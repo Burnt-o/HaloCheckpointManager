@@ -34,7 +34,7 @@ namespace WpfApp3
     public static class HCMGlobal
     {
         public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-        public static readonly string H1CutscenePath = HCMGlobal.LocalDir + @"\saves\h1cs";
+        public static readonly string H1CoreSavePath = HCMGlobal.LocalDir + @"\saves\h1cs";
         public static readonly string H1CheckpointPath = HCMGlobal.LocalDir + @"\saves\h1cp";
         public static readonly string H2CheckpointPath = HCMGlobal.LocalDir + @"\saves\h2cp";
         public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
@@ -144,12 +144,12 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
 
                         var item2 = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex - 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = HCMGlobal.H1CutscenePath + @"\" + s3 + @".bin";
+                        abovefile = HCMGlobal.H1CoreSavePath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -237,12 +237,12 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
 
                         var item2 = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex + 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = HCMGlobal.H1CutscenePath + @"\" + s3 + @".bin";
+                        belowfile = HCMGlobal.H1CoreSavePath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -325,7 +325,7 @@ namespace WpfApp3
             switch (s)
             {
                 case "CS_Loa_SaveButton":
-                    backuploc = HCMGlobal.H1CutscenePath;
+                    backuploc = HCMGlobal.H1CoreSavePath;
                     if (HCMGlobal.SavedConfig.CoreFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     break;
@@ -394,7 +394,7 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        backuploc = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
                         pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     }
                     break;
@@ -474,8 +474,8 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
-                        backuploc = HCMGlobal.H1CutscenePath;
+                        backup = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
+                        backuploc = HCMGlobal.H1CoreSavePath;
                         var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
                  "Rename your backup save",
                          s2,
@@ -568,7 +568,7 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        convertfrom = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        convertfrom = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
                         convertto = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
                         converttoloc = HCMGlobal.H1CheckpointPath;
                     }
@@ -581,8 +581,8 @@ namespace WpfApp3
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
                         convertfrom = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-                        convertto = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
-                        converttoloc = HCMGlobal.H1CutscenePath;
+                        convertto = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
+                        converttoloc = HCMGlobal.H1CoreSavePath;
                     }
                     break;
 
@@ -652,7 +652,7 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        backup = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
                     }
                     break;
 
@@ -895,7 +895,7 @@ namespace WpfApp3
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
 
-                var pathtotest = HCMGlobal.H1CutscenePath + @"\" + s + @".bin";
+                var pathtotest = HCMGlobal.H1CoreSavePath + @"\" + s + @".bin";
 
                 if (File.Exists(pathtotest))
                 {
@@ -1048,9 +1048,9 @@ namespace WpfApp3
 
 
             //h1 cores
-            if (Directory.Exists(HCMGlobal.H1CutscenePath)) // make sure path is valid
+            if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
             {
-                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CutscenePath);
+                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
                 FilesPost.Clear();
 
@@ -1079,7 +1079,7 @@ namespace WpfApp3
                     CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(HCMGlobal.H1CutscenePath + "/" + File);
+                        var data = GetInfo(HCMGlobal.H1CoreSavePath + "/" + File);
                         string _Lvl = data.Item1.ToString();
                         string _Diff = data.Item2.ToString();
 
