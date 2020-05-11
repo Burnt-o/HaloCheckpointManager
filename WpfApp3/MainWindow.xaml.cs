@@ -17,7 +17,6 @@ using System.Reflection;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 
-
 namespace WpfApp3
 {
     /// <summary>
@@ -118,19 +117,13 @@ namespace WpfApp3
             }
         }
 
-
         void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RefreshSel(sender, e);
         }
 
-
-
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
         {
-
-
-
             RefreshSel(sender, e);
             System.Type type = sender.GetType();
             string s = (string)type.GetProperty("Name").GetValue(sender, null);
@@ -209,17 +202,13 @@ namespace WpfApp3
                         break;
                 }
 
-
                 RefreshList(sender, e);
-
             }
             else
             {
                 Log("something went wrong: fileexists(movethis): " + File.Exists(movethis).ToString(), sender);
                 Log("something went wrong: fileexists(abovefile): " + File.Exists(abovefile).ToString(), sender);
             }
-
-
         }
 
         private void MoveDownButton_Click(object sender, RoutedEventArgs e)
@@ -301,9 +290,7 @@ namespace WpfApp3
                         break;
                 }
 
-
                 RefreshList(sender, e);
-
             }
             else
             {
@@ -311,7 +298,6 @@ namespace WpfApp3
                 Log("something went wrong: fileexists belowfile: " + File.Exists(belowfile).ToString(), sender);
             }
         }
-
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -347,7 +333,6 @@ namespace WpfApp3
 
             }
 
-
             if (File.Exists(pathtotest) && Directory.Exists(backuploc) && pathtotest != "")
             {
                 var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
@@ -369,9 +354,6 @@ namespace WpfApp3
                     //need to make this a popup to let user know what was bad
                 }
             }
-
-
-
         }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
@@ -384,7 +366,6 @@ namespace WpfApp3
             System.Type type = sender.GetType();
             string s = (string)type.GetProperty("Name").GetValue(sender, null);
             var testme = "";
-
 
             switch (s)
             {
@@ -433,8 +414,6 @@ namespace WpfApp3
             catch { }
             if (Directory.Exists(testme) && File.Exists(backuploc))
             {
-
-
                 try
                 {
                     File.Copy(backuploc, pathtotest, true);
@@ -451,8 +430,6 @@ namespace WpfApp3
                 Log("something went wrong trying to load a save: Directory.Exists(testme) : " + Directory.Exists(testme).ToString(), sender);
                 Log("something went wrong trying to load a save: File.Exists(backuploc) : " + File.Exists(backuploc).ToString(), sender);
             }
-
-
         }
 
         private void RenameButton_Click(object sender, RoutedEventArgs e)
@@ -464,7 +441,6 @@ namespace WpfApp3
             string s = (string)type.GetProperty("Name").GetValue(sender, null);
             string s2 = "";
             string proposedsave = "";
-
 
             switch (s)
             {
@@ -521,7 +497,6 @@ namespace WpfApp3
 
             }
 
-
             if (File.Exists(backup) && !File.Exists(proposedsave))
             {
                 try
@@ -542,10 +517,7 @@ namespace WpfApp3
                 Log("something went wrong trying to rename a save: File.Exists(backuploc) : " + File.Exists(backup).ToString());
                 Log("something went wrong trying to rename a save: !File.Exists(proposedsave) : " + (!File.Exists(proposedsave)).ToString());
                 //actually this can popup if the user just cancels the input box.
-
             }
-
-
 
         }
 
@@ -741,7 +713,6 @@ namespace WpfApp3
                 settingswindow.modeclas.IsChecked = false;
             }
 
-
             settingswindow.ShowDialog();
 
             if (settingswindow.ChosenCore.Text != null)
@@ -770,7 +741,6 @@ namespace WpfApp3
             }
             else
             {
-
                 HCMGlobal.SavedConfig.ClassicMode = true;
                 WriteConfig();
                 RefreshLoa(sender, e);
@@ -800,16 +770,11 @@ namespace WpfApp3
                     Log("somehow you had an invalid CS Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 CS_Loa_Time.Text = ticksToTime(data.Item3.ToString());
-                if (HCMGlobal.SavedConfig.ClassicMode)
-                {
-                    try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
-                    catch { }
-                }
-                else
-                {
-                    try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
-                    catch { }
-                }
+
+                CS_Loa_LevelImage.Source =
+                    HCMGlobal.SavedConfig.ClassicMode
+                        ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
+                        : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
             }
             else
             {
@@ -817,7 +782,6 @@ namespace WpfApp3
                 CS_Loa_DiffName.Source = null;
                 CS_Loa_Time.Text = "N/A";
                 CS_Loa_LevelImage.Source = null;
-
             }
 
             //H1 CPs SECOND
@@ -832,16 +796,10 @@ namespace WpfApp3
                     Log("somehow you had an invalid CP Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 CP_Loa_Time.Text = ticksToTime(data.Item3.ToString());
-                if (HCMGlobal.SavedConfig.ClassicMode)
-                {
-                    try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
-                    catch { }
-                }
-                else
-                {
-                    try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
-                    catch { }
-                }
+                CP_Loa_LevelImage.Source =
+                    HCMGlobal.SavedConfig.ClassicMode
+                        ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
+                        : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
             }
             else
             {
@@ -849,7 +807,6 @@ namespace WpfApp3
                 CP_Loa_DiffName.Source = null;
                 CP_Loa_Time.Text = "N/A";
                 CP_Loa_LevelImage.Source = null;
-
             }
 
             //H2 CPs THIRD
@@ -864,16 +821,10 @@ namespace WpfApp3
                     Log("somehow you had an invalid H2CP Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 H2CP_Loa_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
-                if (HCMGlobal.SavedConfig.ClassicMode)
-                {
-                    try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
-                    catch { }
-                }
-                else
-                {
-                    try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
-                    catch { }
-                }
+                H2CP_Loa_LevelImage.Source =
+                    HCMGlobal.SavedConfig.ClassicMode
+                        ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
+                        : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
             }
             else
             {
@@ -881,7 +832,6 @@ namespace WpfApp3
                 H2CP_Loa_DiffName.Source = null;
                 H2CP_Loa_Time.Text = "N/A";
                 H2CP_Loa_LevelImage.Source = null;
-
             }
         }
 
@@ -890,11 +840,9 @@ namespace WpfApp3
             //H1 CORES FIRST
             if (CS_MainList.SelectedItem != null)
             {
-
                 var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
-
                 var pathtotest = HCMGlobal.H1CoreSavePath + @"\" + s + @".bin";
 
                 if (File.Exists(pathtotest))
@@ -909,19 +857,11 @@ namespace WpfApp3
 
                     CS_Sel_Time.Text = ticksToTime(data.Item3.ToString());
                     CS_Sel_FileName.Text = s;
-                    if (HCMGlobal.SavedConfig.ClassicMode)
-                    {
-                        try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
-                        catch { }
-                    }
-                    else
-                    {
-                        try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
-                        catch { }
-                    }
-
+                    CS_Sel_LevelImage.Source =
+                        HCMGlobal.SavedConfig.ClassicMode
+                            ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
+                            : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
                 }
-
             }
             else
             {
@@ -930,8 +870,6 @@ namespace WpfApp3
                 CS_Sel_Time.Text = "N/A";
                 CS_Sel_FileName.Text = "N/A";
                 CS_Sel_LevelImage.Source = null;
-
-
             }
             //Console.WriteLine("CP_MainList.SelectedItem" + CP_MainList?.SelectedItem?.ToString());
 
@@ -942,7 +880,6 @@ namespace WpfApp3
                 var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
-
                 var pathtotest = HCMGlobal.H1CheckpointPath + @"\" + s + @".bin";
 
                 if (File.Exists(pathtotest))
@@ -955,19 +892,12 @@ namespace WpfApp3
                     else
                         Log("somehow you had an invalid CP Sel difficulty value: " + data.Item2.ToString(), sender);
 
-
                     CP_Sel_Time.Text = ticksToTime(data.Item3.ToString());
                     CP_Sel_FileName.Text = s;
-                    if (HCMGlobal.SavedConfig.ClassicMode)
-                    {
-                        try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
-                        catch { }
-                    }
-                    else
-                    {
-                        try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
-                        catch { }
-                    }
+                    CP_Sel_LevelImage.Source =
+                        HCMGlobal.SavedConfig.ClassicMode
+                            ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
+                            : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
                 }
             }
             else
@@ -977,8 +907,6 @@ namespace WpfApp3
                 CP_Sel_Time.Text = "N/A";
                 CP_Sel_FileName.Text = "N/A";
                 CP_Sel_LevelImage.Source = null;
-
-
             }
 
             //H2 CPs THIRD
@@ -988,7 +916,6 @@ namespace WpfApp3
                 var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
-
                 var pathtotest = HCMGlobal.H2CheckpointPath + @"\" + s + @".bin";
 
                 if (File.Exists(pathtotest))
@@ -1001,19 +928,12 @@ namespace WpfApp3
                     else
                         Log("somehow you had an invalid CP Sel difficulty value: " + data.Item2.ToString(), sender);
 
-
                     H2CP_Sel_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
                     H2CP_Sel_FileName.Text = s;
-                    if (HCMGlobal.SavedConfig.ClassicMode)
-                    {
-                        try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
-                        catch { }
-                    }
-                    else
-                    {
-                        try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
-                        catch { }
-                    }
+                    H2CP_Sel_LevelImage.Source =
+                        HCMGlobal.SavedConfig.ClassicMode
+                            ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
+                            : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
                 }
             }
             else
@@ -1023,11 +943,8 @@ namespace WpfApp3
                 H2CP_Sel_Time.Text = "N/A";
                 H2CP_Sel_FileName.Text = "N/A";
                 H2CP_Sel_LevelImage.Source = null;
-
-
             }
         }
-
 
         private void RefreshList(object sender, RoutedEventArgs e)
         {
@@ -1046,7 +963,6 @@ namespace WpfApp3
             }
             List<string> FilesPost = new List<string>();
 
-
             //h1 cores
             if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
             {
@@ -1054,27 +970,17 @@ namespace WpfApp3
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
                 FilesPost.Clear();
 
-
                 foreach (FileInfo file in files)
                 {
-
-                    while (hasSameTime(files, file))
+                    while (FileHasSameTime(files, file))
                     {
-                        //do a thing to decrement hte time
-                        // Console.WriteLine("before: " + file.LastWriteTime.ToString());
                         file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                        //Console.WriteLine("after: " + file.LastWriteTime.ToString());
-                        //Console.WriteLine("decremented file");
                     }
-
                     FilesPost.Add(file.ToString());
-
-
                 }
 
                 if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
                 {
-
                     CS_MainList.Items.Clear();
                     CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
@@ -1088,34 +994,25 @@ namespace WpfApp3
                         else
                             Log("somehow you had an invalid CS List difficulty value: " + data.Item2.ToString(), sender);
 
-
                         string _Time = ticksToTime(data.Item3.ToString());
                         string _Name = File.Substring(0, File.Length - 4);
                         CS_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
-
                     }
+
                     CS_MainList.SelectedIndex = oldCSselected;
                     GridView gv = CS_MainList.View as GridView;
                     UpdateColumnWidths(gv);
-
-
-                    // return;
                 }
                 else
                 {
                     CS_MainList.Items.Clear();
                     CS_MainList_Label.Content = "No backup saves in local folder.";
-                    //CS_MainList.Items.Add("No saves in folder :(");
-                    //return;
                 }
-
             }
             else
             {
                 CS_MainList.Items.Clear();
                 CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
-                //CS_MainList.Items.Add("Core folder path is invalid :(");
-                //return;
             }
 
             //h1 checkpoints second
@@ -1126,17 +1023,12 @@ namespace WpfApp3
                 FilesPost.Clear();
                 foreach (FileInfo file in files)
                 {
-                    while (hasSameTime(files, file))
+                    while (FileHasSameTime(files, file))
                     {
-                        //do a thing to decrement hte time
-                        // Console.WriteLine("before: " + file.LastWriteTime.ToString());
                         file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                        //Console.WriteLine("after: " + file.LastWriteTime.ToString());
-                        //Console.WriteLine("decremented file");
                     }
                     FilesPost.Add(file.ToString());
                 }
-
 
                 if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
                 {
@@ -1161,26 +1053,18 @@ namespace WpfApp3
                     CP_MainList.SelectedIndex = oldCPselected;
                     GridView gv = CP_MainList.View as GridView;
                     UpdateColumnWidths(gv);
-
-
-                    //return;
                 }
                 else
                 {
                     CP_MainList.Items.Clear();
                     CP_MainList_Label.Content = "No backup saves in local folder.";
-                    //CP_MainList.Items.Add("No saves in folder :(");
-                    //return;
                 }
             }
             else
             {
                 CP_MainList.Items.Clear();
                 CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
-                //CP_MainList.Items.Add("Checkpoint folder path is invalid :(");
-                //return;
             }
-
 
             //h2 checkpoints THIRD
             if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
@@ -1190,17 +1074,12 @@ namespace WpfApp3
                 FilesPost.Clear();
                 foreach (FileInfo file in files)
                 {
-                    while (hasSameTime(files, file))
+                    while (FileHasSameTime(files, file))
                     {
-                        //do a thing to decrement hte time
-                        // Console.WriteLine("before: " + file.LastWriteTime.ToString());
                         file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                        //Console.WriteLine("after: " + file.LastWriteTime.ToString());
-                        //Console.WriteLine("decremented file");
                     }
                     FilesPost.Add(file.ToString());
                 }
-
 
                 if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
                 {
@@ -1222,32 +1101,23 @@ namespace WpfApp3
                         H2CP_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
 
                     }
+
                     H2CP_MainList.SelectedIndex = oldH2CPselected;
                     GridView gv = H2CP_MainList.View as GridView;
                     UpdateColumnWidths(gv);
-
-
-                    //return;
                 }
                 else
                 {
                     H2CP_MainList.Items.Clear();
                     H2CP_MainList_Label.Content = "No backup saves in local folder.";
-                    //CP_MainList.Items.Add("No saves in folder :(");
-                    //return;
                 }
             }
             else
             {
                 H2CP_MainList.Items.Clear();
                 H2CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
-                //CP_MainList.Items.Add("Checkpoint folder path is invalid :(");
-                //return;
             }
         }
-
-
-
 
         private (string, byte, UInt32) GetInfo(string thispath)
         {
@@ -1302,14 +1172,11 @@ namespace WpfApp3
                 }
             }
         }
-        public bool hasSameTime(FileInfo[] FilesPost, FileInfo currentfile)
+
+        public bool FileHasSameTime(FileInfo[] FilesPost, FileInfo currentfile)
         {
-            // For each column...
             foreach (FileInfo File in FilesPost)
             {
-                //if lastwrite of currentfile = lastwritetime of file
-                //Console.WriteLine("currentfilename: " + currentfile.Name.ToString());
-                //Console.WriteLine("filename: " + File.Name.ToString());
                 if (currentfile.Name != File.Name)
                 {
                     if (File.LastWriteTime == currentfile.LastWriteTime)
@@ -1318,7 +1185,6 @@ namespace WpfApp3
                     }
                 }
             }
-            //Console.WriteLine("returned false on hassametime");
             return false;
         }
 
@@ -1342,9 +1208,9 @@ namespace WpfApp3
             // Halo 1
             { "a10", "Pillar of Autumn" },
             { "a30", "Halo" },
-            { "a50", "Truth and Reconciliation" },
+            { "a50", "Truth and Rec" },
             { "b30", "Silent Cartographer" },
-            { "b40", "Attack on the Control Room" },
+            { "b40", "AotCR" },
             { "c10", "343 Guilty Spark" },
             { "c20", "The Library" },
             { "c40", "Two Betrayals" },
@@ -1372,7 +1238,7 @@ namespace WpfApp3
         public string LevelCodeToFullName(string code)
         {
             string Name;
-            if(LevelCodeToName.TryGetValue(code, out Name))
+            if (LevelCodeToName.TryGetValue(code, out Name))
             {
                 return Name;
             }
