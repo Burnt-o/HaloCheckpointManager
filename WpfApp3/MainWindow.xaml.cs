@@ -23,29 +23,51 @@ namespace WpfApp3
     /// Interaction logic for MainWindow.xaml
     /// </summary>
 
-    public class HCMConfig
-    {
-        public string CoreFolderPath;
-        public string CheckpointFolderPath;
-        public bool ClassicMode;
-    }
-
-    public static class HCMGlobal
-    {
-        public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-        public static readonly string H1CoreSavePath = HCMGlobal.LocalDir + @"\saves\h1cs";
-        public static readonly string H1CheckpointPath = HCMGlobal.LocalDir + @"\saves\h1cp";
-        public static readonly string H2CheckpointPath = HCMGlobal.LocalDir + @"\saves\h2cp";
-        public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
-        public static readonly string LogPath = HCMGlobal.LocalDir + @"\log.txt";
-
-        public static HCMConfig SavedConfig;
-
-        public static bool padowomode = false;
-    }
-
     public partial class MainWindow : Window
     {
+        private class HCMConfig
+        {
+            public string CoreFolderPath;
+            public string CheckpointFolderPath;
+            public bool ClassicMode;
+        }
+
+        private static class HCMGlobal
+        {
+            public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            public static readonly string H1CoreSavePath = HCMGlobal.LocalDir + @"\saves\h1cs";
+            public static readonly string H1CheckpointPath = HCMGlobal.LocalDir + @"\saves\h1cp";
+            public static readonly string H2CheckpointPath = HCMGlobal.LocalDir + @"\saves\h2cp";
+            public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
+            public static readonly string LogPath = HCMGlobal.LocalDir + @"\log.txt";
+
+            public static HCMConfig SavedConfig;
+
+            public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
+
+            public static bool padowomode = false;
+        }
+
+        private enum HaloGame
+        {
+            Halo1,
+            Halo2,
+            Halo3,
+            HaloODST,
+            HaloReach,
+            Halo4,
+            Halo5
+        }
+
+        private enum Difficulty
+        {
+            Invalid = -1,
+            Easy = 0,
+            Normal = 1,
+            Heroic = 2,
+            Legendary = 3,
+        }
+
         private readonly string[] RequiredFiles =
         {
             @"config.json",
@@ -559,12 +581,9 @@ namespace WpfApp3
                     break;
 
                 case "H2CP_Sel_ConvertButton":
-                    string link = "";
-                    if (HCMGlobal.padowomode)
-                        link = "https://www.youtube.com/watch?v=dQ_d_VKrFgM";
-                    else
-                        link = "https://www.youtube.com/watch?v=5u4tQlVRKD8";
-
+                    string link = HCMGlobal.padowomode 
+                        ? "https://www.youtube.com/watch?v=dQ_d_VKrFgM"
+                        : "https://www.youtube.com/watch?v=5u4tQlVRKD8";
 
                     var psi = new System.Diagnostics.ProcessStartInfo
                     {
@@ -655,8 +674,6 @@ namespace WpfApp3
 
             if (File.Exists(backup))
             {
-
-
                 try
                 {
                     File.Delete(backup);
@@ -678,8 +695,6 @@ namespace WpfApp3
                 //need to make this a popup to let user know what was bad
                 Log("something went wrong trying to delete a save: File.Exists(backup) : " + File.Exists(backup).ToString());
             }
-
-
         }
 
 
@@ -761,20 +776,14 @@ namespace WpfApp3
             //H1 CORES FIRST
             if (File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
-                var data = GetInfo(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin");
-                CS_Loa_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin");
+                CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                    CS_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
-                else
-                    Log("somehow you had an invalid CS Loa difficulty value: " + data.Item2.ToString(), sender);
+                if(data.Difficulty != Difficulty.Invalid)
+                    CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
-                CS_Loa_Time.Text = ticksToTime(data.Item3.ToString());
-
-                CS_Loa_LevelImage.Source =
-                    HCMGlobal.SavedConfig.ClassicMode
-                        ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
-                        : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
+                CS_Loa_Time.Text = TickToTimeString(data.StartTick);
+                CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
             }
             else
             {
@@ -787,19 +796,14 @@ namespace WpfApp3
             //H1 CPs SECOND
             if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetInfo(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin");
-                CP_Loa_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin");
+                CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                    CP_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
-                else
-                    Log("somehow you had an invalid CP Loa difficulty value: " + data.Item2.ToString(), sender);
+                if (data.Difficulty != Difficulty.Invalid)
+                    CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
-                CP_Loa_Time.Text = ticksToTime(data.Item3.ToString());
-                CP_Loa_LevelImage.Source =
-                    HCMGlobal.SavedConfig.ClassicMode
-                        ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
-                        : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
+                CP_Loa_Time.Text = TickToTimeString(data.StartTick);
+                CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
             }
             else
             {
@@ -812,19 +816,14 @@ namespace WpfApp3
             //H2 CPs THIRD
             if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetInfo(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin");
-                H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin");
+                H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
-                else
-                    Log("somehow you had an invalid H2CP Loa difficulty value: " + data.Item2.ToString(), sender);
+                if (data.Difficulty != Difficulty.Invalid)
+                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
-                H2CP_Loa_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
-                H2CP_Loa_LevelImage.Source =
-                    HCMGlobal.SavedConfig.ClassicMode
-                        ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
-                        : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
+                H2CP_Loa_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
+                H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
             }
             else
             {
@@ -847,20 +846,15 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetInfo(pathtotest);
-                    CS_Sel_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
+                    var data = GetSaveFileMetadata(pathtotest);
+                    CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                    if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                        CS_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
-                    else
-                        Log("somehow you had an invalid CS Sel difficulty value: " + data.Item2.ToString(), sender);
+                    if (data.Difficulty != Difficulty.Invalid)
+                        CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
-                    CS_Sel_Time.Text = ticksToTime(data.Item3.ToString());
+                    CS_Sel_Time.Text = TickToTimeString(data.StartTick);
                     CS_Sel_FileName.Text = s;
-                    CS_Sel_LevelImage.Source =
-                        HCMGlobal.SavedConfig.ClassicMode
-                            ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
-                            : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
+                    CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                 }
             }
             else
@@ -884,20 +878,15 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetInfo(pathtotest);
-                    CP_Sel_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
+                    var data = GetSaveFileMetadata(pathtotest);
+                    CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                    if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                        CP_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
-                    else
-                        Log("somehow you had an invalid CP Sel difficulty value: " + data.Item2.ToString(), sender);
+                    if (data.Difficulty != Difficulty.Invalid)
+                        CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
-                    CP_Sel_Time.Text = ticksToTime(data.Item3.ToString());
+                    CP_Sel_Time.Text = TickToTimeString(data.StartTick);
                     CP_Sel_FileName.Text = s;
-                    CP_Sel_LevelImage.Source =
-                        HCMGlobal.SavedConfig.ClassicMode
-                            ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
-                            : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
+                    CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                 }
             }
             else
@@ -920,20 +909,15 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetInfo(pathtotest);
-                    H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
+                    var data = GetSaveFileMetadata(pathtotest);
+                    H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                    if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
-                    else
-                        Log("somehow you had an invalid CP Sel difficulty value: " + data.Item2.ToString(), sender);
+                    if (data.Difficulty != Difficulty.Invalid)
+                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
-                    H2CP_Sel_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
+                    H2CP_Sel_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
                     H2CP_Sel_FileName.Text = s;
-                    H2CP_Sel_LevelImage.Source =
-                        HCMGlobal.SavedConfig.ClassicMode
-                            ? new BitmapImage(new Uri($"images/{data.Item1}_clas.png", UriKind.Relative))
-                            : new BitmapImage(new Uri($"images/{data.Item1}_anni.png", UriKind.Relative));
+                    H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                 }
             }
             else
@@ -985,16 +969,14 @@ namespace WpfApp3
                     CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(HCMGlobal.H1CoreSavePath + "/" + File);
-                        string _Lvl = data.Item1.ToString();
-                        string _Diff = data.Item2.ToString();
+                        var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File);
+                        string _Lvl = data.LevelCode;
+                        string _Diff = data.Difficulty.ToString();
 
-                        if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                            _Diff = "diff_" + data.Item2.ToString() + ".png";
-                        else
-                            Log("somehow you had an invalid CS List difficulty value: " + data.Item2.ToString(), sender);
+                        if(data.Difficulty != Difficulty.Invalid)
+                            _Diff = $"images/diff_{(int)data.Difficulty}.png";
 
-                        string _Time = ticksToTime(data.Item3.ToString());
+                        string _Time = TickToTimeString(data.StartTick);
                         string _Name = File.Substring(0, File.Length - 4);
                         CS_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
                     }
@@ -1036,16 +1018,14 @@ namespace WpfApp3
                     CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(HCMGlobal.H1CheckpointPath + "/" + File);
-                        string _Lvl = data.Item1.ToString();
-                        string _Diff = data.Item2.ToString();
+                        var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File);
+                        string _Lvl = data.LevelCode;
+                        string _Diff = data.Difficulty.ToString();
 
-                        if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                            _Diff = "diff_" + data.Item2.ToString() + ".png";
-                        else
-                            Log("somehow you had an invalid CP List difficulty value: " + data.Item2.ToString(), sender);
+                        if (data.Difficulty != Difficulty.Invalid)
+                            _Diff = $"images/diff_{(int)data.Difficulty}.png";
 
-                        string _Time = ticksToTime(data.Item3.ToString());
+                        string _Time = TickToTimeString(data.StartTick);
                         string _Name = File.Substring(0, File.Length - 4);
                         CP_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
 
@@ -1087,16 +1067,14 @@ namespace WpfApp3
                     H2CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(HCMGlobal.H2CheckpointPath + "/" + File);
-                        string _Lvl = data.Item1.ToString();
-                        string _Diff = data.Item2.ToString();
+                        var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File);
+                        string _Lvl = data.LevelCode;
+                        string _Diff = data.Difficulty.ToString();
 
-                        if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                            _Diff = "diff_" + data.Item2.ToString() + ".png";
-                        else
-                            Log("somehow you had an invalid H2CP List difficulty value: " + data.Item2.ToString(), sender);
+                        if (data.Difficulty != Difficulty.Invalid)
+                            _Diff = $"images/diff_{(int)data.Difficulty}.png";
 
-                        string _Time = ticksToTime(data.Item3.ToString());
+                        string _Time = TickToTimeString(data.StartTick);
                         string _Name = File.Substring(0, File.Length - 4);
                         H2CP_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
 
@@ -1119,43 +1097,48 @@ namespace WpfApp3
             }
         }
 
-        private (string, byte, UInt32) GetInfo(string thispath)
+        private class HaloSaveFileMetadata
+        {
+            public HaloGame HaloGame = HaloGame.Halo1;
+            public string LevelCode = "xxx";
+            public uint StartTick = 0;
+            public Difficulty Difficulty = Difficulty.Easy;
+        }
+
+        private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath)
         {
             //btw I suspect the easiest way to deal with h2 is just to CHECK inside the file here to see if it's from h1 or h2, so I don't have to worry about GetInfo being passed either file type
-            String[] line = { "a", "b", "c" };
-            if (File.Exists(thispath))
+
+            HaloSaveFileMetadata metadata = new HaloSaveFileMetadata();
+
+            if (File.Exists(saveFilePath))
             {
-                FileStream readStream;
                 try
                 {
-                    //get levelname
-                    readStream = new FileStream(thispath, FileMode.Open);
-                    BinaryReader readBinary = new BinaryReader(readStream);
-                    readBinary.BaseStream.Seek(11, SeekOrigin.Begin);
-                    string levelname = new string(readBinary.ReadChars(3));
-                    //Console.WriteLine("levelname: " + levelname);
+                    using (FileStream readStream = new FileStream(saveFilePath, FileMode.Open))
+                    {
+                        BinaryReader readBinary = new BinaryReader(readStream);
 
-                    //get time
-                    readBinary.BaseStream.Seek(756, SeekOrigin.Begin);
-                    UInt32 timeinticks = readBinary.ReadUInt32();
-                    //Console.WriteLine("time: " + timeinticks);
+                        //get levelname
+                        readBinary.BaseStream.Seek(11, SeekOrigin.Begin);
+                        metadata.LevelCode = new string(readBinary.ReadChars(3));
 
-                    //get difficulty
-                    readBinary.BaseStream.Seek(294, SeekOrigin.Begin);
-                    Byte difficulty = readBinary.ReadByte();
-                    //Console.WriteLine("difficulty: " + difficulty);
+                        //get time
+                        readBinary.BaseStream.Seek(756, SeekOrigin.Begin);
+                        metadata.StartTick = readBinary.ReadUInt32();
 
-                    readStream.Close();
-                    return (levelname, difficulty, timeinticks);
+                        //get difficulty
+                        readBinary.BaseStream.Seek(294, SeekOrigin.Begin);
+                        metadata.Difficulty = (Difficulty)readBinary.ReadByte();
+                    }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-
-                    return ("0", 0, 0);
                 }
             }
-            return ("0", 0, 0);
+
+            return metadata;
         }
 
         public static void UpdateColumnWidths(GridView gridView)
@@ -1194,13 +1177,11 @@ namespace WpfApp3
             File.WriteAllText(HCMGlobal.ConfigPath, json);
         }
 
-        public string ticksToTime(string ticks)
+        public string TickToTimeString(uint ticks)
         {
-            string Time = "";
-            int number = Int32.Parse(ticks);
-            number = number / 30;
-            Time = string.Format("{0:00}:{1:00}", number / 60, number % 60);
-            return Time;
+            int seconds = (int)ticks / 30;
+            TimeSpan ts = new TimeSpan(seconds / (60*60), seconds / (60), seconds % 60);
+            return ts.ToString(@"mm\:ss");
         }
 
         readonly Dictionary<string, string> LevelCodeToName = new Dictionary<string, string>()
@@ -1244,11 +1225,6 @@ namespace WpfApp3
             }
 
             return code;
-        }
-
-        public bool TestRange(int numberToCheck, int bottom, int top)
-        {
-            return (numberToCheck >= bottom && numberToCheck <= top);
         }
 
         public static void Log(string text, object sender)
