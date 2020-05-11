@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 
 
 namespace WpfApp3
@@ -22,9 +23,44 @@ namespace WpfApp3
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
- 
+
+    public class HCMConfig
+    {
+        public string CoreFolderPath;
+        public string CheckpointFolderPath;
+        public bool ClassicMode;
+    }
+
+    public static class HCMGlobal
+    {
+        public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+        public static readonly string H1CutscenePath = HCMGlobal.LocalDir + @"\saves\h1cs";
+        public static readonly string H1CheckpointPath = HCMGlobal.LocalDir + @"\saves\h1cp";
+        public static readonly string H2CheckpointPath = HCMGlobal.LocalDir + @"\saves\h2cp";
+        public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
+        public static readonly string LogPath = HCMGlobal.LocalDir + @"\log.txt";
+
+        public static HCMConfig SavedConfig;
+
+        public static bool padowomode = false;
+    }
+
     public partial class MainWindow : Window
     {
+        private readonly string[] RequiredFiles =
+        {
+            @"config.json",
+            @"log.txt"
+        };
+
+        private readonly string[] RequiredFolders =
+        {
+            @"saves",
+            @"saves\h1cs",
+            @"saves\h1cp",
+            @"saves\h2cp",
+        };
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,88 +68,41 @@ namespace WpfApp3
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
 
-            if (File.Exists(globals.localdir + @"\config.txt"))
+            // Validate that required folders exist
+            foreach (var folder in RequiredFolders)
             {
+                var folderPath = $@"{HCMGlobal.LocalDir}\{folder}";
                 try
                 {
-                    globals.corefolderpath = File.ReadLines(globals.localdir + @"\config.txt").First();
-                    globals.cpfolderpath = File.ReadLines(globals.localdir + @"\config.txt").Skip(1).Take(1).First();
-                    globals.classicmode = bool.Parse(File.ReadLines(globals.localdir + @"\config.txt").Skip(2).Take(1).First());
-                }
-                catch
-                {
-                    
-                }
-            }
-            else
-            {
-                try
-                {
-                    File.Create(globals.localdir + @"\config.txt").Dispose();
+                    Directory.CreateDirectory(folderPath);
                 }
                 catch (Exception exp)
                 {
-                    MessageBox.Show("Couldn't create local config file. Show this to Burnt: " + exp.ToString());
+                    Log($@"Exception creating folder {folderPath}: {exp}");
                 }
-
             }
 
-            if (!File.Exists(globals.localdir + @"\log.txt"))
+            // Validate that required files exist
+            foreach (var file in RequiredFiles)
             {
+                var filePath = $@"{HCMGlobal.LocalDir}\{file}";
                 try
                 {
-                    File.Create(globals.localdir + @"\log.txt").Dispose();
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show("Couldn't create local log file. Show this to Burnt: " + exp.ToString());
+                    if (!File.Exists(filePath))
+                    {
+                        File.CreateText(filePath);
+                    }
+                } 
+                catch(Exception exp) {
+                    Log($@"Exception creating file {filePath}: {exp}");
                 }
             }
-            
 
-            if (!Directory.Exists(globals.localdir + @"\saves"))
+            // Set up Config
+            using (StreamReader r = new StreamReader(HCMGlobal.ConfigPath))
             {
-                try
-                {
-                    Directory.CreateDirectory(globals.localdir + @"\saves");
-                }
-                catch (Exception exp)
-                {
-                    Log(@"something went wrong trying to make a \saves folder: " + exp);
-                }
-            }
-            if (!Directory.Exists(globals.localdir + @"\saves\h1cs"))
-            {
-                try
-                {
-                    Directory.CreateDirectory(globals.localdir + @"\saves\h1cs");
-                }
-                catch (Exception exp)
-                {
-                    Log(@"something went wrong trying to make a \saves\h1cs folder: " + exp);
-                }
-            }
-            if (!Directory.Exists(globals.localdir + @"\saves\h1cp"))
-            {
-                try
-                {
-                    Directory.CreateDirectory(globals.localdir + @"\saves\h1cp");
-                }
-                catch (Exception exp)
-                {
-                    Log(@"something went wrong trying to make a \saves\h1cp folder: " + exp);
-                }
-            }
-            if (!Directory.Exists(globals.localdir + @"\saves\h2cp"))
-            {
-                try
-                {
-                    Directory.CreateDirectory(globals.localdir + @"\saves\h2cp");
-                }
-                catch (Exception exp)
-                {
-                    Log(@"something went wrong trying to make a \saves\h2cp folder: " + exp);
-                }
+                string json = r.ReadToEnd();
+                HCMGlobal.SavedConfig = JsonConvert.DeserializeObject<HCMConfig>(json);
             }
 
             CS_MainList.Items.Clear();
@@ -123,7 +112,7 @@ namespace WpfApp3
 
             if (DateTime.Now.Day == 25 && DateTime.Now.Month == 12)
             {
-                globals.padowomode = true;
+                HCMGlobal.padowomode = true;
                 H2CP_Sel_ConvertButton.Content = "Convert to PADAWO";
             }
         }
@@ -133,22 +122,7 @@ namespace WpfApp3
         {
             RefreshSel(sender, e);
         }
-
-
-        public static class globals
-        {
-            public static string localdir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-
-
-            public static string corefolderpath = null;
-            public static string cpfolderpath = null;
-            public static string h1cs = globals.localdir + @"\saves\h1cs";
-            public static string h1cp = globals.localdir + @"\saves\h1cp";
-            public static string h2cp = globals.localdir + @"\saves\h2cp";
-            public static bool classicmode = true;
-            public static bool padowomode = false;
-            
-        }
+        
 
 
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
@@ -169,12 +143,12 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = globals.h1cs + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
 
                         var item2 = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex - 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = globals.h1cs + @"\" + s3 + @".bin";
+                        abovefile = HCMGlobal.H1CutscenePath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -184,12 +158,12 @@ namespace WpfApp3
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = globals.h1cp + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
 
                         var item2 = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex - 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = globals.h1cp + @"\" + s3 + @".bin";
+                        abovefile = HCMGlobal.H1CheckpointPath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -199,12 +173,12 @@ namespace WpfApp3
                         var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = globals.h2cp + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
 
                         var item2 = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex - 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = globals.h2cp + @"\" + s3 + @".bin";
+                        abovefile = HCMGlobal.H2CheckpointPath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -262,12 +236,12 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = globals.h1cs + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
 
                         var item2 = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex + 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = globals.h1cs + @"\" + s3 + @".bin";
+                        belowfile = HCMGlobal.H1CutscenePath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -277,12 +251,12 @@ namespace WpfApp3
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = globals.h1cp + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
 
                         var item2 = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex + 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = globals.h1cp + @"\" + s3 + @".bin";
+                        belowfile = HCMGlobal.H1CheckpointPath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -292,12 +266,12 @@ namespace WpfApp3
                         var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = globals.h2cp + @"\" + s2 + @".bin";
+                        movethis = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
 
                         var item2 = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex + 1);
                         System.Type type3 = item2.GetType();
                         string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = globals.h2cp + @"\" + s3 + @".bin";
+                        belowfile = HCMGlobal.H2CheckpointPath + @"\" + s3 + @".bin";
                     }
                     break;
 
@@ -350,21 +324,21 @@ namespace WpfApp3
             switch (s)
             {
                 case "CS_Loa_SaveButton":
-                    backuploc = globals.h1cs;
-                    if (globals.corefolderpath != null)
-                    pathtotest = globals.corefolderpath + @"\core.bin";
+                    backuploc = HCMGlobal.H1CutscenePath;
+                    if (HCMGlobal.SavedConfig.CoreFolderPath != null)
+                    pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     break;
 
                 case "CP_Loa_SaveButton":
-                    backuploc = globals.h1cp;
-                    if (globals.cpfolderpath != null)
-                        pathtotest = globals.cpfolderpath + @"\autosave_Halo1.bin";
+                    backuploc = HCMGlobal.H1CheckpointPath;
+                    if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
                     break;
 
                 case "H2CP_Loa_SaveButton":
-                    backuploc = globals.h2cp;
-                    if (globals.cpfolderpath != null)
-                        pathtotest = globals.cpfolderpath + @"\autosave_Halo2.bin";
+                    backuploc = HCMGlobal.H2CheckpointPath;
+                    if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
                     break;
 
                 default:
@@ -419,8 +393,8 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = globals.h1cs + @"\" + s2 + @".bin";
-                        pathtotest = globals.corefolderpath + @"\core.bin";
+                        backuploc = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     }
                     break;
 
@@ -430,8 +404,8 @@ namespace WpfApp3
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = globals.h1cp + @"\" + s2 + @".bin";
-                        pathtotest = globals.cpfolderpath + @"\autosave_Halo1.bin";
+                        backuploc = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
+                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
                     }
                     break;
 
@@ -441,8 +415,8 @@ namespace WpfApp3
                         var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = globals.h2cp + @"\" + s2 + @".bin";
-                        pathtotest = globals.cpfolderpath + @"\autosave_Halo2.bin";
+                        backuploc = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
+                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
                     }
                     break;
 
@@ -499,8 +473,8 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = globals.h1cs + @"\" + s2 + @".bin";
-                        backuploc = globals.h1cs;
+                        backup = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        backuploc = HCMGlobal.H1CutscenePath;
                         var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
                  "Rename your backup save",
                          s2,
@@ -515,8 +489,8 @@ namespace WpfApp3
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = globals.h1cp + @"\" + s2 + @".bin";
-                        backuploc = globals.h1cp;
+                        backup = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
+                        backuploc = HCMGlobal.H1CheckpointPath;
                         var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
                  "Rename your backup save",
                          s2,
@@ -531,8 +505,8 @@ namespace WpfApp3
                         var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = globals.h2cp + @"\" + s2 + @".bin";
-                        backuploc = globals.h2cp;
+                        backup = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
+                        backuploc = HCMGlobal.H2CheckpointPath;
                         var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
                  "Rename your backup save",
                          s2,
@@ -593,9 +567,9 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        convertfrom = globals.h1cs + @"\" + s2 + @".bin";
-                        convertto = globals.h1cp + @"\" + s2 + @".bin";
-                        converttoloc = globals.h1cp;
+                        convertfrom = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        convertto = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
+                        converttoloc = HCMGlobal.H1CheckpointPath;
                     }
                     break;
 
@@ -605,15 +579,15 @@ namespace WpfApp3
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        convertfrom = globals.h1cp + @"\" + s2 + @".bin";
-                        convertto = globals.h1cs + @"\" + s2 + @".bin";
-                        converttoloc = globals.h1cs;
+                        convertfrom = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
+                        convertto = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
+                        converttoloc = HCMGlobal.H1CutscenePath;
                     }
                     break;
                 
                 case "H2CP_Sel_ConvertButton":
                     string link = "";
-                    if (globals.padowomode)
+                    if (HCMGlobal.padowomode)
                         link = "https://www.youtube.com/watch?v=dQ_d_VKrFgM";
                     else
                         link = "https://www.youtube.com/watch?v=5u4tQlVRKD8";
@@ -677,7 +651,7 @@ namespace WpfApp3
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = globals.h1cs + @"\" + s2 + @".bin";
+                        backup = HCMGlobal.H1CutscenePath + @"\" + s2 + @".bin";
                     }
                     break;
 
@@ -687,7 +661,7 @@ namespace WpfApp3
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = globals.h1cp + @"\" + s2 + @".bin";
+                        backup = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
                     }
                     break;
 
@@ -697,7 +671,7 @@ namespace WpfApp3
                         var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = globals.h2cp + @"\" + s2 + @".bin";
+                        backup = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
                     }
                     break;
 
@@ -746,16 +720,16 @@ namespace WpfApp3
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Window1 settingswindow = new Window1();
-            if (globals.corefolderpath != null)
-                settingswindow.ChosenCore.Text = globals.corefolderpath;
+            if (HCMGlobal.SavedConfig.CoreFolderPath != null)
+                settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig.CoreFolderPath;
             else
                 settingswindow.ChosenCore.Text = "No folder chosen!";
-            if (globals.cpfolderpath != null)
-                settingswindow.ChosenCP.Text = globals.cpfolderpath;
+            if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+                settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig.CheckpointFolderPath;
             else
                 settingswindow.ChosenCP.Text = "No folder chosen!";
 
-            if (globals.classicmode)
+            if (HCMGlobal.SavedConfig.ClassicMode)
             {
                 settingswindow.modeanni.IsChecked = false;
                 settingswindow.modeclas.IsChecked = true;
@@ -771,33 +745,33 @@ namespace WpfApp3
 
             if (settingswindow.ChosenCore.Text != null)
             {
-                globals.corefolderpath = settingswindow.ChosenCore.Text;
-                writeConfig();
+                HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text;
+                WriteConfig();
                 RefreshSel(sender, e);
             }
             else
-                globals.corefolderpath = "";
+                HCMGlobal.SavedConfig.CoreFolderPath = "";
             if (settingswindow.ChosenCP.Text != null)
             {
-                globals.cpfolderpath = settingswindow.ChosenCP.Text;
-                writeConfig();
+                HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text;
+                WriteConfig();
                 RefreshSel(sender, e);
             }
             else
-                globals.cpfolderpath = "";
+                HCMGlobal.SavedConfig.CheckpointFolderPath = "";
 
             if (settingswindow.modeanni.IsChecked ?? false)
             {
-                globals.classicmode = false;
-                writeConfig();
+                HCMGlobal.SavedConfig.ClassicMode = false;
+                WriteConfig();
                 RefreshLoa(sender, e);
                 RefreshSel(sender, e);
             }
             else
             {
 
-                globals.classicmode = true;
-                writeConfig();
+                HCMGlobal.SavedConfig.ClassicMode = true;
+                WriteConfig();
                 RefreshLoa(sender, e);
                 RefreshSel(sender, e);
             }
@@ -814,9 +788,9 @@ namespace WpfApp3
         private void RefreshLoa(object sender, RoutedEventArgs e)
         {
             //H1 CORES FIRST
-            if (File.Exists(globals.corefolderpath + @"\core.bin") && globals.corefolderpath != null)
+            if (File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
-                var data = GetInfo(globals.corefolderpath + @"\core.bin");
+                var data = GetInfo(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin");
                 CS_Loa_LevelName.Text = codeToName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
@@ -825,7 +799,7 @@ namespace WpfApp3
                     Log("somehow you had an invalid CS Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 CS_Loa_Time.Text = ticksToTime(data.Item3.ToString());
-                if (globals.classicmode)
+                if (HCMGlobal.SavedConfig.ClassicMode)
                 {
                     try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                     catch { }
@@ -846,9 +820,9 @@ namespace WpfApp3
             }
 
             //H1 CPs SECOND
-            if (File.Exists(globals.cpfolderpath + @"\autosave_Halo1.bin") && globals.cpfolderpath != null)
+            if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetInfo(globals.cpfolderpath + @"\autosave_Halo1.bin");
+                var data = GetInfo(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin");
                 CP_Loa_LevelName.Text = codeToName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
@@ -857,7 +831,7 @@ namespace WpfApp3
                     Log("somehow you had an invalid CP Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 CP_Loa_Time.Text = ticksToTime(data.Item3.ToString());
-                if (globals.classicmode)
+                if (HCMGlobal.SavedConfig.ClassicMode)
                 {
                     try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                     catch { }
@@ -878,9 +852,9 @@ namespace WpfApp3
             }
 
             //H2 CPs THIRD
-            if (File.Exists(globals.cpfolderpath + @"\autosave_Halo2.bin") && globals.cpfolderpath != null)
+            if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetInfo(globals.cpfolderpath + @"\autosave_Halo2.bin");
+                var data = GetInfo(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin");
                 H2CP_Loa_LevelName.Text = codeToName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
@@ -889,7 +863,7 @@ namespace WpfApp3
                     Log("somehow you had an invalid H2CP Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 H2CP_Loa_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
-                if (globals.classicmode)
+                if (HCMGlobal.SavedConfig.ClassicMode)
                 {
                     try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                     catch { }
@@ -920,7 +894,7 @@ namespace WpfApp3
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
                 
-                var pathtotest = globals.h1cs + @"\" + s + @".bin";
+                var pathtotest = HCMGlobal.H1CutscenePath + @"\" + s + @".bin";
                 
                 if (File.Exists(pathtotest))
                 {
@@ -934,7 +908,7 @@ namespace WpfApp3
 
                     CS_Sel_Time.Text = ticksToTime(data.Item3.ToString());
                     CS_Sel_FileName.Text = s;
-                    if (globals.classicmode)
+                    if (HCMGlobal.SavedConfig.ClassicMode)
                     {
                         try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                         catch { }
@@ -968,7 +942,7 @@ namespace WpfApp3
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
 
-                var pathtotest = globals.h1cp + @"\" + s + @".bin";
+                var pathtotest = HCMGlobal.H1CheckpointPath + @"\" + s + @".bin";
 
                 if (File.Exists(pathtotest))
                 {
@@ -983,7 +957,7 @@ namespace WpfApp3
 
                     CP_Sel_Time.Text = ticksToTime(data.Item3.ToString());
                     CP_Sel_FileName.Text = s;
-                    if (globals.classicmode)
+                    if (HCMGlobal.SavedConfig.ClassicMode)
                     {
                         try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                         catch { }
@@ -1014,7 +988,7 @@ namespace WpfApp3
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
 
-                var pathtotest = globals.h2cp + @"\" + s + @".bin";
+                var pathtotest = HCMGlobal.H2CheckpointPath + @"\" + s + @".bin";
 
                 if (File.Exists(pathtotest))
                 {
@@ -1029,7 +1003,7 @@ namespace WpfApp3
 
                     H2CP_Sel_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
                     H2CP_Sel_FileName.Text = s;
-                    if (globals.classicmode)
+                    if (HCMGlobal.SavedConfig.ClassicMode)
                     {
                         try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                         catch { }
@@ -1061,21 +1035,21 @@ namespace WpfApp3
             var oldH2CPselected = H2CP_MainList.SelectedIndex;
 
             //code to populate the list
-            if (Directory.Exists(globals.corefolderpath))
+            if (Directory.Exists(HCMGlobal.SavedConfig.CoreFolderPath))
             {
-                DirectoryInfo csdir = new DirectoryInfo(globals.corefolderpath);
+                DirectoryInfo csdir = new DirectoryInfo(HCMGlobal.SavedConfig.CoreFolderPath);
             }
-            if (Directory.Exists(globals.cpfolderpath))
+            if (Directory.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath))
             {
-                DirectoryInfo cpdir = new DirectoryInfo(globals.cpfolderpath);
+                DirectoryInfo cpdir = new DirectoryInfo(HCMGlobal.SavedConfig.CheckpointFolderPath);
             }
             List<string> FilesPost = new List<string>();
 
 
             //h1 cores
-            if (Directory.Exists(globals.h1cs)) // make sure path is valid
+            if (Directory.Exists(HCMGlobal.H1CutscenePath)) // make sure path is valid
             {
-                DirectoryInfo dir = new DirectoryInfo(globals.h1cs);
+                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CutscenePath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
                 FilesPost.Clear();
 
@@ -1104,7 +1078,7 @@ namespace WpfApp3
                     CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(globals.h1cs + "/" + File);
+                        var data = GetInfo(HCMGlobal.H1CutscenePath + "/" + File);
                         string _Lvl = data.Item1.ToString();
                         string _Diff = data.Item2.ToString();
 
@@ -1144,9 +1118,9 @@ namespace WpfApp3
             }
 
             //h1 checkpoints second
-            if (Directory.Exists(globals.h1cp)) // make sure path is valid
+            if (Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
             {
-                DirectoryInfo dir = new DirectoryInfo(globals.h1cp);
+                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CheckpointPath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
                 FilesPost.Clear();
                 foreach (FileInfo file in files)
@@ -1169,7 +1143,7 @@ namespace WpfApp3
                     CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(globals.h1cp + "/" + File);
+                        var data = GetInfo(HCMGlobal.H1CheckpointPath + "/" + File);
                         string _Lvl = data.Item1.ToString();
                         string _Diff = data.Item2.ToString();
 
@@ -1208,9 +1182,9 @@ namespace WpfApp3
 
 
             //h2 checkpoints THIRD
-            if (Directory.Exists(globals.h2cp)) // make sure path is valid
+            if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
             {
-                DirectoryInfo dir = new DirectoryInfo(globals.h2cp);
+                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H2CheckpointPath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
                 FilesPost.Clear();
                 foreach (FileInfo file in files)
@@ -1233,7 +1207,7 @@ namespace WpfApp3
                     H2CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetInfo(globals.h2cp + "/" + File);
+                        var data = GetInfo(HCMGlobal.H2CheckpointPath + "/" + File);
                         string _Lvl = data.Item1.ToString();
                         string _Diff = data.Item2.ToString();
 
@@ -1347,20 +1321,10 @@ namespace WpfApp3
             return false;
         }
 
-        public static void writeConfig()
+        public static void WriteConfig()
         {
-            if (File.Exists(globals.localdir + @"\config.txt"))
-            {
-                //write to first line of file
-                // Read the old file.
-                string[] lines = { globals.corefolderpath, globals.cpfolderpath, globals.classicmode.ToString() };
-                string docPath = globals.localdir;
-                using (StreamWriter outputFile = new StreamWriter(System.IO.Path.Combine(docPath, "config.txt")))
-                {
-                    foreach (string line in lines)
-                        outputFile.WriteLine(line);
-                }
-            }
+            string json = JsonConvert.SerializeObject(HCMGlobal.SavedConfig, Formatting.Indented);
+            File.WriteAllText(HCMGlobal.ConfigPath, json);
         }
 
         public string ticksToTime (string ticks)
@@ -1498,15 +1462,13 @@ namespace WpfApp3
             System.Type type = sender.GetType();
             string s = (string)type.GetProperty("Name").GetValue(sender, null);
             List<string> addthis = new List<string> { DateTime.Now.ToString(), text, s };
-            File.AppendAllLines(globals.localdir + @"\log.txt", addthis);
-           
-
+            File.AppendAllLines(HCMGlobal.LogPath, addthis);
         }
 
         public static void Log(string text)
         {
             List<string> addthis = new List<string> { DateTime.Now.ToString(), text};
-            try { File.AppendAllLines(globals.localdir + @"\log.txt", addthis); }
+            try { File.AppendAllLines(HCMGlobal.LogPath, addthis); }
             catch
             {
                 //what the fuck do we even do now?!
