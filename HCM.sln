@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HCM", "WpfApp3\HCM.csproj", "{2809D62E-C49B-4C98-AA84-FE5B163DF822}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2809D62E-C49B-4C98-AA84-FE5B163DF822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2809D62E-C49B-4C98-AA84-FE5B163DF822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2809D62E-C49B-4C98-AA84-FE5B163DF822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2809D62E-C49B-4C98-AA84-FE5B163DF822}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6819C34-EAE2-453F-92AF-2304C010419F}
+	EndGlobalSection
+EndGlobal

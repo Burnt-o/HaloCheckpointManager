@@ -1,0 +1,44 @@
+﻿<Window x:Class="WpfApp3.about"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp3"
+        mc:Ignorable="d"
+        Title="About" Height="330.743" Width="460.066">
+    <Grid Margin="0,0,14,0">
+        <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
+        <TextBlock Text="Make sure you set the correct paths in settings. 
+                   
+                   
+                   You may need to run this tool with admin privileges. 
+                   
+                   
+                   
+                   Backup saves are stored locally to this tools executable file, so move them together if you want to keep things working. 
+                   
+                   
+                   
+                   Likewise with the config files and level splash images, keep em together with the .exe.
+                   
+                   
+                   
+                   
+                   
+                   This tool doesn't revert checkpoints for you, only sets your most recent checkpoint. You still have to revert it yourself in game (or with the checkpoint trainer). Keep in mind that reverting to a checkpoint from a different level to what you're currently on will crash the game; instead just go to the main menu, load the cp with this tool, then use 'resume' in-game.
+                   
+                   
+                   
+                   
+                   Also you DON'T need to run the game with EAC disabled for this to work.
+                   
+                   " HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="192" Width="405" TextWrapping="WrapWithOverflow"/>
+
+        <Label Content="Created by Burnt" HorizontalAlignment="Left" Margin="23,227,0,0" VerticalAlignment="Top"/>
+        <Label Content="Source code here: TODO: HOST THE CODE SOMEWHERE" HorizontalAlignment="Left" Margin="23,253,0,0" VerticalAlignment="Top"/>
+
+
+
+
+    </Grid>
+</Window>
