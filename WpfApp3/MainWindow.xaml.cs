@@ -820,19 +820,19 @@ namespace WpfApp3
                 CS_Loa_LevelName.Text = codeToName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                    CS_Loa_DiffName.Source = new BitmapImage(new Uri("diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
+                    CS_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
                 else
                     Log("somehow you had an invalid CS Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 CS_Loa_Time.Text = ticksToTime(data.Item3.ToString());
                 if (globals.classicmode)
                 {
-                    try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
+                    try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                     catch { }
                 }
                 else
                 {
-                    try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
+                    try { CS_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
                     catch { }
                 }
             }
@@ -852,19 +852,19 @@ namespace WpfApp3
                 CP_Loa_LevelName.Text = codeToName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                    CP_Loa_DiffName.Source = new BitmapImage(new Uri("diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
+                    CP_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
                 else
                     Log("somehow you had an invalid CP Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 CP_Loa_Time.Text = ticksToTime(data.Item3.ToString());
                 if (globals.classicmode)
                 {
-                    try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
+                    try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                     catch { }
                 }
                 else
                 {
-                    try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
+                    try { CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
                     catch { }
                 }
             }
@@ -884,19 +884,19 @@ namespace WpfApp3
                 H2CP_Loa_LevelName.Text = codeToName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri("diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
+                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
                 else
                     Log("somehow you had an invalid H2CP Loa difficulty value: " + data.Item2.ToString(), sender);
 
                 H2CP_Loa_Time.Text = ticksToTime(data.Item3.ToString()); //might need to halve this if h2 really is 60 ticks per sec
                 if (globals.classicmode)
                 {
-                    try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
+                    try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                     catch { }
                 }
                 else
                 {
-                    try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
+                    try { H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
                     catch { }
                 }
             }
@@ -928,7 +928,7 @@ namespace WpfApp3
                     CS_Sel_LevelName.Text = codeToName(data.Item1.ToString());
 
                     if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                        CS_Sel_DiffName.Source = new BitmapImage(new Uri("diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
+                        CS_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
                     else
                         Log("somehow you had an invalid CS Sel difficulty value: " + data.Item2.ToString(), sender);
 
@@ -936,12 +936,12 @@ namespace WpfApp3
                     CS_Sel_FileName.Text = s;
                     if (globals.classicmode)
                     {
-                        try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
+                        try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                         catch { }
                     }
                     else
                     {
-                        try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
+                        try { CS_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
                         catch { }
                     }
 
@@ -976,7 +976,7 @@ namespace WpfApp3
                     CP_Sel_LevelName.Text = codeToName(data.Item1.ToString());
 
                     if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                        CP_Sel_DiffName.Source = new BitmapImage(new Uri("diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
+                        CP_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
                     else
                         Log("somehow you had an invalid CP Sel difficulty value: " + data.Item2.ToString(), sender);
 
@@ -985,12 +985,12 @@ namespace WpfApp3
                     CP_Sel_FileName.Text = s;
                     if (globals.classicmode)
                     {
-                        try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
+                        try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                         catch { }
                     }
                     else
                     {
-                        try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
+                        try { CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
                         catch { }
                     }
                 }
@@ -1022,7 +1022,7 @@ namespace WpfApp3
                     H2CP_Sel_LevelName.Text = codeToName(data.Item1.ToString());
 
                     if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
-                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri("diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
+                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
                     else
                         Log("somehow you had an invalid CP Sel difficulty value: " + data.Item2.ToString(), sender);
 
@@ -1031,12 +1031,12 @@ namespace WpfApp3
                     H2CP_Sel_FileName.Text = s;
                     if (globals.classicmode)
                     {
-                        try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
+                        try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_clas.png", UriKind.Relative)); }
                         catch { }
                     }
                     else
                     {
-                        try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri(data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
+                        try { H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri("images/" + data.Item1.ToString() + "_anni.png", UriKind.Relative)); }
                         catch { }
                     }
                 }
