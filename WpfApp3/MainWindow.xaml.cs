@@ -92,8 +92,9 @@ namespace WpfApp3
                     {
                         File.CreateText(filePath);
                     }
-                } 
-                catch(Exception exp) {
+                }
+                catch (Exception exp)
+                {
                     Log($@"Exception creating file {filePath}: {exp}");
                 }
             }
@@ -122,7 +123,7 @@ namespace WpfApp3
         {
             RefreshSel(sender, e);
         }
-        
+
 
 
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
@@ -209,7 +210,7 @@ namespace WpfApp3
                 }
 
 
-                        RefreshList(sender, e);
+                RefreshList(sender, e);
 
             }
             else
@@ -246,7 +247,7 @@ namespace WpfApp3
                     break;
 
                 case "CP_Sel_MoveDownButton":
-                    if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count -1)
+                    if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count - 1)
                     {
                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
@@ -261,7 +262,7 @@ namespace WpfApp3
                     break;
 
                 case "H2CP_Sel_MoveDownButton":
-                    if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count -1)
+                    if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count - 1)
                     {
                         var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
@@ -326,7 +327,7 @@ namespace WpfApp3
                 case "CS_Loa_SaveButton":
                     backuploc = HCMGlobal.H1CutscenePath;
                     if (HCMGlobal.SavedConfig.CoreFolderPath != null)
-                    pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
+                        pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     break;
 
                 case "CP_Loa_SaveButton":
@@ -424,15 +425,15 @@ namespace WpfApp3
                     break;
 
             }
-           
+
             try
             {
                 testme = System.IO.Path.GetDirectoryName(pathtotest);
             }
-            catch {}
+            catch { }
             if (Directory.Exists(testme) && File.Exists(backuploc))
             {
-          
+
 
                 try
                 {
@@ -541,7 +542,7 @@ namespace WpfApp3
                 Log("something went wrong trying to rename a save: File.Exists(backuploc) : " + File.Exists(backup).ToString());
                 Log("something went wrong trying to rename a save: !File.Exists(proposedsave) : " + (!File.Exists(proposedsave)).ToString());
                 //actually this can popup if the user just cancels the input box.
-                
+
             }
 
 
@@ -584,15 +585,15 @@ namespace WpfApp3
                         converttoloc = HCMGlobal.H1CutscenePath;
                     }
                     break;
-                
+
                 case "H2CP_Sel_ConvertButton":
                     string link = "";
                     if (HCMGlobal.padowomode)
                         link = "https://www.youtube.com/watch?v=dQ_d_VKrFgM";
                     else
                         link = "https://www.youtube.com/watch?v=5u4tQlVRKD8";
-                    
-                    
+
+
                     var psi = new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = link,
@@ -688,10 +689,10 @@ namespace WpfApp3
                 {
                     File.Delete(backup);
                     RefreshList(sender, e);
-                   
-                    CS_MainList.SelectedIndex = oldCSselected; 
-                 
-                    CP_MainList.SelectedIndex = oldCPselected; 
+
+                    CS_MainList.SelectedIndex = oldCSselected;
+
+                    CP_MainList.SelectedIndex = oldCPselected;
                     RefreshSel(sender, e);
                 }
                 catch (Exception exp)
@@ -791,7 +792,7 @@ namespace WpfApp3
             if (File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
                 var data = GetInfo(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin");
-                CS_Loa_LevelName.Text = codeToName(data.Item1.ToString());
+                CS_Loa_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
                     CS_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
@@ -823,7 +824,7 @@ namespace WpfApp3
             if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
                 var data = GetInfo(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin");
-                CP_Loa_LevelName.Text = codeToName(data.Item1.ToString());
+                CP_Loa_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
                     CP_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
@@ -855,7 +856,7 @@ namespace WpfApp3
             if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
                 var data = GetInfo(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin");
-                H2CP_Loa_LevelName.Text = codeToName(data.Item1.ToString());
+                H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
 
                 if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
                     H2CP_Loa_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
@@ -888,18 +889,18 @@ namespace WpfApp3
         {
             //H1 CORES FIRST
             if (CS_MainList.SelectedItem != null)
-                {
-               
+            {
+
                 var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
                 System.Type type = item.GetType();
                 string s = (string)type.GetProperty("Name").GetValue(item, null);
-                
+
                 var pathtotest = HCMGlobal.H1CutscenePath + @"\" + s + @".bin";
-                
+
                 if (File.Exists(pathtotest))
                 {
                     var data = GetInfo(pathtotest);
-                    CS_Sel_LevelName.Text = codeToName(data.Item1.ToString());
+                    CS_Sel_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
 
                     if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
                         CS_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
@@ -947,7 +948,7 @@ namespace WpfApp3
                 if (File.Exists(pathtotest))
                 {
                     var data = GetInfo(pathtotest);
-                    CP_Sel_LevelName.Text = codeToName(data.Item1.ToString());
+                    CP_Sel_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
 
                     if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
                         CP_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
@@ -993,7 +994,7 @@ namespace WpfApp3
                 if (File.Exists(pathtotest))
                 {
                     var data = GetInfo(pathtotest);
-                    H2CP_Sel_LevelName.Text = codeToName(data.Item1.ToString());
+                    H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.Item1.ToString());
 
                     if (TestRange(Int32.Parse(data.Item2.ToString()), 0, 4))
                         H2CP_Sel_DiffName.Source = new BitmapImage(new Uri("images/" + "diff_" + data.Item2.ToString() + ".png", UriKind.Relative));
@@ -1072,7 +1073,7 @@ namespace WpfApp3
                 }
 
                 if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
-                { 
+                {
 
                     CS_MainList.Items.Clear();
                     CS_MainList_Label.Content = "";
@@ -1086,7 +1087,7 @@ namespace WpfApp3
                             _Diff = "diff_" + data.Item2.ToString() + ".png";
                         else
                             Log("somehow you had an invalid CS List difficulty value: " + data.Item2.ToString(), sender);
-                        
+
 
                         string _Time = ticksToTime(data.Item3.ToString());
                         string _Name = File.Substring(0, File.Length - 4);
@@ -1107,7 +1108,7 @@ namespace WpfApp3
                     //CS_MainList.Items.Add("No saves in folder :(");
                     //return;
                 }
-            
+
             }
             else
             {
@@ -1280,7 +1281,7 @@ namespace WpfApp3
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
-                    
+
                     return ("0", 0, 0);
                 }
             }
@@ -1327,7 +1328,7 @@ namespace WpfApp3
             File.WriteAllText(HCMGlobal.ConfigPath, json);
         }
 
-        public string ticksToTime (string ticks)
+        public string ticksToTime(string ticks)
         {
             string Time = "";
             int number = Int32.Parse(ticks);
@@ -1336,120 +1337,47 @@ namespace WpfApp3
             return Time;
         }
 
-        public string codeToName (string code)
+        readonly Dictionary<string, string> LevelCodeToName = new Dictionary<string, string>()
         {
-            string Name = code;
+            // Halo 1
+            { "a10", "Pillar of Autumn" },
+            { "a30", "Halo" },
+            { "a50", "Truth and Reconciliation" },
+            { "b30", "Silent Cartographer" },
+            { "b40", "Attack on the Control Room" },
+            { "c10", "343 Guilty Spark" },
+            { "c20", "The Library" },
+            { "c40", "Two Betrayals" },
+            { "d20", "Keyes" },
+            { "d40", "The Maw" },
 
-            switch (code)
+            // Halo 2
+            { "00a", "The Heretic" },
+            { "01a", "The Armory" },
+            { "01b", "Cairo Station" },
+            { "03a", "Outskirts" },
+            { "03b", "Metropolis" },
+            { "04a", "The Arbiter" },
+            { "04b", "The Oracle" },
+            { "05a", "Delta Halo" },
+            { "05b", "Regret" },
+            { "06a", "Sacred Icon" },
+            { "06b", "Quarantine Zone" },
+            { "07a", "Gravemind" },
+            { "07b", "Uprising" },
+            { "08a", "High Charity" },
+            { "08b", "The Great Journey" },
+        };
+
+        public string LevelCodeToFullName(string code)
+        {
+            string Name;
+            if(LevelCodeToName.TryGetValue(code, out Name))
             {
-                case "a10":
-                    Name = "Pillar of Autumn";
-                    break;
-
-                case "a30":
-                    Name = "Halo";
-                    break;
-
-                case "a50":
-                    Name = "T & R";
-                    break;
-
-                case "b30":
-                    Name = "Silent Cartographer";
-                    break;
-
-                case "b40":
-                    Name = "AotCR";
-                    break;
-
-                case "c10":
-                    Name = "343 Guilty Spark";
-                    break;
-
-                case "c20":
-                    Name = "The Library";
-                    break;
-
-                case "c40":
-                    Name = "Two Betrayals";
-                    break;
-
-                case "d20":
-                    Name = "Keyes";
-                    break;
-
-                case "d40":
-                    Name = "The Maw";
-                    break;
-
-                case "00a":
-                    Name = "The Heretic";
-                    break;
-
-                case "01a":
-                    Name = "The Armory";
-                    break;
-
-                case "01b":
-                    Name = "Cairo Station";
-                    break;
-
-                case "03a":
-                    Name = "Outskirts";
-                    break;
-
-                case "03b":
-                    Name = "Metropolis";
-                    break;
-
-                case "04a":
-                    Name = "The Arbiter";
-                    break;
-
-                case "04b":
-                    Name = "The Oracle";
-                    break;
-
-                case "05a":
-                    Name = "Delta Halo";
-                    break;
-
-                case "05b":
-                    Name = "Regret";
-                    break;
-
-                case "06a":
-                    Name = "Sacred Icon";
-                    break;
-
-                case "06b":
-                    Name = "Quarantine Zone";
-                    break;
-
-                case "07a":
-                    Name = "Gravemind";
-                    break;
-
-                case "07b":
-                    Name = "Uprising";
-                    break;
-
-                case "08a":
-                    Name = "High Charity";
-                    break;
-
-                case "08b":
-                    Name = "The Great Journey";
-                    break;
-
-
-
-                default:
-                    break;
+                return Name;
             }
 
-
-            return Name;
+            return code;
         }
 
         public bool TestRange(int numberToCheck, int bottom, int top)
@@ -1457,7 +1385,7 @@ namespace WpfApp3
             return (numberToCheck >= bottom && numberToCheck <= top);
         }
 
-        public static void Log (string text, object sender)
+        public static void Log(string text, object sender)
         {
             System.Type type = sender.GetType();
             string s = (string)type.GetProperty("Name").GetValue(sender, null);
@@ -1467,7 +1395,7 @@ namespace WpfApp3
 
         public static void Log(string text)
         {
-            List<string> addthis = new List<string> { DateTime.Now.ToString(), text};
+            List<string> addthis = new List<string> { DateTime.Now.ToString(), text };
             try { File.AppendAllLines(HCMGlobal.LogPath, addthis); }
             catch
             {
