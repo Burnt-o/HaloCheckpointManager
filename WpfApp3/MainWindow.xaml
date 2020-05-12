@@ -97,8 +97,8 @@
             <TabItem Header="H1 Checkpoints">
                 <Grid Background="#FFE5E5E5" Margin="0,0,0,-4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="96*"/>
-                        <ColumnDefinition Width="647*"/>
+                        <ColumnDefinition Width="63*"/>
+                        <ColumnDefinition Width="680*"/>
                     </Grid.ColumnDefinitions>
                     <ListView Margin="10,10,335,20" x:Name="CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo1Checkpoints}" >
                         <ListView.View>
