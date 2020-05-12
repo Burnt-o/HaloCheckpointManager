@@ -756,7 +756,7 @@ namespace WpfApp3
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            Window1 settingswindow = new Window1();
+            SettingsWindow settingswindow = new SettingsWindow();
 
             settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig?.CoreFolderPath ?? "No folder chosen!";
             settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig?.CheckpointFolderPath ?? "No folder chosen!";
@@ -765,47 +765,28 @@ namespace WpfApp3
 
             settingswindow.ShowDialog();
 
-            if (settingswindow.ChosenCore.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
-            {
-                HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text;
-                //WriteConfig();
-                RefreshSel(sender, e);
-            }
-            else
-                HCMGlobal.SavedConfig.CoreFolderPath = "";
+            HCMGlobal.SavedConfig.CoreFolderPath =
+                (settingswindow.ChosenCore.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
+                ? HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text
+                : HCMGlobal.SavedConfig.CoreFolderPath = "";
 
-            if (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
-            {
-                HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text;
-                WriteConfig();
-                RefreshSel(sender, e);
-            }
-            else
-                HCMGlobal.SavedConfig.CheckpointFolderPath = "";
+            HCMGlobal.SavedConfig.CheckpointFolderPath =
+                (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
+                ? HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text
+                : HCMGlobal.SavedConfig.CheckpointFolderPath = "";
 
-            if (settingswindow.modeanni.IsChecked ?? false)
-            {
-                HCMGlobal.SavedConfig.ClassicMode = false;
-                WriteConfig();
-                RefreshLoa(sender, e);
-                RefreshSel(sender, e);
-            }
-            else
-            {
-                HCMGlobal.SavedConfig.ClassicMode = true;
-                WriteConfig();
-                RefreshLoa(sender, e);
-                RefreshSel(sender, e);
-            }
+            HCMGlobal.SavedConfig.ClassicMode = settingswindow.modeclas.IsChecked ?? false;
 
+            WriteConfig();
+            RefreshLoa(sender, e);
+            RefreshSel(sender, e);
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)
         {
-            about aboutwindow = new about();
+            AboutWindow aboutwindow = new AboutWindow();
             aboutwindow.ShowDialog();
         }
-
 
         private void RefreshLoa(object sender, RoutedEventArgs e)
         {
