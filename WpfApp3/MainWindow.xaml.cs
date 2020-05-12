@@ -42,7 +42,7 @@ namespace WpfApp3
             public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
             public static readonly string LogPath = HCMGlobal.LocalDir + @"\log.txt";
 
-            public static HCMConfig SavedConfig;
+            public static HCMConfig SavedConfig = new HCMConfig();
 
             public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
 
@@ -740,16 +740,16 @@ namespace WpfApp3
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Window1 settingswindow = new Window1();
-            if (HCMGlobal.SavedConfig.CoreFolderPath != null)
+            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.CoreFolderPath != null)
                 settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig.CoreFolderPath;
             else
                 settingswindow.ChosenCore.Text = "No folder chosen!";
-            if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
                 settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig.CheckpointFolderPath;
             else
                 settingswindow.ChosenCP.Text = "No folder chosen!";
 
-            if (HCMGlobal.SavedConfig.ClassicMode)
+            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.ClassicMode)
             {
                 settingswindow.modeanni.IsChecked = false;
                 settingswindow.modeclas.IsChecked = true;
@@ -762,15 +762,15 @@ namespace WpfApp3
 
             settingswindow.ShowDialog();
 
-            if (settingswindow.ChosenCore.Text != null)
+            if (settingswindow.ChosenCore.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
             {
                 HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text;
-                WriteConfig();
+                //WriteConfig();
                 RefreshSel(sender, e);
             }
             else
                 HCMGlobal.SavedConfig.CoreFolderPath = "";
-            if (settingswindow.ChosenCP.Text != null)
+            if (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
             {
                 HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text;
                 WriteConfig();
@@ -806,7 +806,7 @@ namespace WpfApp3
         private void RefreshLoa(object sender, RoutedEventArgs e)
         {
             //H1 CORES FIRST
-            if (File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
+            if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
                 var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", "game1");
                 CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
@@ -826,7 +826,7 @@ namespace WpfApp3
             }
 
             //H1 CPs SECOND
-            if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+            if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
                 var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", "game1");
                 CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
@@ -846,7 +846,7 @@ namespace WpfApp3
             }
 
             //H2 CPs THIRD
-            if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+            if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
                 var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", "game2");
                 H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
@@ -969,18 +969,18 @@ namespace WpfApp3
             var oldH2CPselected = H2CP_MainList.SelectedIndex;
 
             //code to populate the list
-            if (Directory.Exists(HCMGlobal.SavedConfig.CoreFolderPath))
+            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.SavedConfig.CoreFolderPath))
             {
                 DirectoryInfo csdir = new DirectoryInfo(HCMGlobal.SavedConfig.CoreFolderPath);
             }
-            if (Directory.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath))
+            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath))
             {
                 DirectoryInfo cpdir = new DirectoryInfo(HCMGlobal.SavedConfig.CheckpointFolderPath);
             }
             List<string> FilesPost = new List<string>();
 
             //h1 cores
-            if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
+            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
             {
                 DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
@@ -1030,7 +1030,7 @@ namespace WpfApp3
             }
 
             //h1 checkpoints second
-            if (Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
+            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
             {
                 DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CheckpointPath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
@@ -1079,7 +1079,7 @@ namespace WpfApp3
             }
 
             //h2 checkpoints THIRD
-            if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
+            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
             {
                 DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H2CheckpointPath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
@@ -1214,8 +1214,15 @@ namespace WpfApp3
 
         public static void WriteConfig()
         {
+            try
+            {
             string json = JsonConvert.SerializeObject(HCMGlobal.SavedConfig, Formatting.Indented);
             File.WriteAllText(HCMGlobal.ConfigPath, json);
+            }
+            catch (Exception e)
+            {
+                Log("problem writing config" + e);
+            }
         }
 
         public string TickToTimeString(uint ticks)
