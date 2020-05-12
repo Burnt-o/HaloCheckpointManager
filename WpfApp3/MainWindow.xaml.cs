@@ -17,6 +17,7 @@ using System.Reflection;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using WpfApp3.Properties;
 
 namespace WpfApp3
 {
@@ -133,7 +134,7 @@ namespace WpfApp3
             }
 
             // Verify config was loaded, otherwise create a new one
-            if(HCMGlobal.SavedConfig == null)
+            if (HCMGlobal.SavedConfig == null)
             {
                 HCMGlobal.SavedConfig = new HCMConfig();
             }
@@ -368,35 +369,34 @@ namespace WpfApp3
         {
             RefreshLoa(sender, e);
 
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string backuploc = "";
             string pathtotest = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Loa_SaveButton":
                     backuploc = HCMGlobal.H1CoreSavePath;
                     if (HCMGlobal.SavedConfig.CoreFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     break;
-
                 case "CP_Loa_SaveButton":
                     backuploc = HCMGlobal.H1CheckpointPath;
                     if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
                     break;
-
                 case "H2CP_Loa_SaveButton":
                     backuploc = HCMGlobal.H2CheckpointPath;
                     if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
                     break;
-
                 default:
                     break;
-
             }
+
 
             if (File.Exists(pathtotest) && Directory.Exists(backuploc) && pathtotest != "")
             {
@@ -405,8 +405,6 @@ namespace WpfApp3
                                    "",
                                    -1, -1);
                 string proposedsave = (backuploc + @"\" + userinput + @".bin");
-
-                //Console.WriteLine("proposed save: " + proposedsave);
 
                 try
                 {
@@ -426,13 +424,15 @@ namespace WpfApp3
             RefreshSel(sender, e);
             RefreshLoa(sender, e);
 
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string backuploc = "";
             string pathtotest = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
             var testme = "";
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Sel_LoadButton":
                     if (CS_MainList.SelectedItem != null)
@@ -500,14 +500,16 @@ namespace WpfApp3
         private void RenameButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
-            string backuploc = "";
-            string backup = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string s2 = "";
             string proposedsave = "";
-
-            switch (s)
+            string backup = "";
+            string backuploc;
+            switch (btn.Name)
             {
                 case "CS_Sel_RenameButton":
                     if (CS_MainList.SelectedItem != null)
@@ -589,14 +591,17 @@ namespace WpfApp3
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string convertfrom = "";
             string convertto = "";
             string converttoloc = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
             string s2 = "";
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Sel_ConvertButton":
 
@@ -624,7 +629,7 @@ namespace WpfApp3
                     break;
 
                 case "H2CP_Sel_ConvertButton":
-                    string link = HCMGlobal.padowomode 
+                    string link = HCMGlobal.padowomode
                         ? "https://www.youtube.com/watch?v=dQ_d_VKrFgM"
                         : "https://www.youtube.com/watch?v=5u4tQlVRKD8";
 
@@ -674,11 +679,12 @@ namespace WpfApp3
             var oldCSselected = CS_MainList.SelectedIndex;
             var oldCPselected = CP_MainList.SelectedIndex;
             string backup = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
 
+            var btn = sender as Button;
+            if (btn == null)
+                return;
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Sel_DeleteButton":
                     if (CS_MainList.SelectedItem != null)
@@ -751,25 +757,11 @@ namespace WpfApp3
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Window1 settingswindow = new Window1();
-            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.CoreFolderPath != null)
-                settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig.CoreFolderPath;
-            else
-                settingswindow.ChosenCore.Text = "No folder chosen!";
-            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-                settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig.CheckpointFolderPath;
-            else
-                settingswindow.ChosenCP.Text = "No folder chosen!";
 
-            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.ClassicMode)
-            {
-                settingswindow.modeanni.IsChecked = false;
-                settingswindow.modeclas.IsChecked = true;
-            }
-            else
-            {
-                settingswindow.modeanni.IsChecked = true;
-                settingswindow.modeclas.IsChecked = false;
-            }
+            settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig?.CoreFolderPath ?? "No folder chosen!";
+            settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig?.CheckpointFolderPath ?? "No folder chosen!";
+            settingswindow.modeanni.IsChecked = !HCMGlobal.SavedConfig?.ClassicMode ?? true;
+            settingswindow.modeclas.IsChecked = HCMGlobal.SavedConfig?.ClassicMode ?? false;
 
             settingswindow.ShowDialog();
 
@@ -781,6 +773,7 @@ namespace WpfApp3
             }
             else
                 HCMGlobal.SavedConfig.CoreFolderPath = "";
+
             if (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
             {
                 HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text;
@@ -822,7 +815,7 @@ namespace WpfApp3
                 var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", "game1");
                 CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                if(data.Difficulty != Difficulty.Invalid)
+                if (data.Difficulty != Difficulty.Invalid)
                     CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
 
                 CS_Loa_Time.Text = TickToTimeString(data.StartTick);
@@ -1016,7 +1009,7 @@ namespace WpfApp3
                         string _Lvl = data.LevelCode;
                         string _Diff = data.Difficulty.ToString();
 
-                        if(data.Difficulty != Difficulty.Invalid)
+                        if (data.Difficulty != Difficulty.Invalid)
                             _Diff = $"images/diff_{(int)data.Difficulty}.png";
 
                         string _Time = TickToTimeString(data.StartTick);
@@ -1157,7 +1150,7 @@ namespace WpfApp3
             if (game == "game2") //but if halo 2, change the offsets appropiately
             {
                 offsetLevelCode = 11; //will need to update these values when h2 comes out
-                offsetStartTick = 756; 
+                offsetStartTick = 756;
                 offsetDifficulty = 294;
             }
 
@@ -1227,8 +1220,8 @@ namespace WpfApp3
         {
             try
             {
-            string json = JsonConvert.SerializeObject(HCMGlobal.SavedConfig, Formatting.Indented);
-            File.WriteAllText(HCMGlobal.ConfigPath, json);
+                string json = JsonConvert.SerializeObject(HCMGlobal.SavedConfig, Formatting.Indented);
+                File.WriteAllText(HCMGlobal.ConfigPath, json);
             }
             catch (Exception e)
             {
@@ -1239,7 +1232,7 @@ namespace WpfApp3
         public string TickToTimeString(uint ticks)
         {
             int seconds = (int)ticks / 30;
-            TimeSpan ts = new TimeSpan(seconds / (60*60), seconds / (60), seconds % 60);
+            TimeSpan ts = new TimeSpan(seconds / (60 * 60), seconds / (60), seconds % 60);
             return ts.ToString(@"mm\:ss");
         }
 
@@ -1326,6 +1319,6 @@ namespace WpfApp3
             return null;
         }
 
-        
+
     }
 }
