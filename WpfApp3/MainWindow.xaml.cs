@@ -112,7 +112,6 @@ namespace WpfApp3
                     if (!File.Exists(filePath))
                     {
                         File.CreateText(filePath).Close();
-                        
                     }
                 }
                 catch (Exception exp)
