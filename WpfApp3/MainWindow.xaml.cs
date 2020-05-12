@@ -808,7 +808,7 @@ namespace WpfApp3
             //H1 CORES FIRST
             if (File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin");
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", "game1");
                 CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if(data.Difficulty != Difficulty.Invalid)
@@ -828,7 +828,7 @@ namespace WpfApp3
             //H1 CPs SECOND
             if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin");
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", "game1");
                 CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if (data.Difficulty != Difficulty.Invalid)
@@ -848,7 +848,7 @@ namespace WpfApp3
             //H2 CPs THIRD
             if (File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin");
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", "game2");
                 H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if (data.Difficulty != Difficulty.Invalid)
@@ -878,7 +878,7 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetSaveFileMetadata(pathtotest);
+                    var data = GetSaveFileMetadata(pathtotest, "game1");
                     CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
@@ -910,7 +910,7 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetSaveFileMetadata(pathtotest);
+                    var data = GetSaveFileMetadata(pathtotest, "game1");
                     CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
@@ -941,7 +941,7 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetSaveFileMetadata(pathtotest);
+                    var data = GetSaveFileMetadata(pathtotest, "game2");
                     H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
@@ -1001,7 +1001,7 @@ namespace WpfApp3
                     CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File);
+                        var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, "game1");
                         string _Lvl = data.LevelCode;
                         string _Diff = data.Difficulty.ToString();
 
@@ -1050,7 +1050,7 @@ namespace WpfApp3
                     CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File);
+                        var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File, "game1");
                         string _Lvl = data.LevelCode;
                         string _Diff = data.Difficulty.ToString();
 
@@ -1099,7 +1099,7 @@ namespace WpfApp3
                     H2CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File);
+                        var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File, "game2");
                         string _Lvl = data.LevelCode;
                         string _Diff = data.Difficulty.ToString();
 
@@ -1131,15 +1131,24 @@ namespace WpfApp3
 
         private class HaloSaveFileMetadata
         {
-            public HaloGame HaloGame = HaloGame.Halo1;
             public string LevelCode = "xxx";
             public uint StartTick = 0;
             public Difficulty Difficulty = Difficulty.Easy;
         }
 
-        private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath)
+        private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, string game)
         {
-            //btw I suspect the easiest way to deal with h2 is just to CHECK inside the file here to see if it's from h1 or h2, so I don't have to worry about GetInfo being passed either file type
+            //default to halo 1
+            Int32 offsetLevelCode = 11;
+            Int32 offsetStartTick = 756;
+            Int32 offsetDifficulty = 294;
+
+            if (game == "game2") //but if halo 2, change the offsets appropiately
+            {
+                offsetLevelCode = 11; //will need to update these values when h2 comes out
+                offsetStartTick = 756; 
+                offsetDifficulty = 294;
+            }
 
             HaloSaveFileMetadata metadata = new HaloSaveFileMetadata();
 
@@ -1152,15 +1161,15 @@ namespace WpfApp3
                         BinaryReader readBinary = new BinaryReader(readStream);
 
                         //get levelname
-                        readBinary.BaseStream.Seek(11, SeekOrigin.Begin);
+                        readBinary.BaseStream.Seek(offsetLevelCode, SeekOrigin.Begin);
                         metadata.LevelCode = new string(readBinary.ReadChars(3));
 
                         //get time
-                        readBinary.BaseStream.Seek(756, SeekOrigin.Begin);
+                        readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
                         metadata.StartTick = readBinary.ReadUInt32();
 
                         //get difficulty
-                        readBinary.BaseStream.Seek(294, SeekOrigin.Begin);
+                        readBinary.BaseStream.Seek(offsetDifficulty, SeekOrigin.Begin);
                         metadata.Difficulty = (Difficulty)readBinary.ReadByte();
                     }
                 }
