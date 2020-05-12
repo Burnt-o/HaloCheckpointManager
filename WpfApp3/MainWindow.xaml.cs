@@ -16,6 +16,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
+using Microsoft.Win32;
 
 namespace WpfApp3
 {
@@ -88,6 +89,7 @@ namespace WpfApp3
             CS_MainList.SelectionChanged += List_SelectionChanged;
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
+            bool firstrun = false;
 
             // Validate that required folders exist
             foreach (var folder in RequiredFolders)
@@ -112,6 +114,7 @@ namespace WpfApp3
                     if (!File.Exists(filePath))
                     {
                         File.CreateText(filePath).Close();
+                        firstrun = true;
                     }
                 }
                 catch (Exception exp)
@@ -125,6 +128,35 @@ namespace WpfApp3
             {
                 string json = r.ReadToEnd();
                 HCMGlobal.SavedConfig = JsonConvert.DeserializeObject<HCMConfig>(json);
+            }
+
+            //autodetect folder paths if first run
+            if (firstrun)
+            {
+                //autodetect checkpoint folder path
+                string tentativecpfolderpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                tentativecpfolderpath = System.IO.Directory.GetParent(tentativecpfolderpath).ToString();
+                tentativecpfolderpath = tentativecpfolderpath + @"\LocalLow\MCC\Config";
+                if (Directory.Exists(tentativecpfolderpath))
+                {
+                    Log("autodetected CP folder: " + tentativecpfolderpath);
+                    HCMGlobal.SavedConfig.CheckpointFolderPath = tentativecpfolderpath;
+                    WriteConfig();
+                }
+
+                //autodetect core folder path
+                string tentativecorefolderpath = GetInstallPath("Halo: The Master Chief Collection");
+                if (tentativecorefolderpath != null && tentativecorefolderpath.Contains("steamapps")) //latter ought to be true if steam version of MCC
+                {
+                    tentativecorefolderpath = System.IO.Directory.GetParent(tentativecorefolderpath).ToString();
+                    tentativecorefolderpath = tentativecorefolderpath + @"\core_saves";
+                    if (Directory.Exists(tentativecorefolderpath))
+                    {
+                        Log("autodetected Core folder: " + tentativecorefolderpath);
+                        HCMGlobal.SavedConfig.CoreFolderPath = tentativecorefolderpath;
+                        WriteConfig();
+                    }
+                }
             }
 
             CS_MainList.Items.Clear();
@@ -1243,6 +1275,28 @@ namespace WpfApp3
             {
                 //what the fuck do we even do now?!
             }
+        }
+
+
+        public static string GetInstallPath(string c_name)
+        {
+            string displayName;
+
+            string registryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKey);
+            if (key != null)
+            {
+                foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
+                {
+                    displayName = subkey.GetValue("DisplayName") as string;
+                    if (displayName != null && displayName.Equals(c_name))
+                    {
+                        return subkey.GetValue("InstallLocation") as string;
+                    }
+                }
+                key.Close();
+            }
+            return null;
         }
 
     }
