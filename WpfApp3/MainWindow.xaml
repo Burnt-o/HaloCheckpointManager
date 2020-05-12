@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
         Title="Halo Checkpoint Manager" Height="535" Width="757"
-        MinHeight="525" MinWidth="555">
+        MinHeight="525" MinWidth="555" Loaded="Window_Loaded">
 
 
     <Window.Resources>

@@ -30,7 +30,7 @@ namespace WpfApp3
         {
             public string CoreFolderPath;
             public string CheckpointFolderPath;
-            public bool ClassicMode;
+            public bool ClassicMode = true;
         }
 
         private static class HCMGlobal
@@ -42,7 +42,7 @@ namespace WpfApp3
             public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
             public static readonly string LogPath = HCMGlobal.LocalDir + @"\log.txt";
 
-            public static HCMConfig SavedConfig = new HCMConfig();
+            public static HCMConfig SavedConfig;
 
             public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
 
@@ -86,10 +86,13 @@ namespace WpfApp3
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             CS_MainList.SelectionChanged += List_SelectionChanged;
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
-            bool firstrun = false;
 
             // Validate that required folders exist
             foreach (var folder in RequiredFolders)
@@ -114,7 +117,6 @@ namespace WpfApp3
                     if (!File.Exists(filePath))
                     {
                         File.CreateText(filePath).Close();
-                        firstrun = true;
                     }
                 }
                 catch (Exception exp)
@@ -130,30 +132,39 @@ namespace WpfApp3
                 HCMGlobal.SavedConfig = JsonConvert.DeserializeObject<HCMConfig>(json);
             }
 
-            //autodetect folder paths if first run
-            if (firstrun)
+            // Verify config was loaded, otherwise create a new one
+            if(HCMGlobal.SavedConfig == null)
+            {
+                HCMGlobal.SavedConfig = new HCMConfig();
+            }
+
+            if (HCMGlobal.SavedConfig.CheckpointFolderPath == null)
             {
                 //autodetect checkpoint folder path
-                string tentativecpfolderpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                tentativecpfolderpath = System.IO.Directory.GetParent(tentativecpfolderpath).ToString();
-                tentativecpfolderpath = tentativecpfolderpath + @"\LocalLow\MCC\Config";
-                if (Directory.Exists(tentativecpfolderpath))
+                var CheckpointAutoPath = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    @"..\LocalLow\MCC\Config").ToString();
+
+                if (Directory.Exists(CheckpointAutoPath))
                 {
-                    Log("autodetected CP folder: " + tentativecpfolderpath);
-                    HCMGlobal.SavedConfig.CheckpointFolderPath = tentativecpfolderpath;
+                    Log("Autodetected CP folder: " + CheckpointAutoPath);
+                    HCMGlobal.SavedConfig.CheckpointFolderPath = System.IO.Path.GetFullPath(CheckpointAutoPath);
                     WriteConfig();
                 }
+            }
 
+            if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+            {
                 //autodetect core folder path
-                string tentativecorefolderpath = GetInstallPath("Halo: The Master Chief Collection");
-                if (tentativecorefolderpath != null && tentativecorefolderpath.Contains("steamapps")) //latter ought to be true if steam version of MCC
+                string CoreAutoPath = GetInstallPath("Halo: The Master Chief Collection");
+                if (CoreAutoPath != null && CoreAutoPath.Contains("steamapps")) //latter ought to be true if steam version of MCC
                 {
-                    tentativecorefolderpath = System.IO.Directory.GetParent(tentativecorefolderpath).ToString();
-                    tentativecorefolderpath = tentativecorefolderpath + @"\core_saves";
-                    if (Directory.Exists(tentativecorefolderpath))
+                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"..\core_saves");
+
+                    if (Directory.Exists(CoreAutoPath))
                     {
-                        Log("autodetected Core folder: " + tentativecorefolderpath);
-                        HCMGlobal.SavedConfig.CoreFolderPath = tentativecorefolderpath;
+                        Log("autodetected Core folder: " + CoreAutoPath);
+                        HCMGlobal.SavedConfig.CoreFolderPath = System.IO.Path.GetFullPath(CoreAutoPath);
                         WriteConfig();
                     }
                 }
@@ -1315,5 +1326,6 @@ namespace WpfApp3
             return null;
         }
 
+        
     }
 }
