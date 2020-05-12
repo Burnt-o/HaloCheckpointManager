@@ -43,19 +43,19 @@
                         <ColumnDefinition Width="63*"/>
                         <ColumnDefinition Width="680*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2">
+                    <ListView Margin="10,10,335,20" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo1CoreSaves}">
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding Lvl}" />
+                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding LevelCode}" />
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image  Source="{Binding Diff}" Width="17" Height="18"/>
+                                            <Image  Source="{Binding DifficultyImage}" Width="17" Height="18"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Time" Width="40" DisplayMemberBinding="{Binding Time}"/>
+                                <GridViewColumn Header="Time" Width="40" DisplayMemberBinding="{Binding TimeString}"/>
                                 <GridViewColumn Header="Name" Width="auto" DisplayMemberBinding="{Binding Name}">
                                     <GridViewColumn.HeaderContainerStyle>
                                         <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -72,7 +72,7 @@
                     <TextBox x:Name="CS_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,41,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
                     <TextBox x:Name="CS_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,203,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="1"/>
                     <TextBox x:Name="CS_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,271,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
-                    
+
                     <TextBox x:Name="CS_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,235,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
                     <Button x:Name="CS_Loa_SaveButton" Content="Save" HorizontalAlignment="Right" Height="26" Margin="0,123,183,0" VerticalAlignment="Top" Width="121" Click="SaveButton_Click" Grid.Column="1"/>
                     <Image x:Name="CS_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,41,183,0" VerticalAlignment="Top" Width="121" Grid.Column="1"/>
@@ -89,7 +89,7 @@
                     <Label Content="Selected Backup Save:" HorizontalAlignment="Right" Margin="0,172,109,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
                     <Image x:Name="CS_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,41,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
                     <Image x:Name="CS_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,235,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
-  
+
 
                 </Grid>
             </TabItem>
@@ -97,22 +97,22 @@
             <TabItem Header="H1 Checkpoints">
                 <Grid Background="#FFE5E5E5" Margin="0,0,0,-4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="63*"/>
-                        <ColumnDefinition Width="680*"/>
+                        <ColumnDefinition Width="96*"/>
+                        <ColumnDefinition Width="647*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2">
+                    <ListView Margin="10,10,335,20" x:Name="CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo1Checkpoints}" >
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding Lvl}" />
+                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding LevelCode}" />
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image  Source="{Binding Diff}" Width="17" Height="18"/>
+                                            <Image  Source="{Binding DifficultyImage}" Width="17" Height="18"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Time" Width="40" DisplayMemberBinding="{Binding Time}"/>
+                                <GridViewColumn Header="Time" Width="40" DisplayMemberBinding="{Binding TimeString}"/>
                                 <GridViewColumn Header="Name" Width="auto" DisplayMemberBinding="{Binding Name}">
                                     <GridViewColumn.HeaderContainerStyle>
                                         <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -129,7 +129,7 @@
                     <TextBox x:Name="CP_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,41,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
                     <TextBox x:Name="CP_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,203,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="1"/>
                     <TextBox x:Name="CP_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,271,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
-                    
+
                     <TextBox x:Name="CP_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,235,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
                     <Button x:Name="CP_Loa_SaveButton" Content="Save" HorizontalAlignment="Right" Height="26" Margin="0,123,183,0" VerticalAlignment="Top" Width="121" Click="SaveButton_Click" Grid.Column="1"/>
                     <Image x:Name="CP_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,41,183,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
@@ -142,12 +142,12 @@
                     <Button x:Name="CP_Sel_MoveUpButton" Content="Move Up" HorizontalAlignment="Right" Height="26" Margin="0,417,183,0" VerticalAlignment="Top" Width="121" Click="MoveUpButton_Click" Grid.Column="1"/>
                     <Button x:Name="CP_Sel_MoveDownButton" Content="Move Down" HorizontalAlignment="Right" Height="26" Margin="0,417,43,0" VerticalAlignment="Top" Width="121" Click="MoveDownButton_Click" Grid.Column="1"/>
                     <Label x:Name="CP_MainList_Label" Content="No backup saves made yet." HorizontalAlignment="Left" Height="49" Margin="42,166,0,0" VerticalAlignment="Top" Width="223" Grid.Column="1" IsHitTestVisible="false" />
-                    <Label Content="Currently Loaded Save:" HorizontalAlignment="Right" Margin="0,10,104,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
-                    <Label Content="Selected Backup Save:" HorizontalAlignment="Right" Margin="0,172,109,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
+                    <Label Content="Currently Loaded Save:" HorizontalAlignment="Right" Margin="0,10,104,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1" Height="26" Width="140"/>
+                    <Label Content="Selected Backup Save:" HorizontalAlignment="Right" Margin="0,172,109,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1" Height="26" Width="135"/>
                     <Image x:Name="CP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,41,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
                     <Image x:Name="CP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,235,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
-                    
-                    
+
+
                 </Grid>
             </TabItem>
 
@@ -159,19 +159,19 @@
                         <ColumnDefinition Width="63*"/>
                         <ColumnDefinition Width="680*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2">
+                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo2Checkpoints}">
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding Lvl}" />
+                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding LevelCode}" />
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image  Source="{Binding Diff}" Width="17" Height="18"/>
+                                            <Image  Source="{Binding DifficultyImage}" Width="17" Height="18"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Time" Width="40" DisplayMemberBinding="{Binding Time}"/>
+                                <GridViewColumn Header="Time" Width="40" DisplayMemberBinding="{Binding TimeString}"/>
                                 <GridViewColumn Header="Name" Width="auto" DisplayMemberBinding="{Binding Name}">
                                     <GridViewColumn.HeaderContainerStyle>
                                         <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -187,7 +187,7 @@
                     <TextBox x:Name="H2CP_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,41,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
                     <TextBox x:Name="H2CP_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,203,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="1"/>
                     <TextBox x:Name="H2CP_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,271,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
-                    
+
                     <TextBox x:Name="H2CP_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,235,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
                     <Button x:Name="H2CP_Loa_SaveButton" Content="Save" HorizontalAlignment="Right" Height="26" Margin="0,123,183,0" VerticalAlignment="Top" Width="121" Click="SaveButton_Click" Grid.Column="1"/>
                     <Image x:Name="H2CP_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,41,183,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
