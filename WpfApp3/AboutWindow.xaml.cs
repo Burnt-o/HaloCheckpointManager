@@ -17,9 +17,9 @@ namespace WpfApp3
     /// <summary>
     /// Interaction logic for about.xaml
     /// </summary>
-    public partial class about : Window
+    public partial class AboutWindow : Window
     {
-        public about()
+        public AboutWindow()
         {
             InitializeComponent();
         }

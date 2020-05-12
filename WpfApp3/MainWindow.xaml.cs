@@ -17,6 +17,8 @@ using System.Reflection;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using WpfApp3.Properties;
+using System.Collections.ObjectModel;
 
 namespace WpfApp3
 {
@@ -36,11 +38,11 @@ namespace WpfApp3
         private static class HCMGlobal
         {
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            public static readonly string H1CoreSavePath = HCMGlobal.LocalDir + @"\saves\h1cs";
-            public static readonly string H1CheckpointPath = HCMGlobal.LocalDir + @"\saves\h1cp";
-            public static readonly string H2CheckpointPath = HCMGlobal.LocalDir + @"\saves\h2cp";
-            public static readonly string ConfigPath = HCMGlobal.LocalDir + @"\config.json";
-            public static readonly string LogPath = HCMGlobal.LocalDir + @"\log.txt";
+            public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
+            public static readonly string H1CheckpointPath = LocalDir + @"\saves\h1cp";
+            public static readonly string H2CheckpointPath = LocalDir + @"\saves\h2cp";
+            public static readonly string ConfigPath = LocalDir + @"\config.json";
+            public static readonly string LogPath = LocalDir + @"\log.txt";
 
             public static HCMConfig SavedConfig;
 
@@ -49,7 +51,7 @@ namespace WpfApp3
             public static bool padowomode = false;
         }
 
-        private enum HaloGame
+        public enum HaloGame
         {
             Halo1,
             Halo2,
@@ -60,7 +62,7 @@ namespace WpfApp3
             Halo5
         }
 
-        private enum Difficulty
+        public enum Difficulty
         {
             Invalid = -1,
             Easy = 0,
@@ -83,9 +85,14 @@ namespace WpfApp3
             @"saves\h2cp",
         };
 
+        public ObservableCollection<HaloSaveFileMetadata> Halo1CoreSaves { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+        public ObservableCollection<HaloSaveFileMetadata> Halo1Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+        public ObservableCollection<HaloSaveFileMetadata> Halo2Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -133,7 +140,7 @@ namespace WpfApp3
             }
 
             // Verify config was loaded, otherwise create a new one
-            if(HCMGlobal.SavedConfig == null)
+            if (HCMGlobal.SavedConfig == null)
             {
                 HCMGlobal.SavedConfig = new HCMConfig();
             }
@@ -170,9 +177,6 @@ namespace WpfApp3
                 }
             }
 
-            CS_MainList.Items.Clear();
-            CP_MainList.Items.Clear();
-            H2CP_MainList.Items.Clear();
             RefreshButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             if (DateTime.Now.Day == 25 && DateTime.Now.Month == 12)
@@ -187,216 +191,168 @@ namespace WpfApp3
             RefreshSel(sender, e);
         }
 
-        private void MoveUpButton_Click(object sender, RoutedEventArgs e)
+        private void SwapFileTimes(string PathA, string PathB)
         {
-            RefreshSel(sender, e);
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
-            string movethis = "";
-            string abovefile = "";
-            switch (s)
+            if (File.Exists(PathA) && File.Exists(PathB))
             {
-                case "CS_Sel_MoveUpButton":
-                    if (CS_MainList.SelectedItem != null && CS_MainList.SelectedIndex != 0)
-                    {
-                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
-
-                        var item2 = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex - 1);
-                        System.Type type3 = item2.GetType();
-                        string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = HCMGlobal.H1CoreSavePath + @"\" + s3 + @".bin";
-                    }
-                    break;
-
-                case "CP_Sel_MoveUpButton":
-                    if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != 0)
-                    {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-
-                        var item2 = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex - 1);
-                        System.Type type3 = item2.GetType();
-                        string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = HCMGlobal.H1CheckpointPath + @"\" + s3 + @".bin";
-                    }
-                    break;
-
-                case "H2CP_Sel_MoveUpButton":
-                    if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != 0)
-                    {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
-
-                        var item2 = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex - 1);
-                        System.Type type3 = item2.GetType();
-                        string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        abovefile = HCMGlobal.H2CheckpointPath + @"\" + s3 + @".bin";
-                    }
-                    break;
-
-                default:
-                    break;
-
-            }
-
-            if (File.Exists(movethis) && File.Exists(abovefile))
-            {
-                DateTime currentfilestime = File.GetLastWriteTime(movethis);
-                DateTime abovefilestime = File.GetLastWriteTime(abovefile);
-                File.SetLastWriteTime(movethis, abovefilestime);
-                File.SetLastWriteTime(abovefile, currentfilestime);
-                switch (s)
-                {
-                    case "CS_Sel_MoveUpButton":
-                        CS_MainList.SelectedIndex = CS_MainList.SelectedIndex - 1;
-                        break;
-                    case "CP_Sel_MoveUpButton":
-                        CP_MainList.SelectedIndex = CP_MainList.SelectedIndex - 1;
-                        break;
-                    case "H2CP_Sel_MoveUpButton":
-                        H2CP_MainList.SelectedIndex = H2CP_MainList.SelectedIndex - 1;
-                        break;
-                    default:
-                        break;
-                }
-
-                RefreshList(sender, e);
+                DateTime currentfilestime = File.GetLastWriteTime(PathA);
+                DateTime abovefilestime = File.GetLastWriteTime(PathB);
+                File.SetLastWriteTime(PathA, abovefilestime);
+                File.SetLastWriteTime(PathB, currentfilestime);
             }
             else
             {
-                Log("something went wrong: fileexists(movethis): " + File.Exists(movethis).ToString(), sender);
-                Log("something went wrong: fileexists(abovefile): " + File.Exists(abovefile).ToString(), sender);
+                Log("something went wrong: fileexists(movethis): " + File.Exists(PathA).ToString());
+                Log("something went wrong: fileexists(abovefile): " + File.Exists(PathB).ToString());
             }
+        }
+
+        private void MoveUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshSel(sender, e);
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
+            switch (btn.Name)
+            {
+                case "CS_Sel_MoveUpButton":
+                    if (CS_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
+                            SwapFileTimes(movethis, abovefile);
+                            CS_MainList.SelectedIndex--;
+                        }
+                    }
+                    break;
+                case "CP_Sel_MoveUpButton":
+                    if (CP_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
+                            SwapFileTimes(movethis, abovefile);
+                            CP_MainList.SelectedIndex--;
+                        }
+                    }
+                    break;
+                case "H2CP_Sel_MoveUpButton":
+                    if (H2CP_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
+                            SwapFileTimes(movethis, abovefile);
+                            H2CP_MainList.SelectedIndex--;
+                        }
+                    }
+                    break;
+            }
+
+            RefreshList(sender, e);
         }
 
         private void MoveDownButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
-            string movethis = "";
-            string belowfile = "";
-            switch (s)
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
+            switch (btn.Name)
             {
                 case "CS_Sel_MoveDownButton":
                     if (CS_MainList.SelectedItem != null && CS_MainList.SelectedIndex != CS_MainList.Items.Count - 1)
                     {
-                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
-
-                        var item2 = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex + 1);
-                        System.Type type3 = item2.GetType();
-                        string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = HCMGlobal.H1CoreSavePath + @"\" + s3 + @".bin";
+                        var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
+                            SwapFileTimes(pathAbove, pathBelow);
+                            CS_MainList.SelectedIndex++;
+                        }
                     }
                     break;
-
                 case "CP_Sel_MoveDownButton":
                     if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count - 1)
                     {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-
-                        var item2 = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex + 1);
-                        System.Type type3 = item2.GetType();
-                        string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = HCMGlobal.H1CheckpointPath + @"\" + s3 + @".bin";
+                        var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
+                            SwapFileTimes(pathAbove, pathBelow);
+                            CP_MainList.SelectedIndex++;
+                        }
                     }
                     break;
-
                 case "H2CP_Sel_MoveDownButton":
                     if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count - 1)
                     {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        movethis = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
-
-                        var item2 = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex + 1);
-                        System.Type type3 = item2.GetType();
-                        string s3 = (string)type3.GetProperty("Name").GetValue(item2, null);
-                        belowfile = HCMGlobal.H2CheckpointPath + @"\" + s3 + @".bin";
+                        var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
+                            SwapFileTimes(pathAbove, pathBelow);
+                            H2CP_MainList.SelectedIndex++;
+                        }
                     }
                     break;
-
-                default:
-                    break;
-
             }
-            if (File.Exists(movethis) && File.Exists(belowfile))
-            {
-                DateTime currentfilestime = File.GetLastWriteTime(movethis);
-                DateTime belowfilestime = File.GetLastWriteTime(belowfile);
-                File.SetLastWriteTime(movethis, belowfilestime);
-                File.SetLastWriteTime(belowfile, currentfilestime);
-                switch (s)
-                {
-                    case "CS_Sel_MoveDownButton":
-                        CS_MainList.SelectedIndex = CS_MainList.SelectedIndex + 1;
-                        break;
-                    case "CP_Sel_MoveDownButton":
-                        CP_MainList.SelectedIndex = CP_MainList.SelectedIndex + 1;
-                        break;
-                    case "H2CP_Sel_MoveDownButton":
-                        H2CP_MainList.SelectedIndex = H2CP_MainList.SelectedIndex + 1;
-                        break;
-                    default:
-                        break;
-                }
 
-                RefreshList(sender, e);
-            }
-            else
-            {
-                Log("something went wrong: fileexists movethis: " + File.Exists(movethis).ToString(), sender);
-                Log("something went wrong: fileexists belowfile: " + File.Exists(belowfile).ToString(), sender);
-            }
+            RefreshList(sender, e);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshLoa(sender, e);
 
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string backuploc = "";
             string pathtotest = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Loa_SaveButton":
                     backuploc = HCMGlobal.H1CoreSavePath;
                     if (HCMGlobal.SavedConfig.CoreFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                     break;
-
                 case "CP_Loa_SaveButton":
                     backuploc = HCMGlobal.H1CheckpointPath;
                     if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
                     break;
-
                 case "H2CP_Loa_SaveButton":
                     backuploc = HCMGlobal.H2CheckpointPath;
                     if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
                     break;
-
                 default:
                     break;
-
             }
+
 
             if (File.Exists(pathtotest) && Directory.Exists(backuploc) && pathtotest != "")
             {
@@ -405,8 +361,6 @@ namespace WpfApp3
                                    "",
                                    -1, -1);
                 string proposedsave = (backuploc + @"\" + userinput + @".bin");
-
-                //Console.WriteLine("proposed save: " + proposedsave);
 
                 try
                 {
@@ -421,68 +375,19 @@ namespace WpfApp3
             }
         }
 
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        private void CopySaveFile(string sourcePath, string targetPath)
         {
-            RefreshSel(sender, e);
-            RefreshLoa(sender, e);
-
-            string backuploc = "";
-            string pathtotest = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
-            var testme = "";
-
-            switch (s)
-            {
-                case "CS_Sel_LoadButton":
-                    if (CS_MainList.SelectedItem != null)
-                    {
-                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
-                        pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
-                    }
-                    break;
-
-                case "CP_Sel_LoadButton":
-                    if (CP_MainList.SelectedItem != null)
-                    {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
-                    }
-                    break;
-
-                case "H2CP_Sel_LoadButton":
-                    if (H2CP_MainList.SelectedItem != null)
-                    {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backuploc = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
-                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
-                    }
-                    break;
-
-                default:
-                    break;
-
-            }
-
+            string targetFolder = "";
             try
             {
-                testme = System.IO.Path.GetDirectoryName(pathtotest);
+                targetFolder = System.IO.Path.GetDirectoryName(targetPath);
             }
             catch { }
-            if (Directory.Exists(testme) && File.Exists(backuploc))
+            if (Directory.Exists(targetFolder) && File.Exists(sourcePath))
             {
                 try
                 {
-                    File.Copy(backuploc, pathtotest, true);
-                    RefreshLoa(sender, e);
+                    File.Copy(sourcePath, targetPath, true);
                 }
                 catch (Exception exp)
                 {
@@ -492,22 +397,67 @@ namespace WpfApp3
             else
             {
                 //need to make this a popup to let user know what was bad
-                Log("something went wrong trying to load a save: Directory.Exists(testme) : " + Directory.Exists(testme).ToString(), sender);
-                Log("something went wrong trying to load a save: File.Exists(backuploc) : " + File.Exists(backuploc).ToString(), sender);
+                Log("something went wrong trying to load a save: (sourcePath) : " + sourcePath);
+                Log("something went wrong trying to load a save: (targetPath) : " + targetPath);
             }
+        }
+
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshSel(sender, e);
+            RefreshLoa(sender, e);
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
+            switch (btn.Name)
+            {
+                case "CS_Sel_LoadButton":
+                    if (CS_MainList.SelectedItem != null)
+                    {
+                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string sourcePath = HCMGlobal.H1CoreSavePath + @"\" + item.Name + @".bin";
+                        string targetPath = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
+                        CopySaveFile(sourcePath, targetPath);
+                    }
+                    break;
+                case "CP_Sel_LoadButton":
+                    if (CP_MainList.SelectedItem != null)
+                    {
+                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string sourcePath = HCMGlobal.H1CheckpointPath + @"\" + item.Name + @".bin";
+                        string targetPath = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
+                        CopySaveFile(sourcePath, targetPath);
+                    }
+                    break;
+                case "H2CP_Sel_LoadButton":
+                    if (H2CP_MainList.SelectedItem != null)
+                    {
+                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string sourcePath = HCMGlobal.H2CheckpointPath + @"\" + item.Name + @".bin";
+                        string targetPath = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
+                        CopySaveFile(sourcePath, targetPath);
+                    }
+                    break;
+            }
+
+            RefreshLoa(sender, e);
         }
 
         private void RenameButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
-            string backuploc = "";
-            string backup = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string s2 = "";
             string proposedsave = "";
-
-            switch (s)
+            string backup = "";
+            string backuploc;
+            switch (btn.Name)
             {
                 case "CS_Sel_RenameButton":
                     if (CS_MainList.SelectedItem != null)
@@ -589,14 +539,17 @@ namespace WpfApp3
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
+
+            var btn = sender as Button;
+            if (btn == null)
+                return;
+
             string convertfrom = "";
             string convertto = "";
             string converttoloc = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
             string s2 = "";
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Sel_ConvertButton":
 
@@ -624,7 +577,7 @@ namespace WpfApp3
                     break;
 
                 case "H2CP_Sel_ConvertButton":
-                    string link = HCMGlobal.padowomode 
+                    string link = HCMGlobal.padowomode
                         ? "https://www.youtube.com/watch?v=dQ_d_VKrFgM"
                         : "https://www.youtube.com/watch?v=5u4tQlVRKD8";
 
@@ -664,8 +617,19 @@ namespace WpfApp3
                 Log("something went wrong trying to convert a save: Directory.Exists(converttoloc) : " + Directory.Exists(converttoloc).ToString(), sender);
                 Log("something went wrong trying to convert a save: !File.Exists(convertto) : " + (!File.Exists(convertto)).ToString(), sender);
             }
+        }
 
-
+        private void DeleteSaveFile(string path)
+        {
+            try
+            {
+                File.Delete(path);
+            }
+            catch (Exception exp)
+            {
+                Log("something went wrong trying to delete a save: " + exp);
+                //need to make this a popup to let user know what was bad
+            }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -673,73 +637,44 @@ namespace WpfApp3
             RefreshSel(sender, e);
             var oldCSselected = CS_MainList.SelectedIndex;
             var oldCPselected = CP_MainList.SelectedIndex;
-            string backup = "";
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
 
+            var btn = sender as Button;
+            if (btn == null)
+                return;
 
-            switch (s)
+            switch (btn.Name)
             {
                 case "CS_Sel_DeleteButton":
                     if (CS_MainList.SelectedItem != null)
                     {
-                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
+                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string path = $@"{HCMGlobal.H1CoreSavePath}\{item.Name}.bin";
+                        DeleteSaveFile(path);
                     }
                     break;
-
                 case "CP_Sel_DeleteButton":
                     if (CP_MainList.SelectedItem != null)
                     {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
+                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string path = $@"{HCMGlobal.H1CheckpointPath}\{item.Name}.bin";
+                        DeleteSaveFile(path);
                     }
                     break;
-
                 case "H2CP_Sel_DeleteButton":
                     if (H2CP_MainList.SelectedItem != null)
                     {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        string s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
+                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string path = $@"{HCMGlobal.H2CheckpointPath}\{item.Name}.bin";
+                        DeleteSaveFile(path);
                     }
                     break;
-
-                default:
-                    break;
-
             }
 
-            if (File.Exists(backup))
-            {
-                try
-                {
-                    File.Delete(backup);
-                    RefreshList(sender, e);
-
-                    CS_MainList.SelectedIndex = oldCSselected;
-
-                    CP_MainList.SelectedIndex = oldCPselected;
-                    RefreshSel(sender, e);
-                }
-                catch (Exception exp)
-                {
-                    Log("something went wrong trying to delete a save: " + exp, sender);
-                    //need to make this a popup to let user know what was bad
-                }
-            }
-            else
-            {
-                //need to make this a popup to let user know what was bad
-                Log("something went wrong trying to delete a save: File.Exists(backup) : " + File.Exists(backup).ToString());
-            }
+            RefreshList(sender, e);
+            CS_MainList.SelectedIndex = oldCSselected;
+            CP_MainList.SelectedIndex = oldCPselected;
+            RefreshSel(sender, e);
         }
-
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
@@ -750,76 +685,44 @@ namespace WpfApp3
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            Window1 settingswindow = new Window1();
-            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.CoreFolderPath != null)
-                settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig.CoreFolderPath;
-            else
-                settingswindow.ChosenCore.Text = "No folder chosen!";
-            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-                settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig.CheckpointFolderPath;
-            else
-                settingswindow.ChosenCP.Text = "No folder chosen!";
+            SettingsWindow settingswindow = new SettingsWindow();
 
-            if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.ClassicMode)
-            {
-                settingswindow.modeanni.IsChecked = false;
-                settingswindow.modeclas.IsChecked = true;
-            }
-            else
-            {
-                settingswindow.modeanni.IsChecked = true;
-                settingswindow.modeclas.IsChecked = false;
-            }
+            settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig?.CoreFolderPath ?? "No folder chosen!";
+            settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig?.CheckpointFolderPath ?? "No folder chosen!";
+            settingswindow.modeanni.IsChecked = !HCMGlobal.SavedConfig?.ClassicMode ?? true;
+            settingswindow.modeclas.IsChecked = HCMGlobal.SavedConfig?.ClassicMode ?? false;
 
             settingswindow.ShowDialog();
 
-            if (settingswindow.ChosenCore.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
-            {
-                HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text;
-                //WriteConfig();
-                RefreshSel(sender, e);
-            }
-            else
-                HCMGlobal.SavedConfig.CoreFolderPath = "";
-            if (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
-            {
-                HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text;
-                WriteConfig();
-                RefreshSel(sender, e);
-            }
-            else
-                HCMGlobal.SavedConfig.CheckpointFolderPath = "";
+            HCMGlobal.SavedConfig.CoreFolderPath =
+                (settingswindow.ChosenCore.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
+                ? HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text
+                : HCMGlobal.SavedConfig.CoreFolderPath = "";
 
-            if (settingswindow.modeanni.IsChecked ?? false)
-            {
-                HCMGlobal.SavedConfig.ClassicMode = false;
-                WriteConfig();
-                RefreshLoa(sender, e);
-                RefreshSel(sender, e);
-            }
-            else
-            {
-                HCMGlobal.SavedConfig.ClassicMode = true;
-                WriteConfig();
-                RefreshLoa(sender, e);
-                RefreshSel(sender, e);
-            }
+            HCMGlobal.SavedConfig.CheckpointFolderPath =
+                (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
+                ? HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text
+                : HCMGlobal.SavedConfig.CheckpointFolderPath = "";
 
+            HCMGlobal.SavedConfig.ClassicMode = settingswindow.modeclas.IsChecked ?? false;
+
+            WriteConfig();
+            RefreshLoa(sender, e);
+            RefreshSel(sender, e);
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)
         {
-            about aboutwindow = new about();
+            AboutWindow aboutwindow = new AboutWindow();
             aboutwindow.ShowDialog();
         }
-
 
         private void RefreshLoa(object sender, RoutedEventArgs e)
         {
             //H1 CORES FIRST
             if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", "game1");
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
                 CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if(data.Difficulty != Difficulty.Invalid)
@@ -839,7 +742,7 @@ namespace WpfApp3
             //H1 CPs SECOND
             if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", "game1");
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", HaloGame.Halo1);
                 CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if (data.Difficulty != Difficulty.Invalid)
@@ -859,7 +762,7 @@ namespace WpfApp3
             //H2 CPs THIRD
             if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", "game2");
+                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", HaloGame.Halo2);
                 H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if (data.Difficulty != Difficulty.Invalid)
@@ -889,7 +792,7 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetSaveFileMetadata(pathtotest, "game1");
+                    var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
                     CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
@@ -921,7 +824,7 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetSaveFileMetadata(pathtotest, "game1");
+                    var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
                     CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
@@ -952,7 +855,7 @@ namespace WpfApp3
 
                 if (File.Exists(pathtotest))
                 {
-                    var data = GetSaveFileMetadata(pathtotest, "game2");
+                    var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
                     H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
@@ -979,19 +882,11 @@ namespace WpfApp3
             var oldCPselected = CP_MainList.SelectedIndex;
             var oldH2CPselected = H2CP_MainList.SelectedIndex;
 
-            //code to populate the list
-            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.SavedConfig.CoreFolderPath))
-            {
-                DirectoryInfo csdir = new DirectoryInfo(HCMGlobal.SavedConfig.CoreFolderPath);
-            }
-            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath))
-            {
-                DirectoryInfo cpdir = new DirectoryInfo(HCMGlobal.SavedConfig.CheckpointFolderPath);
-            }
             List<string> FilesPost = new List<string>();
 
             //h1 cores
-            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
+            Halo1CoreSaves.Clear();
+            if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
             {
                 DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
@@ -1006,22 +901,14 @@ namespace WpfApp3
                     FilesPost.Add(file.ToString());
                 }
 
-                if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
+                if(FilesPost.Count > 0)
                 {
-                    CS_MainList.Items.Clear();
                     CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, "game1");
-                        string _Lvl = data.LevelCode;
-                        string _Diff = data.Difficulty.ToString();
-
-                        if(data.Difficulty != Difficulty.Invalid)
-                            _Diff = $"images/diff_{(int)data.Difficulty}.png";
-
-                        string _Time = TickToTimeString(data.StartTick);
-                        string _Name = File.Substring(0, File.Length - 4);
-                        CS_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
+                        var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, HaloGame.Halo1);
+                        data.Name = File.Substring(0, File.Length - 4);
+                        Halo1CoreSaves.Add(data);
                     }
 
                     CS_MainList.SelectedIndex = oldCSselected;
@@ -1030,18 +917,17 @@ namespace WpfApp3
                 }
                 else
                 {
-                    CS_MainList.Items.Clear();
                     CS_MainList_Label.Content = "No backup saves in local folder.";
                 }
             }
             else
             {
-                CS_MainList.Items.Clear();
                 CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
             }
 
             //h1 checkpoints second
-            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
+            Halo1Checkpoints.Clear();
+            if (Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
             {
                 DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CheckpointPath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
@@ -1055,23 +941,14 @@ namespace WpfApp3
                     FilesPost.Add(file.ToString());
                 }
 
-                if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
+                if (FilesPost.Count > 0)
                 {
-                    CP_MainList.Items.Clear();
                     CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File, "game1");
-                        string _Lvl = data.LevelCode;
-                        string _Diff = data.Difficulty.ToString();
-
-                        if (data.Difficulty != Difficulty.Invalid)
-                            _Diff = $"images/diff_{(int)data.Difficulty}.png";
-
-                        string _Time = TickToTimeString(data.StartTick);
-                        string _Name = File.Substring(0, File.Length - 4);
-                        CP_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
-
+                        var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File, HaloGame.Halo1);
+                        data.Name = File.Substring(0, File.Length - 4);
+                        Halo1Checkpoints.Add(data);
                     }
                     CP_MainList.SelectedIndex = oldCPselected;
                     GridView gv = CP_MainList.View as GridView;
@@ -1079,18 +956,17 @@ namespace WpfApp3
                 }
                 else
                 {
-                    CP_MainList.Items.Clear();
                     CP_MainList_Label.Content = "No backup saves in local folder.";
                 }
             }
             else
             {
-                CP_MainList.Items.Clear();
                 CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
             }
 
             //h2 checkpoints THIRD
-            if (HCMGlobal.SavedConfig != null && Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
+            Halo2Checkpoints.Clear();
+            if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
             {
                 DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H2CheckpointPath);
                 FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
@@ -1104,23 +980,14 @@ namespace WpfApp3
                     FilesPost.Add(file.ToString());
                 }
 
-                if (FilesPost.ElementAtOrDefault(0) != null && FilesPost[0].ToString() != null)
+                if (FilesPost.Count > 0)
                 {
-                    H2CP_MainList.Items.Clear();
                     H2CP_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File, "game2");
-                        string _Lvl = data.LevelCode;
-                        string _Diff = data.Difficulty.ToString();
-
-                        if (data.Difficulty != Difficulty.Invalid)
-                            _Diff = $"images/diff_{(int)data.Difficulty}.png";
-
-                        string _Time = TickToTimeString(data.StartTick);
-                        string _Name = File.Substring(0, File.Length - 4);
-                        H2CP_MainList.Items.Add(new { Lvl = _Lvl, Diff = _Diff, Time = _Time, Name = _Name });
-
+                        var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File, HaloGame.Halo2);
+                        data.Name = File.Substring(0, File.Length - 4);
+                        Halo2Checkpoints.Add(data);
                     }
 
                     H2CP_MainList.SelectedIndex = oldH2CPselected;
@@ -1129,39 +996,51 @@ namespace WpfApp3
                 }
                 else
                 {
-                    H2CP_MainList.Items.Clear();
                     H2CP_MainList_Label.Content = "No backup saves in local folder.";
                 }
             }
             else
             {
-                H2CP_MainList.Items.Clear();
                 H2CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
             }
         }
 
-        private class HaloSaveFileMetadata
+        public class HaloSaveFileMetadata
         {
-            public string LevelCode = "xxx";
-            public uint StartTick = 0;
-            public Difficulty Difficulty = Difficulty.Easy;
+            public HaloGame Game { get; set; }
+            public string LevelCode { get; set; } = "xxx";
+            public uint StartTick { get; set; } = 0;
+            public Difficulty Difficulty { get; set; } = Difficulty.Easy;
+            public string Name { get; set; }
+
+            public string DifficultyImage => $"images/diff_{(int)Difficulty}.png";
+            public string TimeString => TickToTimeString(StartTick);
         }
 
-        private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, string game)
+        private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, HaloGame game)
         {
-            //default to halo 1
-            Int32 offsetLevelCode = 11;
-            Int32 offsetStartTick = 756;
-            Int32 offsetDifficulty = 294;
+            int offsetLevelCode;
+            int offsetStartTick;
+            int offsetDifficulty;
 
-            if (game == "game2") //but if halo 2, change the offsets appropiately
+            switch (game)
             {
-                offsetLevelCode = 11; //will need to update these values when h2 comes out
-                offsetStartTick = 756; 
-                offsetDifficulty = 294;
+                case HaloGame.Halo1:
+                    offsetLevelCode = 11;
+                    offsetStartTick = 756;
+                    offsetDifficulty = 294;
+                    break;
+                case HaloGame.Halo2:
+                    offsetLevelCode = 11;
+                    offsetStartTick = 756;
+                    offsetDifficulty = 294;
+                    Log("Fix when Halo 2 comes out :)");
+                    break;
+                default:
+                    throw new NotSupportedException();
             }
 
-            HaloSaveFileMetadata metadata = new HaloSaveFileMetadata();
+            HaloSaveFileMetadata metadata = new HaloSaveFileMetadata() { Game = game };
 
             if (File.Exists(saveFilePath))
             {
@@ -1212,12 +1091,9 @@ namespace WpfApp3
         {
             foreach (FileInfo File in FilesPost)
             {
-                if (currentfile.Name != File.Name)
+                if (currentfile.Name != File.Name && File.LastWriteTime == currentfile.LastWriteTime)
                 {
-                    if (File.LastWriteTime == currentfile.LastWriteTime)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             return false;
@@ -1227,8 +1103,8 @@ namespace WpfApp3
         {
             try
             {
-            string json = JsonConvert.SerializeObject(HCMGlobal.SavedConfig, Formatting.Indented);
-            File.WriteAllText(HCMGlobal.ConfigPath, json);
+                string json = JsonConvert.SerializeObject(HCMGlobal.SavedConfig, Formatting.Indented);
+                File.WriteAllText(HCMGlobal.ConfigPath, json);
             }
             catch (Exception e)
             {
@@ -1236,10 +1112,10 @@ namespace WpfApp3
             }
         }
 
-        public string TickToTimeString(uint ticks)
+        public static string TickToTimeString(uint ticks)
         {
             int seconds = (int)ticks / 30;
-            TimeSpan ts = new TimeSpan(seconds / (60*60), seconds / (60), seconds % 60);
+            TimeSpan ts = new TimeSpan(seconds / (60 * 60), seconds / (60), seconds % 60);
             return ts.ToString(@"mm\:ss");
         }
 
@@ -1288,9 +1164,7 @@ namespace WpfApp3
 
         public static void Log(string text, object sender)
         {
-            System.Type type = sender.GetType();
-            string s = (string)type.GetProperty("Name").GetValue(sender, null);
-            List<string> addthis = new List<string> { DateTime.Now.ToString(), text, s };
+            List<string> addthis = new List<string> { $"{DateTime.Now} - {(sender as Control)?.Name}", text };
             File.AppendAllLines(HCMGlobal.LogPath, addthis);
         }
 
@@ -1303,7 +1177,6 @@ namespace WpfApp3
                 //what the fuck do we even do now?!
             }
         }
-
 
         public static string GetInstallPath(string c_name)
         {
@@ -1326,6 +1199,6 @@ namespace WpfApp3
             return null;
         }
 
-        
+
     }
 }

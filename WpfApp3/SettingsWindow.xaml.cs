@@ -23,49 +23,41 @@ namespace WpfApp3
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class SettingsWindow : Window
     {
 
-
-        public Window1()
+        public SettingsWindow()
         {
             InitializeComponent();
-
-
         }
 
         private void CoreBrowseClick(object sender, RoutedEventArgs e)
         {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            using (var dialog = new FolderBrowserDialog())
             {
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                DialogResult result = dialog.ShowDialog();
                 if (result.ToString() == "OK" && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
                     //Console.WriteLine("corefolder: " + dialog.SelectedPath);
                     if (Directory.Exists(dialog.SelectedPath))
                     {
-
                         ChosenCore.Text = dialog.SelectedPath;
-                       
                     }
                 }
             }
-            
         }
 
         private void CPBrowseClick(object sender, RoutedEventArgs e)
         {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            using (var dialog = new FolderBrowserDialog())
             {
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                DialogResult result = dialog.ShowDialog();
                 if (result.ToString() == "OK" && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
                     //Console.WriteLine("cpfolder: " + dialog.SelectedPath);
                     if (Directory.Exists(dialog.SelectedPath))
                     {
-
                         ChosenCP.Text = dialog.SelectedPath;
-
                     }
                 }
             }
