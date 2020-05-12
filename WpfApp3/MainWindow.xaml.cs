@@ -823,7 +823,7 @@ namespace WpfApp3
                 CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if(data.Difficulty != Difficulty.Invalid)
-                    CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
+                    CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                 CS_Loa_Time.Text = TickToTimeString(data.StartTick);
                 CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
@@ -843,7 +843,7 @@ namespace WpfApp3
                 CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if (data.Difficulty != Difficulty.Invalid)
-                    CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
+                    CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                 CP_Loa_Time.Text = TickToTimeString(data.StartTick);
                 CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
@@ -863,7 +863,7 @@ namespace WpfApp3
                 H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if (data.Difficulty != Difficulty.Invalid)
-                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
+                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_-1.png", UriKind.Relative));
 
                 H2CP_Loa_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
                 H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
@@ -893,7 +893,7 @@ namespace WpfApp3
                     CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
-                        CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
+                        CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                     CS_Sel_Time.Text = TickToTimeString(data.StartTick);
                     CS_Sel_FileName.Text = s;
@@ -925,7 +925,7 @@ namespace WpfApp3
                     CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
-                        CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
+                        CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                     CP_Sel_Time.Text = TickToTimeString(data.StartTick);
                     CP_Sel_FileName.Text = s;
@@ -956,7 +956,7 @@ namespace WpfApp3
                     H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
-                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{data.Difficulty}.png", UriKind.Relative));
+                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                     H2CP_Sel_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
                     H2CP_Sel_FileName.Text = s;
