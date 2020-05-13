@@ -8,7 +8,7 @@
         Title="About" Height="330.743" Width="460.066">
     <Grid Margin="0,0,14,0">
         <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
-        <TextBlock Text="Make sure you set the correct paths in settings. 
+        <TextBlock Text="Make sure you set the correct paths in settings if autodetection failed. 
                    
                    
                    You may need to run this tool with admin privileges. 
@@ -19,7 +19,7 @@
                    
                    
                    
-                   Likewise with the config files and level splash images, keep em together with the .exe.
+                   Likewise with the config.json file, keep it together with the .exe.
                    
                    
                    
@@ -34,8 +34,16 @@
                    
                    " HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="192" Width="405" TextWrapping="WrapWithOverflow"/>
 
-        <Label Content="Created by Burnt" HorizontalAlignment="Left" Margin="23,227,0,0" VerticalAlignment="Top"/>
-        <Label Content="Source code here: TODO: HOST THE CODE SOMEWHERE" HorizontalAlignment="Left" Margin="23,253,0,0" VerticalAlignment="Top"/>
+        <Label Content="Created by Burnt and Scales" HorizontalAlignment="Left" Margin="23,227,0,0" VerticalAlignment="Top"/>
+
+        <TextBlock HorizontalAlignment="Left" Margin="28,253,0,0" VerticalAlignment="Top">
+    <Hyperlink NavigateUri="https://github.com/Burnt-o/HaloCheckpointManager" RequestNavigate="Hyperlink_RequestNavigate">
+       <Hyperlink.Inlines>
+            <Run Text="Source: https://github.com/Burnt-o/HaloCheckpointManager" />
+       </Hyperlink.Inlines>
+   </Hyperlink>
+        </TextBlock>
+        <!--<Label Content="Source: https://github.com/Burnt-o/HaloCheckpointManager" HorizontalAlignment="Left" Margin="23,253,0,0" VerticalAlignment="Top"/>-->
 
 
 
