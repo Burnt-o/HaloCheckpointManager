@@ -8,33 +8,33 @@
         Title="About" Height="330.743" Width="460.066">
     <Grid Margin="0,0,14,0">
         <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
-        <TextBlock Text="Make sure you set the correct paths in settings if autodetection failed.  
+        <TextBlock HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="197" Width="405" TextWrapping="WrapWithOverflow">
+            
+            <Bold>Remember to click the refresh button after getting an in-game save to update it in the tool.</Bold><LineBreak></LineBreak>
                    
                    
+                    <Bold>This tool doesn't revert checkpoints for you, only sets your most recent checkpoint.</Bold> You still have to revert it yourself in game (or with the checkpoint trainer). Keep in mind that reverting to a checkpoint from a different level to what you're currently on will crash the game; instead just go to the main menu, load the cp with this tool, then use 'resume' in-game.<LineBreak></LineBreak>
                     
                    
-                   You may need to run this tool with admin privileges.   
+                   You may need to run this tool with admin privileges.   <LineBreak></LineBreak>
                    
                    
                    
-                   Backup saves and config.json are stored locally to this tools executable file, so move them together if you want to keep things working. 
-                   
-                   
-                   
-                   Remember to click the refresh button after getting an in-game save to update it in the tool.
+                   Backup saves and config.json are stored locally to this tools executable file, so move them together if you want to keep things working. <LineBreak></LineBreak>
                    
                    
                    
                    
+                   Make sure you set the correct paths in settings if autodetection failed.  <LineBreak></LineBreak>
                    
-                   This tool doesn't revert checkpoints for you, only sets your most recent checkpoint. You still have to revert it yourself in game (or with the checkpoint trainer). Keep in mind that reverting to a checkpoint from a different level to what you're currently on will crash the game; instead just go to the main menu, load the cp with this tool, then use 'resume' in-game.
+                  
                    
                    
+                   Also you DON'T need to run the game with EAC disabled for this to work.<LineBreak></LineBreak>
                    
                    
-                   Also you DON'T need to run the game with EAC disabled for this to work.
-                   
-                   " HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="197" Width="405" TextWrapping="WrapWithOverflow"/>
+            
+        </TextBlock>
 
         <Label Content="Created by Burnt and Scales" HorizontalAlignment="Left" Margin="23,227,0,0" VerticalAlignment="Top"/>
 
