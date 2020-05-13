@@ -768,7 +768,7 @@ namespace WpfApp3
                 if (data.Difficulty != Difficulty.Invalid)
                     H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_-1.png", UriKind.Relative));
 
-                H2CP_Loa_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
+                H2CP_Loa_Time.Text = TickToTimeString(data.StartTick);
                 H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
             }
             else
@@ -1031,10 +1031,9 @@ namespace WpfApp3
                     offsetDifficulty = 294;
                     break;
                 case HaloGame.Halo2:
-                    offsetLevelCode = 11;
-                    offsetStartTick = 756;
-                    offsetDifficulty = 294;
-                    Log("Fix when Halo 2 comes out :)");
+                    offsetLevelCode = 23;
+                    offsetStartTick = 10808;
+                    offsetDifficulty = 974;
                     break;
                 default:
                     throw new NotSupportedException();
@@ -1056,7 +1055,11 @@ namespace WpfApp3
 
                         //get time
                         readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
-                        metadata.StartTick = readBinary.ReadUInt32();
+                        UInt32 holdme = readBinary.ReadUInt32();
+                        if (game == HaloGame.Halo2)
+                            metadata.StartTick = holdme / 2;
+                        else
+                            metadata.StartTick = holdme;
 
                         //get difficulty
                         readBinary.BaseStream.Seek(offsetDifficulty, SeekOrigin.Begin);
@@ -1114,10 +1117,11 @@ namespace WpfApp3
 
         public static string TickToTimeString(uint ticks)
         {
-            int seconds = (int)ticks / 30;
+            int seconds = (int)ticks / 30; 
             TimeSpan ts = new TimeSpan(seconds / (60 * 60), seconds / (60), seconds % 60);
             return ts.ToString(@"mm\:ss");
         }
+
 
         readonly Dictionary<string, string> LevelCodeToName = new Dictionary<string, string>()
         {
