@@ -8,18 +8,20 @@
         Title="About" Height="330.743" Width="460.066">
     <Grid Margin="0,0,14,0">
         <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
-        <TextBlock Text="Make sure you set the correct paths in settings if autodetection failed. 
+        <TextBlock Text="Make sure you set the correct paths in settings if autodetection failed.  
                    
                    
-                   You may need to run this tool with admin privileges. 
+                    
                    
-                   
-                   
-                   Backup saves are stored locally to this tools executable file, so move them together if you want to keep things working. 
+                   You may need to run this tool with admin privileges.   
                    
                    
                    
-                   Likewise with the config.json file, keep it together with the .exe.
+                   Backup saves and config.json are stored locally to this tools executable file, so move them together if you want to keep things working. 
+                   
+                   
+                   
+                   Remember to click the refresh button after getting an in-game save to update it in the tool.
                    
                    
                    
@@ -32,7 +34,7 @@
                    
                    Also you DON'T need to run the game with EAC disabled for this to work.
                    
-                   " HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="192" Width="405" TextWrapping="WrapWithOverflow"/>
+                   " HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="197" Width="405" TextWrapping="WrapWithOverflow"/>
 
         <Label Content="Created by Burnt and Scales" HorizontalAlignment="Left" Margin="23,227,0,0" VerticalAlignment="Top"/>
 
