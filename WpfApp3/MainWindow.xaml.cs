@@ -752,44 +752,44 @@ namespace WpfApp3
             }
 
             //H1 CPs SECOND
-            if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-            {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", HaloGame.Halo1);
-                CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+            //if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+            //{
+            //    var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", HaloGame.Halo1);
+            //    CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                if (data.Difficulty != Difficulty.Invalid)
-                    CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+            //    if (data.Difficulty != Difficulty.Invalid)
+            //        CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-                CP_Loa_Time.Text = TickToTimeString(data.StartTick);
-                CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-            }
-            else
-            {
-                CP_Loa_LevelName.Text = "N/A";
-                CP_Loa_DiffName.Source = null;
-                CP_Loa_Time.Text = "N/A";
-                CP_Loa_LevelImage.Source = null;
-            }
+            //    CP_Loa_Time.Text = TickToTimeString(data.StartTick);
+            //    CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+            //}
+            //else
+            //{
+            //    CP_Loa_LevelName.Text = "N/A";
+            //    CP_Loa_DiffName.Source = null;
+            //    CP_Loa_Time.Text = "N/A";
+            //    CP_Loa_LevelImage.Source = null;
+            //}
 
             //H2 CPs THIRD
-            if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-            {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", HaloGame.Halo2);
-                H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+            //if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
+            //{
+            //    var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", HaloGame.Halo2);
+            //    H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                if (data.Difficulty != Difficulty.Invalid)
-                    H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_-1.png", UriKind.Relative));
+            //    if (data.Difficulty != Difficulty.Invalid)
+            //        H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_-1.png", UriKind.Relative));
 
-                H2CP_Loa_Time.Text = TickToTimeString(data.StartTick);
-                H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-            }
-            else
-            {
-                H2CP_Loa_LevelName.Text = "N/A";
-                H2CP_Loa_DiffName.Source = null;
-                H2CP_Loa_Time.Text = "N/A";
-                H2CP_Loa_LevelImage.Source = null;
-            }
+            //    H2CP_Loa_Time.Text = TickToTimeString(data.StartTick);
+            //    H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+            //}
+            //else
+            //{
+            //    H2CP_Loa_LevelName.Text = "N/A";
+            //    H2CP_Loa_DiffName.Source = null;
+            //    H2CP_Loa_Time.Text = "N/A";
+            //    H2CP_Loa_LevelImage.Source = null;
+            //}
         }
 
         private void RefreshSel(object sender, RoutedEventArgs e)
@@ -826,66 +826,66 @@ namespace WpfApp3
             //Console.WriteLine("CP_MainList.SelectedItem" + CP_MainList?.SelectedItem?.ToString());
 
             //H1 CPs SECOND
-            if (CP_MainList.SelectedItem != null)
-            {
-                //Console.WriteLine("ahh" + CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
-                var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-                System.Type type = item.GetType();
-                string s = (string)type.GetProperty("Name").GetValue(item, null);
-                var pathtotest = HCMGlobal.H1CheckpointPath + @"\" + s + @".bin";
+            //if (CP_MainList.SelectedItem != null)
+            //{
+            //    //Console.WriteLine("ahh" + CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
+            //    var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
+            //    System.Type type = item.GetType();
+            //    string s = (string)type.GetProperty("Name").GetValue(item, null);
+            //    var pathtotest = HCMGlobal.H1CheckpointPath + @"\" + s + @".bin";
 
-                if (File.Exists(pathtotest))
-                {
-                    var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
-                    CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+            //    if (File.Exists(pathtotest))
+            //    {
+            //        var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
+            //        CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                    if (data.Difficulty != Difficulty.Invalid)
-                        CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+            //        if (data.Difficulty != Difficulty.Invalid)
+            //            CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-                    CP_Sel_Time.Text = TickToTimeString(data.StartTick);
-                    CP_Sel_FileName.Text = s;
-                    CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                }
-            }
-            else
-            {
-                CP_Sel_LevelName.Text = "N/A";
-                CP_Sel_DiffName.Source = null;
-                CP_Sel_Time.Text = "N/A";
-                CP_Sel_FileName.Text = "N/A";
-                CP_Sel_LevelImage.Source = null;
-            }
+            //        CP_Sel_Time.Text = TickToTimeString(data.StartTick);
+            //        CP_Sel_FileName.Text = s;
+            //        CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+            //    }
+            //}
+            //else
+            //{
+            //    CP_Sel_LevelName.Text = "N/A";
+            //    CP_Sel_DiffName.Source = null;
+            //    CP_Sel_Time.Text = "N/A";
+            //    CP_Sel_FileName.Text = "N/A";
+            //    CP_Sel_LevelImage.Source = null;
+            //}
 
             //H2 CPs THIRD
-            if (H2CP_MainList.SelectedItem != null)
-            {
-                //Console.WriteLine("ahh" + H2CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
-                var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-                System.Type type = item.GetType();
-                string s = (string)type.GetProperty("Name").GetValue(item, null);
-                var pathtotest = HCMGlobal.H2CheckpointPath + @"\" + s + @".bin";
+            //if (H2CP_MainList.SelectedItem != null)
+            //{
+            //    //Console.WriteLine("ahh" + H2CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
+            //    var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
+            //    System.Type type = item.GetType();
+            //    string s = (string)type.GetProperty("Name").GetValue(item, null);
+            //    var pathtotest = HCMGlobal.H2CheckpointPath + @"\" + s + @".bin";
 
-                if (File.Exists(pathtotest))
-                {
-                    var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
-                    H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+            //    if (File.Exists(pathtotest))
+            //    {
+            //        var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
+            //        H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                    if (data.Difficulty != Difficulty.Invalid)
-                        H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+            //        if (data.Difficulty != Difficulty.Invalid)
+            //            H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-                    H2CP_Sel_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
-                    H2CP_Sel_FileName.Text = s;
-                    H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                }
-            }
-            else
-            {
-                H2CP_Sel_LevelName.Text = "N/A";
-                H2CP_Sel_DiffName.Source = null;
-                H2CP_Sel_Time.Text = "N/A";
-                H2CP_Sel_FileName.Text = "N/A";
-                H2CP_Sel_LevelImage.Source = null;
-            }
+            //        H2CP_Sel_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
+            //        H2CP_Sel_FileName.Text = s;
+            //        H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+            //    }
+            //}
+            //else
+            //{
+            //    H2CP_Sel_LevelName.Text = "N/A";
+            //    H2CP_Sel_DiffName.Source = null;
+            //    H2CP_Sel_Time.Text = "N/A";
+            //    H2CP_Sel_FileName.Text = "N/A";
+            //    H2CP_Sel_LevelImage.Source = null;
+            //}
         }
 
         private void RefreshList(object sender, RoutedEventArgs e)
@@ -938,83 +938,83 @@ namespace WpfApp3
             }
 
             //h1 checkpoints second
-            Halo1Checkpoints.Clear();
-            if (Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
-            {
-                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CheckpointPath);
-                FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-                FilesPost.Clear();
-                foreach (FileInfo file in files)
-                {
-                    while (FileHasSameTime(files, file))
-                    {
-                        file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                    }
-                    FilesPost.Add(file.ToString());
-                }
+            //Halo1Checkpoints.Clear();
+            //if (Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
+            //{
+            //    DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CheckpointPath);
+            //    FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
+            //    FilesPost.Clear();
+            //    foreach (FileInfo file in files)
+            //    {
+            //        while (FileHasSameTime(files, file))
+            //        {
+            //            file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
+            //        }
+            //        FilesPost.Add(file.ToString());
+            //    }
 
-                if (FilesPost.Count > 0)
-                {
-                    CP_MainList_Label.Content = "";
-                    foreach (string File in FilesPost)
-                    {
-                        var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File, HaloGame.Halo1);
-                        data.Name = File.Substring(0, File.Length - 4);
-                        Halo1Checkpoints.Add(data);
-                    }
-                    CP_MainList.SelectedIndex = oldCPselected;
-                    GridView gv = CP_MainList.View as GridView;
-                    UpdateColumnWidths(gv);
-                }
-                else
-                {
-                    CP_MainList_Label.Content = "No backup saves in local folder.";
-                }
-            }
-            else
-            {
-                CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
-            }
+            //    if (FilesPost.Count > 0)
+            //    {
+            //        CP_MainList_Label.Content = "";
+            //        foreach (string File in FilesPost)
+            //        {
+            //            var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File, HaloGame.Halo1);
+            //            data.Name = File.Substring(0, File.Length - 4);
+            //            Halo1Checkpoints.Add(data);
+            //        }
+            //        CP_MainList.SelectedIndex = oldCPselected;
+            //        GridView gv = CP_MainList.View as GridView;
+            //        UpdateColumnWidths(gv);
+            //    }
+            //    else
+            //    {
+            //        CP_MainList_Label.Content = "No backup saves in local folder.";
+            //    }
+            //}
+            //else
+            //{
+            //    CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
+            //}
 
             //h2 checkpoints THIRD
-            Halo2Checkpoints.Clear();
-            if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
-            {
-                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H2CheckpointPath);
-                FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-                FilesPost.Clear();
-                foreach (FileInfo file in files)
-                {
-                    while (FileHasSameTime(files, file))
-                    {
-                        file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                    }
-                    FilesPost.Add(file.ToString());
-                }
+            //Halo2Checkpoints.Clear();
+            //if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
+            //{
+            //    DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H2CheckpointPath);
+            //    FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
+            //    FilesPost.Clear();
+            //    foreach (FileInfo file in files)
+            //    {
+            //        while (FileHasSameTime(files, file))
+            //        {
+            //            file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
+            //        }
+            //        FilesPost.Add(file.ToString());
+            //    }
 
-                if (FilesPost.Count > 0)
-                {
-                    H2CP_MainList_Label.Content = "";
-                    foreach (string File in FilesPost)
-                    {
-                        var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File, HaloGame.Halo2);
-                        data.Name = File.Substring(0, File.Length - 4);
-                        Halo2Checkpoints.Add(data);
-                    }
+            //    if (FilesPost.Count > 0)
+            //    {
+            //        H2CP_MainList_Label.Content = "";
+            //        foreach (string File in FilesPost)
+            //        {
+            //            var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File, HaloGame.Halo2);
+            //            data.Name = File.Substring(0, File.Length - 4);
+            //            Halo2Checkpoints.Add(data);
+            //        }
 
-                    H2CP_MainList.SelectedIndex = oldH2CPselected;
-                    GridView gv = H2CP_MainList.View as GridView;
-                    UpdateColumnWidths(gv);
-                }
-                else
-                {
-                    H2CP_MainList_Label.Content = "No backup saves in local folder.";
-                }
-            }
-            else
-            {
-                H2CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
-            }
+            //        H2CP_MainList.SelectedIndex = oldH2CPselected;
+            //        GridView gv = H2CP_MainList.View as GridView;
+            //        UpdateColumnWidths(gv);
+            //    }
+            //    else
+            //    {
+            //        H2CP_MainList_Label.Content = "No backup saves in local folder.";
+            //    }
+            //}
+            //else
+            //{
+            //    H2CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
+            //}
         }
 
         public class HaloSaveFileMetadata
@@ -1054,7 +1054,11 @@ namespace WpfApp3
             HaloSaveFileMetadata metadata = new HaloSaveFileMetadata() { Game = game };
 
             if (File.Exists(saveFilePath))
+
             {
+                FileInfo f = new FileInfo(saveFilePath);
+                if (f.Length > 10000)
+                { 
                 try
                 {
                     using (FileStream readStream = new FileStream(saveFilePath, FileMode.Open))
@@ -1081,6 +1085,7 @@ namespace WpfApp3
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
+                }
                 }
             }
 
