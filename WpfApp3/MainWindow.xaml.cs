@@ -108,7 +108,6 @@ namespace WpfApp3
                 var folderPath = $@"{HCMGlobal.LocalDir}\{folder}";
                 try
                 {
-                    firstrun = true; //for raising AboutWindow
                     Directory.CreateDirectory(folderPath);
                 }
                 catch (Exception exp)
