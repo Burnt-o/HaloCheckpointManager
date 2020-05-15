@@ -100,6 +100,7 @@ namespace WpfApp3
             CS_MainList.SelectionChanged += List_SelectionChanged;
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
+            bool firstrun = false;
 
             // Validate that required folders exist
             foreach (var folder in RequiredFolders)
@@ -107,6 +108,7 @@ namespace WpfApp3
                 var folderPath = $@"{HCMGlobal.LocalDir}\{folder}";
                 try
                 {
+                    firstrun = true; //for raising AboutWindow
                     Directory.CreateDirectory(folderPath);
                 }
                 catch (Exception exp)
@@ -123,6 +125,7 @@ namespace WpfApp3
                 {
                     if (!File.Exists(filePath))
                     {
+                        firstrun = true; //for raising AboutWindow
                         File.CreateText(filePath).Close();
                     }
                 }
@@ -147,6 +150,7 @@ namespace WpfApp3
 
             if (HCMGlobal.SavedConfig.CheckpointFolderPath == null)
             {
+
                 //autodetect checkpoint folder path
                 var CheckpointAutoPath = System.IO.Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -176,6 +180,15 @@ namespace WpfApp3
                     }
                 }
             }
+
+
+            if (firstrun == true)
+            { 
+                AboutButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); //raise aboutwindow
+                firstrun = false;
+            } 
+                
+
 
             RefreshButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
