@@ -10,7 +10,7 @@
         <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="197" Width="405" TextWrapping="WrapWithOverflow">
             
-            <Bold>Remember to click the refresh button after making a coresave with the traine to update it in this tool.</Bold><LineBreak></LineBreak>
+            <Bold>Remember to click the refresh button after making a coresave with the trainer to update it in this tool.</Bold><LineBreak></LineBreak>
                    
                    
                     <Bold>This tool doesn't revert to the core_save for you, only sets your most recent core save.</Bold> You still have to revert to it yourself with the checkpoint trainer. Keep in mind that reverting to a core save from a different level to what you're currently on will crash the game; instead you'll have to load up the correct level before core loading.<LineBreak></LineBreak>
