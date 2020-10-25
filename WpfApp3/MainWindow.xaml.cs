@@ -1255,14 +1255,14 @@ namespace WpfApp3
         {
             string test = "empty lol";
 
-            Process process = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
+            /*Process process = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
             IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
 
             int bytesRead = 0;
             byte[] buffer = new byte[3]; //3 bytes for levelcode string
             ReadProcessMemory((int)processHandle, 0x7FF7A5A6004E, buffer, buffer.Length, ref bytesRead);
             Console.WriteLine(Encoding.ASCII.GetString(buffer) + " (" + bytesRead.ToString() + "bytes)");
-
+*/
 
             return test;
         }

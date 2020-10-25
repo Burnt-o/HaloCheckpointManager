@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
-        Title="Halo Checkpoint Manager" Height="535" Width="757"
+        Title="Halo Checkpoint Manager" Height="585" Width="820"
         MinHeight="550" MinWidth="555" Loaded="Window_Loaded">
 
 
@@ -35,7 +35,7 @@
             </Style>
         </Grid.Resources>
 
-        <TabControl Margin="0,25,0,0">
+        <TabControl Margin="0,30,0,0">
 
 
             <TabItem Header="H1 Cores">
@@ -153,7 +153,7 @@
                 </Grid>
             </TabItem>
 
-            
+
 
             <TabItem Header="H2 Checkpoints" IsEnabled="false" Visibility="Visible">
                 <Grid Background="#FFE5E5E5" Margin="0,0,0,-4">
@@ -242,27 +242,35 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <TextBox x:Name="HRCP_Loa_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,77,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
-                    <TextBox x:Name="HRCP_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,41,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
-                    <TextBox x:Name="HRCP_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,203,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="1"/>
-                    <TextBox x:Name="HRCP_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,271,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
+                    <TextBox x:Name="HRCP_Loa_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,128,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
+                    <TextBox x:Name="HRCP_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,92,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
+                    <TextBox x:Name="HRCP_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,240,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="1"/>
+                    <TextBox x:Name="HRCP_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,308,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
 
-                    <TextBox x:Name="HRCP_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,235,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
-                    <Button x:Name="HRCP_Loa_SaveButton" Content="Backup" HorizontalAlignment="Right" Height="26" Margin="0,123,183,0" VerticalAlignment="Top" Width="121" Click="SaveButton_Click" Grid.Column="1"/>
-                    <Image x:Name="HRCP_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,41,183,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
-                    <Image x:Name="HRCP_Sel_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,235,183,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
-                    <Button x:Name="HRCP_Sel_LoadButton" Content="Load" HorizontalAlignment="Right" Height="26" Margin="0,317,183,0" VerticalAlignment="Top" Width="121" Click="LoadButton_Click" Grid.Column="1" />
-                    <Button x:Name="HRCP_Sel_RenameButton" Content="Rename" HorizontalAlignment="Right" Height="26" Margin="0,317,43,0" VerticalAlignment="Top" Width="121" Click="RenameButton_Click" Grid.Column="1"/>
-                    <Button x:Name="HRCP_Sel_ConvertButton" Content="Convert to Frog" HorizontalAlignment="Right" Height="26" Margin="0,367,183,0" VerticalAlignment="Top" Width="121" Click="ConvertButton_Click" Grid.Column="1"/>
-                    <Button x:Name="HRCP_Sel_DeleteButton" Content="Delete" HorizontalAlignment="Right" Height="26" Margin="0,367,43,0" VerticalAlignment="Top" Width="121" Click="DeleteButton_Click" Grid.Column="1"/>
-                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,166,27,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="1"/>
-                    <Button x:Name="HRCP_Sel_MoveUpButton" Content="Move Up" HorizontalAlignment="Right" Height="26" Margin="0,417,183,0" VerticalAlignment="Top" Width="121" Click="MoveUpButton_Click" Grid.Column="1"/>
-                    <Button x:Name="HRCP_Sel_MoveDownButton" Content="Move Down" HorizontalAlignment="Right" Height="26" Margin="0,417,43,0" VerticalAlignment="Top" Width="121" Click="MoveDownButton_Click" Grid.Column="1"/>
+                    <TextBox x:Name="HRCP_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,272,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
+                    <Button x:Name="HRCP_Loa_SaveButton" Content="Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,223,0" VerticalAlignment="Top" Width="82" Click="SaveButton_Click" Grid.Column="1"/>
+                    <Image x:Name="HRCP_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,92,184,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
+                    <Image x:Name="HRCP_Sel_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,272,184,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
+                    <Button x:Name="HRCP_Sel_LoadButton" Content="Inject" HorizontalAlignment="Right" Height="26" Margin="0,354,223,0" VerticalAlignment="Top" Width="82" Click="LoadButton_Click" Grid.Column="1" />
+                    <Button x:Name="HRCP_Sel_RenameButton" Content="Rename" HorizontalAlignment="Right" Height="26" Margin="0,404,184,0" VerticalAlignment="Top" Width="121" Click="RenameButton_Click" Grid.Column="1"/>
+                    <Button x:Name="HRCP_Sel_ConvertButton" Content="Inject &amp; Revert" HorizontalAlignment="Right" Height="26" Margin="0,354,44,0" VerticalAlignment="Top" Width="157" Click="ConvertButton_Click" Grid.Column="1"/>
+                    <Button x:Name="HRCP_Sel_DeleteButton" Content="Delete" HorizontalAlignment="Right" Height="26" Margin="0,404,44,0" VerticalAlignment="Top" Width="121" Click="DeleteButton_Click" Grid.Column="1"/>
+                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,208,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="1"/>
+                    <Button x:Name="HRCP_Sel_MoveUpButton" Content="Move Up" HorizontalAlignment="Right" Height="26" Margin="0,454,184,0" VerticalAlignment="Top" Width="121" Click="MoveUpButton_Click" Grid.Column="1"/>
+                    <Button x:Name="HRCP_Sel_MoveDownButton" Content="Move Down" HorizontalAlignment="Right" Height="26" Margin="0,454,44,0" VerticalAlignment="Top" Width="121" Click="MoveDownButton_Click" Grid.Column="1"/>
                     <Label x:Name="HRCP_MainList_Label" Content="No backup saves made yet." HorizontalAlignment="Left" Height="49" Margin="42,166,0,0" VerticalAlignment="Top" Width="223" Grid.Column="1" IsHitTestVisible="false" />
-                    <Label Content="Currently Loaded Checkpoint:" HorizontalAlignment="Right" Margin="0,10,104,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
-                    <Label Content="Selected Backup Checkpoint:" HorizontalAlignment="Right" Margin="0,172,109,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
-                    <Image x:Name="HRCP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,41,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
-                    <Image x:Name="HRCP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,235,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
+                    <Label Content="Currently Loaded Checkpoint:" HorizontalAlignment="Right" Margin="0,61,128,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
+                    <Label Content="Selected Backup Checkpoint:" HorizontalAlignment="Right" Margin="0,209,133,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
+                    <Image x:Name="HRCP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,92,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
+                    <Image x:Name="HRCP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,272,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
+                    <Button x:Name="HRCP_Loa_SaveButton_Copy" Content="Force Checkpoint &amp; Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,44,0" VerticalAlignment="Top" Width="157" Click="SaveButton_Click" Grid.Column="1"/>
+                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,60,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="1"/>
+                    <Button Content="Force Checkpoint" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="433,19,0,0" VerticalAlignment="Top" Width="107"/>
+                    <Button Content="Force Revert" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="560,19,0,0" VerticalAlignment="Top" Width="91"/>
+                    <Button Content="" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="668,19,0,0" VerticalAlignment="Top" Width="26"/>
+                    <Image Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="670,21,0,0" VerticalAlignment="Top" Width="24" Source="arrows-switch-pngrepo-com.png" RenderTransformOrigin="4.292,0.458"/>
+                    <Label Content="Seed: 64AF99C1" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="613,210,0,0" VerticalAlignment="Top" Width="100" FontSize="11"/>
+                    <Label Content="Seed: 64AF99C1" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="613,62,0,0" VerticalAlignment="Top" Width="100" FontSize="11"/>
 
 
                 </Grid>
@@ -280,9 +288,9 @@
 
 
 
-        <Button x:Name="RefreshButton" Content="Refresh" HorizontalAlignment="Right" Height="18" Margin="0,5,220,0" VerticalAlignment="Top" Width="86" Click="RefreshButton_Click"/>
-        <Button x:Name="SettingsButton" Content="Settings" HorizontalAlignment="Right" Height="18" Margin="0,5,120,0" VerticalAlignment="Top" Width="86" Click="SettingsButton_Click"/>
-        <Button x:Name="AboutButton" Content="About" HorizontalAlignment="Right" Height="18" Margin="0,5,20,0" VerticalAlignment="Top" Width="86" Click="AboutButton_Click" RenderTransformOrigin="0.488,0"/>
+        <Button x:Name="RefreshButton" Content="Refresh" HorizontalAlignment="Right" Height="23" Margin="0,5,220,0" VerticalAlignment="Top" Width="86" Click="RefreshButton_Click"/>
+        <Button x:Name="SettingsButton" Content="Settings" HorizontalAlignment="Right" Height="23" Margin="0,5,120,0" VerticalAlignment="Top" Width="86" Click="SettingsButton_Click"/>
+        <Button x:Name="AboutButton" Content="About" HorizontalAlignment="Right" Height="23" Margin="0,5,20,0" VerticalAlignment="Top" Width="86" Click="AboutButton_Click" RenderTransformOrigin="0.488,0"/>
 
 
 
