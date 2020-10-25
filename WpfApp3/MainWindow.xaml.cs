@@ -1267,5 +1267,22 @@ namespace WpfApp3
             return test;
         }
 
+        private void DumpButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void InjectButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void InjectRevertButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void ForceCPDumpButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void MoveUpButton_All_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void MoveDownButton_All_Click(object sender, RoutedEventArgs e)
+        { }
     }
 }
