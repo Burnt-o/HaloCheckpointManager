@@ -209,5 +209,11 @@
   <ItemGroup>
     <Resource Include="HCM.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="arrows-switch-pngrepo-com.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="arrow.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

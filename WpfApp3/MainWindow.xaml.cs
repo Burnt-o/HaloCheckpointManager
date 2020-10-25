@@ -20,14 +20,34 @@ using Microsoft.Win32;
 using WpfApp3.Properties;
 using System.Collections.ObjectModel;
 
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Text;
+
+
+
+
 namespace WpfApp3
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+
+
 
     public partial class MainWindow : Window
     {
+        //for reading/writing from process memory
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+        [DllImport("kernel32.dll")]
+        public static extern bool ReadProcessMemory(int hProcess,
+            Int64 lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+        const int PROCESS_WM_READ = 0x0010;
+
+
         private class HCMConfig
         {
             public string CoreFolderPath;
@@ -97,6 +117,16 @@ namespace WpfApp3
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //some testing stuff
+
+
+
+            Console.WriteLine("test: " + ReadLevelFromMemory());
+
+
+
+            //end testing stuff
+            
             CS_MainList.SelectionChanged += List_SelectionChanged;
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
@@ -1221,5 +1251,38 @@ namespace WpfApp3
         }
 
 
+        public static string ReadLevelFromMemory()
+        {
+            string test = "empty lol";
+
+            /*Process process = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
+            IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
+
+            int bytesRead = 0;
+            byte[] buffer = new byte[3]; //3 bytes for levelcode string
+            ReadProcessMemory((int)processHandle, 0x7FF7A5A6004E, buffer, buffer.Length, ref bytesRead);
+            Console.WriteLine(Encoding.ASCII.GetString(buffer) + " (" + bytesRead.ToString() + "bytes)");
+*/
+
+            return test;
+        }
+
+        private void DumpButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void InjectButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void InjectRevertButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void ForceCPDumpButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void MoveUpButton_All_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void MoveDownButton_All_Click(object sender, RoutedEventArgs e)
+        { }
     }
 }
