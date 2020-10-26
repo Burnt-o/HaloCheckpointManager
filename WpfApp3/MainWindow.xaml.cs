@@ -61,6 +61,8 @@ namespace WpfApp3
             public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
             public static readonly string H1CheckpointPath = LocalDir + @"\saves\h1cp";
             public static readonly string H2CheckpointPath = LocalDir + @"\saves\h2cp";
+            public static readonly string HRCheckpointPath = LocalDir + @"\saves\hrcp";
+            
             public static readonly string ConfigPath = LocalDir + @"\config.json";
             public static readonly string LogPath = LocalDir + @"\log.txt";
 
@@ -103,11 +105,14 @@ namespace WpfApp3
             @"saves\h1cs",
             @"saves\h1cp",
             @"saves\h2cp",
+            @"saves\hrcp",
         };
 
         public ObservableCollection<HaloSaveFileMetadata> Halo1CoreSaves { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo1Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo2Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+
+        public ObservableCollection<HaloSaveFileMetadata> HaloReachCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
         public MainWindow()
         {
@@ -121,7 +126,7 @@ namespace WpfApp3
 
 
 
-            Console.WriteLine("test: " + ReadLevelFromMemory());
+            //Console.WriteLine("test: " + ReadLevelFromMemory());
 
 
 
@@ -130,6 +135,7 @@ namespace WpfApp3
             CS_MainList.SelectionChanged += List_SelectionChanged;
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
+            HRCP_MainList.SelectionChanged += List_SelectionChanged;
             bool firstrun = false;
 
             // Validate that required folders exist
@@ -221,11 +227,6 @@ namespace WpfApp3
 
             RefreshButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
-            if (DateTime.Now.Day == 25 && DateTime.Now.Month == 12)
-            {
-                HCMGlobal.padowomode = true;
-                H2CP_Sel_ConvertButton.Content = "Convert to PADAWO";
-            }
         }
 
         void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -249,17 +250,39 @@ namespace WpfApp3
             }
         }
 
+        private void MaxFileTimes(string PathA, string PathB, bool ToTop)
+        {
+            //where A is the thing we want to move to the top
+            if (File.Exists(PathA) && File.Exists(PathB))
+            {
+                DateTime currentfilestime = File.GetLastWriteTime(PathA);
+                DateTime abovefilestime = File.GetLastWriteTime(PathB);
+                if (ToTop)
+                File.SetLastWriteTime(PathA, abovefilestime.AddMinutes(1));
+                else
+                    File.SetLastWriteTime(PathA, abovefilestime.AddMinutes(-1));
+                //File.SetLastWriteTime(PathB, currentfilestime);
+            }
+            else
+            {
+                Log("something went wrong: fileexists(movethis): " + File.Exists(PathA).ToString());
+                Log("something went wrong: fileexists(abovefile): " + File.Exists(PathB).ToString());
+            }
+
+
+        }
+
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
 
-            var btn = sender as Button;
-            if (btn == null)
-                return;
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
 
-            switch (btn.Name)
+
+            switch (parent_name)
             {
-                case "CS_Sel_MoveUpButton":
+                case "H1CS":
                     if (CS_MainList.SelectedIndex >= 0)
                     {
                         var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
@@ -273,7 +296,7 @@ namespace WpfApp3
                         }
                     }
                     break;
-                case "CP_Sel_MoveUpButton":
+                case "H1CP":
                     if (CP_MainList.SelectedIndex >= 0)
                     {
                         var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
@@ -287,7 +310,7 @@ namespace WpfApp3
                         }
                     }
                     break;
-                case "H2CP_Sel_MoveUpButton":
+                case "H2CP":
                     if (H2CP_MainList.SelectedIndex >= 0)
                     {
                         var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
@@ -301,22 +324,114 @@ namespace WpfApp3
                         }
                     }
                     break;
+                case "HRCP":
+                    if (HRCP_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
+                            SwapFileTimes(movethis, abovefile);
+                            HRCP_MainList.SelectedIndex--;
+                        }
+                    }
+                    break;
             }
 
             RefreshList(sender, e);
         }
 
+        private void MoveUpButton_All_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshSel(sender, e);
+
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            parent = (FrameworkElement)((FrameworkElement)parent).Parent;
+            string parent_name = parent.Name;
+
+
+            switch (parent_name)
+            {
+                case "H1CS":
+                    if (CS_MainList.SelectedIndex >= 0)
+                    {
+                        Console.Write("ee");
+                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = CS_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            Console.Write("aa");
+                            string movethis = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
+                            MaxFileTimes(movethis, abovefile, true);
+                            CS_MainList.SelectedIndex = 0;
+                        }
+                    }
+                    break;
+                case "H1CP":
+                    if (CP_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = CP_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
+                            MaxFileTimes(movethis, abovefile, true);
+                            CP_MainList.SelectedIndex = 0;
+                        }
+                    }
+                    break;
+                case "H2CP":
+                    if (H2CP_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = H2CP_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
+                            MaxFileTimes(movethis, abovefile, true);
+                            H2CP_MainList.SelectedIndex = 0;
+                        }
+                    }
+                    break;
+                case "HRCP":
+                    if (HRCP_MainList.SelectedIndex >= 0)
+                    {
+                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = HRCP_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string movethis = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
+                            MaxFileTimes(movethis, abovefile, true);
+                            HRCP_MainList.SelectedIndex = 0;
+                        }
+                    }
+                    break;
+            }
+
+            RefreshList(sender, e);
+
+        }
+
+
+
+
         private void MoveDownButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
 
-            var btn = sender as Button;
-            if (btn == null)
-                return;
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
 
-            switch (btn.Name)
+
+            switch (parent_name)
             {
-                case "CS_Sel_MoveDownButton":
+                case "H1CS":
                     if (CS_MainList.SelectedItem != null && CS_MainList.SelectedIndex != CS_MainList.Items.Count - 1)
                     {
                         var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
@@ -330,7 +445,7 @@ namespace WpfApp3
                         }
                     }
                     break;
-                case "CP_Sel_MoveDownButton":
+                case "H1CP":
                     if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count - 1)
                     {
                         var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
@@ -344,7 +459,7 @@ namespace WpfApp3
                         }
                     }
                     break;
-                case "H2CP_Sel_MoveDownButton":
+                case "H2CP":
                     if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count - 1)
                     {
                         var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
@@ -358,9 +473,96 @@ namespace WpfApp3
                         }
                     }
                     break;
+                case "HRCP":
+                    if (HRCP_MainList.SelectedItem != null && HRCP_MainList.SelectedIndex != HRCP_MainList.Items.Count - 1)
+                    {
+                        var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
+                            SwapFileTimes(pathAbove, pathBelow);
+                            HRCP_MainList.SelectedIndex++;
+                        }
+                    }
+                    break;
             }
 
             RefreshList(sender, e);
+        }
+
+        private void MoveDownButton_All_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshSel(sender, e);
+
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            parent = (FrameworkElement)((FrameworkElement)parent).Parent;
+            string parent_name = parent.Name;
+
+
+            switch (parent_name)
+            {
+                case "H1CS":
+                    if (CS_MainList.SelectedItem != null && CS_MainList.SelectedIndex != CS_MainList.Items.Count - 1)
+                    {
+                        var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.Items.Count - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
+                            MaxFileTimes(pathAbove, pathBelow, false);
+                            CS_MainList.SelectedIndex = CS_MainList.Items.Count - 1;
+                        }
+                    }
+                    break;
+                case "H1CP":
+                    if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count - 1)
+                    {
+                        var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.Items.Count - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
+                            MaxFileTimes(pathAbove, pathBelow, false);
+                            CP_MainList.SelectedIndex = CP_MainList.Items.Count - 1;
+                        }
+                    }
+                    break;
+                case "H2CP":
+                    if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count - 1)
+                    {
+                        var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.Items.Count - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
+                            MaxFileTimes(pathAbove, pathBelow, false);
+                            H2CP_MainList.SelectedIndex = H2CP_MainList.Items.Count - 1;
+                        }
+                    }
+                    break;
+                case "HRCP":
+                    if (HRCP_MainList.SelectedItem != null && HRCP_MainList.SelectedIndex != HRCP_MainList.Items.Count - 1)
+                    {
+                        var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.Items.Count - 1) as HaloSaveFileMetadata;
+                        if (fileBelow != null && fileAbove != null)
+                        {
+                            string pathAbove = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
+                            MaxFileTimes(pathAbove, pathBelow, false);
+                            HRCP_MainList.SelectedIndex = HRCP_MainList.Items.Count - 1;
+                        }
+                    }
+                    break;
+            }
+
+            RefreshList(sender, e);
+
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -578,7 +780,7 @@ namespace WpfApp3
 
         }
 
-        private void ConvertButton_Click(object sender, RoutedEventArgs e)
+       /* private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
 
@@ -659,7 +861,7 @@ namespace WpfApp3
                 Log("something went wrong trying to convert a save: Directory.Exists(converttoloc) : " + Directory.Exists(converttoloc).ToString(), sender);
                 Log("something went wrong trying to convert a save: !File.Exists(convertto) : " + (!File.Exists(convertto)).ToString(), sender);
             }
-        }
+        }*/
 
         private void DeleteSaveFile(string path)
         {
@@ -674,48 +876,61 @@ namespace WpfApp3
             }
         }
 
+
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            var oldselected = 0;
+            
             RefreshSel(sender, e);
-            var oldCSselected = CS_MainList.SelectedIndex;
-            var oldCPselected = CP_MainList.SelectedIndex;
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
 
-            var btn = sender as Button;
-            if (btn == null)
-                return;
+            
 
-            switch (btn.Name)
+                switch (parent_name)
             {
-                case "CS_Sel_DeleteButton":
+                case "H1CS":
+                    oldselected = CS_MainList.SelectedIndex;
                     if (CS_MainList.SelectedItem != null)
                     {
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         string path = $@"{HCMGlobal.H1CoreSavePath}\{item.Name}.bin";
-                        DeleteSaveFile(path);
+
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Delete " + item.Name + "?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+                        if (messageBoxResult == MessageBoxResult.Yes)
+                        {
+                            DeleteSaveFile(path);
+                        }
                     }
+                    RefreshList(sender, e);
+                    CS_MainList.SelectedIndex = oldselected;
+                    RefreshSel(sender, e);
                     break;
-                case "CP_Sel_DeleteButton":
-                    if (CP_MainList.SelectedItem != null)
+
+                case "HRCP":
+                    oldselected = HRCP_MainList.SelectedIndex;
+                    if (HRCP_MainList.SelectedItem != null)
                     {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        string path = $@"{HCMGlobal.H1CheckpointPath}\{item.Name}.bin";
-                        DeleteSaveFile(path);
+                        var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string path = $@"{HCMGlobal.HRCheckpointPath}\{item.Name}.bin";
+
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Delete " + item.Name + "?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+                        if (messageBoxResult == MessageBoxResult.Yes)
+                        {
+                            DeleteSaveFile(path);
+                        }
                     }
+                    RefreshList(sender, e);
+                    HRCP_MainList.SelectedIndex = oldselected;
+                    RefreshSel(sender, e);
                     break;
-                case "H2CP_Sel_DeleteButton":
-                    if (H2CP_MainList.SelectedItem != null)
-                    {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        string path = $@"{HCMGlobal.H2CheckpointPath}\{item.Name}.bin";
-                        DeleteSaveFile(path);
-                    }
-                    break;
+            
+            
             }
 
-            RefreshList(sender, e);
-            CS_MainList.SelectedIndex = oldCSselected;
-            CP_MainList.SelectedIndex = oldCPselected;
-            RefreshSel(sender, e);
+
+
+
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -765,20 +980,20 @@ namespace WpfApp3
             if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
             {
                 var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
-                CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                 if(data.Difficulty != Difficulty.Invalid)
-                    CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                    H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-                CS_Loa_Time.Text = TickToTimeString(data.StartTick);
-                CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                H1CS_Loa_Time.Text = TickToTimeString(data.StartTick);
+                H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
             }
             else
             {
-                CS_Loa_LevelName.Text = "N/A";
-                CS_Loa_DiffName.Source = null;
-                CS_Loa_Time.Text = "N/A";
-                CS_Loa_LevelImage.Source = null;
+                H1CS_Loa_LevelName.Text = "N/A";
+                H1CS_Loa_DiffName.Source = null;
+                H1CS_Loa_Time.Text = "N/A";
+                H1CS_Loa_LevelImage.Source = null;
             }
 
             //H1 CPs SECOND
@@ -835,23 +1050,23 @@ namespace WpfApp3
                 if (File.Exists(pathtotest))
                 {
                     var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
-                    CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                    H1CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
                     if (data.Difficulty != Difficulty.Invalid)
-                        CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                        H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-                    CS_Sel_Time.Text = TickToTimeString(data.StartTick);
-                    CS_Sel_FileName.Text = s;
-                    CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                    H1CS_Sel_Time.Text = TickToTimeString(data.StartTick);
+                    H1CS_Sel_FileName.Text = s;
+                    H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                 }
             }
             else
             {
-                CS_Sel_LevelName.Text = "N/A";
-                CS_Sel_DiffName.Source = null;
-                CS_Sel_Time.Text = "N/A";
-                CS_Sel_FileName.Text = "N/A";
-                CS_Sel_LevelImage.Source = null;
+                H1CS_Sel_LevelName.Text = "N/A";
+                H1CS_Sel_DiffName.Source = null;
+                H1CS_Sel_Time.Text = "N/A";
+                H1CS_Sel_FileName.Text = "N/A";
+                H1CS_Sel_LevelImage.Source = null;
             }
             //Console.WriteLine("CP_MainList.SelectedItem" + CP_MainList?.SelectedItem?.ToString());
 
@@ -945,7 +1160,7 @@ namespace WpfApp3
 
                 if(FilesPost.Count > 0)
                 {
-                    CS_MainList_Label.Content = "";
+                    H1CS_MainList_Label.Content = "";
                     foreach (string File in FilesPost)
                     {
                         var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, HaloGame.Halo1);
@@ -959,12 +1174,12 @@ namespace WpfApp3
                 }
                 else
                 {
-                    CS_MainList_Label.Content = "No backup saves in local folder.";
+                    H1CS_MainList_Label.Content = "No backup saves in local folder.";
                 }
             }
             else
             {
-                CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
+                H1CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
             }
 
             //h1 checkpoints second
@@ -1279,10 +1494,18 @@ namespace WpfApp3
         private void ForceCPDumpButton_Click(object sender, RoutedEventArgs e)
         { }
 
-        private void MoveUpButton_All_Click(object sender, RoutedEventArgs e)
+
+
+        private void H1CSDumpButton_Click(object sender, RoutedEventArgs e)
         { }
 
-        private void MoveDownButton_All_Click(object sender, RoutedEventArgs e)
+        private void H1CSInjectButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void H1CSInjectRevertButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void H1CSForceCPDumpButton_Click(object sender, RoutedEventArgs e)
         { }
     }
 }

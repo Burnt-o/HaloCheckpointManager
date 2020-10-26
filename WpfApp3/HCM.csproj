@@ -215,5 +215,8 @@
   <ItemGroup>
     <Resource Include="arrow.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="arrows-switch.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
