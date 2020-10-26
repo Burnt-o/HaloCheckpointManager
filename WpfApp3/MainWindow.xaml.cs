@@ -272,35 +272,31 @@ namespace WpfApp3
 
         }
 
-        private void ArbitaryFileTimeMove(int startindex, int destindex, object mainlist, string path)
+        private void ArbitaryFileTimeMove(int startindex, int destindex, ListView mainlist, string path)
         {
             //need to iterate over mainlist and create array of times
            
 
             List<DateTime> arrayoftimes = new List<DateTime>();
 
-            foreach (var item in CS_MainList.Items.)
+            for (int i = 0; i < mainlist.Items.Count; i++)
             {
-
+                var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
+                arrayoftimes.Add(File.GetLastWriteTime($@"{path}\{filedata.Name}.bin"));
             }
 
-            /*
-                        //h1 cores
-                        Halo1CoreSaves.Clear();
-                        if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
-                        {
-                            DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
-                            FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-                            FilesPost.Clear();
+            var tempfile = mainlist.Items.GetItemAt(destindex) as HaloSaveFileMetadata;
+            var tempdate = File.GetLastWriteTime($@"{path}\{tempfile.Name}.bin");
+            arrayoftimes.RemoveAt(destindex);
+            arrayoftimes.Insert(startindex, tempdate);
 
-                            foreach (FileInfo file in files)
-                            {
-                                while (FileHasSameTime(files, file))
-                                {
-                                    file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                                }
-                                FilesPost.Add(file.ToString());
-                            }*/
+            //now just need to apply the new times
+
+            for (int i = 0; i < mainlist.Items.Count; i++)
+            {
+                var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
+                File.SetLastWriteTime($@"{path}\{filedata.Name}.bin", arrayoftimes[i]);
+            }
 
         }
 
@@ -315,7 +311,7 @@ namespace WpfApp3
             switch (parent_name)
             {
                 case "H1CS":
-                    if (CS_MainList.SelectedIndex >= 0)
+                    if (CS_MainList.SelectedIndex >= 1)
                     {
                         var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
@@ -329,7 +325,7 @@ namespace WpfApp3
                     }
                     break;
                 case "H1CP":
-                    if (CP_MainList.SelectedIndex >= 0)
+                    if (CP_MainList.SelectedIndex >= 1)
                     {
                         var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
@@ -343,7 +339,7 @@ namespace WpfApp3
                     }
                     break;
                 case "H2CP":
-                    if (H2CP_MainList.SelectedIndex >= 0)
+                    if (H2CP_MainList.SelectedIndex >= 1)
                     {
                         var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
@@ -357,7 +353,7 @@ namespace WpfApp3
                     }
                     break;
                 case "HRCP":
-                    if (HRCP_MainList.SelectedIndex >= 0)
+                    if (HRCP_MainList.SelectedIndex >= 1)
                     {
                         var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
@@ -398,7 +394,6 @@ namespace WpfApp3
                             string movethis = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
                             string abovefile = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
                             ArbitaryFileTimeMove(CS_MainList.SelectedIndex, 0, CS_MainList, HCMGlobal.H1CoreSavePath);
-                            //MaxFileTimes(movethis, abovefile, true);
                             CS_MainList.SelectedIndex = 0;
                         }
                     }
@@ -412,7 +407,7 @@ namespace WpfApp3
                         {
                             string movethis = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
                             string abovefile = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
-                            MaxFileTimes(movethis, abovefile, true);
+                            ArbitaryFileTimeMove(CP_MainList.SelectedIndex, 0, CP_MainList, HCMGlobal.H1CheckpointPath);
                             CP_MainList.SelectedIndex = 0;
                         }
                     }
@@ -426,7 +421,7 @@ namespace WpfApp3
                         {
                             string movethis = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
                             string abovefile = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
-                            MaxFileTimes(movethis, abovefile, true);
+                            ArbitaryFileTimeMove(H2CP_MainList.SelectedIndex, 0, H2CP_MainList, HCMGlobal.H2CheckpointPath);
                             H2CP_MainList.SelectedIndex = 0;
                         }
                     }
@@ -440,7 +435,7 @@ namespace WpfApp3
                         {
                             string movethis = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
                             string abovefile = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
-                            MaxFileTimes(movethis, abovefile, true);
+                            ArbitaryFileTimeMove(HRCP_MainList.SelectedIndex, 0, HRCP_MainList, HCMGlobal.HRCheckpointPath);
                             HRCP_MainList.SelectedIndex = 0;
                         }
                     }
@@ -545,7 +540,7 @@ namespace WpfApp3
                         {
                             string pathAbove = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
                             string pathBelow = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
-                            MaxFileTimes(pathAbove, pathBelow, false);
+                            ArbitaryFileTimeMove(CS_MainList.SelectedIndex, CS_MainList.Items.Count -1, CS_MainList, HCMGlobal.H1CoreSavePath);
                             CS_MainList.SelectedIndex = CS_MainList.Items.Count - 1;
                         }
                     }
@@ -559,7 +554,7 @@ namespace WpfApp3
                         {
                             string pathAbove = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
                             string pathBelow = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
-                            MaxFileTimes(pathAbove, pathBelow, false);
+                            ArbitaryFileTimeMove(CP_MainList.SelectedIndex, CP_MainList.Items.Count - 1, CP_MainList, HCMGlobal.H1CheckpointPath);
                             CP_MainList.SelectedIndex = CP_MainList.Items.Count - 1;
                         }
                     }
@@ -573,7 +568,7 @@ namespace WpfApp3
                         {
                             string pathAbove = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
                             string pathBelow = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
-                            MaxFileTimes(pathAbove, pathBelow, false);
+                            ArbitaryFileTimeMove(H2CP_MainList.SelectedIndex, H2CP_MainList.Items.Count - 1, H2CP_MainList, HCMGlobal.H2CheckpointPath);
                             H2CP_MainList.SelectedIndex = H2CP_MainList.Items.Count - 1;
                         }
                     }
@@ -587,7 +582,7 @@ namespace WpfApp3
                         {
                             string pathAbove = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
                             string pathBelow = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
-                            MaxFileTimes(pathAbove, pathBelow, false);
+                            ArbitaryFileTimeMove(HRCP_MainList.SelectedIndex, HRCP_MainList.Items.Count - 1, HRCP_MainList, HCMGlobal.HRCheckpointPath);
                             HRCP_MainList.SelectedIndex = HRCP_MainList.Items.Count - 1;
                         }
                     }
