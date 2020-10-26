@@ -272,6 +272,38 @@ namespace WpfApp3
 
         }
 
+        private void ArbitaryFileTimeMove(int startindex, int destindex, object mainlist, string path)
+        {
+            //need to iterate over mainlist and create array of times
+           
+
+            List<DateTime> arrayoftimes = new List<DateTime>();
+
+            foreach (var item in CS_MainList.Items.)
+            {
+
+            }
+
+            /*
+                        //h1 cores
+                        Halo1CoreSaves.Clear();
+                        if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
+                        {
+                            DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
+                            FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
+                            FilesPost.Clear();
+
+                            foreach (FileInfo file in files)
+                            {
+                                while (FileHasSameTime(files, file))
+                                {
+                                    file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
+                                }
+                                FilesPost.Add(file.ToString());
+                            }*/
+
+        }
+
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
@@ -362,10 +394,11 @@ namespace WpfApp3
                         var fileAbove = CS_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
                         if (fileBelow != null && fileAbove != null)
                         {
-                            Console.Write("aa");
+                           
                             string movethis = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
                             string abovefile = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
-                            MaxFileTimes(movethis, abovefile, true);
+                            ArbitaryFileTimeMove(CS_MainList.SelectedIndex, 0, CS_MainList, HCMGlobal.H1CoreSavePath);
+                            //MaxFileTimes(movethis, abovefile, true);
                             CS_MainList.SelectedIndex = 0;
                         }
                     }
