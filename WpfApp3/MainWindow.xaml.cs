@@ -19,13 +19,13 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using WpfApp3.Properties;
 using System.Collections.ObjectModel;
-
-using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Runtime.CompilerServices;
-
+//using System.Windows.Shapes;
+using System.ComponentModel;
+//using System.Windows.Forms;
+using System.Windows.Threading;
 
 
 
@@ -66,12 +66,18 @@ namespace WpfApp3
             
             public static readonly string ConfigPath = LocalDir + @"\config.json";
             public static readonly string LogPath = LocalDir + @"\log.txt";
+            public static readonly string OffsetsPath = LocalDir + @"\offsets\";
 
             public static HCMConfig SavedConfig;
 
             public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
 
             public static bool padowomode = false;
+
+            public static Int32 ProcessID;
+            public static IntPtr GlobalProcessHandle;
+
+            public static bool SteamFlag = true; //false == winstore, used for knowing which offsets to use
         }
 
         public enum HaloGame
@@ -119,6 +125,16 @@ namespace WpfApp3
         {
             InitializeComponent();
             DataContext = this;
+
+
+
+            //need to initialize timer that will check for attachment to mcc process
+            //wasn't sure whether to put this here or in the above function but whatever
+            
+            DispatcherTimer dtClockTime = new DispatcherTimer();
+            dtClockTime.Interval = new TimeSpan(0, 0, 1); //in Hour, Minutes, Second.
+            dtClockTime.Tick += dtClockTime_Tick;
+            dtClockTime.Start();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -229,6 +245,23 @@ namespace WpfApp3
             RefreshButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1552,6 +1585,94 @@ namespace WpfApp3
                         [CallerLineNumber] int line = 0)
         {
             Console.WriteLine("{0}_{1}({2}): {3}", System.IO.Path.GetFileName(file), member, line, text);
+        }
+
+
+
+        private void dtClockTime_Tick(object sender, EventArgs e)
+        {
+
+            /* PLAN:::
+            check if process exists
+            check if our global process id matches it's id
+            if so do nothing (we're attached) (well actually proceed to next checks but eh)
+            if not (but process exists)
+            then try opening it and setting global process id etc
+            catch - failed to open - popup warning about needing admin priv + mcc eac off. then do nothing (not attached)
+            if process didn't exist
+            do nothing (not attached)
+
+            during all this we need to set a steam vs winstore flag
+
+            then; check game version (do we have the offsets to support it?)
+            check gameindicator and menuindicator to check whether we're in game (and which game) vs menu
+                then disable the ui functions related to the games that we're not in (the ones that need attachment anyway, like dump/inject)
+
+            also we're gonna need to set some sort of "busy flag" that's enabled when injections/dumps are happening that tells all this to not happen
+             */
+
+
+
+            //first, we'll have a global process ID that we check to see if we're already attached
+
+            IntPtr processHandle;
+
+            try
+            {
+                Process testProcess = Process.GetProcessById(HCMGlobal.ProcessID);
+                if (testProcess.ProcessName == "MCC-Win64-Shipping")
+                {
+                    Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
+                    HCMGlobal.SteamFlag = true;
+                }
+                else if (testProcess.ProcessName == "MCC-Win64-Shipping-Winstore")
+                {
+                    Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
+                    HCMGlobal.SteamFlag = false;
+                }
+                else
+                {
+                    throw new Exception("using exceptions as control flow is a terrible idea, they said");
+                    //but we need to go down and reattach to the process now
+                }
+
+            }
+            catch
+            {
+                try
+                {
+                    Process myProcess = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
+                    processHandle = OpenProcess(PROCESS_WM_READ, false, myProcess.Id);
+                    HCMGlobal.ProcessID = myProcess.Id;
+                    HCMGlobal.GlobalProcessHandle = processHandle;
+                    Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
+                    HCMGlobal.SteamFlag = true;
+                }
+                catch
+                {
+                    try
+                    {
+                        Process myProcess = Process.GetProcessesByName("MCC-Win64-Shipping-WinStore")[0];
+                        processHandle = OpenProcess(PROCESS_WM_READ, false, myProcess.Id);
+                        HCMGlobal.ProcessID = myProcess.Id;
+                        HCMGlobal.GlobalProcessHandle = processHandle;
+                        Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
+                        HCMGlobal.SteamFlag = false;
+                    }
+                    catch
+                    {
+                        Debug("MCC not found");
+                        return;
+                    }
+                }
+            }
+
+            //now that we're attached (we would've returned if we hadn't), we can proceed to next checks
+
+
+
+
+
         }
 
 
