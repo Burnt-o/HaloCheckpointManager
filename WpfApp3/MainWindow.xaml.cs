@@ -85,6 +85,7 @@ namespace WpfApp3
             public static bool CheckedForOnlineOffsets = false;
             public static string MCCversion;
             public static bool GiveUpFlag = false; //set to true if attachment checking should cease forever
+            public static bool OffsetsAcquired = false;
         }
 
 
@@ -1653,7 +1654,7 @@ namespace WpfApp3
 
             
            //if busy, don't do things since it'll cause access errors
-            if (HCMGlobal.BusyFlag)
+            if (HCMGlobal.BusyFlag || HCMGlobal.GiveUpFlag)
                 return;
 
 
@@ -1739,65 +1740,177 @@ namespace WpfApp3
                 }
             }
 
-            //now need to check if we have the offsets for this version in our local /offsets/ folder
-            if (File.Exists(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+
+            if (!HCMGlobal.OffsetsAcquired)
             {
-                //need to unpack the json and setup our offsets..
-                //gotta learn how json works lmao
-                Debug("file exists! unpacking json");
-                using (StreamReader r = new StreamReader(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+                //now need to check if we have the offsets for this version in our local /offsets/ folder
+                if (File.Exists(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
                 {
-                    string json = r.ReadToEnd();
-                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(json);
-                    //Debug("json string: " + json);
-                }
+                    //need to unpack the json and setup our offsets..
+                    //gotta learn how json works lmao
+                    Debug("file exists! unpacking json");
+                    using (StreamReader r = new StreamReader(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+                    {
+                        string json = r.ReadToEnd();
+                        r.Close();
+                        try
+                        {
+                            HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(json);
+                        }
+                        catch
+                        {
+                            Debug("something went horrifically wrong trying to load local json file");
+                            HCMGlobal.AttachedGame = "No";
+                            SetEnabledUI();
+                            HCMGlobal.GiveUpFlag = true;
+
+                            if (File.Exists("offsets\\" + HCMGlobal.MCCversion + ".json"))
+                            {
+                                try
+                                {
+                                    File.Delete("offsets\\" + HCMGlobal.MCCversion + ".json");
+                                    Debug("deleted local json file since it was bunk");
+                                }
+                                catch
+                                {
+                                    Debug("failed to delete bunk local json file");
+                                }
+                            }
+                            return;
+
+                        }
+                        //Debug("json string: " + json);
+                    }
 
 
-                if (HCMGlobal.LoadedOffsets.gameindicator == null)
-                {
-                    Debug("something went horribly wrong loading the json");
+                    if (HCMGlobal.LoadedOffsets.gameindicator == null)
+                    {
+                        Debug("something went horribly wrong loading the json");
+                    }
+                    else
+                    {
+                        Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicator.ToString());
+                        Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicator[0][0].ToString());
+                        Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
+                        Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
+                        Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
+                        //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+                    }
                 }
-                else
+                //if no offsets found, let's check the github and try to download them!
+                else if (!HCMGlobal.CheckedForOnlineOffsets)
                 {
-                    Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicator.ToString());
-                    Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicator[0][0].ToString());
-                    Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
-                    Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
-                    Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
-                    //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+                    HCMGlobal.CheckedForOnlineOffsets = true;
+                    try
+                    {
+                        String url = "https://github.com/Burnt-o/HaloCheckpointManager/raw/master/WpfApp3/offsets/" + HCMGlobal.MCCversion + ".json";
+                        System.Net.WebClient client = new System.Net.WebClient();
+                        String json = client.DownloadString(url);
+                        System.IO.File.WriteAllText("offsets\\" + HCMGlobal.MCCversion + ".json", json);
+                        Debug("downloaded json file!" + json);
+
+                        //copy pasted code from above
+                        if (File.Exists(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+                        {
+                            //need to unpack the json and setup our offsets..
+                            //gotta learn how json works lmao
+                            Debug("file exists! unpacking json");
+                            using (StreamReader r = new StreamReader(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+                            {
+                                string json2 = r.ReadToEnd();
+                                r.Close();
+                                try
+                                {
+                                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(json2);
+                                }
+                                catch
+                                {
+                                    Debug("something went horrifically wrong trying to load downloaded local json file");
+                                    HCMGlobal.AttachedGame = "No";
+                                    SetEnabledUI();
+                                    HCMGlobal.GiveUpFlag = true;
+
+                                    if (File.Exists("offsets\\" + HCMGlobal.MCCversion + ".json"))
+                                    {
+                                        try
+                                        {
+                                            File.Delete("offsets\\" + HCMGlobal.MCCversion + ".json");
+                                            Debug("deleted downloaded local json file since it was bunk");
+                                        }
+                                        catch
+                                        {
+                                            Debug("failed to delete bunk downloaded local json file");
+                                        }
+                                    }
+                                    return;
+
+                                }
+                                //Debug("json string: " + json);
+                            }
+
+
+                            if (HCMGlobal.LoadedOffsets.gameindicator == null)
+                            {
+                                Debug("something went horribly wrong loading the json");
+                            }
+                            else
+                            {
+                                Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicator.ToString());
+                                Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicator[0][0].ToString());
+                                Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
+                                Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
+                                Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
+                                //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+                            }
+                        }
+
+
+                    }
+                    catch
+                    {
+                        //failed to find/download json!
+                        Debug("online json file didn't exist!");
+                    }
+
+
+                    //nah
                 }
-            }
-            //if no offsets found, let's check the github and try to download them!
-            else if (!HCMGlobal.CheckedForOnlineOffsets)
-            {
-                HCMGlobal.CheckedForOnlineOffsets = true;
+                //check that offsets aren't null
                 try
                 {
-                    String url = "https://github.com/Burnt-o/HaloCheckpointManager/raw/master/WpfApp3/offsets/" + HCMGlobal.MCCversion + ".json";
-                    System.Net.WebClient client = new System.Net.WebClient();
-                    String json = client.DownloadString(url);
-                    System.IO.File.WriteAllText("offsets\\" + HCMGlobal.MCCversion + ".json", json);
-                    Debug("downloaded json file!" + json);
+                    if (HCMGlobal.LoadedOffsets.gameindicator[0][0] > 0)
+                    {
+                        //success!
+                        Debug("SUCCESS");
+                        HCMGlobal.OffsetsAcquired = true;
+                    }
+                    else
+                    {
+                        throw new Exception("using exceptions as control flow is a terrible idea, they said - part 2 electric boogaloo");
+                    }
                 }
                 catch
-                { 
-                //failed to find/download json!
+                {
+                    Debug("failed to find offsets for current MCC version! Need to popup a user dialog to let em know");
+                    HCMGlobal.AttachedGame = "No";
+                    SetEnabledUI();
+                    HCMGlobal.GiveUpFlag = true;
 
+                    if (HCMGlobal.CheckedForOnlineOffsets && File.Exists("offsets\\" + HCMGlobal.MCCversion + ".json"))
+                    {
+                        try
+                        {
+                            File.Delete("offsets\\" + HCMGlobal.MCCversion + ".json");
+                            Debug("deleted downloaded json file since it was bunk");
+                        }
+                        catch
+                        {
+                            Debug("failed to delete bunk downloaded json file");
+                        }
+                    }
+                    return;
                 }
-
-
-                //nah
             }
-            //check that offsets aren't null
-            if (HCMGlobal.LoadedOffsets == null)
-            {
-                Debug("failed to find offsets for current MCC version! Need to popup a user dialog to let em know");
-                HCMGlobal.AttachedGame = "No";
-                SetEnabledUI();
-                HCMGlobal.GiveUpFlag = true;
-                return;
-            }
-
 
             //still no offsets found; popup warning about unsupported version, set attached to no and return
 
