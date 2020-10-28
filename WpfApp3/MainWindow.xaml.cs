@@ -69,6 +69,7 @@ namespace WpfApp3
             public static readonly string OffsetsPath = LocalDir + @"\offsets\";
 
             public static HCMConfig SavedConfig;
+            public static Offsets LoadedOffsets;
 
             public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
 
@@ -85,17 +86,30 @@ namespace WpfApp3
         }
 
 
-        private static class Offsets
-        { 
-        //offsets are gonna be stored as 2-unit arrays, first position is winstore, second is steam
-        //that way when we're calling them from elsewhere we can just call Offsets.WhateverOffset[HCMGlobal.SteamFlag] and it'll give us the one we want
-        //the units will themselves be arbitary length arrays (each position for each offset in a multi-level pointer)
+        private class Offsets
+        {
+            //offsets are gonna be stored as 2-unit arrays, first position is winstore, second is steam
+            //that way when we're calling them from elsewhere we can just call Offsets.WhateverOffset[HCMGlobal.SteamFlag] and it'll give us the one we want
+            //the units will themselves be arbitary length arrays (each position for each offset in a multi-level pointer)
 
-        //the actual values will be populated from the json file corrosponding to the attached mcc version
+            //the actual values will be populated from the json file corrosponding to the attached mcc version
 
-            public static int[][] H1_ForceCoreSave = new int[2][];
-            public static int[][] H1_ForceCoreLoad = new int[2][];
-            //will add the rest later lmao
+                //general
+            public int[][] gameindicator;
+            public int[][] menuindicator;
+
+             //h1
+            public static int[][] H1_CoreSave = new int[2][];
+            public static int[][] H1_CoreLoad = new int[2][];
+            //need to 
+
+                //hr
+            public static int[][] HR_Checkpoint = new int[2][]; //for forcing checkpoints
+            public static int[][] HR_Revert = new int[2][]; //for forcing reverts
+            public static int[][] HR_CPLocation = new int[2][];
+            public static int[][] HR_DRflag = new int[2][]; //dr as in "double revert"
+            public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
+            
 
 
 
@@ -1704,7 +1718,7 @@ namespace WpfApp3
 
             //now that we're attached (we would've returned if we hadn't), we can proceed to next checks
             //what mcc version are we? only need to check this once
-            if (HCMGlobal.VersionCheckedFlag)
+            if (!HCMGlobal.VersionCheckedFlag)
             {
                 try
                 {
@@ -1728,12 +1742,41 @@ namespace WpfApp3
             {
                 //need to unpack the json and setup our offsets..
                 //gotta learn how json works lmao
+                Debug("file exists! unpacking json");
+                using (StreamReader r = new StreamReader(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+                {
+                    string json = r.ReadToEnd();
+                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(json);
+                    //Debug("json string: " + json);
+                }
 
+
+                if (HCMGlobal.LoadedOffsets.gameindicator == null)
+                {
+                    Debug("something went horribly wrong loading the json");
+                }
+                else
+                {
+                    Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicator.ToString());
+                    Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicator[0][0].ToString());
+                    Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
+                    Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
+                    Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
+                    //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+                }
             }
             //if no offsets found, let's check the github and try to download them!
             else
-            { 
-            
+            {
+            /*    String url = "https://www.ah.nl/service/rest/delegate?url=%2Fproducten%2Fproduct%2Fwi224735%2Fdoritos-nacho-cheese&_=1513938720642";
+                System.Net.WebClient client = new System.Net.WebClient();
+                String json = client.DownloadString(url);
+                System.IO.File.WriteAllText("fileName.json", json);
+                Console.WriteLine(json);*/
+
+
+
+                //nah
             }
             
 
