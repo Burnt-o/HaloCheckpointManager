@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 
 
@@ -126,7 +127,7 @@ namespace WpfApp3
 
 
 
-            //Console.WriteLine("test: " + ReadLevelFromMemory());
+            //Debug("test: " + ReadLevelFromMemory());
 
 
 
@@ -385,7 +386,7 @@ namespace WpfApp3
                 case "H1CS":
                     if (CS_MainList.SelectedIndex >= 0)
                     {
-                        Console.Write("ee");
+                        Debug("ee");
                         var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         var fileAbove = CS_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
                         if (fileBelow != null && fileAbove != null)
@@ -597,23 +598,16 @@ namespace WpfApp3
         {
             RefreshLoa(sender, e);
 
-            var btn = sender as Button;
-            if (btn == null)
-                return;
+
 
             string backuploc = "";
             string pathtotest = "";
 
-            switch (btn.Name)
-            {
-                case "CS_Loa_SaveButton":
+
                     backuploc = HCMGlobal.H1CoreSavePath;
                     if (HCMGlobal.SavedConfig.CoreFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
-                    break;
-                default:
-                    break;
-            }
+
 
 
             if (File.Exists(pathtotest) && Directory.Exists(backuploc) && pathtotest != "")
@@ -647,12 +641,15 @@ namespace WpfApp3
 
         private void CopySaveFile(string sourcePath, string targetPath)
         {
+            Debug("hm yes");
             string targetFolder = "";
             try
             {
                 targetFolder = System.IO.Path.GetDirectoryName(targetPath);
             }
-            catch { }
+            catch {
+                Debug("that's not good");
+            }
             if (Directory.Exists(targetFolder) && File.Exists(sourcePath))
             {
                 try
@@ -676,25 +673,18 @@ namespace WpfApp3
         {
             RefreshSel(sender, e);
             RefreshLoa(sender, e);
-            Console.WriteLine("attempting to inject h1cs");
-            var btn = sender as Button;
-            if (btn == null)
-                return;
+            Debug("attempting to inject h1cs");
 
-            switch (btn.Name)
-            {
-                case "CS_Sel_LoadButton":
+
                     if (CS_MainList.SelectedItem != null)
                     {
+                        Debug("uh huh");
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         string sourcePath = HCMGlobal.H1CoreSavePath + @"\" + item.Name + @".bin";
                         string targetPath = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
                         CopySaveFile(sourcePath, targetPath);
                     }
-                    break;
-                default:
-                    break;
-            }
+
 
             RefreshLoa(sender, e);
         }
@@ -1085,12 +1075,12 @@ namespace WpfApp3
                 H1CS_Sel_FileName.Text = "N/A";
                 H1CS_Sel_LevelImage.Source = null;
             }
-            //Console.WriteLine("CP_MainList.SelectedItem" + CP_MainList?.SelectedItem?.ToString());
+            //Debug("CP_MainList.SelectedItem" + CP_MainList?.SelectedItem?.ToString());
 
             //H1 CPs SECOND
             //if (CP_MainList.SelectedItem != null)
             //{
-            //    //Console.WriteLine("ahh" + CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
+            //    //Debug("ahh" + CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
             //    var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
             //    System.Type type = item.GetType();
             //    string s = (string)type.GetProperty("Name").GetValue(item, null);
@@ -1121,7 +1111,7 @@ namespace WpfApp3
             //H2 CPs THIRD
             //if (H2CP_MainList.SelectedItem != null)
             //{
-            //    //Console.WriteLine("ahh" + H2CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
+            //    //Debug("ahh" + H2CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
             //    var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
             //    System.Type type = item.GetType();
             //    string s = (string)type.GetProperty("Name").GetValue(item, null);
@@ -1449,6 +1439,7 @@ namespace WpfApp3
         {
             List<string> addthis = new List<string> { $"{DateTime.Now} - {(sender as Control)?.Name}", text };
             File.AppendAllLines(HCMGlobal.LogPath, addthis);
+            Debug(addthis.ToString());
         }
 
         public static void Log(string text)
@@ -1493,7 +1484,7 @@ namespace WpfApp3
             int bytesRead = 0;
             byte[] buffer = new byte[3]; //3 bytes for levelcode string
             ReadProcessMemory((int)processHandle, 0x7FF7A5A6004E, buffer, buffer.Length, ref bytesRead);
-            Console.WriteLine(Encoding.ASCII.GetString(buffer) + " (" + bytesRead.ToString() + "bytes)");
+            Debug(Encoding.ASCII.GetString(buffer) + " (" + bytesRead.ToString() + "bytes)");
 */
 
             return test;
@@ -1555,7 +1546,13 @@ namespace WpfApp3
 
 
 
-
+        private static void Debug(string text,
+                        [CallerFilePath] string file = "",
+                        [CallerMemberName] string member = "",
+                        [CallerLineNumber] int line = 0)
+        {
+            Console.WriteLine("{0}_{1}({2}): {3}", System.IO.Path.GetFileName(file), member, line, text);
+        }
 
 
     }
