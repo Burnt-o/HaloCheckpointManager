@@ -44,9 +44,16 @@ namespace WpfApp3
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
         [DllImport("kernel32.dll")]
-        public static extern bool ReadProcessMemory(int hProcess,
-            Int64 lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
+        public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
+
+
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, out int lpNumberOfBytesWritten);
+
+
         const int PROCESS_WM_READ = 0x0010;
+        const int PROCESS_ALL_ACCESS = 0x1F0FFF;
 
 
         private class HCMConfig
@@ -86,6 +93,7 @@ namespace WpfApp3
             public static string MCCversion;
             public static bool GiveUpFlag = false; //set to true if attachment checking should cease forever
             public static bool OffsetsAcquired = false;
+            public static IntPtr BaseAddress;
         }
 
 
@@ -1912,10 +1920,96 @@ namespace WpfApp3
                 }
             }
 
-            //still no offsets found; popup warning about unsupported version, set attached to no and return
+            //OKAY we need to get the base address of mcc.exe
+            ProcessModule myProcessModule;
+            ProcessModuleCollection myProcessModuleCollection = myProcess.Modules;
+
+            for (int i = 0; i < myProcessModuleCollection.Count; i++)
+            {
+                myProcessModule = myProcessModuleCollection[i];
+
+                switch (myProcessModule.ModuleName)
+                {
+                    case "MCC-Win64-Shipping.exe":
+                        HCMGlobal.BaseAddress = myProcessModule.BaseAddress;
+                        break;
+
+                    case "MCC-Win64-Shipping-Winstore.exe":
+                        HCMGlobal.BaseAddress = myProcessModule.BaseAddress;
+                        break;
+
+                    default:
+                        break;
+
+                }
+            }
+
+            if (HCMGlobal.BaseAddress == null)
+            {
+                Debug("How did execution even get to here? Something went really wrong");
+                return;
+            }
+
+                //OKAY we're attached, and we have our offsets (or we would've returned by now)
+                //let's check whether we're in game (as opposed to menu), and which game we're in
+                byte[] buffer = new byte[1];
 
 
-        }
+            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.gameindicator[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesRead2))
+            {
+                switch (buffer[0])
+                {
+                    case 0:
+                        HCMGlobal.AttachedGame = "H1";
+                        break;
+                    case 1:
+                        HCMGlobal.AttachedGame = "H2";
+                        break;
+                    case 2:
+                        HCMGlobal.AttachedGame = "H3";
+                        break;
+                    case 3:
+                        HCMGlobal.AttachedGame = "Mn"; //halo 4 maybe?
+                        break;
+                    case 4:
+                        HCMGlobal.AttachedGame = "Mn"; //halo 4 maybe?
+                        break;
+                    case 5:
+                        HCMGlobal.AttachedGame = "OD";
+                        break;
+                    case 6:
+                        HCMGlobal.AttachedGame = "HR";
+                        break;
+
+                }
+            }
+            else //means reading the gameindicator failed
+            {
+                Debug("failed to read game indicator");
+                return;
+            }
+
+            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.menuindicator[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesRead))
+            {
+                Debug("menu indicator is: " + buffer[0]);
+                if (buffer[0] == 0x0B)
+                    HCMGlobal.AttachedGame = "Mn";
+
+            }
+            else
+            {
+                Debug("failed to read menu indicator");
+                //Debug("resolved addy?: " + FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, testoffset));
+                //Debug("Global process handle: " + (HCMGlobal.GlobalProcessHandle.ToString()));
+                //Debug("Global base addy: " + (HCMGlobal.BaseAddress.ToString()));
+                return;
+            }
+
+            Debug("All checks succeeded, attached game is: " + HCMGlobal.AttachedGame);
+            //is that it? I think we're done
+
+
+            }
 
         private void SetEnabledUI()
         {
@@ -1951,5 +2045,33 @@ namespace WpfApp3
 
             }
         }
+
+        public static IntPtr FindPointerAddy(IntPtr hProc, IntPtr ptr, int[] offsets)
+        {
+            var buffer = new byte[IntPtr.Size];
+
+
+            ptr = ptr + offsets[0];
+            if (offsets.Length == 1)
+            {
+                return ptr;
+            }
+
+            offsets = offsets.Skip(1).ToArray();
+
+            foreach (int i in offsets)
+            {
+                ReadProcessMemory(hProc, ptr, buffer, buffer.Length, out int read);
+
+                ptr = (IntPtr.Size == 4)
+                ? IntPtr.Add(new IntPtr(BitConverter.ToInt32(buffer, 0)), i)
+                : ptr = IntPtr.Add(new IntPtr(BitConverter.ToInt64(buffer, 0)), i);
+            }
+            return ptr;
+        }
+
+
+
+
     }
 }
