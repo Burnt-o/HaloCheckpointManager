@@ -78,6 +78,28 @@ namespace WpfApp3
             public static IntPtr GlobalProcessHandle;
 
             public static bool SteamFlag = true; //false == winstore, used for knowing which offsets to use
+            public static bool BusyFlag = false; //turned true when injecting/dumping so we don't do it twice
+            public static string AttachedGame = "No"; //No, Mn (menu), HR, H1, H2, H3, OD (ODST), H4
+            public static bool VersionCheckedFlag = false;
+            public static string MCCversion;
+        }
+
+
+        private static class Offsets
+        { 
+        //offsets are gonna be stored as 2-unit arrays, first position is winstore, second is steam
+        //that way when we're calling them from elsewhere we can just call Offsets.WhateverOffset[HCMGlobal.SteamFlag] and it'll give us the one we want
+        //the units will themselves be arbitary length arrays (each position for each offset in a multi-level pointer)
+
+        //the actual values will be populated from the json file corrosponding to the attached mcc version
+
+            public static int[][] H1_ForceCoreSave = new int[2][];
+            public static int[][] H1_ForceCoreLoad = new int[2][];
+            //will add the rest later lmao
+
+
+
+
         }
 
         public enum HaloGame
@@ -1613,19 +1635,27 @@ namespace WpfApp3
 
 
 
+            
+           //if busy, don't do things since it'll cause access errors
+            if (HCMGlobal.BusyFlag)
+                return;
+
+
             //first, we'll have a global process ID that we check to see if we're already attached
 
+            //string AttachedGame = "No"; //temp var, will modify this as we go through the checks
             IntPtr processHandle;
+            Process myProcess;
 
             try
             {
-                Process testProcess = Process.GetProcessById(HCMGlobal.ProcessID);
-                if (testProcess.ProcessName == "MCC-Win64-Shipping")
+                myProcess = Process.GetProcessById(HCMGlobal.ProcessID);
+                if (myProcess.ProcessName == "MCC-Win64-Shipping")
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
                     HCMGlobal.SteamFlag = true;
                 }
-                else if (testProcess.ProcessName == "MCC-Win64-Shipping-Winstore")
+                else if (myProcess.ProcessName == "MCC-Win64-Shipping-Winstore")
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
                     HCMGlobal.SteamFlag = false;
@@ -1641,7 +1671,7 @@ namespace WpfApp3
             {
                 try
                 {
-                    Process myProcess = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
+                    myProcess = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
                     processHandle = OpenProcess(PROCESS_WM_READ, false, myProcess.Id);
                     HCMGlobal.ProcessID = myProcess.Id;
                     HCMGlobal.GlobalProcessHandle = processHandle;
@@ -1652,7 +1682,7 @@ namespace WpfApp3
                 {
                     try
                     {
-                        Process myProcess = Process.GetProcessesByName("MCC-Win64-Shipping-WinStore")[0];
+                        myProcess = Process.GetProcessesByName("MCC-Win64-Shipping-WinStore")[0];
                         processHandle = OpenProcess(PROCESS_WM_READ, false, myProcess.Id);
                         HCMGlobal.ProcessID = myProcess.Id;
                         HCMGlobal.GlobalProcessHandle = processHandle;
@@ -1662,19 +1692,89 @@ namespace WpfApp3
                     catch
                     {
                         Debug("MCC not found");
+                        HCMGlobal.AttachedGame = "No";
+                        SetEnabledUI();
                         return;
                     }
                 }
             }
 
+
+
+
             //now that we're attached (we would've returned if we hadn't), we can proceed to next checks
+            //what mcc version are we? only need to check this once
+            if (HCMGlobal.VersionCheckedFlag)
+            {
+                try
+                {
+                    HCMGlobal.MCCversion = myProcess.MainModule.FileVersionInfo.ProductVersion.ToString();
+                    Debug("MCC version: " + HCMGlobal.MCCversion + ", steamflag: " + HCMGlobal.SteamFlag.ToString());
+                    HCMGlobal.VersionCheckedFlag = true;
+                    
+                }
 
+                catch
+                {
+                    Debug("MCC - failed to find version info");
+                    HCMGlobal.AttachedGame = "No";
+                    SetEnabledUI();
+                    return;
+                }
+            }
 
+            //now need to check if we have the offsets for this version in our local /offsets/ folder
+            if (File.Exists(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
+            {
+                //need to unpack the json and setup our offsets..
+                //gotta learn how json works lmao
 
+            }
+            //if no offsets found, let's check the github and try to download them!
+            else
+            { 
+            
+            }
+            
+
+            //still no offsets found; popup warning about unsupported version, set attached to no and return
 
 
         }
 
+        private void SetEnabledUI()
+        {
+            //here we'll set certain UI elements to be enabled/disabled based on what we're attached too
+            //eg if we're in H1, we disable the inject/dump buttons for reach (& force checkpoint/revert)
+            //or if we're in menu/not attached, we disable those buttons for all games
+            //we'll just use the xaml .IsEnabled flag, when false this greys out the button and makes it unclickable
 
+            //todo; implement this
+            switch (HCMGlobal.AttachedGame)
+            {
+                case "Me":
+                case "No":
+
+                    break;
+                case "HR":
+                    break;
+
+                case "H1":
+                break;
+
+                case "H2":
+                    break;
+
+                case "H3":
+                    break;
+
+                case "OD":
+                    break;
+
+                case "H4":
+                    break;
+
+            }
+        }
     }
 }
