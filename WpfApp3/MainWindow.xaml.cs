@@ -82,7 +82,9 @@ namespace WpfApp3
             public static bool BusyFlag = false; //turned true when injecting/dumping so we don't do it twice
             public static string AttachedGame = "No"; //No, Mn (menu), HR, H1, H2, H3, OD (ODST), H4
             public static bool VersionCheckedFlag = false;
+            public static bool CheckedForOnlineOffsets = false;
             public static string MCCversion;
+            public static bool GiveUpFlag = false; //set to true if attachment checking should cease forever
         }
 
 
@@ -1766,19 +1768,36 @@ namespace WpfApp3
                 }
             }
             //if no offsets found, let's check the github and try to download them!
-            else
+            else if (!HCMGlobal.CheckedForOnlineOffsets)
             {
-            /*    String url = "https://www.ah.nl/service/rest/delegate?url=%2Fproducten%2Fproduct%2Fwi224735%2Fdoritos-nacho-cheese&_=1513938720642";
-                System.Net.WebClient client = new System.Net.WebClient();
-                String json = client.DownloadString(url);
-                System.IO.File.WriteAllText("fileName.json", json);
-                Console.WriteLine(json);*/
+                HCMGlobal.CheckedForOnlineOffsets = true;
+                try
+                {
+                    String url = "https://github.com/Burnt-o/HaloCheckpointManager/raw/master/WpfApp3/offsets/" + HCMGlobal.MCCversion + ".json";
+                    System.Net.WebClient client = new System.Net.WebClient();
+                    String json = client.DownloadString(url);
+                    System.IO.File.WriteAllText("offsets\\" + HCMGlobal.MCCversion + ".json", json);
+                    Debug("downloaded json file!" + json);
+                }
+                catch
+                { 
+                //failed to find/download json!
 
+                }
 
 
                 //nah
             }
-            
+            //check that offsets aren't null
+            if (HCMGlobal.LoadedOffsets == null)
+            {
+                Debug("failed to find offsets for current MCC version! Need to popup a user dialog to let em know");
+                HCMGlobal.AttachedGame = "No";
+                SetEnabledUI();
+                HCMGlobal.GiveUpFlag = true;
+                return;
+            }
+
 
             //still no offsets found; popup warning about unsupported version, set attached to no and return
 
