@@ -593,7 +593,7 @@ namespace WpfApp3
 
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void H1CSDumpButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshLoa(sender, e);
 
@@ -610,16 +610,6 @@ namespace WpfApp3
                     backuploc = HCMGlobal.H1CoreSavePath;
                     if (HCMGlobal.SavedConfig.CoreFolderPath != null)
                         pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
-                    break;
-                case "CP_Loa_SaveButton":
-                    backuploc = HCMGlobal.H1CheckpointPath;
-                    if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
-                    break;
-                case "H2CP_Loa_SaveButton":
-                    backuploc = HCMGlobal.H2CheckpointPath;
-                    if (HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-                        pathtotest = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
                     break;
                 default:
                     break;
@@ -645,6 +635,14 @@ namespace WpfApp3
                     //need to make this a popup to let user know what was bad
                 }
             }
+        }
+
+
+        private void H1CSForceCPDumpButton_Click(object sender, RoutedEventArgs e)
+        {
+            //do force cp things, set a timer to wait for checkpoint to complete, then..
+            H1CSDumpButton_Click(sender, e);
+
         }
 
         private void CopySaveFile(string sourcePath, string targetPath)
@@ -674,11 +672,11 @@ namespace WpfApp3
             }
         }
 
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        private void H1CSInjectButton_Click(object sender, RoutedEventArgs e)
         {
             RefreshSel(sender, e);
             RefreshLoa(sender, e);
-
+            Console.WriteLine("attempting to inject h1cs");
             var btn = sender as Button;
             if (btn == null)
                 return;
@@ -694,27 +692,18 @@ namespace WpfApp3
                         CopySaveFile(sourcePath, targetPath);
                     }
                     break;
-                case "CP_Sel_LoadButton":
-                    if (CP_MainList.SelectedItem != null)
-                    {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        string sourcePath = HCMGlobal.H1CheckpointPath + @"\" + item.Name + @".bin";
-                        string targetPath = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin";
-                        CopySaveFile(sourcePath, targetPath);
-                    }
-                    break;
-                case "H2CP_Sel_LoadButton":
-                    if (H2CP_MainList.SelectedItem != null)
-                    {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        string sourcePath = HCMGlobal.H2CheckpointPath + @"\" + item.Name + @".bin";
-                        string targetPath = HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin";
-                        CopySaveFile(sourcePath, targetPath);
-                    }
+                default:
                     break;
             }
 
             RefreshLoa(sender, e);
+        }
+
+        private void H1CSInjectRevertButton_Click(object sender, RoutedEventArgs e)
+        {
+            H1CSInjectButton_Click(sender, e);
+            //then do force revert things
+        
         }
 
         private void RenameButton_Click(object sender, RoutedEventArgs e)
@@ -1511,29 +1500,63 @@ namespace WpfApp3
         }
 
         private void DumpButton_Click(object sender, RoutedEventArgs e)
-        { }
+        {
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //do dumpy things
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
 
         private void InjectButton_Click(object sender, RoutedEventArgs e)
-        { }
+        {
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //do inject things
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
 
         private void InjectRevertButton_Click(object sender, RoutedEventArgs e)
-        { }
+        {
+            //inject
+            InjectButton_Click(sender, e);
+            //then force revert
+            //TBD
+        
+        }
 
         private void ForceCPDumpButton_Click(object sender, RoutedEventArgs e)
-        { }
+        {
+            //do force cp things, set a timer to wait for checkpoint to complete, then..
+            //dump
+            DumpButton_Click(sender, e);
+
+        }
 
 
 
-        private void H1CSDumpButton_Click(object sender, RoutedEventArgs e)
-        { }
 
-        private void H1CSInjectButton_Click(object sender, RoutedEventArgs e)
-        { }
 
-        private void H1CSInjectRevertButton_Click(object sender, RoutedEventArgs e)
-        { }
 
-        private void H1CSForceCPDumpButton_Click(object sender, RoutedEventArgs e)
-        { }
+
     }
 }
