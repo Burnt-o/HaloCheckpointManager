@@ -86,7 +86,7 @@ namespace WpfApp3
             public static Int32 ProcessID;
             public static IntPtr GlobalProcessHandle;
 
-            public static bool SteamFlag = true; //false == winstore, used for knowing which offsets to use
+            public static bool WinFlag = false; //false == steam, used for knowing which offsets to use
             public static bool BusyFlag = false; //turned true when injecting/dumping so we don't do it twice
             public static string AttachedGame = "No"; //No, Mn (menu), HR, H1, H2, H3, OD (ODST), H4
             public static bool VersionCheckedFlag = false;
@@ -101,7 +101,7 @@ namespace WpfApp3
         private class Offsets
         {
             //offsets are gonna be stored as 2-unit arrays, first position is winstore, second is steam
-            //that way when we're calling them from elsewhere we can just call Offsets.WhateverOffset[HCMGlobal.SteamFlag] and it'll give us the one we want
+            //that way when we're calling them from elsewhere we can just call Offsets.WhateverOffset[HCMGlobal.WinFlag] and it'll give us the one we want
             //the units will themselves be arbitary length arrays (each position for each offset in a multi-level pointer)
 
             //the actual values will be populated from the json file corrosponding to the attached mcc version
@@ -196,7 +196,7 @@ namespace WpfApp3
 
                 DispatcherTimer dtClockTime = new DispatcherTimer();
             dtClockTime.Interval = new TimeSpan(0, 0, 1); //in Hour, Minutes, Second.
-            dtClockTime.Tick += dtClockTime_Tick;
+            dtClockTime.Tick += maintick;
             dtClockTime.Start();
         }
 
@@ -744,10 +744,10 @@ namespace WpfApp3
                 byte[] buffer = new byte[1];
                 buffer[0] = 1;
 
-                IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.SteamFlag)]);
+                IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]);
                 Debug(test.ToString());
 
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesWritten))
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesWritten))
                 {
                     Debug("h1: made core save");
                 }
@@ -767,7 +767,7 @@ namespace WpfApp3
 
                 byte[] buffer = { 1 };
 
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreLoad[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesWritten))
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreLoad[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesWritten))
                 {
                     Debug("h1: made core load");
                 }
@@ -1696,7 +1696,18 @@ namespace WpfApp3
             Console.WriteLine("{0}_{1}({2}): {3}", System.IO.Path.GetFileName(file), member, line, text);
         }
 
+        private void maintick(object sender, EventArgs e)
+        {
+            string game = HCMGlobal.AttachedGame;
 
+            //all the magic happens here
+            dtClockTime_Tick(sender, e);
+
+            if (game != HCMGlobal.AttachedGame)
+            SetEnabledUI(); //only change the ui if the attached game changed
+
+
+        }
 
         private void dtClockTime_Tick(object sender, EventArgs e)
         {
@@ -1740,12 +1751,12 @@ namespace WpfApp3
                 if (myProcess.ProcessName == "MCC-Win64-Shipping")
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
-                    HCMGlobal.SteamFlag = true;
+                    HCMGlobal.WinFlag = false;
                 }
                 else if (myProcess.ProcessName == "MCC-Win64-Shipping-Winstore")
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
-                    HCMGlobal.SteamFlag = false;
+                    HCMGlobal.WinFlag = true;
                 }
                 else
                 {
@@ -1763,7 +1774,7 @@ namespace WpfApp3
                     HCMGlobal.ProcessID = myProcess.Id;
                     HCMGlobal.GlobalProcessHandle = processHandle;
                     Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
-                    HCMGlobal.SteamFlag = true;
+                    HCMGlobal.WinFlag = false;
                 }
                 catch
                 {
@@ -1774,7 +1785,7 @@ namespace WpfApp3
                         HCMGlobal.ProcessID = myProcess.Id;
                         HCMGlobal.GlobalProcessHandle = processHandle;
                         Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
-                        HCMGlobal.SteamFlag = false;
+                        HCMGlobal.WinFlag = true;
                     }
                     catch
                     {
@@ -1796,7 +1807,7 @@ namespace WpfApp3
                 try
                 {
                     HCMGlobal.MCCversion = myProcess.MainModule.FileVersionInfo.ProductVersion.ToString();
-                    Debug("MCC version: " + HCMGlobal.MCCversion + ", steamflag: " + HCMGlobal.SteamFlag.ToString());
+                    Debug("MCC version: " + HCMGlobal.MCCversion + ", WinFlag: " + HCMGlobal.WinFlag.ToString());
                     HCMGlobal.VersionCheckedFlag = true;
                     
                 }
@@ -2019,7 +2030,7 @@ namespace WpfApp3
                 byte[] buffer = new byte[1];
 
 
-            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.gameindicator[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesRead2))
+            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.gameindicator[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
             {
                 switch (buffer[0])
                 {
@@ -2053,7 +2064,7 @@ namespace WpfApp3
                 return;
             }
 
-            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.menuindicator[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesRead))
+            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.menuindicator[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead))
             {
                 Debug("menu indicator is: " + buffer[0]);
                 if (buffer[0] == 0x0B)
@@ -2085,29 +2096,76 @@ namespace WpfApp3
             //todo; implement this
             switch (HCMGlobal.AttachedGame)
             {
-                case "Me":
+                case "H2":
+                case "H3":
+                case "OD":
+                case "H4"://these above games are not supported yet
+                   
+                case "Mn":
                 case "No":
-
-                    break;
-                case "HR":
+                    SetH1(false);
+                    SetHR(false);
                     break;
 
                 case "H1":
-                break;
-
-                case "H2":
+                    SetH1(HCMGlobal.SavedConfig.CoreFolderPath != null); //false if corefolderpath not set correctly
+                    SetHR(false);
                     break;
 
-                case "H3":
+                case "HR":
+                    SetH1(false);
+                    SetHR(true);
                     break;
 
-                case "OD":
-                    break;
 
-                case "H4":
-                    break;
+
+
 
             }
+
+            if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+            {
+                SetH1(false);
+            }
+
+
+
+            void SetH1(bool state)
+            {
+                H1CS_ForceCheckpoint.IsEnabled = state;
+                H1CS_ForceRevert.IsEnabled = state;
+                H1CS_Loa_ForceCPDump.IsEnabled = state;
+                H1CS_Sel_InjectRevertButton.IsEnabled = state;
+
+                if (state == false && (!HCMGlobal.WinFlag || HCMGlobal.AttachedGame == "no"))
+                {
+                    H1CS_Loa_DumpButton.IsEnabled = true;
+                    H1CS_Sel_InjectButton.IsEnabled = true;
+                }
+                else if (state == false)
+                {
+                    H1CS_Loa_DumpButton.IsEnabled = false;
+                    H1CS_Sel_InjectButton.IsEnabled = false;
+                }
+                else
+                {
+                    H1CS_Loa_DumpButton.IsEnabled = true;
+                    H1CS_Sel_InjectButton.IsEnabled = true;
+                }
+            }
+
+            void SetHR(bool state)
+            {
+                HRCP_ForceCheckpoint.IsEnabled = state;
+                HRCP_ForceRevert.IsEnabled = state;
+                HRCP_ForceDR.IsEnabled = state;
+                HRCP_Loa_DumpButton.IsEnabled = state;
+                HRCP_Loa_ForceCPDump.IsEnabled = state;
+                HRCP_Sel_InjectButton.IsEnabled = state;
+                HRCP_Sel_InjectRevertButton.IsEnabled = state;
+            }
+
+
         }
 
         public static IntPtr FindPointerAddy(IntPtr hProc, IntPtr ptr, int[] offsets)
