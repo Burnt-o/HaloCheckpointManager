@@ -26,6 +26,7 @@ using System.Runtime.CompilerServices;
 using System.ComponentModel;
 //using System.Windows.Forms;
 using System.Windows.Threading;
+using System.Security.Principal;
 
 
 
@@ -162,6 +163,16 @@ namespace WpfApp3
             @"saves\hrcp",
         };
 
+
+        public static bool IsElevated
+        {
+            get
+            {
+                return WindowsIdentity.GetCurrent().Owner
+                  .IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid);
+            }
+        }
+
         public ObservableCollection<HaloSaveFileMetadata> Halo1CoreSaves { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo1Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo2Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
@@ -173,12 +184,17 @@ namespace WpfApp3
             InitializeComponent();
             DataContext = this;
 
-
+            if (IsElevated == false)
+            {
+                //popup error message that we need admin privledges, then close the application
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(" HCM needs admin privileges to operate, the application will now close. \n To run as admin, right click the exe and 'Run As Administrator' \n \n If you're (rightfully) cautious of giving software admin privs, \n feel free to inspect/build the source from over at \n https://github.com/Burnt-o/HaloCheckpointManager ", "Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.Application.Current.Shutdown();
+            }
 
             //need to initialize timer that will check for attachment to mcc process
             //wasn't sure whether to put this here or in the above function but whatever
-            
-            DispatcherTimer dtClockTime = new DispatcherTimer();
+
+                DispatcherTimer dtClockTime = new DispatcherTimer();
             dtClockTime.Interval = new TimeSpan(0, 0, 1); //in Hour, Minutes, Second.
             dtClockTime.Tick += dtClockTime_Tick;
             dtClockTime.Start();
