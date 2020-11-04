@@ -111,16 +111,16 @@ namespace WpfApp3
             public int[][] menuindicator;
 
              //h1
-            public static int[][] H1_CoreSave = new int[2][];
-            public static int[][] H1_CoreLoad = new int[2][];
+            public int[][] H1_CoreSave;
+            public int[][] H1_CoreLoad;
             //need to 
 
                 //hr
-            public static int[][] HR_Checkpoint = new int[2][]; //for forcing checkpoints
-            public static int[][] HR_Revert = new int[2][]; //for forcing reverts
-            public static int[][] HR_CPLocation = new int[2][];
-            public static int[][] HR_DRflag = new int[2][]; //dr as in "double revert"
-            public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
+            //public static int[][] HR_Checkpoint = new int[2][]; //for forcing checkpoints
+            //public static int[][] HR_Revert = new int[2][]; //for forcing reverts
+            //public static int[][] HR_CPLocation = new int[2][];
+            //public static int[][] HR_DRflag = new int[2][]; //dr as in "double revert"
+            //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
             
 
 
@@ -734,6 +734,52 @@ namespace WpfApp3
             H1CSDumpButton_Click(sender, e);
 
         }
+
+
+        private void H1CSForceCPButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (HCMGlobal.AttachedGame == "H1")
+            {
+
+                byte[] buffer = new byte[1];
+                buffer[0] = 1;
+
+                IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.SteamFlag)]);
+                Debug(test.ToString());
+
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesWritten))
+                {
+                    Debug("h1: made core save");
+                }
+                else
+                    Debug("failed to make core save");
+
+            }
+            else
+                Debug("tried to make core save but h1 wasn't open");
+
+        }
+
+        private void H1CSForceRevertButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (HCMGlobal.AttachedGame == "H1")
+            {
+
+                byte[] buffer = { 1 };
+
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreLoad[Convert.ToInt32(HCMGlobal.SteamFlag)]), buffer, buffer.Length, out int bytesWritten))
+                {
+                    Debug("h1: made core load");
+                }
+                else
+                    Debug("failed to make core load");
+
+            }
+            else
+                Debug("tried to make core load but h1 wasn't open");
+
+        }
+
 
         private void CopySaveFile(string sourcePath, string targetPath)
         {
@@ -1713,7 +1759,7 @@ namespace WpfApp3
                 try
                 {
                     myProcess = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
-                    processHandle = OpenProcess(PROCESS_WM_READ, false, myProcess.Id);
+                    processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, myProcess.Id);
                     HCMGlobal.ProcessID = myProcess.Id;
                     HCMGlobal.GlobalProcessHandle = processHandle;
                     Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
@@ -1724,7 +1770,7 @@ namespace WpfApp3
                     try
                     {
                         myProcess = Process.GetProcessesByName("MCC-Win64-Shipping-WinStore")[0];
-                        processHandle = OpenProcess(PROCESS_WM_READ, false, myProcess.Id);
+                        processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, myProcess.Id);
                         HCMGlobal.ProcessID = myProcess.Id;
                         HCMGlobal.GlobalProcessHandle = processHandle;
                         Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
@@ -1767,6 +1813,7 @@ namespace WpfApp3
 
             if (!HCMGlobal.OffsetsAcquired)
             {
+                bool failedlocalcheck = true;
                 //now need to check if we have the offsets for this version in our local /offsets/ folder
                 if (File.Exists(HCMGlobal.OffsetsPath + HCMGlobal.MCCversion + ".json"))
                 {
@@ -1818,11 +1865,12 @@ namespace WpfApp3
                         Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
                         Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
                         Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
+                        failedlocalcheck = false;
                         //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
                     }
                 }
                 //if no offsets found, let's check the github and try to download them!
-                else if (!HCMGlobal.CheckedForOnlineOffsets)
+                if (!HCMGlobal.CheckedForOnlineOffsets && failedlocalcheck)
                 {
                     HCMGlobal.CheckedForOnlineOffsets = true;
                     try

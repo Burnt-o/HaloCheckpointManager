@@ -93,8 +93,8 @@
                     <Image x:Name="H1CS_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,272,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="2"/>
                     <Button x:Name="H1CS_Loa_ForceCPDump" Content="Core Save &amp; Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,44,0" VerticalAlignment="Top" Width="157" Click="H1CSForceCPDumpButton_Click" Grid.Column="2"/>
                     <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,60,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="2"/>
-                    <Button x:Name="H1CS_ForceCheckpoint" Content="Core Save" Grid.Column="2" Height="26" Margin="0,19,184,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121"/>
-                    <Button x:Name="H1CS_ForceRevert" Content="Core Load" Grid.Column="2" Height="26" Margin="0,19,44,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121"/>
+                    <Button x:Name="H1CS_ForceCheckpoint" Content="Core Save" Grid.Column="2" Height="26" Margin="0,19,184,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121" Click="H1CSForceCPButton_Click"/>
+                    <Button x:Name="H1CS_ForceRevert" Content="Core Load" Grid.Column="2" Height="26" Margin="0,19,44,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121"  Click="H1CSForceRevertButton_Click"/>
 
                     <Grid Grid.Column="2" Margin="0,454,183,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="27">
                         <Button x:Name="H1CS_Sel_MoveUpButton_All" Content="" HorizontalAlignment="Right" Height="26" Margin="0,0,1,0" VerticalAlignment="Top" Width="26" Click="MoveUpButton_All_Click"/>

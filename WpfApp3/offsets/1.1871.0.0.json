@@ -1,10 +1,20 @@
 ﻿{
-  "gameindicator": [
-    [ 0x037A8988, 0x0 ],
-    [ 0x038F5A00, 0x0 ]
-  ],
-  "menuindicator": [
-    [ 0x3682BD8 ],
-    [ 0x37CFCD8 ]
-  ]
+    "gameindicator": [
+      [ 0x037A8988, 0x0 ],
+      [ 0x038F5A00, 0x0 ]
+    ],
+    "menuindicator": [
+      [ 0x3682BD8 ],
+      [ 0x37CFCD8 ]
+    ],
+
+    "H1_CoreSave": [
+      [ 0x03792DA0, 0x8, 0x2A6AFD9 ],
+      [ 0x038DFE90, 0x8, 0x2A6AFD9 ]
+    ],
+
+    "H1_CoreLoad": [
+      [ 0x03792DA0, 0x8, 0x2A6AFDA ],
+      [ 0x038DFE90, 0x8, 0x2A6AFDA ]
+    ]
 }
