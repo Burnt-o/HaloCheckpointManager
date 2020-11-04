@@ -113,15 +113,18 @@ namespace WpfApp3
              //h1
             public int[][] H1_CoreSave;
             public int[][] H1_CoreLoad;
-            //need to 
+            public int[][] H1_CheckString;
+            //need to add custom message stuff
 
-                //hr
+
+            //hr
+            public int[][] HR_CheckString;
             //public static int[][] HR_Checkpoint = new int[2][]; //for forcing checkpoints
             //public static int[][] HR_Revert = new int[2][]; //for forcing reverts
             //public static int[][] HR_CPLocation = new int[2][];
             //public static int[][] HR_DRflag = new int[2][]; //dr as in "double revert"
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
-            
+
 
 
 
@@ -191,10 +194,11 @@ namespace WpfApp3
                 System.Windows.Application.Current.Shutdown();
             }
 
+            SetEnabledUI(); //will initialize all the attachment-dependent stuff to be disabled
+
             //need to initialize timer that will check for attachment to mcc process
             //wasn't sure whether to put this here or in the above function but whatever
-
-                DispatcherTimer dtClockTime = new DispatcherTimer();
+            DispatcherTimer dtClockTime = new DispatcherTimer();
             dtClockTime.Interval = new TimeSpan(0, 0, 1); //in Hour, Minutes, Second.
             dtClockTime.Tick += maintick;
             dtClockTime.Start();
@@ -738,7 +742,7 @@ namespace WpfApp3
 
         private void H1CSForceCPButton_Click(object sender, RoutedEventArgs e)
         {
-            if (HCMGlobal.AttachedGame == "H1")
+            if (HCMGlobal.AttachedGame == "H1" && ValidCheck_H1())
             {
 
                 byte[] buffer = new byte[1];
@@ -1703,9 +1707,8 @@ namespace WpfApp3
             //all the magic happens here
             dtClockTime_Tick(sender, e);
 
-            if (game != HCMGlobal.AttachedGame)
+            if (game != HCMGlobal.AttachedGame )
             SetEnabledUI(); //only change the ui if the attached game changed
-
 
         }
 
@@ -2055,6 +2058,9 @@ namespace WpfApp3
                     case 6:
                         HCMGlobal.AttachedGame = "HR";
                         break;
+                    default:
+                        HCMGlobal.AttachedGame = "Mn";
+                        break;
 
                 }
             }
@@ -2100,7 +2106,8 @@ namespace WpfApp3
                 case "H3":
                 case "OD":
                 case "H4"://these above games are not supported yet
-                   
+
+                default:
                 case "Mn":
                 case "No":
                     SetH1(false);
@@ -2123,11 +2130,14 @@ namespace WpfApp3
 
             }
 
-            if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+            try
             {
-                SetH1(false);
+                if (HCMGlobal.SavedConfig.CoreFolderPath == null)
+                {
+                    SetH1(false);
+                }
             }
-
+            catch { SetH1(false); }
 
 
             void SetH1(bool state)
@@ -2192,8 +2202,64 @@ namespace WpfApp3
             return ptr;
         }
 
+        private static bool ValidCheck_H1()
+        {
+
+            try
+            {
+                byte[] buffer = new byte[6];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CheckString[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+                {
+                    if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "levels")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+                
+        }
 
 
+        private static bool ValidCheck_HR()
+        {
+
+            try
+            {
+                byte[] buffer = new byte[4];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_CheckString[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+                {
+                    if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "maps")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
 
     }
 }
