@@ -114,6 +114,8 @@ namespace WpfApp3
             public int[][] H1_CoreSave;
             public int[][] H1_CoreLoad;
             public int[][] H1_CheckString;
+            public int[][] H1_TickCounter;
+            public int[][] H1_Message;
             //need to add custom message stuff
 
 
@@ -742,6 +744,7 @@ namespace WpfApp3
 
         private void H1CSForceCPButton_Click(object sender, RoutedEventArgs e)
         {
+            int bytesWritten;
             if (HCMGlobal.AttachedGame == "H1" && ValidCheck_H1())
             {
 
@@ -751,12 +754,70 @@ namespace WpfApp3
                 IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]);
                 Debug(test.ToString());
 
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesWritten))
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
                 {
                     Debug("h1: made core save");
                 }
                 else
+                {
                     Debug("failed to make core save");
+                    return;
+                }
+
+                //next, the custom message stuff
+                //acquire the current tickcount
+                buffer = new byte[4];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                {
+                    Debug("h1: custom message 1: success");
+                }
+                else
+                {
+                    Debug("h1: custom message 1: failed");
+                    return;
+                }
+
+                //buffer will be equal to the tickcounter so just paste it into the new spot
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                {
+                    Debug("h1: custom message 2: success");
+                }
+                else
+                {
+                    Debug("h1: custom message 2: failed");
+                    return;
+                }
+
+                buffer = new byte["Core Save... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                buffer = Encoding.Unicode.GetBytes("Core Save... done");
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x4, buffer, buffer.Length, out bytesWritten))
+                {
+                    Debug("h1: custom message 3: success");
+                }
+                else
+                {
+                    Debug("h1: custom message 3: failed");
+                    return;
+                }
+
+                buffer = new byte[8] { 0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF }; //setting showmessage flag to true
+                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x80, buffer, buffer.Length, out bytesWritten))
+                {
+                    Debug("h1: custom message 4: success");
+                }
+                else
+                {
+                    Debug("h1: custom message 4: failed");
+                    return;
+                }
+
+
+                /*
+
+                        WriteInteger("["..halo1pointer..OffsetMessageTC.."]+0", (ReadInteger(halo1pointer..OffsetTickcount)))--set message tc to current tc(minus 70 is good val for faded look)
+                        WriteString("["..halo1pointer..OffsetMessageTC.."]+4", message, true)--set message text
+                        WriteBytes("["..halo1pointer..OffsetMessageTC.."]+80", 0x00, 0x00, 0x01, 0x00)--set show message flag to true
+                        WriteBytes("["..halo1pointer..OffsetMessageTC.."]+84", 0xFF, 0xFF, 0xFF, 0xFF)--no idea wtf this does but it needs to be this*/
 
             }
             else
@@ -783,6 +844,8 @@ namespace WpfApp3
                 Debug("tried to make core load but h1 wasn't open");
 
         }
+
+
 
 
         private void CopySaveFile(string sourcePath, string targetPath)
@@ -1636,6 +1699,19 @@ namespace WpfApp3
             return test;
         }
 
+        private void ForceCPButton_Click(object sender, RoutedEventArgs e)
+        { 
+        
+        
+        }
+
+        private void ForceRevertButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+        private void DoubleRevertButton_Click(object sender, RoutedEventArgs e)
+        { }
+
+
         private void DumpButton_Click(object sender, RoutedEventArgs e)
         {
             //figure out which game this was for
@@ -1674,18 +1750,47 @@ namespace WpfApp3
 
         private void InjectRevertButton_Click(object sender, RoutedEventArgs e)
         {
-            //inject
-            InjectButton_Click(sender, e);
-            //then force revert
-            //TBD
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //inject
+                    InjectButton_Click(sender, e);
+                    //then force revert
+                    //TBD
+                    break;
+
+                default:
+                    break;
+            }
+
+
         
         }
 
         private void ForceCPDumpButton_Click(object sender, RoutedEventArgs e)
         {
-            //do force cp things, set a timer to wait for checkpoint to complete, then..
-            //dump
-            DumpButton_Click(sender, e);
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //do force cp things, set a timer to wait for checkpoint to complete, then..
+                    //dump
+                    DumpButton_Click(sender, e);
+                    break;
+
+                default:
+                    break;
+            }
+
+
+
 
         }
 
@@ -1707,9 +1812,45 @@ namespace WpfApp3
             //all the magic happens here
             dtClockTime_Tick(sender, e);
 
-            if (game != HCMGlobal.AttachedGame )
-            SetEnabledUI(); //only change the ui if the attached game changed
+            if (game != HCMGlobal.AttachedGame)
+            {
+                SetEnabledUI(); //only change the ui if the attached game changed
+                switch (HCMGlobal.AttachedGame)
+                {
 
+
+
+                    case "Mn":
+                        GameLabel.Content = "Attached: Menu";
+                        break;
+                    default:
+                    case "No":
+                        GameLabel.Content = "Attached: None";
+                        break;
+                    case "H1":
+                        GameLabel.Content = "Attached: H1";
+                        break;
+                    case "H2":
+                        GameLabel.Content = "Attached: H2";
+                        break;
+                    case "H3":
+                        GameLabel.Content = "Attached: H3";
+                        break;
+                    case "OD":
+                        GameLabel.Content = "Attached: ODST";
+                        break;
+                    case "H4":
+                        GameLabel.Content = "Attached: H4";
+                        break;
+
+                    case "HR":
+                        GameLabel.Content = "Attached: Reach";
+                        break;
+
+
+
+                }
+            }
         }
 
         private void dtClockTime_Tick(object sender, EventArgs e)
