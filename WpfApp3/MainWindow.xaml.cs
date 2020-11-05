@@ -116,15 +116,16 @@ namespace WpfApp3
             public int[][] H1_CheckString;
             public int[][] H1_TickCounter;
             public int[][] H1_Message;
-            //need to add custom message stuff
+            
 
 
             //hr
             public int[][] HR_CheckString;
-            //public static int[][] HR_Checkpoint = new int[2][]; //for forcing checkpoints
-            //public static int[][] HR_Revert = new int[2][]; //for forcing reverts
+            public int[][] HR_Checkpoint; //for forcing checkpoints
+            public int[][] HR_Revert; //for forcing reverts
+            public int[][] HR_DRflag; //dr as in "double revert"
             //public static int[][] HR_CPLocation = new int[2][];
-            //public static int[][] HR_DRflag = new int[2][]; //dr as in "double revert"
+
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
 
@@ -748,11 +749,10 @@ namespace WpfApp3
             if (HCMGlobal.AttachedGame == "H1" && ValidCheck_H1())
             {
 
-                byte[] buffer = new byte[1];
-                buffer[0] = 1;
+                byte[] buffer = new byte[1] { 1 };
 
-                IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]);
-                Debug(test.ToString());
+                //IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]);
+                //Debug(test.ToString());
 
                 if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
                 {
@@ -1603,6 +1603,8 @@ namespace WpfApp3
 
         readonly Dictionary<string, string> LevelCodeToName = new Dictionary<string, string>()
         {
+            //maybe I'll add multiplayer levels to this eventually. or extra entry for "acronym'd name"
+
             // Halo 1
             { "a10", "Pillar of Autumn" },
             { "a30", "Halo" },
@@ -1631,6 +1633,21 @@ namespace WpfApp3
             { "07b", "Uprising" },
             { "08a", "High Charity" },
             { "08b", "The Great Journey" },
+
+            // Halo Reach
+            { "m05", "Noble Actual" },
+            { "m10", "Winter Contingency" },
+            { "m20", "ONI: Sword Base" },
+            { "m30", "Nightfall" },
+            { "m35", "Tip of the Spear" },
+            { "m45", "Long Night of Solace" },
+            { "m50", "Exodus" },
+            { "m52", "New Alexandria" },
+            { "m60", "The Package" },
+            { "m70", "The Pillar of Autumn" },
+            { "m70_a", "Credits" },
+            { "m70_bonus", "Lone Wolf" },
+
         };
 
         public string LevelCodeToFullName(string code)
@@ -1700,16 +1717,138 @@ namespace WpfApp3
         }
 
         private void ForceCPButton_Click(object sender, RoutedEventArgs e)
-        { 
-        
-        
+        {
+            int bytesWritten;
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            Debug("parent button: " + parent_name);
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //do checkpointy things
+
+                    if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
+                    {
+
+                        byte[] buffer = new byte[1] { 1 };
+                        if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Checkpoint[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                        {
+                            Debug("hr: made checkpoint");
+                        }
+                        else
+                        {
+                            Debug("hr: failed to make checkpoint");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Debug("hr: failed to make checkpoint because not attached");
+                    }
+                        break;
+
+                default:
+                    break;
+            }
+
         }
 
         private void ForceRevertButton_Click(object sender, RoutedEventArgs e)
-        { }
+        {
+            int bytesWritten;
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            Debug("parent button: " + parent_name);
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //do reverty things
+
+                    if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
+                    {
+
+                        byte[] buffer = new byte[1] { 1 };
+                        if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Revert[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                        {
+                            Debug("hr: made revert");
+                        }
+                        else
+                        {
+                            Debug("hr: failed to make revert");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Debug("hr: failed to make revert because not attached");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
 
         private void DoubleRevertButton_Click(object sender, RoutedEventArgs e)
-        { }
+        {
+            int bytesWritten;
+            //figure out which game this was for
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            parent = (FrameworkElement)((FrameworkElement)parent).Parent;
+            string parent_name = parent.Name; //have to go up two steps cos reasons
+
+            Debug("parent button: " + parent_name);
+
+            switch (parent_name)
+            {
+                case "HRCP":
+                    //do double reverty things
+
+                    if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
+                    {
+                        byte[] buffer = new byte[1];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                        {
+                            Debug("hr: read double revert flag");
+                        }
+                        else
+                        {
+                            Debug("hr: failed to read double revert flag");
+                            return;
+                        }
+
+
+                        buffer[0] = Convert.ToByte(!(BitConverter.ToBoolean(buffer, 0))); //just flip the value lmao
+                        if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                        {
+                            Debug("hr: made double revert");
+                        }
+                        else
+                        {
+                            Debug("hr: failed to make double revert");
+                            return;
+                        }
+
+                        //ForceRevertButton_Click(sender, e); //take this out later and replace it with refreshloa
+                        //didn't work anyway because of double-parent thing, won't bother to fix
+                    }
+                    else
+                    {
+                        Debug("hr: failed to make double revert because not attached");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
 
         private void DumpButton_Click(object sender, RoutedEventArgs e)
@@ -2383,20 +2522,24 @@ namespace WpfApp3
                 {
                     if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "maps")
                     {
+                        Debug("reach check success");
                         return true;
                     }
                     else
                     {
+                        Debug("oh no");
                         return false;
                     }
                 }
                 else
                 {
+                    Debug("oh no");
                     return false;
                 }
             }
             catch
             {
+                Debug("oh no");
                 return false;
             }
 

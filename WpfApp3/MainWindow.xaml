@@ -291,11 +291,11 @@
                     <Image x:Name="HRCP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,272,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="2"/>
                     <Button x:Name="HRCP_Loa_ForceCPDump" Content="Force Checkpoint &amp; Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,44,0" VerticalAlignment="Top" Width="157" Click="ForceCPDumpButton_Click" Grid.Column="2"/>
                     <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,60,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="2"/>
-                    <Button x:Name="HRCP_ForceCheckpoint" Content="Force Checkpoint" Grid.Column="2" Height="26" Margin="0,19,198,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="107"/>
-                    <Button x:Name="HRCP_ForceRevert" Content="Force Revert" Grid.Column="2" Height="26" Margin="0,19,87,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="91"/>
+                    <Button x:Name="HRCP_ForceCheckpoint" Content="Force Checkpoint" Grid.Column="2" Height="26" Margin="0,19,198,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="107" Click="ForceCPButton_Click"/>
+                    <Button x:Name="HRCP_ForceRevert" Content="Force Revert" Grid.Column="2" Height="26" Margin="0,19,87,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="91" Click="ForceRevertButton_Click"/>
                     <Grid Grid.Column="2" Margin="0,19,44,0" HorizontalAlignment="Right" Width="26" Height="26" VerticalAlignment="Top">
-                        <Button x:Name="HRCP_ForceDR" Content="" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="26"/>
-                        <Image HorizontalAlignment="Left" Height="22" Margin="2,2,0,0" VerticalAlignment="Top" Width="24" Source="arrows-switch.png" RenderTransformOrigin="4.292,0.458"/>
+                        <Button x:Name="HRCP_ForceDR" Content="" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="26" Click="DoubleRevertButton_Click"/>
+                        <Image HorizontalAlignment="Left" Height="22" Margin="2,2,0,0" VerticalAlignment="Top" Width="24" Source="arrows-switch.png" RenderTransformOrigin="4.292,0.458" IsHitTestVisible="False"/>
 
                     </Grid>
                     <Label  x:Name="HRCP_Sel_Seed" Content="Seed: N/A" Grid.Column="2" HorizontalAlignment="Right" Height="26" Margin="0,210,25,0" VerticalAlignment="Top" Width="100" FontSize="11"/>
