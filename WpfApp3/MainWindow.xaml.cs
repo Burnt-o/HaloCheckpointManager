@@ -1354,128 +1354,112 @@ namespace WpfApp3
             var oldCSselected = CS_MainList.SelectedIndex;
             var oldCPselected = CP_MainList.SelectedIndex;
             var oldH2CPselected = H2CP_MainList.SelectedIndex;
+            var oldHRCPselected = HRCP_MainList.SelectedIndex;
 
             List<string> FilesPost = new List<string>();
 
-            //h1 cores
-            Halo1CoreSaves.Clear();
-            if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
+            //let's only update the active tab (we'll later also add a RefreshList whenever the tab is changed)
+            Debug(TabList.SelectedIndex.ToString());
+            switch (TabList.SelectedIndex)
             {
-                DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
-                FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-                FilesPost.Clear();
-
-                foreach (FileInfo file in files)
-                {
-                    while (FileHasSameTime(files, file))
+                case 0: //h1 cores
+                    Halo1CoreSaves.Clear();
+                    if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
                     {
-                        file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                    }
-                    FilesPost.Add(file.ToString());
-                }
+                        DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
+                        FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
+                        FilesPost.Clear();
 
-                if(FilesPost.Count > 0)
-                {
-                    H1CS_MainList_Label.Content = "";
-                    foreach (string File in FilesPost)
+                        foreach (FileInfo file in files)
+                        {
+                            while (FileHasSameTime(files, file))
+                            {
+                                file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
+                            }
+                            FilesPost.Add(file.ToString());
+                        }
+
+                        if (FilesPost.Count > 0)
+                        {
+                            H1CS_MainList_Label.Content = "";
+                            foreach (string File in FilesPost)
+                            {
+                                var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, HaloGame.Halo1);
+                                data.Name = File.Substring(0, File.Length - 4);
+                                Halo1CoreSaves.Add(data);
+                            }
+
+                            CS_MainList.SelectedIndex = oldCSselected;
+                            GridView gv = CS_MainList.View as GridView;
+                            UpdateColumnWidths(gv);
+                        }
+                        else
+                        {
+                            H1CS_MainList_Label.Content = "No backup saves in local folder.";
+                        }
+                    }
+                    else
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, HaloGame.Halo1);
-                        data.Name = File.Substring(0, File.Length - 4);
-                        Halo1CoreSaves.Add(data);
+                        H1CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
+                    }
+                    break;
+
+                case 3: //halo reach
+                    HaloReachCheckpoints.Clear();
+                    if (Directory.Exists(HCMGlobal.HRCheckpointPath)) // make sure path is valid
+                    {
+                        DirectoryInfo dir = new DirectoryInfo(HCMGlobal.HRCheckpointPath);
+                        FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
+                        FilesPost.Clear();
+
+                        foreach (FileInfo file in files)
+                        {
+                            while (FileHasSameTime(files, file))
+                            {
+                                file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
+                            }
+                            FilesPost.Add(file.ToString());
+                        }
+
+                        if (FilesPost.Count > 0)
+                        {
+                            HRCP_MainList_Label.Content = "";
+                            foreach (string File in FilesPost)
+                            {
+                                var data = GetSaveFileMetadata(HCMGlobal.HRCheckpointPath + "/" + File, HaloGame.HaloReach);
+                                data.Name = File.Substring(0, File.Length - 4);
+                                HaloReachCheckpoints.Add(data);
+                            }
+
+                            HRCP_MainList.SelectedIndex = oldHRCPselected;
+                            GridView gv = HRCP_MainList.View as GridView;
+                            UpdateColumnWidths(gv);
+                        }
+                        else
+                        {
+                            HRCP_MainList_Label.Content = "No backup saves in local folder.";
+                        }
+                    }
+                    else
+                    {
+                        //this should never happen lmao
+                        Debug("how in the goddamn fuck?");
                     }
 
-                    CS_MainList.SelectedIndex = oldCSselected;
-                    GridView gv = CS_MainList.View as GridView;
-                    UpdateColumnWidths(gv);
-                }
-                else
-                {
-                    H1CS_MainList_Label.Content = "No backup saves in local folder.";
-                }
+
+                        break;
+
+                default:
+                    break;
+            
+            
             }
-            else
-            {
-                H1CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
-            }
+            
+            
+           
 
-            //h1 checkpoints second
-            //Halo1Checkpoints.Clear();
-            //if (Directory.Exists(HCMGlobal.H1CheckpointPath)) // make sure path is valid
-            //{
-            //    DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CheckpointPath);
-            //    FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-            //    FilesPost.Clear();
-            //    foreach (FileInfo file in files)
-            //    {
-            //        while (FileHasSameTime(files, file))
-            //        {
-            //            file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-            //        }
-            //        FilesPost.Add(file.ToString());
-            //    }
+            
 
-            //    if (FilesPost.Count > 0)
-            //    {
-            //        CP_MainList_Label.Content = "";
-            //        foreach (string File in FilesPost)
-            //        {
-            //            var data = GetSaveFileMetadata(HCMGlobal.H1CheckpointPath + "/" + File, HaloGame.Halo1);
-            //            data.Name = File.Substring(0, File.Length - 4);
-            //            Halo1Checkpoints.Add(data);
-            //        }
-            //        CP_MainList.SelectedIndex = oldCPselected;
-            //        GridView gv = CP_MainList.View as GridView;
-            //        UpdateColumnWidths(gv);
-            //    }
-            //    else
-            //    {
-            //        CP_MainList_Label.Content = "No backup saves in local folder.";
-            //    }
-            //}
-            //else
-            //{
-            //    CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
-            //}
-
-            //h2 checkpoints THIRD
-            //Halo2Checkpoints.Clear();
-            //if (Directory.Exists(HCMGlobal.H2CheckpointPath)) // make sure path is valid
-            //{
-            //    DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H2CheckpointPath);
-            //    FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-            //    FilesPost.Clear();
-            //    foreach (FileInfo file in files)
-            //    {
-            //        while (FileHasSameTime(files, file))
-            //        {
-            //            file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-            //        }
-            //        FilesPost.Add(file.ToString());
-            //    }
-
-            //    if (FilesPost.Count > 0)
-            //    {
-            //        H2CP_MainList_Label.Content = "";
-            //        foreach (string File in FilesPost)
-            //        {
-            //            var data = GetSaveFileMetadata(HCMGlobal.H2CheckpointPath + "/" + File, HaloGame.Halo2);
-            //            data.Name = File.Substring(0, File.Length - 4);
-            //            Halo2Checkpoints.Add(data);
-            //        }
-
-            //        H2CP_MainList.SelectedIndex = oldH2CPselected;
-            //        GridView gv = H2CP_MainList.View as GridView;
-            //        UpdateColumnWidths(gv);
-            //    }
-            //    else
-            //    {
-            //        H2CP_MainList_Label.Content = "No backup saves in local folder.";
-            //    }
-            //}
-            //else
-            //{
-            //    H2CP_MainList_Label.Content = "Checkpoint folder path is invalid, check Settings.";
-            //}
         }
 
         public class HaloSaveFileMetadata
@@ -1508,6 +1492,11 @@ namespace WpfApp3
                     offsetStartTick = 10808;
                     offsetDifficulty = 974;
                     break;
+                case HaloGame.HaloReach:
+                    offsetLevelCode = 0xFD73;
+                    offsetStartTick = 0x9FD18; 
+                    offsetDifficulty = 0xFEFC; 
+                    break;
                 default:
                     throw new NotSupportedException();
             }
@@ -1533,7 +1522,7 @@ namespace WpfApp3
                         //get time
                         readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
                         UInt32 holdme = readBinary.ReadUInt32();
-                        if (game == HaloGame.Halo2)
+                        if (game != HaloGame.Halo1)
                             metadata.StartTick = holdme / 2;
                         else
                             metadata.StartTick = holdme;
@@ -1890,8 +1879,9 @@ namespace WpfApp3
                         offset = 0x0; //second cp
                     }
 
-
-                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)]) + offset, buffer, buffer.Length, out bytesWritten))
+                    int[] addy = HCMGlobal.LoadedOffsets.HR_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                    addy[3] = offset;
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
                     {
 
 

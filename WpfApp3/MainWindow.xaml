@@ -36,7 +36,7 @@
             </Style>
         </Grid.Resources>
 
-        <TabControl Margin="0,30,0,0">
+        <TabControl  x:Name="TabList" Margin="0,30,0,0">
 
 
             <TabItem Header="H1 Cores">
@@ -50,7 +50,7 @@
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding LevelCode}"/>
+                                <GridViewColumn Header="Lvl" Width="36" DisplayMemberBinding="{Binding LevelCode}"/>
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -248,7 +248,7 @@
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding LevelCode}"/>
+                                <GridViewColumn Header="Lvl" Width="36" DisplayMemberBinding="{Binding LevelCode}"/>
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
