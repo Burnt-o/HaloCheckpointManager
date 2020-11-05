@@ -124,7 +124,7 @@ namespace WpfApp3
             public int[][] HR_Checkpoint; //for forcing checkpoints
             public int[][] HR_Revert; //for forcing reverts
             public int[][] HR_DRflag; //dr as in "double revert"
-            //public static int[][] HR_CPLocation = new int[2][];
+            public int[][] HR_CPLocation;
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
@@ -1861,6 +1861,74 @@ namespace WpfApp3
             {
                 case "HRCP":
                     //do dumpy things
+
+                    RefreshLoa(sender, e);
+
+                    int bytesWritten;
+                    bool DRflag;
+                    byte[] DRbuffer = new byte[1];
+
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                    {
+                        DRflag = Convert.ToBoolean(DRbuffer[0]);
+                    }
+                    else
+                    {
+                        Debug("something went wrong trying to read DR flag for reach dumping");
+                        return;
+                    }
+
+
+                    byte[] buffer = new byte[10551296];
+                    int offset;
+                    if (!DRflag)
+                    {
+                        offset = -0xA10000; //first cp
+                    }
+                    else
+                    {
+                        offset = 0x0; //second cp
+                    }
+
+
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)]) + offset, buffer, buffer.Length, out bytesWritten))
+                    {
+
+
+                        string backuploc = HCMGlobal.HRCheckpointPath;
+
+                        if (Directory.Exists(backuploc))
+                        {
+                            var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                               "Name your backup save",
+                                               "",
+                                               -1, -1);
+                            string proposedsave = (backuploc + @"\" + userinput + @".bin");
+
+                            try
+                            {
+                                File.WriteAllBytes(proposedsave, buffer);
+                                FileInfo test = new FileInfo(proposedsave);
+                                if (File.Exists(test.ToString()) && test.Length > 1000)
+                                {
+                                    Debug("SUCESSFULLY DUMPED HR CP, LENGTH: " + test.Length.ToString());
+                                }
+                            }
+                            catch
+                            {
+                                Debug("something went wrong trying to save a save: " + parent_name + ", " + proposedsave);
+                                //need to make this a popup to let user know what was bad
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug("failed to read reach checkpoint from memory");
+                    }
+
+                        
+
+
                     break;
 
                 default:
