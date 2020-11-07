@@ -136,26 +136,26 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\a10_anni.png" />
-    <Resource Include="images\a10_clas.png" />
-    <Resource Include="images\a30_anni.png" />
-    <Resource Include="images\a30_clas.png" />
-    <Resource Include="images\a50_anni.png" />
-    <Resource Include="images\a50_clas.png" />
-    <Resource Include="images\b30_anni.png" />
-    <Resource Include="images\b30_clas.png" />
-    <Resource Include="images\b40_anni.png" />
-    <Resource Include="images\b40_clas.png" />
-    <Resource Include="images\c10_anni.png" />
-    <Resource Include="images\c10_clas.png" />
-    <Resource Include="images\c20_anni.png" />
-    <Resource Include="images\c20_clas.png" />
-    <Resource Include="images\c40_anni.png" />
-    <Resource Include="images\c40_clas.png" />
-    <Resource Include="images\d20_anni.png" />
-    <Resource Include="images\d20_clas.png" />
-    <Resource Include="images\d40_anni.png" />
-    <Resource Include="images\d40_clas.png" />
+    <Resource Include="images\H1\a10_anni.png" />
+    <Resource Include="images\H1\a10_clas.png" />
+    <Resource Include="images\H1\a30_anni.png" />
+    <Resource Include="images\H1\a30_clas.png" />
+    <Resource Include="images\H1\a50_anni.png" />
+    <Resource Include="images\H1\a50_clas.png" />
+    <Resource Include="images\H1\b30_anni.png" />
+    <Resource Include="images\H1\b30_clas.png" />
+    <Resource Include="images\H1\b40_anni.png" />
+    <Resource Include="images\H1\b40_clas.png" />
+    <Resource Include="images\H1\c10_anni.png" />
+    <Resource Include="images\H1\c10_clas.png" />
+    <Resource Include="images\H1\c20_anni.png" />
+    <Resource Include="images\H1\c20_clas.png" />
+    <Resource Include="images\H1\c40_anni.png" />
+    <Resource Include="images\H1\c40_clas.png" />
+    <Resource Include="images\H1\d20_anni.png" />
+    <Resource Include="images\H1\d20_clas.png" />
+    <Resource Include="images\H1\d40_anni.png" />
+    <Resource Include="images\H1\d40_clas.png" />
     <Resource Include="images\diff_0.png" />
     <Resource Include="images\diff_1.png" />
     <Resource Include="images\diff_2.png" />
@@ -174,38 +174,38 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\00a_anni.png" />
-    <Resource Include="images\01a_anni.png" />
-    <Resource Include="images\01b_anni.png" />
-    <Resource Include="images\03a_anni.png" />
-    <Resource Include="images\03b_anni.png" />
-    <Resource Include="images\04a_anni.png" />
-    <Resource Include="images\04b_anni.png" />
-    <Resource Include="images\05a_anni.png" />
-    <Resource Include="images\05b_anni.png" />
-    <Resource Include="images\06a_anni.png" />
-    <Resource Include="images\06b_anni.png" />
-    <Resource Include="images\07a_anni.png" />
-    <Resource Include="images\07b_anni.png" />
-    <Resource Include="images\08a_anni.png" />
-    <Resource Include="images\08b_anni.png" />
+    <Resource Include="images\H2\00a_anni.png" />
+    <Resource Include="images\H2\01a_anni.png" />
+    <Resource Include="images\H2\01b_anni.png" />
+    <Resource Include="images\H2\03a_anni.png" />
+    <Resource Include="images\H2\03b_anni.png" />
+    <Resource Include="images\H2\04a_anni.png" />
+    <Resource Include="images\H2\04b_anni.png" />
+    <Resource Include="images\H2\05a_anni.png" />
+    <Resource Include="images\H2\05b_anni.png" />
+    <Resource Include="images\H2\06a_anni.png" />
+    <Resource Include="images\H2\06b_anni.png" />
+    <Resource Include="images\H2\07a_anni.png" />
+    <Resource Include="images\H2\07b_anni.png" />
+    <Resource Include="images\H2\08a_anni.png" />
+    <Resource Include="images\H2\08b_anni.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\00a_clas.png" />
-    <Resource Include="images\01a_clas.png" />
-    <Resource Include="images\01b_clas.png" />
-    <Resource Include="images\03a_clas.png" />
-    <Resource Include="images\03b_clas.png" />
-    <Resource Include="images\04a_clas.png" />
-    <Resource Include="images\04b_clas.png" />
-    <Resource Include="images\05a_clas.png" />
-    <Resource Include="images\05b_clas.png" />
-    <Resource Include="images\06a_clas.png" />
-    <Resource Include="images\06b_clas.png" />
-    <Resource Include="images\07a_clas.png" />
-    <Resource Include="images\07b_clas.png" />
-    <Resource Include="images\08a_clas.png" />
-    <Resource Include="images\08b_clas.png" />
+    <Resource Include="images\H2\00a_clas.png" />
+    <Resource Include="images\H2\01a_clas.png" />
+    <Resource Include="images\H2\01b_clas.png" />
+    <Resource Include="images\H2\03a_clas.png" />
+    <Resource Include="images\H2\03b_clas.png" />
+    <Resource Include="images\H2\04a_clas.png" />
+    <Resource Include="images\H2\04b_clas.png" />
+    <Resource Include="images\H2\05a_clas.png" />
+    <Resource Include="images\H2\05b_clas.png" />
+    <Resource Include="images\H2\06a_clas.png" />
+    <Resource Include="images\H2\06b_clas.png" />
+    <Resource Include="images\H2\07a_clas.png" />
+    <Resource Include="images\H2\07b_clas.png" />
+    <Resource Include="images\H2\08a_clas.png" />
+    <Resource Include="images\H2\08b_clas.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="HCM.ico" />
@@ -218,6 +218,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="arrows-switch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images\HR\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

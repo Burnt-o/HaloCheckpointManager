@@ -36,7 +36,7 @@
             </Style>
         </Grid.Resources>
 
-        <TabControl  x:Name="TabList" Margin="0,30,0,0">
+        <TabControl  x:Name="TabList" Margin="0,30,0,0" SelectionChanged="TabSelectionChanged">
 
 
             <TabItem Header="H1 Cores">

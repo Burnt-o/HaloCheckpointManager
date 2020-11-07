@@ -330,7 +330,18 @@ namespace WpfApp3
 
 
 
+        private void TabSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
+            if (e.Source is TabControl) //if this event fired from TabControl then enter
+            {
+                Debug("Tab selection changed");
+                RefreshSel(sender, e);
+                RefreshLoa(sender, e);
+                RefreshList(sender, e);
+            }
+
+        }
 
 
         void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1192,65 +1203,137 @@ namespace WpfApp3
 
         private void RefreshLoa(object sender, RoutedEventArgs e)
         {
-            //H1 CORES FIRST
-            if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
+
+
+            switch (TabList.SelectedIndex)
             {
-                var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
-                H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                case 0: //H1 CORES 
 
-                if(data.Difficulty != Difficulty.Invalid)
-                    H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                    
+                    if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
+                    {
+                        var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
+                        H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                H1CS_Loa_Time.Text = TickToTimeString(data.StartTick);
-                H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        if (data.Difficulty != Difficulty.Invalid)
+                            H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                        H1CS_Loa_Time.Text = TickToTimeString(data.StartTick);
+                        H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                    }
+                    else
+                    {
+                        H1CS_Loa_LevelName.Text = "N/A";
+                        H1CS_Loa_DiffName.Source = null;
+                        H1CS_Loa_Time.Text = "N/A";
+                        H1CS_Loa_LevelImage.Source = null;
+                    }
+                    break;
+
+                case 3: //reach
+                    if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
+                    {
+                        //data to get; level code, diff, time
+
+                        //first check double revert flag
+                        int bytesWritten;
+                        bool DRflag;
+                        byte[] DRbuffer = new byte[1];
+                        var data = new HaloSaveFileMetadata();
+                        string levelseed;
+
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                        {
+                            DRflag = Convert.ToBoolean(DRbuffer[0]);
+                        }
+                        else { Debug("oh no"); NullReach(); return; }
+
+
+                        
+                        int offset;
+                        if (!DRflag)
+                        {
+                            offset = -0xA10000; //first cp
+                        }
+                        else
+                        {
+                            offset = 0x0; //second cp
+                        }
+
+                        int[] addy = HCMGlobal.LoadedOffsets.HR_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                        addy[3] = offset;
+                        //setup done, let's get our data
+                        //levelcode
+                        byte[] buffer = new byte[3];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFD73, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.LevelCode = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        }
+                        else { Debug("oh no"); NullReach(); return; }
+
+                        //difficulty
+                        buffer = new byte[1];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFEFC, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.Difficulty = (Difficulty)buffer[0];
+                        }
+                        else { Debug("oh no"); NullReach(); return; }
+
+                        //tickcount
+                        buffer = new byte[4];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x9FD18, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.StartTick = BitConverter.ToUInt32(buffer, 0);
+                        }
+                        else { Debug("oh no"); NullReach(); return; }
+
+                        //level start seed
+                        buffer = new byte[4];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x9FD18, buffer, buffer.Length, out bytesWritten))
+                        {
+                            levelseed = (Convert.ToString(BitConverter.ToUInt32(buffer, 0), 16)).ToUpper();
+                        }
+                        else { Debug("oh no"); NullReach(); return; }
+
+
+                        //now assign to ui
+                        HRCP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+
+                        if (data.Difficulty != Difficulty.Invalid)
+                            HRCP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                        HRCP_Loa_Time.Text = TickToTimeString(data.StartTick);
+                        HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        HRCP_Loa_Seed.Content = "Seed: " + levelseed;
+
+                    }
+                    else { Debug("oh no"); NullReach(); }
+
+
+
+
+
+
+                    break;
+
+                    void NullReach()
+                    {
+                        HRCP_Loa_LevelName.Text = "N/A";
+                        HRCP_Loa_DiffName.Source = null;
+                        HRCP_Loa_Time.Text = "N/A";
+                        HRCP_Loa_LevelImage.Source = null;
+                        HRCP_Loa_Seed.Content = "Seed: N/A";
+                    }
+
             }
-            else
-            {
-                H1CS_Loa_LevelName.Text = "N/A";
-                H1CS_Loa_DiffName.Source = null;
-                H1CS_Loa_Time.Text = "N/A";
-                H1CS_Loa_LevelImage.Source = null;
-            }
 
-            //H1 CPs SECOND
-            //if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-            //{
-            //    var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo1.bin", HaloGame.Halo1);
-            //    CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-            //    if (data.Difficulty != Difficulty.Invalid)
-            //        CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-            //    CP_Loa_Time.Text = TickToTimeString(data.StartTick);
-            //    CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-            //}
-            //else
-            //{
-            //    CP_Loa_LevelName.Text = "N/A";
-            //    CP_Loa_DiffName.Source = null;
-            //    CP_Loa_Time.Text = "N/A";
-            //    CP_Loa_LevelImage.Source = null;
-            //}
 
-            //H2 CPs THIRD
-            //if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin") && HCMGlobal.SavedConfig.CheckpointFolderPath != null)
-            //{
-            //    var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CheckpointFolderPath + @"\autosave_Halo2.bin", HaloGame.Halo2);
-            //    H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+            
 
-            //    if (data.Difficulty != Difficulty.Invalid)
-            //        H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_-1.png", UriKind.Relative));
 
-            //    H2CP_Loa_Time.Text = TickToTimeString(data.StartTick);
-            //    H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-            //}
-            //else
-            //{
-            //    H2CP_Loa_LevelName.Text = "N/A";
-            //    H2CP_Loa_DiffName.Source = null;
-            //    H2CP_Loa_Time.Text = "N/A";
-            //    H2CP_Loa_LevelImage.Source = null;
-            //}
+
         }
 
         private void RefreshSel(object sender, RoutedEventArgs e)
@@ -1273,7 +1356,7 @@ namespace WpfApp3
 
                     H1CS_Sel_Time.Text = TickToTimeString(data.StartTick);
                     H1CS_Sel_FileName.Text = s;
-                    H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                    H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                 }
             }
             else
@@ -1523,9 +1606,9 @@ namespace WpfApp3
                         readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
                         UInt32 holdme = readBinary.ReadUInt32();
                         if (game != HaloGame.Halo1)
-                            metadata.StartTick = holdme / 2;
-                        else
                             metadata.StartTick = holdme;
+                        else
+                            metadata.StartTick = holdme * 2;
 
                         //get difficulty
                         readBinary.BaseStream.Seek(offsetDifficulty, SeekOrigin.Begin);
@@ -1584,7 +1667,7 @@ namespace WpfApp3
 
         public static string TickToTimeString(uint ticks)
         {
-            int seconds = (int)ticks / 30; 
+            int seconds = (int)ticks / 60; 
             TimeSpan ts = new TimeSpan(seconds / (60 * 60), seconds / (60), seconds % 60);
             return ts.ToString(@"mm\:ss");
         }
@@ -2008,6 +2091,8 @@ namespace WpfApp3
 
             //all the magic happens here
             dtClockTime_Tick(sender, e);
+
+            RefreshLoa(sender, new RoutedEventArgs());
 
             if (game != HCMGlobal.AttachedGame)
             {
