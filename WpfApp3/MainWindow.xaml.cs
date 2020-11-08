@@ -1219,14 +1219,25 @@ namespace WpfApp3
                             H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                         H1CS_Loa_Time.Text = TickToTimeString(data.StartTick);
+                        H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/mp.png", UriKind.Relative));
                         H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        //there's gotta be a better way to code this..
+                        try
+                        {
+                            Debug("eee" + H1CS_Loa_LevelImage.Source.Width);
+                        }
+                        catch
+                        {
+                            H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/mp.png", UriKind.Relative));
+                        }
+
                     }
                     else
                     {
                         H1CS_Loa_LevelName.Text = "N/A";
                         H1CS_Loa_DiffName.Source = null;
                         H1CS_Loa_Time.Text = "N/A";
-                        H1CS_Loa_LevelImage.Source = null;
+                        H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
                     break;
 
@@ -1240,7 +1251,6 @@ namespace WpfApp3
                         bool DRflag;
                         byte[] DRbuffer = new byte[1];
                         var data = new HaloSaveFileMetadata();
-                        string levelseed;
 
                         if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
                         {
@@ -1267,7 +1277,8 @@ namespace WpfApp3
                         byte[] buffer = new byte[32];
                         if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFD73, buffer, buffer.Length, out bytesWritten))
                         {
-                            data.LevelCode = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                            char[] exceptions = new char[] { '_' };
+                            data.LevelCode = String.Concat(Encoding.UTF8.GetString(buffer, 0, buffer.Length).Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
                         }
                         else { Debug("oh no"); NullReach(); return; }
 
@@ -1281,7 +1292,7 @@ namespace WpfApp3
 
                         //tickcount
                         buffer = new byte[4];
-                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x9FD18, buffer, buffer.Length, out bytesWritten))
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x10FD54, buffer, buffer.Length, out bytesWritten))
                         {
                             data.StartTick = BitConverter.ToUInt32(buffer, 0);
                         }
@@ -1289,9 +1300,9 @@ namespace WpfApp3
 
                         //level start seed
                         buffer = new byte[4];
-                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x9FD18, buffer, buffer.Length, out bytesWritten))
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x148, buffer, buffer.Length, out bytesWritten))
                         {
-                            levelseed = (Convert.ToString(BitConverter.ToUInt32(buffer, 0), 16)).ToUpper();
+                            data.Seed = (Convert.ToString(BitConverter.ToUInt32(buffer, 0), 16)).ToUpper();
                         }
                         else { Debug("oh no"); NullReach(); return; }
 
@@ -1304,7 +1315,20 @@ namespace WpfApp3
 
                         HRCP_Loa_Time.Text = TickToTimeString(data.StartTick);
                         HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                        HRCP_Loa_Seed.Content = "Seed: " + levelseed;
+                        //there's gotta be a better way to code this..
+                        try
+                        {
+                            Debug("eee" + HRCP_Loa_LevelImage.Source.Width);
+                        }
+                        catch
+                        {
+                            HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/HR/mp.png", UriKind.Relative));
+                        }
+
+
+
+
+                        HRCP_Loa_Seed.Content = "Seed: " + data.Seed;
 
                     }
                     else { Debug("oh no"); NullReach(); }
@@ -1321,7 +1345,7 @@ namespace WpfApp3
                         HRCP_Loa_LevelName.Text = "N/A";
                         HRCP_Loa_DiffName.Source = null;
                         HRCP_Loa_Time.Text = "N/A";
-                        HRCP_Loa_LevelImage.Source = null;
+                        HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                         HRCP_Loa_Seed.Content = "Seed: N/A";
                     }
 
@@ -1338,98 +1362,106 @@ namespace WpfApp3
 
         private void RefreshSel(object sender, RoutedEventArgs e)
         {
-            //H1 CORES FIRST
-            if (CS_MainList.SelectedItem != null)
+
+
+            switch (TabList.SelectedIndex)
             {
-                var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                System.Type type = item.GetType();
-                string s = (string)type.GetProperty("Name").GetValue(item, null);
-                var pathtotest = HCMGlobal.H1CoreSavePath + @"\" + s + @".bin";
+                case 0: //H1 CORES 
+                    if (CS_MainList.SelectedItem != null)
+                    {
+                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
+                        System.Type type = item.GetType();
+                        string s = (string)type.GetProperty("Name").GetValue(item, null);
+                        var pathtotest = HCMGlobal.H1CoreSavePath + @"\" + s + @".bin";
 
-                if (File.Exists(pathtotest))
-                {
-                    var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
-                    H1CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                        if (File.Exists(pathtotest))
+                        {
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
+                            H1CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                    if (data.Difficulty != Difficulty.Invalid)
-                        H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                            if (data.Difficulty != Difficulty.Invalid)
+                                H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
-                    H1CS_Sel_Time.Text = TickToTimeString(data.StartTick);
-                    H1CS_Sel_FileName.Text = s;
-                    H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                }
+                            H1CS_Sel_Time.Text = TickToTimeString(data.StartTick);
+                            H1CS_Sel_FileName.Text = s;
+                            H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                            //there's gotta be a better way to code this..
+                            try
+                            {
+                                Debug("eee" + H1CS_Sel_LevelImage.Source.Width);
+                            }
+                            catch
+                            {
+                                H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/mp.png", UriKind.Relative));
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        H1CS_Sel_LevelName.Text = "N/A";
+                        H1CS_Sel_DiffName.Source = null;
+                        H1CS_Sel_Time.Text = "N/A";
+                        H1CS_Sel_FileName.Text = "N/A";
+                        H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+                    break;
+
+                case 3: //reach
+                    if (HRCP_MainList.SelectedItem != null)
+                    {
+                        var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex);
+                        System.Type type = item.GetType();
+                        string s = (string)type.GetProperty("Name").GetValue(item, null);
+                        var pathtotest = HCMGlobal.HRCheckpointPath + @"\" + s + @".bin";
+
+                        if (File.Exists(pathtotest))
+                        {
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.HaloReach);
+                            HRCP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+
+                            if (data.Difficulty != Difficulty.Invalid)
+                                HRCP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                            HRCP_Sel_Time.Text = TickToTimeString(data.StartTick);
+                            HRCP_Sel_FileName.Text = s;
+
+                            
+                                HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                            //there's gotta be a better way to code this..
+                            try
+                            {
+                                Debug("eee" + HRCP_Sel_LevelImage.Source.Width);
+                            }
+                            catch {
+                                HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/HR/mp.png", UriKind.Relative));
+                            }
+
+
+                            HRCP_Sel_Seed.Content = "Seed: " + data.Seed;
+                        }
+                    }
+                    else
+                    {
+                        HRCP_Sel_LevelName.Text = "N/A";
+                        HRCP_Sel_DiffName.Source = null;
+                        HRCP_Sel_Time.Text = "N/A";
+                        HRCP_Sel_FileName.Text = "N/A";
+                        HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                        HRCP_Sel_Seed.Content = "Seed: N/A";
+                    }
+                    break;
+
+                default:
+                    break;
+
             }
-            else
-            {
-                H1CS_Sel_LevelName.Text = "N/A";
-                H1CS_Sel_DiffName.Source = null;
-                H1CS_Sel_Time.Text = "N/A";
-                H1CS_Sel_FileName.Text = "N/A";
-                H1CS_Sel_LevelImage.Source = null;
+
             }
-            //Debug("CP_MainList.SelectedItem" + CP_MainList?.SelectedItem?.ToString());
 
-            //H1 CPs SECOND
-            //if (CP_MainList.SelectedItem != null)
-            //{
-            //    //Debug("ahh" + CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
-            //    var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-            //    System.Type type = item.GetType();
-            //    string s = (string)type.GetProperty("Name").GetValue(item, null);
-            //    var pathtotest = HCMGlobal.H1CheckpointPath + @"\" + s + @".bin";
-
-            //    if (File.Exists(pathtotest))
-            //    {
-            //        var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
-            //        CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
-
-            //        if (data.Difficulty != Difficulty.Invalid)
-            //            CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
-
-            //        CP_Sel_Time.Text = TickToTimeString(data.StartTick);
-            //        CP_Sel_FileName.Text = s;
-            //        CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-            //    }
-            //}
-            //else
-            //{
-            //    CP_Sel_LevelName.Text = "N/A";
-            //    CP_Sel_DiffName.Source = null;
-            //    CP_Sel_Time.Text = "N/A";
-            //    CP_Sel_FileName.Text = "N/A";
-            //    CP_Sel_LevelImage.Source = null;
-            //}
-
-            //H2 CPs THIRD
-            //if (H2CP_MainList.SelectedItem != null)
-            //{
-            //    //Debug("ahh" + H2CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex).ToString());
-            //    var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-            //    System.Type type = item.GetType();
-            //    string s = (string)type.GetProperty("Name").GetValue(item, null);
-            //    var pathtotest = HCMGlobal.H2CheckpointPath + @"\" + s + @".bin";
-
-            //    if (File.Exists(pathtotest))
-            //    {
-            //        var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
-            //        H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
-
-            //        if (data.Difficulty != Difficulty.Invalid)
-            //            H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
-
-            //        H2CP_Sel_Time.Text = TickToTimeString(data.StartTick); //might need to halve this if h2 really is 60 ticks per sec
-            //        H2CP_Sel_FileName.Text = s;
-            //        H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-            //    }
-            //}
-            //else
-            //{
-            //    H2CP_Sel_LevelName.Text = "N/A";
-            //    H2CP_Sel_DiffName.Source = null;
-            //    H2CP_Sel_Time.Text = "N/A";
-            //    H2CP_Sel_FileName.Text = "N/A";
-            //    H2CP_Sel_LevelImage.Source = null;
-            //}
+        private void HRCP_Sel_LevelImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void RefreshList(object sender, RoutedEventArgs e)
@@ -1551,6 +1583,8 @@ namespace WpfApp3
             public string LevelCode { get; set; } = "xxx";
             public uint StartTick { get; set; } = 0;
             public Difficulty Difficulty { get; set; } = Difficulty.Easy;
+
+            public string Seed { get; set; } = "N/A";
             public string Name { get; set; }
 
             public string DifficultyImage => $"images/diff_{(int)Difficulty}.png";
@@ -1562,6 +1596,7 @@ namespace WpfApp3
             int offsetLevelCode;
             int offsetStartTick;
             int offsetDifficulty;
+            int offsetSeed;
 
             switch (game)
             {
@@ -1569,16 +1604,19 @@ namespace WpfApp3
                     offsetLevelCode = 11;
                     offsetStartTick = 756;
                     offsetDifficulty = 294;
+                    offsetSeed = 0;
                     break;
                 case HaloGame.Halo2:
                     offsetLevelCode = 23;
                     offsetStartTick = 10808;
                     offsetDifficulty = 974;
+                    offsetSeed = 0;
                     break;
                 case HaloGame.HaloReach:
                     offsetLevelCode = 0xFD73;
-                    offsetStartTick = 0x9FD18; 
-                    offsetDifficulty = 0xFEFC; 
+                    offsetStartTick = 0x10FD54; 
+                    offsetDifficulty = 0xFEFC;
+                    offsetSeed = 0x148;
                     break;
                 default:
                     throw new NotSupportedException();
@@ -1602,7 +1640,9 @@ namespace WpfApp3
                         readBinary.BaseStream.Seek(offsetLevelCode, SeekOrigin.Begin);
                         metadata.LevelCode = new string(readBinary.ReadChars(32));
                             metadata.LevelCode = metadata.LevelCode.Substring(metadata.LevelCode.LastIndexOf("\\") + 1);
-
+                            metadata.LevelCode = metadata.LevelCode.Substring(metadata.LevelCode.LastIndexOf("\\") + 1);
+                            char[] exceptions = new char[] { '_' };
+                            metadata.LevelCode = String.Concat(metadata.LevelCode.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
                             //get time
                             readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
                         UInt32 holdme = readBinary.ReadUInt32();
@@ -1614,6 +1654,12 @@ namespace WpfApp3
                         //get difficulty
                         readBinary.BaseStream.Seek(offsetDifficulty, SeekOrigin.Begin);
                         metadata.Difficulty = (Difficulty)readBinary.ReadByte();
+
+                            if (game == HaloGame.HaloReach)
+                            {
+                                readBinary.BaseStream.Seek(offsetSeed, SeekOrigin.Begin);
+                                metadata.Seed = (Convert.ToString((readBinary.ReadUInt32()), 16)).ToUpper();
+                            }
                     }
                 }
                 catch (Exception ex)
@@ -1679,6 +1725,7 @@ namespace WpfApp3
             //maybe I'll add multiplayer levels to this eventually. or extra entry for "acronym'd name"
 
             // Halo 1
+            //SP
             { "a10", "Pillar of Autumn" },
             { "a30", "Halo" },
             { "a50", "Truth and Rec" },
@@ -1689,8 +1736,30 @@ namespace WpfApp3
             { "c40", "Two Betrayals" },
             { "d20", "Keyes" },
             { "d40", "The Maw" },
+            //MP
+            { "beavercreek", "Battle Creek" },
+            { "boardingaction", "Boarding Action" },
+            { "bloodgulch", "Blood Gulch" },
+            { "carousel", "Derelict" },
+            { "chillout", "Chill Out" },
+            { "damnation", "Damnation" },
+            { "dangercanyon", "Danger Canyon" },
+            { "deathisland", "Death Island" },
+            { "gephyrophobia", "Gephyrophobia" },
+            { "hangemhigh", "Hang 'Em High" },
+            { "icefields", "Ice Fields" },
+            { "infinity", "Infinity" },
+            { "longest", "Longest" },
+            { "prisoner", "Prisoner" },
+            { "putput", "Chiron TL-34" },
+            { "ratrace", "Rat Race" },
+            { "sidewinder", "Sidewinder" },
+            { "timberland", "Timberland" },
+            { "wizard", "Wizard" },
+
 
             // Halo 2
+            //SP
             { "00a", "The Heretic" },
             { "01a", "The Armory" },
             { "01b", "Cairo Station" },
@@ -1706,8 +1775,11 @@ namespace WpfApp3
             { "07b", "Uprising" },
             { "08a", "High Charity" },
             { "08b", "The Great Journey" },
+            //MP
+            //tbd
 
             // Halo Reach
+            //SP
             { "m05", "Noble Actual" },
             { "m10", "Winter Contingency" },
             { "m20", "ONI: Sword Base" },
@@ -1720,12 +1792,45 @@ namespace WpfApp3
             { "m70", "The Pillar of Autumn" },
             { "m70_a", "Credits" },
             { "m70_bonus", "Lone Wolf" },
+            //MP
+            { "20_sword_slayer", "Sword Base" },
+            { "30_settlement", "Powerhouse" },
+            { "35_island", "Spire" },
+            { "45_aftship", "Zealot" },
+            { "45_launch_station", "Countdown" },
+            { "50_panopticon", "Boardwalk" },
+            { "52_ivory_tower", "Reflection" },
+            { "70_boneyard", "Boneyard" },
+            { "forge_halo", "Forge World" },
+            { "dlc_invasion ", "Breakpoint" },
+            { "dlc_medium ", "Tempest" },
+            { "dlc_slayer ", "Anchor 9" },
+            { "cex_beaver_creek ", "Battle Canyon " },
+            { "cex_damnation ", "Penance " },
+            { "cex_ff_halo ", "Installation 04 " },
+            { "cex_hangemhigh ", "High Noon" },
+            { "cex_headlong ", "Breakneck " },
+            { "cex_prisoner ", "Solitary " },
+            { "cex_timberland ", "Ridgeline " },
+            { "condemned ", "Condemned " },
+            { "ff_unearthed ", "Unearthed " },
+            { "trainingpreserve ", "Highlands " },
+            { "ff10_prototype ", "Overlook" },
+            { "ff20_courtyard ", "Courtyard" },
+            { "ff30_waterfront ", "Waterfront" },
+            { "ff45_corvette ", "Corvette" },
+            { "ff50_park ", "Beachhead" },
+            { "ff60_airview ", "Outpost" },
+            { "ff60 icecave ", "Glacier " },
+            { "ff70_holdout ", "Holdout" },
+
+
 
         };
 
         public string LevelCodeToFullName(string code)
         {
-            code = String.Concat(code.Where(ch => Char.IsLetterOrDigit(ch)));
+
             string Name;
             if (LevelCodeToName.TryGetValue(code, out Name))
             {

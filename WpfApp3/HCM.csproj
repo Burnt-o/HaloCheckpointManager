@@ -219,7 +219,9 @@
   <ItemGroup>
     <Resource Include="arrows-switch.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="images\H1\mp.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="images\HR\m05_anni.png" />
     <Resource Include="images\HR\m05_clas.png" />
@@ -245,6 +247,15 @@
     <Resource Include="images\HR\m70_bonus_anni.png" />
     <Resource Include="images\HR\m70_bonus_clas.png" />
     <Resource Include="images\HR\m70_clas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\H2\mp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\HR\mp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\nofile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
