@@ -168,6 +168,7 @@ namespace WpfApp3
             @"saves\h1cp",
             @"saves\h2cp",
             @"saves\hrcp",
+            @"offsets",
         };
 
 
@@ -2510,7 +2511,7 @@ namespace WpfApp3
                     HCMGlobal.CheckedForOnlineOffsets = true;
                     try
                     {
-                        String url = "https://github.com/Burnt-o/HaloCheckpointManager/raw/master/WpfApp3/offsets/" + HCMGlobal.MCCversion + ".json";
+                        String url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/WpfApp3/offsets/" + HCMGlobal.MCCversion + ".json";
                         System.Net.WebClient client = new System.Net.WebClient();
                         String json = client.DownloadString(url);
                         System.IO.File.WriteAllText("offsets\\" + HCMGlobal.MCCversion + ".json", json);
