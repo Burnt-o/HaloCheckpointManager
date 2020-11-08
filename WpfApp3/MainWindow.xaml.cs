@@ -1264,7 +1264,7 @@ namespace WpfApp3
                         addy[3] = offset;
                         //setup done, let's get our data
                         //levelcode
-                        byte[] buffer = new byte[3];
+                        byte[] buffer = new byte[32];
                         if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFD73, buffer, buffer.Length, out bytesWritten))
                         {
                             data.LevelCode = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
@@ -1600,10 +1600,11 @@ namespace WpfApp3
 
                         //get levelname
                         readBinary.BaseStream.Seek(offsetLevelCode, SeekOrigin.Begin);
-                        metadata.LevelCode = new string(readBinary.ReadChars(3));
+                        metadata.LevelCode = new string(readBinary.ReadChars(32));
+                            metadata.LevelCode = metadata.LevelCode.Substring(metadata.LevelCode.LastIndexOf("\\") + 1);
 
-                        //get time
-                        readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
+                            //get time
+                            readBinary.BaseStream.Seek(offsetStartTick, SeekOrigin.Begin);
                         UInt32 holdme = readBinary.ReadUInt32();
                         if (game != HaloGame.Halo1)
                             metadata.StartTick = holdme;
@@ -1724,6 +1725,7 @@ namespace WpfApp3
 
         public string LevelCodeToFullName(string code)
         {
+            code = String.Concat(code.Where(ch => Char.IsLetterOrDigit(ch)));
             string Name;
             if (LevelCodeToName.TryGetValue(code, out Name))
             {
@@ -1999,7 +2001,7 @@ namespace WpfApp3
                         Debug("failed to read reach checkpoint from memory");
                     }
 
-                        
+                    RefreshList(sender, e);
 
 
                     break;
