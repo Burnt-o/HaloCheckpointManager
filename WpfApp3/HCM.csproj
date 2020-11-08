@@ -219,8 +219,32 @@
   <ItemGroup>
     <Resource Include="arrows-switch.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="images\HR\" />
+    <Resource Include="images\HR\m05_anni.png" />
+    <Resource Include="images\HR\m05_clas.png" />
+    <Resource Include="images\HR\m10_anni.png" />
+    <Resource Include="images\HR\m10_clas.png" />
+    <Resource Include="images\HR\m20_anni.png" />
+    <Resource Include="images\HR\m20_clas.png" />
+    <Resource Include="images\HR\m30_anni.png" />
+    <Resource Include="images\HR\m30_clas.png" />
+    <Resource Include="images\HR\m35_anni.png" />
+    <Resource Include="images\HR\m35_clas.png" />
+    <Resource Include="images\HR\m45_anni.png" />
+    <Resource Include="images\HR\m45_clas.png" />
+    <Resource Include="images\HR\m50_anni.png" />
+    <Resource Include="images\HR\m50_clas.png" />
+    <Resource Include="images\HR\m52_anni.png" />
+    <Resource Include="images\HR\m52_clas.png" />
+    <Resource Include="images\HR\m60_anni.png" />
+    <Resource Include="images\HR\m60_clas.png" />
+    <Resource Include="images\HR\m70_anni.png" />
+    <Resource Include="images\HR\m70_a_anni.png" />
+    <Resource Include="images\HR\m70_a_clas.png" />
+    <Resource Include="images\HR\m70_bonus_anni.png" />
+    <Resource Include="images\HR\m70_bonus_clas.png" />
+    <Resource Include="images\HR\m70_clas.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
