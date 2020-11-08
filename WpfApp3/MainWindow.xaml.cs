@@ -27,6 +27,7 @@ using System.ComponentModel;
 //using System.Windows.Forms;
 using System.Windows.Threading;
 using System.Security.Principal;
+using System.Threading;
 
 
 
@@ -2119,6 +2120,8 @@ namespace WpfApp3
 
         private void InjectButton_Click(object sender, RoutedEventArgs e)
         {
+            
+            
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
@@ -2127,6 +2130,93 @@ namespace WpfApp3
             {
                 case "HRCP":
                     //do inject things
+                    RefreshSel(sender, e);
+                    Debug("attempting to inject reach checkpoint");
+
+                    if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR() && HRCP_MainList.SelectedItem != null)
+                    {
+                        var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string sourcePath = HCMGlobal.HRCheckpointPath + @"\" + item.Name + @".bin";
+
+                        FileStream fs = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+                        // Create a byte array of file stream length
+                        byte[] buffer = System.IO.File.ReadAllBytes(sourcePath);
+                        //Read block of bytes from stream into the byte array
+                        fs.Read(buffer, 0, System.Convert.ToInt32(fs.Length));
+                        //Close the File Stream
+                        fs.Close();
+                        Console.WriteLine("nearly ready to inject, buffer length: " + buffer.Length.ToString());
+
+                        //okay first we need to read from memory the bytes that we need to preserve and overwrite them in buffer
+                        //let's check the DR flag first
+                        int bytesWritten;
+                        bool DRflag;
+                        byte[] DRbuffer = new byte[1];
+
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                        {
+                            DRflag = Convert.ToBoolean(DRbuffer[0]);
+                        }
+                        else
+                        {
+                            Debug("something went wrong trying to read DR flag for reach injecting");
+                            return;
+                        }
+
+                        int offset;
+                        if (!DRflag)
+                        {
+                            offset = -0xA10000; //first cp
+                        }
+                        else
+                        {
+                            offset = 0x0; //second cp
+                        }
+
+                        int[] addy = HCMGlobal.LoadedOffsets.HR_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                        addy[3] = offset;
+
+                        //setup a 2d array with the values we need to preserve (offset, length)
+                        int[][] PreserveLocations = new int[][] { new int[] { 0x594A74, 4}, new int[] { 0x58F4F0, 16 } };
+                        
+                        foreach (int[] i in PreserveLocations)
+                        {
+                            byte[] tempbuffer = new byte[i[1]];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten))
+                            {
+                                //overwrite the stored cp buffer with new vals
+                                Array.ConstrainedCopy(tempbuffer, 0, buffer, i[0], i[1]);
+                                Debug("successfully copied over buffer at " + i[0]);
+                            }
+                            else
+                            {
+                                Debug("failed reading current vals for reach injection");
+                                return;
+                            }
+                        }
+
+                        //now to inject into memory
+                        if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                        {
+                            Debug("successfully injected reach cp, " + buffer.Length.ToString() + " bytes!");
+                        }
+                        else
+                        {
+                            Debug("failed injecting reach cp");
+                            return;
+                        }
+
+                        //ok cool now if we came from injectrevert button, let's call revert
+                        Debug("senderrrr: " + (sender as Button).Content.ToString());
+                        if ((sender as Button).Content.ToString().Length > 10) //this is a STUPID way to do this
+                        {
+                            Debug("yes");
+                            ForceRevertButton_Click(sender, e);
+                        }
+
+
+                    }
+
                     break;
 
                 default:
@@ -2146,8 +2236,7 @@ namespace WpfApp3
                 case "HRCP":
                     //inject
                     InjectButton_Click(sender, e);
-                    //then force revert
-                    //TBD
+                    //force revert will be handled over there by checking sender object
                     break;
 
                 default:
@@ -2167,7 +2256,9 @@ namespace WpfApp3
             switch (parent_name)
             {
                 case "HRCP":
-                    //do force cp things, set a timer to wait for checkpoint to complete, then..
+                    //do force cp things, sleep 100ms, then do dump things
+                    ForceCPButton_Click(sender, e);
+                    Thread.Sleep(100);
                     //dump
                     DumpButton_Click(sender, e);
                     break;
