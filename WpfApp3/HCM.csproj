@@ -257,5 +257,29 @@
   <ItemGroup>
     <Resource Include="images\nofile.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\H1\diff_0.png" />
+    <Resource Include="images\H1\diff_1.png" />
+    <Resource Include="images\H1\diff_2.png" />
+    <Resource Include="images\H1\diff_3.png" />
+    <Resource Include="images\H1\diff_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\H2\diff_0.png" />
+    <Resource Include="images\H2\diff_1.png" />
+    <Resource Include="images\H2\diff_2.png" />
+    <Resource Include="images\H2\diff_3.png" />
+    <Resource Include="images\H2\diff_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\HR\diff_0.png" />
+    <Resource Include="images\HR\diff_1.png" />
+    <Resource Include="images\HR\diff_2.png" />
+    <Resource Include="images\HR\diff_3.png" />
+    <Resource Include="images\HR\diff_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\diff_4.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -54,7 +54,7 @@
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image  Source="{Binding DifficultyImage}" Width="17" Height="18"/>
+                                            <Image  Source="{Binding DifficultyImageH1}" Width="17" Height="18"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -252,7 +252,7 @@
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image  Source="{Binding DifficultyImage}" Width="17" Height="18"/>
+                                            <Image  Source="{Binding DifficultyImageHR}" Width="17" Height="18"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

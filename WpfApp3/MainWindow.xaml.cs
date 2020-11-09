@@ -31,6 +31,56 @@ using System.Threading;
 
 
 
+
+
+//TODO LIST
+
+/*
+Make returns more informational. Instead of just returning, return true or false (success) + error message that calling function can popup a dialog about. Will have to divide functions up a bit but it's for the best. 
+
+Add way more try catches to anywhere that reads memory, or handles files. Add file length check too.
+
+Implement profiles.
+
+Add level check/lockout. Add seed check to maintick. 
+
+Remove debugs from maintick except when Vals change. 
+
+Add many user dialogs for when errors popup. 
+
+DONE ---- Fix mp map icon stuff, just add a check if map is on the dictionary (maybe programitcally divide dictionary into sp and mp). Also change difficulty icon to mp unique image (in list, loa, and sel) 
+
+Add options for list level name - code (current), acronym, thumbnail. 
+
+Change settings to have per-game options (clean up h1 checkpoints stuff) 
+
+Clean up about page,stop it autoshowing on first run. 
+
+Add last selected tab and save to config and autoload on start. Also mainlist column widths. And vertical scrollbar position. 
+
+Add sub-seconds readout to checkpoint time in loa and sel (but not list) 
+
+Add sorting functionality. 
+
+Get all mp level splashes (clas and anni). 
+
+Implement custom level splash images. With auto resizing. 
+
+Add mandatory update online checks. 
+
+Verify online json file vs off-line one? Uh no just delete offline json file on first run (after update). 
+
+Add tool tip to double revert or just make icon better. 
+
+DONE ---- Make difficulty icons per game instead of global (iirc odst has different icons)
+
+Add open in Explorer button. 
+
+Implement core save and dump + inject and revert for h1cs.
+
+*/
+
+
 namespace WpfApp3
 {
     /// <summary>
@@ -153,6 +203,7 @@ namespace WpfApp3
             Normal = 1,
             Heroic = 2,
             Legendary = 3,
+            Multiplayer = 4,
         }
 
         private readonly string[] RequiredFiles =
@@ -1216,22 +1267,23 @@ namespace WpfApp3
                     {
                         var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
                         H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
-
+                        
                         if (data.Difficulty != Difficulty.Invalid)
-                            H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                            H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/H1/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
 
                         H1CS_Loa_Time.Text = TickToTimeString(data.StartTick);
-                        H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/mp.png", UriKind.Relative));
-                        H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                        //there's gotta be a better way to code this..
-                        try
-                        {
-                            Debug("eee" + H1CS_Loa_LevelImage.Source.Width);
-                        }
-                        catch
+
+                        if (LevelCodeToGameType(data.LevelCode))
                         {
                             H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/mp.png", UriKind.Relative));
                         }
+                        else
+                        {
+                            H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        }
+
+
 
                     }
                     else
@@ -1261,7 +1313,7 @@ namespace WpfApp3
                         else { Debug("oh no"); NullReach(); return; }
 
 
-                        
+
                         int offset;
                         if (!DRflag)
                         {
@@ -1285,13 +1337,19 @@ namespace WpfApp3
                         else { Debug("oh no"); NullReach(); return; }
 
                         //difficulty
-                        buffer = new byte[1];
-                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFEFC, buffer, buffer.Length, out bytesWritten))
+                        if (LevelCodeToGameType(data.LevelCode))
                         {
-                            data.Difficulty = (Difficulty)buffer[0];
+                            data.Difficulty = (Difficulty)4;
                         }
-                        else { Debug("oh no"); NullReach(); return; }
-
+                        else
+                        { 
+                            buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFEFC, buffer, buffer.Length, out bytesWritten))
+                            {
+                                data.Difficulty = (Difficulty)buffer[0];
+                            }
+                            else { Debug("oh no"); NullReach(); return; }
+                        }
                         //tickcount
                         buffer = new byte[4];
                         if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x10FD54, buffer, buffer.Length, out bytesWritten))
@@ -1312,19 +1370,20 @@ namespace WpfApp3
                         //now assign to ui
                         HRCP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                        if (data.Difficulty != Difficulty.Invalid)
-                            HRCP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
-
                         HRCP_Loa_Time.Text = TickToTimeString(data.StartTick);
-                        HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                        //there's gotta be a better way to code this..
-                        try
-                        {
-                            Debug("eee" + HRCP_Loa_LevelImage.Source.Width);
-                        }
-                        catch
+
+
+                        if (data.Difficulty != Difficulty.Invalid)
+                            HRCP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/HR/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+
+                        if (LevelCodeToGameType(data.LevelCode))
                         {
                             HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/HR/mp.png", UriKind.Relative));
+                        }
+                        else
+                        {
+                            HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                         }
 
 
@@ -1381,20 +1440,22 @@ namespace WpfApp3
                             var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
                             H1CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
+
                             if (data.Difficulty != Difficulty.Invalid)
-                                H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                                H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H1/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
 
                             H1CS_Sel_Time.Text = TickToTimeString(data.StartTick);
                             H1CS_Sel_FileName.Text = s;
-                            H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                            //there's gotta be a better way to code this..
-                            try
-                            {
-                                Debug("eee" + H1CS_Sel_LevelImage.Source.Width);
-                            }
-                            catch
+                           
+
+                            if (LevelCodeToGameType(data.LevelCode))
                             {
                                 H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/mp.png", UriKind.Relative));
+                            }
+                            else
+                            {
+                                H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H1/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                             }
 
                         }
@@ -1422,21 +1483,23 @@ namespace WpfApp3
                             var data = GetSaveFileMetadata(pathtotest, HaloGame.HaloReach);
                             HRCP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
+
                             if (data.Difficulty != Difficulty.Invalid)
-                                HRCP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+                                HRCP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/HR/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
 
                             HRCP_Sel_Time.Text = TickToTimeString(data.StartTick);
                             HRCP_Sel_FileName.Text = s;
 
                             
-                                HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
-                            //there's gotta be a better way to code this..
-                            try
+                               
+                            if (LevelCodeToGameType(data.LevelCode))
                             {
-                                Debug("eee" + HRCP_Sel_LevelImage.Source.Width);
-                            }
-                            catch {
                                 HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/HR/mp.png", UriKind.Relative));
+                            }
+                            else
+                            {
+                                HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/HR/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
                             }
 
 
@@ -1589,7 +1652,9 @@ namespace WpfApp3
             public string Seed { get; set; } = "N/A";
             public string Name { get; set; }
 
-            public string DifficultyImage => $"images/diff_{(int)Difficulty}.png";
+            //split difficultyimage into these two, probably a dumb way to do this but ¯\_(ツ)_/¯
+            public string DifficultyImageH1 => $"images/H1/diff_{(int)Difficulty}.png";
+            public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
             public string TimeString => TickToTimeString(StartTick);
         }
 
@@ -1655,8 +1720,15 @@ namespace WpfApp3
 
                         //get difficulty
                         readBinary.BaseStream.Seek(offsetDifficulty, SeekOrigin.Begin);
-                        metadata.Difficulty = (Difficulty)readBinary.ReadByte();
 
+                            if (LevelCodeToGameType(metadata.LevelCode))
+                            {
+                                metadata.Difficulty = (Difficulty)4;
+                            }
+                            else
+                            {
+                                metadata.Difficulty = (Difficulty)readBinary.ReadByte();
+                            }
                             if (game == HaloGame.HaloReach)
                             {
                                 readBinary.BaseStream.Seek(offsetSeed, SeekOrigin.Begin);
@@ -1807,24 +1879,133 @@ namespace WpfApp3
             { "dlc_invasion ", "Breakpoint" },
             { "dlc_medium ", "Tempest" },
             { "dlc_slayer ", "Anchor 9" },
-            { "cex_beaver_creek ", "Battle Canyon " },
-            { "cex_damnation ", "Penance " },
-            { "cex_ff_halo ", "Installation 04 " },
+            { "cex_beaver_creek ", "Battle Canyon" },
+            { "cex_damnation ", "Penance" },
+            { "cex_ff_halo ", "Installation 04" },
             { "cex_hangemhigh ", "High Noon" },
-            { "cex_headlong ", "Breakneck " },
-            { "cex_prisoner ", "Solitary " },
-            { "cex_timberland ", "Ridgeline " },
-            { "condemned ", "Condemned " },
-            { "ff_unearthed ", "Unearthed " },
-            { "trainingpreserve ", "Highlands " },
+            { "cex_headlong ", "Breakneck" },
+            { "cex_prisoner ", "Solitary" },
+            { "cex_timberland ", "Ridgeline" },
+            { "condemned ", "Condemned" },
+            { "ff_unearthed ", "Unearthed" },
+            { "trainingpreserve ", "Highlands" },
             { "ff10_prototype ", "Overlook" },
             { "ff20_courtyard ", "Courtyard" },
             { "ff30_waterfront ", "Waterfront" },
             { "ff45_corvette ", "Corvette" },
             { "ff50_park ", "Beachhead" },
             { "ff60_airview ", "Outpost" },
-            { "ff60 icecave ", "Glacier " },
+            { "ff60 icecave ", "Glacier" },
             { "ff70_holdout ", "Holdout" },
+
+
+
+        };
+
+        readonly Dictionary<string, bool> LevelCodeToType = new Dictionary<string, bool>()
+        {
+            //false = solo, true = multi
+            //again, there's gotta be a better way to code this than having two dictionaries but eh
+
+            // Halo 1
+            //SP
+            { "a10", false },
+            { "a30", false },
+            { "a50", false },
+            { "b30", false },
+            { "b40", false },
+            { "c10", false },
+            { "c20", false },
+            { "c40", false },
+            { "d20", false },
+            { "d40", false },
+            //MP
+            { "beavercreek", true },
+            { "boardingaction", true },
+            { "bloodgulch", true },
+            { "carousel", true },
+            { "chillout", true },
+            { "damnation", true },
+            { "dangercanyon", true },
+            { "deathisland", true },
+            { "gephyrophobia", true },
+            { "hangemhigh", true },
+            { "icefields", true },
+            { "infinity", true },
+            { "longest", true },
+            { "prisoner", true },
+            { "putput", true },
+            { "ratrace", true},
+            { "sidewinder", true },
+            { "timberland", true },
+            { "wizard", true },
+
+
+            // Halo 2
+            //SP
+            { "00a", false },
+            { "01a", false },
+            { "01b", false },
+            { "03a", false },
+            { "03b", false },
+            { "04a", false },
+            { "04b", false },
+            { "05a", false },
+            { "05b", false },
+            { "06a", false },
+            { "06b", false },
+            { "07a", false },
+            { "07b", false },
+            { "08a", false },
+            { "08b", false },
+            //MP
+            //tbd
+
+            // Halo Reach
+            //SP
+            { "m05", false },
+            { "m10", false },
+            { "m20", false },
+            { "m30", false },
+            { "m35", false },
+            { "m45", false },
+            { "m50", false },
+            { "m52", false },
+            { "m60", false },
+            { "m70", false },
+            { "m70_a", false },
+            { "m70_bonus", false },
+            //MP
+            { "20_sword_slayer", true },
+            { "30_settlement", true },
+            { "35_island", true },
+            { "45_aftship", true },
+            { "45_launch_station", true },
+            { "50_panopticon", true },
+            { "52_ivory_tower", true },
+            { "70_boneyard", true },
+            { "forge_halo", true },
+            { "dlc_invasion ", true },
+            { "dlc_medium ", true },
+            { "dlc_slayer ", true },
+            { "cex_beaver_creek ", true },
+            { "cex_damnation ", true },
+            { "cex_ff_halo ", true },
+            { "cex_hangemhigh ", true },
+            { "cex_headlong ", true },
+            { "cex_prisoner ", true },
+            { "cex_timberland ", true },
+            { "condemned ", true },
+            { "ff_unearthed ", true },
+            { "trainingpreserve ", true },
+            { "ff10_prototype ", true },
+            { "ff20_courtyard ", true },
+            { "ff30_waterfront ", true },
+            { "ff45_corvette ", true },
+            { "ff50_park ", true },
+            { "ff60_airview ", true },
+            { "ff60 icecave ", true },
+            { "ff70_holdout ", true },
 
 
 
@@ -1840,6 +2021,18 @@ namespace WpfApp3
             }
 
             return code;
+        }
+
+        public bool LevelCodeToGameType(string code)
+        {
+            //return false for solo, true for multi
+            bool Type;
+            if (LevelCodeToType.TryGetValue(code, out Type))
+            {
+                return Type;
+            }
+
+            return false;
         }
 
         public static void Log(string text, object sender)
