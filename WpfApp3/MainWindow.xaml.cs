@@ -58,7 +58,7 @@ Clean up about page,stop it autoshowing on first run.
 
 Add last selected tab and save to config and autoload on start. Also mainlist column widths. And vertical scrollbar position. 
 
-Add sub-seconds readout to checkpoint time in loa and sel (but not list) 
+DONE ---- Add sub-seconds readout to checkpoint time in loa and sel (but not list) 
 
 Add sorting functionality. 
 
@@ -1272,7 +1272,7 @@ namespace WpfApp3
                             H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/H1/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
 
-                        H1CS_Loa_Time.Text = TickToTimeString(data.StartTick);
+                        H1CS_Loa_Time.Text = TickToTimeString(data.StartTick, true);
 
                         if (LevelCodeToGameType(data.LevelCode))
                         {
@@ -1370,7 +1370,7 @@ namespace WpfApp3
                         //now assign to ui
                         HRCP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
 
-                        HRCP_Loa_Time.Text = TickToTimeString(data.StartTick);
+                        HRCP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
 
 
                         if (data.Difficulty != Difficulty.Invalid)
@@ -1445,7 +1445,7 @@ namespace WpfApp3
                                 H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H1/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
 
-                            H1CS_Sel_Time.Text = TickToTimeString(data.StartTick);
+                            H1CS_Sel_Time.Text = TickToTimeString(data.StartTick, true);
                             H1CS_Sel_FileName.Text = s;
                            
 
@@ -1488,7 +1488,7 @@ namespace WpfApp3
                                 HRCP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/HR/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
 
-                            HRCP_Sel_Time.Text = TickToTimeString(data.StartTick);
+                            HRCP_Sel_Time.Text = TickToTimeString(data.StartTick, true);
                             HRCP_Sel_FileName.Text = s;
 
                             
@@ -1655,7 +1655,7 @@ namespace WpfApp3
             //split difficultyimage into these two, probably a dumb way to do this but ¯\_(ツ)_/¯
             public string DifficultyImageH1 => $"images/H1/diff_{(int)Difficulty}.png";
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
-            public string TimeString => TickToTimeString(StartTick);
+            public string TimeString => TickToTimeString(StartTick, false);
         }
 
         private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, HaloGame game)
@@ -1786,11 +1786,21 @@ namespace WpfApp3
             }
         }
 
-        public static string TickToTimeString(uint ticks)
+        public static string TickToTimeString(uint ticks, bool subseconds)
         {
-            int seconds = (int)ticks / 60; 
-            TimeSpan ts = new TimeSpan(seconds / (60 * 60), seconds / (60), seconds % 60);
-            return ts.ToString(@"mm\:ss");
+            int seconds = (int)ticks / 60;
+            if (subseconds)
+            {
+                float milliseconds = 1000 * (((float)ticks % 60) / 60);
+                TimeSpan ts = new TimeSpan(0, seconds / (60 * 60), seconds / (60), seconds % 60, (int)Math.Round((float)milliseconds));
+                return ts.ToString(@"mm\:ss\.ff");
+            }
+            else
+            {
+                TimeSpan ts = new TimeSpan(seconds / (60 * 60), seconds / (60), seconds % 60);
+                return ts.ToString(@"mm\:ss");
+            }
+          
         }
 
 
