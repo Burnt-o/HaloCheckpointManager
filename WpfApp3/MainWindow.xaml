@@ -76,12 +76,12 @@
                     <TextBox x:Name="H1CS_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,308,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="2"/>
 
                     <TextBox x:Name="H1CS_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,272,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="2"/>
-                    <Button x:Name="H1CS_Loa_DumpButton" Content="Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,223,0" VerticalAlignment="Top" Width="82" Click="H1CSDumpButton_Click" Grid.Column="2"/>
+                    <Button x:Name="H1CS_Loa_DumpButton" Content="Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,223,0" VerticalAlignment="Top" Width="82" Click="DumpButton_Click" Grid.Column="2"/>
                     <Image x:Name="H1CS_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,92,184,0" VerticalAlignment="Top" Width="121"  Grid.Column="2"/>
                     <Image x:Name="H1CS_Sel_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,272,184,0" VerticalAlignment="Top" Width="121"  Grid.Column="2"/>
-                    <Button x:Name="H1CS_Sel_InjectButton" Content="Inject" HorizontalAlignment="Right" Height="26" Margin="0,354,223,0" VerticalAlignment="Top" Width="82" Click="H1CSInjectButton_Click" Grid.Column="2" />
+                    <Button x:Name="H1CS_Sel_InjectButton" Content="Inject" HorizontalAlignment="Right" Height="26" Margin="0,354,223,0" VerticalAlignment="Top" Width="82" Click="InjectButton_Click" Grid.Column="2" />
                     <Button x:Name="H1CS_Sel_RenameButton" Content="Rename" HorizontalAlignment="Right" Height="26" Margin="0,404,184,0" VerticalAlignment="Top" Width="121" Click="RenameButton_Click" Grid.Column="2"/>
-                    <Button x:Name="H1CS_Sel_InjectRevertButton" Content="Inject &amp; Core Load" HorizontalAlignment="Right" Height="26" Margin="0,354,44,0" VerticalAlignment="Top" Width="157" Click="H1CSInjectRevertButton_Click" Grid.Column="2"/>
+                    <Button x:Name="H1CS_Sel_InjectRevertButton" Content="Inject &amp; Core Load" HorizontalAlignment="Right" Height="26" Margin="0,354,44,0" VerticalAlignment="Top" Width="157" Click="InjectRevertButton_Click" Grid.Column="2"/>
                     <Button x:Name="H1CS_Sel_DeleteButton" Content="Delete" HorizontalAlignment="Right" Height="26" Margin="0,404,44,0" VerticalAlignment="Top" Width="121" Click="DeleteButton_Click" Grid.Column="2"/>
                     <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,208,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="2"/>
                     <Button x:Name="H1CS_Sel_MoveUpButton" Content="Move Up" HorizontalAlignment="Right" Height="26" Margin="0,454,208,0" VerticalAlignment="Top" Width="97" Click="MoveUpButton_Click" Grid.Column="2"/>
@@ -91,10 +91,10 @@
                     <Label Content="Selected Backup Core Save:" HorizontalAlignment="Right" Margin="0,209,133,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="2"/>
                     <Image x:Name="H1CS_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,92,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="2"/>
                     <Image x:Name="H1CS_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,272,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="2"/>
-                    <Button x:Name="H1CS_Loa_ForceCPDump" Content="Core Save &amp; Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,44,0" VerticalAlignment="Top" Width="157" Click="H1CSForceCPDumpButton_Click" Grid.Column="2"/>
+                    <Button x:Name="H1CS_Loa_ForceCPDump" Content="Core Save &amp; Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,44,0" VerticalAlignment="Top" Width="157" Click="ForceCPDumpButton_Click" Grid.Column="2"/>
                     <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,60,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="2"/>
-                    <Button x:Name="H1CS_ForceCheckpoint" Content="Core Save" Grid.Column="2" Height="26" Margin="0,19,184,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121" Click="H1CSForceCPButton_Click"/>
-                    <Button x:Name="H1CS_ForceRevert" Content="Core Load" Grid.Column="2" Height="26" Margin="0,19,44,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121"  Click="H1CSForceRevertButton_Click"/>
+                    <Button x:Name="H1CS_ForceCheckpoint" Content="Core Save" Grid.Column="2" Height="26" Margin="0,19,184,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121" Click="ForceCPButton_Click"/>
+                    <Button x:Name="H1CS_ForceRevert" Content="Core Load" Grid.Column="2" Height="26" Margin="0,19,44,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="121"  Click="ForceRevertButton_Click"/>
 
                     <Grid Grid.Column="2" Margin="0,454,183,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="27">
                         <Button x:Name="H1CS_Sel_MoveUpButton_All" Content="" HorizontalAlignment="Right" Height="26" Margin="0,0,1,0" VerticalAlignment="Top" Width="26" Click="MoveUpButton_All_Click"/>

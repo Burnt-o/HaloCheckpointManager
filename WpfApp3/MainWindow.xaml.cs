@@ -764,214 +764,7 @@ namespace WpfApp3
 
         }
 
-        private void H1CSDumpButton_Click(object sender, RoutedEventArgs e)
-        {
-            RefreshLoa(sender, e);
-
-
-
-            string backuploc = "";
-            string pathtotest = "";
-
-
-            backuploc = HCMGlobal.H1CoreSavePath;
-            if (HCMGlobal.SavedConfig.CoreFolderPath != null)
-                pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
-
-
-
-            if (File.Exists(pathtotest) && Directory.Exists(backuploc) && pathtotest != "")
-            {
-                var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
-                                   "Name your backup save",
-                                   "",
-                                   -1, -1);
-                string proposedsave = (backuploc + @"\" + userinput + @".bin");
-
-                try
-                {
-                    File.Copy(pathtotest, proposedsave);
-                    RefreshList(sender, e);
-                }
-                catch (Exception exp)
-                {
-                    Log("something went wrong trying to save a save: " + exp, sender);
-                    //need to make this a popup to let user know what was bad
-                }
-            }
-        }
-
-
-        private void H1CSForceCPDumpButton_Click(object sender, RoutedEventArgs e)
-        {
-            //do force cp things, set a timer to wait for checkpoint to complete, then..
-            H1CSDumpButton_Click(sender, e);
-
-        }
-
-
-        private void H1CSForceCPButton_Click(object sender, RoutedEventArgs e)
-        {
-            int bytesWritten;
-            if (HCMGlobal.AttachedGame == "H1" && ValidCheck_H1())
-            {
-
-                byte[] buffer = new byte[1] { 1 };
-
-                //IntPtr test = FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]);
-                //Debug(test.ToString());
-
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
-                {
-                    Debug("h1: made core save");
-                }
-                else
-                {
-                    Debug("failed to make core save");
-                    return;
-                }
-
-                //next, the custom message stuff
-                //acquire the current tickcount
-                buffer = new byte[4];
-                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
-                {
-                    Debug("h1: custom message 1: success");
-                }
-                else
-                {
-                    Debug("h1: custom message 1: failed");
-                    return;
-                }
-
-                //buffer will be equal to the tickcounter so just paste it into the new spot
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
-                {
-                    Debug("h1: custom message 2: success");
-                }
-                else
-                {
-                    Debug("h1: custom message 2: failed");
-                    return;
-                }
-
-                buffer = new byte["Core Save... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
-                buffer = Encoding.Unicode.GetBytes("Core Save... done");
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x4, buffer, buffer.Length, out bytesWritten))
-                {
-                    Debug("h1: custom message 3: success");
-                }
-                else
-                {
-                    Debug("h1: custom message 3: failed");
-                    return;
-                }
-
-                buffer = new byte[8] { 0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF }; //setting showmessage flag to true
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x80, buffer, buffer.Length, out bytesWritten))
-                {
-                    Debug("h1: custom message 4: success");
-                }
-                else
-                {
-                    Debug("h1: custom message 4: failed");
-                    return;
-                }
-
-
-                /*
-
-                        WriteInteger("["..halo1pointer..OffsetMessageTC.."]+0", (ReadInteger(halo1pointer..OffsetTickcount)))--set message tc to current tc(minus 70 is good val for faded look)
-                        WriteString("["..halo1pointer..OffsetMessageTC.."]+4", message, true)--set message text
-                        WriteBytes("["..halo1pointer..OffsetMessageTC.."]+80", 0x00, 0x00, 0x01, 0x00)--set show message flag to true
-                        WriteBytes("["..halo1pointer..OffsetMessageTC.."]+84", 0xFF, 0xFF, 0xFF, 0xFF)--no idea wtf this does but it needs to be this*/
-
-            }
-            else
-                Debug("tried to make core save but h1 wasn't open");
-
-        }
-
-        private void H1CSForceRevertButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (HCMGlobal.AttachedGame == "H1")
-            {
-
-                byte[] buffer = { 1 };
-
-                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreLoad[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesWritten))
-                {
-                    Debug("h1: made core load");
-                }
-                else
-                    Debug("failed to make core load");
-
-            }
-            else
-                Debug("tried to make core load but h1 wasn't open");
-
-        }
-
-
-
-
-        private void CopySaveFile(string sourcePath, string targetPath)
-        {
-            Debug("hm yes");
-            string targetFolder = "";
-            try
-            {
-                targetFolder = System.IO.Path.GetDirectoryName(targetPath);
-            }
-            catch
-            {
-                Debug("that's not good");
-            }
-            if (Directory.Exists(targetFolder) && File.Exists(sourcePath))
-            {
-                try
-                {
-                    File.Copy(sourcePath, targetPath, true);
-                }
-                catch (Exception exp)
-                {
-                    Log("something went wrong trying to load a save: " + exp);
-                }
-            }
-            else
-            {
-                //need to make this a popup to let user know what was bad
-                Log("something went wrong trying to load a save: (sourcePath) : " + sourcePath);
-                Log("something went wrong trying to load a save: (targetPath) : " + targetPath);
-            }
-        }
-
-        private void H1CSInjectButton_Click(object sender, RoutedEventArgs e)
-        {
-            RefreshSel(sender, e);
-            RefreshLoa(sender, e);
-            Debug("attempting to inject h1cs");
-
-
-            if (CS_MainList.SelectedItem != null)
-            {
-                Debug("uh huh");
-                var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                string sourcePath = HCMGlobal.H1CoreSavePath + @"\" + item.Name + @".bin";
-                string targetPath = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
-                CopySaveFile(sourcePath, targetPath);
-            }
-
-
-            RefreshLoa(sender, e);
-        }
-
-        private void H1CSInjectRevertButton_Click(object sender, RoutedEventArgs e)
-        {
-            H1CSInjectButton_Click(sender, e);
-            //then do force revert things
-
-        }
+        
 
         private void RenameButton_Click(object sender, RoutedEventArgs e)
         {
@@ -2106,7 +1899,8 @@ namespace WpfApp3
 
         private void ForceCPButton_Click(object sender, RoutedEventArgs e)
         {
-
+            bool success;
+            string error;
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
@@ -2115,18 +1909,32 @@ namespace WpfApp3
 
             switch (parent_name)
             {
+
+                case "H1CS":
+                    //do cp things
+
+                    (success, error) = ForceCPFunction("H1CS", sender, e);
+
+                    if (success == false)
+                    {
+                        Debug("Failed to make core save, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force core save, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                    }
+                    RefreshLoa(sender, e);
+                    break;
+
                 case "HRCP":
                     //do cp things
 
-                    var result = ForceCPFunction("HRCP", sender, e);
+                    (success, error) = ForceCPFunction("HRCP", sender, e);
 
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to make cp, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force cp, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to make cp, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force cp, " + error, "Error", System.Windows.MessageBoxButton.OK);
                     }
 
-
+                    RefreshLoa(sender, e);
                     break;
 
                 default:
@@ -2140,6 +1948,84 @@ namespace WpfApp3
             int bytesWritten;
             switch (game)
             {
+
+                case "H1CS":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H1" && ValidCheck_H1())
+                        {
+
+                            byte[] buffer;
+
+
+
+                            //next, the custom message stuff
+                            //acquire the current tickcount
+                            buffer = new byte[4];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h1: custom message 1: success");
+                            }
+                            else
+                            {
+                                return (false, "message 1 failure");
+                            }
+
+                            //buffer will be equal to the tickcounter so just paste it into the new spot
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h1: custom message 2: success");
+                            }
+                            else
+                            {
+                                return (false, "message 2 failure");
+                            }
+
+                            buffer = new byte["Core Save... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                            buffer = Encoding.Unicode.GetBytes("Core Save... done");
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x4, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h1: custom message 3: success");
+                            }
+                            else
+                            {
+                                return (false, "message 3 failure");
+                            }
+
+                            buffer = new byte[8] { 0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF }; //setting showmessage flag to true
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x80, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h1: custom message 4: success");
+                            }
+                            else
+                            {
+                                return (false, "message 4 failure");
+                            }
+
+
+                            buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreSave[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h1: made core save");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "failed to write core save byte");
+                            }
+
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
 
                 case "HRCP":
                     try
@@ -2180,7 +2066,8 @@ namespace WpfApp3
 
         private void ForceRevertButton_Click(object sender, RoutedEventArgs e)
         {
-
+            bool success;
+            string error;
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
@@ -2189,15 +2076,29 @@ namespace WpfApp3
 
             switch (parent_name)
             {
+                case "H1CS":
+                    //do reverty things
+
+                    (success, error) = ForceRevertFunction("H1CS", sender, e);
+
+                    if (success == false)
+                    {
+                        Debug("Failed to core load, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to core load, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                    }
+
+
+                    break;
+
                 case "HRCP":
                     //do reverty things
 
-                    var result = ForceRevertFunction("HRCP", sender, e);
+                    (success, error) = ForceRevertFunction("HRCP", sender, e);
 
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to revert, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to revert, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to revert, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to revert, " + error, "Error", System.Windows.MessageBoxButton.OK);
                     }
 
 
@@ -2214,6 +2115,39 @@ namespace WpfApp3
             int bytesWritten;
             switch (game)
             {
+
+
+                case "H1CS":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H1" && ValidCheck_H1())
+                        {
+
+                            byte[] buffer = { 1 };
+
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_CoreLoad[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "failed to write core load byte");
+                            }
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+
+
 
                 case "HRCP":
                     try
@@ -2253,7 +2187,8 @@ namespace WpfApp3
 
         private void DoubleRevertButton_Click(object sender, RoutedEventArgs e)
         {
-
+            bool success;
+            string error;
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             parent = (FrameworkElement)((FrameworkElement)parent).Parent;
@@ -2265,12 +2200,12 @@ namespace WpfApp3
             {
                 case "HRCP":
                     //do double reverty things
-                    var result = DoubleRevertFunction("HRCP", sender, e);
+                    (success, error) = DoubleRevertFunction("HRCP", sender, e);
 
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to double revert, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to double revert, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to double revert, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to double revert, " + error, "Error", System.Windows.MessageBoxButton.OK);
                     }
 
                     RefreshLoa(sender, e);
@@ -2337,22 +2272,42 @@ namespace WpfApp3
 
         private void DumpButton_Click(object sender, RoutedEventArgs e)
         {
+            bool success;
+            string error;
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
 
             switch (parent_name)
             {
+                case "H1CS":
+                    RefreshLoa(sender, e);
+                    (success, error) = DumpFunction("H1CS", sender, e);
+
+                    if (error == "cancelclick")
+                        return;
+
+                    if (success == false)
+                    {
+                        Debug("Failed to dump, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                    }
+
+                    RefreshList(sender, e);
+                    break;
+
                 case "HRCP":
                     //do dumpy things
+                    RefreshLoa(sender, e);
+                    (success, error) = DumpFunction("HRCP", sender, e);
 
-                    var result = DumpFunction("HRCP", sender, e);
+                    if (error == "cancelclick")
+                        return;
 
-
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to dump, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to dump, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + error, "Error", System.Windows.MessageBoxButton.OK);
                     }
 
                     RefreshList(sender, e);
@@ -2372,6 +2327,57 @@ namespace WpfApp3
             switch (game)
             {
 
+                case "H1CS":
+                    try
+                    {
+                        string backuploc = "";
+                        string pathtotest = "";
+
+
+                        backuploc = HCMGlobal.H1CoreSavePath;
+                        if (HCMGlobal.SavedConfig.CoreFolderPath != null)
+                        {
+                            pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
+                        }
+                        else
+                        {
+                            return (false, "core folder path not set, check settings!");
+                        }
+
+                        if (!File.Exists(pathtotest))
+                            return (false, "core.bin at corefolderpath didn't exist!");
+
+                        if (!Directory.Exists(backuploc))
+                            return (false, "local core saves folder didn't exist");
+
+                        if (pathtotest == "")
+                            return (false, "corebin path invalid somehow"); //might remove this, doesn't seem reachable
+
+
+                        var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                           "Name your backup save",
+                                           "",
+                                           -1, -1);
+                        string proposedsave = (backuploc + @"\" + userinput + @".bin");
+                        if (userinput == "")
+                            return (false, "cancelclick");
+
+                        try
+                        {
+                            File.Copy(pathtotest, proposedsave);
+                            return (true, "success!");
+                        }
+                        catch (Exception exp)
+                        {
+                            return (false, "failed to copy the file! possible invalid filename? " + proposedsave);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 case "HRCP":
                     try
                     {
@@ -2379,7 +2385,6 @@ namespace WpfApp3
                         if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
                         {
 
-                            RefreshLoa(sender, e);
 
 
 
@@ -2424,7 +2429,8 @@ namespace WpfApp3
                                                        "",
                                                        -1, -1);
                                     string proposedsave = (backuploc + @"\" + userinput + @".bin");
-
+                                    if (userinput == "")
+                                        return (false, "cancelclick");
                                     try
                                     {
                                         File.WriteAllBytes(proposedsave, buffer);
@@ -2477,7 +2483,8 @@ namespace WpfApp3
 
         private void InjectButton_Click(object sender, RoutedEventArgs e)
         {
-
+            bool success;
+            string error;
 
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
@@ -2485,16 +2492,34 @@ namespace WpfApp3
 
             switch (parent_name)
             {
+
+                case "H1CS":
+                    //do inject things
+                    RefreshSel(sender, e);
+                    (success, error) = InjectFunction("H1CS", sender, e);
+
+
+                    if (success == false)
+                    {
+                        Debug("Failed to inject core save, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to inject core save, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                        return;
+                    }
+                    RefreshLoa(sender, e);
+
+                    break;
+
+
                 case "HRCP":
                     //do inject things
                     RefreshSel(sender, e);
-                    var result = InjectFunction("HRCP", sender, e);
+                    (success, error) = InjectFunction("HRCP", sender, e);
 
 
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to inject cp, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to inject cp, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + error, "Error", System.Windows.MessageBoxButton.OK);
                         return;
                     }
                     RefreshLoa(sender, e);
@@ -2512,6 +2537,55 @@ namespace WpfApp3
 
             switch (game)
             {
+
+                case "H1CS":
+                    try
+                    {
+                        Debug("attempting to inject h1cs");
+
+                        if (CS_MainList.SelectedItem == null)
+                        {
+                            return (false, "no save file selected!");
+                        }
+
+                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                        string sourcePath = HCMGlobal.H1CoreSavePath + @"\" + item.Name + @".bin";
+                        string targetPath = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
+                        string targetFolder = "";
+
+                        try
+                        {
+                            targetFolder = System.IO.Path.GetDirectoryName(targetPath);
+                        }
+                        catch
+                        {
+                            return (false, "couldn't navigate up from core.bin");
+                        }
+
+                        if (!Directory.Exists(targetFolder))
+                            return (false, "folder above core.bin didn't exist");
+
+                        if (!File.Exists(sourcePath))
+                            return (false, "selected save file somehow didn't actually exist");
+
+
+                        try
+                        {
+                            File.Copy(sourcePath, targetPath, true);
+                            return (true, "success!");
+                        }
+                        catch (Exception exp)
+                        {
+                            return (false, "failed to copy the save file");
+                        }
+
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
 
                 case "HRCP":
                     try
@@ -2625,33 +2699,55 @@ namespace WpfApp3
         }
         private void InjectRevertButton_Click(object sender, RoutedEventArgs e)
         {
+
+            bool success;
+            string error;
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
 
             switch (parent_name)
             {
-                case "HRCP":
-                    //do force cp things, sleep 100ms, then do dump things
-                    var result = InjectFunction("HRCP", sender, e);
+                case "H1CS":
+                    //do inject things
+                    (success, error) = InjectFunction("H1CS", sender, e);
 
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to inject cp, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to inject cp, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to inject core save, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to inject core save, " + error, "Error", System.Windows.MessageBoxButton.OK);
                         return;
                     }
                     RefreshLoa(sender, e);
                     //dump
-                    var result2 = ForceRevertFunction("HRCP", sender, e);
+                    (success, error) = ForceRevertFunction("H1CS", sender, e);
 
-                    if (result2.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to force revert, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force revert, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to core load, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to core load, " + error, "Error", System.Windows.MessageBoxButton.OK);
                     }
+                    break;
 
+                case "HRCP":
+                    //do inject things
+                    (success, error) = InjectFunction("HRCP", sender, e);
 
+                    if (success == false)
+                    {
+                        Debug("Failed to inject cp, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to inject cp, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                        return;
+                    }
+                    RefreshLoa(sender, e);
+                    //dump
+                    (success, error) = ForceRevertFunction("HRCP", sender, e);
+
+                    if (success == false)
+                    {
+                        Debug("Failed to force revert, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force revert, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                    }
                     break;
 
                 default:
@@ -2661,34 +2757,63 @@ namespace WpfApp3
 
         private void ForceCPDumpButton_Click(object sender, RoutedEventArgs e)
         {
+            bool success;
+            string error;
+
             //figure out which game this was for
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
 
             switch (parent_name)
             {
-                case "HRCP":
+                case "H1CS":
                     //do force cp things, sleep 100ms, then do dump things
-                    var result = ForceCPFunction("HRCP", sender, e);
+                    (success, error) = ForceCPFunction("H1CS", sender, e);
 
-                    if (result.success == false)
+                    if (success == false)
                     {
-                        Debug("Failed to make cp, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force cp, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to make core save, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force core save, " + error, "Error", System.Windows.MessageBoxButton.OK);
                         return;
                     }
                     Thread.Sleep(100);
                     RefreshLoa(sender, e);
                     //dump
-                    var result2 = DumpFunction("HRCP", sender, e);
+                    (success, error) = DumpFunction("H1CS", sender, e);
 
-                    if (result2.success == false)
+                    if (error == "cancelclick")
+                        return;
+
+                    if (success == false)
                     {
-                        Debug("Failed to dump, " + result.error);
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + result.error, "Error", System.Windows.MessageBoxButton.OK);
+                        Debug("Failed to dump, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + error, "Error", System.Windows.MessageBoxButton.OK);
                     }
+                    break;
 
+                case "HRCP":
+                    //do force cp things, sleep 100ms, then do dump things
+                    (success, error) = ForceCPFunction("HRCP", sender, e);
 
+                    if (success == false)
+                    {
+                        Debug("Failed to make cp, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to force cp, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                        return;
+                    }
+                    Thread.Sleep(100);
+                    RefreshLoa(sender, e);
+                    //dump
+                    (success, error) = DumpFunction("HRCP", sender, e);
+
+                    if (error == "cancelclick")
+                        return;
+
+                    if (success == false)
+                    {
+                        Debug("Failed to dump, " + error);
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Failed to dump, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                    }
                     break;
 
                 default:
