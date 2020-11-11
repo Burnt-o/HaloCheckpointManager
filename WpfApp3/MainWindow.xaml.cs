@@ -54,7 +54,7 @@ Remove debugs from maintick except when Vals change.
 
 Implement profiles.
 
-DO THIS - HALF DONE -- Add level check/lockout. Add seed check to maintick. 
+DONE, decided not to do levellockout (but did add check)---- Add level check/lockout. Add seed check to maintick. 
 
 Add options for list level name - code (current), acronym, thumbnail. 
 
@@ -131,6 +131,7 @@ namespace WpfApp3
             public static bool WinFlag = false; //false == steam, used for knowing which offsets to use
             public static bool BusyFlag = false; //turned true when injecting/dumping so we don't do it twice
             public static string AttachedGame = "No"; //No, Mn (menu), HR, H1, H2, H3, OD (ODST), H4
+            public static string AttachedLevel; 
             public static bool VersionCheckedFlag = false;
             public static bool CheckedForOnlineOffsets = false;
             public static string MCCversion;
@@ -153,6 +154,7 @@ namespace WpfApp3
             public int[][] stateindicator;
 
             //h1
+            public int[][] H1_LevelName;
             public int[][] H1_CoreSave;
             public int[][] H1_CoreLoad;
             public int[][] H1_CheckString;
@@ -160,6 +162,7 @@ namespace WpfApp3
             public int[][] H1_Message;
 
             //hr
+            public int[][] HR_LevelName;
             public int[][] HR_CheckString;
             public int[][] HR_Checkpoint; //for forcing checkpoints
             public int[][] HR_Revert; //for forcing reverts
@@ -1030,6 +1033,9 @@ namespace WpfApp3
                         H1CS_Loa_Time.Text = "N/A";
                         H1CS_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
+
+
+
                     break;
 
                 case 3: //reach
@@ -1122,6 +1128,8 @@ namespace WpfApp3
 
                     }
                     else { Debug("oh no"); NullReach(); }
+
+
 
                     break;
 
@@ -2500,46 +2508,62 @@ namespace WpfApp3
         private void maintick(object sender, EventArgs e)
         {
             string game = HCMGlobal.AttachedGame;
+            string level = HCMGlobal.AttachedLevel;
 
             //all the magic happens here
-            dtClockTime_Tick(sender, e);
+            try
+            {
+                dtClockTime_Tick(sender, e);
+            }
+            catch (Exception ex)
+            {
+                Log("unknown maintick error: " + ex.ToString());
+            }
 
             RefreshLoa(sender, new RoutedEventArgs());
 
             if (game != HCMGlobal.AttachedGame)
             {
+
                 SetEnabledUI(); //only change the ui if the attached game changed
                 switch (HCMGlobal.AttachedGame)
                 {
 
                     case "Mn":
-                        GameLabel.Content = "Attached: Menu";
+                        GameLabel.Content = "Game: Menu";
+                        LevelLabel.Content = "Level: None";
                         break;
                     default:
                     case "No":
-                        GameLabel.Content = "Attached: None";
+                        GameLabel.Content = "Game: None";
+                        LevelLabel.Content = "Level: None";
                         break;
                     case "H1":
-                        GameLabel.Content = "Attached: H1";
+                        GameLabel.Content = "Game: H1";
                         break;
                     case "H2":
-                        GameLabel.Content = "Attached: H2";
+                        GameLabel.Content = "Game: H2";
                         break;
                     case "H3":
-                        GameLabel.Content = "Attached: H3";
+                        GameLabel.Content = "Game: H3";
                         break;
                     case "OD":
-                        GameLabel.Content = "Attached: ODST";
+                        GameLabel.Content = "Game: ODST";
                         break;
                     case "H4":
-                        GameLabel.Content = "Attached: H4";
+                        GameLabel.Content = "Game: H4";
                         break;
 
                     case "HR":
-                        GameLabel.Content = "Attached: Reach";
+                        GameLabel.Content = "Game: Reach";
                         break;
 
                 }
+            }
+
+            if (level != HCMGlobal.AttachedLevel)
+            {
+                LevelLabel.Content = "Level: " + HCMGlobal.AttachedLevel;
             }
         }
 
@@ -2577,7 +2601,7 @@ namespace WpfApp3
 
             try
             {
-                myProcess = Process.GetProcessById(HCMGlobal.ProcessID);
+                myProcess = Process.GetProcessById(HCMGlobal.ProcessID); //todo; think about this - https://stackoverflow.com/questions/1545270/how-to-determine-if-a-process-id-exists
                 if (myProcess.ProcessName == "MCC-Win64-Shipping")
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
@@ -2599,7 +2623,7 @@ namespace WpfApp3
             {
                 try
                 {
-                    myProcess = Process.GetProcessesByName("MCC-Win64-Shipping")[0];
+                    myProcess = Process.GetProcessesByName("MCC-Win64-Shipping")[0]; //could add a check here that the array isn't null, and if so to uh.. throw our own exception to continue control flow ree
                     processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, myProcess.Id);
                     HCMGlobal.ProcessID = myProcess.Id;
                     HCMGlobal.GlobalProcessHandle = processHandle;
@@ -2918,7 +2942,62 @@ namespace WpfApp3
             Debug("All checks succeeded, attached game is: " + HCMGlobal.AttachedGame);
             //is that it? I think we're done
 
-            //UNLESS game is reach & tab is reach, then do a seed check
+            //NEXT, level check!
+            buffer = new byte[32];
+            string holdstring;
+            switch (HCMGlobal.AttachedGame)
+            {
+                case "H2":
+                case "H3":
+                case "OD":
+                case "H4"://these above games are not supported yet
+
+                default:
+                case "Mn":
+                case "No":
+                    HCMGlobal.AttachedLevel = null;
+                    break;
+
+                case "H1":
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                    {
+                        holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        char[] exceptions = new char[] { '_' };
+                        holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        Debug("read h1 level: " + holdstring);
+                        HCMGlobal.AttachedLevel = holdstring;
+                    }
+                    else
+                    {
+                        Debug("failed to read h1 level");
+                        HCMGlobal.AttachedLevel = null;
+                    }
+                    break;
+
+                case "HR":
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                    {
+                        holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        char[] exceptions = new char[] { '_' };
+                        holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        Debug("read hr level: " + holdstring);
+                        HCMGlobal.AttachedLevel = holdstring;
+                    }
+                    else
+                    {
+                        Debug("failed to read hr level");
+                        HCMGlobal.AttachedLevel = null;
+                    }
+                    break;
+
+            }
+
+
+            //if game is reach & tab is reach, then do a seed check
             if (TabList.SelectedIndex == 3 && HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
             {
                 buffer = new byte[4];
@@ -3020,6 +3099,8 @@ namespace WpfApp3
                 HRCP_Sel_InjectButton.IsEnabled = state;
                 HRCP_Sel_InjectRevertButton.IsEnabled = state;
             }
+
+
 
         }
 

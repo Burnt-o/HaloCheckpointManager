@@ -8,9 +8,14 @@
     [ 0x3682BD8 ]
   ],
 
-      "stateindicator": [
-      [ 0x38FCAF9 ],
-      [ 0x37AF859 ]
+  "stateindicator": [
+    [ 0x38FCAF9 ],
+    [ 0x37AF859 ]
+  ],
+
+      "H1_LevelName": [
+      [ 0x038DFE90, 0x8, 0x2A6B008 ],
+      [ 0x03792DA0, 0x8, 0x2A6B008 ]
     ],
 
     "H1_CoreSave": [
@@ -33,10 +38,15 @@
     [ 0x03792DA0, 0x8, 0x2B21E24 ]
   ],
 
-    "H1_Message": [
+  "H1_Message": [
     [ 0x038DFE90, 0x8, 0x2A6BB60, 0x0 ],
     [ 0x03792DA0, 0x8, 0x2A6BB60, 0x0 ]
   ],
+
+        "HR_LevelName": [
+      [ 0x038DFE90, 0xC8, 0x28478D7 ],
+      [ 0x03792DA0, 0xC8, 0x28478D7 ]
+    ],
 
   "HR_CheckString": [
     [ 0x038DFE90, 0xC8, 0x28478D2 ],

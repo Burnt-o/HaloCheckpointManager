@@ -340,7 +340,8 @@
         <Button x:Name="RefreshButton" Content="Refresh" HorizontalAlignment="Right" Height="23" Margin="0,5,220,0" VerticalAlignment="Top" Width="86" Click="RefreshButton_Click"/>
         <Button x:Name="SettingsButton" Content="Settings" HorizontalAlignment="Right" Height="23" Margin="0,5,120,0" VerticalAlignment="Top" Width="86" Click="SettingsButton_Click"/>
         <Button x:Name="AboutButton" Content="About" HorizontalAlignment="Right" Height="23" Margin="0,5,20,0" VerticalAlignment="Top" Width="86" Click="AboutButton_Click" RenderTransformOrigin="0.488,0"/>
-        <Label x:Name="GameLabel" Content="Attached: None" HorizontalAlignment="Left" Margin="373,2,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="GameLabel" Content="Game: None" HorizontalAlignment="Left" Margin="21,3,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LevelLabel" Content="Level: None" HorizontalAlignment="Left" Margin="133,3,0,0" VerticalAlignment="Top"/>
 
 
 
