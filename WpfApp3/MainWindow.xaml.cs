@@ -34,17 +34,17 @@ using System.Threading;
 /*
 //ERROR HANDLING STUFF
 
-Make returns more informational. Instead of just returning, return true or false (success) + error message that calling function can popup a dialog about. Will have to divide functions up a bit but it's for the best. 
+DONE --- Make returns more informational. Instead of just returning, return true or false (success) + error message that calling function can popup a dialog about. Will have to divide functions up a bit but it's for the best. 
 
-Add way more try catches to anywhere that reads memory, or handles files. Add file length check too.
+DONE --- Add way more try catches to anywhere that reads memory, or handles files. Add file length check too.
 
-Add many user dialogs for when errors popup. 
+DONE --- Add many user dialogs for when errors popup. 
 
 Verify online json file vs off-line one? Uh no just delete offline json file on first run (after update). 
 
 Add mandatory update online checks. 
 
-Add state indicator checks/lockout so no funny business on loading screen/pgcr
+DONE ---- Add state indicator checks/lockout so no funny business on loading screen/pgcr
 
 Implement busy flag in maintick
 
@@ -54,7 +54,7 @@ Remove debugs from maintick except when Vals change.
 
 Implement profiles.
 
-Add level check/lockout. Add seed check to maintick. 
+DO THIS - HALF DONE -- Add level check/lockout. Add seed check to maintick. 
 
 Add options for list level name - code (current), acronym, thumbnail. 
 
@@ -150,6 +150,7 @@ namespace WpfApp3
             //general
             public int[][] gameindicator;
             public int[][] menuindicator;
+            public int[][] stateindicator;
 
             //h1
             public int[][] H1_CoreSave;
@@ -164,6 +165,7 @@ namespace WpfApp3
             public int[][] HR_Revert; //for forcing reverts
             public int[][] HR_DRflag; //dr as in "double revert"
             public int[][] HR_CPLocation;
+            public int[][] HR_LoadedSeed;
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
@@ -403,28 +405,33 @@ namespace WpfApp3
         private void ArbitaryFileTimeMove(int startindex, int destindex, ListView mainlist, string path)
         {
             //need to iterate over mainlist and create array of times
-
-            List<DateTime> arrayoftimes = new List<DateTime>();
-
-            for (int i = 0; i < mainlist.Items.Count; i++)
+            try
             {
-                var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
-                arrayoftimes.Add(File.GetLastWriteTime($@"{path}\{filedata.Name}.bin"));
+                List<DateTime> arrayoftimes = new List<DateTime>();
+
+                for (int i = 0; i < mainlist.Items.Count; i++)
+                {
+                    var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
+                    arrayoftimes.Add(File.GetLastWriteTime($@"{path}\{filedata.Name}.bin"));
+                }
+
+                var tempfile = mainlist.Items.GetItemAt(destindex) as HaloSaveFileMetadata;
+                var tempdate = File.GetLastWriteTime($@"{path}\{tempfile.Name}.bin");
+                arrayoftimes.RemoveAt(destindex);
+                arrayoftimes.Insert(startindex, tempdate);
+
+                //now just need to apply the new times
+
+                for (int i = 0; i < mainlist.Items.Count; i++)
+                {
+                    var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
+                    File.SetLastWriteTime($@"{path}\{filedata.Name}.bin", arrayoftimes[i]);
+                }
             }
-
-            var tempfile = mainlist.Items.GetItemAt(destindex) as HaloSaveFileMetadata;
-            var tempdate = File.GetLastWriteTime($@"{path}\{tempfile.Name}.bin");
-            arrayoftimes.RemoveAt(destindex);
-            arrayoftimes.Insert(startindex, tempdate);
-
-            //now just need to apply the new times
-
-            for (int i = 0; i < mainlist.Items.Count; i++)
+            catch (Exception ex)
             {
-                var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
-                File.SetLastWriteTime($@"{path}\{filedata.Name}.bin", arrayoftimes[i]);
+                Log("unknown error occured: " + ex.ToString());
             }
-
         }
 
         private void MoveUpButton_Click(object sender, RoutedEventArgs e)
@@ -1346,7 +1353,7 @@ namespace WpfApp3
             public string Seed { get; set; } = "N/A";
             public string Name { get; set; }
 
-            //split difficultyimage into these two, probably a dumb way to do this but ¯\_(ツ)_/¯
+            //split difficultyimage into these two, probably a dumb way to do this but idk how this shit works ¯\_(ツ)_/¯
             public string DifficultyImageH1 => $"images/H1/diff_{(int)Difficulty}.png";
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
             public string TimeString => TickToTimeString(StartTick, false);
@@ -2007,6 +2014,19 @@ namespace WpfApp3
             }
 
             RefreshLoa(sender, e);
+
+            (success, error) = ForceRevertFunction(parent_name, sender, e);
+
+            if (success == false)
+            {
+                Debug("Failed to revert, " + error);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(parent_name + ": Failed to revert, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                return;
+            }
+
+
+
+            
         }
 
         private (bool success, string error) DoubleRevertFunction(string game, object sender, RoutedEventArgs e)
@@ -2878,14 +2898,48 @@ namespace WpfApp3
             else
             {
                 Debug("failed to read menu indicator");
-                //Debug("resolved addy?: " + FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, testoffset));
-                //Debug("Global process handle: " + (HCMGlobal.GlobalProcessHandle.ToString()));
-                //Debug("Global base addy: " + (HCMGlobal.BaseAddress.ToString()));
                 return;
             }
 
+            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.stateindicator[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+            {
+                Debug("state indicator is: " + buffer[0]);
+                if (buffer[0] == 0x44 || buffer[0] == 57)
+                    HCMGlobal.AttachedGame = "Mn";
+
+            }
+            else
+            {
+                Debug("failed to read state indicator");
+                return;
+            }
+
+
             Debug("All checks succeeded, attached game is: " + HCMGlobal.AttachedGame);
             //is that it? I think we're done
+
+            //UNLESS game is reach & tab is reach, then do a seed check
+            if (TabList.SelectedIndex == 3 && HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
+            {
+                buffer = new byte[4];
+                uint seedint;
+                string seedstring;
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LoadedSeed[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                {
+                    seedint = BitConverter.ToUInt32(buffer, 0);
+                    seedstring = (Convert.ToString(seedint, 16)).ToUpper();
+                    ReachLoadedSeed.Content = "Loaded Seed: " + seedstring;
+                }
+                else
+                {
+                    Debug("failed to read reach seed");
+                    ReachLoadedSeed.Content = "Loaded Seed: N/A";
+                }
+
+
+            }
+            else
+                ReachLoadedSeed.Content = "Loaded Seed: N/A";
 
         }
 

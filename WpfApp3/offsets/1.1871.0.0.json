@@ -3,9 +3,14 @@
       [ 0x038F5A00, 0x0 ],
       [ 0x037A8988, 0x0 ]
     ],
-    "menuindicator": [
-      [ 0x37CFCD8 ],
-      [ 0x3682BD8 ]
+  "menuindicator": [
+    [ 0x37CFCD8 ],
+    [ 0x3682BD8 ]
+  ],
+
+      "stateindicator": [
+      [ 0x38FCAF9 ],
+      [ 0x37AF859 ]
     ],
 
     "H1_CoreSave": [
@@ -58,7 +63,7 @@
     [ 0x03792DA0, 0xC8, 0x2839810, 0x0 ]
   ],
 
-              "HR_StartSeed": [
+              "HR_LoadedSeed": [
     [ 0x038DFE90, 0xC8, 0x1119E18 ],
     [ 0x03792DA0, 0xC8, 0x1119E18 ]
   ]
