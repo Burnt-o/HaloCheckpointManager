@@ -108,6 +108,8 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
+            public static readonly string HCMversion = "0.9.0";
+
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
             public static readonly string H1CheckpointPath = LocalDir + @"\saves\h1cp";
@@ -120,6 +122,7 @@ namespace WpfApp3
 
             public static HCMConfig SavedConfig;
             public static Offsets LoadedOffsets;
+            public static MandatoryUpdates MandatoryUpdates;
 
             public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
 
@@ -137,6 +140,7 @@ namespace WpfApp3
             public static string MCCversion;
             public static bool GiveUpFlag = false; //set to true if attachment checking should cease forever
             public static bool OffsetsAcquired = false;
+            public static bool MandatoryChecked = false;
             public static IntPtr BaseAddress;
         }
 
@@ -172,6 +176,11 @@ namespace WpfApp3
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
+        }
+
+        private class MandatoryUpdates
+        {
+            public string[] VersionString;
         }
 
         public enum HaloGame
@@ -2669,6 +2678,37 @@ namespace WpfApp3
                     HCMGlobal.AttachedGame = "No";
                     SetEnabledUI();
                     return;
+                }
+            }
+
+            //next let's check if there's any "mandatory" updates for hcm
+
+            if (!HCMGlobal.MandatoryChecked)
+            {
+                HCMGlobal.MandatoryChecked = true;
+                try
+                {
+                    String url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/WpfApp3/offsets/Updates.json";
+                    System.Net.WebClient client = new System.Net.WebClient();
+                    String json = client.DownloadString(url);
+                    Debug("accessed updates file!" + json);
+
+                    HCMGlobal.MandatoryUpdates = JsonConvert.DeserializeObject<MandatoryUpdates>(json);
+
+                    //now check if our version matches any of the strings in the updates string array
+
+                    foreach (string i in HCMGlobal.MandatoryUpdates.VersionString)
+                    {
+                        if (i == HCMGlobal.HCMversion)
+                        {
+                            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("It looks like HCM has recieved an important update. \n Feel free to continue using this version, but you may be missing important features or bugfixes. \n \n Grab the new version over at \n https://github.com/Burnt-o/HaloCheckpointManager/releases ", "Update", System.Windows.MessageBoxButton.OK);
+                        }
+                    }
+                    Debug("finished checking hcm version");
+                }
+                catch
+                { 
+                Debug("failed to check hcm version")
                 }
             }
 
