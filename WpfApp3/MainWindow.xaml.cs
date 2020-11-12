@@ -53,7 +53,7 @@ Clean up debug/logging stuff (inc; remove debugs from maintick except when Vals 
 
     //FEATURE STUFF
 
-Implement profiles.
+DO THIS - Implement profiles.
 
 DONE --- , decided not to do levellockout (but did add check)---- Add level check/lockout. Add seed check to maintick. 
 
@@ -136,7 +136,7 @@ namespace WpfApp3
             public static bool WinFlag = false; //false == steam, used for knowing which offsets to use
             public static bool BusyFlag = false; //turned true when injecting/dumping so we don't do it twice
             public static string AttachedGame = "No"; //No, Mn (menu), HR, H1, H2, H3, OD (ODST), H4
-            public static string AttachedLevel; 
+            public static string AttachedLevel;
             public static bool VersionCheckedFlag = false;
             public static bool CheckedForOnlineOffsets = false;
             public static string MCCversion;
@@ -250,31 +250,31 @@ namespace WpfApp3
 
 
             //checking for HCM updates
-                try
+            try
+            {
+                String url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/WpfApp3/offsets/Updates.json";
+                System.Net.WebClient client = new System.Net.WebClient();
+                String json = client.DownloadString(url);
+                Debug("accessed updates file!" + json);
+
+                HCMGlobal.MandatoryUpdates = JsonConvert.DeserializeObject<MandatoryUpdates>(json);
+
+                //now check if our version matches any of the strings in the updates string array
+
+                foreach (string i in HCMGlobal.MandatoryUpdates.VersionString)
                 {
-                    String url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/WpfApp3/offsets/Updates.json";
-                    System.Net.WebClient client = new System.Net.WebClient();
-                    String json = client.DownloadString(url);
-                    Debug("accessed updates file!" + json);
-
-                    HCMGlobal.MandatoryUpdates = JsonConvert.DeserializeObject<MandatoryUpdates>(json);
-
-                    //now check if our version matches any of the strings in the updates string array
-
-                    foreach (string i in HCMGlobal.MandatoryUpdates.VersionString)
+                    if (i == HCMGlobal.HCMversion)
                     {
-                        if (i == HCMGlobal.HCMversion)
-                        {
-                            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("It looks like HCM has recieved an important update. \nFeel free to continue using this version, but you may be missing important features or bugfixes. \n \nGrab the new version over at \n https://github.com/Burnt-o/HaloCheckpointManager/releases ", "Update", System.Windows.MessageBoxButton.OK);
-                        }
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("It looks like HCM has recieved an important update. \nFeel free to continue using this version, but you may be missing important features or bugfixes. \n \nGrab the new version over at \n https://github.com/Burnt-o/HaloCheckpointManager/releases ", "Update", System.Windows.MessageBoxButton.OK);
                     }
-                    Debug("finished checking hcm version");
                 }
-                catch
-                {
-                    Debug("failed to check hcm version");
-                }
-  
+                Debug("finished checking hcm version");
+            }
+            catch
+            {
+                Debug("failed to check hcm version");
+            }
+
 
 
 
@@ -294,8 +294,7 @@ namespace WpfApp3
         {
             //some testing stuff
 
-            //Debug("test: " + ReadLevelFromMemory());
-
+            SetupProfiles();
             //end testing stuff
 
             CS_MainList.SelectionChanged += List_SelectionChanged;
@@ -381,7 +380,7 @@ namespace WpfApp3
                         }
                     }
                 }
-                catch 
+                catch
                 {
                     Debug("error occured while deleting old offset jsons");
                 }
@@ -397,7 +396,7 @@ namespace WpfApp3
                 {
                     oldranversions = new string[] { HCMGlobal.HCMversion };
                 }
-                    HCMGlobal.SavedConfig.RanVersions = oldranversions;
+                HCMGlobal.SavedConfig.RanVersions = oldranversions;
 
                 foreach (string i in oldranversions)
                 {
@@ -457,6 +456,104 @@ namespace WpfApp3
 
             RefreshButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
+        }
+
+        readonly Dictionary<string, string> ProfileTypeToPath = new Dictionary<string, string>()
+            {
+                { "H1Profile", HCMGlobal.H1CoreSavePath},
+                { "HRProfile", HCMGlobal.HRCheckpointPath},
+            };
+
+        private string ProfileTypeToPathGet(string code)
+        {
+            string Name;
+            if (ProfileTypeToPath.TryGetValue(code, out Name))
+            {
+                return Name;
+            }
+
+            return code;
+        }
+
+
+        private void SetupProfiles()
+       {
+
+            var list = new List<ComboBox> { H1Profile, HRProfile };
+
+
+            foreach (ComboBox cb in list)
+            {
+                cb.Items.Clear();
+                cb.Items.Add("*Root");
+
+                
+                
+                DirectoryInfo dir = new DirectoryInfo(ProfileTypeToPathGet(cb.Name.ToString()));
+                DirectoryInfo[] folderlist = dir.GetDirectories().OrderByDescending(p => p.LastWriteTime).ToArray();
+
+                foreach (DirectoryInfo folder in folderlist)
+                {
+                    cb.Items.Add(folder.Name);
+                }
+
+
+                cb.Items.Add("++ New ++");
+                if (cb.SelectedIndex == -1)
+                    cb.SelectedIndex = 0;
+
+            }
+
+        }
+
+        private void ProfileChanged(object sender, RoutedEventArgs e)
+        {
+  
+
+            //figure out which game this was for
+            ComboBox cb = (ComboBox)sender;
+            string parent_name = cb.Name;
+
+            if (cb.IsDropDownOpen)
+            {
+                if (cb.SelectedIndex == cb.Items.Count - 1) //the "new folder" option
+                {
+                    var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                         "Create a new Profile (folder) with the following name",
+                                 "",
+                                     -1, -1);
+                    if (userinput != "") //this would indicate cancel click
+                    {
+                        string proposedfolder = ProfileTypeToPathGet(cb.Name.ToString()) + "\\" + userinput;
+                        try
+                        {
+                            if (userinput.Contains("\\"))
+                            {
+                                throw new Exception("someone put the funny slashes in their folder name");
+                            }
+
+                            Directory.CreateDirectory(proposedfolder);
+                            SetupProfiles();
+                            cb.SelectedIndex = 1;
+                        }
+                        catch
+                        {
+                            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(cb.Name + ": Failed to create new profile (folder) at: " + proposedfolder + " \n Possible invalid characters?", "Error", System.Windows.MessageBoxButton.OK);
+                            cb.SelectedIndex = 0;
+                        }
+
+
+                    }
+                    else
+                    {
+                        cb.SelectedIndex = 0;
+                    }
+
+                }
+                cb.IsDropDownOpen = false;
+            }
+            RefreshList(sender, e);
+            RefreshSel(sender, e);
         }
 
         private void TabSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1072,6 +1169,7 @@ namespace WpfApp3
             RefreshLoa(sender, e);
             RefreshList(sender, e);
             RefreshSel(sender, e);
+            SetupProfiles();
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -2622,7 +2720,7 @@ namespace WpfApp3
             //all the magic happens here
             try
             {
-                dtClockTime_Tick(sender, e);
+                //dtClockTime_Tick(sender, e);
             }
             catch (Exception ex)
             {

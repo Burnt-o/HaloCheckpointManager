@@ -46,7 +46,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo1CoreSaves}">
+                    <ListView Margin="10,10,335,71" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo1CoreSaves}">
                         <ListView.View>
                             <GridView>
 
@@ -115,7 +115,7 @@
 
 
                     </Grid>
-
+                    <ComboBox x:Name="H1Profile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged"/>
 
                 </Grid>
             </TabItem>
@@ -244,7 +244,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="HRCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
+                    <ListView Margin="10,10,335,78" x:Name="HRCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
                         <ListView.View>
                             <GridView>
 
@@ -319,6 +319,7 @@
 
 
                     </Grid>
+                    <ComboBox x:Name="HRProfile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged"/>
                     <Label x:Name="ReachLoadedSeed" Content="Loaded Seed: N/A"  FontSize="11" Grid.Column="2" HorizontalAlignment="Left" Height="32" Margin="573,-4,0,0" VerticalAlignment="Top" Width="113" RenderTransformOrigin="-1.983,-2.312"/>
 
 
