@@ -42,11 +42,11 @@ DONE --- Add many user dialogs for when errors popup.
 
 Verify online json file vs off-line one? Uh no just delete offline json file on first run (after update). 
 
-Add mandatory update online checks. 
+DONE --- Add mandatory update online checks. 
 
-DONE ---- Add state indicator checks/lockout so no funny business on loading screen/pgcr
+DONE --- Add state indicator checks/lockout so no funny business on loading screen/pgcr
 
-Implement busy flag in maintick
+NOT GONNA DO --- Implement busy flag in maintick
 
 Remove debugs from maintick except when Vals change. 
 
@@ -54,7 +54,7 @@ Remove debugs from maintick except when Vals change.
 
 Implement profiles.
 
-DONE, decided not to do levellockout (but did add check)---- Add level check/lockout. Add seed check to maintick. 
+DONE --- , decided not to do levellockout (but did add check)---- Add level check/lockout. Add seed check to maintick. 
 
 Add options for list level name - code (current), acronym, thumbnail. 
 
@@ -242,7 +242,7 @@ namespace WpfApp3
             if (IsElevated == false)
             {
                 //popup error message that we need admin privledges, then close the application
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(" HCM needs admin privileges to operate, the application will now close. \n To run as admin, right click the exe and 'Run As Administrator' \n \n If you're (rightfully) cautious of giving software admin privs, \n feel free to inspect/build the source from over at \n https://github.com/Burnt-o/HaloCheckpointManager ", "Error", System.Windows.MessageBoxButton.OK);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(" HCM needs admin privileges to operate, the application will now close. \n To run as admin, right click the exe and 'Run As Administrator' \n \n If you're (rightfully) cautious of giving software admin privs, \n feel free to inspect/build the source from over at \n github.com/Burnt-o/HaloCheckpointManager ", "Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
 
