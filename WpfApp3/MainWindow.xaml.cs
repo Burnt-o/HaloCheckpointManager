@@ -41,6 +41,7 @@ DONE --- Add way more try catches to anywhere that reads memory, or handles file
 DONE --- Add many user dialogs for when errors popup. 
 
 Verify online json file vs off-line one? Uh no just delete offline json file on first run (after update). 
+//also delete config I guess? jic
 
 DONE --- Add mandatory update online checks. 
 
@@ -101,6 +102,7 @@ namespace WpfApp3
 
         private class HCMConfig
         {
+            public string[] RanVersions;
             public string CoreFolderPath;
             public string CheckpointFolderPath;
             public bool ClassicMode = true;
@@ -346,6 +348,62 @@ namespace WpfApp3
             {
                 HCMGlobal.SavedConfig = new HCMConfig();
             }
+
+
+            //if this is the first run of this hcm version, we need to do some STUFF
+            //check if our version name is on first line of config file, if not, delete/remake config & offsets.json
+            //then add our version name to config file.
+
+            bool needtorefresh = true;
+            foreach (string i in HCMGlobal.SavedConfig.RanVersions)
+            {
+                if (i == HCMGlobal.HCMversion)
+                    needtorefresh = false;
+            }
+            Debug("needtorefresh is: " + needtorefresh.ToString());
+            if (needtorefresh)
+            {
+                //delete offsets file if they exist (need to redownload, happens in maintick)
+                try
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo("offsets\\");
+
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        if (file.Extension == ".json")
+                        {
+                            file.Delete();
+                        }
+                    }
+                }
+                catch 
+                {
+                    Debug("error occured while deleting old offset jsons");
+                }
+
+                //then remake config file and add current hcm version to it
+                string[] oldranversions = HCMGlobal.SavedConfig.RanVersions;
+                HCMGlobal.SavedConfig = new HCMConfig();
+                oldranversions = oldranversions.Append(HCMGlobal.HCMversion).ToArray();
+                HCMGlobal.SavedConfig.RanVersions = oldranversions;
+
+                foreach (string i in oldranversions)
+                {
+                    Debug("ver: " + i);
+                }
+
+                WriteConfig();
+                //then reread config file
+                using (StreamReader r = new StreamReader(HCMGlobal.ConfigPath))
+                {
+                    string json = r.ReadToEnd();
+                    HCMGlobal.SavedConfig = JsonConvert.DeserializeObject<HCMConfig>(json);
+                }
+            }
+
+
+
 
             if (HCMGlobal.SavedConfig.CheckpointFolderPath == null)
             {
@@ -2780,6 +2838,7 @@ namespace WpfApp3
                         System.Net.WebClient client = new System.Net.WebClient();
                         String json = client.DownloadString(url);
                         System.IO.File.WriteAllText("offsets\\" + HCMGlobal.MCCversion + ".json", json);
+
                         Debug("downloaded json file!" + json);
 
                         //copy pasted code from above
