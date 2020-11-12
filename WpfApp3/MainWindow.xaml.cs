@@ -2720,7 +2720,7 @@ namespace WpfApp3
             //all the magic happens here
             try
             {
-                //dtClockTime_Tick(sender, e);
+                dtClockTime_Tick(sender, e);
             }
             catch (Exception ex)
             {
