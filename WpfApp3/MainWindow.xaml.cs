@@ -40,8 +40,8 @@ DONE --- Add way more try catches to anywhere that reads memory, or handles file
 
 DONE --- Add many user dialogs for when errors popup. 
 
-Verify online json file vs off-line one? Uh no just delete offline json file on first run (after update). 
-//also delete config I guess? jic
+DONE --- Verify online json file vs off-line one? Uh no just delete offline json file on first run (after update). 
+DONE --- //also delete config I guess? jic
 
 DONE --- Add mandatory update online checks. 
 
@@ -49,7 +49,7 @@ DONE --- Add state indicator checks/lockout so no funny business on loading scre
 
 NOT GONNA DO --- Implement busy flag in maintick
 
-Remove debugs from maintick except when Vals change. 
+Clean up debug/logging stuff (inc; remove debugs from maintick except when Vals change). 
 
     //FEATURE STUFF
 
@@ -75,7 +75,7 @@ Add tool tip to double revert or just make icon better.
 
 Add open in Explorer button. 
 
-Implement core save and dump + inject and revert for h1cs.
+DONE --- Implement core save and dump + inject and revert for h1cs.
 
 */
 
@@ -355,11 +355,15 @@ namespace WpfApp3
             //then add our version name to config file.
 
             bool needtorefresh = true;
-            foreach (string i in HCMGlobal.SavedConfig.RanVersions)
+            if (HCMGlobal.SavedConfig.RanVersions != null)
             {
-                if (i == HCMGlobal.HCMversion)
-                    needtorefresh = false;
+                foreach (string i in HCMGlobal.SavedConfig.RanVersions)
+                {
+                    if (i == HCMGlobal.HCMversion)
+                        needtorefresh = false;
+                }
             }
+
             Debug("needtorefresh is: " + needtorefresh.ToString());
             if (needtorefresh)
             {
@@ -385,8 +389,15 @@ namespace WpfApp3
                 //then remake config file and add current hcm version to it
                 string[] oldranversions = HCMGlobal.SavedConfig.RanVersions;
                 HCMGlobal.SavedConfig = new HCMConfig();
-                oldranversions = oldranversions.Append(HCMGlobal.HCMversion).ToArray();
-                HCMGlobal.SavedConfig.RanVersions = oldranversions;
+                if (oldranversions != null)
+                {
+                    oldranversions = oldranversions.Append(HCMGlobal.HCMversion).ToArray();
+                }
+                else
+                {
+                    oldranversions = new string[] { HCMGlobal.HCMversion };
+                }
+                    HCMGlobal.SavedConfig.RanVersions = oldranversions;
 
                 foreach (string i in oldranversions)
                 {
