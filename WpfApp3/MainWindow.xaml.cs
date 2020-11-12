@@ -263,7 +263,7 @@ namespace WpfApp3
                     {
                         if (i == HCMGlobal.HCMversion)
                         {
-                            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("It looks like HCM has recieved an important update. \n Feel free to continue using this version, but you may be missing important features or bugfixes. \n \n Grab the new version over at \n https://github.com/Burnt-o/HaloCheckpointManager/releases ", "Update", System.Windows.MessageBoxButton.OK);
+                            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("It looks like HCM has recieved an important update. \nFeel free to continue using this version, but you may be missing important features or bugfixes. \n \nGrab the new version over at \n https://github.com/Burnt-o/HaloCheckpointManager/releases ", "Update", System.Windows.MessageBoxButton.OK);
                         }
                     }
                     Debug("finished checking hcm version");
