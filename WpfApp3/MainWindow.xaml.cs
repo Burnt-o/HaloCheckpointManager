@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using System.Security.Principal;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 //TODO LIST
 
@@ -174,6 +175,8 @@ namespace WpfApp3
             public int[][] HR_DRflag; //dr as in "double revert"
             public int[][] HR_CPLocation;
             public int[][] HR_LoadedSeed;
+            public int[][] HR_TickCounter;
+            public int[][] HR_Message;
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
@@ -2802,6 +2805,12 @@ namespace WpfApp3
             }
         }
 
+
+        public static string Hex2Dec(string m)
+        {
+            return int.Parse(m, System.Globalization.NumberStyles.HexNumber).ToString();
+        }
+
         private void dtClockTime_Tick(object sender, EventArgs e)
         {
 
@@ -2923,7 +2932,12 @@ namespace WpfApp3
                         r.Close();
                         try
                         {
-                            HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(json);
+
+                            var s = json;
+                            var res = Regex.Replace(s, @"(?i)\b0x([a-f0-9]+)\b", m => Hex2Dec(m.Groups[1].Value));
+
+                            HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res);
+
                         }
                         catch
                         {
@@ -2990,7 +3004,10 @@ namespace WpfApp3
                                 r.Close();
                                 try
                                 {
-                                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(json2);
+                                    var s = json2;
+                                    var res = Regex.Replace(s, @"(?i)\b0x([a-f0-9]+)\b", m => Hex2Dec(m.Groups[1].Value));
+
+                                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res);
                                 }
                                 catch
                                 {
