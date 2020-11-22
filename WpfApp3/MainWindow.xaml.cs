@@ -508,7 +508,8 @@ namespace WpfApp3
 
         private void ProfileChanged(object sender, RoutedEventArgs e)
         {
-  
+            if (H1Profile.SelectedItem != null)
+            Debug("GJIJG: " + H1Profile.SelectedItem.ToString());
 
             //figure out which game this was for
             ComboBox cb = (ComboBox)sender;
@@ -554,6 +555,33 @@ namespace WpfApp3
             }
             RefreshList(sender, e);
             RefreshSel(sender, e);
+        }
+
+        private string ResolveProfile(string game)
+        {
+            switch (game)
+            {
+                case "H1CS":
+                    if (H1Profile.SelectedItem != null && H1Profile.SelectedItem.ToString() != "*Root")
+                    {
+                        return @"\" + H1Profile.SelectedItem.ToString();
+                    }
+                    else
+                        return "";
+
+                case "HRCP":
+                    if (HRProfile.SelectedItem != null && HRProfile.SelectedItem.ToString() != "*Root")
+                    {
+                        return @"\" + HRProfile.SelectedItem.ToString();
+                    }
+                    else
+                        return "";
+                    
+                default:
+                    return "";
+            
+            }//need to fix the bloody TRAP of how inconsitent my use of h1coresavepath w/ the slash at the end is
+
         }
 
         private void TabSelectionChanged(object sender, SelectionChangedEventArgs e)
