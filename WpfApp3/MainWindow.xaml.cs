@@ -105,7 +105,6 @@ namespace WpfApp3
         {
             public string[] RanVersions;
             public string CoreFolderPath;
-            public string CheckpointFolderPath;
             public bool ClassicMode = true;
         }
 
@@ -418,21 +417,7 @@ namespace WpfApp3
 
 
 
-            if (HCMGlobal.SavedConfig.CheckpointFolderPath == null)
-            {
 
-                //autodetect checkpoint folder path
-                var CheckpointAutoPath = System.IO.Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"..\LocalLow\MCC\Config").ToString();
-
-                if (Directory.Exists(CheckpointAutoPath))
-                {
-                    Log("Autodetected CP folder: " + CheckpointAutoPath);
-                    HCMGlobal.SavedConfig.CheckpointFolderPath = System.IO.Path.GetFullPath(CheckpointAutoPath);
-                    WriteConfig();
-                }
-            }
 
             if (HCMGlobal.SavedConfig.CoreFolderPath == null)
             {
@@ -1208,7 +1193,6 @@ namespace WpfApp3
             SettingsWindow settingswindow = new SettingsWindow();
 
             settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig?.CoreFolderPath ?? "No folder chosen!";
-            settingswindow.ChosenCP.Text = HCMGlobal.SavedConfig?.CheckpointFolderPath ?? "No folder chosen!";
             settingswindow.modeanni.IsChecked = !HCMGlobal.SavedConfig?.ClassicMode ?? true;
             settingswindow.modeclas.IsChecked = HCMGlobal.SavedConfig?.ClassicMode ?? false;
 
@@ -1219,10 +1203,7 @@ namespace WpfApp3
                 ? HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text
                 : HCMGlobal.SavedConfig.CoreFolderPath = "";
 
-            HCMGlobal.SavedConfig.CheckpointFolderPath =
-                (settingswindow.ChosenCP.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
-                ? HCMGlobal.SavedConfig.CheckpointFolderPath = settingswindow.ChosenCP.Text
-                : HCMGlobal.SavedConfig.CheckpointFolderPath = "";
+          
 
             HCMGlobal.SavedConfig.ClassicMode = settingswindow.modeclas.IsChecked ?? false;
 
@@ -2935,7 +2916,7 @@ namespace WpfApp3
 
                             var s = json;
                             var res = Regex.Replace(s, @"(?i)\b0x([a-f0-9]+)\b", m => Hex2Dec(m.Groups[1].Value));
-
+                            Debug(res);
                             HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res);
 
                         }
@@ -3006,7 +2987,7 @@ namespace WpfApp3
                                 {
                                     var s = json2;
                                     var res = Regex.Replace(s, @"(?i)\b0x([a-f0-9]+)\b", m => Hex2Dec(m.Groups[1].Value));
-
+                                    Debug(res);
                                     HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res);
                                 }
                                 catch
@@ -3260,6 +3241,12 @@ namespace WpfApp3
                 if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LoadedSeed[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
                 {
                     seedint = BitConverter.ToUInt32(buffer, 0);
+                    Debug((FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LoadedSeed[Convert.ToInt32(HCMGlobal.WinFlag)])).ToString());
+                    Debug(buffer[0].ToString());
+                    Debug(buffer[1].ToString());
+                    Debug(buffer[2].ToString());
+                    Debug(buffer[3].ToString());
+                    Debug(seedint.ToString());
                     seedstring = (Convert.ToString(seedint, 16)).ToUpper();
                     ReachLoadedSeed.Content = "Loaded Seed: " + seedstring;
                 }

@@ -47,20 +47,6 @@ namespace WpfApp3
             }
         }
 
-        private void CPBrowseClick(object sender, RoutedEventArgs e)
-        {
-            using (var dialog = new FolderBrowserDialog())
-            {
-                DialogResult result = dialog.ShowDialog();
-                if (result.ToString() == "OK" && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
-                {
-                    //Console.WriteLine("cpfolder: " + dialog.SelectedPath);
-                    if (Directory.Exists(dialog.SelectedPath))
-                    {
-                        ChosenCP.Text = dialog.SelectedPath;
-                    }
-                }
-            }
-        }
+       
     }
 }

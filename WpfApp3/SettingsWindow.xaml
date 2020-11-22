@@ -5,21 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
-        Title="Settings" Height="283" Width="400">
-    <Grid Margin="0,0,0,-31">
-        <Label Content="Set Core folder directory." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        Title="Settings" Height="198.068" Width="400">
+    <Grid>
+        <Label Content="Set Core folder directory. (Required for H1)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="-  usually (...\Steam\steamapps\common\core_saves\)" HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top"/>
         <Button Content="Browse" HorizontalAlignment="Left" Margin="30,61,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="2.444,0.187" Click="CoreBrowseClick" />
         <TextBox x:Name="ChosenCore" HorizontalAlignment="Left" Height="20" Margin="80,61,0,0" TextWrapping="Wrap" Text="No Folder chosen!" VerticalAlignment="Top" Width="287"/>
-        
-        <Label Content="Set Checkpoint folder directory." HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" IsEnabled="false"/>
-        <Label Content='- usually (...\"user"\AppData\LocalLow\MCC\Config\)' HorizontalAlignment="Left" Margin="30,130,0,0" VerticalAlignment="Top" IsEnabled="false"/>
-        <Button Content="Browse" HorizontalAlignment="Left" Margin="30,161,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="2.444,0.187" Click="CPBrowseClick" IsEnabled="false"/>
-        <TextBox x:Name="ChosenCP" HorizontalAlignment="Left" Height="20" Margin="80,161,0,0" TextWrapping="Wrap" Text="No Folder chosen!" VerticalAlignment="Top" Width="287" IsEnabled="false"/>
 
-        <RadioButton  x:Name ="modeanni"  Content="Anniversary" HorizontalAlignment="Left" Margin="193,221,0,0" VerticalAlignment="Top" />
-        <RadioButton  x:Name ="modeclas"  Content="Classic" HorizontalAlignment="Left" Margin="98,221,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Label Content="Level Splash Style: " HorizontalAlignment="Left" Height="25" Margin="67,196,0,0" VerticalAlignment="Top" Width="230"/>
+        <RadioButton  x:Name ="modeanni"  Content="Anniversary" HorizontalAlignment="Left" Margin="178,127,0,0" VerticalAlignment="Top" />
+        <RadioButton  x:Name ="modeclas"  Content="Classic" HorizontalAlignment="Left" Margin="83,127,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Label Content="Level Splash Style: " HorizontalAlignment="Left" Height="25" Margin="52,102,0,0" VerticalAlignment="Top" Width="230"/>
 
 
 
