@@ -320,7 +320,7 @@
 
                     </Grid>
                     <ComboBox x:Name="HRProfile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden"/>
-                    <Label x:Name="ReachLoadedSeed" Content="Loaded Seed: N/A"  FontSize="11" Grid.Column="2" HorizontalAlignment="Left" Height="32" Margin="573,-4,0,0" VerticalAlignment="Top" Width="140" RenderTransformOrigin="-1.983,-2.312"/>
+                    <Label x:Name="ReachLoadedSeed" Content="Loaded Seed: N/A"  FontSize="11" Grid.Column="2" HorizontalAlignment="Left" Height="32" Margin="568,-4,0,0" VerticalAlignment="Top" Width="140" RenderTransformOrigin="-1.983,-2.312"/>
 
 
                 </Grid>

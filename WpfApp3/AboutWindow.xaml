@@ -5,41 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
-        Title="About" Height="330.743" Width="460.066">
+        Title="About" Height="428.95" Width="460.066">
     <Grid Margin="0,0,14,0">
-        <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="23,30,0,0" VerticalAlignment="Top" Height="197" Width="405" TextWrapping="WrapWithOverflow">
+        <Label Content="Usage Notes:" HorizontalAlignment="Left" Margin="15,84,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.462,0.42"/>
+        <TextBlock HorizontalAlignment="Left" Margin="33,115,0,0" VerticalAlignment="Top" Height="264" Width="405" TextWrapping="WrapWithOverflow">
+
+                   You need to run this tool with admin privileges.   <LineBreak></LineBreak> 
             
-            <Bold>Remember to click the refresh button after making a coresave with the trainer to update it in this tool.</Bold><LineBreak></LineBreak>
+                   You need to run MCC with EAC disabled.   <LineBreak></LineBreak> <LineBreak></LineBreak>
                    
+                   Backup saves and config files are stored locally to this tools executable file, so move them together if you want to keep things working. <LineBreak></LineBreak> <LineBreak></LineBreak>
                    
-                    <Bold>This tool doesn't revert to the core_save for you, only sets your most recent core save.</Bold> You still have to revert to it yourself with the checkpoint trainer. Keep in mind that reverting to a core save from a different level to what you're currently on will crash the game; instead you'll have to load up the correct level before core loading.<LineBreak></LineBreak>
-                    
-                   
-                   You may need to run this tool with admin privileges.   <LineBreak></LineBreak>
-                   
-                   
-                   
-                   Backup saves and config.json are stored locally to this tools executable file, so move them together if you want to keep things working. <LineBreak></LineBreak>
-                   
-                   
-                   
-                   
-                   Make sure you set the correct paths in settings if autodetection failed.  <LineBreak></LineBreak>
+                   Make sure you set the correct core folder path for Halo 1 in settings if autodetection failed.  <LineBreak></LineBreak> <LineBreak></LineBreak>
+            
+                   If MCC recieves an update, the tool will break, but once I fix it the update will be automatic (you won't have to download a new release). <LineBreak></LineBreak> <LineBreak></LineBreak>
+            
+                   Some (rare) MCC updates will break previous checkpoints/saves, and you won't be able to use those old saves in future versions of MCC. <LineBreak></LineBreak><LineBreak></LineBreak>
+            
+                   If you run into any issues, just ping me on Discord  @<Bold>BurntKurisu</Bold>#6253 
+            
 <LineBreak></LineBreak>
-                   
-                   
-            
+
+
+
         </TextBlock>
 
-        <Label Content="Created by Burnt and Scales" HorizontalAlignment="Left" Margin="23,227,0,0" VerticalAlignment="Top"/>
+        <Label Content="Created by Burnt and Scales" HorizontalAlignment="Left" Margin="15,7,0,0" VerticalAlignment="Top"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="28,253,0,0" VerticalAlignment="Top">
+        <TextBlock HorizontalAlignment="Left" Margin="20,33,0,0" VerticalAlignment="Top">
     <Hyperlink NavigateUri="https://github.com/Burnt-o/HaloCheckpointManager" RequestNavigate="Hyperlink_RequestNavigate">
        <Hyperlink.Inlines>
             <Run Text="Source: https://github.com/Burnt-o/HaloCheckpointManager" />
        </Hyperlink.Inlines>
    </Hyperlink>
+
+        </TextBlock>
+
+        <TextBlock HorizontalAlignment="Left" Margin="20,54,0,0" VerticalAlignment="Top">
+    <Hyperlink NavigateUri="https://github.com/Burnt-o/HaloCheckpointManager/releases" RequestNavigate="Hyperlink_RequestNavigate">
+       <Hyperlink.Inlines>
+            <Run Text="Latest Release: https://github.com/Burnt-o/HaloCheckpointManager/releases" />
+       </Hyperlink.Inlines>
+   </Hyperlink>
+
         </TextBlock>
         <!--<Label Content="Source: https://github.com/Burnt-o/HaloCheckpointManager" HorizontalAlignment="Left" Margin="23,253,0,0" VerticalAlignment="Top"/>-->
 

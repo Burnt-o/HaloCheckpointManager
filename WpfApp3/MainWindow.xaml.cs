@@ -176,6 +176,7 @@ namespace WpfApp3
             public int[][] HR_LoadedSeed;
             public int[][] HR_TickCounter;
             public int[][] HR_Message;
+            public int[][] HR_MessageCall;
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
@@ -2106,17 +2107,106 @@ namespace WpfApp3
                     {
                         if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
                         {
-                            byte[] buffer = new byte[1] { 1 };
+
+                            //next, the custom message stuff
+                            //null the cp messagecall
+                            byte[] buffer = new byte[5] { 0x90, 0x90, 0x90, 0x90, 0x90};
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("hr: custom message 0: success");
+                            }
+                            else
+                            {
+                                return (false, "message 0 failure");
+                            }
+
+
+                            //acquire the current tickcount
+                            buffer = new byte[4];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("hr: custom message 1: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 1 failure");
+                            }
+
+                            //buffer will be equal to the tickcounter so just paste it into the new spot
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("hr: custom message 2: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 2 failure");
+                            }
+
+                            buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                            buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x84, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("hr: custom message 3: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 3 failure");
+                            }
+
+                            buffer = new byte[1] { 1 }; //setting showmessage flag to true
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0x10, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("hr: custom message 4: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 4 failure");
+                            }
+
+                            buffer = new byte[1] { 1 };
                             if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Checkpoint[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("hr: made cp");
+
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                Debug("hr: failed to make cp");
+                                return (false, "failed to write cp byte");
+                            }
+
+                            Thread.Sleep(50);
+
+                            buffer = new byte[5] { 0xE8, 0x67, 0x46, 0x28, 0x00 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("hr: custom message 5: success");
                                 return (true, "success!");
                             }
                             else
                             {
-                                Debug("hr: failed to make cp");
-                                return (false, "failed to write cp byte");
+                                return (false, "message 5 failure");
                             }
+
+                            void FixMessageCall()
+                            {
+
+                                try
+                                {
+                                    buffer = new byte[5] { 0xE8, 0x67, 0x46, 0x28, 0x00 };
+                                    WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+
                         }
                         else
                         {
@@ -2713,6 +2803,7 @@ namespace WpfApp3
                 Debug("Failed to dump, " + error);
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(parent_name + ": Failed to dump, " + error, "Error", System.Windows.MessageBoxButton.OK);
             }
+            RefreshList(sender, e);
 
         }
 
@@ -3241,12 +3332,6 @@ namespace WpfApp3
                 if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LoadedSeed[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
                 {
                     seedint = BitConverter.ToUInt32(buffer, 0);
-                    Debug((FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LoadedSeed[Convert.ToInt32(HCMGlobal.WinFlag)])).ToString());
-                    Debug(buffer[0].ToString());
-                    Debug(buffer[1].ToString());
-                    Debug(buffer[2].ToString());
-                    Debug(buffer[3].ToString());
-                    Debug(seedint.ToString());
                     seedstring = (Convert.ToString(seedint, 16)).ToUpper();
                     ReachLoadedSeed.Content = "Loaded Seed: " + seedstring;
                 }
