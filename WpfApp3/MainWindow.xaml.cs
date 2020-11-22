@@ -297,7 +297,7 @@ namespace WpfApp3
         {
             //some testing stuff
 
-            SetupProfiles();
+           
             //end testing stuff
 
             CS_MainList.SelectionChanged += List_SelectionChanged;
@@ -319,6 +319,8 @@ namespace WpfApp3
                     Log($@"Exception creating folder {folderPath}: {exp}");
                 }
             }
+
+            SetupProfiles();
 
             // Validate that required files exist
             foreach (var file in RequiredFiles)
