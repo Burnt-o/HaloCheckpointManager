@@ -180,21 +180,22 @@
 
 
 
-            <TabItem Header="H2 Checkpoints" IsEnabled="false" Visibility="Visible">
-                <Grid Background="#FFE5E5E5" Margin="0,0,0,-4">
+            <TabItem Header="H2 Checkpoints" IsEnabled="true" Visibility="Visible">
+                <Grid x:Name="H2CP" Background="#FFE5E5E5" Margin="0,0,0,-4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="63*"/>
-                        <ColumnDefinition Width="680*"/>
+                        <ColumnDefinition Width="13*"/>
+                        <ColumnDefinition Width="55*"/>
+                        <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo2Checkpoints}">
+                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="32" DisplayMemberBinding="{Binding LevelCode}" />
+                                <GridViewColumn Header="Lvl" Width="36" DisplayMemberBinding="{Binding LevelCode}"/>
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Image  Source="{Binding DifficultyImage}" Width="17" Height="18"/>
+                                            <Image  Source="{Binding DifficultyImageH2}" Width="17" Height="18"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -210,27 +211,57 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <TextBox x:Name="H2CP_Loa_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,77,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
-                    <TextBox x:Name="H2CP_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,41,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
-                    <TextBox x:Name="H2CP_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,203,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="1"/>
-                    <TextBox x:Name="H2CP_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,271,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="1"/>
+                    <TextBox x:Name="H2CP_Loa_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,128,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="2"/>
+                    <TextBox x:Name="H2CP_Loa_Time" HorizontalAlignment="Right" Height="21" Margin="0,92,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="2"/>
+                    <TextBox x:Name="H2CP_Sel_FileName" HorizontalAlignment="Right" Height="21" Margin="0,240,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="261" IsEnabled="False" Grid.Column="2"/>
+                    <TextBox x:Name="H2CP_Sel_LevelName" HorizontalAlignment="Right" Height="21" Margin="0,308,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="121" IsEnabled="False" Grid.Column="2"/>
 
-                    <TextBox x:Name="H2CP_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,235,43,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="1"/>
-                    <Button x:Name="H2CP_Loa_SaveButton" Content="Backup" HorizontalAlignment="Right" Height="26" Margin="0,123,183,0" VerticalAlignment="Top" Width="121" Click="DumpButton_Click" Grid.Column="1"/>
-                    <Image x:Name="H2CP_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,41,183,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
-                    <Image x:Name="H2CP_Sel_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,235,183,0" VerticalAlignment="Top" Width="121"  Grid.Column="1"/>
-                    <Button x:Name="H2CP_Sel_LoadButton" Content="Load" HorizontalAlignment="Right" Height="26" Margin="0,317,183,0" VerticalAlignment="Top" Width="121" Click="InjectButton_Click" Grid.Column="1" />
-                    <Button x:Name="H2CP_Sel_RenameButton" Content="Rename" HorizontalAlignment="Right" Height="26" Margin="0,317,43,0" VerticalAlignment="Top" Width="121" Click="RenameButton_Click" Grid.Column="1"/>
+                    <TextBox x:Name="H2CP_Sel_Time" HorizontalAlignment="Right" Height="21" Margin="0,272,44,0" TextWrapping="Wrap" Text="N/A" VerticalAlignment="Top" Width="81" IsEnabled="False" Grid.Column="2"/>
+                    <Button x:Name="H2CP_Loa_DumpButton" Content="Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,223,0" VerticalAlignment="Top" Width="82" Click="DumpButton_Click" Grid.Column="2"/>
+                    <Image x:Name="H2CP_Loa_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,92,184,0" VerticalAlignment="Top" Width="121"  Grid.Column="2"/>
+                    <Image x:Name="H2CP_Sel_LevelImage" HorizontalAlignment="Right" Height="68" Margin="0,272,184,0" VerticalAlignment="Top" Width="121"  Grid.Column="2"/>
+                    <Button x:Name="H2CP_Sel_InjectButton" Content="Inject" HorizontalAlignment="Right" Height="26" Margin="0,354,223,0" VerticalAlignment="Top" Width="82" Click="InjectButton_Click" Grid.Column="2" />
+                    <Button x:Name="H2CP_Sel_RenameButton" Content="Rename" HorizontalAlignment="Right" Height="26" Margin="0,404,184,0" VerticalAlignment="Top" Width="121" Click="RenameButton_Click" Grid.Column="2"/>
+                    <Button x:Name="H2CP_Sel_InjectRevertButton" Content="Inject &amp; Force Revert" HorizontalAlignment="Right" Height="26" Margin="0,354,44,0" VerticalAlignment="Top" Width="157" Click="InjectRevertButton_Click" Grid.Column="2"/>
+                    <Button x:Name="H2CP_Sel_DeleteButton" Content="Delete" HorizontalAlignment="Right" Height="26" Margin="0,404,44,0" VerticalAlignment="Top" Width="121" Click="DeleteButton_Click" Grid.Column="2"/>
+                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,208,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="2"/>
+                    <Button x:Name="H2CP_Sel_MoveUpButton" Content="Move Up" HorizontalAlignment="Right" Height="26" Margin="0,454,208,0" VerticalAlignment="Top" Width="97" Click="MoveUpButton_Click" Grid.Column="2"/>
+                    <Button x:Name="H2CP_Sel_MoveDownButton" Content="Move Down" HorizontalAlignment="Right" Height="26" Margin="0,454,69,0" VerticalAlignment="Top" Width="96" Click="MoveDownButton_Click" Grid.Column="2"/>
+                    <Label x:Name="H2CP_MainList_Label" Content="No backup saves made yet." HorizontalAlignment="Left" Height="49" Margin="10,160,0,0" VerticalAlignment="Top" Width="223" Grid.Column="1" IsHitTestVisible="false" Grid.ColumnSpan="2" />
+                    <Label Content="Currently Loaded Checkpoint:" HorizontalAlignment="Right" Margin="0,61,128,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="2"/>
+                    <Label Content="Selected Backup Checkpoint:" HorizontalAlignment="Right" Margin="0,209,133,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="2"/>
+                    <Image x:Name="H2CP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,92,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="2"/>
+                    <Image x:Name="H2CP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,272,143,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="2"/>
+                    <Button x:Name="H2CP_Loa_ForceCPDump" Content="Force Checkpoint &amp; Dump" HorizontalAlignment="Right" Height="26" Margin="0,174,44,0" VerticalAlignment="Top" Width="157" Click="ForceCPDumpButton_Click" Grid.Column="2"/>
+                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,60,25,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="2"/>
+                    <Button x:Name="H2CP_ForceCheckpoint" Content="Force Checkpoint" Grid.Column="2" Height="26" Margin="0,19,198,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="107" Click="ForceCPButton_Click"/>
+                    <Button x:Name="H2CP_ForceRevert" Content="Force Revert" Grid.Column="2" Height="26" Margin="0,19,87,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="91" Click="ForceRevertButton_Click"/>
+                    <Grid Grid.Column="2" Margin="0,19,44,0" HorizontalAlignment="Right" Width="26" Height="26" VerticalAlignment="Top">
+                        <Button x:Name="H2CP_ForceDR" Content="" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="26" Click="DoubleRevertButton_Click"/>
+                        <Image HorizontalAlignment="Left" Height="22" Margin="2,2,0,0" VerticalAlignment="Top" Width="24" Source="arrows-switch.png" RenderTransformOrigin="4.292,0.458" IsHitTestVisible="False"/>
 
-                    <Button x:Name="H2CP_Sel_DeleteButton" Content="Delete" HorizontalAlignment="Right" Height="26" Margin="0,367,43,0" VerticalAlignment="Top" Width="121" Click="DeleteButton_Click" Grid.Column="1"/>
-                    <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="1" Margin="0,166,27,0" Stroke="Black" VerticalAlignment="Top" Width="292" Grid.Column="1"/>
-                    <Button x:Name="H2CP_Sel_MoveUpButton" Content="Move Up" HorizontalAlignment="Right" Height="26" Margin="0,417,183,0" VerticalAlignment="Top" Width="121" Click="MoveUpButton_Click" Grid.Column="1"/>
-                    <Button x:Name="H2CP_Sel_MoveDownButton" Content="Move Down" HorizontalAlignment="Right" Height="26" Margin="0,417,43,0" VerticalAlignment="Top" Width="121" Click="MoveDownButton_Click" Grid.Column="1"/>
-                    <Label x:Name="H2CP_MainList_Label" Content="No backup saves made yet." HorizontalAlignment="Left" Height="49" Margin="42,166,0,0" VerticalAlignment="Top" Width="223" Grid.Column="1" IsHitTestVisible="false" />
-                    <Label Content="Currently Loaded Checkpoint:" HorizontalAlignment="Right" Margin="0,10,104,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
-                    <Label Content="Selected Backup Checkpoint:" HorizontalAlignment="Right" Margin="0,172,109,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
-                    <Image x:Name="H2CP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,41,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
-                    <Image x:Name="H2CP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,235,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
+                    </Grid>
+                    <Grid Grid.Column="2" Margin="0,454,183,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="27">
+                        <Button x:Name="H2CP_Sel_MoveUpButton_All" Content="" HorizontalAlignment="Right" Height="26" Margin="0,0,1,0" VerticalAlignment="Top" Width="26" Click="MoveUpButton_All_Click"/>
+                        <Image HorizontalAlignment="Left" Height="19" Margin="7,4,0,0" VerticalAlignment="Top" Width="20" Source="arrow.png" RenderTransformOrigin="4.292,0.458" IsHitTestVisible="false"/>
+                    </Grid>
+                    <Grid Grid.Column="2" Margin="0,454,44,0" HorizontalAlignment="Right" Width="110" Height="26" VerticalAlignment="Top">
+                        <Button x:Name="H2CP_Sel_MoveDownButton_All" Content="" HorizontalAlignment="Right" Height="26" VerticalAlignment="Top" Width="26" Click="MoveDownButton_All_Click"/>
+                        <Image HorizontalAlignment="Left" Height="19" Margin="0,5,0,0" VerticalAlignment="Top" Width="20" Source="arrow.png" RenderTransformOrigin="4.292,0.458" IsHitTestVisible="false">
+                            <Image.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="180"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
+                        </Image>
+
+
+                    </Grid>
+                    <ComboBox x:Name="H2Profile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden"/>
+                    
 
 
                 </Grid>

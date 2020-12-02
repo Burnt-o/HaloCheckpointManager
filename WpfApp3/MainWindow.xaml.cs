@@ -78,6 +78,8 @@ Add open in Explorer button.
 
 DONE --- Implement core save and dump + inject and revert for h1cs.
 
+    make injecting a cp print "Custom Checkpoint.. Injected" to the screen
+
 */
 
 namespace WpfApp3
@@ -177,6 +179,19 @@ namespace WpfApp3
             public int[][] HR_TickCounter;
             public int[][] HR_Message;
             public int[][] HR_MessageCall;
+
+            public int[][] H2_LevelName;
+            public int[][] H2_CheckString;
+            public int[][] H2_Checkpoint; //for forcing checkpoints
+            public int[][] H2_Revert; //for forcing reverts
+            public int[][] H2_DRflag; //dr as in "double revert"
+            public int[][] H2_CPLocation;
+            public int[][] H2_TickCounter;
+            public int[][] H2_Message;
+            public int[][] H2_MessageCall;
+            public int[][] H2_LoadedBSP1;
+            public int[][] H2_LoadedBSP2;
+
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
@@ -1469,106 +1484,89 @@ namespace WpfApp3
 
         private void RefreshList(object sender, RoutedEventArgs e)
         {
-            var oldCSselected = CS_MainList.SelectedIndex;
-            var oldCPselected = CP_MainList.SelectedIndex;
-            var oldH2CPselected = H2CP_MainList.SelectedIndex;
-            var oldHRCPselected = HRCP_MainList.SelectedIndex;
+
+            var oldselected = CS_MainList.SelectedIndex;
 
             List<string> FilesPost = new List<string>();
 
             //let's only update the active tab (we'll later also add a RefreshList whenever the tab is changed)
             Debug(TabList.SelectedIndex.ToString());
+            string savepath = HCMGlobal.H1CoreSavePath;
+            var game = HaloGame.Halo1;
+            var list = CS_MainList;
+            var listlabel = H1CS_MainList_Label;
+            var collection = Halo1CoreSaves;
             switch (TabList.SelectedIndex)
             {
                 case 0: //h1 cores
                     Halo1CoreSaves.Clear();
-                    if (Directory.Exists(HCMGlobal.H1CoreSavePath)) // make sure path is valid
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(HCMGlobal.H1CoreSavePath);
-                        FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-                        FilesPost.Clear();
+                    savepath = HCMGlobal.H1CoreSavePath;
+                    game = HaloGame.Halo1;
+                    list = CS_MainList;
+                    listlabel = H1CS_MainList_Label;
+                    oldselected = CS_MainList.SelectedIndex;
+                    break;
 
-                        foreach (FileInfo file in files)
-                        {
-                            while (FileHasSameTime(files, file))
-                            {
-                                file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                            }
-                            FilesPost.Add(file.ToString());
-                        }
-
-                        if (FilesPost.Count > 0)
-                        {
-                            H1CS_MainList_Label.Content = "";
-                            foreach (string File in FilesPost)
-                            {
-                                var data = GetSaveFileMetadata(HCMGlobal.H1CoreSavePath + "/" + File, HaloGame.Halo1);
-                                data.Name = File.Substring(0, File.Length - 4);
-                                Halo1CoreSaves.Add(data);
-                            }
-
-                            CS_MainList.SelectedIndex = oldCSselected;
-                            GridView gv = CS_MainList.View as GridView;
-                            UpdateColumnWidths(gv);
-                        }
-                        else
-                        {
-                            H1CS_MainList_Label.Content = "No backup saves in local folder.";
-                        }
-                    }
-                    else
-                    {
-                        H1CS_MainList_Label.Content = "Core folder path is invalid, check Settings.";
-                    }
+                case 1: //halo 2
+                    Halo2Checkpoints.Clear();
+                    savepath = HCMGlobal.H2CheckpointPath;
+                    game = HaloGame.Halo2;
+                    list = H2CP_MainList;
+                    listlabel = H2CP_MainList_Label;
+                    oldselected = H2CP_MainList.SelectedIndex;
                     break;
 
                 case 3: //halo reach
                     HaloReachCheckpoints.Clear();
-                    if (Directory.Exists(HCMGlobal.HRCheckpointPath)) // make sure path is valid
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(HCMGlobal.HRCheckpointPath);
-                        FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
-                        FilesPost.Clear();
-
-                        foreach (FileInfo file in files)
-                        {
-                            while (FileHasSameTime(files, file))
-                            {
-                                file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
-                            }
-                            FilesPost.Add(file.ToString());
-                        }
-
-                        if (FilesPost.Count > 0)
-                        {
-                            HRCP_MainList_Label.Content = "";
-                            foreach (string File in FilesPost)
-                            {
-                                var data = GetSaveFileMetadata(HCMGlobal.HRCheckpointPath + "/" + File, HaloGame.HaloReach);
-                                data.Name = File.Substring(0, File.Length - 4);
-                                HaloReachCheckpoints.Add(data);
-                            }
-
-                            HRCP_MainList.SelectedIndex = oldHRCPselected;
-                            GridView gv = HRCP_MainList.View as GridView;
-                            UpdateColumnWidths(gv);
-                        }
-                        else
-                        {
-                            HRCP_MainList_Label.Content = "No backup saves in local folder.";
-                        }
-                    }
-                    else
-                    {
-                        //this should never happen lmao
-                        Debug("how in the goddamn fuck?");
-                    }
-
+                    savepath = HCMGlobal.HRCheckpointPath;
+                    game = HaloGame.HaloReach;
+                    list = HRCP_MainList;
+                    listlabel = HRCP_MainList_Label;
+                    oldselected = HRCP_MainList.SelectedIndex;
                     break;
 
                 default:
-                    break;
+                    return;
 
+            }
+
+            if (Directory.Exists(savepath)) // make sure path is valid
+            {
+                DirectoryInfo dir = new DirectoryInfo(savepath);
+                FileInfo[] files = dir.GetFiles("*.bin").OrderByDescending(p => p.LastWriteTime).ToArray();
+                FilesPost.Clear();
+
+                foreach (FileInfo file in files)
+                {
+                    while (FileHasSameTime(files, file))
+                    {
+                        file.LastWriteTime = file.LastWriteTime.AddSeconds(1);
+                    }
+                    FilesPost.Add(file.ToString());
+                }
+
+                if (FilesPost.Count > 0)
+                {
+                    listlabel.Content = "";
+                    foreach (string File in FilesPost)
+                    {
+                        var data = GetSaveFileMetadata(savepath + "/" + File, game);
+                        data.Name = File.Substring(0, File.Length - 4);
+                        collection.Add(data);
+                    }
+
+                    list.SelectedIndex = oldselected;
+                    GridView gv = list.View as GridView;
+                    UpdateColumnWidths(gv);
+                }
+                else
+                {
+                    listlabel.Content = "No backup saves in local folder.";
+                }
+            }
+            else
+            {
+                listlabel.Content = "save folder path is invalid, check Settings.";
             }
 
         }
@@ -1585,6 +1583,7 @@ namespace WpfApp3
 
             //split difficultyimage into these two, probably a dumb way to do this but idk how this shit works ¯\_(ツ)_/¯
             public string DifficultyImageH1 => $"images/H1/diff_{(int)Difficulty}.png";
+            public string DifficultyImageH2 => $"images/H2/diff_{(int)Difficulty}.png";
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
             public string TimeString => TickToTimeString(StartTick, false);
         }
@@ -1606,7 +1605,7 @@ namespace WpfApp3
                     break;
                 case HaloGame.Halo2:
                     offsetLevelCode = 23;
-                    offsetStartTick = 10808;
+                    offsetStartTick = 10824;
                     offsetDifficulty = 974;
                     offsetSeed = 0;
                     break;
@@ -1789,6 +1788,25 @@ namespace WpfApp3
             { "08a", "High Charity" },
             { "08b", "The Great Journey" },
             //MP
+            { "ascension", "placeholder" },
+            { "backwash", "placeholder" },
+            //{ "beavercreek", "placeholder" },
+            { "burial_mounds", "placeholder" },
+            { "coagulation", "placeholder" },
+            { "colossus", "placeholder" },
+            { "containment", "placeholder" },
+            { "cyclotron", "placeholder" },
+            { "deltatap", "placeholder" },
+            { "derelict ", "placeholder" },
+            { "dune", "placeholder" },
+            { "elongation", "placeholder" },
+            { "foundation", "placeholder" },
+            { "gemini", "placeholder" },
+            { "headlong", "placeholder" },
+            { "highplains", "placeholder" },
+            { "lockout", "placeholder" },
+            { "midship", "placeholder" },
+            { "needle", "placeholder" },
             //tbd
 
             // Halo Reach
@@ -1879,22 +1897,41 @@ namespace WpfApp3
 
             // Halo 2
             //SP
-            { "00a", false },
-            { "01a", false },
-            { "01b", false },
-            { "03a", false },
-            { "03b", false },
-            { "04a", false },
-            { "04b", false },
-            { "05a", false },
-            { "05b", false },
-            { "06a", false },
-            { "06b", false },
-            { "07a", false },
-            { "07b", false },
-            { "08a", false },
-            { "08b", false },
+            { "00a_introduction", false },
+            { "01a_tutorial", false },
+            { "01b_spacestation", false },
+            { "03a_oldmombasa", false },
+            { "03b_newmombasa", false },
+            { "04a_gasgiant", false },
+            { "04b_floodlab", false },
+            { "05a_deltaapproach", false },
+            { "05b_deltatowers", false },
+            { "06a_sentinelwalls", false },
+            { "06b_floodzone", false },
+            { "07a_highcharity", false },
+            { "07b_forerunnership", false },
+            { "08a_deltacliffs", false },
+            { "08b_deltacontrol", false },
             //MP
+            { "ascension", true },
+            { "backwash", true },
+            //{ "beavercreek", true },
+            { "burial_mounds", true },
+            { "coagulation", true },
+            { "colossus", true },
+            { "containment", true },
+            { "cyclotron", true },
+            { "deltatap", true },
+            { "derelict ", true },
+            { "dune", true },
+            { "elongation", true },
+            { "foundation", true },
+            { "gemini", true },
+            { "headlong", true },
+            { "highplains", true },
+            { "lockout", true },
+            { "midship", true },
+            { "needle", true },
             //tbd
 
             // Halo Reach
@@ -3275,7 +3312,7 @@ namespace WpfApp3
             string holdstring;
             switch (HCMGlobal.AttachedGame)
             {
-                case "H2":
+                
                 case "H3":
                 case "OD":
                 case "H4"://these above games are not supported yet
@@ -3300,6 +3337,24 @@ namespace WpfApp3
                     else
                     {
                         Debug("failed to read h1 level");
+                        HCMGlobal.AttachedLevel = null;
+                    }
+                    break;
+
+                case "H2":
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                    {
+                        holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        char[] exceptions = new char[] { '_' };
+                        holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        Debug("read h2 level: " + holdstring);
+                        HCMGlobal.AttachedLevel = holdstring;
+                    }
+                    else
+                    {
+                        Debug("failed to read h2 level");
                         HCMGlobal.AttachedLevel = null;
                     }
                     break;
@@ -3360,7 +3415,6 @@ namespace WpfApp3
             //todo; implement this
             switch (HCMGlobal.AttachedGame)
             {
-                case "H2":
                 case "H3":
                 case "OD":
                 case "H4"://these above games are not supported yet
@@ -3375,12 +3429,22 @@ namespace WpfApp3
                 case "H1":
                     SetH1(HCMGlobal.SavedConfig.CoreFolderPath != null); //false if corefolderpath not set correctly
                     SetHR(false);
+                    SetH2(false);
+                    break;
+
+                case "H2":
+                    SetH1(false);
+                    SetHR(false);
+                    SetH2(true);
                     break;
 
                 case "HR":
                     SetH1(false);
                     SetHR(true);
+                    SetH2(false);
                     break;
+
+                
 
             }
 
@@ -3426,6 +3490,18 @@ namespace WpfApp3
                 HRCP_Loa_ForceCPDump.IsEnabled = state;
                 HRCP_Sel_InjectButton.IsEnabled = state;
                 HRCP_Sel_InjectRevertButton.IsEnabled = state;
+            }
+
+
+            void SetH2(bool state)
+            {
+                H2CP_ForceCheckpoint.IsEnabled = state;
+                H2CP_ForceRevert.IsEnabled = state;
+                H2CP_ForceDR.IsEnabled = state;
+                H2CP_Loa_DumpButton.IsEnabled = state;
+                H2CP_Loa_ForceCPDump.IsEnabled = state;
+                H2CP_Sel_InjectButton.IsEnabled = state;
+                H2CP_Sel_InjectRevertButton.IsEnabled = state;
             }
 
 
