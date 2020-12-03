@@ -176,38 +176,38 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\H2\00a_anni.png" />
-    <Resource Include="images\H2\01a_anni.png" />
-    <Resource Include="images\H2\01b_anni.png" />
-    <Resource Include="images\H2\03a_anni.png" />
-    <Resource Include="images\H2\03b_anni.png" />
-    <Resource Include="images\H2\04a_anni.png" />
-    <Resource Include="images\H2\04b_anni.png" />
-    <Resource Include="images\H2\05a_anni.png" />
-    <Resource Include="images\H2\05b_anni.png" />
-    <Resource Include="images\H2\06a_anni.png" />
-    <Resource Include="images\H2\06b_anni.png" />
-    <Resource Include="images\H2\07a_anni.png" />
-    <Resource Include="images\H2\07b_anni.png" />
-    <Resource Include="images\H2\08a_anni.png" />
-    <Resource Include="images\H2\08b_anni.png" />
+    <Resource Include="images\H2\00a_introduction_anni.png" />
+    <Resource Include="images\H2\01a_tutorial_anni.png" />
+    <Resource Include="images\H2\01b_spacestation_anni.png" />
+    <Resource Include="images\H2\03a_oldmombasa_anni.png" />
+    <Resource Include="images\H2\03b_newmombasa_anni.png" />
+    <Resource Include="images\H2\04a_gasgiant_anni.png" />
+    <Resource Include="images\H2\04b_floodlab_anni.png" />
+    <Resource Include="images\H2\05a_deltaapproach_anni.png" />
+    <Resource Include="images\H2\05b_deltatowers_anni.png" />
+    <Resource Include="images\H2\06a_sentinelwalls_anni.png" />
+    <Resource Include="images\H2\06b_floodzone_anni.png" />
+    <Resource Include="images\H2\07a_highcharity_anni.png" />
+    <Resource Include="images\H2\07b_forerunnership_anni.png" />
+    <Resource Include="images\H2\08a_deltacliffs_anni.png" />
+    <Resource Include="images\H2\08b_deltacontrol_anni.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\H2\00a_clas.png" />
-    <Resource Include="images\H2\01a_clas.png" />
-    <Resource Include="images\H2\01b_clas.png" />
-    <Resource Include="images\H2\03a_clas.png" />
-    <Resource Include="images\H2\03b_clas.png" />
-    <Resource Include="images\H2\04a_clas.png" />
-    <Resource Include="images\H2\04b_clas.png" />
-    <Resource Include="images\H2\05a_clas.png" />
-    <Resource Include="images\H2\05b_clas.png" />
-    <Resource Include="images\H2\06a_clas.png" />
-    <Resource Include="images\H2\06b_clas.png" />
-    <Resource Include="images\H2\07a_clas.png" />
-    <Resource Include="images\H2\07b_clas.png" />
-    <Resource Include="images\H2\08a_clas.png" />
-    <Resource Include="images\H2\08b_clas.png" />
+    <Resource Include="images\H2\00a_introduction_clas.png" />
+    <Resource Include="images\H2\01a_tutorial_clas.png" />
+    <Resource Include="images\H2\01b_spacestation_clas.png" />
+    <Resource Include="images\H2\03a_oldmombasa_clas.png" />
+    <Resource Include="images\H2\03b_newmombasa_clas.png" />
+    <Resource Include="images\H2\04a_gasgiant_clas.png" />
+    <Resource Include="images\H2\04b_floodlab_clas.png" />
+    <Resource Include="images\H2\05a_deltaapproach_clas.png" />
+    <Resource Include="images\H2\05b_deltatowers_clas.png" />
+    <Resource Include="images\H2\06a_sentinelwalls_clas.png" />
+    <Resource Include="images\H2\06b_floodzone_clas.png" />
+    <Resource Include="images\H2\07a_highcharity_clas.png" />
+    <Resource Include="images\H2\07b_forerunnership_clas.png" />
+    <Resource Include="images\H2\08a_deltacliffs_clas.png" />
+    <Resource Include="images\H2\08b_deltacontrol_clas.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="HCM.ico" />

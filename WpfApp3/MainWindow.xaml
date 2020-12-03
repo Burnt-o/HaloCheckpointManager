@@ -187,7 +187,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
+                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo2Checkpoints}">
                         <ListView.View>
                             <GridView>
 

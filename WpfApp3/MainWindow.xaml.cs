@@ -112,7 +112,7 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.0";
+            public static readonly string HCMversion = "0.9.1";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
@@ -467,6 +467,7 @@ namespace WpfApp3
         readonly Dictionary<string, string> ProfileTypeToPath = new Dictionary<string, string>()
             {
                 { "H1Profile", HCMGlobal.H1CoreSavePath},
+                { "H2Profile", HCMGlobal.H2CheckpointPath},
                 { "HRProfile", HCMGlobal.HRCheckpointPath},
             };
 
@@ -485,7 +486,7 @@ namespace WpfApp3
         private void SetupProfiles()
        {
 
-            var list = new List<ComboBox> { H1Profile, HRProfile };
+            var list = new List<ComboBox> { H1Profile, H2Profile, HRProfile };
 
 
             foreach (ComboBox cb in list)
@@ -571,6 +572,14 @@ namespace WpfApp3
                     if (H1Profile.SelectedItem != null && H1Profile.SelectedItem.ToString() != "*Root")
                     {
                         return @"\" + H1Profile.SelectedItem.ToString();
+                    }
+                    else
+                        return "";
+
+                case "H2CP":
+                    if (H2Profile.SelectedItem != null && H2Profile.SelectedItem.ToString() != "*Root")
+                    {
+                        return @"\" + H2Profile.SelectedItem.ToString();
                     }
                     else
                         return "";
@@ -993,14 +1002,14 @@ namespace WpfApp3
                     }
                     break;
 
-                case "CP_Sel_RenameButton":
-                    if (CP_MainList.SelectedItem != null)
+                case "HRCP_Sel_RenameButton":
+                    if (HRCP_MainList.SelectedItem != null)
                     {
-                        var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
+                        var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex);
                         System.Type type2 = item.GetType();
                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-                        backuploc = HCMGlobal.H1CheckpointPath;
+                        backup = HCMGlobal.HRCheckpointPath + @"\" + s2 + @".bin";
+                        backuploc = HCMGlobal.HRCheckpointPath;
                         var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
                  "Rename your backup save",
                          s2,
@@ -1151,6 +1160,8 @@ namespace WpfApp3
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var oldselected = 0;
+            var mainlist = CS_MainList;
+            var savepath = HCMGlobal.H1CoreSavePath;
 
             RefreshSel(sender, e);
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
@@ -1160,41 +1171,38 @@ namespace WpfApp3
             {
                 case "H1CS":
                     oldselected = CS_MainList.SelectedIndex;
-                    if (CS_MainList.SelectedItem != null)
-                    {
-                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        string path = $@"{HCMGlobal.H1CoreSavePath}\{item.Name}.bin";
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
+                    break;
 
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Delete " + item.Name + "?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-                        if (messageBoxResult == MessageBoxResult.Yes)
-                        {
-                            DeleteSaveFile(path);
-                        }
-                    }
-                    RefreshList(sender, e);
-                    CS_MainList.SelectedIndex = oldselected;
-                    RefreshSel(sender, e);
+                case "H2CP":
+                    oldselected = H2CP_MainList.SelectedIndex;
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
                     break;
 
                 case "HRCP":
                     oldselected = HRCP_MainList.SelectedIndex;
-                    if (HRCP_MainList.SelectedItem != null)
-                    {
-                        var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        string path = $@"{HCMGlobal.HRCheckpointPath}\{item.Name}.bin";
-
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Delete " + item.Name + "?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-                        if (messageBoxResult == MessageBoxResult.Yes)
-                        {
-                            DeleteSaveFile(path);
-                        }
-                    }
-                    RefreshList(sender, e);
-                    HRCP_MainList.SelectedIndex = oldselected;
-                    RefreshSel(sender, e);
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
                     break;
 
             }
+
+            if (mainlist.SelectedItem != null)
+            {
+                var item = mainlist.Items.GetItemAt(mainlist.SelectedIndex) as HaloSaveFileMetadata;
+                string path = $@"{savepath}\{item.Name}.bin";
+
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Delete " + item.Name + "?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    DeleteSaveFile(path);
+                }
+            }
+            RefreshList(sender, e);
+            mainlist.SelectedIndex = oldselected;
+            RefreshSel(sender, e);
 
         }
 
@@ -1275,6 +1283,94 @@ namespace WpfApp3
 
                     break;
 
+
+                case 2: //h2
+                    if (HCMGlobal.AttachedGame == "H2" && ValidCheck_H2())
+                    {
+                        //data to get; level code, diff, time
+
+                        //first check double revert flag
+                        int bytesWritten;
+                        bool DRflag;
+                        byte[] DRbuffer = new byte[1];
+                        var data = new HaloSaveFileMetadata();
+
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                        {
+                            DRflag = Convert.ToBoolean(DRbuffer[0]);
+                        }
+                        else { Debug("oh no"); NullH2(); return; }
+
+                        int offset;
+                        if (!DRflag)
+                        {
+                            offset = 0x0; //first cp
+                        }
+                        else
+                        {
+                            offset = 0x3FE000; //second cp
+                        }
+
+                        int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                        addy[3] = offset;
+                        //setup done, let's get our data
+                        //levelcode
+                        byte[] buffer = new byte[64];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 23, buffer, buffer.Length, out bytesWritten))
+                        {
+                            char[] exceptions = new char[] { '_' };
+                            data.LevelCode = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                            data.LevelCode = data.LevelCode.Substring(data.LevelCode.LastIndexOf("\\") + 1);
+                            data.LevelCode = data.LevelCode.Substring(data.LevelCode.LastIndexOf("\\") + 1);
+                            data.LevelCode = String.Concat(data.LevelCode.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        }
+                        else { Debug("oh no"); NullH2(); return; }
+
+                        //difficulty
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            data.Difficulty = (Difficulty)4;
+                        }
+                        else
+                        {
+                            buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 974, buffer, buffer.Length, out bytesWritten))
+                            {
+                                data.Difficulty = (Difficulty)buffer[0];
+                            }
+                            else { Debug("oh no"); NullH2(); return; }
+                        }
+                        //tickcount
+                        buffer = new byte[4];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 10824, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.StartTick = BitConverter.ToUInt32(buffer, 0);
+                        }
+                        else { Debug("oh no"); NullH2(); return; }
+
+                       
+
+                        //now assign to ui
+                        H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+
+                        H2CP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
+
+                        if (data.Difficulty != Difficulty.Invalid)
+                            H2CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/H2/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H2/mp.png", UriKind.Relative));
+                        }
+                        else
+                        {
+                            H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H2/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        }
+
+                    }
+                    else { Debug("oh no"); NullH2(); }
+                    break;
+
                 case 3: //reach
                     if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
                     {
@@ -1306,7 +1402,7 @@ namespace WpfApp3
                         addy[3] = offset;
                         //setup done, let's get our data
                         //levelcode
-                        byte[] buffer = new byte[32];
+                        byte[] buffer = new byte[64];
                         if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0xFD73, buffer, buffer.Length, out bytesWritten))
                         {
                             char[] exceptions = new char[] { '_' };
@@ -1370,6 +1466,8 @@ namespace WpfApp3
 
                     break;
 
+
+
                     void NullReach()
                     {
                         HRCP_Loa_LevelName.Text = "N/A";
@@ -1377,6 +1475,14 @@ namespace WpfApp3
                         HRCP_Loa_Time.Text = "N/A";
                         HRCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                         HRCP_Loa_Seed.Content = "Seed: N/A";
+                    }
+
+                    void NullH2()
+                    {
+                        H2CP_Loa_LevelName.Text = "N/A";
+                        H2CP_Loa_DiffName.Source = null;
+                        H2CP_Loa_Time.Text = "N/A";
+                        H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
 
             }
@@ -1425,6 +1531,47 @@ namespace WpfApp3
                         H1CS_Sel_Time.Text = "N/A";
                         H1CS_Sel_FileName.Text = "N/A";
                         H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+                    break;
+
+                case 2: //h2
+                    if (H2CP_MainList.SelectedItem != null)
+                    {
+                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
+                        System.Type type = item.GetType();
+                        string s = (string)type.GetProperty("Name").GetValue(item, null);
+                        var pathtotest = HCMGlobal.H2CheckpointPath + @"\" + s + @".bin";
+
+                        if (File.Exists(pathtotest))
+                        {
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
+                            H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+
+                            if (data.Difficulty != Difficulty.Invalid)
+                                H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H2/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                            H2CP_Sel_Time.Text = TickToTimeString(data.StartTick, true);
+                            H2CP_Sel_FileName.Text = s;
+
+                            if (LevelCodeToGameType(data.LevelCode))
+                            {
+                                H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H2/mp.png", UriKind.Relative));
+                            }
+                            else
+                            {
+                                H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H2/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                            }
+
+                           
+                        }
+                    }
+                    else
+                    {
+                        H2CP_Sel_LevelName.Text = "N/A";
+                        H2CP_Sel_DiffName.Source = null;
+                        H2CP_Sel_Time.Text = "N/A";
+                        H2CP_Sel_FileName.Text = "N/A";
+                        H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
                     break;
 
@@ -1485,7 +1632,7 @@ namespace WpfApp3
         private void RefreshList(object sender, RoutedEventArgs e)
         {
 
-            var oldselected = CS_MainList.SelectedIndex;
+            
 
             List<string> FilesPost = new List<string>();
 
@@ -1495,34 +1642,41 @@ namespace WpfApp3
             var game = HaloGame.Halo1;
             var list = CS_MainList;
             var listlabel = H1CS_MainList_Label;
+            var oldselected = CS_MainList.SelectedIndex;
             var collection = Halo1CoreSaves;
             switch (TabList.SelectedIndex)
             {
                 case 0: //h1 cores
-                    Halo1CoreSaves.Clear();
+                    
                     savepath = HCMGlobal.H1CoreSavePath;
                     game = HaloGame.Halo1;
                     list = CS_MainList;
                     listlabel = H1CS_MainList_Label;
                     oldselected = CS_MainList.SelectedIndex;
+                    collection = Halo1CoreSaves;
+                    Halo1CoreSaves.Clear();
                     break;
 
-                case 1: //halo 2
-                    Halo2Checkpoints.Clear();
+                case 2: //halo 2
+                   
                     savepath = HCMGlobal.H2CheckpointPath;
                     game = HaloGame.Halo2;
                     list = H2CP_MainList;
                     listlabel = H2CP_MainList_Label;
                     oldselected = H2CP_MainList.SelectedIndex;
+                    collection = Halo2Checkpoints;
+                    Halo2Checkpoints.Clear();
                     break;
 
                 case 3: //halo reach
-                    HaloReachCheckpoints.Clear();
+                    
                     savepath = HCMGlobal.HRCheckpointPath;
                     game = HaloGame.HaloReach;
                     list = HRCP_MainList;
                     listlabel = HRCP_MainList_Label;
                     oldselected = HRCP_MainList.SelectedIndex;
+                    collection = HaloReachCheckpoints;
+                    HaloReachCheckpoints.Clear();
                     break;
 
                 default:
@@ -1635,7 +1789,7 @@ namespace WpfApp3
 
                             //get levelname
                             readBinary.BaseStream.Seek(offsetLevelCode, SeekOrigin.Begin);
-                            metadata.LevelCode = new string(readBinary.ReadChars(32));
+                            metadata.LevelCode = new string(readBinary.ReadChars(64));
                             metadata.LevelCode = metadata.LevelCode.Substring(metadata.LevelCode.LastIndexOf("\\") + 1);
                             metadata.LevelCode = metadata.LevelCode.Substring(metadata.LevelCode.LastIndexOf("\\") + 1);
                             char[] exceptions = new char[] { '_' };
@@ -1772,41 +1926,47 @@ namespace WpfApp3
 
             // Halo 2
             //SP
-            { "00a", "The Heretic" },
-            { "01a", "The Armory" },
-            { "01b", "Cairo Station" },
-            { "03a", "Outskirts" },
-            { "03b", "Metropolis" },
-            { "04a", "The Arbiter" },
-            { "04b", "The Oracle" },
-            { "05a", "Delta Halo" },
-            { "05b", "Regret" },
-            { "06a", "Sacred Icon" },
-            { "06b", "Quarantine Zone" },
-            { "07a", "Gravemind" },
-            { "07b", "Uprising" },
-            { "08a", "High Charity" },
-            { "08b", "The Great Journey" },
+            { "00a_introduction", "The Heretic" },
+            { "01a_tutorial", "The Armory" },
+            { "01b_spacestation", "Cairo Station" },
+            { "03a_oldmombasa", "Outskirts" },
+            { "03b_newmombasa", "Metropolis" },
+            { "04a_gasgiant", "The Arbiter" },
+            { "04b_floodlab", "The Oracle" },
+            { "05a_deltaapproach", "Delta Halo" },
+            { "05b_deltatowers", "Regret" },
+            { "06a_sentinelwalls", "Sacred Icon" },
+            { "06b_floodzone", "Quarantine Zone" },
+            { "07a_highcharity", "Gravemind" },
+            { "07b_forerunnership", "Uprising" },
+            { "08a_deltacliffs", "High Charity" },
+            { "08b_deltacontrol", "The Great Journey" },
             //MP
-            { "ascension", "placeholder" },
-            { "backwash", "placeholder" },
+            { "ascension", "Ascension" },
+            { "backwash", "Backwash" },
             //{ "beavercreek", "placeholder" },
-            { "burial_mounds", "placeholder" },
-            { "coagulation", "placeholder" },
-            { "colossus", "placeholder" },
-            { "containment", "placeholder" },
-            { "cyclotron", "placeholder" },
-            { "deltatap", "placeholder" },
-            { "derelict ", "placeholder" },
-            { "dune", "placeholder" },
-            { "elongation", "placeholder" },
-            { "foundation", "placeholder" },
-            { "gemini", "placeholder" },
-            { "headlong", "placeholder" },
-            { "highplains", "placeholder" },
-            { "lockout", "placeholder" },
-            { "midship", "placeholder" },
-            { "needle", "placeholder" },
+            { "burial_mounds", "Burial Mounds" },
+            { "coagulation", "Coagulation" },
+            { "colossus", "Colossus" },
+            { "containment", "Containment" },
+            { "cyclotron", "Ivory Tower" },
+            { "deltatap", "Sanctuary" },
+            { "derelict", "Desolation" },
+            { "dune", "Relic" },
+            { "elongation", "Elongation" },
+            { "foundation", "Foundation" },
+            { "gemini", "Gemini" },
+            { "headlong", "Headlong" },
+            { "highplains", "Tombstone" },
+            { "lockout", "Lockout" },
+            { "midship", "Midship" },
+            { "needle", "Uplift" },
+            { "street_sweeper", "District" },
+            { "triplicate", "Terminal" },
+            { "turf", "Turf" },
+            { "warlock", "Warlock" },
+            { "waterworks", "Waterworks" },
+            { "zanzibar", "Zanzibar" },
             //tbd
 
             // Halo Reach
@@ -1932,6 +2092,12 @@ namespace WpfApp3
             { "lockout", true },
             { "midship", true },
             { "needle", true },
+                        { "street_sweeper", true },
+            { "triplicate", true },
+            { "turf", true },
+            { "warlock", true },
+            { "waterworks", true },
+            { "zanzibar", true },
             //tbd
 
             // Halo Reach
@@ -2141,6 +2307,123 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+                case "H2CP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H2" && ValidCheck_H2())
+                        {
+
+                            //next, the custom message stuff
+                            //null the cp messagecall
+                            byte[] buffer = new byte[5] { 0x90, 0x90, 0x90, 0x90, 0x90 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: custom message 0: success");
+                            }
+                            else
+                            {
+                                return (false, "message 0 failure");
+                            }
+
+
+                            //acquire the current tickcount
+                            buffer = new byte[4];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: custom message 1: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 1 failure");
+                            }
+
+                            //buffer will be equal to the tickcounter so just paste it into the new spot
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: custom message 2: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 2 failure");
+                            }
+
+                            buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                            buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x4, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: custom message 3: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 3 failure");
+                            }
+
+                            buffer = new byte[4] { 0, 0, 1, 0 }; //setting showmessage flag to true
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x80, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: custom message 4: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 4 failure");
+                            }
+
+                            buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Checkpoint[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: made cp");
+
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                Debug("h2: failed to make cp");
+                                return (false, "failed to write cp byte");
+                            }
+
+                            Thread.Sleep(50);
+
+                            buffer = new byte[5] { 0xE8, 0x57, 0xCA, 0x18, 0x00 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: custom message 5: success");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "message 5 failure");
+                            }
+
+                            void FixMessageCall()
+                            {
+
+                                try
+                                {
+                                    buffer = new byte[5] { 0xE8, 0x57, 0xCA, 0x18, 0x00 };
+                                    WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make cp because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 case "HRCP":
                     try
                     {
@@ -2317,6 +2600,34 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+                case "H2CP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H2" && ValidCheck_H2())
+                        {
+                            byte[] buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Revert[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: made revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                Debug("h2: failed to make revert");
+                                return (false, "failed to write revert byte");
+                            }
+                        }
+                        else
+                        {
+                            return (false, "failed to force revert because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 case "HRCP":
                     try
                     {
@@ -2429,6 +2740,44 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+                case "H2CP":
+
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H2" && ValidCheck_H2())
+                        {
+                            byte[] buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: read double revert flag");
+                            }
+                            else
+                            {
+                                return (false, "failed to read double revert flag");
+                            }
+
+                            buffer[0] = Convert.ToByte(!(BitConverter.ToBoolean(buffer, 0))); //just flip the value lmao
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("h2: made double revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "h2: failed to make double revert");
+                            }
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make double revert because not attached");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 default:
                     return (false, "invalid game");
 
@@ -2510,6 +2859,94 @@ namespace WpfApp3
                             return (false, "failed to copy the file! possible invalid filename? " + proposedsave);
                         }
 
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+                case "H2CP":
+                    try
+                    {
+
+                        if (HCMGlobal.AttachedGame == "H2" && ValidCheck_H2())
+                        {
+
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                Debug("something went wrong trying to read DR flag for h2 dumping");
+                                return (false, "Failed to read double-revert byte");
+                            }
+
+                            byte[] buffer = new byte[4186112];
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = 0; //first cp
+                            }
+                            else
+                            {
+                                offset = 0x3FE000; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+
+                                string backuploc = HCMGlobal.H2CheckpointPath;
+
+                                if (Directory.Exists(backuploc))
+                                {
+                                    var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                                       "Name your backup save",
+                                                       "",
+                                                       -1, -1);
+                                    string proposedsave = (backuploc + @"\" + userinput + @".bin");
+                                    if (userinput == "")
+                                        return (false, "cancelclick");
+                                    try
+                                    {
+                                        File.WriteAllBytes(proposedsave, buffer);
+                                        FileInfo test = new FileInfo(proposedsave);
+                                        if (File.Exists(test.ToString()) && test.Length > 1000)
+                                        {
+                                            Debug("SUCESSFULLY DUMPED H2 CP, LENGTH: " + test.Length.ToString());
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Debug("something went wrong trying to save a save: " + game + ", " + proposedsave);
+                                        return (false, "couldn't write save file to disk, did you have an invalid name? proposed save: " + proposedsave);
+                                        //need to make this a popup to let user know what was bad
+                                    }
+                                }
+                                else
+                                {
+                                    return (false, "back up directory didn't exist: " + backuploc);
+                                }
+                            }
+                            else
+                            {
+                                return (false, "failed to read checkpoint from memory");
+                            }
+
+                            return (true, "success!");
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -2676,6 +3113,130 @@ namespace WpfApp3
                             return (false, "failed to copy the save file");
                         }
 
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+                case "H2CP":
+                    try
+                    {
+                        Debug("attempting to inject h2 checkpoint");
+                        if (H2CP_MainList.SelectedItem == null)
+                        {
+                            return (false, "no save file selected!");
+                        }
+
+                        if (HCMGlobal.AttachedGame == "H2" && ValidCheck_H2())
+                        {
+                            var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                            string sourcePath = HCMGlobal.H2CheckpointPath + @"\" + item.Name + @".bin";
+                            byte[] buffer;
+                            try
+                            {
+                                FileStream fs = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+                                // Create a byte array of file stream length
+                                buffer = System.IO.File.ReadAllBytes(sourcePath);
+                                //Read block of bytes from stream into the byte array
+                                fs.Read(buffer, 0, System.Convert.ToInt32(fs.Length));
+                                //Close the File Stream
+                                fs.Close();
+                                Console.WriteLine("nearly ready to inject, buffer length: " + buffer.Length.ToString());
+                            }
+                            catch
+                            {
+                                return (false, "failed to access save file");
+                            }
+
+                            //okay first we need to read from memory the bytes that we need to preserve and overwrite them in buffer
+                            //let's check the DR flag first
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                return (false, "something went wrong trying to read DR flag for h2 injecting");
+                            }
+
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = 0x0; //first cp
+                            }
+                            else
+                            {
+                                offset = 0x3FE000; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+
+                            //setup a 2d array with the values we need to preserve (offset, length)
+                            int[][] PreserveLocations = new int[][] { new int[] { 0x4D1C, 8 } };
+
+                            foreach (int[] i in PreserveLocations)
+                            {
+                                byte[] tempbuffer = new byte[i[1]];
+                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten))
+                                {
+                                    //overwrite the stored cp buffer with new vals
+                                    Array.ConstrainedCopy(tempbuffer, 0, buffer, i[0], i[1]);
+                                    Debug("successfully copied over buffer at " + i[0]);
+                                }
+                                else
+                                {
+                                    return (false, "failed reading current vals for h2 injection");
+                                }
+                            }
+
+                            //now to inject into memory
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("successfully injected h2 cp, " + buffer.Length.ToString() + " bytes!");
+                                
+                            }
+                            else
+                            {
+                                return (false, "failed injecting h2 cp");
+                            }
+
+                            //gotta set the cp loaded bsp or we'll crash da game!
+                            int[] addybsp;
+                            if (!DRflag)
+                            {
+                                addybsp = HCMGlobal.LoadedOffsets.H2_LoadedBSP1[Convert.ToInt32(HCMGlobal.WinFlag)]; //first cp
+                            }
+                            else
+                            {
+                                addybsp = HCMGlobal.LoadedOffsets.H2_LoadedBSP2[Convert.ToInt32(HCMGlobal.WinFlag)]; //second cp
+                            }
+
+                            byte[] BSPbuffer = new byte[1];
+                            BSPbuffer[0] = buffer[0x12E0];
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addybsp), BSPbuffer, BSPbuffer.Length, out bytesWritten))
+                            {
+                                Debug("successfully set loaded bsp, " + BSPbuffer.Length.ToString() + " bytes!");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "failed writing loaded bsp");
+                            }
+
+
+
+                            
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -3342,6 +3903,7 @@ namespace WpfApp3
                     break;
 
                 case "H2":
+
                     if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
                     {
                         holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
@@ -3424,6 +3986,7 @@ namespace WpfApp3
                 case "No":
                     SetH1(false);
                     SetHR(false);
+                    SetH2(false);
                     break;
 
                 case "H1":
@@ -3571,6 +4134,39 @@ namespace WpfApp3
                     if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "maps")
                     {
                         Debug("reach check success");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug("oh no");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Debug("oh no");
+                    return false;
+                }
+            }
+            catch
+            {
+                Debug("oh no");
+                return false;
+            }
+
+        }
+
+        private static bool ValidCheck_H2()
+        {
+
+            try
+            {
+                byte[] buffer = new byte[4];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_CheckString[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+                {
+                    if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "scen")
+                    {
+                        Debug("h2 check success");
                         return true;
                     }
                     else
