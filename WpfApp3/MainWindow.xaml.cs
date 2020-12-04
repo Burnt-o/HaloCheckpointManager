@@ -3523,7 +3523,7 @@ namespace WpfApp3
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
                     HCMGlobal.WinFlag = false;
                 }
-                else if (myProcess.ProcessName == "MCC-Win64-Shipping-Winstore")
+                else if (myProcess.ProcessName == "MCC-Win64-Shipping-WinStore")
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
                     HCMGlobal.WinFlag = true;
@@ -3781,7 +3781,7 @@ namespace WpfApp3
                         HCMGlobal.BaseAddress = myProcessModule.BaseAddress;
                         break;
 
-                    case "MCC-Win64-Shipping-Winstore.exe":
+                    case "MCC-Win64-Shipping-WinStore.exe":
                         HCMGlobal.BaseAddress = myProcessModule.BaseAddress;
                         break;
 
@@ -3835,6 +3835,9 @@ namespace WpfApp3
             else //means reading the gameindicator failed
             {
                 Debug("failed to read game indicator");
+                Debug("winflag?: " + HCMGlobal.WinFlag);
+                Debug("a " + HCMGlobal.BaseAddress);
+                Debug("b " + HCMGlobal.GlobalProcessHandle);
                 return;
             }
 
