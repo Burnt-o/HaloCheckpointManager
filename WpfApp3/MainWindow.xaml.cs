@@ -113,7 +113,7 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.1";
+            public static readonly string HCMversion = "0.9.2";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
@@ -1329,7 +1329,7 @@ namespace WpfApp3
                         }
                         //tickcount
                         buffer = new byte[4];
-                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x2546C, buffer, buffer.Length, out bytesWritten))
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x3E0220, buffer, buffer.Length, out bytesWritten))
                         {
                             data.StartTick = BitConverter.ToUInt32(buffer, 0);
                         }
@@ -1581,13 +1581,14 @@ namespace WpfApp3
 
                         if (File.Exists(pathtotest))
                         {
-                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo3);
                             H3CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo3);
 
                             if (data.Difficulty != Difficulty.Invalid)
                                 H3CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H3/diff_{(int)data.Difficulty}.png", UriKind.Relative));
 
                             H3CP_Sel_Time.Text = TickToTimeString(data.StartTick, true);
+                            Debug("AHHH" + TickToTimeString(data.StartTick, true));
                             H3CP_Sel_FileName.Text = s;
 
                             if (LevelCodeToGameType(data.LevelCode))
@@ -1814,7 +1815,7 @@ namespace WpfApp3
                     break;
                 case HaloGame.Halo3:
                     offsetLevelCode = 28;
-                    offsetStartTick = 0x2546C;
+                    offsetStartTick = 0x3E0220;
                     offsetDifficulty = 0x274;
                     offsetSeed = 0;
                     break;
