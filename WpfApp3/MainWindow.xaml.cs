@@ -29,6 +29,7 @@ using System.Windows.Threading;
 using System.Security.Principal;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 //TODO LIST
 
@@ -118,6 +119,7 @@ namespace WpfApp3
             public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
             public static readonly string H1CheckpointPath = LocalDir + @"\saves\h1cp";
             public static readonly string H2CheckpointPath = LocalDir + @"\saves\h2cp";
+            public static readonly string H3CheckpointPath = LocalDir + @"\saves\h3cp";
             public static readonly string HRCheckpointPath = LocalDir + @"\saves\hrcp";
 
             public static readonly string ConfigPath = LocalDir + @"\config.json";
@@ -247,6 +249,7 @@ namespace WpfApp3
             @"saves\h1cs",
             @"saves\h1cp",
             @"saves\h2cp",
+            @"saves\h3cp",
             @"saves\hrcp",
             @"offsets",
         };
@@ -263,6 +266,7 @@ namespace WpfApp3
         public ObservableCollection<HaloSaveFileMetadata> Halo1CoreSaves { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo1Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo2Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+        public ObservableCollection<HaloSaveFileMetadata> Halo3Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
         public ObservableCollection<HaloSaveFileMetadata> HaloReachCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
@@ -330,6 +334,7 @@ namespace WpfApp3
             CS_MainList.SelectionChanged += List_SelectionChanged;
             CP_MainList.SelectionChanged += List_SelectionChanged;
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
+            H3CP_MainList.SelectionChanged += List_SelectionChanged;
             HRCP_MainList.SelectionChanged += List_SelectionChanged;
             bool firstrun = false;
 
@@ -480,6 +485,7 @@ namespace WpfApp3
             {
                 { "H1Profile", HCMGlobal.H1CoreSavePath},
                 { "H2Profile", HCMGlobal.H2CheckpointPath},
+                { "H3Profile", HCMGlobal.H3CheckpointPath},
                 { "HRProfile", HCMGlobal.HRCheckpointPath},
             };
 
@@ -498,7 +504,7 @@ namespace WpfApp3
         private void SetupProfiles()
        {
 
-            var list = new List<ComboBox> { H1Profile, H2Profile, HRProfile };
+            var list = new List<ComboBox> { H1Profile, H2Profile, H3Profile, HRProfile };
 
 
             foreach (ComboBox cb in list)
@@ -592,6 +598,14 @@ namespace WpfApp3
                     if (H2Profile.SelectedItem != null && H2Profile.SelectedItem.ToString() != "*Root")
                     {
                         return @"\" + H2Profile.SelectedItem.ToString();
+                    }
+                    else
+                        return "";
+
+                case "H3CP":
+                    if (H3Profile.SelectedItem != null && H3Profile.SelectedItem.ToString() != "*Root")
+                    {
+                        return @"\" + H3Profile.SelectedItem.ToString();
                     }
                     else
                         return "";
@@ -704,66 +718,54 @@ namespace WpfApp3
 
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
+            var mainlist = CS_MainList;
+            var savepath = HCMGlobal.H1CoreSavePath;
 
             switch (parent_name)
             {
                 case "H1CS":
-                    if (CS_MainList.SelectedIndex >= 1)
-                    {
-                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string movethis = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
-                            SwapFileTimes(movethis, abovefile);
-                            CS_MainList.SelectedIndex--;
-                        }
-                    }
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
                     break;
+
                 case "H1CP":
-                    if (CP_MainList.SelectedIndex >= 1)
-                    {
-                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string movethis = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
-                            SwapFileTimes(movethis, abovefile);
-                            CP_MainList.SelectedIndex--;
-                        }
-                    }
+                    mainlist = CP_MainList;
+                    savepath = HCMGlobal.H1CheckpointPath;
                     break;
+
                 case "H2CP":
-                    if (H2CP_MainList.SelectedIndex >= 1)
-                    {
-                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string movethis = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
-                            SwapFileTimes(movethis, abovefile);
-                            H2CP_MainList.SelectedIndex--;
-                        }
-                    }
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
                     break;
+
+                case "H3CP":
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
                 case "HRCP":
-                    if (HRCP_MainList.SelectedIndex >= 1)
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                default:
+                    break;
+
+            }
+
+                    if (mainlist.SelectedIndex >= 1)
                     {
-                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex - 1) as HaloSaveFileMetadata;
+                        var fileBelow = mainlist.Items.GetItemAt(mainlist.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = mainlist.Items.GetItemAt(mainlist.SelectedIndex - 1) as HaloSaveFileMetadata;
                         if (fileBelow != null && fileAbove != null)
                         {
-                            string movethis = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
+                            string movethis = $@"{savepath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{savepath}\{fileAbove.Name}.bin";
                             SwapFileTimes(movethis, abovefile);
-                            HRCP_MainList.SelectedIndex--;
+                             mainlist.SelectedIndex--;
                         }
                     }
-                    break;
-            }
+                   
 
             RefreshList(sender, e);
         }
@@ -776,67 +778,56 @@ namespace WpfApp3
             parent = (FrameworkElement)((FrameworkElement)parent).Parent;
             string parent_name = parent.Name;
 
+            var mainlist = CS_MainList;
+            var savepath = HCMGlobal.H1CoreSavePath;
+
             switch (parent_name)
             {
                 case "H1CS":
-                    if (CS_MainList.SelectedIndex >= 0)
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
+                    break;
+
+                case "H1CP":
+                    mainlist = CP_MainList;
+                    savepath = HCMGlobal.H1CheckpointPath;
+                    break;
+
+                case "H2CP":
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
+                    break;
+
+                case "H3CP":
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
+                case "HRCP":
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
+                    if (mainlist.SelectedIndex >= 0)
                     {
-                        Debug("ee");
-                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = CS_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
+                        var fileBelow = mainlist.Items.GetItemAt(mainlist.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileAbove = mainlist.Items.GetItemAt(0) as HaloSaveFileMetadata;
                         if (fileBelow != null && fileAbove != null)
                         {
 
-                            string movethis = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
-                            ArbitaryFileTimeMove(CS_MainList.SelectedIndex, 0, CS_MainList, HCMGlobal.H1CoreSavePath);
-                            CS_MainList.SelectedIndex = 0;
+                            string movethis = $@"{savepath}\{fileBelow.Name}.bin";
+                            string abovefile = $@"{savepath}\{fileAbove.Name}.bin";
+                            ArbitaryFileTimeMove(mainlist.SelectedIndex, 0, mainlist, savepath);
+                    mainlist.SelectedIndex = 0;
                         }
                     }
-                    break;
-                case "H1CP":
-                    if (CP_MainList.SelectedIndex >= 0)
-                    {
-                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = CP_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string movethis = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
-                            ArbitaryFileTimeMove(CP_MainList.SelectedIndex, 0, CP_MainList, HCMGlobal.H1CheckpointPath);
-                            CP_MainList.SelectedIndex = 0;
-                        }
-                    }
-                    break;
-                case "H2CP":
-                    if (H2CP_MainList.SelectedIndex >= 0)
-                    {
-                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = H2CP_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string movethis = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
-                            ArbitaryFileTimeMove(H2CP_MainList.SelectedIndex, 0, H2CP_MainList, HCMGlobal.H2CheckpointPath);
-                            H2CP_MainList.SelectedIndex = 0;
-                        }
-                    }
-                    break;
-                case "HRCP":
-                    if (HRCP_MainList.SelectedIndex >= 0)
-                    {
-                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileAbove = HRCP_MainList.Items.GetItemAt(0) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string movethis = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
-                            string abovefile = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
-                            ArbitaryFileTimeMove(HRCP_MainList.SelectedIndex, 0, HRCP_MainList, HCMGlobal.HRCheckpointPath);
-                            HRCP_MainList.SelectedIndex = 0;
-                        }
-                    }
-                    break;
-            }
+                   
 
             RefreshList(sender, e);
 
@@ -849,65 +840,54 @@ namespace WpfApp3
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
 
+            var mainlist = CS_MainList;
+            var savepath = HCMGlobal.H1CoreSavePath;
+
             switch (parent_name)
             {
                 case "H1CS":
-                    if (CS_MainList.SelectedItem != null && CS_MainList.SelectedIndex != CS_MainList.Items.Count - 1)
-                    {
-                        var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string pathAbove = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
-                            SwapFileTimes(pathAbove, pathBelow);
-                            CS_MainList.SelectedIndex++;
-                        }
-                    }
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
                     break;
+
                 case "H1CP":
-                    if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count - 1)
-                    {
-                        var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string pathAbove = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
-                            SwapFileTimes(pathAbove, pathBelow);
-                            CP_MainList.SelectedIndex++;
-                        }
-                    }
+                    mainlist = CP_MainList;
+                    savepath = HCMGlobal.H1CheckpointPath;
                     break;
+
                 case "H2CP":
-                    if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count - 1)
-                    {
-                        var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string pathAbove = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
-                            SwapFileTimes(pathAbove, pathBelow);
-                            H2CP_MainList.SelectedIndex++;
-                        }
-                    }
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
                     break;
+
+                case "H3CP":
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
                 case "HRCP":
-                    if (HRCP_MainList.SelectedItem != null && HRCP_MainList.SelectedIndex != HRCP_MainList.Items.Count - 1)
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                default:
+                    break;
+
+            }
+
+                    if (mainlist.SelectedItem != null && mainlist.SelectedIndex != mainlist.Items.Count - 1)
                     {
-                        var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex + 1) as HaloSaveFileMetadata;
+                        var fileAbove = mainlist.Items.GetItemAt(mainlist.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = mainlist.Items.GetItemAt(mainlist.SelectedIndex + 1) as HaloSaveFileMetadata;
                         if (fileBelow != null && fileAbove != null)
                         {
-                            string pathAbove = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
+                            string pathAbove = $@"{savepath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{savepath}\{fileBelow.Name}.bin";
                             SwapFileTimes(pathAbove, pathBelow);
-                            HRCP_MainList.SelectedIndex++;
+                    mainlist.SelectedIndex++;
                         }
                     }
-                    break;
-            }
+                    
 
             RefreshList(sender, e);
         }
@@ -920,65 +900,54 @@ namespace WpfApp3
             parent = (FrameworkElement)((FrameworkElement)parent).Parent;
             string parent_name = parent.Name;
 
+            var mainlist = CS_MainList;
+            var savepath = HCMGlobal.H1CoreSavePath;
+
             switch (parent_name)
             {
                 case "H1CS":
-                    if (CS_MainList.SelectedItem != null && CS_MainList.SelectedIndex != CS_MainList.Items.Count - 1)
-                    {
-                        var fileAbove = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = CS_MainList.Items.GetItemAt(CS_MainList.Items.Count - 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string pathAbove = $@"{HCMGlobal.H1CoreSavePath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.H1CoreSavePath}\{fileBelow.Name}.bin";
-                            ArbitaryFileTimeMove(CS_MainList.SelectedIndex, CS_MainList.Items.Count - 1, CS_MainList, HCMGlobal.H1CoreSavePath);
-                            CS_MainList.SelectedIndex = CS_MainList.Items.Count - 1;
-                        }
-                    }
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
                     break;
+
                 case "H1CP":
-                    if (CP_MainList.SelectedItem != null && CP_MainList.SelectedIndex != CP_MainList.Items.Count - 1)
-                    {
-                        var fileAbove = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = CP_MainList.Items.GetItemAt(CP_MainList.Items.Count - 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string pathAbove = $@"{HCMGlobal.H1CheckpointPath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.H1CheckpointPath}\{fileBelow.Name}.bin";
-                            ArbitaryFileTimeMove(CP_MainList.SelectedIndex, CP_MainList.Items.Count - 1, CP_MainList, HCMGlobal.H1CheckpointPath);
-                            CP_MainList.SelectedIndex = CP_MainList.Items.Count - 1;
-                        }
-                    }
+                    mainlist = CP_MainList;
+                    savepath = HCMGlobal.H1CheckpointPath;
                     break;
+
                 case "H2CP":
-                    if (H2CP_MainList.SelectedItem != null && H2CP_MainList.SelectedIndex != H2CP_MainList.Items.Count - 1)
-                    {
-                        var fileAbove = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = H2CP_MainList.Items.GetItemAt(H2CP_MainList.Items.Count - 1) as HaloSaveFileMetadata;
-                        if (fileBelow != null && fileAbove != null)
-                        {
-                            string pathAbove = $@"{HCMGlobal.H2CheckpointPath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.H2CheckpointPath}\{fileBelow.Name}.bin";
-                            ArbitaryFileTimeMove(H2CP_MainList.SelectedIndex, H2CP_MainList.Items.Count - 1, H2CP_MainList, HCMGlobal.H2CheckpointPath);
-                            H2CP_MainList.SelectedIndex = H2CP_MainList.Items.Count - 1;
-                        }
-                    }
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
                     break;
+
+                case "H3CP":
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
                 case "HRCP":
-                    if (HRCP_MainList.SelectedItem != null && HRCP_MainList.SelectedIndex != HRCP_MainList.Items.Count - 1)
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                default:
+                    break;
+
+            }
+
+                    if (mainlist != null && mainlist.SelectedIndex != mainlist.Items.Count - 1)
                     {
-                        var fileAbove = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
-                        var fileBelow = HRCP_MainList.Items.GetItemAt(HRCP_MainList.Items.Count - 1) as HaloSaveFileMetadata;
+                        var fileAbove = mainlist.Items.GetItemAt(mainlist.SelectedIndex) as HaloSaveFileMetadata;
+                        var fileBelow = mainlist.Items.GetItemAt(mainlist.Items.Count - 1) as HaloSaveFileMetadata;
                         if (fileBelow != null && fileAbove != null)
                         {
-                            string pathAbove = $@"{HCMGlobal.HRCheckpointPath}\{fileAbove.Name}.bin";
-                            string pathBelow = $@"{HCMGlobal.HRCheckpointPath}\{fileBelow.Name}.bin";
-                            ArbitaryFileTimeMove(HRCP_MainList.SelectedIndex, HRCP_MainList.Items.Count - 1, HRCP_MainList, HCMGlobal.HRCheckpointPath);
-                            HRCP_MainList.SelectedIndex = HRCP_MainList.Items.Count - 1;
+                            string pathAbove = $@"{savepath}\{fileAbove.Name}.bin";
+                            string pathBelow = $@"{savepath}\{fileBelow.Name}.bin";
+                            ArbitaryFileTimeMove(mainlist.SelectedIndex, mainlist.Items.Count - 1, mainlist, savepath);
+                    mainlist.SelectedIndex = mainlist.Items.Count - 1;
                         }
                     }
-                    break;
-            }
+                    
 
             RefreshList(sender, e);
 
@@ -996,60 +965,53 @@ namespace WpfApp3
             string proposedsave = "";
             string backup = "";
             string backuploc;
-            switch (btn.Name)
+            var mainlist = CS_MainList;
+            var savepath = HCMGlobal.H1CoreSavePath;
+
+            switch(btn.Name)
             {
                 case "CS_Sel_RenameButton":
-                    if (CS_MainList.SelectedItem != null)
-                    {
-                        var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
-                        backuploc = HCMGlobal.H1CoreSavePath;
-                        var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
-                 "Rename your backup save",
-                         s2,
-                             -1, -1);
-                        proposedsave = (backuploc + @"\" + userinput + @".bin");
-                    }
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
+                 break;
+                case "CP_Sel_RenameButton":
+                    mainlist = CP_MainList;
+                    savepath = HCMGlobal.H1CheckpointPath;
                     break;
-
-                case "HRCP_Sel_RenameButton":
-                    if (HRCP_MainList.SelectedItem != null)
-                    {
-                        var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.HRCheckpointPath + @"\" + s2 + @".bin";
-                        backuploc = HCMGlobal.HRCheckpointPath;
-                        var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
-                 "Rename your backup save",
-                         s2,
-                             -1, -1);
-                        proposedsave = (backuploc + @"\" + userinput + @".bin");
-                    }
-                    break;
-
                 case "H2CP_Sel_RenameButton":
-                    if (H2CP_MainList.SelectedItem != null)
-                    {
-                        var item = H2CP_MainList.Items.GetItemAt(H2CP_MainList.SelectedIndex);
-                        System.Type type2 = item.GetType();
-                        s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                        backup = HCMGlobal.H2CheckpointPath + @"\" + s2 + @".bin";
-                        backuploc = HCMGlobal.H2CheckpointPath;
-                        var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
-                 "Rename your backup save",
-                         s2,
-                             -1, -1);
-                        proposedsave = (backuploc + @"\" + userinput + @".bin");
-                    }
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
+                    break;
+                case "H3CP_Sel_RenameButton":
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+                case "HRCP_Sel_RenameButton":
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
                     break;
 
                 default:
                     break;
 
             }
+
+
+                    if (mainlist.SelectedItem != null)
+                    {
+                        var item = mainlist.Items.GetItemAt(mainlist.SelectedIndex);
+                        System.Type type2 = item.GetType();
+                        s2 = (string)type2.GetProperty("Name").GetValue(item, null);
+                        backup = savepath + @"\" + s2 + @".bin";
+                        backuploc = savepath;
+                        var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                 "Rename your backup save",
+                         s2,
+                             -1, -1);
+                        proposedsave = (backuploc + @"\" + userinput + @".bin");
+                    }
+                    
+        
 
             if (File.Exists(backup) && !File.Exists(proposedsave))
             {
@@ -1075,86 +1037,6 @@ namespace WpfApp3
 
         }
 
-        /* private void ConvertButton_Click(object sender, RoutedEventArgs e)
-         {
-             RefreshSel(sender, e);
-
-             var btn = sender as Button;
-             if (btn == null)
-                 return;
-
-             string convertfrom = "";
-             string convertto = "";
-             string converttoloc = "";
-             string s2 = "";
-
-             switch (btn.Name)
-             {
-                 case "CS_Sel_ConvertButton":
-
-                     if (CS_MainList.SelectedItem != null)
-                     {
-                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex);
-                         System.Type type2 = item.GetType();
-                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                         convertfrom = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
-                         convertto = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-                         converttoloc = HCMGlobal.H1CheckpointPath;
-                     }
-                     break;
-
-                 case "CP_Sel_ConvertButton":
-                     if (CP_MainList.SelectedItem != null)
-                     {
-                         var item = CP_MainList.Items.GetItemAt(CP_MainList.SelectedIndex);
-                         System.Type type2 = item.GetType();
-                         s2 = (string)type2.GetProperty("Name").GetValue(item, null);
-                         convertfrom = HCMGlobal.H1CheckpointPath + @"\" + s2 + @".bin";
-                         convertto = HCMGlobal.H1CoreSavePath + @"\" + s2 + @".bin";
-                         converttoloc = HCMGlobal.H1CoreSavePath;
-                     }
-                     break;
-
-                 case "H2CP_Sel_ConvertButton":
-                     string link = HCMGlobal.padowomode
-                         ? "https://www.youtube.com/watch?v=dQ_d_VKrFgM"
-                         : "https://www.youtube.com/watch?v=5u4tQlVRKD8";
-
-                     var psi = new System.Diagnostics.ProcessStartInfo
-                     {
-                         FileName = link,
-                         UseShellExecute = true
-                     };
-                     System.Diagnostics.Process.Start(psi);
-                     break;
-
-                 default:
-                     break;
-
-             }
-
-             if (File.Exists(convertfrom) && Directory.Exists(converttoloc) && !(File.Exists(convertto)))
-             {
-
-                 try
-                 {
-                     File.Copy(convertfrom, convertto);
-                     RefreshList(sender, e);
-                 }
-                 catch (Exception exp)
-                 {
-                     Log("something went wrong trying to convert a save: " + exp, sender);
-                     //need to make this a popup to let user know what was bad
-                 }
-             }
-             else
-             {
-                 //need to make this a popup to let user know what was bad
-                 Log("something went wrong trying to convert a save: File.Exists(convertfrom) : " + File.Exists(convertfrom).ToString(), sender);
-                 Log("something went wrong trying to convert a save: Directory.Exists(converttoloc) : " + Directory.Exists(converttoloc).ToString(), sender);
-                 Log("something went wrong trying to convert a save: !File.Exists(convertto) : " + (!File.Exists(convertto)).ToString(), sender);
-             }
-         }*/
 
         private void DeleteSaveFile(string path)
         {
@@ -1191,6 +1073,12 @@ namespace WpfApp3
                     oldselected = H2CP_MainList.SelectedIndex;
                     mainlist = H2CP_MainList;
                     savepath = HCMGlobal.H2CheckpointPath;
+                    break;
+
+                case "H3CP":
+                    oldselected = H3CP_MainList.SelectedIndex;
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
                     break;
 
                 case "HRCP":
@@ -1266,7 +1154,7 @@ namespace WpfApp3
                     if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
                     {
                         var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
-                        H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                        H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo1);
 
                         if (data.Difficulty != Difficulty.Invalid)
                             H1CS_Loa_DiffName.Source = new BitmapImage(new Uri($"images/H1/diff_{(int)data.Difficulty}.png", UriKind.Relative));
@@ -1363,7 +1251,7 @@ namespace WpfApp3
                        
 
                         //now assign to ui
-                        H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                        H2CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo2);
 
                         H2CP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
 
@@ -1383,7 +1271,95 @@ namespace WpfApp3
                     else { Debug("oh no"); NullH2(); }
                     break;
 
-                case 3: //reach
+                case 3: //H3
+                    if (HCMGlobal.AttachedGame == "H3" && ValidCheck_H3())
+                    {
+                        //data to get; level code, diff, time
+
+                        //first check double revert flag
+                        int bytesWritten;
+                        bool DRflag;
+                        byte[] DRbuffer = new byte[1];
+                        var data = new HaloSaveFileMetadata();
+
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                        {
+                            DRflag = Convert.ToBoolean(DRbuffer[0]);
+                        }
+                        else { Debug("oh no"); NullH3(); return; }
+
+                        int offset;
+                        if (!DRflag)
+                        {
+                            offset = 0x0; //first cp
+                        }
+                        else
+                        {
+                            offset = 0x7E0000; //second cp
+                        }
+
+                        int[] addy = HCMGlobal.LoadedOffsets.H3_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                        addy[3] = offset;
+                        //setup done, let's get our data
+                        //levelcode
+                        byte[] buffer = new byte[64];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 28, buffer, buffer.Length, out bytesWritten))
+                        {
+                            char[] exceptions = new char[] { '_' };
+                            data.LevelCode = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                            data.LevelCode = data.LevelCode.Substring(data.LevelCode.LastIndexOf("\\") + 1);
+                            data.LevelCode = data.LevelCode.Substring(data.LevelCode.LastIndexOf("\\") + 1);
+                            data.LevelCode = String.Concat(data.LevelCode.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        }
+                        else { Debug("oh no"); NullH3(); return; }
+
+                        //difficulty
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            data.Difficulty = (Difficulty)4;
+                        }
+                        else
+                        {
+                            buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x274, buffer, buffer.Length, out bytesWritten))
+                            {
+                                data.Difficulty = (Difficulty)buffer[0];
+                            }
+                            else { Debug("oh no"); NullH3(); return; }
+                        }
+                        //tickcount
+                        buffer = new byte[4];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x2546C, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.StartTick = BitConverter.ToUInt32(buffer, 0);
+                        }
+                        else { Debug("oh no"); NullH3(); return; }
+
+
+
+                        //now assign to ui
+                        H3CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo3);
+
+                        H3CP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
+
+                        if (data.Difficulty != Difficulty.Invalid)
+                            H3CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/H3/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            H3CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H3/mp.png", UriKind.Relative));
+                        }
+                        else
+                        {
+                            H3CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H3/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        }
+
+                    }
+                    else { Debug("oh no"); NullH3(); }
+                    break;
+
+
+                case 5: //reach
                     if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
                     {
                         //data to get; level code, diff, time
@@ -1453,7 +1429,7 @@ namespace WpfApp3
                         else { Debug("oh no"); NullReach(); return; }
 
                         //now assign to ui
-                        HRCP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                        HRCP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.HaloReach);
 
                         HRCP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
 
@@ -1497,6 +1473,14 @@ namespace WpfApp3
                         H2CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
 
+                    void NullH3()
+                    {
+                        H3CP_Loa_LevelName.Text = "N/A";
+                        H3CP_Loa_DiffName.Source = null;
+                        H3CP_Loa_Time.Text = "N/A";
+                        H3CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+
             }
 
         }
@@ -1517,7 +1501,7 @@ namespace WpfApp3
                         if (File.Exists(pathtotest))
                         {
                             var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo1);
-                            H1CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                            H1CS_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo1);
 
                             if (data.Difficulty != Difficulty.Invalid)
                                 H1CS_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H1/diff_{(int)data.Difficulty}.png", UriKind.Relative));
@@ -1557,7 +1541,7 @@ namespace WpfApp3
                         if (File.Exists(pathtotest))
                         {
                             var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
-                            H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                            H2CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo2);
 
                             if (data.Difficulty != Difficulty.Invalid)
                                 H2CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H2/diff_{(int)data.Difficulty}.png", UriKind.Relative));
@@ -1587,7 +1571,48 @@ namespace WpfApp3
                     }
                     break;
 
-                case 3: //reach
+                case 3: //H3
+                    if (H3CP_MainList.SelectedItem != null)
+                    {
+                        var item = H3CP_MainList.Items.GetItemAt(H3CP_MainList.SelectedIndex);
+                        System.Type type = item.GetType();
+                        string s = (string)type.GetProperty("Name").GetValue(item, null);
+                        var pathtotest = HCMGlobal.H3CheckpointPath + @"\" + s + @".bin";
+
+                        if (File.Exists(pathtotest))
+                        {
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo2);
+                            H3CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo3);
+
+                            if (data.Difficulty != Difficulty.Invalid)
+                                H3CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H3/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                            H3CP_Sel_Time.Text = TickToTimeString(data.StartTick, true);
+                            H3CP_Sel_FileName.Text = s;
+
+                            if (LevelCodeToGameType(data.LevelCode))
+                            {
+                                H3CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H3/mp.png", UriKind.Relative));
+                            }
+                            else
+                            {
+                                H3CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H3/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                        H3CP_Sel_LevelName.Text = "N/A";
+                        H3CP_Sel_DiffName.Source = null;
+                        H3CP_Sel_Time.Text = "N/A";
+                        H3CP_Sel_FileName.Text = "N/A";
+                        H3CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+                    break;
+
+                case 5: //reach
                     if (HRCP_MainList.SelectedItem != null)
                     {
                         var item = HRCP_MainList.Items.GetItemAt(HRCP_MainList.SelectedIndex);
@@ -1598,7 +1623,7 @@ namespace WpfApp3
                         if (File.Exists(pathtotest))
                         {
                             var data = GetSaveFileMetadata(pathtotest, HaloGame.HaloReach);
-                            HRCP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode);
+                            HRCP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.HaloReach);
 
                             if (data.Difficulty != Difficulty.Invalid)
                                 HRCP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/HR/diff_{(int)data.Difficulty}.png", UriKind.Relative));
@@ -1636,7 +1661,7 @@ namespace WpfApp3
 
         }
 
-        private void HRCP_Sel_LevelImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        private void HRCP_Sel_LevelImage_ImageFailed(object sender, ExceptionRoutedEventArgs e) //christ I can't even remember what this is for
         {
             throw new NotImplementedException();
         }
@@ -1680,7 +1705,18 @@ namespace WpfApp3
                     Halo2Checkpoints.Clear();
                     break;
 
-                case 3: //halo reach
+                case 3: //halo 3
+
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    game = HaloGame.Halo3;
+                    list = H3CP_MainList;
+                    listlabel = H3CP_MainList_Label;
+                    oldselected = H3CP_MainList.SelectedIndex;
+                    collection = Halo3Checkpoints;
+                    Halo3Checkpoints.Clear();
+                    break;
+
+                case 5: //halo reach
                     
                     savepath = HCMGlobal.HRCheckpointPath;
                     game = HaloGame.HaloReach;
@@ -1750,6 +1786,7 @@ namespace WpfApp3
             //split difficultyimage into these two, probably a dumb way to do this but idk how this shit works ¯\_(ツ)_/¯
             public string DifficultyImageH1 => $"images/H1/diff_{(int)Difficulty}.png";
             public string DifficultyImageH2 => $"images/H2/diff_{(int)Difficulty}.png";
+            public string DifficultyImageH3 => $"images/H3/diff_{(int)Difficulty}.png";
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
             public string TimeString => TickToTimeString(StartTick, false);
         }
@@ -1773,6 +1810,12 @@ namespace WpfApp3
                     offsetLevelCode = 23;
                     offsetStartTick = 10824;
                     offsetDifficulty = 974;
+                    offsetSeed = 0;
+                    break;
+                case HaloGame.Halo3:
+                    offsetLevelCode = 28;
+                    offsetStartTick = 0x2546C;
+                    offsetDifficulty = 0x274;
                     offsetSeed = 0;
                     break;
                 case HaloGame.HaloReach:
@@ -1899,11 +1942,9 @@ namespace WpfApp3
 
         }
 
-        readonly Dictionary<string, string> LevelCodeToName = new Dictionary<string, string>()
-        {
-            //maybe I'll add multiplayer levels to this eventually. or extra entry for "acronym'd name"
-
-            // Halo 1
+        readonly Dictionary<string, string> LevelCodeToNameH1 = new Dictionary<string, string>()
+        { 
+         // Halo 1
             //SP
             { "a10", "Pillar of Autumn" },
             { "a30", "Halo" },
@@ -1936,6 +1977,11 @@ namespace WpfApp3
             { "timberland", "Timberland" },
             { "wizard", "Wizard" },
 
+        };
+
+        readonly Dictionary<string, string> LevelCodeToNameH2 = new Dictionary<string, string>()
+        { 
+
             // Halo 2
             //SP
             { "00a_introduction", "The Heretic" },
@@ -1956,7 +2002,7 @@ namespace WpfApp3
             //MP
             { "ascension", "Ascension" },
             { "backwash", "Backwash" },
-            //{ "beavercreek", "placeholder" },
+            { "beavercreek", "placeholder" },
             { "burial_mounds", "Burial Mounds" },
             { "coagulation", "Coagulation" },
             { "colossus", "Colossus" },
@@ -1979,7 +2025,56 @@ namespace WpfApp3
             { "warlock", "Warlock" },
             { "waterworks", "Waterworks" },
             { "zanzibar", "Zanzibar" },
-            //tbd
+
+        };
+
+        readonly Dictionary<string, string> LevelCodeToNameH3 = new Dictionary<string, string>()
+        { 
+
+
+             // Halo 3
+            //SP
+            { "005_intro", "Arrival" },
+            { "010_jungle", "Sierra 117" },
+            { "020_base", "Crow's Nest" },
+            { "030_outskirts", "Tsavo Highway" },
+            { "040_voi", "The Storm" },
+            { "050_floodvoi", "Floodgate" },
+            { "070_waste", "The Ark" },
+            { "100_citadel", "The Covenant" },
+            { "110_hc", "Cortana" },
+            { "120_halo", "Halo" },
+            { "130_epilogue", "Epilogue" },
+            //MP
+            { "armory", "Rat's Nest" },
+            { "bunkerworld", "Standoff" },
+            { "chill", "Narrows" },
+            { "chillout", "Cold Storage" },
+            { "construct", "Construct" },
+            { "cyberdyne", "The Pit" },
+            { "deadlock", "Highground" },
+            { "descent", "Assembly" },
+            { "docks", "Longshore" },
+            { "fortress", "Citadel" },
+            { "ghosttown", "Ghost Town" },
+            { "guardian", "Guardian" },
+            { "isolation", "Isolation" },
+            { "lockout", "Blackout" },
+            { "midship", "Heretic" },
+            { "riverworld", "Valhalla" },
+            { "salvation", "Epitaph" },
+            { "sandbox", "Sandbox" },
+            { "shrine", "Sandtrap" },
+            { "sidewinder", "Avalanche" },
+            { "snowbound", "Snowbound" },
+            { "spacecamp", "Orbital" },
+            { "warehouse", "Foundry" },
+            { "zanzibar", "Last Resort" },
+
+        };
+
+        readonly Dictionary<string, string> LevelCodeToNameHR = new Dictionary<string, string>()
+        {
 
             // Halo Reach
             //SP
@@ -2104,13 +2199,52 @@ namespace WpfApp3
             { "lockout", true },
             { "midship", true },
             { "needle", true },
-                        { "street_sweeper", true },
+            { "street_sweeper", true },
             { "triplicate", true },
             { "turf", true },
             { "warlock", true },
             { "waterworks", true },
             { "zanzibar", true },
             //tbd
+
+                         // Halo 3
+            //SP
+            { "005_intro", false },
+            { "010_jungle",  false },
+            { "020_base",  false },
+            { "030_outskirts",  false },
+            { "040_voi",  false },
+            { "050_floodvoi",  false},
+            { "070_waste",  false },
+            { "100_citadel", false },
+            { "110_hc", false },
+            { "120_halo", false },
+            { "130_epilogue",  false },
+            //MP
+            { "armory", true },
+            { "bunkerworld", true },
+            { "chill",true },
+            //{ "chillout", true },
+            { "construct", true },
+            { "cyberdyne", true },
+            { "deadlock", true },
+            { "descent", true },
+            { "docks", true },
+            { "fortress", true },
+            { "ghosttown",true },
+            { "guardian", true },
+            { "isolation", true },
+            //{ "lockout", true },
+            //{ "midship", true },
+            { "riverworld", true },
+            { "salvation", true },
+            { "sandbox", true },
+            { "shrine", true },
+            //{ "sidewinder", true },
+            { "snowbound", true },
+            { "spacecamp", true },
+            { "warehouse", true },
+            //{ "zanzibar", true },
 
             // Halo Reach
             //SP
@@ -2160,16 +2294,45 @@ namespace WpfApp3
 
         };
 
-        public string LevelCodeToFullName(string code)
+        public string LevelCodeToFullName(string code, HaloGame game)
         {
-
             string Name;
-            if (LevelCodeToName.TryGetValue(code, out Name))
+            switch (game)
             {
-                return Name;
+                case HaloGame.Halo1:
+                    if (LevelCodeToNameH1.TryGetValue(code, out Name))
+                    {
+                        return Name;
+                    }
+                    return code;
+
+                case HaloGame.Halo2:
+                    if (LevelCodeToNameH2.TryGetValue(code, out Name))
+                    {
+                        return Name;
+                    }
+                    return code;
+
+                case HaloGame.Halo3:
+                    if (LevelCodeToNameH3.TryGetValue(code, out Name))
+                    {
+                        return Name;
+                    }
+                    return code;
+
+                case HaloGame.HaloReach:
+                    if (LevelCodeToNameHR.TryGetValue(code, out Name))
+                    {
+                        return Name;
+                    }
+                    return code;
+
+                default:
+                    return code;
             }
 
-            return code;
+
+
         }
 
         public bool LevelCodeToGameType(string code)
@@ -2436,6 +2599,123 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+                case "H3CP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H3" && ValidCheck_H3())
+                        {
+
+                            //next, the custom message stuff
+                            //null the cp messagecall
+                            byte[] buffer = new byte[5] { 0x90, 0x90, 0x90, 0x90, 0x90 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: custom message 0: success");
+                            }
+                            else
+                            {
+                                return (false, "message 0 failure");
+                            }
+
+
+                            //acquire the current tickcount
+                            buffer = new byte[4];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: custom message 1: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 1 failure");
+                            }
+
+                            //buffer will be equal to the tickcounter so just paste it into the new spot
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: custom message 2: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 2 failure");
+                            }
+
+                            buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                            buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0xC8, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: custom message 3: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 3 failure");
+                            }
+
+                            buffer = new byte[1] { 1 }; //setting showmessage flag to true
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 7, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: custom message 4: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 4 failure");
+                            }
+
+                            buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Checkpoint[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: made cp");
+
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                Debug("H3: failed to make cp");
+                                return (false, "failed to write cp byte");
+                            }
+
+                            Thread.Sleep(50);
+
+                            buffer = new byte[5] { 0xE8, 0x31, 0xDF, 0x1F, 0x00 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: custom message 5: success");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "message 5 failure");
+                            }
+
+                            void FixMessageCall()
+                            {
+
+                                try
+                                {
+                                    buffer = new byte[5] { 0xE8, 0x31, 0xDF, 0x1F, 0x00 };
+                                    WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make cp because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 case "HRCP":
                     try
                     {
@@ -2640,6 +2920,34 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+                case "H3CP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H3" && ValidCheck_H3())
+                        {
+                            byte[] buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Revert[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: made revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                Debug("H3: failed to make revert");
+                                return (false, "failed to write revert byte");
+                            }
+                        }
+                        else
+                        {
+                            return (false, "failed to force revert because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 case "HRCP":
                     try
                     {
@@ -2777,6 +3085,44 @@ namespace WpfApp3
                             else
                             {
                                 return (false, "h2: failed to make double revert");
+                            }
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make double revert because not attached");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+                case "H3CP":
+
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H3" && ValidCheck_H3())
+                        {
+                            byte[] buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: read double revert flag");
+                            }
+                            else
+                            {
+                                return (false, "failed to read double revert flag");
+                            }
+
+                            buffer[0] = Convert.ToByte(!(BitConverter.ToBoolean(buffer, 0))); //just flip the value lmao
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H3: made double revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "H3: failed to make double revert");
                             }
 
                         }
@@ -2932,6 +3278,95 @@ namespace WpfApp3
                                         if (File.Exists(test.ToString()) && test.Length > 1000)
                                         {
                                             Debug("SUCESSFULLY DUMPED H2 CP, LENGTH: " + test.Length.ToString());
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Debug("something went wrong trying to save a save: " + game + ", " + proposedsave);
+                                        return (false, "couldn't write save file to disk, did you have an invalid name? proposed save: " + proposedsave);
+                                        //need to make this a popup to let user know what was bad
+                                    }
+                                }
+                                else
+                                {
+                                    return (false, "back up directory didn't exist: " + backuploc);
+                                }
+                            }
+                            else
+                            {
+                                return (false, "failed to read checkpoint from memory");
+                            }
+
+                            return (true, "success!");
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+
+                case "H3CP":
+                    try
+                    {
+
+                        if (HCMGlobal.AttachedGame == "H3" && ValidCheck_H3())
+                        {
+
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                Debug("something went wrong trying to read DR flag for H3 dumping");
+                                return (false, "Failed to read double-revert byte");
+                            }
+
+                            byte[] buffer = new byte[8257536];
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = 0; //first cp
+                            }
+                            else
+                            {
+                                offset = 0x7E0000; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.H3_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+
+                                string backuploc = HCMGlobal.H3CheckpointPath;
+
+                                if (Directory.Exists(backuploc))
+                                {
+                                    var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                                       "Name your backup save",
+                                                       "",
+                                                       -1, -1);
+                                    string proposedsave = (backuploc + @"\" + userinput + @".bin");
+                                    if (userinput == "")
+                                        return (false, "cancelclick");
+                                    try
+                                    {
+                                        File.WriteAllBytes(proposedsave, buffer);
+                                        FileInfo test = new FileInfo(proposedsave);
+                                        if (File.Exists(test.ToString()) && test.Length > 1000)
+                                        {
+                                            Debug("SUCESSFULLY DUMPED H3 CP, LENGTH: " + test.Length.ToString());
                                         }
                                     }
                                     catch
@@ -3254,6 +3689,163 @@ namespace WpfApp3
                     {
                         return (false, "unknown error occured: " + ex.ToString());
                     }
+
+                case "H3CP":
+                    try
+                    {
+                        Debug("attempting to inject H3 checkpoint");
+                        if (H3CP_MainList.SelectedItem == null)
+                        {
+                            return (false, "no save file selected!");
+                        }
+
+                        if (HCMGlobal.AttachedGame == "H3" && ValidCheck_H3())
+                        {
+                            var item = H3CP_MainList.Items.GetItemAt(H3CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                            string sourcePath = HCMGlobal.H3CheckpointPath + @"\" + item.Name + @".bin";
+                            byte[] buffer;
+                            try
+                            {
+                                FileStream fs = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+                                // Create a byte array of file stream length
+                                buffer = System.IO.File.ReadAllBytes(sourcePath);
+                                //Read block of bytes from stream into the byte array
+                                fs.Read(buffer, 0, System.Convert.ToInt32(fs.Length));
+                                //Close the File Stream
+                                fs.Close();
+                                Console.WriteLine("nearly ready to inject, buffer length: " + buffer.Length.ToString());
+                            }
+                            catch
+                            {
+                                return (false, "failed to access save file");
+                            }
+
+                            //okay first we need to read from memory the bytes that we need to preserve and overwrite them in buffer
+                            //let's check the DR flag first
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                return (false, "something went wrong trying to read DR flag for H3 injecting");
+                            }
+
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = 0x0; //first cp
+                            }
+                            else
+                            {
+                                offset = 0x7E0000; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.H3_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+
+                            //setup a 2d array with the values we need to preserve (offset, length)
+                            int[][] PreserveLocations = new int[][] { new int[] { 0x8, 0x4 }, new int[] { 0x3F0528, 0x16 }, new int[] { 0x3F4524, 0x2 }, /*new int[] { 0x3F458B, 0x2 },*/ new int[] { 0x3F051C, 0x8 }/*, new int[] { 0x3F05BC, 0x8 }, new int[] { 0x3F06E4, 0x8 }, new int[] { 0x3F4EB4, 0x8 }*/ };
+
+                            foreach (int[] i in PreserveLocations)
+                            {
+                                byte[] tempbuffer = new byte[i[1]];
+                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten))
+                                {
+                                    //overwrite the stored cp buffer with new vals
+                                    Array.ConstrainedCopy(tempbuffer, 0, buffer, i[0], i[1]);
+                                    Debug("successfully copied over buffer at " + i[0]);
+                                }
+                                else
+                                {
+                                    return (false, "failed reading current vals for H3 injection");
+                                }
+                            }
+
+                            //now the hash stuff because for some god foresaken reason h3 checkpoints have a hash (thanks scales)
+
+                            //NEXT DO HASH STUFF
+                            //first, store the old hash value (not really necessary but helps debugging)
+                            byte[] oldhash = new byte[20];
+                            Array.Copy(buffer, 0xFB18, oldhash, 0, 20);
+                            Debug("oldhash: " + BitConverter.ToString(oldhash).Replace("-", ""));
+
+
+                            //zero out the hash at FB18 (dec 20 bytes)
+                            byte[] zeroes = new byte[20];
+                            Array.Copy(zeroes, 0, buffer, 0xFB18, 20);
+
+                            //then calculate the sha-1 hash
+                            try
+                            {
+                                using (var cryptoProvider = new SHA1CryptoServiceProvider())
+                                {
+                                    byte[] newhash = cryptoProvider.ComputeHash(buffer);
+
+                                    //write the hash at FB18 
+                                    Array.Copy(newhash, 0, buffer, 0xFB18, 20);
+                                    Debug("newhash: " + BitConverter.ToString(newhash).Replace("-", ""));
+                                }
+                            }
+                            catch
+                            {
+                                return (false, "something went wrong calculating cp hash");
+                            }
+
+                            //gotta set the cp loaded bsp or we'll crash da game!
+
+
+                            //bsp manip
+                            byte[] buffer6 = new byte[44];
+                            Array.Copy(buffer, 0xFAD8, buffer6, 0, 44);//read bsp from checkpoint file
+                            int[][] bspoffsets;
+                            if (!DRflag)
+                            {
+                                bspoffsets = HCMGlobal.LoadedOffsets.H3_LoadedBSP1;
+                            }
+                            else
+                            {
+                                bspoffsets = HCMGlobal.LoadedOffsets.H3_LoadedBSP2;
+                            }
+
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, bspoffsets[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer6, buffer6.Length, out int bytesWritten6)) //write it in so the game knows what bsp to load
+                            {
+                                Debug("Successfully pasted h3 bsp bytes: " + BitConverter.ToString(buffer6).Replace("-", ""));
+                            }
+                            else
+                            {
+                                return (false, "failed pasting h3 bsp bytes");
+                            }
+
+
+                            //now to inject the prepared checkpoint into memory
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("successfully injected H3 cp, " + buffer.Length.ToString() + " bytes!");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "failed injecting H3 cp");
+                            }
+
+
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
 
                 case "HRCP":
                     try
@@ -3889,7 +4481,7 @@ namespace WpfApp3
             switch (HCMGlobal.AttachedGame)
             {
                 
-                case "H3":
+
                 case "OD":
                 case "H4"://these above games are not supported yet
 
@@ -3936,6 +4528,25 @@ namespace WpfApp3
                     }
                     break;
 
+                case "H3":
+
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                    {
+                        holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        char[] exceptions = new char[] { '_' };
+                        holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        Debug("read h3 level: " + holdstring);
+                        HCMGlobal.AttachedLevel = holdstring;
+                    }
+                    else
+                    {
+                        Debug("failed to read h3 level");
+                        HCMGlobal.AttachedLevel = null;
+                    }
+                    break;
+
                 case "HR":
                     if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
                     {
@@ -3958,7 +4569,7 @@ namespace WpfApp3
 
 
             //if game is reach & tab is reach, then do a seed check
-            if (TabList.SelectedIndex == 3 && HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
+            if (TabList.SelectedIndex == 5 && HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
             {
                 buffer = new byte[4];
                 uint seedint;
@@ -4182,6 +4793,39 @@ namespace WpfApp3
                     if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "scen")
                     {
                         Debug("h2 check success");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug("oh no");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Debug("oh no");
+                    return false;
+                }
+            }
+            catch
+            {
+                Debug("oh no");
+                return false;
+            }
+
+        }
+
+        private static bool ValidCheck_H3()
+        {
+
+            try
+            {
+                byte[] buffer = new byte[4];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_CheckString[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+                {
+                    if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "leve")
+                    {
+                        Debug("h3 check success");
                         return true;
                     }
                     else
