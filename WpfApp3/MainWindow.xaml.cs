@@ -161,36 +161,48 @@ namespace WpfApp3
             public int[][] stateindicator;
 
             //h1
-            public int[][] H1_LevelName;
+            public int[][] H1_LevelName; //45 33 c0 48 8b 50 28 8b 12 non writeable, third/last result, scroll up to mov that writes 01. that writes to revert
             public int[][] H1_CoreSave;
             public int[][] H1_CoreLoad;
             public int[][] H1_CheckString;
-            public int[][] H1_TickCounter;
-            public int[][] H1_Message;
+            public int[][] H1_TickCounter; //b0 01 4c 8b 7c 24 20 4c 8b 74 24 28. inc right above.
+            public int[][] H1_Message; //8b 48 0c 89 0b. 89 0b writes to it (only when getting a message)
 
             //hr
-            public int[][] HR_LevelName;
+            public int[][] HR_LevelName; //0x3FB3D9 ahead of checkpoint
             public int[][] HR_CheckString;
-            public int[][] HR_Checkpoint; //for forcing checkpoints
-            public int[][] HR_Revert; //for forcing reverts
-            public int[][] HR_DRflag; //dr as in "double revert"
-            public int[][] HR_CPLocation;
-            public int[][] HR_LoadedSeed;
-            public int[][] HR_TickCounter;
-            public int[][] HR_Message;
-            public int[][] HR_MessageCall;
+            public int[][] HR_Checkpoint; //4a 8b 14 3b b8 a8 00 00 00, mov right above
+            public int[][] HR_Revert; //rel
+            public int[][] HR_DRflag; //b8 50 00 00 00 ** ** ** ** ** ** 48 8b 04 18, it's the ** when you get a cp
+            public int[][] HR_CPLocation; //just scan lol
+            public int[][] HR_LoadedSeed; //45 33 ff 84 db, take first. the mov above writes to a byte that's 0x2B before the loaded seed
+            public int[][] HR_TickCounter; //8b c7 48 8b 0c 18 44 01 61 0c. the add writes to it.
+            public int[][] HR_Message; //4B 8b 04 2e 8b 48 0c 89 4b 04. last mov writes to it (messageTC) when getting message.
+            public int[][] HR_MessageCall; //48 89 6c 24 20 41 b9 01 00 00 00. should have "checkpoint save" next to it in disassembly. the call 7 instructions above the cp save is the cp message call ; E8 67 46 28 00
 
-            public int[][] H2_LevelName;
+            public int[][] H2_LevelName; //take second last oldmombassa from; load outskirts then scan for, WRITEABLE: 30 33 61 5F 6F 6C 64 6D 6F 6D 62 61 73 61 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 73 63 65 6E 61 72 69 6F 73 5C 73 6F 6C 6F 5C 30 33 61 5F 6F 6C 64 6D 6F 6D 62 61 73
             public int[][] H2_CheckString;
-            public int[][] H2_Checkpoint; //for forcing checkpoints
-            public int[][] H2_Revert; //for forcing reverts
-            public int[][] H2_DRflag; //dr as in "double revert"
-            public int[][] H2_CPLocation;
-            public int[][] H2_TickCounter;
-            public int[][] H2_Message;
-            public int[][] H2_MessageCall;
-            public int[][] H2_LoadedBSP1;
+            public int[][] H2_Checkpoint; //rel
+            public int[][] H2_Revert; //bf ff ff ff ff ** ** 33 c9, the cmp immediately above accesses it
+            public int[][] H2_DRflag; //c1 e0 05 8b d8 d1 ef 83 cb 40. movzx below accesses it on revert.
+            public int[][] H2_CPLocation; //just scan lol
+            public int[][] H2_TickCounter; //f3 0f 5d c6 0f 28 74 24 40 40 84 f6, it's a mov like 10 instr below
+            public int[][] H2_Message; // the 89 03 (mov [rbx], eax), above c6 83 82 00 00 00 01 66 c7
+            public int[][] H2_MessageCall; //48 8b 10 ff 52 58 48 8b c8 48 8b 10, go a little down to the call that immd precedes a mov and cmp. E8 57 CA 18 00
+            public int[][] H2_LoadedBSP1; //scan for writable, unicode, case sens "halo2\h2_m". two of the results will have "untracked version" a little above". 0x1F8 before the halo2 string is the bsp bytes.
             public int[][] H2_LoadedBSP2;
+
+            public int[][] H3_LevelName; //load up ark easy, scan for writeable 64 61 65 68 0B 00 00 00 00 E0 D4 22 00 00 00 00 84 D6 F5 8A 01 00 00 00 00 E0 9E 1C 00 00 36 06
+            public int[][] H3_CheckString;
+            public int[][] H3_Checkpoint; //rel
+            public int[][] H3_Revert; //first halo3 result of 4c 8d 5c 24 60 49 8b 5b 10 49 8b 73 18 49 8b 7b 20 4d 8b 73 28, it's the mov below it
+            public int[][] H3_DRflag; //ff c0 ** ** ** ** ** ** 99 b9 00 02 00 00. it's the mov edx when getting a checkpoint.
+            public int[][] H3_CPLocation; //just scan lol
+            public int[][] H3_TickCounter; //48 8b 04 c8 48 8b 0c 10 8b 59 0c,, movs below point to it
+            public int[][] H3_Message; //4a 8b 0c c0 48 8b 04 31 8b 48 0c, first result, mov ecx writes to messageTC when getting cp
+            public int[][] H3_MessageCall; //48 83 ec 68 33 c9  call immediately below. E8 31 DF 1F 00
+            public int[][] H3_LoadedBSP1; //load into ark. two last results of scan for writeable 01 00 00 00 00 00 00 00 C0 09 68 14 01 10 00 00 01 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+            public int[][] H3_LoadedBSP2;
 
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
@@ -1938,8 +1950,8 @@ namespace WpfApp3
             { "06a_sentinelwalls", "Sacred Icon" },
             { "06b_floodzone", "Quarantine Zone" },
             { "07a_highcharity", "Gravemind" },
-            { "07b_forerunnership", "Uprising" },
-            { "08a_deltacliffs", "High Charity" },
+            { "07b_forerunnership", "High Charity" },
+            { "08a_deltacliffs", "Uprising" },
             { "08b_deltacontrol", "The Great Journey" },
             //MP
             { "ascension", "Ascension" },
