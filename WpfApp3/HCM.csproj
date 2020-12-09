@@ -283,5 +283,35 @@
   <ItemGroup>
     <Resource Include="images\diff_4.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\H3\005_intro_anni.png" />
+    <Resource Include="images\H3\005_intro_clas.png" />
+    <Resource Include="images\H3\010_jungle_anni.png" />
+    <Resource Include="images\H3\010_jungle_clas.png" />
+    <Resource Include="images\H3\020_base_anni.png" />
+    <Resource Include="images\H3\020_base_clas.png" />
+    <Resource Include="images\H3\030_outskirts_anni.png" />
+    <Resource Include="images\H3\030_outskirts_clas.png" />
+    <Resource Include="images\H3\040_voi_anni.png" />
+    <Resource Include="images\H3\040_voi_clas.png" />
+    <Resource Include="images\H3\050_floodvoi_anni.png" />
+    <Resource Include="images\H3\050_floodvoi_clas.png" />
+    <Resource Include="images\H3\070_waste_anni.png" />
+    <Resource Include="images\H3\070_waste_clas.png" />
+    <Resource Include="images\H3\100_citadel_anni.png" />
+    <Resource Include="images\H3\100_citadel_clas.png" />
+    <Resource Include="images\H3\110_hc_anni.png" />
+    <Resource Include="images\H3\110_hc_clas.png" />
+    <Resource Include="images\H3\120_halo_anni.png" />
+    <Resource Include="images\H3\120_halo_clas.png" />
+    <Resource Include="images\H3\130_epilogue_anni.png" />
+    <Resource Include="images\H3\130_epilogue_clas.png" />
+    <Resource Include="images\H3\diff_0.png" />
+    <Resource Include="images\H3\diff_1.png" />
+    <Resource Include="images\H3\diff_2.png" />
+    <Resource Include="images\H3\diff_3.png" />
+    <Resource Include="images\H3\diff_4.png" />
+    <Resource Include="images\H3\mp.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
