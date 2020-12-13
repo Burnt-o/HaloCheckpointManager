@@ -5,16 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
-        Title="Settings" Height="198.068" Width="400">
+        Title="Settings" Height="198.068" Width="400" WindowStyle="None">
     <Grid>
-        <Label Content="Set Core folder directory. (Required for H1)" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="-  usually (...\Steam\steamapps\common\core_saves\)" HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top"/>
-        <Button Content="Browse" HorizontalAlignment="Left" Margin="30,61,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="2.444,0.187" Click="CoreBrowseClick" />
-        <TextBox x:Name="ChosenCore" HorizontalAlignment="Left" Height="20" Margin="80,61,0,0" TextWrapping="Wrap" Text="No Folder chosen!" VerticalAlignment="Top" Width="287"/>
 
-        <RadioButton  x:Name ="modeanni"  Content="Anniversary" HorizontalAlignment="Left" Margin="178,127,0,0" VerticalAlignment="Top" />
-        <RadioButton  x:Name ="modeclas"  Content="Classic" HorizontalAlignment="Left" Margin="83,127,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Label Content="Level Splash Style: " HorizontalAlignment="Left" Height="25" Margin="52,102,0,0" VerticalAlignment="Top" Width="230"/>
+        <RadioButton  x:Name ="modeanni"  Content="Anniversary" HorizontalAlignment="Left" Margin="146,64,0,0" VerticalAlignment="Top" />
+        <RadioButton  x:Name ="modeclas"  Content="Classic" HorizontalAlignment="Left" Margin="51,64,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Label Content="Level Splash Style: " HorizontalAlignment="Left" Height="25" Margin="20,39,0,0" VerticalAlignment="Top" Width="230"/>
+        <Button Content="Close" HorizontalAlignment="Left" Height="24" Margin="146,146,0,0" VerticalAlignment="Top" Width="101" Click="CloseButton_Click"/>
+        <Label Content="Settings: " HorizontalAlignment="Left" Height="29" Margin="10,5,0,0" VerticalAlignment="Top" Width="254" FontWeight="Bold" FontSize="14"/>
 
 
 

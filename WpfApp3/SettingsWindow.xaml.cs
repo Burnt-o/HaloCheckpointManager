@@ -31,22 +31,11 @@ namespace WpfApp3
             InitializeComponent();
         }
 
-        private void CoreBrowseClick(object sender, RoutedEventArgs e)
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
-            {
-                DialogResult result = dialog.ShowDialog();
-                if (result.ToString() == "OK" && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
-                {
-                    //Console.WriteLine("corefolder: " + dialog.SelectedPath);
-                    if (Directory.Exists(dialog.SelectedPath))
-                    {
-                        ChosenCore.Text = dialog.SelectedPath;
-                    }
-                }
-            }
+            Close();
         }
 
-       
+
     }
 }

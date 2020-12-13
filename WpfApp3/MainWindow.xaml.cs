@@ -57,7 +57,7 @@ Clean up debug/logging stuff (inc; remove debugs from maintick except when Vals 
 
 DO THIS - Implement profiles.
 
-DONE --- , decided not to do levellockout (but did add check)---- Add level check/lockout. Add seed check to maintick. 
+Add level check/lockout. Or way to load arbitary level when injecting
 
 Add options for list level name - code (current), acronym, thumbnail. 
 
@@ -73,13 +73,24 @@ Get all mp level splashes (clas and anni).
 
 Implement custom level splash images. With auto resizing. 
 
-Add tool tip to double revert or just make icon better. 
+Add tool tip to double revert or just make icon better. Actually add tool tips to EVERYTHING
 
 Add open in Explorer button. 
 
-DONE --- Implement core save and dump + inject and revert for h1cs.
+make injecting a cp print "Custom Checkpoint.. Injected" to the screen
 
-    make injecting a cp print "Custom Checkpoint.. Injected" to the screen
+CP thumbnails via screenshots.. not sure on this
+
+Add hotkeys for dump/inject
+
+Checkpoint Descriptions
+
+Auto-dump checkpoints feature
+
+
+    ////////BUG SHIT
+    ///h2: fix cp injection totally breaking level restarts.
+    ///h3: crash on loading cp's from different rally point - probs sim issue with reach, odst, h4
 
 */
 
@@ -107,7 +118,7 @@ namespace WpfApp3
         private class HCMConfig
         {
             public string[] RanVersions;
-            public string CoreFolderPath;
+            //public string CoreFolderPath;
             public bool ClassicMode = true;
         }
 
@@ -147,6 +158,8 @@ namespace WpfApp3
             public static bool GiveUpFlag = false; //set to true if attachment checking should cease forever
             public static bool OffsetsAcquired = false;
             public static IntPtr BaseAddress;
+
+            public static string CoreFolderPath;
         }
 
         private class Offsets
@@ -454,22 +467,7 @@ namespace WpfApp3
 
 
 
-            if (HCMGlobal.SavedConfig.CoreFolderPath == null)
-            {
-                //autodetect core folder path
-                string CoreAutoPath = GetInstallPath("Halo: The Master Chief Collection");
-                if (CoreAutoPath != null && CoreAutoPath.Contains("steamapps")) //latter ought to be true if steam version of MCC
-                {
-                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"..\core_saves");
 
-                    if (Directory.Exists(CoreAutoPath))
-                    {
-                        Log("autodetected Core folder: " + CoreAutoPath);
-                        HCMGlobal.SavedConfig.CoreFolderPath = System.IO.Path.GetFullPath(CoreAutoPath);
-                        WriteConfig();
-                    }
-                }
-            }
 
             if (firstrun == true)
             {
@@ -1118,16 +1116,12 @@ namespace WpfApp3
         {
             SettingsWindow settingswindow = new SettingsWindow();
 
-            settingswindow.ChosenCore.Text = HCMGlobal.SavedConfig?.CoreFolderPath ?? "No folder chosen!";
+            
             settingswindow.modeanni.IsChecked = !HCMGlobal.SavedConfig?.ClassicMode ?? true;
             settingswindow.modeclas.IsChecked = HCMGlobal.SavedConfig?.ClassicMode ?? false;
 
             settingswindow.ShowDialog();
 
-            HCMGlobal.SavedConfig.CoreFolderPath =
-                (settingswindow.ChosenCore.Text != null && settingswindow.ChosenCore.Text != "No Folder chosen!")
-                ? HCMGlobal.SavedConfig.CoreFolderPath = settingswindow.ChosenCore.Text
-                : HCMGlobal.SavedConfig.CoreFolderPath = "";
 
           
 
@@ -1151,9 +1145,9 @@ namespace WpfApp3
             {
                 case 0: //H1 CORES 
 
-                    if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin") && HCMGlobal.SavedConfig.CoreFolderPath != null)
+                    if (HCMGlobal.SavedConfig != null && File.Exists(HCMGlobal.CoreFolderPath + @"\core.bin") && HCMGlobal.CoreFolderPath != null)
                     {
-                        var data = GetSaveFileMetadata(HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
+                        var data = GetSaveFileMetadata(HCMGlobal.CoreFolderPath + @"\core.bin", HaloGame.Halo1);
                         H1CS_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo1);
 
                         if (data.Difficulty != Difficulty.Invalid)
@@ -2365,26 +2359,7 @@ namespace WpfApp3
             }
         }
 
-        public static string GetInstallPath(string c_name)
-        {
-            string displayName;
-
-            string registryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKey);
-            if (key != null)
-            {
-                foreach (RegistryKey subkey in key.GetSubKeyNames().Select(keyName => key.OpenSubKey(keyName)))
-                {
-                    displayName = subkey.GetValue("DisplayName") as string;
-                    if (displayName != null && displayName.Equals(c_name))
-                    {
-                        return subkey.GetValue("InstallLocation") as string;
-                    }
-                }
-                key.Close();
-            }
-            return null;
-        }
+        
 
         private void ForceCPButton_Click(object sender, RoutedEventArgs e)
         {
@@ -3182,9 +3157,9 @@ namespace WpfApp3
                         string pathtotest = "";
 
                         backuploc = HCMGlobal.H1CoreSavePath;
-                        if (HCMGlobal.SavedConfig.CoreFolderPath != null)
+                        if (HCMGlobal.CoreFolderPath != null)
                         {
-                            pathtotest = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
+                            pathtotest = HCMGlobal.CoreFolderPath + @"\core.bin";
                         }
                         else
                         {
@@ -3533,7 +3508,7 @@ namespace WpfApp3
 
                         var item = CS_MainList.Items.GetItemAt(CS_MainList.SelectedIndex) as HaloSaveFileMetadata;
                         string sourcePath = HCMGlobal.H1CoreSavePath + @"\" + item.Name + @".bin";
-                        string targetPath = HCMGlobal.SavedConfig.CoreFolderPath + @"\core.bin";
+                        string targetPath = HCMGlobal.CoreFolderPath + @"\core.bin";
                         string targetFolder = "";
 
                         try
@@ -4476,6 +4451,32 @@ namespace WpfApp3
             Debug("All checks succeeded, attached game is: " + HCMGlobal.AttachedGame);
             //is that it? I think we're done
 
+
+
+            //adding core folder check here
+
+            if (HCMGlobal.WinFlag == false && HCMGlobal.CoreFolderPath == null)
+            {
+                //autodetect core folder path by just checking where the attached process is
+                string CoreAutoPath = myProcess.MainModule.FileName;
+                Debug("aaaaaa: " + CoreAutoPath);
+                if (CoreAutoPath != null && CoreAutoPath.Contains("steamapps")) //latter ought to be true if steam version of MCC
+                {
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"core_saves");
+                    Debug("bbbbbbb: " + CoreAutoPath);
+                    if (Directory.Exists(CoreAutoPath))
+                    {
+                        Debug("autodetected Core folder: " + CoreAutoPath);
+                        HCMGlobal.CoreFolderPath = System.IO.Path.GetFullPath(CoreAutoPath);
+                    }
+                }
+            }
+
             //NEXT, level check!
             buffer = new byte[32];
             string holdstring;
@@ -4604,7 +4605,6 @@ namespace WpfApp3
             //todo; implement this
             switch (HCMGlobal.AttachedGame)
             {
-                case "H3":
                 case "OD":
                 case "H4"://these above games are not supported yet
 
@@ -4614,38 +4614,42 @@ namespace WpfApp3
                     SetH1(false);
                     SetHR(false);
                     SetH2(false);
+                    SetH3(false);
                     break;
 
                 case "H1":
-                    SetH1(HCMGlobal.SavedConfig.CoreFolderPath != null); //false if corefolderpath not set correctly
+                    SetH1(true); 
                     SetHR(false);
                     SetH2(false);
+                    SetH3(false);
                     break;
 
                 case "H2":
                     SetH1(false);
                     SetHR(false);
                     SetH2(true);
+                    SetH3(false);
                     break;
 
                 case "HR":
                     SetH1(false);
                     SetHR(true);
                     SetH2(false);
+                    SetH3(false);
                     break;
 
-                
-
-            }
-
-            try
-            {
-                if (HCMGlobal.SavedConfig.CoreFolderPath == null)
-                {
+                case "H3":
                     SetH1(false);
-                }
+                    SetHR(false);
+                    SetH2(false);
+                    SetH3(true);
+                    break;
+
+
+
             }
-            catch { SetH1(false); }
+
+
 
             void SetH1(bool state)
             {
@@ -4653,22 +4657,9 @@ namespace WpfApp3
                 H1CS_ForceRevert.IsEnabled = state;
                 H1CS_Loa_ForceCPDump.IsEnabled = state;
                 H1CS_Sel_InjectRevertButton.IsEnabled = state;
+                    H1CS_Loa_DumpButton.IsEnabled = state;
+                    H1CS_Sel_InjectButton.IsEnabled = state;
 
-                if (state == false && (!HCMGlobal.WinFlag || HCMGlobal.AttachedGame == "no"))
-                {
-                    H1CS_Loa_DumpButton.IsEnabled = true;
-                    H1CS_Sel_InjectButton.IsEnabled = true;
-                }
-                else if (state == false)
-                {
-                    H1CS_Loa_DumpButton.IsEnabled = false;
-                    H1CS_Sel_InjectButton.IsEnabled = false;
-                }
-                else
-                {
-                    H1CS_Loa_DumpButton.IsEnabled = true;
-                    H1CS_Sel_InjectButton.IsEnabled = true;
-                }
             }
 
             void SetHR(bool state)
@@ -4692,6 +4683,17 @@ namespace WpfApp3
                 H2CP_Loa_ForceCPDump.IsEnabled = state;
                 H2CP_Sel_InjectButton.IsEnabled = state;
                 H2CP_Sel_InjectRevertButton.IsEnabled = state;
+            }
+
+            void SetH3(bool state)
+            {
+                H3CP_ForceCheckpoint.IsEnabled = state;
+                H3CP_ForceRevert.IsEnabled = state;
+                H3CP_ForceDR.IsEnabled = state;
+                H3CP_Loa_DumpButton.IsEnabled = state;
+                H3CP_Loa_ForceCPDump.IsEnabled = state;
+                H3CP_Sel_InjectButton.IsEnabled = state;
+                H3CP_Sel_InjectRevertButton.IsEnabled = state;
             }
 
 
