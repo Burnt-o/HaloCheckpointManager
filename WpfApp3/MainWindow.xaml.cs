@@ -4655,10 +4655,19 @@ namespace WpfApp3
             {
                 H1CS_ForceCheckpoint.IsEnabled = state;
                 H1CS_ForceRevert.IsEnabled = state;
+
                 H1CS_Loa_ForceCPDump.IsEnabled = state;
                 H1CS_Sel_InjectRevertButton.IsEnabled = state;
-                    H1CS_Loa_DumpButton.IsEnabled = state;
-                    H1CS_Sel_InjectButton.IsEnabled = state;
+                H1CS_Loa_DumpButton.IsEnabled = state;
+                H1CS_Sel_InjectButton.IsEnabled = state;
+
+                if (HCMGlobal.CoreFolderPath == null)
+                {
+                    H1CS_Loa_ForceCPDump.IsEnabled = false;
+                    H1CS_Sel_InjectRevertButton.IsEnabled = false;
+                    H1CS_Loa_DumpButton.IsEnabled = false;
+                    H1CS_Sel_InjectButton.IsEnabled = false;
+                }
 
             }
 

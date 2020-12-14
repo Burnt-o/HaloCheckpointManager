@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
-        Title="Halo Checkpoint Manager 0.9.2" Height="593" Width="820"
+        Title="Halo Checkpoint Manager 0.9.2b" Height="593" Width="820"
         MinHeight="593" MinWidth="555" Loaded="Window_Loaded">
 
 
