@@ -132,6 +132,7 @@ namespace WpfApp3
             public static readonly string H2CheckpointPath = LocalDir + @"\saves\h2cp";
             public static readonly string H3CheckpointPath = LocalDir + @"\saves\h3cp";
             public static readonly string HRCheckpointPath = LocalDir + @"\saves\hrcp";
+            public static readonly string ODCheckpointPath = LocalDir + @"\saves\odcp";
 
             public static readonly string ConfigPath = LocalDir + @"\config.json";
             public static readonly string LogPath = LocalDir + @"\log.txt";
@@ -219,6 +220,18 @@ namespace WpfApp3
             public int[][] H3_LoadedBSP1; //load into ark. two last results of scan for writeable 01 00 00 00 00 00 00 00 C0 09 68 14 01 10 00 00 01 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
             public int[][] H3_LoadedBSP2;
 
+            public int[][] OD_LevelName; 
+            public int[][] OD_CheckString;
+            public int[][] OD_Checkpoint; 
+            public int[][] OD_Revert; 
+            public int[][] OD_DRflag;
+            public int[][] OD_CPLocation; 
+            public int[][] OD_TickCounter; 
+            public int[][] OD_Message;
+            public int[][] OD_MessageCall;
+            public int[][] OD_LoadedBSP1; 
+            public int[][] OD_LoadedBSP2;
+
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
 
@@ -264,6 +277,7 @@ namespace WpfApp3
             @"saves\h2cp",
             @"saves\h3cp",
             @"saves\hrcp",
+            @"saves\odcp",
             @"offsets",
         };
 
@@ -280,6 +294,8 @@ namespace WpfApp3
         public ObservableCollection<HaloSaveFileMetadata> Halo1Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo2Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> Halo3Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+        public ObservableCollection<HaloSaveFileMetadata> HaloODSTCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
+
 
         public ObservableCollection<HaloSaveFileMetadata> HaloReachCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
@@ -349,6 +365,7 @@ namespace WpfApp3
             H2CP_MainList.SelectionChanged += List_SelectionChanged;
             H3CP_MainList.SelectionChanged += List_SelectionChanged;
             HRCP_MainList.SelectionChanged += List_SelectionChanged;
+            ODCP_MainList.SelectionChanged += List_SelectionChanged;
             bool firstrun = false;
 
             // Validate that required folders exist
@@ -485,6 +502,7 @@ namespace WpfApp3
                 { "H2Profile", HCMGlobal.H2CheckpointPath},
                 { "H3Profile", HCMGlobal.H3CheckpointPath},
                 { "HRProfile", HCMGlobal.HRCheckpointPath},
+                { "ODProfile", HCMGlobal.HRCheckpointPath},
             };
 
         private string ProfileTypeToPathGet(string code)
@@ -615,7 +633,15 @@ namespace WpfApp3
                     }
                     else
                         return "";
-                    
+
+                case "ODCP":
+                    if (HRProfile.SelectedItem != null && ODProfile.SelectedItem.ToString() != "*Root")
+                    {
+                        return @"\" + HRProfile.SelectedItem.ToString();
+                    }
+                    else
+                        return "";
+
                 default:
                     return "";
             
@@ -741,6 +767,11 @@ namespace WpfApp3
                     savepath = HCMGlobal.H3CheckpointPath;
                     break;
 
+                case "ODCP":
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
+                    break;
+
                 case "HRCP":
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
@@ -799,6 +830,11 @@ namespace WpfApp3
                 case "H3CP":
                     mainlist = H3CP_MainList;
                     savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
+                case "ODCP":
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
                     break;
 
                 case "HRCP":
@@ -863,6 +899,11 @@ namespace WpfApp3
                     savepath = HCMGlobal.H3CheckpointPath;
                     break;
 
+                case "ODCP":
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
+                    break;
+
                 case "HRCP":
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
@@ -921,6 +962,11 @@ namespace WpfApp3
                 case "H3CP":
                     mainlist = H3CP_MainList;
                     savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
+                case "ODCP":
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
                     break;
 
                 case "HRCP":
@@ -984,10 +1030,17 @@ namespace WpfApp3
                     mainlist = H3CP_MainList;
                     savepath = HCMGlobal.H3CheckpointPath;
                     break;
+
+                case "ODCP_Sel_RenameButton":
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
+                    break;
+
                 case "HRCP_Sel_RenameButton":
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
                     break;
+
 
                 default:
                     break;
@@ -1077,6 +1130,12 @@ namespace WpfApp3
                     oldselected = H3CP_MainList.SelectedIndex;
                     mainlist = H3CP_MainList;
                     savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
+                case "ODCP":
+                    oldselected = ODCP_MainList.SelectedIndex;
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
                     break;
 
                 case "HRCP":
@@ -1353,6 +1412,94 @@ namespace WpfApp3
                     break;
 
 
+                case 4: //OD
+                    if (HCMGlobal.AttachedGame == "OD" && ValidCheck_OD())
+                    {
+                        //data to get; level code, diff, time
+
+                        //first check double revert flag
+                        int bytesWritten;
+                        bool DRflag;
+                        byte[] DRbuffer = new byte[1];
+                        var data = new HaloSaveFileMetadata();
+
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                        {
+                            DRflag = Convert.ToBoolean(DRbuffer[0]);
+                        }
+                        else { Debug("oh no"); NullOD(); return; }
+
+                        int offset;
+                        if (!DRflag)
+                        {
+                            offset = 0x0; //first cp
+                        }
+                        else
+                        {
+                            offset = 0x8F0000; //second cp
+                        }
+
+                        int[] addy = HCMGlobal.LoadedOffsets.OD_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                        addy[3] = offset;
+                        //setup done, let's get our data
+                        //levelcode
+                        byte[] buffer = new byte[64];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x15, buffer, buffer.Length, out bytesWritten))
+                        {
+                            char[] exceptions = new char[] { '_' };
+                            data.LevelCode = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                            data.LevelCode = data.LevelCode.Substring(data.LevelCode.LastIndexOf("\\") + 1);
+                            data.LevelCode = data.LevelCode.Substring(data.LevelCode.LastIndexOf("\\") + 1);
+                            data.LevelCode = String.Concat(data.LevelCode.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        }
+                        else { Debug("oh no"); NullOD(); return; }
+
+                        //difficulty
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            data.Difficulty = (Difficulty)4;
+                        }
+                        else
+                        {
+                            buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x26C, buffer, buffer.Length, out bytesWritten))
+                            {
+                                data.Difficulty = (Difficulty)buffer[0];
+                            }
+                            else { Debug("oh no"); NullOD(); return; }
+                        }
+                        //tickcount
+                        buffer = new byte[4];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + 0x004002E0, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.StartTick = BitConverter.ToUInt32(buffer, 0);
+                        }
+                        else { Debug("oh no"); NullOD(); return; }
+
+
+
+                        //now assign to ui
+                        ODCP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.HaloODST);
+
+                        ODCP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
+
+                        if (data.Difficulty != Difficulty.Invalid)
+                            ODCP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/OD/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            ODCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/OD/mp.png", UriKind.Relative));
+                        }
+                        else
+                        {
+                            ODCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/OD/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        }
+
+                    }
+                    else { Debug("oh no"); NullOD(); }
+                    break;
+
+
                 case 5: //reach
                     if (HCMGlobal.AttachedGame == "HR" && ValidCheck_HR())
                     {
@@ -1473,6 +1620,14 @@ namespace WpfApp3
                         H3CP_Loa_DiffName.Source = null;
                         H3CP_Loa_Time.Text = "N/A";
                         H3CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+
+                    void NullOD()
+                    {
+                        ODCP_Loa_LevelName.Text = "N/A";
+                        ODCP_Loa_DiffName.Source = null;
+                        ODCP_Loa_Time.Text = "N/A";
+                        ODCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
 
             }
@@ -1607,6 +1762,48 @@ namespace WpfApp3
                     }
                     break;
 
+                case 4: //OD
+                    if (ODCP_MainList.SelectedItem != null)
+                    {
+                        var item = ODCP_MainList.Items.GetItemAt(ODCP_MainList.SelectedIndex);
+                        System.Type type = item.GetType();
+                        string s = (string)type.GetProperty("Name").GetValue(item, null);
+                        var pathtotest = HCMGlobal.ODCheckpointPath + @"\" + s + @".bin";
+
+                        if (File.Exists(pathtotest))
+                        {
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo3);
+                            ODCP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.HaloODST);
+
+                            if (data.Difficulty != Difficulty.Invalid)
+                                ODCP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/OD/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                            ODCP_Sel_Time.Text = TickToTimeString(data.StartTick, true);
+                            Debug("AHHH" + TickToTimeString(data.StartTick, true));
+                            ODCP_Sel_FileName.Text = s;
+
+                            if (LevelCodeToGameType(data.LevelCode))
+                            {
+                                ODCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/OD/mp.png", UriKind.Relative));
+                            }
+                            else
+                            {
+                                ODCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/OD/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                        ODCP_Sel_LevelName.Text = "N/A";
+                        ODCP_Sel_DiffName.Source = null;
+                        ODCP_Sel_Time.Text = "N/A";
+                        ODCP_Sel_FileName.Text = "N/A";
+                        ODCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+                    break;
+
                 case 5: //reach
                     if (HRCP_MainList.SelectedItem != null)
                     {
@@ -1711,6 +1908,17 @@ namespace WpfApp3
                     Halo3Checkpoints.Clear();
                     break;
 
+                case 4: //odst
+
+                    savepath = HCMGlobal.ODCheckpointPath;
+                    game = HaloGame.HaloODST;
+                    list = ODCP_MainList;
+                    listlabel = ODCP_MainList_Label;
+                    oldselected = ODCP_MainList.SelectedIndex;
+                    collection = HaloODSTCheckpoints;
+                    HaloODSTCheckpoints.Clear();
+                    break;
+
                 case 5: //halo reach
                     
                     savepath = HCMGlobal.HRCheckpointPath;
@@ -1783,6 +1991,8 @@ namespace WpfApp3
             public string DifficultyImageH2 => $"images/H2/diff_{(int)Difficulty}.png";
             public string DifficultyImageH3 => $"images/H3/diff_{(int)Difficulty}.png";
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
+
+            public string DifficultyImageOD => $"images/OD/diff_{(int)Difficulty}.png";
             public string TimeString => TickToTimeString(StartTick, false);
         }
 
@@ -1811,6 +2021,12 @@ namespace WpfApp3
                     offsetLevelCode = 28;
                     offsetStartTick = 0x3E0220;
                     offsetDifficulty = 0x274;
+                    offsetSeed = 0;
+                    break;
+                case HaloGame.HaloODST:
+                    offsetLevelCode = 0x15;
+                    offsetStartTick = 0x004002E0;
+                    offsetDifficulty = 0x26C;
                     offsetSeed = 0;
                     break;
                 case HaloGame.HaloReach:
@@ -2068,6 +2284,28 @@ namespace WpfApp3
 
         };
 
+        readonly Dictionary<string, string> LevelCodeToNameOD = new Dictionary<string, string>()
+        { 
+
+
+             // ODST
+            //SP -- need to double check these. ODST is weird. also double check cases
+            { "c100", "Prepare to Drop" }, //aka the cutscene, not the MS1 level
+            { "c200", "Epilogue" },
+            { "h100", "Mombasa Streets" },
+            { "l200", "Data Hive" },
+            { "l300", "Coastal Highway" },
+            { "sc100", "Tayari Plaza" },
+            { "sc110", "Uplift Reserve" },
+            { "sc120", "Kinzingo Boulevard" },
+            { "sc130", "ONI Alpha Site" },
+            { "sc140", "NMPD HQ" },
+            { "sc150", "Kikowani Station" },
+            //MP
+            //imagine
+
+        };
+
         readonly Dictionary<string, string> LevelCodeToNameHR = new Dictionary<string, string>()
         {
 
@@ -2241,6 +2479,19 @@ namespace WpfApp3
             { "warehouse", true },
             //{ "zanzibar", true },
 
+            //ODST
+                        { "c100", false },
+            { "c200", false },
+            { "h100", false },
+            { "l200", false },
+            { "l300", false },
+            { "sc100", false },
+            { "sc110", false },
+            { "sc120", false },
+            { "sc130", false },
+            { "sc140", false },
+            { "sc150", false },
+
             // Halo Reach
             //SP
             { "m05", false },
@@ -2310,6 +2561,13 @@ namespace WpfApp3
 
                 case HaloGame.Halo3:
                     if (LevelCodeToNameH3.TryGetValue(code, out Name))
+                    {
+                        return Name;
+                    }
+                    return code;
+
+                case HaloGame.HaloODST:
+                    if (LevelCodeToNameOD.TryGetValue(code, out Name))
                     {
                         return Name;
                     }
@@ -4605,7 +4863,6 @@ namespace WpfApp3
             //todo; implement this
             switch (HCMGlobal.AttachedGame)
             {
-                case "OD":
                 case "H4"://these above games are not supported yet
 
                 default:
@@ -4615,6 +4872,7 @@ namespace WpfApp3
                     SetHR(false);
                     SetH2(false);
                     SetH3(false);
+                    SetOD(false);
                     break;
 
                 case "H1":
@@ -4622,6 +4880,7 @@ namespace WpfApp3
                     SetHR(false);
                     SetH2(false);
                     SetH3(false);
+                    SetOD(false);
                     break;
 
                 case "H2":
@@ -4629,6 +4888,7 @@ namespace WpfApp3
                     SetHR(false);
                     SetH2(true);
                     SetH3(false);
+                    SetOD(false);
                     break;
 
                 case "HR":
@@ -4636,6 +4896,7 @@ namespace WpfApp3
                     SetHR(true);
                     SetH2(false);
                     SetH3(false);
+                    SetOD(false);
                     break;
 
                 case "H3":
@@ -4643,6 +4904,15 @@ namespace WpfApp3
                     SetHR(false);
                     SetH2(false);
                     SetH3(true);
+                    SetOD(false);
+                    break;
+
+                case "OD":
+                    SetH1(false);
+                    SetHR(false);
+                    SetH2(false);
+                    SetH3(false);
+                    SetOD(true);
                     break;
 
 
@@ -4703,6 +4973,17 @@ namespace WpfApp3
                 H3CP_Loa_ForceCPDump.IsEnabled = state;
                 H3CP_Sel_InjectButton.IsEnabled = state;
                 H3CP_Sel_InjectRevertButton.IsEnabled = state;
+            }
+
+            void SetOD(bool state)
+            {
+                ODCP_ForceCheckpoint.IsEnabled = state;
+                ODCP_ForceRevert.IsEnabled = state;
+                ODCP_ForceDR.IsEnabled = state;
+                ODCP_Loa_DumpButton.IsEnabled = state;
+                ODCP_Loa_ForceCPDump.IsEnabled = state;
+                ODCP_Sel_InjectButton.IsEnabled = state;
+                ODCP_Sel_InjectRevertButton.IsEnabled = state;
             }
 
 
@@ -4838,6 +5119,39 @@ namespace WpfApp3
                     if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "leve")
                     {
                         Debug("h3 check success");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug("oh no");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Debug("oh no");
+                    return false;
+                }
+            }
+            catch
+            {
+                Debug("oh no");
+                return false;
+            }
+
+        }
+
+        private static bool ValidCheck_OD()
+        {
+
+            try
+            {
+                byte[] buffer = new byte[4];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_CheckString[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+                {
+                    if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "maps")
+                    {
+                        Debug("OD check success");
                         return true;
                     }
                     else
