@@ -125,7 +125,7 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.2";
+            public static readonly string HCMversion = "0.9.3";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
