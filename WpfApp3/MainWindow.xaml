@@ -364,7 +364,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="ODCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo3Checkpoints}">
+                    <ListView Margin="10,10,335,20" x:Name="ODCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloODSTCheckpoints}">
                         <ListView.View>
                             <GridView>
 

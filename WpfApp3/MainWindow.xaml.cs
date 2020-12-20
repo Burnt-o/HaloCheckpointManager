@@ -30,6 +30,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using Newtonsoft.Json.Serialization;
 
 //TODO LIST
 
@@ -172,7 +173,9 @@ namespace WpfApp3
             //the actual values will be populated from the json file corrosponding to the attached mcc version
 
             //general
-            public int[][] gameindicator;
+            public int[][] gameindicatormagic; //renamed from gameindicator > gameindicatormagicmagic. This is to 
+                                          //deliberately break HCM versions before 0.9.3 since if they recieve
+                                          //the 2028 offsets, they'll write junk data to cpmessage calls and crash MCC
             public int[][] menuindicator;
             public int[][] stateindicator;
 
@@ -183,6 +186,44 @@ namespace WpfApp3
             public int[][] H1_CheckString;
             public int[][] H1_TickCounter; //b0 01 4c 8b 7c 24 20 4c 8b 74 24 28. inc right above.
             public int[][] H1_Message; //8b 48 0c 89 0b. 89 0b writes to it (only when getting a message)
+
+            public byte[] H1_MessageCode; //
+            public int H1_CPData_LevelCode; 
+            public int H1_CPData_StartTick;
+            public int H1_CPData_Difficulty;
+            public int H1_CPData_Size;
+
+
+
+            //                case HaloGame.Halo1:
+            /*            offsetLevelCode = 11;
+                                offsetStartTick = 756;
+                                offsetDifficulty = 294;
+                                offsetSeed = 0;
+                                break;
+                            case HaloGame.Halo2:
+                                offsetLevelCode = 23;
+                                offsetStartTick = 10824;
+                                offsetDifficulty = 974;
+                                offsetSeed = 0;
+                                break;
+                            case HaloGame.Halo3:
+                                offsetLevelCode = 28;
+                                offsetStartTick = 0x3E0220;
+                                offsetDifficulty = 0x274;
+                                offsetSeed = 0;
+                                break;
+                            case HaloGame.HaloODST:
+                                offsetLevelCode = 0x15;
+                                offsetStartTick = 0x004002E0;
+                                offsetDifficulty = 0x26C;
+                                offsetSeed = 0;
+                                break;
+                            case HaloGame.HaloReach:
+                                offsetLevelCode = 0xFD73;
+                                offsetStartTick = 0x10FD54;
+                                offsetDifficulty = 0xFEFC;
+                                offsetSeed = 0x148;*/
 
             //hr
             public int[][] HR_LevelName; //0x3FB3D9 ahead of checkpoint
@@ -195,6 +236,19 @@ namespace WpfApp3
             public int[][] HR_TickCounter; //8b c7 48 8b 0c 18 44 01 61 0c. the add writes to it.
             public int[][] HR_Message; //4B 8b 04 2e 8b 48 0c 89 4b 04. last mov writes to it (messageTC) when getting message.
             public int[][] HR_MessageCall; //48 89 6c 24 20 41 b9 01 00 00 00. should have "checkpoint save" next to it in disassembly. the call 7 instructions above the cp save is the cp message call ; E8 67 46 28 00
+            
+            
+            public byte[] HR_MessageCode;
+            public int HR_CPData_LevelCode;
+            public int HR_CPData_StartTick;
+            public int HR_CPData_Difficulty;
+            public int HR_CPData_Seed;
+            public int HR_CPData_DROffset1;
+            public int HR_CPData_DROffset2;
+            public int HR_CPData_Size;
+            public int[][] HR_CPData_PreserveLocations;
+
+
 
             public int[][] H2_LevelName; //take second last oldmombassa from; load outskirts then scan for, WRITEABLE: 30 33 61 5F 6F 6C 64 6D 6F 6D 62 61 73 61 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 73 63 65 6E 61 72 69 6F 73 5C 73 6F 6C 6F 5C 30 33 61 5F 6F 6C 64 6D 6F 6D 62 61 73
             public int[][] H2_CheckString;
@@ -208,6 +262,18 @@ namespace WpfApp3
             public int[][] H2_LoadedBSP1; //scan for writable, unicode, case sens "halo2\h2_m". two of the results will have "untracked version" a little above". 0x1F8 before the halo2 string is the bsp bytes.
             public int[][] H2_LoadedBSP2;
 
+
+            public byte[] H2_MessageCode;
+            public int H2_CPData_LevelCode;
+            public int H2_CPData_StartTick;
+            public int H2_CPData_Difficulty;
+            public int[] H2_CPData_BSP;
+            public int H2_CPData_DROffset1;
+            public int H2_CPData_DROffset2;
+            public int H2_CPData_Size;
+            public int[][] H2_CPData_PreserveLocations;
+
+
             public int[][] H3_LevelName; //load up ark easy, scan for writeable 64 61 65 68 0B 00 00 00 00 E0 D4 22 00 00 00 00 84 D6 F5 8A 01 00 00 00 00 E0 9E 1C 00 00 36 06
             public int[][] H3_CheckString;
             public int[][] H3_Checkpoint; //rel
@@ -220,6 +286,19 @@ namespace WpfApp3
             public int[][] H3_LoadedBSP1; //load into ark. two last results of scan for writeable 01 00 00 00 00 00 00 00 C0 09 68 14 01 10 00 00 01 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
             public int[][] H3_LoadedBSP2;
 
+
+            public byte[] H3_MessageCode;
+            public int H3_CPData_LevelCode;
+            public int H3_CPData_StartTick;
+            public int H3_CPData_Difficulty;
+            public int[] H3_CPData_BSP;
+            public int[] H3_CPData_SHA;
+            public int H3_CPData_DROffset1;
+            public int H3_CPData_DROffset2;
+            public int H3_CPData_Size;
+            public int[][] H3_CPData_PreserveLocations;
+
+
             public int[][] OD_LevelName; 
             public int[][] OD_CheckString;
             public int[][] OD_Checkpoint; 
@@ -231,6 +310,18 @@ namespace WpfApp3
             public int[][] OD_MessageCall;
             public int[][] OD_LoadedBSP1; 
             public int[][] OD_LoadedBSP2;
+
+            public byte[] OD_MessageCode;
+            public int OD_CPData_LevelCode;
+            public int OD_CPData_StartTick;
+            public int OD_CPData_Difficulty;
+            public int[] OD_CPData_BSP;
+            public int[] OD_CPData_SHA;
+            public int OD_CPData_DROffset1;
+            public int OD_CPData_DROffset2;
+            public int OD_CPData_Size;
+            public int[][] OD_CPData_PreserveLocations;
+
 
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
@@ -319,6 +410,8 @@ namespace WpfApp3
                 System.Net.WebClient client = new System.Net.WebClient();
                 String json = client.DownloadString(url);
                 Debug("accessed updates file!" + json);
+
+
 
                 HCMGlobal.MandatoryUpdates = JsonConvert.DeserializeObject<MandatoryUpdates>(json);
 
@@ -1772,7 +1865,7 @@ namespace WpfApp3
 
                         if (File.Exists(pathtotest))
                         {
-                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo3);
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.HaloODST);
                             ODCP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.HaloODST);
 
                             if (data.Difficulty != Difficulty.Invalid)
@@ -2796,7 +2889,8 @@ namespace WpfApp3
 
                             Thread.Sleep(50);
 
-                            buffer = new byte[5] { 0xE8, 0x57, 0xCA, 0x18, 0x00 };
+                            buffer = new byte[5];
+                            buffer = HCMGlobal.LoadedOffsets.H2_MessageCode;
                             if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("h2: custom message 5: success");
@@ -2812,7 +2906,8 @@ namespace WpfApp3
 
                                 try
                                 {
-                                    buffer = new byte[5] { 0xE8, 0x57, 0xCA, 0x18, 0x00 };
+                                    buffer = new byte[5];
+                                    buffer = HCMGlobal.LoadedOffsets.H2_MessageCode;
                                     WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
                                 }
                                 catch
@@ -2913,7 +3008,8 @@ namespace WpfApp3
 
                             Thread.Sleep(50);
 
-                            buffer = new byte[5] { 0xE8, 0x31, 0xDF, 0x1F, 0x00 };
+                            buffer = new byte[5];
+                            buffer = HCMGlobal.LoadedOffsets.H3_MessageCode;
                             if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("H3: custom message 5: success");
@@ -2929,7 +3025,8 @@ namespace WpfApp3
 
                                 try
                                 {
-                                    buffer = new byte[5] { 0xE8, 0x31, 0xDF, 0x1F, 0x00 };
+                                    buffer = new byte[5];
+                                    buffer = HCMGlobal.LoadedOffsets.H3_MessageCode;
                                     WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
                                 }
                                 catch
@@ -2949,6 +3046,129 @@ namespace WpfApp3
                     {
                         return (false, "unknown error occured: " + ex.ToString());
                     }
+
+
+                ///start inserting code for ODST here, then revert, dr, dump, and inject
+                ///
+                case "ODCP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "OD" && ValidCheck_OD())
+                        {
+
+                            //next, the custom message stuff
+                            //null the cp messagecall
+                            byte[] buffer = new byte[5] { 0x90, 0x90, 0x90, 0x90, 0x90 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: custom message 0: success");
+                            }
+                            else
+                            {
+                                return (false, "message 0 failure");
+                            }
+
+
+                            //acquire the current tickcount
+                            buffer = new byte[4];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: custom message 1: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 1 failure");
+                            }
+
+                            //buffer will be equal to the tickcounter so just paste it into the new spot
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: custom message 2: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 2 failure");
+                            }
+
+                            buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                            buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0xC8, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: custom message 3: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 3 failure");
+                            }
+
+                            buffer = new byte[1] { 1 }; //setting showmessage flag to true
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 7, buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: custom message 4: success");
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                return (false, "message 4 failure");
+                            }
+
+                            buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Checkpoint[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: made cp");
+
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                Debug("OD: failed to make cp");
+                                return (false, "failed to write cp byte");
+                            }
+
+                            Thread.Sleep(50);
+
+                            buffer = new byte[5];
+                            buffer = HCMGlobal.LoadedOffsets.OD_MessageCode;
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: custom message 5: success");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "message 5 failure");
+                            }
+
+                            void FixMessageCall()
+                            {
+
+                                try
+                                {
+                                    buffer = new byte[5];
+                                    buffer = HCMGlobal.LoadedOffsets.OD_MessageCode;
+                                    WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make cp because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
 
                 case "HRCP":
                     try
@@ -3030,7 +3250,8 @@ namespace WpfApp3
 
                             Thread.Sleep(50);
 
-                            buffer = new byte[5] { 0xE8, 0x67, 0x46, 0x28, 0x00 };
+                            buffer = new byte[5];
+                            buffer = HCMGlobal.LoadedOffsets.HR_MessageCode;
                             if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("hr: custom message 5: success");
@@ -3046,7 +3267,8 @@ namespace WpfApp3
 
                                 try
                                 {
-                                    buffer = new byte[5] { 0xE8, 0x67, 0x46, 0x28, 0x00 };
+                                    buffer = new byte[5];
+                                    buffer = HCMGlobal.LoadedOffsets.HR_MessageCode;
                                     WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
                                 }
                                 catch
@@ -3168,6 +3390,34 @@ namespace WpfApp3
                             else
                             {
                                 Debug("H3: failed to make revert");
+                                return (false, "failed to write revert byte");
+                            }
+                        }
+                        else
+                        {
+                            return (false, "failed to force revert because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+                case "ODCP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "OD" && ValidCheck_OD())
+                        {
+                            byte[] buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Revert[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: made revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                Debug("OD: failed to make revert");
                                 return (false, "failed to write revert byte");
                             }
                         }
@@ -3370,6 +3620,44 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+                case "ODCP":
+
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "OD" && ValidCheck_OD())
+                        {
+                            byte[] buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: read double revert flag");
+                            }
+                            else
+                            {
+                                return (false, "failed to read double revert flag");
+                            }
+
+                            buffer[0] = Convert.ToByte(!(BitConverter.ToBoolean(buffer, 0))); //just flip the value lmao
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("OD: made double revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "OD: failed to make double revert");
+                            }
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make double revert because not attached");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 default:
                     return (false, "invalid game");
 
@@ -3513,6 +3801,9 @@ namespace WpfApp3
                                         {
                                             Debug("SUCESSFULLY DUMPED H2 CP, LENGTH: " + test.Length.ToString());
                                         }
+
+
+
                                     }
                                     catch
                                     {
@@ -3601,6 +3892,96 @@ namespace WpfApp3
                                         if (File.Exists(test.ToString()) && test.Length > 1000)
                                         {
                                             Debug("SUCESSFULLY DUMPED H3 CP, LENGTH: " + test.Length.ToString());
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Debug("something went wrong trying to save a save: " + game + ", " + proposedsave);
+                                        return (false, "couldn't write save file to disk, did you have an invalid name? proposed save: " + proposedsave);
+                                        //need to make this a popup to let user know what was bad
+                                    }
+                                }
+                                else
+                                {
+                                    return (false, "back up directory didn't exist: " + backuploc);
+                                }
+                            }
+                            else
+                            {
+                                return (false, "failed to read checkpoint from memory");
+                            }
+
+                            return (true, "success!");
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+
+
+                case "ODCP":
+                    try
+                    {
+
+                        if (HCMGlobal.AttachedGame == "OD" && ValidCheck_OD())
+                        {
+
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                Debug("something went wrong trying to read DR flag for OD dumping");
+                                return (false, "Failed to read double-revert byte");
+                            }
+
+                            byte[] buffer = new byte[9371648];
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = 0; //first cp
+                            }
+                            else
+                            {
+                                offset = 0x8F0000; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.OD_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+
+                                string backuploc = HCMGlobal.ODCheckpointPath;
+
+                                if (Directory.Exists(backuploc))
+                                {
+                                    var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                                       "Name your backup save",
+                                                       "",
+                                                       -1, -1);
+                                    string proposedsave = (backuploc + @"\" + userinput + @".bin");
+                                    if (userinput == "")
+                                        return (false, "cancelclick");
+                                    try
+                                    {
+                                        File.WriteAllBytes(proposedsave, buffer);
+                                        FileInfo test = new FileInfo(proposedsave);
+                                        if (File.Exists(test.ToString()) && test.Length > 1000)
+                                        {
+                                            Debug("SUCESSFULLY DUMPED OD CP, LENGTH: " + test.Length.ToString());
                                         }
                                     }
                                     catch
@@ -3859,7 +4240,8 @@ namespace WpfApp3
                             addy[3] = offset;
 
                             //setup a 2d array with the values we need to preserve (offset, length)
-                            int[][] PreserveLocations = new int[][] { new int[] { 0x4D1C, 8 } };
+                            int[][] PreserveLocations = new int[][] { new int[] { 0x4D1C, 8 }, new int[] { 0x2BBC, 8 } }; //first let's checkpoints load at all, second one fixes restart-level bug
+                          
 
                             foreach (int[] i in PreserveLocations)
                             {
@@ -3886,6 +4268,10 @@ namespace WpfApp3
                             {
                                 return (false, "failed injecting h2 cp");
                             }
+
+
+                            //ok this is some weird shit but we also gotta inject the cp to a third location or else level restart will fail. not sure whats up with that
+
 
                             //gotta set the cp loaded bsp or we'll crash da game!
                             int[] addybsp;
@@ -3983,7 +4369,9 @@ namespace WpfApp3
                             addy[3] = offset;
 
                             //setup a 2d array with the values we need to preserve (offset, length)
-                            int[][] PreserveLocations = new int[][] { new int[] { 0x8, 0x4 }, new int[] { 0x3F0528, 0x16 }, new int[] { 0x3F4524, 0x2 }, /*new int[] { 0x3F458B, 0x2 },*/ new int[] { 0x3F051C, 0x8 }/*, new int[] { 0x3F05BC, 0x8 }, new int[] { 0x3F06E4, 0x8 }, new int[] { 0x3F4EB4, 0x8 }*/ };
+
+                            ///THIS HAS CHANGED AAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+                            int[][] PreserveLocations = new int[][] { new int[] { 0x8, 0x4 }, new int[] { 0x3F0628, 0x16 }, new int[] { 0x3F4824, 0x2 }, /*new int[] { 0x3F458B, 0x2 },*/ new int[] { 0x3F061C, 0x8 }/*, new int[] { 0x3F05BC, 0x8 }, new int[] { 0x3F06E4, 0x8 }, new int[] { 0x3F4EB4, 0x8 }*/ };
 
                             foreach (int[] i in PreserveLocations)
                             {
@@ -4005,13 +4393,13 @@ namespace WpfApp3
                             //NEXT DO HASH STUFF
                             //first, store the old hash value (not really necessary but helps debugging)
                             byte[] oldhash = new byte[20];
-                            Array.Copy(buffer, 0xFB18, oldhash, 0, 20);
+                            Array.Copy(buffer, 0xFC18, oldhash, 0, 20);
                             Debug("oldhash: " + BitConverter.ToString(oldhash).Replace("-", ""));
 
 
                             //zero out the hash at FB18 (dec 20 bytes)
                             byte[] zeroes = new byte[20];
-                            Array.Copy(zeroes, 0, buffer, 0xFB18, 20);
+                            Array.Copy(zeroes, 0, buffer, 0xFC18, 20);
 
                             //then calculate the sha-1 hash
                             try
@@ -4021,7 +4409,7 @@ namespace WpfApp3
                                     byte[] newhash = cryptoProvider.ComputeHash(buffer);
 
                                     //write the hash at FB18 
-                                    Array.Copy(newhash, 0, buffer, 0xFB18, 20);
+                                    Array.Copy(newhash, 0, buffer, 0xFC18, 20);
                                     Debug("newhash: " + BitConverter.ToString(newhash).Replace("-", ""));
                                 }
                             }
@@ -4035,7 +4423,7 @@ namespace WpfApp3
 
                             //bsp manip
                             byte[] buffer6 = new byte[44];
-                            Array.Copy(buffer, 0xFAD8, buffer6, 0, 44);//read bsp from checkpoint file
+                            Array.Copy(buffer, 0xFBD8, buffer6, 0, 44);//read bsp from checkpoint file
                             int[][] bspoffsets;
                             if (!DRflag)
                             {
@@ -4080,6 +4468,165 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+
+
+                case "ODCP":
+                    try
+                    {
+                        Debug("attempting to inject OD checkpoint");
+                        if (ODCP_MainList.SelectedItem == null)
+                        {
+                            return (false, "no save file selected!");
+                        }
+
+                        if (HCMGlobal.AttachedGame == "OD" && ValidCheck_OD())
+                        {
+                            var item = ODCP_MainList.Items.GetItemAt(ODCP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                            string sourcePath = HCMGlobal.ODCheckpointPath + @"\" + item.Name + @".bin";
+                            byte[] buffer;
+                            try
+                            {
+                                FileStream fs = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+                                // Create a byte array of file stream length
+                                buffer = System.IO.File.ReadAllBytes(sourcePath);
+                                //Read block of bytes from stream into the byte array
+                                fs.Read(buffer, 0, System.Convert.ToInt32(fs.Length));
+                                //Close the File Stream
+                                fs.Close();
+                                Console.WriteLine("nearly ready to inject, buffer length: " + buffer.Length.ToString());
+                            }
+                            catch
+                            {
+                                return (false, "failed to access save file");
+                            }
+
+                            //okay first we need to read from memory the bytes that we need to preserve and overwrite them in buffer
+                            //let's check the DR flag first
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                return (false, "something went wrong trying to read DR flag for OD injecting");
+                            }
+
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = 0x0; //first cp
+                            }
+                            else
+                            {
+                                offset = 0x8F0000; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.OD_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+
+                            //setup a 2d array with the values we need to preserve (offset, length)
+
+                            int[][] PreserveLocations = new int[][] { new int[] { 0x4005AC, 0x4 }, new int[] { 0x4005B8, 0x2 }, new int[] { 0x405A34, 0x2 } };
+                            //possibly unncessary preserves: { 0x3F458B, 0x2 }, { 0x3F05BC, 0x8 }, { 0x3F06E4, 0x8 }
+
+                            foreach (int[] i in PreserveLocations)
+                            {
+                                byte[] tempbuffer = new byte[i[1]];
+                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten))
+                                {
+                                    //overwrite the stored cp buffer with new vals
+                                    Array.ConstrainedCopy(tempbuffer, 0, buffer, i[0], i[1]);
+                                    Debug("successfully copied over buffer at " + i[0]);
+                                }
+                                else
+                                {
+                                    return (false, "failed reading current vals for OD injection");
+                                }
+                            }
+
+                            //now the hash stuff because for some god foresaken reason OD checkpoints have a hash (thanks scales)
+
+                            //NEXT DO HASH STUFF
+                            //first, store the old hash value (not really necessary but helps debugging)
+                            byte[] oldhash = new byte[20];
+                            Array.Copy(buffer, 0xFB10, oldhash, 0, 20);
+                            Debug("oldhash: " + BitConverter.ToString(oldhash).Replace("-", ""));
+
+
+                            //zero out the hash at FB18 (dec 20 bytes)
+                            byte[] zeroes = new byte[20];
+                            Array.Copy(zeroes, 0, buffer, 0xFB10, 20);
+
+                            //then calculate the sha-1 hash
+                            try
+                            {
+                                using (var cryptoProvider = new SHA1CryptoServiceProvider())
+                                {
+                                    byte[] newhash = cryptoProvider.ComputeHash(buffer);
+
+                                    //write the hash at FB18 
+                                    Array.Copy(newhash, 0, buffer, 0xFB10, 20);
+                                    Debug("newhash: " + BitConverter.ToString(newhash).Replace("-", ""));
+                                }
+                            }
+                            catch
+                            {
+                                return (false, "something went wrong calculating cp hash");
+                            }
+
+                            //gotta set the cp loaded bsp or we'll crash da game!
+
+
+                            //bsp manip
+                            byte[] buffer6 = new byte[60];
+                            Array.Copy(buffer, 0xFAC0, buffer6, 0, 60);//read bsp from checkpoint file
+                            int[][] bspoffsets;
+                            if (!DRflag)
+                            {
+                                bspoffsets = HCMGlobal.LoadedOffsets.OD_LoadedBSP1;
+                            }
+                            else
+                            {
+                                bspoffsets = HCMGlobal.LoadedOffsets.OD_LoadedBSP2;
+                            }
+
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, bspoffsets[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer6, buffer6.Length, out int bytesWritten6)) //write it in so the game knows what bsp to load
+                            {
+                                Debug("Successfully pasted OD bsp bytes: " + BitConverter.ToString(buffer6).Replace("-", ""));
+                            }
+                            else
+                            {
+                                return (false, "failed pasting OD bsp bytes");
+                            }
+
+
+                            //now to inject the prepared checkpoint into memory
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("successfully injected OD cp, " + buffer.Length.ToString() + " bytes!");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "failed injecting OD cp");
+                            }
+
+
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
 
                 case "HRCP":
                     try
@@ -4337,7 +4884,7 @@ namespace WpfApp3
             during all this we need to set a steam vs winstore flag
 
             then; check game version (do we have the offsets to support it?)
-            check gameindicator and menuindicator to check whether we're in game (and which game) vs menu
+            check gameindicatormagic and menuindicator to check whether we're in game (and which game) vs menu
                 then disable the ui functions related to the games that we're not in (the ones that need attachment anyway, like dump/inject)
 
             also we're gonna need to set some sort of "busy flag" that's enabled when injections/dumps are happening that tells all this to not happen
@@ -4440,18 +4987,22 @@ namespace WpfApp3
                     {
                         string json = r.ReadToEnd();
                         r.Close();
+                        ITraceWriter traceWriter = new MemoryTraceWriter();
                         try
                         {
 
+
+                            
                             var s = json;
                             var res = Regex.Replace(s, @"(?i)\b0x([a-f0-9]+)\b", m => Hex2Dec(m.Groups[1].Value));
                             Debug(res);
-                            HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res);
+                            HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res, new JsonSerializerSettings { TraceWriter = traceWriter, });
 
                         }
                         catch
                         {
                             Debug("something went horrifically wrong trying to load local json file");
+                            Debug(traceWriter.ToString());
                             HCMGlobal.AttachedGame = "No";
                             SetEnabledUI();
                             HCMGlobal.GiveUpFlag = true;
@@ -4474,17 +5025,17 @@ namespace WpfApp3
                         //Debug("json string: " + json);
                     }
 
-                    if (HCMGlobal.LoadedOffsets.gameindicator == null)
+                    if (HCMGlobal.LoadedOffsets.gameindicatormagic == null)
                     {
                         Debug("something went horribly wrong loading the json");
                     }
                     else
                     {
-                        Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicator.ToString());
-                        Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicator[0][0].ToString());
-                        Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
-                        Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
-                        Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
+                        Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicatormagic.ToString());
+                        Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicatormagic[0][0].ToString());
+                        Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicatormagic[0][1].ToString());
+                        Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicatormagic[1][0].ToString());
+                        Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicatormagic[1][1].ToString());
                         failedlocalcheck = false;
                         //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
                     }
@@ -4512,16 +5063,19 @@ namespace WpfApp3
                             {
                                 string json2 = r.ReadToEnd();
                                 r.Close();
+                                ITraceWriter traceWriter = new MemoryTraceWriter();
                                 try
                                 {
+                                    
                                     var s = json2;
                                     var res = Regex.Replace(s, @"(?i)\b0x([a-f0-9]+)\b", m => Hex2Dec(m.Groups[1].Value));
                                     Debug(res);
-                                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res);
+                                    HCMGlobal.LoadedOffsets = JsonConvert.DeserializeObject<Offsets>(res, new JsonSerializerSettings { TraceWriter = traceWriter, });
                                 }
                                 catch
                                 {
                                     Debug("something went horrifically wrong trying to load downloaded local json file");
+                                    Debug(traceWriter.ToString());
                                     HCMGlobal.AttachedGame = "No";
                                     SetEnabledUI();
                                     HCMGlobal.GiveUpFlag = true;
@@ -4544,17 +5098,17 @@ namespace WpfApp3
                                 //Debug("json string: " + json);
                             }
 
-                            if (HCMGlobal.LoadedOffsets.gameindicator == null)
+                            if (HCMGlobal.LoadedOffsets.gameindicatormagic == null)
                             {
                                 Debug("something went horribly wrong loading the json");
                             }
                             else
                             {
-                                Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicator.ToString());
-                                Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicator[0][0].ToString());
-                                Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicator[0][1].ToString());
-                                Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicator[1][0].ToString());
-                                Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicator[1][1].ToString());
+                                Debug("gi: " + HCMGlobal.LoadedOffsets.gameindicatormagic.ToString());
+                                Debug("gi00: " + HCMGlobal.LoadedOffsets.gameindicatormagic[0][0].ToString());
+                                Debug("gi01: " + HCMGlobal.LoadedOffsets.gameindicatormagic[0][1].ToString());
+                                Debug("gi10: " + HCMGlobal.LoadedOffsets.gameindicatormagic[1][0].ToString());
+                                Debug("gi11: " + HCMGlobal.LoadedOffsets.gameindicatormagic[1][1].ToString());
                                 //if (HCMGlobal.SavedConfig.CoreFolderPath == null)
                             }
                         }
@@ -4571,7 +5125,7 @@ namespace WpfApp3
                 //check that offsets aren't null
                 try
                 {
-                    if (HCMGlobal.LoadedOffsets.gameindicator[0][0] > 0)
+                    if (HCMGlobal.LoadedOffsets.gameindicatormagic[0][0] > 0)
                     {
                         //success!
                         Debug("SUCCESS");
@@ -4639,7 +5193,7 @@ namespace WpfApp3
             //let's check whether we're in game (as opposed to menu), and which game we're in
             byte[] buffer = new byte[1];
 
-            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.gameindicator[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.gameindicatormagic[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
             {
                 switch (buffer[0])
                 {
@@ -4670,7 +5224,7 @@ namespace WpfApp3
 
                 }
             }
-            else //means reading the gameindicator failed
+            else //means reading the gameindicatormagic failed
             {
                 Debug("failed to read game indicator");
                 Debug("winflag?: " + HCMGlobal.WinFlag);
@@ -4741,8 +5295,6 @@ namespace WpfApp3
             switch (HCMGlobal.AttachedGame)
             {
                 
-
-                case "OD":
                 case "H4"://these above games are not supported yet
 
                 default:
@@ -4803,6 +5355,25 @@ namespace WpfApp3
                     else
                     {
                         Debug("failed to read h3 level");
+                        HCMGlobal.AttachedLevel = null;
+                    }
+                    break;
+
+                case "OD":
+
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                    {
+                        holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        char[] exceptions = new char[] { '_' };
+                        holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        Debug("read OD level: " + holdstring);
+                        HCMGlobal.AttachedLevel = holdstring;
+                    }
+                    else
+                    {
+                        Debug("failed to read OD level");
                         HCMGlobal.AttachedLevel = null;
                     }
                     break;
@@ -4933,10 +5504,15 @@ namespace WpfApp3
 
                 if (HCMGlobal.CoreFolderPath == null)
                 {
-                    H1CS_Loa_ForceCPDump.IsEnabled = false;
+                    H1CS_Loa_ForceCPDump.IsEnabled = false; //something with our auto core folder detection went wrong
                     H1CS_Sel_InjectRevertButton.IsEnabled = false;
                     H1CS_Loa_DumpButton.IsEnabled = false;
                     H1CS_Sel_InjectButton.IsEnabled = false;
+                }
+                else
+                {
+                    H1CS_Loa_DumpButton.IsEnabled = true; //these will work even if we're not attached with correct offsets
+                    H1CS_Sel_InjectButton.IsEnabled = true;
                 }
 
             }

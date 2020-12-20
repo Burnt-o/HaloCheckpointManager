@@ -126,6 +126,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="offsets\1.1871.0.0.json" />
+    <None Include="offsets\1.2028.0.0.json" />
     <None Include="offsets\1.1955.0.0.json" />
     <None Include="offsets\Updates.json" />
     <None Include="packages.config" />
@@ -312,6 +313,38 @@
     <Resource Include="images\H3\diff_3.png" />
     <Resource Include="images\H3\diff_4.png" />
     <Resource Include="images\H3\mp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\OD\c100_ani.png" />
+    <Resource Include="images\OD\c100_clas.png" />
+    <Resource Include="images\OD\h100_anni.png" />
+    <Resource Include="images\OD\h100_clas.png" />
+    <Resource Include="images\OD\l200_anni.png" />
+    <Resource Include="images\OD\l200_clas.png" />
+    <Resource Include="images\OD\l300_anni.png" />
+    <Resource Include="images\OD\l300_clas.png" />
+    <Resource Include="images\OD\sc100_anni.png" />
+    <Resource Include="images\OD\sc100_clas.png" />
+    <Resource Include="images\OD\sc110_anni.png" />
+    <Resource Include="images\OD\sc110_clas.png" />
+    <Resource Include="images\OD\sc120_anni.png" />
+    <Resource Include="images\OD\sc120_clas.png" />
+    <Resource Include="images\OD\sc130_anni.png" />
+    <Resource Include="images\OD\sc130_clas.png" />
+    <Resource Include="images\OD\sc140_anni.png" />
+    <Resource Include="images\OD\sc140_clas.png" />
+    <Resource Include="images\OD\sc150_anni.png" />
+    <Resource Include="images\OD\sc150_clas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\OD\diff_4.png" />
+    <Resource Include="images\OD\mp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\OD\diff_0.png" />
+    <Resource Include="images\OD\diff_1.png" />
+    <Resource Include="images\OD\diff_2.png" />
+    <Resource Include="images\OD\diff_3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
