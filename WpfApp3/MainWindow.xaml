@@ -46,7 +46,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo1CoreSaves}">
+                    <ListView Margin="10,10,335,41" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo1CoreSaves}">
                         <ListView.View>
                             <GridView>
 
@@ -115,7 +115,7 @@
 
 
                     </Grid>
-                    <ComboBox x:Name="H1Profile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden" />
+                    <ComboBox x:Name="H1CSProfile" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="26" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" />
 
                 </Grid>
             </TabItem>
@@ -174,6 +174,8 @@
                     <Image x:Name="CP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,41,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
                     <Image x:Name="CP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,235,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
 
+                    <ComboBox x:Name="H1CPProfile" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="26" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" />
+
 
                 </Grid>
             </TabItem>
@@ -187,7 +189,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo2Checkpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo2Checkpoints}">
                         <ListView.View>
                             <GridView>
 
@@ -260,8 +262,8 @@
 
 
                     </Grid>
-                    <ComboBox x:Name="H2Profile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden"/>
-                    
+                    <ComboBox x:Name="H2Profile"  Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="26" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" />
+
 
 
                 </Grid>
@@ -274,7 +276,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="H3CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo3Checkpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="H3CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo3Checkpoints}">
                         <ListView.View>
                             <GridView>
 
@@ -347,7 +349,7 @@
 
 
                     </Grid>
-                    <ComboBox x:Name="H3Profile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden"/>
+                    <ComboBox x:Name="H3Profile"  Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="26" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000"/>
 
 
 
@@ -364,7 +366,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="ODCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloODSTCheckpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="ODCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloODSTCheckpoints}">
                         <ListView.View>
                             <GridView>
 
@@ -437,7 +439,7 @@
 
 
                     </Grid>
-                    <ComboBox x:Name="ODProfile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden"/>
+                    <ComboBox x:Name="ODProfile"  Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="26" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000"/>
 
 
 
@@ -452,7 +454,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="HRCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="HRCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
                         <ListView.View>
                             <GridView>
 
@@ -527,7 +529,7 @@
 
 
                     </Grid>
-                    <ComboBox x:Name="HRProfile" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="0,454,0,0" VerticalAlignment="Top" Width="133" SelectionChanged="ProfileChanged" IsEnabled="false" Visibility="Hidden"/>
+                    <ComboBox x:Name="HRProfile" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="26" Margin="10,0,0,9" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000"/>
                     <Label x:Name="ReachLoadedSeed" Content="Loaded Seed: N/A"  FontSize="11" Grid.Column="2" HorizontalAlignment="Left" Height="32" Margin="568,-4,0,0" VerticalAlignment="Top" Width="140" RenderTransformOrigin="-1.983,-2.312"/>
 
 

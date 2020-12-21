@@ -128,12 +128,19 @@ namespace WpfApp3
             public static readonly string HCMversion = "0.9.3";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            public static readonly string H1CoreSavePath = LocalDir + @"\saves\h1cs";
-            public static readonly string H1CheckpointPath = LocalDir + @"\saves\h1cp";
-            public static readonly string H2CheckpointPath = LocalDir + @"\saves\h2cp";
-            public static readonly string H3CheckpointPath = LocalDir + @"\saves\h3cp";
-            public static readonly string HRCheckpointPath = LocalDir + @"\saves\hrcp";
-            public static readonly string ODCheckpointPath = LocalDir + @"\saves\odcp";
+            public static  string H1CoreSavePath = LocalDir + @"\saves\h1cs";
+            public static  string H1CheckpointPath = LocalDir + @"\saves\h1cp";
+            public static  string H2CheckpointPath = LocalDir + @"\saves\h2cp";
+            public static  string H3CheckpointPath = LocalDir + @"\saves\h3cp";
+            public static  string HRCheckpointPath = LocalDir + @"\saves\hrcp";
+            public static  string ODCheckpointPath = LocalDir + @"\saves\odcp";
+
+            public static readonly string RootH1CoreSavePath = LocalDir + @"\saves\h1cs";
+            public static readonly string RootH1CheckpointPath = LocalDir + @"\saves\h1cp";
+            public static readonly string RootH2CheckpointPath = LocalDir + @"\saves\h2cp";
+            public static readonly string RootH3CheckpointPath = LocalDir + @"\saves\h3cp";
+            public static readonly string RootHRCheckpointPath = LocalDir + @"\saves\hrcp";
+            public static readonly string RootODCheckpointPath = LocalDir + @"\saves\odcp";
 
             public static readonly string ConfigPath = LocalDir + @"\config.json";
             public static readonly string LogPath = LocalDir + @"\log.txt";
@@ -591,7 +598,8 @@ namespace WpfApp3
 
         readonly Dictionary<string, string> ProfileTypeToPath = new Dictionary<string, string>()
             {
-                { "H1Profile", HCMGlobal.H1CoreSavePath},
+                { "H1CSProfile", HCMGlobal.H1CoreSavePath},
+                { "H1CPProfile", HCMGlobal.H1CheckpointPath},
                 { "H2Profile", HCMGlobal.H2CheckpointPath},
                 { "H3Profile", HCMGlobal.H3CheckpointPath},
                 { "HRProfile", HCMGlobal.HRCheckpointPath},
@@ -613,7 +621,7 @@ namespace WpfApp3
         private void SetupProfiles()
        {
 
-            var list = new List<ComboBox> { H1Profile, H2Profile, H3Profile, HRProfile };
+            var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile };
 
 
             foreach (ComboBox cb in list)
@@ -640,14 +648,20 @@ namespace WpfApp3
 
         }
 
-        private void ProfileChanged(object sender, RoutedEventArgs e)
+
+
+        private void ProfileChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (H1Profile.SelectedItem != null)
-            Debug("GJIJG: " + H1Profile.SelectedItem.ToString());
+
+
+            if (H1CSProfile.SelectedItem != null)
+            Debug("GJIJG: " + H1CSProfile.SelectedItem.ToString());
 
             //figure out which game this was for
             ComboBox cb = (ComboBox)sender;
             string parent_name = cb.Name;
+
+            bool skipcondition = false;
 
             if (cb.IsDropDownOpen)
             {
@@ -674,17 +688,60 @@ namespace WpfApp3
                         catch
                         {
                             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(cb.Name + ": Failed to create new profile (folder) at: " + proposedfolder + " \n Possible invalid characters?", "Error", System.Windows.MessageBoxButton.OK);
-                            cb.SelectedIndex = 0;
+
+                            cb.SelectedIndex = cb.Items.IndexOf(e.RemovedItems[0]);
+                            skipcondition = true;
                         }
 
 
                     }
                     else
                     {
-                        cb.SelectedIndex = 0;
+                        cb.SelectedIndex = cb.Items.IndexOf(e.RemovedItems[0]);
+                        skipcondition = true;
                     }
 
                 }
+
+                if (!skipcondition)
+                {
+                    bool backtoroot = true;
+                    if (cb.SelectedItem.ToString() != "*Root")
+                        backtoroot = false;
+
+                    // Debug("this is where I would change the profile, I think: " + cb.SelectedItem.ToString());
+                    switch (cb.Name.ToString())
+                    {
+                        case "H1CSProfile":
+                            HCMGlobal.H1CoreSavePath = HCMGlobal.RootH1CoreSavePath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+                        case "H1CPProfile":
+                            HCMGlobal.H1CheckpointPath = HCMGlobal.RootH1CheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+                        case "H2Profile":
+                            HCMGlobal.H2CheckpointPath = HCMGlobal.RootH2CheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+                        case "H3Profile":
+                            HCMGlobal.H3CheckpointPath = HCMGlobal.RootH3CheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+                        case "HRProfile":
+                            HCMGlobal.HRCheckpointPath = HCMGlobal.RootHRCheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+                        case "ODProfile":
+                            HCMGlobal.ODCheckpointPath = HCMGlobal.RootODCheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+
+
+
+                        default:
+                            break;
+
+
+                    }
+                }
+
+
+                
                 cb.IsDropDownOpen = false;
             }
             RefreshList(sender, e);
@@ -696,9 +753,17 @@ namespace WpfApp3
             switch (game)
             {
                 case "H1CS":
-                    if (H1Profile.SelectedItem != null && H1Profile.SelectedItem.ToString() != "*Root")
+                    if (H1CSProfile.SelectedItem != null && H1CSProfile.SelectedItem.ToString() != "*Root")
                     {
-                        return @"\" + H1Profile.SelectedItem.ToString();
+                        return @"\" + H1CSProfile.SelectedItem.ToString();
+                    }
+                    else
+                        return "";
+
+                case "H1CP":
+                    if (H1CPProfile.SelectedItem != null && H1CPProfile.SelectedItem.ToString() != "*Root")
+                    {
+                        return @"\" + H1CPProfile.SelectedItem.ToString();
                     }
                     else
                         return "";
@@ -1261,7 +1326,7 @@ namespace WpfApp3
             RefreshLoa(sender, e);
             RefreshList(sender, e);
             RefreshSel(sender, e);
-            SetupProfiles();
+           // SetupProfiles();
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
