@@ -1,0 +1,30 @@
+﻿<Window x:Class="WpfApp3.SortSavesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp3"
+        mc:Ignorable="d"
+        Title="SortSavesWindow" Height="384.073" Width="258.051" WindowStyle="None">
+    <Grid Margin="0,0,2,2">
+        <Button Content="Sort" HorizontalAlignment="Left" Height="26" Margin="34,334,0,0" VerticalAlignment="Top" Width="75" Click="SortClick"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="144,334,0,0" VerticalAlignment="Top" Width="71" Height="26" Click="CancelClick"/>
+        <Label x:Name="MainLabel" Content="Sort Saves in " HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" VerticalAlignment="Top" Width="273" FontWeight="Bold"/>
+        <Label Content="First, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,39,0,0" VerticalAlignment="Top" Width="109"/>
+        <ComboBox HorizontalAlignment="Left" Height="28" Margin="11,63,0,0" VerticalAlignment="Top" Width="137" />
+        <CheckBox Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,68,0,0" VerticalAlignment="Top" Width="78"/>
+        <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,95,0,0" VerticalAlignment="Top" Width="109"/>
+        <ComboBox HorizontalAlignment="Left" Height="28" Margin="11,119,0,0" VerticalAlignment="Top" Width="137" />
+        <CheckBox Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,124,0,0" VerticalAlignment="Top" Width="78"/>
+        <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,150,0,0" VerticalAlignment="Top" Width="109"/>
+        <ComboBox HorizontalAlignment="Left" Height="28" Margin="11,174,0,0" VerticalAlignment="Top" Width="137" />
+        <CheckBox Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,179,0,0" VerticalAlignment="Top" Width="78"/>
+        <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,208,0,0" VerticalAlignment="Top" Width="109"/>
+        <ComboBox HorizontalAlignment="Left" Height="28" Margin="11,232,0,0" VerticalAlignment="Top" Width="137" />
+        <CheckBox Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,237,0,0" VerticalAlignment="Top" Width="78"/>
+        <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,265,0,0" VerticalAlignment="Top" Width="109"/>
+        <ComboBox HorizontalAlignment="Left" Height="28" Margin="11,289,0,0" VerticalAlignment="Top" Width="137" IsEnabled="false" />
+        <CheckBox Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,294,0,0" VerticalAlignment="Top" Width="78"/>
+
+    </Grid>
+</Window>

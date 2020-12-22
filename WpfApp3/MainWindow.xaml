@@ -118,6 +118,7 @@
                     <ComboBox x:Name="H1CSProfile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
                     <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
                     <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="273,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
 
                 </Grid>
             </TabItem>

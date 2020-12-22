@@ -793,6 +793,8 @@ namespace WpfApp3
         }
 
 
+
+
         private void TabSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -810,6 +812,9 @@ namespace WpfApp3
         {
             RefreshSel(sender, e);
         }
+
+
+
 
         private void SwapFileTimes(string PathA, string PathB)
         {
@@ -847,6 +852,105 @@ namespace WpfApp3
             }
 
         }
+
+
+
+        private static class PhysicalSaveFiles
+        {
+            public static HaloSaveFileMetadata SaveFileMetaData;
+           
+        }
+
+        private void SortSavesClick(object sender, RoutedEventArgs e)
+        {
+            //thinks I want to be able to sort by: name alphabetical, time into level, difficulty, lastwritetime. all reversible.
+
+
+            //alphabetical, timeinto level, difficulty, level, lastwritetime
+            //hmm
+            //let's get data context then open up a window where user can choose what they want to sort by
+            ListView mainlist = null; 
+            string savepath = null;
+
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+
+            switch (parent_name)
+            {
+                case "H1CS":
+                    mainlist = CS_MainList;
+                    savepath = HCMGlobal.H1CoreSavePath;
+                    break;
+
+                case "H1CP":
+                    mainlist = CP_MainList;
+                    savepath = HCMGlobal.H1CheckpointPath;
+                    break;
+
+                case "H2CP":
+                    mainlist = H2CP_MainList;
+                    savepath = HCMGlobal.H2CheckpointPath;
+                    break;
+
+                case "H3CP":
+                    mainlist = H3CP_MainList;
+                    savepath = HCMGlobal.H3CheckpointPath;
+                    break;
+
+                case "HRCP":
+                    mainlist = HRCP_MainList;
+                    savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                case "ODCP":
+                    mainlist = ODCP_MainList;
+                    savepath = HCMGlobal.ODCheckpointPath;
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (mainlist == null || savepath == null || !Directory.Exists(savepath))
+            {
+                //popup error message and cancel
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Something went horribly wrong trying to setup save sorting window", "Error", System.Windows.MessageBoxButton.OK);
+                return;
+            }
+
+            Debug("hmm: " + savepath);
+            SortSavesWindow SortSavesWindow = new SortSavesWindow(savepath.Substring(savepath.LastIndexOf("saves") + 5));
+            bool? whatbutton = SortSavesWindow.ShowDialog();
+
+            //need to check for cancel click in sortsaveswindow
+            if (whatbutton != true)
+                return;
+
+            try
+            {
+                //make a list and fill it with the files
+                List<DateTime> arrayoftimes = new List<DateTime>();
+
+                for (int i = 0; i < mainlist.Items.Count; i++)
+                {
+                    var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
+                    arrayoftimes.Add(File.GetLastWriteTime($@"{savepath}\{filedata.Name}.bin"));
+                }
+
+
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Log("unknown error occured: " + ex.ToString());
+            }
+        }
+
+
+
 
         private void ArbitaryFileTimeMove(int startindex, int destindex, ListView mainlist, string path)
         {
@@ -2138,6 +2242,9 @@ namespace WpfApp3
 
             public string DifficultyImageOD => $"images/OD/diff_{(int)Difficulty}.png";
             public string TimeString => TickToTimeString(StartTick, false);
+
+            //added this for sortsaves manip
+            public static DateTime LastWriteTime { get; set; }
         }
 
         private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, HaloGame game)
