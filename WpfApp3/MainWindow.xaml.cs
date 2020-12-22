@@ -748,64 +748,50 @@ namespace WpfApp3
             RefreshSel(sender, e);
         }
 
-        private string ResolveProfile(string game)
+        private void OpenExplorer(object sender, RoutedEventArgs e)
         {
-            switch (game)
+
+            FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
+            string parent_name = parent.Name;
+            string pathtoopen = "";
+
+            switch (parent_name)
             {
                 case "H1CS":
-                    if (H1CSProfile.SelectedItem != null && H1CSProfile.SelectedItem.ToString() != "*Root")
-                    {
-                        return @"\" + H1CSProfile.SelectedItem.ToString();
-                    }
-                    else
-                        return "";
+                    pathtoopen = HCMGlobal.H1CoreSavePath;
+                    break;
 
                 case "H1CP":
-                    if (H1CPProfile.SelectedItem != null && H1CPProfile.SelectedItem.ToString() != "*Root")
-                    {
-                        return @"\" + H1CPProfile.SelectedItem.ToString();
-                    }
-                    else
-                        return "";
+                    pathtoopen = HCMGlobal.H1CheckpointPath;
+                    break;
 
                 case "H2CP":
-                    if (H2Profile.SelectedItem != null && H2Profile.SelectedItem.ToString() != "*Root")
-                    {
-                        return @"\" + H2Profile.SelectedItem.ToString();
-                    }
-                    else
-                        return "";
+                    pathtoopen = HCMGlobal.H2CheckpointPath;
+                    break;
 
                 case "H3CP":
-                    if (H3Profile.SelectedItem != null && H3Profile.SelectedItem.ToString() != "*Root")
-                    {
-                        return @"\" + H3Profile.SelectedItem.ToString();
-                    }
-                    else
-                        return "";
+                    pathtoopen = HCMGlobal.H3CheckpointPath;
+                    break;
 
                 case "HRCP":
-                    if (HRProfile.SelectedItem != null && HRProfile.SelectedItem.ToString() != "*Root")
-                    {
-                        return @"\" + HRProfile.SelectedItem.ToString();
-                    }
-                    else
-                        return "";
+                    pathtoopen = HCMGlobal.HRCheckpointPath;
+                    break;
 
                 case "ODCP":
-                    if (HRProfile.SelectedItem != null && ODProfile.SelectedItem.ToString() != "*Root")
-                    {
-                        return @"\" + HRProfile.SelectedItem.ToString();
-                    }
-                    else
-                        return "";
+                    pathtoopen = HCMGlobal.ODCheckpointPath;
+                    break;
 
                 default:
-                    return "";
-            
-            }//need to fix the bloody TRAP of how inconsitent my use of h1coresavepath w/ the slash at the end is
+                    break;
+            }
+
+            if (Directory.Exists(pathtoopen))
+            {
+                Process.Start(pathtoopen);
+            }
 
         }
+
 
         private void TabSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
