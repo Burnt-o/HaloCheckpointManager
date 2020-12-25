@@ -869,7 +869,7 @@ namespace WpfApp3
             //alphabetical, timeinto level, difficulty, level, lastwritetime
             //hmm
             //let's get data context then open up a window where user can choose what they want to sort by
-            ListView mainlist = null; 
+            ListView mainlist = null;
             string savepath = null;
 
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
@@ -926,27 +926,162 @@ namespace WpfApp3
             if (whatbutton != true)
                 return;
 
+            //get return values from sort saves
+            //0 = none
+            //1 = difficulty
+            //2 = level order (just sort alphabetically by levelname, maybe seperate multi out first)
+            //3 = Alphabetically
+            //4 = Time into level
+
+            int[] sortoptions = { SortSavesWindow.ReturnSort1, SortSavesWindow.ReturnSort2, SortSavesWindow.ReturnSort3, SortSavesWindow.ReturnSort4 };
+            bool[] reverseoptions = { SortSavesWindow.ReturnReverse1, SortSavesWindow.ReturnReverse2, SortSavesWindow.ReturnReverse3, SortSavesWindow.ReturnReverse4, SortSavesWindow.ReturnReverse5 };
+
+
+
+            List<DateTime> arrayoftimes = new List<DateTime>();
             try
             {
-                //make a list and fill it with the files
-                List<DateTime> arrayoftimes = new List<DateTime>();
-
+                //make a list of lastwrite times and save it to the end so we can reapply in the new order
                 for (int i = 0; i < mainlist.Items.Count; i++)
                 {
                     var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
                     arrayoftimes.Add(File.GetLastWriteTime($@"{savepath}\{filedata.Name}.bin"));
                 }
 
-
-
-
-
-
             }
             catch (Exception ex)
             {
                 Log("unknown error occured: " + ex.ToString());
             }
+
+
+            List<HaloSaveFileMetadata> SortList = new List<HaloSaveFileMetadata>();
+            try
+            {
+                //now need a list of the saves with all our relavent properties
+                for (int i = 0; i < mainlist.Items.Count; i++)
+                {
+                    var filedata = mainlist.Items.GetItemAt(i) as HaloSaveFileMetadata;
+                    filedata.LastWriteTime = (File.GetLastWriteTime($@"{savepath}\{filedata.Name}.bin")); //have to add this property
+                    filedata.IsMultiplayer = LevelCodeToGameType(filedata.LevelCode);
+                    SortList.Add(filedata);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Log("unknown error occured: " + ex.ToString());
+                //need to add a popup error message here
+                return;
+            }
+
+            //okay, sorting time. #
+
+            //let's do shit in reverse order basically
+
+            if (reverseoptions[4])
+            {
+                Debug("Yes, REVERSING");
+                SortList = SortList.OrderBy(x => x.LastWriteTime)
+                                          .ToList();
+            }
+
+
+            //0 = none
+            //1 = difficulty
+            //2 = level order (just sort alphabetically by levelname, maybe seperate multi out first)
+            //3 = Alphabetically
+            //4 = Time into level
+
+            //just gonna declare this boy here cos it makes more sense
+            void SortThisGuyOut (int sortoption, bool reverseoption)
+                {
+                switch (sortoption)
+                {
+                    case 0: //none
+                    default:
+                        break;
+
+                    case 1: //difficulty
+                        if (reverseoption)
+                        {
+                            SortList = SortList.OrderBy(x => x.Difficulty)
+                                  .ToList();
+                        }
+                        else
+                        {
+                            SortList = SortList.OrderByDescending(x => x.Difficulty)
+                                      .ToList();
+                        }
+                        break;
+
+                    case 2: //level order (aka level code alphabetical) -- needs extra check for multi
+                        if (reverseoption)
+                        {
+                            SortList = SortList.OrderBy(x => x.IsMultiplayer)
+                                               .ThenBy(y => y.LevelCode)
+                                  .ToList();
+                        }
+                        else
+                        {
+                            SortList = SortList.OrderByDescending(x => x.IsMultiplayer)
+                                               .ThenByDescending(y => y.LevelCode)
+                                      .ToList();
+                        }
+                        break;
+
+                    case 3: //alphabetical by cp name
+                        if (reverseoption)
+                        {
+                            SortList = SortList.OrderBy(x => x.Name)
+                                  .ToList();
+                        }
+                        else
+                        {
+                            SortList = SortList.OrderByDescending(x => x.Name)
+                                      .ToList();
+                        }
+                        break;
+
+                    case 4: //time into level
+                        if (!reverseoption) //reversing this cos reasons
+                        {
+                            SortList = SortList.OrderBy(x => x.StartTick)
+                                  .ToList();
+                        }
+                        else
+                        {
+                            SortList = SortList.OrderByDescending(x => x.StartTick)
+                                      .ToList();
+                        }
+                        break;
+
+
+                }
+            }
+
+            //now let's call it
+            SortThisGuyOut(sortoptions[3], reverseoptions[3]);
+            SortThisGuyOut(sortoptions[2], reverseoptions[2]);
+            SortThisGuyOut(sortoptions[1], reverseoptions[1]);
+            SortThisGuyOut(sortoptions[0], reverseoptions[0]);
+
+
+
+            Debug("Sortlist first pos: " + SortList[0].Name);
+            var testdata = mainlist.Items.GetItemAt(0) as HaloSaveFileMetadata;
+            Debug("mainlist first pos: " + testdata.Name);
+
+            //then reapply the writetimes we got at the start, but in the new order
+            for (int i = 0; i < SortList.Count; i++)
+            {
+                //Debug("difficulty: " + SortList[i].Difficulty);
+                File.SetLastWriteTime(savepath + "\\" + SortList[i].Name + ".bin", arrayoftimes[i]);
+            }
+
+            RefreshList(sender, e);
+
+
         }
 
 
@@ -2244,7 +2379,8 @@ namespace WpfApp3
             public string TimeString => TickToTimeString(StartTick, false);
 
             //added this for sortsaves manip
-            public static DateTime LastWriteTime { get; set; }
+            public DateTime LastWriteTime { get; set; }
+            public bool IsMultiplayer { get; set; }
         }
 
         private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, HaloGame game)
