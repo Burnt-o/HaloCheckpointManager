@@ -12,19 +12,19 @@
         <Label x:Name="MainLabel" Content="Sort Saves in " HorizontalAlignment="Left" Height="37" Margin="10,10,0,0" VerticalAlignment="Top" Width="273" FontWeight="Bold"/>
         <Label Content="First, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,39,0,0" VerticalAlignment="Top" Width="109"/>
         <ComboBox x:Name="Sort1" HorizontalAlignment="Left" Height="28" Margin="11,63,0,0" VerticalAlignment="Top" Width="137" />
-        <CheckBox x:Name="Reverse1" Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,68,0,0" VerticalAlignment="Top" Width="78"/>
+        <CheckBox x:Name="Reverse1" Content="Reverse" HorizontalAlignment="Left" Height="23" Margin="156,68,0,0" VerticalAlignment="Top" Width="78"/>
         <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,95,0,0" VerticalAlignment="Top" Width="109"/>
         <ComboBox x:Name="Sort2" HorizontalAlignment="Left" Height="28" Margin="11,119,0,0" VerticalAlignment="Top" Width="137" />
-        <CheckBox x:Name="Reverse2" Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,124,0,0" VerticalAlignment="Top" Width="78"/>
+        <CheckBox x:Name="Reverse2" Content="Reverse" HorizontalAlignment="Left" Height="23" Margin="156,124,0,0" VerticalAlignment="Top" Width="78"/>
         <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,150,0,0" VerticalAlignment="Top" Width="109"/>
         <ComboBox x:Name="Sort3" HorizontalAlignment="Left" Height="28" Margin="11,174,0,0" VerticalAlignment="Top" Width="137" />
-        <CheckBox x:Name="Reverse3" Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,179,0,0" VerticalAlignment="Top" Width="78"/>
+        <CheckBox x:Name="Reverse3" Content="Reverse" HorizontalAlignment="Left" Height="23" Margin="156,179,0,0" VerticalAlignment="Top" Width="78"/>
         <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,208,0,0" VerticalAlignment="Top" Width="109"/>
         <ComboBox x:Name="Sort4" HorizontalAlignment="Left" Height="28" Margin="11,232,0,0" VerticalAlignment="Top" Width="137" />
-        <CheckBox x:Name="Reverse4" Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,237,0,0" VerticalAlignment="Top" Width="78"/>
+        <CheckBox x:Name="Reverse4" Content="Reverse" HorizontalAlignment="Left" Height="23" Margin="156,237,0,0" VerticalAlignment="Top" Width="78"/>
         <Label Content="Then, sort by: " HorizontalAlignment="Left" Height="30" Margin="10,265,0,0" VerticalAlignment="Top" Width="109"/>
         <ComboBox x:Name="Sort5" HorizontalAlignment="Left" Height="28" Margin="11,289,0,0" VerticalAlignment="Top" Width="137" IsEnabled="false" />
-        <CheckBox x:Name="Reverse5" Content="Ascending" HorizontalAlignment="Left" Height="23" Margin="156,294,0,0" VerticalAlignment="Top" Width="78"/>
+        <CheckBox x:Name="Reverse5" Content="Reverse" HorizontalAlignment="Left" Height="23" Margin="156,294,0,0" VerticalAlignment="Top" Width="78"/>
 
     </Grid>
 </Window>

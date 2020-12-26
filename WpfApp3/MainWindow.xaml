@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
         Title="Halo Checkpoint Manager 0.9.3" Height="593" Width="820"
-        MinHeight="593" MinWidth="555" Loaded="Window_Loaded">
+        MinHeight="593" MinWidth="555" Loaded="Window_Loaded"
+        Closing="Window_Closing">
 
 
     <Window.Resources>
@@ -21,7 +22,7 @@
 
     </Window.Resources>
 
-    <Grid>
+    <Grid x:Name="MainGrid">
 
         <Grid.Resources>
             <Style TargetType="ListViewItem">
@@ -46,7 +47,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,41" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo1CoreSaves}">
+                    <ListView Margin="10,10,335,41" x:Name="CS_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo1CoreSaves}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
 
@@ -116,9 +117,9 @@
 
                     </Grid>
                     <ComboBox x:Name="H1CSProfile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
-                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
-                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
-                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="273,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
+                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,11" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
+                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="278,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
 
                 </Grid>
             </TabItem>
@@ -130,7 +131,7 @@
                         <ColumnDefinition Width="63*"/>
                         <ColumnDefinition Width="680*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,20" x:Name="CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo1Checkpoints}" >
+                    <ListView Margin="10,10,335,20" x:Name="CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="2" ItemsSource="{Binding Halo1Checkpoints}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
 
@@ -176,11 +177,11 @@
                     <Label Content="Selected Backup Checkpoint:" HorizontalAlignment="Right" Margin="0,172,109,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1"/>
                     <Image x:Name="CP_Loa_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,41,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
                     <Image x:Name="CP_Sel_DiffName" HorizontalAlignment="Right"  VerticalAlignment="Top" Source="{Binding Diff}" Margin="0,235,142,0" Width="22" Height="24" RenderTransformOrigin="0.364,-4.875" Grid.Column="1"/>
-                    
-                    <ComboBox x:Name="H1CPProfile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
-                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
-                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
 
+                    <ComboBox x:Name="H1CPProfile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
+                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,11" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
+                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="278,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
                 </Grid>
             </TabItem>
 
@@ -193,7 +194,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,41" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo2Checkpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="H2CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo2Checkpoints}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
 
@@ -267,9 +268,9 @@
 
                     </Grid>
                     <ComboBox x:Name="H2Profile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
-                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
-                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
-
+                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,11" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
+                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="278,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
 
 
                 </Grid>
@@ -282,7 +283,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,41" x:Name="H3CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo3Checkpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="H3CP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding Halo3Checkpoints}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
 
@@ -356,10 +357,9 @@
 
                     </Grid>
                     <ComboBox x:Name="H3Profile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
-                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
-                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
-
-
+                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,11" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
+                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="278,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
 
                 </Grid>
             </TabItem>
@@ -374,7 +374,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,41" x:Name="ODCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloODSTCheckpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="ODCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloODSTCheckpoints}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
 
@@ -448,9 +448,9 @@
 
                     </Grid>
                     <ComboBox x:Name="ODProfile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
-                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
-                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
-
+                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,11" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
+                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="278,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
 
 
                 </Grid>
@@ -464,7 +464,7 @@
                         <ColumnDefinition Width="55*"/>
                         <ColumnDefinition Width="738*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10,10,335,41" x:Name="HRCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}">
+                    <ListView Margin="10,10,335,41" x:Name="HRCP_MainList" SelectionMode="Single" AlternationCount="2" Grid.ColumnSpan="3" ItemsSource="{Binding HaloReachCheckpoints}" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.View>
                             <GridView>
 
@@ -540,9 +540,9 @@
 
                     </Grid>
                     <ComboBox x:Name="HRProfile" HorizontalAlignment="Left" Height="26" Margin="42,0,0,10" VerticalAlignment="Bottom" Width="133" SelectionChanged="ProfileChanged" IsEnabled="true" Visibility="Visible" MaxDropDownHeight="1000" Grid.Column="1" Grid.ColumnSpan="2" />
-                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,10" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
-                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="133,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
-
+                    <Label Content="Profile:" HorizontalAlignment="Left" Height="26" Margin="8,0,0,11" VerticalAlignment="Bottom" Width="47" Grid.ColumnSpan="2"/>
+                    <Button Content="Open in Explorer" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="138,0,0,10" VerticalAlignment="Bottom" Width="105" Click="OpenExplorer"/>
+                    <Button Content="Sort Saves" Grid.Column="2" HorizontalAlignment="Left" Height="26" Margin="278,0,0,10" VerticalAlignment="Bottom" Width="98" Click="SortSavesClick"/>
 
 
                     <Label x:Name="ReachLoadedSeed" Content="Loaded Seed: N/A"  FontSize="11" Grid.Column="2" HorizontalAlignment="Left" Height="32" Margin="568,-4,0,0" VerticalAlignment="Top" Width="140" RenderTransformOrigin="-1.983,-2.312"/>

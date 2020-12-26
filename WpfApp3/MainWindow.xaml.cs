@@ -56,7 +56,7 @@ Clean up debug/logging stuff (inc; remove debugs from maintick except when Vals 
 
     //FEATURE STUFF
 
-DO THIS - Implement profiles.
+DONE --- Implement profiles.
 
 Add level check/lockout. Or way to load arbitary level when injecting
 
@@ -66,21 +66,21 @@ Change settings to have per-game options (clean up h1 checkpoints stuff)
 
 Clean up about page,stop it autoshowing on first run. 
 
-Add last selected tab and save to config and autoload on start. Also mainlist column widths. And vertical scrollbar position. 
+DO THIS - Add last selected tab and save to config and autoload on start. Also mainlist column widths. And vertical scrollbar position. 
 
-Add sorting functionality. 
+DONE --- Add sorting functionality. 
 
 Get all mp level splashes (clas and anni). 
 
 Implement custom level splash images. With auto resizing. 
 
-Add tool tip to double revert or just make icon better. Actually add tool tips to EVERYTHING
+DO THIS - Add tool tip to double revert or just make icon better. Actually add tool tips to EVERYTHING
 
-Add open in Explorer button. 
+DONE --- Add open in Explorer button. 
 
-make injecting a cp print "Custom Checkpoint.. Injected" to the screen
+DONE --- make injecting a cp print "Custom Checkpoint.. Injected" to the screen
 
-CP thumbnails via screenshots.. not sure on this
+CP thumbnails via screenshots.. not sure on this. would have to grab framebuffer so it doesn't accidentally screenshot not-video-game
 
 Add hotkeys for dump/inject
 
@@ -121,6 +121,11 @@ namespace WpfApp3
             public string[] RanVersions;
             //public string CoreFolderPath;
             public bool ClassicMode = true;
+            public int Reset_Tab;
+            public int[] Reset_Folder;
+            public int[] Reset_SelCP;
+            public double[] Reset_Col;
+
         }
 
         private static class HCMGlobal
@@ -128,12 +133,12 @@ namespace WpfApp3
             public static readonly string HCMversion = "0.9.3";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            public static  string H1CoreSavePath = LocalDir + @"\saves\h1cs";
-            public static  string H1CheckpointPath = LocalDir + @"\saves\h1cp";
-            public static  string H2CheckpointPath = LocalDir + @"\saves\h2cp";
-            public static  string H3CheckpointPath = LocalDir + @"\saves\h3cp";
-            public static  string HRCheckpointPath = LocalDir + @"\saves\hrcp";
-            public static  string ODCheckpointPath = LocalDir + @"\saves\odcp";
+            public static string H1CoreSavePath = LocalDir + @"\saves\h1cs";
+            public static string H1CheckpointPath = LocalDir + @"\saves\h1cp";
+            public static string H2CheckpointPath = LocalDir + @"\saves\h2cp";
+            public static string H3CheckpointPath = LocalDir + @"\saves\h3cp";
+            public static string HRCheckpointPath = LocalDir + @"\saves\hrcp";
+            public static string ODCheckpointPath = LocalDir + @"\saves\odcp";
 
             public static readonly string RootH1CoreSavePath = LocalDir + @"\saves\h1cs";
             public static readonly string RootH1CheckpointPath = LocalDir + @"\saves\h1cp";
@@ -181,8 +186,8 @@ namespace WpfApp3
 
             //general
             public int[][] gameindicatormagic; //renamed from gameindicator > gameindicatormagicmagic. This is to 
-                                          //deliberately break HCM versions before 0.9.3 since if they recieve
-                                          //the 2028 offsets, they'll write junk data to cpmessage calls and crash MCC
+                                               //deliberately break HCM versions before 0.9.3 since if they recieve
+                                               //the 2028 offsets, they'll write junk data to cpmessage calls and crash MCC
             public int[][] menuindicator;
             public int[][] stateindicator;
 
@@ -195,42 +200,13 @@ namespace WpfApp3
             public int[][] H1_Message; //8b 48 0c 89 0b. 89 0b writes to it (only when getting a message)
 
             public byte[] H1_MessageCode; //
-            public int H1_CPData_LevelCode; 
+            public int H1_CPData_LevelCode;
             public int H1_CPData_StartTick;
             public int H1_CPData_Difficulty;
             public int H1_CPData_Size;
 
 
 
-            //                case HaloGame.Halo1:
-            /*            offsetLevelCode = 11;
-                                offsetStartTick = 756;
-                                offsetDifficulty = 294;
-                                offsetSeed = 0;
-                                break;
-                            case HaloGame.Halo2:
-                                offsetLevelCode = 23;
-                                offsetStartTick = 10824;
-                                offsetDifficulty = 974;
-                                offsetSeed = 0;
-                                break;
-                            case HaloGame.Halo3:
-                                offsetLevelCode = 28;
-                                offsetStartTick = 0x3E0220;
-                                offsetDifficulty = 0x274;
-                                offsetSeed = 0;
-                                break;
-                            case HaloGame.HaloODST:
-                                offsetLevelCode = 0x15;
-                                offsetStartTick = 0x004002E0;
-                                offsetDifficulty = 0x26C;
-                                offsetSeed = 0;
-                                break;
-                            case HaloGame.HaloReach:
-                                offsetLevelCode = 0xFD73;
-                                offsetStartTick = 0x10FD54;
-                                offsetDifficulty = 0xFEFC;
-                                offsetSeed = 0x148;*/
 
             //hr
             public int[][] HR_LevelName; //0x3FB3D9 ahead of checkpoint
@@ -243,8 +219,8 @@ namespace WpfApp3
             public int[][] HR_TickCounter; //8b c7 48 8b 0c 18 44 01 61 0c. the add writes to it.
             public int[][] HR_Message; //4B 8b 04 2e 8b 48 0c 89 4b 04. last mov writes to it (messageTC) when getting message.
             public int[][] HR_MessageCall; //48 89 6c 24 20 41 b9 01 00 00 00. should have "checkpoint save" next to it in disassembly. the call 7 instructions above the cp save is the cp message call ; E8 67 46 28 00
-            
-            
+
+
             public byte[] HR_MessageCode;
             public int HR_CPData_LevelCode;
             public int HR_CPData_StartTick;
@@ -306,16 +282,16 @@ namespace WpfApp3
             public int[][] H3_CPData_PreserveLocations;
 
 
-            public int[][] OD_LevelName; 
+            public int[][] OD_LevelName;
             public int[][] OD_CheckString;
-            public int[][] OD_Checkpoint; 
-            public int[][] OD_Revert; 
+            public int[][] OD_Checkpoint;
+            public int[][] OD_Revert;
             public int[][] OD_DRflag;
-            public int[][] OD_CPLocation; 
-            public int[][] OD_TickCounter; 
+            public int[][] OD_CPLocation;
+            public int[][] OD_TickCounter;
             public int[][] OD_Message;
             public int[][] OD_MessageCall;
-            public int[][] OD_LoadedBSP1; 
+            public int[][] OD_LoadedBSP1;
             public int[][] OD_LoadedBSP2;
 
             public byte[] OD_MessageCode;
@@ -457,7 +433,7 @@ namespace WpfApp3
         {
             //some testing stuff
 
-           
+
             //end testing stuff
 
             CS_MainList.SelectionChanged += List_SelectionChanged;
@@ -594,7 +570,145 @@ namespace WpfApp3
 
             RefreshButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
+
+            //next let's load the reset ui values 
+
+            try
+            {
+                TabList.SelectedIndex = HCMGlobal.SavedConfig.Reset_Tab;
+
+                H1CSProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[0];
+                H1CPProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[1];
+                H2Profile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[2];
+                H3Profile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[3];
+                HRProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[4];
+                ODProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[5];
+                SetupProfiles();
+
+                CS_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[0];
+                CS_MainList.ScrollIntoView(CS_MainList.SelectedItem);
+                CP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[1];
+                CP_MainList.ScrollIntoView(CP_MainList.SelectedItem);
+                H2CP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[2];
+                H2CP_MainList.ScrollIntoView(H2CP_MainList.SelectedItem);
+                H3CP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[3];
+                H3CP_MainList.ScrollIntoView(H3CP_MainList.SelectedItem);
+                HRCP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[4];
+                HRCP_MainList.ScrollIntoView(HRCP_MainList.SelectedItem);
+                ODCP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[5];
+                ODCP_MainList.ScrollIntoView(ODCP_MainList.SelectedItem);
+
+                List<GridView> grids = new List<GridView>();
+                grids.Add(CS_MainList.View as GridView);
+                grids.Add(CP_MainList.View as GridView);
+                grids.Add(H2CP_MainList.View as GridView);
+                grids.Add(H3CP_MainList.View as GridView);
+                grids.Add(HRCP_MainList.View as GridView);
+                grids.Add(ODCP_MainList.View as GridView);
+
+
+                //this is hell jank
+                //basically we're just applying to column widths from the config file to the actual gridviews
+
+
+                Debug("eh: " + grids.Count);
+                Debug("EH: " + HCMGlobal.SavedConfig.Reset_Col.Length);
+
+                int j = 0;
+                for (int i = 0; i < grids.Count; i++)
+                {
+                    
+                    foreach (var column in grids[i].Columns)
+                    {
+                        Debug("this needs to count from 0 up: " + (j));
+                        column.Width = HCMGlobal.SavedConfig.Reset_Col[j]; //uh
+                        j++; 
+                    }
+
+                }
+
+
+
+
+            }
+            catch
+            {
+                Debug("failed somewhere resetting the ui values");
+            }
+
+
+            /* HCMGlobal.SavedConfig.Reset_Tab = TabList.SelectedIndex;
+             HCMGlobal.SavedConfig.Reset_Folder = new int[] { H1CSProfile.SelectedIndex, H1CPProfile.SelectedIndex, H2Profile.SelectedIndex, H3Profile.SelectedIndex, HRProfile.SelectedIndex, ODProfile.SelectedIndex };
+             HCMGlobal.SavedConfig.Reset_SelCP = new int[] { CS_MainList.SelectedIndex, CP_MainList.SelectedIndex, H2CP_MainList.SelectedIndex, H3CP_MainList.SelectedIndex, HRCP_MainList.SelectedIndex, ODCP_MainList.SelectedIndex };
+             HCMGlobal.SavedConfig.Reset_Col = new double[] { };
+
+             List<GridView> grids = new List<GridView>();
+             grids.Add(CS_MainList.View as GridView);
+             grids.Add(CS_MainList.View as GridView);
+
+
+             foreach (var grid in grids)
+             {
+                 foreach (var column in grid.Columns)
+                 {
+                     HCMGlobal.SavedConfig.Reset_Col.Append(column.Width);
+                 }
+             }*/
+
+
+
+
         }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            //main thing we do here is record the windows current tab, folder, selected save, and column widths (for each tab). 
+            //save them to the config file
+            //then next time we do window loaded we can try to load them
+            HCMGlobal.SavedConfig.Reset_Tab = TabList.SelectedIndex;
+            HCMGlobal.SavedConfig.Reset_Folder = new int[] { H1CSProfile.SelectedIndex, H1CPProfile.SelectedIndex, H2Profile.SelectedIndex, H3Profile.SelectedIndex, HRProfile.SelectedIndex, ODProfile.SelectedIndex };
+            HCMGlobal.SavedConfig.Reset_SelCP = new int[] { CS_MainList.SelectedIndex, CP_MainList.SelectedIndex, H2CP_MainList.SelectedIndex, H3CP_MainList.SelectedIndex, HRCP_MainList.SelectedIndex, ODCP_MainList.SelectedIndex };
+            
+
+            List<GridView> grids = new List<GridView>();
+            grids.Add(CS_MainList.View as GridView);
+            grids.Add(CP_MainList.View as GridView);
+            grids.Add(H2CP_MainList.View as GridView);
+            grids.Add(H3CP_MainList.View as GridView);
+            grids.Add(HRCP_MainList.View as GridView);
+            grids.Add(ODCP_MainList.View as GridView);
+
+            List<double> temparray = new List<double>();
+
+            foreach (var grid in grids)
+            {
+                foreach (var column in grid.Columns)
+                {
+                    //Debug("hmmm: " + column.Width);
+                    temparray.Add(column.Width);
+                }
+            }
+            Debug("this should be a big number: " + temparray.Count);
+            HCMGlobal.SavedConfig.Reset_Col = temparray.ToArray();
+            Debug("this should be a big number: " + HCMGlobal.SavedConfig.Reset_Col.Length);
+
+
+            WriteConfig();
+        }
+
+
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
+        {
+            //basically, if we click on a header, return to a default/autosized column width
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            if (headerClicked != null)
+            {
+                DependencyProperty dp = WidthProperty;
+                headerClicked.Column.ClearValue(dp);
+            }
+
+        }
+
 
         readonly Dictionary<string, string> ProfileTypeToPath = new Dictionary<string, string>()
             {
@@ -603,7 +717,7 @@ namespace WpfApp3
                 { "H2Profile", HCMGlobal.H2CheckpointPath},
                 { "H3Profile", HCMGlobal.H3CheckpointPath},
                 { "HRProfile", HCMGlobal.HRCheckpointPath},
-                { "ODProfile", HCMGlobal.HRCheckpointPath},
+                { "ODProfile", HCMGlobal.ODCheckpointPath},
             };
 
         private string ProfileTypeToPathGet(string code)
@@ -621,11 +735,13 @@ namespace WpfApp3
         private void SetupProfiles()
        {
 
-            var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile };
-
+            var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile, ODProfile };
+            var oldselected = H1CSProfile.SelectedItem;
 
             foreach (ComboBox cb in list)
             {
+                oldselected = cb.SelectedItem;
+                //Debug("bbbb: " + cb.SelectedItem);
                 cb.Items.Clear();
                 cb.Items.Add("*Root");
 
@@ -639,10 +755,15 @@ namespace WpfApp3
                     cb.Items.Add(folder.Name);
                 }
 
+                //Debug("aaaa: " + cb.Items.IndexOf(oldselected));
+                //Debug("cccc: " + cb.SelectedIndex);
 
                 cb.Items.Add("++ New ++");
-                if (cb.SelectedIndex == -1)
+                if (cb.Items.IndexOf(oldselected) == -1)
                     cb.SelectedIndex = 0;
+                else
+                    cb.SelectedIndex = cb.Items.IndexOf(oldselected);
+
 
             }
 
@@ -954,6 +1075,9 @@ namespace WpfApp3
                 Log("unknown error occured: " + ex.ToString());
             }
 
+            Debug("length of array of times: " + arrayoftimes.Count);
+            if (arrayoftimes.Count == 0)
+                return; //don't want to try sorting an empty list
 
             List<HaloSaveFileMetadata> SortList = new List<HaloSaveFileMetadata>();
             try
@@ -1003,7 +1127,7 @@ namespace WpfApp3
                         break;
 
                     case 1: //difficulty
-                        if (reverseoption)
+                        if (!reverseoption) //reversing cos I feel like it
                         {
                             SortList = SortList.OrderBy(x => x.Difficulty)
                                   .ToList();
@@ -1016,7 +1140,7 @@ namespace WpfApp3
                         break;
 
                     case 2: //level order (aka level code alphabetical) -- needs extra check for multi
-                        if (reverseoption)
+                        if (!reverseoption) //reversing cos I feel like it
                         {
                             SortList = SortList.OrderBy(x => x.IsMultiplayer)
                                                .ThenBy(y => y.LevelCode)
@@ -1031,7 +1155,7 @@ namespace WpfApp3
                         break;
 
                     case 3: //alphabetical by cp name
-                        if (reverseoption)
+                        if (!reverseoption) //reversing cos I feel like it
                         {
                             SortList = SortList.OrderBy(x => x.Name)
                                   .ToList();
@@ -1551,7 +1675,7 @@ namespace WpfApp3
             RefreshLoa(sender, e);
             RefreshList(sender, e);
             RefreshSel(sender, e);
-           // SetupProfiles();
+            SetupProfiles();
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -2386,48 +2510,81 @@ namespace WpfApp3
         private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, HaloGame game)
         {
             HaloSaveFileMetadata metadata = new HaloSaveFileMetadata() { Game = game };
-            if (HCMGlobal.LoadedOffsets == null)
-            {
 
-                return metadata; //this is the dumbest way to fix this bug (basically GetSaveFileMetadata is getting called before offsets are loaded)
-            }
             int offsetLevelCode;
             int offsetStartTick;
             int offsetDifficulty;
             int offsetSeed = 0;
 
-            switch (game)
-            {
-                case HaloGame.Halo1:
-                    offsetLevelCode = HCMGlobal.LoadedOffsets.H1_CPData_LevelCode;
-                    offsetStartTick = HCMGlobal.LoadedOffsets.H1_CPData_StartTick;
-                    offsetDifficulty = HCMGlobal.LoadedOffsets.H1_CPData_Difficulty;
-                    break;
-                case HaloGame.Halo2:
-                    offsetLevelCode = HCMGlobal.LoadedOffsets.H2_CPData_LevelCode;
-                    offsetStartTick = HCMGlobal.LoadedOffsets.H2_CPData_StartTick;
-                    offsetDifficulty = HCMGlobal.LoadedOffsets.H2_CPData_Difficulty;
-                    break;
-                case HaloGame.Halo3:
-                    offsetLevelCode = HCMGlobal.LoadedOffsets.H3_CPData_LevelCode;
-                    offsetStartTick = HCMGlobal.LoadedOffsets.H3_CPData_StartTick;
-                    offsetDifficulty = HCMGlobal.LoadedOffsets.H3_CPData_Difficulty;
-                    break;
-                case HaloGame.HaloODST:
-                    offsetLevelCode = HCMGlobal.LoadedOffsets.OD_CPData_LevelCode;
-                    offsetStartTick = HCMGlobal.LoadedOffsets.OD_CPData_StartTick;
-                    offsetDifficulty = HCMGlobal.LoadedOffsets.OD_CPData_Difficulty;
-                    break;
-                case HaloGame.HaloReach:
-                    offsetLevelCode = HCMGlobal.LoadedOffsets.HR_CPData_LevelCode;
-                    offsetStartTick = HCMGlobal.LoadedOffsets.HR_CPData_StartTick;
-                    offsetDifficulty = HCMGlobal.LoadedOffsets.HR_CPData_Difficulty;
-                    offsetSeed = HCMGlobal.LoadedOffsets.HR_CPData_Seed;
-                    break;
-                default:
-                    throw new NotSupportedException();
-            }
 
+            if (HCMGlobal.LoadedOffsets == null) //use some default values if we haven't loaded offsets json yet
+            {
+                switch (game)
+                {
+                    case HaloGame.Halo1:
+                        offsetLevelCode = 11;
+                        offsetStartTick = 756;
+                        offsetDifficulty = 294;
+                        break;
+                    case HaloGame.Halo2:
+                        offsetLevelCode = 23;
+                        offsetStartTick = 10824;
+                        offsetDifficulty = 974;
+                        break;
+                    case HaloGame.Halo3:
+                        offsetLevelCode = 28;
+                        offsetStartTick = 0x3E0220;
+                        offsetDifficulty = 0x274;
+                        break;
+                    case HaloGame.HaloODST:
+                        offsetLevelCode = 0x15;
+                        offsetStartTick = 0x004002E0;
+                        offsetDifficulty = 0x26C;
+                        break;
+                    case HaloGame.HaloReach:
+                        offsetLevelCode = 0xFD73;
+                        offsetStartTick = 0x10FD54;
+                        offsetDifficulty = 0xFEFC;
+                        offsetSeed = 0x148;
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+            else
+            {
+                switch (game)
+                {
+                    case HaloGame.Halo1:
+                        offsetLevelCode = HCMGlobal.LoadedOffsets.H1_CPData_LevelCode;
+                        offsetStartTick = HCMGlobal.LoadedOffsets.H1_CPData_StartTick;
+                        offsetDifficulty = HCMGlobal.LoadedOffsets.H1_CPData_Difficulty;
+                        break;
+                    case HaloGame.Halo2:
+                        offsetLevelCode = HCMGlobal.LoadedOffsets.H2_CPData_LevelCode;
+                        offsetStartTick = HCMGlobal.LoadedOffsets.H2_CPData_StartTick;
+                        offsetDifficulty = HCMGlobal.LoadedOffsets.H2_CPData_Difficulty;
+                        break;
+                    case HaloGame.Halo3:
+                        offsetLevelCode = HCMGlobal.LoadedOffsets.H3_CPData_LevelCode;
+                        offsetStartTick = HCMGlobal.LoadedOffsets.H3_CPData_StartTick;
+                        offsetDifficulty = HCMGlobal.LoadedOffsets.H3_CPData_Difficulty;
+                        break;
+                    case HaloGame.HaloODST:
+                        offsetLevelCode = HCMGlobal.LoadedOffsets.OD_CPData_LevelCode;
+                        offsetStartTick = HCMGlobal.LoadedOffsets.OD_CPData_StartTick;
+                        offsetDifficulty = HCMGlobal.LoadedOffsets.OD_CPData_Difficulty;
+                        break;
+                    case HaloGame.HaloReach:
+                        offsetLevelCode = HCMGlobal.LoadedOffsets.HR_CPData_LevelCode;
+                        offsetStartTick = HCMGlobal.LoadedOffsets.HR_CPData_StartTick;
+                        offsetDifficulty = HCMGlobal.LoadedOffsets.HR_CPData_Difficulty;
+                        offsetSeed = HCMGlobal.LoadedOffsets.HR_CPData_Seed;
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
             
 
             if (File.Exists(saveFilePath))

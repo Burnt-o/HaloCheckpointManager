@@ -24,7 +24,7 @@ namespace WpfApp3
             
             InitializeComponent();
             MainLabel.Content = "Sort Saves in " + savepath;
-            string[] sortoptions = { "None", "Difficulty", "Level Order", "Alphabetically", "Time into Level" };
+            string[] sortoptions = { "None", "Difficulty", "Level Name", "File Name", "Time into Level" };
             foreach (string option in sortoptions)
             {
                 Sort1.Items.Add(option);
