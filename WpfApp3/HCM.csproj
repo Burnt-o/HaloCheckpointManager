@@ -353,5 +353,8 @@
     <Resource Include="images\OD\diff_2.png" />
     <Resource Include="images\OD\diff_3.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\mp.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

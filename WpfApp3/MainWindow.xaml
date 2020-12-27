@@ -51,7 +51,17 @@
                         <ListView.View>
                             <GridView>
 
-                                <GridViewColumn Header="Lvl" Width="36" DisplayMemberBinding="{Binding LevelCode}"/>
+                                <GridViewColumn x:Name="LevelColumn" Header="Lvl" Width="36" >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock Text="{Binding LevelNameDisplay}" Width="36" Height="18" Visibility="{Binding TextVisibility}"/>
+                                                <Image Source="images/nofile.png" Width="20" Height="18" Visibility="{Binding ImageVisibility}" />
+                                                <Image Source="{Binding LevelListImageURL}" Width="20" Height="18" Visibility="{Binding ImageVisibility}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="Diff" Width="28">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

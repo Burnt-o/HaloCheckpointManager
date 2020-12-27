@@ -5,15 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp3"
         mc:Ignorable="d"
-        Title="Settings" Height="198.068" Width="400" WindowStyle="None">
+        Title="Settings" Height="266.013" Width="400" WindowStyle="None">
     <Grid>
 
         <RadioButton  x:Name ="modeanni"  Content="Anniversary" HorizontalAlignment="Left" Margin="146,64,0,0" VerticalAlignment="Top" />
         <RadioButton  x:Name ="modeclas"  Content="Classic" HorizontalAlignment="Left" Margin="51,64,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <Label Content="Level Splash Style: " HorizontalAlignment="Left" Height="25" Margin="20,39,0,0" VerticalAlignment="Top" Width="230"/>
-        <Button Content="Close" HorizontalAlignment="Left" Height="24" Margin="146,146,0,0" VerticalAlignment="Top" Width="101" Click="CloseButton_Click"/>
+        <Button Content="Close" HorizontalAlignment="Left" Height="24" Margin="146,201,0,0" VerticalAlignment="Top" Width="101" Click="CloseButton_Click"/>
         <Label Content="Settings: " HorizontalAlignment="Left" Height="29" Margin="10,5,0,0" VerticalAlignment="Top" Width="254" FontWeight="Bold" FontSize="14"/>
-        <CheckBox x:Name="LevelLockoutCheckbox" Content="Lockout Injection when on Wrong Level" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,93,0,0" IsChecked="true"/>
+        <CheckBox x:Name="LevelLockoutCheckbox" Content="Lockout Injection when on Wrong Level" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="21,170,0,0" IsChecked="true"/>
+        <ComboBox x:Name="LevelListBox" HorizontalAlignment="Left" Height="28" Margin="146,103,0,0" VerticalAlignment="Top" Width="86"/>
+        <Label Content="Display Level List as: " HorizontalAlignment="Left" Height="31" Margin="21,103,0,0" VerticalAlignment="Top" Width="143"/>
 
 
 

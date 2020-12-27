@@ -126,6 +126,7 @@ namespace WpfApp3
             public int[] Reset_SelCP;
             public double[] Reset_Col;
             public bool LockoutLevels = true;
+            public int LevelListOption = 0;
 
         }
 
@@ -156,7 +157,7 @@ namespace WpfApp3
             public static Offsets LoadedOffsets;
             public static MandatoryUpdates MandatoryUpdates;
 
-            public static string ImageModeSuffix => SavedConfig.ClassicMode ? "clas" : "anni";
+            public static string ImageModeSuffix => (SavedConfig?.ClassicMode ?? false) ? "clas" : "anni";
 
             public static bool padowomode = false;
 
@@ -1688,6 +1689,15 @@ namespace WpfApp3
             settingswindow.modeclas.IsChecked = HCMGlobal.SavedConfig?.ClassicMode ?? false;
             settingswindow.LevelLockoutCheckbox.IsChecked = HCMGlobal.SavedConfig?.LockoutLevels ?? false;
 
+            string[] levellistoptions = new string[] { "Level ID", "Acronym", "Full Name", "Icon" };
+
+            foreach (string option in levellistoptions)
+            {
+                settingswindow.LevelListBox.Items.Add(option);
+            }
+            settingswindow.LevelListBox.SelectedIndex = HCMGlobal.SavedConfig?.LevelListOption ?? 0;
+
+
             settingswindow.ShowDialog();
 
 
@@ -1695,11 +1705,13 @@ namespace WpfApp3
 
             HCMGlobal.SavedConfig.ClassicMode = settingswindow.modeclas.IsChecked ?? false;
             HCMGlobal.SavedConfig.LockoutLevels = settingswindow.LevelLockoutCheckbox.IsChecked ?? false;
+            HCMGlobal.SavedConfig.LevelListOption = settingswindow.LevelListBox.SelectedIndex;
 
 
             WriteConfig();
             RefreshLoa(sender, e);
             RefreshSel(sender, e);
+            RefreshList(sender, e);
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)
@@ -2534,17 +2546,60 @@ namespace WpfApp3
                     {
                         var data = GetSaveFileMetadata(savepath + "/" + File, game);
                         data.Name = File.Substring(0, File.Length - 4);
+                        //could add a switch here for levellistoption
+                        //but how to add image as option hm.
+                        //data.LevelCode = null;
+
+                        //data.TextVisibility = Visibility.Visible;
+                        //data.ImageVisibility = Visibility.Hidden;
+
+                        switch (HCMGlobal.SavedConfig?.LevelListOption ?? 0)
+                        {
+                            
+                            default:
+                            case 0: //levelcode
+                                data.LevelNameDisplay = data.LevelCode;
+                                break;
+
+                            case 1: //anronym
+                                //TODO: make a dictionary for this
+                                data.LevelNameDisplay = "NAH";
+                                break;
+
+                            case 2: //fullname
+                                //TODO: make a dictionary for this
+                                data.LevelNameDisplay = "Indubitably Not Ready Yet";
+                                break;
+
+                            case 3: //icon //levelnamedisplay won't be used 
+                                data.TextVisibility = Visibility.Hidden;
+                                data.ImageVisibility = Visibility.Visible;
+                                break;
+                        }
+
+                        if (LevelCodeToGameType(data.LevelCode))
+                            data.LevelListImageURL = "images/mp.png";
+                        else
+                            data.LevelListImageURL = data.LevelListImage;
+
+
                         collection.Add(data);
                     }
+
+
 
                     list.SelectedIndex = oldselected;
                     GridView gv = list.View as GridView;
                     UpdateColumnWidths(gv);
+
                 }
                 else
                 {
                     listlabel.Content = "No backup saves in local folder.";
                 }
+
+
+
             }
             else
             {
@@ -2570,11 +2625,20 @@ namespace WpfApp3
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
 
             public string DifficultyImageOD => $"images/OD/diff_{(int)Difficulty}.png";
+
+            //public string LevelListImage => $"images/H1/a10_clas.png";
+            public string LevelListImage => $"images/H1/{LevelCode}_{HCMGlobal.ImageModeSuffix}.png";
+            public string LevelListImageURL { get; set; }
+
+            public string LevelNameDisplay { get; set; }
             public string TimeString => TickToTimeString(StartTick, false);
 
             //added this for sortsaves manip
             public DateTime LastWriteTime { get; set; }
             public bool IsMultiplayer { get; set; }
+
+            public Visibility TextVisibility { get; set; } = Visibility.Visible;
+            public Visibility ImageVisibility { get; set; } = Visibility.Hidden;
         }
 
         private HaloSaveFileMetadata GetSaveFileMetadata(string saveFilePath, HaloGame game)
