@@ -58,15 +58,15 @@ Clean up debug/logging stuff (inc; remove debugs from maintick except when Vals 
 
 DONE --- Implement profiles.
 
-Add level check/lockout. Or way to load arbitary level when injecting
+DONE --- Add level check/lockout. Or way to load arbitary level when injecting
 
-Add options for list level name - code (current), acronym, thumbnail. 
+DO THIS - Add options for list level name - code (current), acronym, thumbnail. 
 
 Change settings to have per-game options (clean up h1 checkpoints stuff) 
 
 Clean up about page,stop it autoshowing on first run. 
 
-DO THIS - Add last selected tab and save to config and autoload on start. Also mainlist column widths. And vertical scrollbar position. 
+DONE --- Add last selected tab and save to config and autoload on start. Also mainlist column widths. And vertical scrollbar position. 
 
 DONE --- Add sorting functionality. 
 
@@ -125,6 +125,7 @@ namespace WpfApp3
             public int[] Reset_Folder;
             public int[] Reset_SelCP;
             public double[] Reset_Col;
+            public bool LockoutLevels = true;
 
         }
 
@@ -1692,6 +1693,8 @@ namespace WpfApp3
           
 
             HCMGlobal.SavedConfig.ClassicMode = settingswindow.modeclas.IsChecked ?? false;
+            HCMGlobal.SavedConfig.LockoutLevels = settingswindow.LevelLockoutCheckbox.IsChecked ?? false;
+
 
             WriteConfig();
             RefreshLoa(sender, e);
@@ -2184,6 +2187,23 @@ namespace WpfApp3
                         H1CS_Sel_FileName.Text = "N/A";
                         H1CS_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
+
+
+
+                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (CS_MainList.SelectedItem == null || CS_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(CS_MainList.SelectedItem, null) as string
+                   != HCMGlobal.AttachedLevel))
+                    {
+                        Debug("lockout the thing");
+                        H1CS_Sel_InjectButton.IsEnabled = false;
+                        H1CS_Sel_InjectRevertButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Debug("unlockout the thingy");
+                        H1CS_Sel_InjectButton.IsEnabled = true;
+                        H1CS_Sel_InjectRevertButton.IsEnabled = true;
+                    }
+
                     break;
 
                 case 2: //h2
@@ -2224,6 +2244,23 @@ namespace WpfApp3
                         H2CP_Sel_Time.Text = "N/A";
                         H2CP_Sel_FileName.Text = "N/A";
                         H2CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+
+
+                  
+                    //so the bug is that SetEnabledUI is undoing our work here
+                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (H2CP_MainList.SelectedItem == null || H2CP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(H2CP_MainList.SelectedItem, null) as string
+                   != HCMGlobal.AttachedLevel))
+                    {
+                        Debug("lockout the thing");
+                        H2CP_Sel_InjectButton.IsEnabled = false;
+                        H2CP_Sel_InjectRevertButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Debug("unlockout the thingy");
+                        H2CP_Sel_InjectButton.IsEnabled = true;
+                        H2CP_Sel_InjectRevertButton.IsEnabled = true;
                     }
                     break;
 
@@ -2267,6 +2304,21 @@ namespace WpfApp3
                         H3CP_Sel_FileName.Text = "N/A";
                         H3CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
+
+
+                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (H3CP_MainList.SelectedItem == null || H3CP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(H3CP_MainList.SelectedItem, null) as string
+                   != HCMGlobal.AttachedLevel))
+                    {
+                        Debug("lockout the thing");
+                        H3CP_Sel_InjectButton.IsEnabled = false;
+                        H3CP_Sel_InjectRevertButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Debug("unlockout the thingy");
+                        H3CP_Sel_InjectButton.IsEnabled = true;
+                        H3CP_Sel_InjectRevertButton.IsEnabled = true;
+                    }
                     break;
 
                 case 4: //OD
@@ -2309,6 +2361,21 @@ namespace WpfApp3
                         ODCP_Sel_FileName.Text = "N/A";
                         ODCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
+
+
+                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (ODCP_MainList.SelectedItem == null || ODCP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(ODCP_MainList.SelectedItem, null) as string
+                   != HCMGlobal.AttachedLevel))
+                    {
+                        Debug("lockout the thing");
+                        ODCP_Sel_InjectButton.IsEnabled = false;
+                        ODCP_Sel_InjectRevertButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Debug("unlockout the thingy");
+                        ODCP_Sel_InjectButton.IsEnabled = true;
+                        ODCP_Sel_InjectRevertButton.IsEnabled = true;
+                    }
                     break;
 
                 case 5: //reach
@@ -2350,6 +2417,21 @@ namespace WpfApp3
                         HRCP_Sel_FileName.Text = "N/A";
                         HRCP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                         HRCP_Sel_Seed.Content = "Seed: N/A";
+                    }
+
+
+                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (HRCP_MainList.SelectedItem == null || HRCP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(HRCP_MainList.SelectedItem, null) as string
+                   != HCMGlobal.AttachedLevel))
+                    {
+                        Debug("lockout the thing");
+                        HRCP_Sel_InjectButton.IsEnabled = false;
+                        HRCP_Sel_InjectRevertButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Debug("unlockout the thingy");
+                        HRCP_Sel_InjectButton.IsEnabled = true;
+                        HRCP_Sel_InjectRevertButton.IsEnabled = true;
                     }
                     break;
 
@@ -6013,6 +6095,8 @@ namespace WpfApp3
 
             }
 
+           
+
 
 
             void SetH1(bool state)
@@ -6021,9 +6105,9 @@ namespace WpfApp3
                 H1CS_ForceRevert.IsEnabled = state;
 
                 H1CS_Loa_ForceCPDump.IsEnabled = state;
-                H1CS_Sel_InjectRevertButton.IsEnabled = state;
+                //H1CS_Sel_InjectRevertButton.IsEnabled = state;
                 H1CS_Loa_DumpButton.IsEnabled = state;
-                H1CS_Sel_InjectButton.IsEnabled = state;
+                //H1CS_Sel_InjectButton.IsEnabled = state;
 
                 if (HCMGlobal.CoreFolderPath == null)
                 {
@@ -6038,6 +6122,9 @@ namespace WpfApp3
                     H1CS_Sel_InjectButton.IsEnabled = true;
                 }
 
+
+               
+
             }
 
             void SetHR(bool state)
@@ -6047,8 +6134,10 @@ namespace WpfApp3
                 HRCP_ForceDR.IsEnabled = state;
                 HRCP_Loa_DumpButton.IsEnabled = state;
                 HRCP_Loa_ForceCPDump.IsEnabled = state;
-                HRCP_Sel_InjectButton.IsEnabled = state;
-                HRCP_Sel_InjectRevertButton.IsEnabled = state;
+                //HRCP_Sel_InjectButton.IsEnabled = state;
+                //HRCP_Sel_InjectRevertButton.IsEnabled = state;
+
+
             }
 
 
@@ -6059,8 +6148,8 @@ namespace WpfApp3
                 H2CP_ForceDR.IsEnabled = state;
                 H2CP_Loa_DumpButton.IsEnabled = state;
                 H2CP_Loa_ForceCPDump.IsEnabled = state;
-                H2CP_Sel_InjectButton.IsEnabled = state;
-                H2CP_Sel_InjectRevertButton.IsEnabled = state;
+                //H2CP_Sel_InjectButton.IsEnabled = state;
+                //H2CP_Sel_InjectRevertButton.IsEnabled = state;
             }
 
             void SetH3(bool state)
@@ -6070,8 +6159,8 @@ namespace WpfApp3
                 H3CP_ForceDR.IsEnabled = state;
                 H3CP_Loa_DumpButton.IsEnabled = state;
                 H3CP_Loa_ForceCPDump.IsEnabled = state;
-                H3CP_Sel_InjectButton.IsEnabled = state;
-                H3CP_Sel_InjectRevertButton.IsEnabled = state;
+                //H3CP_Sel_InjectButton.IsEnabled = state;
+               // H3CP_Sel_InjectRevertButton.IsEnabled = state;
             }
 
             void SetOD(bool state)
@@ -6081,8 +6170,8 @@ namespace WpfApp3
                 ODCP_ForceDR.IsEnabled = state;
                 ODCP_Loa_DumpButton.IsEnabled = state;
                 ODCP_Loa_ForceCPDump.IsEnabled = state;
-                ODCP_Sel_InjectButton.IsEnabled = state;
-                ODCP_Sel_InjectRevertButton.IsEnabled = state;
+                //ODCP_Sel_InjectButton.IsEnabled = state;
+                //ODCP_Sel_InjectRevertButton.IsEnabled = state;
             }
 
 
