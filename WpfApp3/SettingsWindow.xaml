@@ -13,7 +13,7 @@
         <Label Content="Level Splash Style: " HorizontalAlignment="Left" Height="25" Margin="20,39,0,0" VerticalAlignment="Top" Width="230"/>
         <Button Content="Close" HorizontalAlignment="Left" Height="24" Margin="146,146,0,0" VerticalAlignment="Top" Width="101" Click="CloseButton_Click"/>
         <Label Content="Settings: " HorizontalAlignment="Left" Height="29" Margin="10,5,0,0" VerticalAlignment="Top" Width="254" FontWeight="Bold" FontSize="14"/>
-        <CheckBox x:Name="LevelLockoutCheckbox" Content="Lockout Wrong Levels" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,93,0,0"/>
+        <CheckBox x:Name="LevelLockoutCheckbox" Content="Lockout Injection when on Wrong Level" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,93,0,0" IsChecked="true"/>
 
 
 

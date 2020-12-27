@@ -1686,6 +1686,7 @@ namespace WpfApp3
             
             settingswindow.modeanni.IsChecked = !HCMGlobal.SavedConfig?.ClassicMode ?? true;
             settingswindow.modeclas.IsChecked = HCMGlobal.SavedConfig?.ClassicMode ?? false;
+            settingswindow.LevelLockoutCheckbox.IsChecked = HCMGlobal.SavedConfig?.LockoutLevels ?? false;
 
             settingswindow.ShowDialog();
 
@@ -2189,20 +2190,7 @@ namespace WpfApp3
                     }
 
 
-
-                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (CS_MainList.SelectedItem == null || CS_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(CS_MainList.SelectedItem, null) as string
-                   != HCMGlobal.AttachedLevel))
-                    {
-                        Debug("lockout the thing");
-                        H1CS_Sel_InjectButton.IsEnabled = false;
-                        H1CS_Sel_InjectRevertButton.IsEnabled = false;
-                    }
-                    else
-                    {
-                        Debug("unlockout the thingy");
-                        H1CS_Sel_InjectButton.IsEnabled = true;
-                        H1CS_Sel_InjectRevertButton.IsEnabled = true;
-                    }
+                    //no lockout for h1cs
 
                     break;
 
@@ -6096,8 +6084,7 @@ namespace WpfApp3
             }
 
            
-
-
+  
 
             void SetH1(bool state)
             {
@@ -6105,9 +6092,9 @@ namespace WpfApp3
                 H1CS_ForceRevert.IsEnabled = state;
 
                 H1CS_Loa_ForceCPDump.IsEnabled = state;
-                //H1CS_Sel_InjectRevertButton.IsEnabled = state;
+                H1CS_Sel_InjectRevertButton.IsEnabled = state;
                 H1CS_Loa_DumpButton.IsEnabled = state;
-                //H1CS_Sel_InjectButton.IsEnabled = state;
+               H1CS_Sel_InjectButton.IsEnabled = state;
 
                 if (HCMGlobal.CoreFolderPath == null)
                 {
@@ -6134,8 +6121,12 @@ namespace WpfApp3
                 HRCP_ForceDR.IsEnabled = state;
                 HRCP_Loa_DumpButton.IsEnabled = state;
                 HRCP_Loa_ForceCPDump.IsEnabled = state;
-                //HRCP_Sel_InjectButton.IsEnabled = state;
-                //HRCP_Sel_InjectRevertButton.IsEnabled = state;
+
+                if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.LockoutLevels == false)
+                {
+                    HRCP_Sel_InjectButton.IsEnabled = state;
+                    HRCP_Sel_InjectRevertButton.IsEnabled = state;
+                }
 
 
             }
@@ -6148,8 +6139,11 @@ namespace WpfApp3
                 H2CP_ForceDR.IsEnabled = state;
                 H2CP_Loa_DumpButton.IsEnabled = state;
                 H2CP_Loa_ForceCPDump.IsEnabled = state;
-                //H2CP_Sel_InjectButton.IsEnabled = state;
-                //H2CP_Sel_InjectRevertButton.IsEnabled = state;
+                if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.LockoutLevels == false)
+                {
+                    H2CP_Sel_InjectButton.IsEnabled = state;
+                    H2CP_Sel_InjectRevertButton.IsEnabled = state;
+                }
             }
 
             void SetH3(bool state)
@@ -6159,8 +6153,11 @@ namespace WpfApp3
                 H3CP_ForceDR.IsEnabled = state;
                 H3CP_Loa_DumpButton.IsEnabled = state;
                 H3CP_Loa_ForceCPDump.IsEnabled = state;
-                //H3CP_Sel_InjectButton.IsEnabled = state;
-               // H3CP_Sel_InjectRevertButton.IsEnabled = state;
+                if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.LockoutLevels == false)
+                {
+                    H3CP_Sel_InjectButton.IsEnabled = state;
+                    H3CP_Sel_InjectRevertButton.IsEnabled = state;
+                }
             }
 
             void SetOD(bool state)
@@ -6170,8 +6167,11 @@ namespace WpfApp3
                 ODCP_ForceDR.IsEnabled = state;
                 ODCP_Loa_DumpButton.IsEnabled = state;
                 ODCP_Loa_ForceCPDump.IsEnabled = state;
-                //ODCP_Sel_InjectButton.IsEnabled = state;
-                //ODCP_Sel_InjectRevertButton.IsEnabled = state;
+                if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.LockoutLevels == false)
+                {
+                    ODCP_Sel_InjectButton.IsEnabled = state;
+                    ODCP_Sel_InjectRevertButton.IsEnabled = state;
+                }
             }
 
 
