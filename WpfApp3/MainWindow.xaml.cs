@@ -6281,6 +6281,10 @@ namespace WpfApp3
             }
 
             RefreshLoa(sender, new RoutedEventArgs());
+            if (HCMGlobal.SavedConfig?.LockoutLevels == true)
+            {
+                RefreshSel(sender, new RoutedEventArgs());
+            }
 
             if (game != HCMGlobal.AttachedGame)
             {
