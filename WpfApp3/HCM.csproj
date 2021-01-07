@@ -356,5 +356,33 @@
   <ItemGroup>
     <Resource Include="images\mp.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\H4\diff_0.png" />
+    <Resource Include="images\H4\diff_1.png" />
+    <Resource Include="images\H4\diff_2.png" />
+    <Resource Include="images\H4\diff_3.png" />
+    <Resource Include="images\H4\diff_4.png" />
+    <Resource Include="images\H4\m020_anni.png" />
+    <Resource Include="images\H4\m020_clas.png" />
+    <Resource Include="images\H4\m05_prologue_anni.png" />
+    <Resource Include="images\H4\m05_prologue_clas.png" />
+    <Resource Include="images\H4\m10_crash_anni.png" />
+    <Resource Include="images\H4\m10_crash_clas.png" />
+    <Resource Include="images\H4\m30_cryptum_anni.png" />
+    <Resource Include="images\H4\m30_cryptum_clas.png" />
+    <Resource Include="images\H4\m40_invasion_anni.png" />
+    <Resource Include="images\H4\m40_invasion_clas.png" />
+    <Resource Include="images\H4\m60_rescue_anni.png" />
+    <Resource Include="images\H4\m60_rescue_clas.png" />
+    <Resource Include="images\H4\m70_liftoff_anni.png" />
+    <Resource Include="images\H4\m70_liftoff_clas.png" />
+    <Resource Include="images\H4\m80_delta_anni.png" />
+    <Resource Include="images\H4\m80_delta_clas.png" />
+    <Resource Include="images\H4\m90_sacrifice_anni.png" />
+    <Resource Include="images\H4\m90_sacrifice_clas.png" />
+    <Resource Include="images\H4\m95_epilogue_anni.png" />
+    <Resource Include="images\H4\m95_epilogue_clas.png" />
+    <Resource Include="images\H4\mp.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

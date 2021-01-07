@@ -92,6 +92,26 @@ Auto-dump checkpoints feature
     ////////BUG SHIT
     ///h2: fix cp injection totally breaking level restarts.
     ///h3: crash on loading cp's from different rally point - probs sim issue with reach, odst, h4
+    ///
+
+
+
+
+    BUG LIST:
+    Multiplayer:
+    HR: Multiplayer checkpoints don't work between game sessions.
+    H2: Multiplayer will restart the match if you inject a checkpoint on a map when you haven't made at least one checkpoint in that match.
+    H3: Multiplayer will completely crash if you inject a checkpoint on a map when you haven't made at least one checkpoint in that match.
+
+    Campaign:
+    OD: sometimes crashes after injecting then finishing a level
+    OD: sometimes can't force checkpoints/reverts when on non-alpha rally points
+    H3: injected checkpoints don't work from between different rallypoints (game crashes)
+    HR: "Force checkpoint & dump" doesn't work on non-alpha rally points (tho they work individually)
+
+
+
+
 
 */
 
@@ -132,7 +152,7 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.3";
+            public static readonly string HCMversion = "0.9.4";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static string H1CoreSavePath = LocalDir + @"\saves\h1cs";
@@ -141,6 +161,8 @@ namespace WpfApp3
             public static string H3CheckpointPath = LocalDir + @"\saves\h3cp";
             public static string HRCheckpointPath = LocalDir + @"\saves\hrcp";
             public static string ODCheckpointPath = LocalDir + @"\saves\odcp";
+            public static string H4CheckpointPath = LocalDir + @"\saves\h4cp";
+
 
             public static readonly string RootH1CoreSavePath = LocalDir + @"\saves\h1cs";
             public static readonly string RootH1CheckpointPath = LocalDir + @"\saves\h1cp";
@@ -148,6 +170,7 @@ namespace WpfApp3
             public static readonly string RootH3CheckpointPath = LocalDir + @"\saves\h3cp";
             public static readonly string RootHRCheckpointPath = LocalDir + @"\saves\hrcp";
             public static readonly string RootODCheckpointPath = LocalDir + @"\saves\odcp";
+            public static readonly string RootH4CheckpointPath = LocalDir + @"\saves\h4cp";
 
             public static readonly string ConfigPath = LocalDir + @"\config.json";
             public static readonly string LogPath = LocalDir + @"\log.txt";
@@ -307,6 +330,25 @@ namespace WpfApp3
             public int OD_CPData_Size;
             public int[][] OD_CPData_PreserveLocations;
 
+            public int[][] H4_LevelName; 
+            public int[][] H4_CheckString;
+            public int[][] H4_Checkpoint; 
+            public int[][] H4_Revert; 
+            public int[][] H4_DRflag; 
+            public int[][] H4_CPLocation; 
+            public int[][] H4_TickCounter; 
+            public int[][] H4_Message; 
+            public int[][] H4_MessageCall; 
+
+
+            public byte[] H4_MessageCode;
+            public int H4_CPData_LevelCode;
+            public int H4_CPData_StartTick;
+            public int H4_CPData_Difficulty;
+            public int H4_CPData_DROffset1;
+            public int H4_CPData_DROffset2;
+            public int H4_CPData_Size;
+            public int[][] H4_CPData_PreserveLocations;
 
 
             //public static int[][] HR_StartSeed = new int[2][]; //seed of the level start - you get a different seed in reach every time you start the level from the main menu
@@ -354,6 +396,7 @@ namespace WpfApp3
             @"saves\h3cp",
             @"saves\hrcp",
             @"saves\odcp",
+            @"saves\h4cp",
             @"offsets",
         };
 
@@ -372,6 +415,7 @@ namespace WpfApp3
         public ObservableCollection<HaloSaveFileMetadata> Halo3Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
         public ObservableCollection<HaloSaveFileMetadata> HaloODSTCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
+        public ObservableCollection<HaloSaveFileMetadata> Halo4Checkpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
         public ObservableCollection<HaloSaveFileMetadata> HaloReachCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
@@ -444,6 +488,7 @@ namespace WpfApp3
             H3CP_MainList.SelectionChanged += List_SelectionChanged;
             HRCP_MainList.SelectionChanged += List_SelectionChanged;
             ODCP_MainList.SelectionChanged += List_SelectionChanged;
+            H4CP_MainList.SelectionChanged += List_SelectionChanged;
             bool firstrun = false;
 
             // Validate that required folders exist
@@ -585,6 +630,7 @@ namespace WpfApp3
                 H3Profile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[3];
                 HRProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[4];
                 ODProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[5];
+                H4Profile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[6];
                 SetupProfiles();
 
                 CS_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[0];
@@ -599,6 +645,8 @@ namespace WpfApp3
                 HRCP_MainList.ScrollIntoView(HRCP_MainList.SelectedItem);
                 ODCP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[5];
                 ODCP_MainList.ScrollIntoView(ODCP_MainList.SelectedItem);
+                H4CP_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[6];
+                H4CP_MainList.ScrollIntoView(H4CP_MainList.SelectedItem);
 
                 List<GridView> grids = new List<GridView>();
                 grids.Add(CS_MainList.View as GridView);
@@ -607,6 +655,7 @@ namespace WpfApp3
                 grids.Add(H3CP_MainList.View as GridView);
                 grids.Add(HRCP_MainList.View as GridView);
                 grids.Add(ODCP_MainList.View as GridView);
+                grids.Add(H4CP_MainList.View as GridView);
 
 
                 //this is hell jank
@@ -679,6 +728,7 @@ namespace WpfApp3
             grids.Add(H3CP_MainList.View as GridView);
             grids.Add(HRCP_MainList.View as GridView);
             grids.Add(ODCP_MainList.View as GridView);
+            grids.Add(H4CP_MainList.View as GridView);
 
             List<double> temparray = new List<double>();
 
@@ -720,6 +770,7 @@ namespace WpfApp3
                 { "H3Profile", HCMGlobal.H3CheckpointPath},
                 { "HRProfile", HCMGlobal.HRCheckpointPath},
                 { "ODProfile", HCMGlobal.ODCheckpointPath},
+                { "H4Profile", HCMGlobal.H4CheckpointPath},
             };
 
         private string ProfileTypeToPathGet(string code)
@@ -737,7 +788,7 @@ namespace WpfApp3
         private void SetupProfiles()
        {
 
-            var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile, ODProfile };
+            var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile, ODProfile, H4Profile };
             var oldselected = H1CSProfile.SelectedItem;
 
             foreach (ComboBox cb in list)
@@ -804,6 +855,7 @@ namespace WpfApp3
                                 throw new Exception("someone put the funny slashes in their folder name");
                             }
 
+                            Debug("HMMMMM" + proposedfolder);
                             Directory.CreateDirectory(proposedfolder);
                             SetupProfiles();
                             cb.SelectedIndex = 1;
@@ -852,6 +904,9 @@ namespace WpfApp3
                             break;
                         case "ODProfile":
                             HCMGlobal.ODCheckpointPath = HCMGlobal.RootODCheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
+                            break;
+                        case "H4Profile":
+                            HCMGlobal.H4CheckpointPath = HCMGlobal.RootH4CheckpointPath + (backtoroot ? "" : ("\\" + cb.SelectedItem.ToString()));
                             break;
 
 
@@ -902,6 +957,10 @@ namespace WpfApp3
 
                 case "ODCP":
                     pathtoopen = HCMGlobal.ODCheckpointPath;
+                    break;
+
+                case "H4CP":
+                    pathtoopen = HCMGlobal.H4CheckpointPath;
                     break;
 
                 default:
@@ -1028,6 +1087,11 @@ namespace WpfApp3
                 case "ODCP":
                     mainlist = ODCP_MainList;
                     savepath = HCMGlobal.ODCheckpointPath;
+                    break;
+
+                case "H4CP":
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
                     break;
 
                 default:
@@ -1286,6 +1350,11 @@ namespace WpfApp3
                     savepath = HCMGlobal.HRCheckpointPath;
                     break;
 
+                case "H4CP":
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
+                    break;
+
                 default:
                     break;
 
@@ -1349,6 +1418,11 @@ namespace WpfApp3
                 case "HRCP":
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                case "H4CP":
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
                     break;
 
                 default:
@@ -1418,6 +1492,11 @@ namespace WpfApp3
                     savepath = HCMGlobal.HRCheckpointPath;
                     break;
 
+                case "H4CP":
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
+                    break;
+
                 default:
                     break;
 
@@ -1481,6 +1560,11 @@ namespace WpfApp3
                 case "HRCP":
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                case "H4CP":
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
                     break;
 
                 default:
@@ -1548,6 +1632,11 @@ namespace WpfApp3
                 case "HRCP_Sel_RenameButton":
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                case "H4CP_Sel_RenameButton":
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
                     break;
 
 
@@ -1651,6 +1740,12 @@ namespace WpfApp3
                     oldselected = HRCP_MainList.SelectedIndex;
                     mainlist = HRCP_MainList;
                     savepath = HCMGlobal.HRCheckpointPath;
+                    break;
+
+                case "H4CP":
+                    oldselected = H4CP_MainList.SelectedIndex;
+                    mainlist = H4CP_MainList;
+                    savepath = HCMGlobal.H4CheckpointPath;
                     break;
 
             }
@@ -2113,6 +2208,89 @@ namespace WpfApp3
 
                     }
                     else { Debug("oh no"); NullReach(); }
+                    break;
+
+
+                case 6: //h4
+                    if (HCMGlobal.AttachedGame == "H4" && ValidCheck_H4())
+                    {
+                        //data to get; level code, diff, time
+
+                        //first check double revert flag
+                        int bytesWritten;
+                        bool DRflag;
+                        byte[] DRbuffer = new byte[1];
+                        var data = new HaloSaveFileMetadata();
+
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                        {
+                            DRflag = Convert.ToBoolean(DRbuffer[0]);
+                        }
+                        else { Debug("oh no"); NullH4(); return; }
+
+                        int offset;
+                        if (!DRflag)
+                        {
+                            offset = HCMGlobal.LoadedOffsets.H4_CPData_DROffset1; //first cp
+                        }
+                        else
+                        {
+                            offset = HCMGlobal.LoadedOffsets.H4_CPData_DROffset2; //second cp
+                        }
+
+                        int[] addy = HCMGlobal.LoadedOffsets.H4_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                        addy[3] = offset;
+                        //setup done, let's get our data
+                        //levelcode
+                        byte[] buffer = new byte[64];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + HCMGlobal.LoadedOffsets.H4_CPData_LevelCode, buffer, buffer.Length, out bytesWritten))
+                        {
+                            char[] exceptions = new char[] { '_' };
+                            data.LevelCode = String.Concat(Encoding.UTF8.GetString(buffer, 0, buffer.Length).Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        }
+                        else { Debug("oh no"); NullH4(); return; }
+
+                        //difficulty
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            data.Difficulty = (Difficulty)4;
+                        }
+                        else
+                        {
+                            buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + HCMGlobal.LoadedOffsets.H4_CPData_Difficulty, buffer, buffer.Length, out bytesWritten))
+                            {
+                                data.Difficulty = (Difficulty)buffer[0];
+                            }
+                            else { Debug("oh no"); NullH4(); return; }
+                        }
+                        //tickcount
+                        buffer = new byte[4];
+                        if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + HCMGlobal.LoadedOffsets.H4_CPData_StartTick, buffer, buffer.Length, out bytesWritten))
+                        {
+                            data.StartTick = BitConverter.ToUInt32(buffer, 0);
+                        }
+                        else { Debug("oh no"); NullH4(); return; }
+
+                        //now assign to ui
+                        H4CP_Loa_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo4);
+
+                        H4CP_Loa_Time.Text = TickToTimeString(data.StartTick, true);
+
+                        if (data.Difficulty != Difficulty.Invalid)
+                            H4CP_Loa_DiffName.Source = new BitmapImage(new Uri($"images/H4/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                        if (LevelCodeToGameType(data.LevelCode))
+                        {
+                            H4CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H4/mp.png", UriKind.Relative));
+                        }
+                        else
+                        {
+                            H4CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/H4/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                        }
+
+                    }
+                    else { Debug("oh no"); NullH4(); }
 
 
 
@@ -2151,6 +2329,14 @@ namespace WpfApp3
                         ODCP_Loa_DiffName.Source = null;
                         ODCP_Loa_Time.Text = "N/A";
                         ODCP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+
+                    void NullH4()
+                    {
+                        H4CP_Loa_LevelName.Text = "N/A";
+                        H4CP_Loa_DiffName.Source = null;
+                        H4CP_Loa_Time.Text = "N/A";
+                        H4CP_Loa_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
                     }
 
             }
@@ -2367,6 +2553,11 @@ namespace WpfApp3
                    != HCMGlobal.AttachedLevel))
                     {
                         Debug("lockout the thing");
+                        if (ODCP_MainList.SelectedItem != null)
+                        {
+                            Debug("obv: " + (ODCP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(ODCP_MainList.SelectedItem, null) as string));
+                        }
+                        Debug("exp: " + HCMGlobal.AttachedLevel);
                         ODCP_Sel_InjectButton.IsEnabled = false;
                         ODCP_Sel_InjectRevertButton.IsEnabled = false;
                     }
@@ -2432,6 +2623,61 @@ namespace WpfApp3
                         Debug("unlockout the thingy");
                         HRCP_Sel_InjectButton.IsEnabled = true;
                         HRCP_Sel_InjectRevertButton.IsEnabled = true;
+                    }
+                    break;
+
+                case 6: //h4
+                    if (H4CP_MainList.SelectedItem != null)
+                    {
+                        var item = H4CP_MainList.Items.GetItemAt(H4CP_MainList.SelectedIndex);
+                        System.Type type = item.GetType();
+                        string s = (string)type.GetProperty("Name").GetValue(item, null);
+                        var pathtotest = HCMGlobal.H4CheckpointPath + @"\" + s + @".bin";
+
+                        if (File.Exists(pathtotest))
+                        {
+                            var data = GetSaveFileMetadata(pathtotest, HaloGame.Halo4);
+                            H4CP_Sel_LevelName.Text = LevelCodeToFullName(data.LevelCode, HaloGame.Halo4);
+
+                            if (data.Difficulty != Difficulty.Invalid)
+                                H4CP_Sel_DiffName.Source = new BitmapImage(new Uri($"images/H4/diff_{(int)data.Difficulty}.png", UriKind.Relative));
+
+                            H4CP_Sel_Time.Text = TickToTimeString(data.StartTick, true);
+                            H4CP_Sel_FileName.Text = s;
+
+                            if (LevelCodeToGameType(data.LevelCode))
+                            {
+                                H4CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H4/mp.png", UriKind.Relative));
+                            }
+                            else
+                            {
+                                H4CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/H4/{data.LevelCode}_{HCMGlobal.ImageModeSuffix}.png", UriKind.Relative));
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        H4CP_Sel_LevelName.Text = "N/A";
+                        H4CP_Sel_DiffName.Source = null;
+                        H4CP_Sel_Time.Text = "N/A";
+                        H4CP_Sel_FileName.Text = "N/A";
+                        H4CP_Sel_LevelImage.Source = new BitmapImage(new Uri($"images/nofile.png", UriKind.Relative));
+                    }
+
+
+                    if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (H4CP_MainList.SelectedItem == null || H4CP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(H4CP_MainList.SelectedItem, null) as string
+                   != HCMGlobal.AttachedLevel))
+                    {
+                        Debug("lockout the thing");
+                        H4CP_Sel_InjectButton.IsEnabled = false;
+                        H4CP_Sel_InjectRevertButton.IsEnabled = false;
+                    }
+                    else
+                    {
+                        Debug("unlockout the thingy");
+                        H4CP_Sel_InjectButton.IsEnabled = true;
+                        H4CP_Sel_InjectRevertButton.IsEnabled = true;
                     }
                     break;
 
@@ -2519,6 +2765,17 @@ namespace WpfApp3
                     HaloReachCheckpoints.Clear();
                     break;
 
+                case 6: //halo 4
+
+                    savepath = HCMGlobal.H4CheckpointPath;
+                    game = HaloGame.Halo4;
+                    list = H4CP_MainList;
+                    listlabel = H4CP_MainList_Label;
+                    oldselected = H4CP_MainList.SelectedIndex;
+                    collection = Halo4Checkpoints;
+                    Halo4Checkpoints.Clear();
+                    break;
+
                 default:
                     return;
 
@@ -2553,34 +2810,38 @@ namespace WpfApp3
                         //data.TextVisibility = Visibility.Visible;
                         //data.ImageVisibility = Visibility.Hidden;
 
-                        switch (HCMGlobal.SavedConfig?.LevelListOption ?? 0)
+                        if (LevelCodeToGameType(data.LevelCode))
                         {
-                            
-                            default:
-                            case 0: //levelcode
-                                data.LevelNameDisplay = data.LevelCode;
-                                break;
+                            data.LevelNameDisplay = data.LevelCode;
+                        }
+                        else
+                        {
+                            switch (HCMGlobal.SavedConfig?.LevelListOption ?? 0)
+                            {
 
-                            case 1: //anronym
-                                //TODO: make a dictionary for this
-                                data.LevelNameDisplay = "NAH";
-                                break;
+                                default:
+                                case 0: //levelcode
+                                    data.LevelNameDisplay = data.LevelCode;
+                                    break;
 
-                            case 2: //fullname
-                                //TODO: make a dictionary for this
-                                data.LevelNameDisplay = "Indubitably Not Ready Yet";
-                                break;
+                                case 1: //anronym
+                                        //TODO: make a dictionary for this
+                                    data.LevelNameDisplay = "NAH";
+                                    break;
 
-                            case 3: //icon //levelnamedisplay won't be used 
-                                data.TextVisibility = Visibility.Hidden;
-                                data.ImageVisibility = Visibility.Visible;
-                                break;
+                                case 2: //fullname
+                                        //TODO: make a dictionary for this
+                                    data.LevelNameDisplay = "Indubitably Not Ready Yet";
+                                    break;
+
+                                case 3: //icon //levelnamedisplay won't be used 
+                                    data.LevelListImageURL = data.LevelListImage;
+                                    data.TextVisibility = Visibility.Hidden;
+                                    data.ImageVisibility = Visibility.Visible;
+                                    break;
+                            }
                         }
 
-                        if (LevelCodeToGameType(data.LevelCode))
-                            data.LevelListImageURL = "images/mp.png";
-                        else
-                            data.LevelListImageURL = data.LevelListImage;
 
 
                         collection.Add(data);
@@ -2625,6 +2886,8 @@ namespace WpfApp3
             public string DifficultyImageHR => $"images/HR/diff_{(int)Difficulty}.png";
 
             public string DifficultyImageOD => $"images/OD/diff_{(int)Difficulty}.png";
+
+            public string DifficultyImageH4 => $"images/H4/diff_{(int)Difficulty}.png";
 
             //public string LevelListImage => $"images/H1/a10_clas.png";
             public string LevelListImage => $"images/H1/{LevelCode}_{HCMGlobal.ImageModeSuffix}.png";
@@ -2681,6 +2944,11 @@ namespace WpfApp3
                         offsetDifficulty = 0xFEFC;
                         offsetSeed = 0x148;
                         break;
+                    case HaloGame.Halo4:
+                        offsetLevelCode = 0x1C96F;
+                        offsetStartTick = 0x2E424;
+                        offsetDifficulty = 0x1CB00;
+                        break;
                     default:
                         throw new NotSupportedException();
                 }
@@ -2714,6 +2982,11 @@ namespace WpfApp3
                         offsetStartTick = HCMGlobal.LoadedOffsets.HR_CPData_StartTick;
                         offsetDifficulty = HCMGlobal.LoadedOffsets.HR_CPData_Difficulty;
                         offsetSeed = HCMGlobal.LoadedOffsets.HR_CPData_Seed;
+                        break;
+                    case HaloGame.Halo4:
+                        offsetLevelCode = HCMGlobal.LoadedOffsets.H4_CPData_LevelCode;
+                        offsetStartTick = HCMGlobal.LoadedOffsets.H4_CPData_StartTick;
+                        offsetDifficulty = HCMGlobal.LoadedOffsets.H4_CPData_Difficulty;
                         break;
                     default:
                         throw new NotSupportedException();
@@ -3037,6 +3310,67 @@ namespace WpfApp3
 
         };
 
+
+        readonly Dictionary<string, string> LevelCodeToNameH4 = new Dictionary<string, string>()
+        { 
+
+
+             // Halo 4
+            //SP
+            { "m05_prologue", "Prologue" },
+            { "m10_crash", "Dawn" },
+            { "m020", "Requiem" },
+            { "m30_cryptum", "Forerunner" },
+            { "m40_invasion", "Reclaimer" },
+            { "m60_rescue", "Infinity" },
+            { "m70_liftoff", "Shutdown" },
+            { "m80_delta", "Composer" },
+            { "m90_sacrifice", "Midnight" },
+            { "m95_epilogue", "Epilogue" },
+            //Spartan Ops
+            { "ff87_chopperbowl", "Quarry" },
+            { "ff86_sniperalley", "Sniper Alley" },
+            { "ff90_fortsw", "Fortress" },
+            { "ff84_temple", "The Refuge" },
+            { "ff82_scurve", "The Cauldron" },
+            { "ff81_courtyard", "The Gate" },
+            { "ff91_complex", "The Galileo" },
+            { "ff92_valhalla", "Two Giants" },
+            { "dlc01_factory", "Lockup" },
+            { "ff151_mezzanine", "Control" },
+            { "ff153_caverns", "Warrens" },
+            { "ff152_vortex", "Cyclone" },
+            { "ff155_breach", "Harvester" },
+            { "ff154_hillside", "Apex" },
+            { "dlc01_engine", "Infinity" },
+            //MP -- I haven't double checked that all of these are correct
+            { "ca_blood_cavern", "Abandon" },
+            { "ca_blood_crash", "Exile" },
+            { "ca_canyon", "Meltdown" },
+            { "ca_forge_bonzanza", "Impact" },
+            { "ca_forge_erosion", "Erosion" },
+            { "ca_forge_ravine", "Ravine" },
+            { "ca_gore_valley", "Longbow" },
+            { "ca_redoubt", "Vortex" },
+            { "ca_tower", "Solace" },
+            { "ca_warhouse", "Adrift" },
+            { "ca_wraparound", "Haven" },
+            { "dlc_forge_island", "Forge Island" },
+            { "dlc dejewel", "Shatter" },
+            { "dlc dejunkyard", "Wreckage" },
+            { "z05_cliffside", "Complex" },
+            { "zd_02_grind", "Harvest" },
+            { "ca deadlycrossing", "Monolith" },
+            { "ca_port", "Landfall" },
+            { "ca_rattler", "Skyline" },
+            { "ca_basin", "Outcast" },
+            { "ca_highrise", "Perdition" },
+            { "ca_spiderweb", "Daybreak" },
+            { "ca_creeper", "Pitfall" },
+            { "ca_dropoff", "Daybreak" }, //nfi why there's two daybreaks
+
+        };
+
         readonly Dictionary<string, bool> LevelCodeToType = new Dictionary<string, bool>()
         {
             //false = solo, true = multi
@@ -3218,6 +3552,61 @@ namespace WpfApp3
             { "ff60 icecave ", true },
             { "ff70_holdout ", true },
 
+
+                         // Halo 4
+            //SP
+            { "m05_prologue", false },
+            { "m10_crash", false },
+            { "m020", false },
+            { "m30_cryptum", false },
+            { "m60_rescue", false },
+            { "m40_invasion", false },
+            { "m70_liftoff", false },
+            { "m80_delta", false },
+            { "m90_sacrifice", false },
+            { "m95_epilogue", false },
+            //Spartan Ops -- gonna define these as MP so I don't have to do level icons for em all
+            { "ff87_chopperbowl", true },
+            { "ff86_sniperalley", true },
+            { "ff90_fortsw", true },
+            { "ff84_temple", true },
+            { "ff82_scurve", true },
+            { "ff81_courtyard", true },
+            { "ff91_complex", true },
+            { "ff92_valhalla", true },
+            { "dlc01_factory", true },
+            { "ff151_mezzanine", true },
+            { "ff153_caverns", true },
+            { "ff152_vortex", true },
+            { "ff155_breach", true },
+            { "ff154_hillside", true },
+            { "dlc01_engine",true },
+            //MP
+            { "ca_blood_cavern", true },
+            { "ca_blood_crash", true },
+            { "ca_canyon", true },
+            { "ca_forge_bonzanza", true },
+            { "ca_forge_erosion", true },
+            { "ca_forge_ravine", true },
+            { "ca_gore_valley", true },
+            { "ca_redoubt", true },
+            { "ca_tower", true },
+            { "ca_warhouse", true },
+            { "ca_wraparound", true },
+            { "dlc_forge_island", true },
+            { "dlc dejewel", true },
+            { "dlc dejunkyard", true },
+            { "z05_cliffside", true },
+            { "zd_02_grind", true },
+            { "ca deadlycrossing", true },
+            { "ca_port", true },
+            { "ca_rattler", true },
+            { "ca_basin", true },
+            { "ca_highrise", true },
+            { "ca_spiderweb", true },
+            { "ca_creeper", true },
+            { "ca_dropoff", true }, 
+
         };
 
         public string LevelCodeToFullName(string code, HaloGame game)
@@ -3255,6 +3644,13 @@ namespace WpfApp3
 
                 case HaloGame.HaloReach:
                     if (LevelCodeToNameHR.TryGetValue(code, out Name))
+                    {
+                        return Name;
+                    }
+                    return code;
+
+                case HaloGame.Halo4:
+                    if (LevelCodeToNameH4.TryGetValue(code, out Name))
                     {
                         return Name;
                     }
@@ -3943,6 +4339,158 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+
+                case "H4CP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H4" && ValidCheck_H4())
+                        {
+
+                            //looks like doing custom message in MP breaks things, so we need to skip that stuff if we're in MP
+                            byte[] buffer = new byte[64];
+                            string holdstring;
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+
+                                holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                                holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                                holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                                char[] exceptions = new char[] { '_' };
+                                holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                                Debug("read H4 level: " + holdstring);
+
+                            }
+                            else
+                            {
+                                return (false, "failed to read levelname for mp check");
+                            }
+
+                            if (!LevelCodeToGameType(holdstring))
+                            {
+
+                                //next, the custom message stuff
+                                //null the cp messagecall
+                                buffer = new byte[5] { 0x90, 0x90, 0x90, 0x90, 0x90 };
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                                {
+                                    Debug("H4: custom message 0: success");
+                                }
+                                else
+                                {
+                                    return (false, "message 0 failure");
+                                }
+
+
+                                //acquire the current tickcount
+                                buffer = new byte[4];
+                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_TickCounter[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                                {
+                                    Debug("H4: custom message 1: success");
+                                }
+                                else
+                                {
+                                    FixMessageCall();
+                                    return (false, "message 1 failure");
+                                }
+
+                                //buffer will be equal to the tickcounter so just paste it into the new spot
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                                {
+                                    Debug("H4: custom message 2: success");
+                                }
+                                else
+                                {
+                                    FixMessageCall();
+                                    return (false, "message 2 failure");
+                                }
+
+                                buffer = new byte["Custom Checkpoint... done  ".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                                buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done  ");
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 8, buffer, buffer.Length, out bytesWritten))
+                                {
+                                    Debug("H4: custom message 3: success");
+                                }
+                                else
+                                {
+                                    FixMessageCall();
+                                    return (false, "message 3 failure");
+                                }
+
+                                buffer = new byte[8] { 0, 0, 0, 0, 0, 0, 0, 0 }; //setting showmessage flag to true --- show is ZERO, not one. set 8 bytes, not one.
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0x10, buffer, buffer.Length, out bytesWritten))
+                                {
+                                    Debug("H4: custom message 4: success");
+                                }
+                                else
+                                {
+                                    FixMessageCall();
+                                    return (false, "message 4 failure");
+                                }
+
+                            }
+
+                            buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Checkpoint[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H4: made cp");
+
+                            }
+                            else
+                            {
+                                FixMessageCall();
+                                Debug("H4: failed to make cp");
+                                return (false, "failed to write cp byte");
+                            }
+
+                            if (!LevelCodeToGameType(holdstring))
+                            {
+                                Thread.Sleep(50);
+
+                                buffer = new byte[5];
+                                buffer = HCMGlobal.LoadedOffsets.H4_MessageCode;
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                                {
+                                    Debug("H4: custom message 5: success");
+                                    return (true, "success!");
+                                }
+                                else
+                                {
+                                    return (false, "message 5 failure");
+                                }
+                            }
+                            else
+                            {
+                                return (true, "success! (mp cp)");
+                            }
+
+
+                            void FixMessageCall()
+                            {
+
+                                try
+                                {
+                                    buffer = new byte[5];
+                                    buffer = HCMGlobal.LoadedOffsets.H4_MessageCode;
+                                    WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_MessageCall[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten);
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make cp because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 default:
                     return (false, "invalid game");
 
@@ -4113,6 +4661,36 @@ namespace WpfApp3
                     {
                         return (false, "unknown error occured: " + ex.ToString());
                     }
+
+
+                case "H4CP":
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H4" && ValidCheck_H4())
+                        {
+                            byte[] buffer = new byte[1] { 1 };
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Revert[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H4: made revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                Debug("H4: failed to make revert");
+                                return (false, "failed to write revert byte");
+                            }
+                        }
+                        else
+                        {
+                            return (false, "failed to force revert because not attached");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
 
                 default:
                     return (false, "invalid game");
@@ -4299,6 +4877,45 @@ namespace WpfApp3
                             else
                             {
                                 return (false, "OD: failed to make double revert");
+                            }
+
+                        }
+                        else
+                        {
+                            return (false, "failed to make double revert because not attached");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+
+                case "H4CP":
+
+                    try
+                    {
+                        if (HCMGlobal.AttachedGame == "H4" && ValidCheck_H4())
+                        {
+                            byte[] buffer = new byte[1];
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H4: read double revert flag");
+                            }
+                            else
+                            {
+                                return (false, "failed to read double revert flag");
+                            }
+
+                            buffer[0] = Convert.ToByte(!(BitConverter.ToBoolean(buffer, 0))); //just flip the value lmao
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("H4: made double revert");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "H4: failed to make double revert");
                             }
 
                         }
@@ -4724,6 +5341,95 @@ namespace WpfApp3
                                         if (File.Exists(test.ToString()) && test.Length > 1000)
                                         {
                                             Debug("SUCESSFULLY DUMPED HR CP, LENGTH: " + test.Length.ToString());
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Debug("something went wrong trying to save a save: " + game + ", " + proposedsave);
+                                        return (false, "couldn't write save file to disk, did you have an invalid name? proposed save: " + proposedsave);
+                                        //need to make this a popup to let user know what was bad
+                                    }
+                                }
+                                else
+                                {
+                                    return (false, "back up directory didn't exist: " + backuploc);
+                                }
+                            }
+                            else
+                            {
+                                return (false, "failed to read checkpoint from memory");
+                            }
+
+                            return (true, "success!");
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
+
+                case "H4CP":
+                    try
+                    {
+
+                        if (HCMGlobal.AttachedGame == "H4" && ValidCheck_H4())
+                        {
+
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                Debug("something went wrong trying to read DR flag for H4 dumping");
+                                return (false, "Failed to read double-revert byte");
+                            }
+
+                            byte[] buffer = new byte[HCMGlobal.LoadedOffsets.H4_CPData_Size];
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = HCMGlobal.LoadedOffsets.H4_CPData_DROffset1; //first cp
+                            }
+                            else
+                            {
+                                offset = HCMGlobal.LoadedOffsets.H4_CPData_DROffset2; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.H4_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+
+                                string backuploc = HCMGlobal.H4CheckpointPath;
+
+                                if (Directory.Exists(backuploc))
+                                {
+                                    var userinput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                                       "Name your backup save",
+                                                       "",
+                                                       -1, -1);
+                                    string proposedsave = (backuploc + @"\" + userinput + @".bin");
+                                    if (userinput == "")
+                                        return (false, "cancelclick");
+                                    try
+                                    {
+                                        File.WriteAllBytes(proposedsave, buffer);
+                                        FileInfo test = new FileInfo(proposedsave);
+                                        if (File.Exists(test.ToString()) && test.Length > 1000)
+                                        {
+                                            Debug("SUCESSFULLY DUMPED H4 CP, LENGTH: " + test.Length.ToString());
                                         }
                                     }
                                     catch
@@ -5381,6 +6087,110 @@ namespace WpfApp3
                         return (false, "unknown error occured: " + ex.ToString());
                     }
 
+
+                case "H4CP":
+                    try
+                    {
+                        Debug("attempting to inject H4 checkpoint");
+                        if (H4CP_MainList.SelectedItem == null)
+                        {
+                            return (false, "no save file selected!");
+                        }
+
+                        if (HCMGlobal.AttachedGame == "H4" && ValidCheck_H4())
+                        {
+                            var item = H4CP_MainList.Items.GetItemAt(H4CP_MainList.SelectedIndex) as HaloSaveFileMetadata;
+                            string sourcePath = HCMGlobal.H4CheckpointPath + @"\" + item.Name + @".bin";
+                            byte[] buffer;
+                            try
+                            {
+                                FileStream fs = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+                                // Create a byte array of file stream length
+                                buffer = System.IO.File.ReadAllBytes(sourcePath);
+                                //Read block of bytes from stream into the byte array
+                                fs.Read(buffer, 0, System.Convert.ToInt32(fs.Length));
+                                //Close the File Stream
+                                fs.Close();
+                                Console.WriteLine("nearly ready to inject, buffer length: " + buffer.Length.ToString());
+                            }
+                            catch
+                            {
+                                return (false, "failed to access save file");
+                            }
+
+                            //okay first we need to read from memory the bytes that we need to preserve and overwrite them in buffer
+                            //let's check the DR flag first
+                            int bytesWritten;
+                            bool DRflag;
+                            byte[] DRbuffer = new byte[1];
+
+                            if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_DRflag[Convert.ToInt32(HCMGlobal.WinFlag)]), DRbuffer, DRbuffer.Length, out bytesWritten))
+                            {
+                                DRflag = Convert.ToBoolean(DRbuffer[0]);
+                            }
+                            else
+                            {
+                                return (false, "something went wrong trying to read DR flag for H4 injecting");
+                            }
+
+                            int offset;
+                            if (!DRflag)
+                            {
+                                offset = HCMGlobal.LoadedOffsets.H4_CPData_DROffset1; //first cp
+                            }
+                            else
+                            {
+                                offset = HCMGlobal.LoadedOffsets.H4_CPData_DROffset2; //second cp
+                            }
+
+                            int[] addy = HCMGlobal.LoadedOffsets.H4_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+
+                            //setup a 2d array with the values we need to preserve (offset, length)
+
+                            
+                            int[][] PreserveLocations = HCMGlobal.LoadedOffsets.H4_CPData_PreserveLocations;
+
+                            foreach (int[] i in PreserveLocations)
+                            {
+                                byte[] tempbuffer = new byte[i[1]];
+                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten))
+                                {
+                                    //overwrite the stored cp buffer with new vals
+                                    Array.ConstrainedCopy(tempbuffer, 0, buffer, i[0], i[1]);
+                                    Debug("successfully copied over buffer at " + i[0]);
+                                }
+                                else
+                                {
+                                    return (false, "failed reading current vals for H4 injection");
+                                }
+                            }
+
+
+                            //now to inject the prepared checkpoint into memory
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
+                            {
+                                Debug("successfully injected H4 cp, " + buffer.Length.ToString() + " bytes!");
+                                return (true, "success!");
+                            }
+                            else
+                            {
+                                return (false, "failed injecting H4 cp");
+                            }
+
+
+
+                        }
+                        else
+                        {
+                            return (false, "not attached to game");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return (false, "unknown error occured: " + ex.ToString());
+                    }
+
                 default:
                     return (false, "invalid game");
 
@@ -5864,10 +6674,10 @@ namespace WpfApp3
                         HCMGlobal.AttachedGame = "H3";
                         break;
                     case 3:
-                        HCMGlobal.AttachedGame = "Mn"; //halo 4 maybe?
+                        HCMGlobal.AttachedGame = "H4"; 
                         break;
                     case 4:
-                        HCMGlobal.AttachedGame = "Mn"; //halo 4 maybe?
+                        HCMGlobal.AttachedGame = "Mn"; //nfi - h2a mp maybe?
                         break;
                     case 5:
                         HCMGlobal.AttachedGame = "OD";
@@ -5952,7 +6762,6 @@ namespace WpfApp3
             switch (HCMGlobal.AttachedGame)
             {
                 
-                case "H4"://these above games are not supported yet
 
                 default:
                 case "Mn":
@@ -6020,9 +6829,14 @@ namespace WpfApp3
 
                     if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
                     {
+                        //levelstring here is laid out a little differently
+
                         holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
-                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        //Debug("Holdstring 1: " + holdstring);
+                        holdstring = holdstring.Substring(0, holdstring.LastIndexOf("."));
+                        //Debug("Holdstring 2: " + holdstring);
+                        //holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                       // Debug("Holdstring 3: " + holdstring);
                         char[] exceptions = new char[] { '_' };
                         holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
                         Debug("read OD level: " + holdstring);
@@ -6049,6 +6863,26 @@ namespace WpfApp3
                     else
                     {
                         Debug("failed to read hr level");
+                        HCMGlobal.AttachedLevel = null;
+                    }
+                    break;
+
+
+                case "H4":
+
+                    if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_LevelName[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out bytesRead))
+                    {
+                        holdstring = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        holdstring = holdstring.Substring(holdstring.LastIndexOf("\\") + 1);
+                        char[] exceptions = new char[] { '_' };
+                        holdstring = String.Concat(holdstring.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                        Debug("read H4 level: " + holdstring);
+                        HCMGlobal.AttachedLevel = holdstring;
+                    }
+                    else
+                    {
+                        Debug("failed to read H4 level");
                         HCMGlobal.AttachedLevel = null;
                     }
                     break;
@@ -6091,7 +6925,7 @@ namespace WpfApp3
             //todo; implement this
             switch (HCMGlobal.AttachedGame)
             {
-                case "H4"://these above games are not supported yet
+               
 
                 default:
                 case "Mn":
@@ -6101,6 +6935,7 @@ namespace WpfApp3
                     SetH2(false);
                     SetH3(false);
                     SetOD(false);
+                    SetH4(false);
                     break;
 
                 case "H1":
@@ -6109,6 +6944,7 @@ namespace WpfApp3
                     SetH2(false);
                     SetH3(false);
                     SetOD(false);
+                    SetH4(false);
                     break;
 
                 case "H2":
@@ -6117,6 +6953,7 @@ namespace WpfApp3
                     SetH2(true);
                     SetH3(false);
                     SetOD(false);
+                    SetH4(false);
                     break;
 
                 case "HR":
@@ -6125,6 +6962,7 @@ namespace WpfApp3
                     SetH2(false);
                     SetH3(false);
                     SetOD(false);
+                    SetH4(false);
                     break;
 
                 case "H3":
@@ -6133,6 +6971,7 @@ namespace WpfApp3
                     SetH2(false);
                     SetH3(true);
                     SetOD(false);
+                    SetH4(false);
                     break;
 
                 case "OD":
@@ -6141,6 +6980,16 @@ namespace WpfApp3
                     SetH2(false);
                     SetH3(false);
                     SetOD(true);
+                    SetH4(false);
+                    break;
+
+                case "H4":
+                    SetH1(false);
+                    SetHR(false);
+                    SetH2(false);
+                    SetH3(false);
+                    SetOD(false);
+                    SetH4(true);
                     break;
 
 
@@ -6238,6 +7087,20 @@ namespace WpfApp3
                 }
             }
 
+
+            void SetH4(bool state)
+            {
+                H4CP_ForceCheckpoint.IsEnabled = state;
+                H4CP_ForceRevert.IsEnabled = state;
+                H4CP_ForceDR.IsEnabled = state;
+                H4CP_Loa_DumpButton.IsEnabled = state;
+                H4CP_Loa_ForceCPDump.IsEnabled = state;
+                if (HCMGlobal.SavedConfig != null && HCMGlobal.SavedConfig.LockoutLevels == false)
+                {
+                    H4CP_Sel_InjectButton.IsEnabled = state;
+                    H4CP_Sel_InjectRevertButton.IsEnabled = state;
+                }
+            }
 
 
         }
@@ -6404,6 +7267,40 @@ namespace WpfApp3
                     if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "maps")
                     {
                         Debug("OD check success");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug("oh no");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Debug("oh no");
+                    return false;
+                }
+            }
+            catch
+            {
+                Debug("oh no");
+                return false;
+            }
+
+        }
+
+
+        private static bool ValidCheck_H4()
+        {
+
+            try
+            {
+                byte[] buffer = new byte[4];
+                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_CheckString[Convert.ToInt32(HCMGlobal.WinFlag)]), buffer, buffer.Length, out int bytesRead2))
+                {
+                    if (Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "maps")
+                    {
+                        Debug("H4 check success");
                         return true;
                     }
                     else
