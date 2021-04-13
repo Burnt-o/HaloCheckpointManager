@@ -152,7 +152,7 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.4";
+            public static readonly string HCMversion = "0.9.5";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static string H1CoreSavePath = LocalDir + @"\saves\h1cs";
@@ -845,7 +845,7 @@ namespace WpfApp3
 
         {
 
-                bool backtoroot = false;
+                bool backtoroot = true;
 
                 Debug(H1CSProfile.SelectedIndex.ToString());
                 Debug("REEEEEEEEEEEEEEEEEEEEEEE");
@@ -856,25 +856,59 @@ namespace WpfApp3
 
 
                     case 0:
+                    if (H1CSProfile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
                         HCMGlobal.H1CoreSavePath = HCMGlobal.RootH1CoreSavePath + (backtoroot ? "" : ("\\" + H1CSProfile.SelectedItem.ToString()));
                         break;
+
                     case 1:
-                        HCMGlobal.H1CheckpointPath = HCMGlobal.RootH1CheckpointPath + (backtoroot ? "" : ("\\" + H1CPProfile.SelectedItem.ToString()));
+                    if (H1CPProfile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
+                    HCMGlobal.H1CheckpointPath = HCMGlobal.RootH1CheckpointPath + (backtoroot ? "" : ("\\" + H1CPProfile.SelectedItem.ToString()));
                         break;
+
                     case 2:
-                        HCMGlobal.H2CheckpointPath = HCMGlobal.RootH2CheckpointPath + (backtoroot ? "" : ("\\" + H2Profile.SelectedItem.ToString()));
+                    if (H2Profile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
+                    HCMGlobal.H2CheckpointPath = HCMGlobal.RootH2CheckpointPath + (backtoroot ? "" : ("\\" + H2Profile.SelectedItem.ToString()));
                         break;
+
                     case 3:
-                        HCMGlobal.H3CheckpointPath = HCMGlobal.RootH3CheckpointPath + (backtoroot ? "" : ("\\" + H3Profile.SelectedItem.ToString()));
+                    if (H3Profile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
+                    HCMGlobal.H3CheckpointPath = HCMGlobal.RootH3CheckpointPath + (backtoroot ? "" : ("\\" + H3Profile.SelectedItem.ToString()));
                         break;
+
                     case 4:
-                        HCMGlobal.HRCheckpointPath = HCMGlobal.RootHRCheckpointPath + (backtoroot ? "" : ("\\" + HRProfile.SelectedItem.ToString()));
-                        break;
+                    if (HRProfile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
+                    HCMGlobal.HRCheckpointPath = HCMGlobal.RootHRCheckpointPath + (backtoroot ? "" : ("\\" + HRProfile.SelectedItem.ToString()));
+                    break;
+
                     case 5:
-                        HCMGlobal.ODCheckpointPath = HCMGlobal.RootODCheckpointPath + (backtoroot ? "" : ("\\" + ODProfile.SelectedItem.ToString()));
+                    if (ODProfile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
+                    HCMGlobal.ODCheckpointPath = HCMGlobal.RootODCheckpointPath + (backtoroot ? "" : ("\\" + ODProfile.SelectedItem.ToString()));
                         break;
+
                     case 6:
-                        HCMGlobal.H4CheckpointPath = HCMGlobal.RootH4CheckpointPath + (backtoroot ? "" : ("\\" + H4Profile.SelectedItem.ToString()));
+                    if (H4Profile.SelectedIndex > 0)
+                    {
+                        backtoroot = false;
+                    }
+                    HCMGlobal.H4CheckpointPath = HCMGlobal.RootH4CheckpointPath + (backtoroot ? "" : ("\\" + H4Profile.SelectedItem.ToString()));
                         break;
 
 
