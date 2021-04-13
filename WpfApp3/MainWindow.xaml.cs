@@ -506,6 +506,7 @@ namespace WpfApp3
             }
 
             SetupProfiles();
+            
 
             // Validate that required files exist
             foreach (var file in RequiredFiles)
@@ -623,6 +624,7 @@ namespace WpfApp3
             try
             {
                 TabList.SelectedIndex = HCMGlobal.SavedConfig.Reset_Tab;
+                Debug("SURELY I'M BEING RUN BEFORE THE OTHER THING");
 
                 H1CSProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[0];
                 H1CPProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[1];
@@ -631,7 +633,11 @@ namespace WpfApp3
                 HRProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[4];
                 ODProfile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[5];
                 H4Profile.SelectedIndex = HCMGlobal.SavedConfig.Reset_Folder[6];
+
                 SetupProfiles();
+                Debug("eh why aren't I getting here");
+                ProfileChangedNull();
+                Debug("after pcn");
 
                 CS_MainList.SelectedIndex = HCMGlobal.SavedConfig.Reset_SelCP[0];
                 CS_MainList.ScrollIntoView(CS_MainList.SelectedItem);
@@ -682,9 +688,17 @@ namespace WpfApp3
 
 
             }
-            catch
+            catch (Exception ex)
             {
                 Debug("failed somewhere resetting the ui values");
+
+                // Get stack trace for the exception with source file information
+                var st = new StackTrace(ex, true);
+                // Get the top stack frame
+                var frame = st.GetFrame(0);
+                // Get the line number from the stack frame
+                var line = frame.GetFileLineNumber();
+                Debug(line.ToString());
             }
 
 
@@ -717,8 +731,8 @@ namespace WpfApp3
             //save them to the config file
             //then next time we do window loaded we can try to load them
             HCMGlobal.SavedConfig.Reset_Tab = TabList.SelectedIndex;
-            HCMGlobal.SavedConfig.Reset_Folder = new int[] { H1CSProfile.SelectedIndex, H1CPProfile.SelectedIndex, H2Profile.SelectedIndex, H3Profile.SelectedIndex, HRProfile.SelectedIndex, ODProfile.SelectedIndex };
-            HCMGlobal.SavedConfig.Reset_SelCP = new int[] { CS_MainList.SelectedIndex, CP_MainList.SelectedIndex, H2CP_MainList.SelectedIndex, H3CP_MainList.SelectedIndex, HRCP_MainList.SelectedIndex, ODCP_MainList.SelectedIndex };
+            HCMGlobal.SavedConfig.Reset_Folder = new int[] { H1CSProfile.SelectedIndex, H1CPProfile.SelectedIndex, H2Profile.SelectedIndex, H3Profile.SelectedIndex, HRProfile.SelectedIndex, ODProfile.SelectedIndex, H4Profile.SelectedIndex };
+            HCMGlobal.SavedConfig.Reset_SelCP = new int[] { CS_MainList.SelectedIndex, CP_MainList.SelectedIndex, H2CP_MainList.SelectedIndex, H3CP_MainList.SelectedIndex, HRCP_MainList.SelectedIndex, ODCP_MainList.SelectedIndex, H4CP_MainList.SelectedIndex };
             
 
             List<GridView> grids = new List<GridView>();
@@ -787,41 +801,91 @@ namespace WpfApp3
 
         private void SetupProfiles()
        {
-
-            var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile, ODProfile, H4Profile };
-            var oldselected = H1CSProfile.SelectedItem;
-
-            foreach (ComboBox cb in list)
+            try
             {
-                oldselected = cb.SelectedItem;
-                //Debug("bbbb: " + cb.SelectedItem);
-                cb.Items.Clear();
-                cb.Items.Add("*Root");
+                var list = new List<ComboBox> { H1CSProfile, H1CPProfile, H2Profile, H3Profile, HRProfile, ODProfile, H4Profile };
+                var oldselected = H1CSProfile.SelectedItem;
 
-                
-                
-                DirectoryInfo dir = new DirectoryInfo(ProfileTypeToPathGet(cb.Name.ToString()));
-                DirectoryInfo[] folderlist = dir.GetDirectories().OrderByDescending(p => p.LastWriteTime).ToArray();
-
-                foreach (DirectoryInfo folder in folderlist)
+                foreach (ComboBox cb in list)
                 {
-                    cb.Items.Add(folder.Name);
+                    oldselected = cb.SelectedItem;
+                    //Debug("bbbb: " + cb.SelectedItem);
+                    cb.Items.Clear();
+                    cb.Items.Add("*Root");
+
+
+
+                    DirectoryInfo dir = new DirectoryInfo(ProfileTypeToPathGet(cb.Name.ToString()));
+                    DirectoryInfo[] folderlist = dir.GetDirectories().OrderByDescending(p => p.LastWriteTime).ToArray();
+
+                    foreach (DirectoryInfo folder in folderlist)
+                    {
+                        cb.Items.Add(folder.Name);
+                    }
+
+                    //Debug("aaaa: " + cb.Items.IndexOf(oldselected));
+                    //Debug("cccc: " + cb.SelectedIndex);
+
+                    cb.Items.Add("++ New ++");
+                    if (cb.Items.IndexOf(oldselected) == -1)
+                        cb.SelectedIndex = 0;
+                    else
+                        cb.SelectedIndex = cb.Items.IndexOf(oldselected);
+
+
                 }
-
-                //Debug("aaaa: " + cb.Items.IndexOf(oldselected));
-                //Debug("cccc: " + cb.SelectedIndex);
-
-                cb.Items.Add("++ New ++");
-                if (cb.Items.IndexOf(oldselected) == -1)
-                    cb.SelectedIndex = 0;
-                else
-                    cb.SelectedIndex = cb.Items.IndexOf(oldselected);
-
-
             }
-
+            catch (Exception ex)
+            {
+                Debug("setup profile exception: " + ex.ToString());
+            }
         }
 
+        private void ProfileChangedNull()
+
+        {
+
+                bool backtoroot = false;
+
+                Debug(H1CSProfile.SelectedIndex.ToString());
+                Debug("REEEEEEEEEEEEEEEEEEEEEEE");
+            Debug(H1CSProfile.SelectedIndex.ToString());
+            Debug(H1CSProfile.SelectedItem.ToString());
+            switch (TabList.SelectedIndex)
+                {
+
+
+                    case 0:
+                        HCMGlobal.H1CoreSavePath = HCMGlobal.RootH1CoreSavePath + (backtoroot ? "" : ("\\" + H1CSProfile.SelectedItem.ToString()));
+                        break;
+                    case 1:
+                        HCMGlobal.H1CheckpointPath = HCMGlobal.RootH1CheckpointPath + (backtoroot ? "" : ("\\" + H1CPProfile.SelectedItem.ToString()));
+                        break;
+                    case 2:
+                        HCMGlobal.H2CheckpointPath = HCMGlobal.RootH2CheckpointPath + (backtoroot ? "" : ("\\" + H2Profile.SelectedItem.ToString()));
+                        break;
+                    case 3:
+                        HCMGlobal.H3CheckpointPath = HCMGlobal.RootH3CheckpointPath + (backtoroot ? "" : ("\\" + H3Profile.SelectedItem.ToString()));
+                        break;
+                    case 4:
+                        HCMGlobal.HRCheckpointPath = HCMGlobal.RootHRCheckpointPath + (backtoroot ? "" : ("\\" + HRProfile.SelectedItem.ToString()));
+                        break;
+                    case 5:
+                        HCMGlobal.ODCheckpointPath = HCMGlobal.RootODCheckpointPath + (backtoroot ? "" : ("\\" + ODProfile.SelectedItem.ToString()));
+                        break;
+                    case 6:
+                        HCMGlobal.H4CheckpointPath = HCMGlobal.RootH4CheckpointPath + (backtoroot ? "" : ("\\" + H4Profile.SelectedItem.ToString()));
+                        break;
+
+
+
+                    default:
+                        break;
+
+                }
+
+          
+        }
 
 
         private void ProfileChanged(object sender, SelectionChangedEventArgs e)
@@ -832,7 +896,8 @@ namespace WpfApp3
             Debug("GJIJG: " + H1CSProfile.SelectedItem.ToString());
 
             //figure out which game this was for
-            ComboBox cb = (ComboBox)sender;
+
+               ComboBox cb = (ComboBox)sender;
             string parent_name = cb.Name;
 
             bool skipcondition = false;
@@ -881,6 +946,7 @@ namespace WpfApp3
                 if (!skipcondition)
                 {
                     bool backtoroot = true;
+                    Debug("EEEEEEEEEE" + cb.SelectedItem.ToString());
                     if (cb.SelectedItem.ToString() != "*Root")
                         backtoroot = false;
 
@@ -917,11 +983,13 @@ namespace WpfApp3
 
                     }
                 }
-
-
+                
                 
                 cb.IsDropDownOpen = false;
             }
+
+           
+
             RefreshList(sender, e);
             RefreshSel(sender, e);
         }
@@ -2669,7 +2737,13 @@ namespace WpfApp3
                     if (HCMGlobal.SavedConfig == null || HCMGlobal.SavedConfig.LockoutLevels == true && (H4CP_MainList.SelectedItem == null || H4CP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(H4CP_MainList.SelectedItem, null) as string
                    != HCMGlobal.AttachedLevel))
                     {
+                        string teststring = "null";
+                        if (H4CP_MainList.SelectedItem != null)
+                        {
+                            teststring = H4CP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(H4CP_MainList.SelectedItem, null) as string;
+                        }
                         Debug("lockout the thing");
+                        Debug("why lockout? attached level: " + HCMGlobal.AttachedLevel.ToString() + ", sel cp level: " + teststring);
                         H4CP_Sel_InjectButton.IsEnabled = false;
                         H4CP_Sel_InjectRevertButton.IsEnabled = false;
                     }
@@ -3041,7 +3115,16 @@ namespace WpfApp3
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.ToString());
+                        if (HCMGlobal.AttachedGame != "H1") //shit constantly pops up for h1 and doesn't matter
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
+                        else
+                        {
+                            Debug("EXCEPTION: " + ex.ToString());
+                        }
+
+
                     }
                 }
             }
@@ -4980,7 +5063,7 @@ namespace WpfApp3
                         }
                         else
                         {
-                            return (false, "core folder path not set, check settings!");
+                                return (false, "core folder path not set, uhhhh that's bad! tell burnt?");
                         }
 
                         if (!File.Exists(pathtotest))
@@ -6377,7 +6460,7 @@ namespace WpfApp3
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
                     HCMGlobal.WinFlag = false;
                 }
-                else if (myProcess.ProcessName == "MCC-Win64-Shipping-WinStore")
+                else if (myProcess.ProcessName == "MCC-Win64-Shipping-WinStore" || myProcess.ProcessName == "MCCWinStore-Win64-Shipping.exe") 
                 {
                     Debug("MCC already attached at " + (Convert.ToString(HCMGlobal.ProcessID, 16)).ToUpper());
                     HCMGlobal.WinFlag = true;
@@ -6413,14 +6496,63 @@ namespace WpfApp3
                     }
                     catch
                     {
-                        Debug("MCC not found");
-                        HCMGlobal.AttachedGame = "No";
-                        SetEnabledUI();
-                        return;
+
+
+                        try
+                        {
+                            myProcess = Process.GetProcessesByName("MCCWinStore-Win64-Shipping")[0];
+                            processHandle = OpenProcess(PROCESS_ALL_ACCESS, false, myProcess.Id);
+                            HCMGlobal.ProcessID = myProcess.Id;
+                            HCMGlobal.GlobalProcessHandle = processHandle;
+                            Debug("MCC found with ID " + (Convert.ToString(myProcess.Id, 16)).ToUpper());
+                            HCMGlobal.WinFlag = true;
+
+                        }
+                        catch 
+                        {
+                            Debug("MCC not found");
+                            HCMGlobal.AttachedGame = "No";
+                            SetEnabledUI();
+                            return;
+
+                        }
+
                     }
                 }
             }
 
+
+
+
+            //adding core folder check here
+
+            if (HCMGlobal.WinFlag == false && HCMGlobal.CoreFolderPath == null)
+            {
+                //autodetect core folder path by just checking where the attached process is
+                string CoreAutoPath = myProcess.MainModule.FileName;
+                Debug("aaaaaa: " + CoreAutoPath);
+                if (CoreAutoPath != null && CoreAutoPath.Contains("steamapps")) //latter ought to be true if steam version of MCC
+                {
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
+                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"core_saves");
+                    Debug("bbbbbbb: " + CoreAutoPath);
+                    if (Directory.Exists(CoreAutoPath))
+                    {
+                        Debug("autodetected Core folder: " + CoreAutoPath);
+                        HCMGlobal.CoreFolderPath = System.IO.Path.GetFullPath(CoreAutoPath);
+                    }
+                }
+            }
+
+
+            //also forcing folder refresh here
+            //ProfileChanged(sender, null);
+
+            
             //now that we're attached (we would've returned if we hadn't), we can proceed to next checks
             //what mcc version are we? only need to check this once
             if (!HCMGlobal.VersionCheckedFlag)
@@ -6511,7 +6643,7 @@ namespace WpfApp3
                     }
                 }
                 //if no offsets found, let's check the github and try to download them!
-                if (!HCMGlobal.CheckedForOnlineOffsets && failedlocalcheck)
+                if (!HCMGlobal.CheckedForOnlineOffsets) //took out failedlocalcheck check, so we always get freshest offsets
                 {
                     HCMGlobal.CheckedForOnlineOffsets = true;
                     try
@@ -6648,6 +6780,10 @@ namespace WpfApp3
                         HCMGlobal.BaseAddress = myProcessModule.BaseAddress;
                         break;
 
+                    case "MCCWinStore-Win64-Shipping.exe":
+                        HCMGlobal.BaseAddress = myProcessModule.BaseAddress;
+                        break;
+
                     default:
                         break;
 
@@ -6736,29 +6872,6 @@ namespace WpfApp3
 
 
 
-            //adding core folder check here
-
-            if (HCMGlobal.WinFlag == false && HCMGlobal.CoreFolderPath == null)
-            {
-                //autodetect core folder path by just checking where the attached process is
-                string CoreAutoPath = myProcess.MainModule.FileName;
-                Debug("aaaaaa: " + CoreAutoPath);
-                if (CoreAutoPath != null && CoreAutoPath.Contains("steamapps")) //latter ought to be true if steam version of MCC
-                {
-                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"core_saves");
-                    Debug("bbbbbbb: " + CoreAutoPath);
-                    if (Directory.Exists(CoreAutoPath))
-                    {
-                        Debug("autodetected Core folder: " + CoreAutoPath);
-                        HCMGlobal.CoreFolderPath = System.IO.Path.GetFullPath(CoreAutoPath);
-                    }
-                }
-            }
 
             //NEXT, level check!
             buffer = new byte[32];
@@ -7017,14 +7130,13 @@ namespace WpfApp3
                 {
                     H1CS_Loa_ForceCPDump.IsEnabled = false; //something with our auto core folder detection went wrong
                     H1CS_Sel_InjectRevertButton.IsEnabled = false;
-                    H1CS_Loa_DumpButton.IsEnabled = false;
-                    H1CS_Sel_InjectButton.IsEnabled = false;
+                    //H1CS_Loa_DumpButton.IsEnabled = false;
+                    //H1CS_Sel_InjectButton.IsEnabled = false;
                 }
-                else
-                {
+
                     H1CS_Loa_DumpButton.IsEnabled = true; //these will work even if we're not attached with correct offsets
                     H1CS_Sel_InjectButton.IsEnabled = true;
-                }
+
 
 
                
