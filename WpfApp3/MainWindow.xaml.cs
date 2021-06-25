@@ -152,7 +152,7 @@ namespace WpfApp3
 
         private static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.5";
+            public static readonly string HCMversion = "0.9.6";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static string H1CoreSavePath = LocalDir + @"\saves\h1cs";
@@ -1747,7 +1747,7 @@ namespace WpfApp3
 
             }
 
-
+            string input = "";
                     if (mainlist.SelectedItem != null)
                     {
                         var item = mainlist.Items.GetItemAt(mainlist.SelectedIndex);
@@ -1760,11 +1760,12 @@ namespace WpfApp3
                          s2,
                              -1, -1);
                         proposedsave = (backuploc + @"\" + userinput + @".bin");
+                input = userinput;
                     }
                     
         
 
-            if (File.Exists(backup) && !File.Exists(proposedsave))
+            if (File.Exists(backup) && !File.Exists(proposedsave) && input.Length > 0) 
             {
                 try
                 {
@@ -6571,8 +6572,7 @@ namespace WpfApp3
                     CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
                     CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
                     CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = Directory.GetParent(CoreAutoPath).FullName;
-                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"core_saves");
+                    CoreAutoPath = System.IO.Path.Combine(CoreAutoPath, @"core");
                     Debug("bbbbbbb: " + CoreAutoPath);
                     if (Directory.Exists(CoreAutoPath))
                     {
