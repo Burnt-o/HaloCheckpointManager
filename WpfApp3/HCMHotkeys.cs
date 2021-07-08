@@ -90,7 +90,11 @@ namespace HCMHotkeys
 
             // register the hot key.
             if (!RegisterHotKey(_window.Handle, 0, (uint)modifier, (uint)key))
+            {
+
+                if (modifier != 0 && key != 0)
                 throw new InvalidOperationException("Couldn’t register the hot key.");
+            }
         }
 
         public void UnregisterAllHotKeys()
