@@ -24,13 +24,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 //using System.Windows.Shapes;
 using System.ComponentModel;
-//using System.Windows.Forms;
 using System.Windows.Threading;
 using System.Security.Principal;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using Newtonsoft.Json.Serialization;
+using HCMHotkeys;
 
 //TODO LIST
 
@@ -136,7 +136,7 @@ namespace WpfApp3
         const int PROCESS_WM_READ = 0x0010;
         const int PROCESS_ALL_ACCESS = 0x1F0FFF;
 
-        private class HCMConfig
+        public class HCMConfig
         {
             public string[] RanVersions;
             //public string CoreFolderPath;
@@ -148,9 +148,12 @@ namespace WpfApp3
             public bool LockoutLevels = true;
             public int LevelListOption = 0;
 
+            public Key CPHotkey = Key.None;
+            public Key RevertHotkey = Key.None;
+            public Key DoubleRevertHotkey = Key.None;
         }
 
-        private static class HCMGlobal
+        public static class HCMGlobal
         {
             public static readonly string HCMversion = "0.9.6";
 
@@ -201,7 +204,7 @@ namespace WpfApp3
             public static string CoreFolderPath;
         }
 
-        private class Offsets
+        public class Offsets
         {
             //offsets are gonna be stored as 2-unit arrays, first position is winstore, second is steam
             //that way when we're calling them from elsewhere we can just call Offsets.WhateverOffset[HCMGlobal.WinFlag] and it'll give us the one we want
@@ -355,7 +358,7 @@ namespace WpfApp3
 
         }
 
-        private class MandatoryUpdates
+        public class MandatoryUpdates
         {
             public string[] VersionString;
         }
@@ -419,6 +422,10 @@ namespace WpfApp3
 
         public ObservableCollection<HaloSaveFileMetadata> HaloReachCheckpoints { get; set; } = new ObservableCollection<HaloSaveFileMetadata>();
 
+        public static KeyboardHook CPHotkeyHook = new KeyboardHook();
+        public static KeyboardHook RevertHotkeyHook = new KeyboardHook();
+        public static KeyboardHook DoubleRevertHotkeyHook = new KeyboardHook();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -459,11 +466,6 @@ namespace WpfApp3
             {
                 Debug("failed to check hcm version");
             }
-
-
-
-
-
 
             SetEnabledUI(); //will initialize all the attachment-dependent stuff to be disabled
 
@@ -721,8 +723,12 @@ namespace WpfApp3
              }*/
 
 
-
-
+            CPHotkeyHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(ForceCP);
+            CPHotkeyHook.RegisterHotKey(HCMHotkeys.ModifierKeys.None, (System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(HCMGlobal.SavedConfig.CPHotkey));
+            RevertHotkeyHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(ForceRevert);
+            RevertHotkeyHook.RegisterHotKey(HCMHotkeys.ModifierKeys.None, (System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(HCMGlobal.SavedConfig.RevertHotkey));
+            DoubleRevertHotkeyHook.KeyPressed += new EventHandler<KeyPressedEventArgs>(ForceDoubleRevert);
+            DoubleRevertHotkeyHook.RegisterHotKey(HCMHotkeys.ModifierKeys.None, (System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(HCMGlobal.SavedConfig.DoubleRevertHotkey));
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -3489,7 +3495,7 @@ namespace WpfApp3
 
         };
 
-        readonly Dictionary<string, bool> LevelCodeToType = new Dictionary<string, bool>()
+        readonly static Dictionary<string, bool> LevelCodeToType = new Dictionary<string, bool>()
         {
             //false = solo, true = multi
             //again, there's gotta be a better way to code this than having two dictionaries but eh
@@ -3782,7 +3788,7 @@ namespace WpfApp3
 
         }
 
-        public bool LevelCodeToGameType(string code)
+        public static bool LevelCodeToGameType(string code)
         {
             //return false for solo, true for multi
             bool Type;
@@ -3819,7 +3825,7 @@ namespace WpfApp3
             FrameworkElement parent = (FrameworkElement)((Button)sender).Parent;
             string parent_name = parent.Name;
 
-            var (success, error) = ForceCPFunction(parent_name, sender, e);
+            var (success, error) = ForceCPFunction(parent_name);
 
             if (success == false)
             {
@@ -3831,7 +3837,7 @@ namespace WpfApp3
 
         }
 
-        private (bool success, string error) ForceCPFunction(string game, object sender, RoutedEventArgs e)
+        private static (bool success, string error) ForceCPFunction(string game)
         {
             int bytesWritten;
             switch (game)
@@ -4623,7 +4629,7 @@ namespace WpfApp3
             string parent_name = parent.Name;
 
             //do reverty things
-            var (success, error) = ForceRevertFunction(parent_name, sender, e);
+            var (success, error) = ForceRevertFunction(parent_name);
 
             if (success == false)
             {
@@ -4633,7 +4639,7 @@ namespace WpfApp3
 
         }
 
-        private (bool success, string error) ForceRevertFunction(string game, object sender, RoutedEventArgs e)
+        private static (bool success, string error) ForceRevertFunction(string game)
         {
             int bytesWritten;
             switch (game)
@@ -4825,7 +4831,7 @@ namespace WpfApp3
             string parent_name = parent.Name; //have to go up two steps cos reasons
 
             //do double reverty things
-            var (success, error) = DoubleRevertFunction(parent_name, sender, e);
+            var (success, error) = DoubleRevertFunction(parent_name);
 
             if (success == false)
             {
@@ -4836,7 +4842,7 @@ namespace WpfApp3
 
             RefreshLoa(sender, e);
 
-            (success, error) = ForceRevertFunction(parent_name, sender, e);
+            (success, error) = ForceRevertFunction(parent_name);
 
             if (success == false)
             {
@@ -4850,7 +4856,7 @@ namespace WpfApp3
             
         }
 
-        private (bool success, string error) DoubleRevertFunction(string game, object sender, RoutedEventArgs e)
+        private static (bool success, string error) DoubleRevertFunction(string game)
         {
             int bytesWritten;
             switch (game)
@@ -6332,7 +6338,7 @@ namespace WpfApp3
             }
             RefreshLoa(sender, e);
             //dump
-            (success, error) = ForceRevertFunction(parent_name, sender, e);
+            (success, error) = ForceRevertFunction(parent_name);
 
             if (success == false)
             {
@@ -6350,7 +6356,7 @@ namespace WpfApp3
             string parent_name = parent.Name;
 
             //do force cp things, sleep 100ms, then do dump things
-            var (success, error) = ForceCPFunction(parent_name, sender, e);
+            var (success, error) = ForceCPFunction(parent_name);
 
             if (success == false)
             {
@@ -7473,5 +7479,59 @@ namespace WpfApp3
 
         }
 
+        public static void ForceCP(object sender, KeyPressedEventArgs e)
+        {
+            string game = (HCMGlobal.AttachedGame == "H1") ? game = "H1CS" : game = HCMGlobal.AttachedGame + "CP";
+
+            //do reverty things
+            var (success, error) = ForceCPFunction(game);
+
+            if (success == false)
+            {
+                Debug("Failed to force load, " + error);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(game + ": Failed to force save, " + error, "Error", System.Windows.MessageBoxButton.OK);
+            }
+        }
+        public static void ForceRevert(object sender, KeyPressedEventArgs e)
+        {
+            string game = (HCMGlobal.AttachedGame == "H1") ? game = "H1CS" : game = HCMGlobal.AttachedGame + "CP";
+
+            //do reverty things
+            var (success, error) = ForceRevertFunction(game);
+
+            if (success == false)
+            {
+                Debug("Failed to force load, " + error);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(game + ": Failed to force load, " + error, "Error", System.Windows.MessageBoxButton.OK);
+            }
+        }
+        public static void ForceDoubleRevert(object sender, KeyPressedEventArgs e)
+        {
+            if (HCMGlobal.AttachedGame == "H1")
+            {
+                ForceRevert(sender, e);
+                return;
+            }
+
+            string game = HCMGlobal.AttachedGame + "CP";
+
+            //do reverty things
+            var (success, error) = DoubleRevertFunction(game);
+
+            if (success == false)
+            {
+                Debug("Failed to double revert, " + error);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(game + ": Failed to double revert, " + error, "Error", System.Windows.MessageBoxButton.OK);
+            }
+
+            (success, error) = ForceRevertFunction(game);
+
+            if (success == false)
+            {
+                Debug("Failed to revert, " + error);
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(game + ": Failed to revert, " + error, "Error", System.Windows.MessageBoxButton.OK);
+                return;
+            }
+        }
     }
 }
