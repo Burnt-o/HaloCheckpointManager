@@ -136,23 +136,6 @@ namespace WpfApp3
         const int PROCESS_WM_READ = 0x0010;
         const int PROCESS_ALL_ACCESS = 0x1F0FFF;
 
-        public class HCMConfig
-        {
-            public string[] RanVersions;
-            //public string CoreFolderPath;
-            public bool ClassicMode = true;
-            public int Reset_Tab;
-            public int[] Reset_Folder;
-            public int[] Reset_SelCP;
-            public double[] Reset_Col;
-            public bool LockoutLevels = true;
-            public int LevelListOption = 0;
-
-            public Key CPHotkey = Key.None;
-            public Key RevertHotkey = Key.None;
-            public Key DoubleRevertHotkey = Key.None;
-        }
-
         public static class HCMGlobal
         {
             public static readonly string HCMversion = "0.9.7";
@@ -1214,7 +1197,7 @@ namespace WpfApp3
             }
 
             Debug("hmm: " + savepath);
-            SortSavesWindow SortSavesWindow = new SortSavesWindow(savepath.Substring(savepath.LastIndexOf("saves") + 5));
+            SortSavesWindow SortSavesWindow = new SortSavesWindow(savepath.Substring(savepath.LastIndexOf("saves") + 5), ref HCMGlobal.SavedConfig);
             bool? whatbutton = SortSavesWindow.ShowDialog();
 
             //need to check for cancel click in sortsaveswindow
@@ -1228,8 +1211,9 @@ namespace WpfApp3
             //3 = Alphabetically
             //4 = Time into level
 
-            int[] sortoptions = { SortSavesWindow.ReturnSort1, SortSavesWindow.ReturnSort2, SortSavesWindow.ReturnSort3, SortSavesWindow.ReturnSort4 };
-            bool[] reverseoptions = { SortSavesWindow.ReturnReverse1, SortSavesWindow.ReturnReverse2, SortSavesWindow.ReturnReverse3, SortSavesWindow.ReturnReverse4, SortSavesWindow.ReturnReverse5 };
+            (int, bool)[] criteria = SortSavesWindow.Criteria();
+            HCMGlobal.SavedConfig.Sort.SetCriteria(criteria);
+            HCMGlobal.SavedConfig.Sort.ReversePreviousPosition = SortSavesWindow.ReversePreviousPosition();
 
 
 
@@ -1277,7 +1261,7 @@ namespace WpfApp3
 
             //let's do shit in reverse order basically
 
-            if (reverseoptions[4])
+            if (SortSavesWindow.ReversePreviousPosition())
             {
                 Debug("Yes, REVERSING");
                 SortList = SortList.OrderBy(x => x.LastWriteTime)
@@ -1359,10 +1343,8 @@ namespace WpfApp3
             }
 
             //now let's call it
-            SortThisGuyOut(sortoptions[3], reverseoptions[3]);
-            SortThisGuyOut(sortoptions[2], reverseoptions[2]);
-            SortThisGuyOut(sortoptions[1], reverseoptions[1]);
-            SortThisGuyOut(sortoptions[0], reverseoptions[0]);
+            foreach (var (key, reverse) in criteria.Reverse())
+                SortThisGuyOut(key, reverse);
 
 
 
