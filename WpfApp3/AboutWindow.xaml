@@ -30,7 +30,7 @@
 
         </TextBlock>
 
-        <Label Content="Created by Burnt, Scales, and Xero" HorizontalAlignment="Left" Margin="15,7,0,0" VerticalAlignment="Top"/>
+        <Label Content="Created by Burnt with much help from Scales, Xero, and Delan" HorizontalAlignment="Left" Margin="15,7,0,0" VerticalAlignment="Top"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="20,33,0,0" VerticalAlignment="Top">
     <Hyperlink NavigateUri="https://github.com/Burnt-o/HaloCheckpointManager" RequestNavigate="Hyperlink_RequestNavigate">
