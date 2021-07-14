@@ -10,7 +10,7 @@ namespace WpfApp3
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        public MainWindow.HCMConfig Config = MainWindow.HCMGlobal.SavedConfig;
+        public HCMConfig Config = MainWindow.HCMGlobal.SavedConfig;
         public KeyboardHook CPHotkeyHook = MainWindow.CPHotkeyHook;
         public KeyboardHook RevertHotkeyHook = MainWindow.RevertHotkeyHook;
         public KeyboardHook DoubleRevertHotkeyHook = MainWindow.DoubleRevertHotkeyHook;

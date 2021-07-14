@@ -19,36 +19,37 @@ namespace WpfApp3
     /// </summary>
     public partial class SortSavesWindow : Window
     {
-        public SortSavesWindow(string savepath)
+        (ComboBox Key, CheckBox Reverse)[] SortFields;
+
+        public SortSavesWindow(string savepath, ref HCMConfig config)
         {
             
             InitializeComponent();
+            SortFields = new[] { (Sort1, Reverse1), (Sort2, Reverse2), (Sort3, Reverse3), (Sort4, Reverse4) };
+
             MainLabel.Content = "Sort Saves in " + savepath;
             string[] sortoptions = { "None", "Difficulty", "Level Name", "File Name", "Time into Level" };
-            foreach (string option in sortoptions)
+            foreach (var (field, i) in SortFields.Select((x, i) => (x, i)))
             {
-                Sort1.Items.Add(option);
-                Sort2.Items.Add(option);
-                Sort3.Items.Add(option);
-                Sort4.Items.Add(option);
+                foreach (string option in sortoptions)
+                    field.Key.Items.Add(option);
+                field.Key.SelectedIndex = config.Sort[i].Item1;
+                field.Reverse.IsChecked = config.Sort[i].Item2;
             }
             Sort5.Items.Add("Previous position");
-            Sort1.SelectedIndex = 0;
-            Sort2.SelectedIndex = 0;
-            Sort3.SelectedIndex = 0;
-            Sort4.SelectedIndex = 0;
             Sort5.SelectedIndex = 0;
+            Reverse5.IsChecked = config.Sort.ReversePreviousPosition;
         }
 
-        public int ReturnSort1 { get; set; }
-        public bool ReturnReverse1 { get; set; }
-        public int ReturnSort2 { get; set; }
-        public bool ReturnReverse2 { get; set; }
-        public int ReturnSort3 { get; set; }
-        public bool ReturnReverse3 { get; set; }
-        public int ReturnSort4 { get; set; }
-        public bool ReturnReverse4 { get; set; }
-        public bool ReturnReverse5 { get; set; }
+        public (int, bool)[] Criteria()
+        {
+            return SortFields.Select((x, i) => (x.Key.SelectedIndex, x.Reverse.IsChecked.GetValueOrDefault())).ToArray();
+        }
+
+        public bool ReversePreviousPosition()
+        {
+            return Reverse5.IsChecked.GetValueOrDefault();
+        }
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
@@ -59,15 +60,6 @@ namespace WpfApp3
 
         private void SortClick(object sender, RoutedEventArgs e)
         {
-            this.ReturnSort1 = Sort1.SelectedIndex;
-            this.ReturnReverse1 = Reverse1.IsChecked.GetValueOrDefault();
-            this.ReturnSort2 = Sort2.SelectedIndex;
-            this.ReturnReverse2 = Reverse2.IsChecked.GetValueOrDefault();
-            this.ReturnSort3 = Sort3.SelectedIndex;
-            this.ReturnReverse3 = Reverse3.IsChecked.GetValueOrDefault();
-            this.ReturnSort4 = Sort4.SelectedIndex;
-            this.ReturnReverse4 = Reverse4.IsChecked.GetValueOrDefault();
-            this.ReturnReverse5 = Reverse5.IsChecked.GetValueOrDefault();
             this.DialogResult = true;
 
             Close();
