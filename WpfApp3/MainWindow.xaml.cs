@@ -239,6 +239,7 @@ namespace WpfApp3
             public int HR_CPData_Seed;
             public int HR_CPData_DROffset1;
             public int HR_CPData_DROffset2;
+            public int[] HR_CPData_SHA;
             public int HR_CPData_Size;
             public int[][] HR_CPData_PreserveLocations;
 
@@ -6154,12 +6155,14 @@ namespace WpfApp3
                             addy[3] = offset;
 
                             //setup a 2d array with the values we need to preserve (offset, length)
-                            int[][] PreserveLocations = HCMGlobal.LoadedOffsets.HR_CPData_PreserveLocations;
+                            int[][] PreserveLocations = HCMGlobal.LoadedOffsets.HR_CPData_PreserveLocations; 
+
+                            //int[][] PreserveLocations =  new int[][] { new int[] { 5853828, 4 }, new int[] { 5831936, 16 } };
 
                             foreach (int[] i in PreserveLocations)
                             {
                                 byte[] tempbuffer = new byte[i[1]];
-                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten))
+                                if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy) + i[0], tempbuffer, tempbuffer.Length, out bytesWritten)) 
                                 {
                                     //overwrite the stored cp buffer with new vals
                                     Array.ConstrainedCopy(tempbuffer, 0, buffer, i[0], i[1]);
@@ -6170,6 +6173,41 @@ namespace WpfApp3
                                     return (false, "failed reading current vals for reach injection");
                                 }
                             }
+
+                            //now checksum stuff. for some godforsaken reason, 343 added a checksum check into reach cp's as of patch 2448
+
+
+                          
+
+
+                            byte[] oldhash = new byte[HCMGlobal.LoadedOffsets.HR_CPData_SHA[1]];
+                            Array.Copy(buffer, HCMGlobal.LoadedOffsets.HR_CPData_SHA[0], oldhash, 0, HCMGlobal.LoadedOffsets.HR_CPData_SHA[1]);
+                            Debug("oldhash: " + BitConverter.ToString(oldhash).Replace("-", ""));
+
+
+                            //zero out the hash at FB18 (dec 20 bytes)
+                            byte[] zeroes = new byte[HCMGlobal.LoadedOffsets.HR_CPData_SHA[1]];
+                            Array.Copy(zeroes, 0, buffer, HCMGlobal.LoadedOffsets.HR_CPData_SHA[0], HCMGlobal.LoadedOffsets.HR_CPData_SHA[1]);
+
+                            //then calculate the sha-1 hash
+                            try
+                            {
+                                using (var cryptoProvider = new SHA1CryptoServiceProvider())
+                                {
+                                    byte[] newhash = cryptoProvider.ComputeHash(buffer);
+
+                                    //write the hash at FB18 
+                                    Array.Copy(newhash, 0, buffer, HCMGlobal.LoadedOffsets.HR_CPData_SHA[0], HCMGlobal.LoadedOffsets.HR_CPData_SHA[1]);
+                                    Debug("newhash: " + BitConverter.ToString(newhash).Replace("-", ""));
+                                }
+                            }
+                            catch
+                            {
+                                return (false, "something went wrong calculating cp hash");
+                            }
+
+                            //end checksum stuff
+
 
                             //now to inject into memory
                             if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))

@@ -106,6 +106,7 @@
   "HR_CPData_Seed": 0x148, 
   "HR_CPData_DROffset1": -0xA10000,
   "HR_CPData_DROffset2": 0x0,
+    "HR_CPData_SHA": [ 0x1F30C, 20 ], 
     "HR_CPData_Size": 0xA10000,
   "HR_CPData_PreserveLocations": [ 
     [0x595284, 4],
