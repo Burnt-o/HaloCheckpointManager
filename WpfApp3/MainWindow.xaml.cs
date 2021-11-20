@@ -176,7 +176,7 @@ namespace WpfApp3
             public static bool WinFlag = false; //false == steam, used for knowing which offsets to use
             public static bool BusyFlag = false; //turned true when injecting/dumping so we don't do it twice
             public static string AttachedGame = "No"; //No, Mn (menu), HR, H1, H2, H3, OD (ODST), H4
-            public static string AttachedLevel;
+            public static string AttachedLevel = "No";
             public static bool VersionCheckedFlag = false;
             public static bool CheckedForOnlineOffsets = false;
             public static string MCCversion;
@@ -194,6 +194,26 @@ namespace WpfApp3
             //the units will themselves be arbitary length arrays (each position for each offset in a multi-level pointer)
 
             //the actual values will be populated from the json file corrosponding to the attached mcc version
+
+
+
+            //dynamic message offsets
+            public int H1_MessageOffset1;
+            public int H1_MessageOffset2;
+            public int H2_MessageOffset1;
+            public int H2_MessageOffset2;
+            public int H3_MessageOffset1;
+            public int H3_MessageOffset2;
+            public int OD_MessageOffset1;
+            public int OD_MessageOffset2;
+            public int HR_MessageOffset1;
+            public int HR_MessageOffset2;
+            public int H4_MessageOffset1;
+            public int H4_MessageOffset2;
+
+
+
+
 
             //general
             public int[][] gameindicatormagic; //renamed from gameindicator > gameindicatormagicmagic. This is to 
@@ -2767,6 +2787,7 @@ namespace WpfApp3
                             teststring = H4CP_MainList.SelectedItem.GetType().GetProperty("LevelCode").GetValue(H4CP_MainList.SelectedItem, null) as string;
                         }
                         Debug("lockout the thing");
+
                         Debug("why lockout? attached level: " + HCMGlobal.AttachedLevel.ToString() + ", sel cp level: " + teststring);
                         H4CP_Sel_InjectButton.IsEnabled = false;
                         H4CP_Sel_InjectRevertButton.IsEnabled = false;
@@ -3858,7 +3879,7 @@ namespace WpfApp3
 
                             buffer = new byte["Core Save... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
                             buffer = Encoding.Unicode.GetBytes("Core Save... done");
-                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x4, buffer, buffer.Length, out bytesWritten))
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H1_MessageOffset1, buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("h1: custom message 3: success");
                             }
@@ -3868,7 +3889,7 @@ namespace WpfApp3
                             }
 
                             buffer = new byte[8] { 0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF }; //setting showmessage flag to true
-                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x80, buffer, buffer.Length, out bytesWritten))
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H1_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H1_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("h1: custom message 4: success");
                             }
@@ -3943,7 +3964,7 @@ namespace WpfApp3
 
                             buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
                             buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
-                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x4, buffer, buffer.Length, out bytesWritten))
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H2_MessageOffset1, buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("h2: custom message 3: success");
                             }
@@ -3954,7 +3975,7 @@ namespace WpfApp3
                             }
 
                             buffer = new byte[4] { 0, 0, 1, 0 }; //setting showmessage flag to true
-                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x80, buffer, buffer.Length, out bytesWritten))
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H2_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H2_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("h2: custom message 4: success");
                             }
@@ -4083,7 +4104,7 @@ namespace WpfApp3
 
                                 buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
                                 buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0xC8, buffer, buffer.Length, out bytesWritten))
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - HCMGlobal.LoadedOffsets.H3_MessageOffset1, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("H3: custom message 3: success");
                                 }
@@ -4094,7 +4115,7 @@ namespace WpfApp3
                                 }
 
                                 buffer = new byte[1] { 1 }; //setting showmessage flag to true
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 7, buffer, buffer.Length, out bytesWritten))
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H3_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - HCMGlobal.LoadedOffsets.H3_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("H3: custom message 4: success");
                                 }
@@ -4215,7 +4236,7 @@ namespace WpfApp3
 
                             buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
                             buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
-                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0xC8, buffer, buffer.Length, out bytesWritten))
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - HCMGlobal.LoadedOffsets.OD_MessageOffset1, buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("OD: custom message 3: success");
                             }
@@ -4226,7 +4247,7 @@ namespace WpfApp3
                             }
 
                             buffer = new byte[1] { 1 }; //setting showmessage flag to true
-                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 7, buffer, buffer.Length, out bytesWritten))
+                            if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.OD_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - HCMGlobal.LoadedOffsets.OD_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                             {
                                 Debug("OD: custom message 4: success");
                             }
@@ -4359,7 +4380,7 @@ namespace WpfApp3
 
                                 buffer = new byte["Custom Checkpoint... done".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
                                 buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done");
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 0x84, buffer, buffer.Length, out bytesWritten))
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.HR_MessageOffset1, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("hr: custom message 3: success");
                                 }
@@ -4370,7 +4391,7 @@ namespace WpfApp3
                                 }
 
                                 buffer = new byte[1] { 1 }; //setting showmessage flag to true
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0x10, buffer, buffer.Length, out bytesWritten))
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.HR_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - HCMGlobal.LoadedOffsets.HR_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("hr: custom message 4: success");
                                 }
@@ -4513,7 +4534,7 @@ namespace WpfApp3
 
                                 buffer = new byte["Custom Checkpoint... done  ".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
                                 buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done  ");
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + 8, buffer, buffer.Length, out bytesWritten))
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H4_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("H4: custom message 3: success");
                                 }
@@ -4524,7 +4545,7 @@ namespace WpfApp3
                                 }
 
                                 buffer = new byte[8] { 0, 0, 0, 0, 0, 0, 0, 0 }; //setting showmessage flag to true --- show is ZERO, not one. set 8 bytes, not one.
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - 0x10, buffer, buffer.Length, out bytesWritten))
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) - HCMGlobal.LoadedOffsets.H4_MessageOffset2, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("H4: custom message 4: success");
                                 }

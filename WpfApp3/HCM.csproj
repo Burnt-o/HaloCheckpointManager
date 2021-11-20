@@ -135,6 +135,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="offsets\1.1871.0.0.json" />
+    <None Include="offsets\1.2611.0.0.json" />
+    <None Include="offsets\1.2580.0.0.json" />
     <None Include="offsets\1.2448.0.0.json" />
     <None Include="offsets\1.2406.0.0.json" />
     <None Include="offsets\1.2398.0.0.json" />
