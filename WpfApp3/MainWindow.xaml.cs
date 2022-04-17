@@ -4545,9 +4545,9 @@ namespace WpfApp3
                                     return (false, "message 2 failure");
                                 }
 
-                                buffer = new byte["Custom Checkpoint... done  ".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
-                                buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done  ");
-                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H4_MessageOffset2, buffer, buffer.Length, out bytesWritten))
+                                buffer = new byte["Custom Checkpoint... done    ".Length * 2]; //halo uses widechar for it's message strings, so double the length needed.
+                                buffer = Encoding.Unicode.GetBytes("Custom Checkpoint... done    ");
+                                if (WriteProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, HCMGlobal.LoadedOffsets.H4_Message[Convert.ToInt32(HCMGlobal.WinFlag)]) + HCMGlobal.LoadedOffsets.H4_MessageOffset1, buffer, buffer.Length, out bytesWritten))
                                 {
                                     Debug("H4: custom message 3: success");
                                 }
