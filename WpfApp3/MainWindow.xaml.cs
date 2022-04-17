@@ -138,7 +138,7 @@ namespace WpfApp3
 
         public static class HCMGlobal
         {
-            public static readonly string HCMversion = "0.9.8";
+            public static readonly string HCMversion = "0.9.8b";
 
             public static readonly string LocalDir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             public static string H1CoreSavePath = LocalDir + @"\saves\h1cs";
@@ -271,6 +271,7 @@ namespace WpfApp3
             public int[][] H2_Revert; //bf ff ff ff ff ** ** 33 c9, the cmp immediately above accesses it
             public int[][] H2_DRflag; //c1 e0 05 8b d8 d1 ef 83 cb 40. movzx below accesses it on revert.
             public int[][] H2_CPLocation; //just scan lol
+            public int[][] H2_CPLocation2; //just scan lol
             public int[][] H2_TickCounter; //f3 0f 5d c6 0f 28 74 24 40 40 84 f6, it's a mov like 10 instr below
             public int[][] H2_Message; // the 89 03 (mov [rbx], eax), above c6 83 82 00 00 00 01 66 c7
             public int[][] H2_MessageCall; //48 8b 10 ff 52 58 48 8b c8 48 8b 10, go a little down to the call that immd precedes a mov and cmp. E8 57 CA 18 00
@@ -1984,18 +1985,30 @@ namespace WpfApp3
                         }
                         else { Debug("oh no"); NullH2(); return; }
 
-                        int offset;
-                        if (!DRflag)
-                        {
-                            offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset1; //first cp
-                        }
-                        else
-                        {
-                            offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset2; //second cp
-                        }
-
                         int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
-                        addy[3] = offset;
+                        if ((Int32.Parse(HCMGlobal.MCCversion.Substring(2, 4))) > 2800) //cp location behaviour changed with season floodfight
+                            {
+                            if (DRflag)
+                                {
+                                addy = HCMGlobal.LoadedOffsets.H2_CPLocation2[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            }
+                            }
+                        else
+                            { 
+                            int offset;
+                            if (!DRflag)
+                                {
+                                    offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset1; //first cp
+                                }
+                            else
+                                {
+                                    offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset2; //second cp
+                                }
+
+                            addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            addy[3] = offset;
+                            }
+
                         //setup done, let's get our data
                         //levelcode
                         byte[] buffer = new byte[64];
@@ -5166,18 +5179,29 @@ namespace WpfApp3
                             }
 
                             byte[] buffer = new byte[HCMGlobal.LoadedOffsets.H2_CPData_Size];
-                            int offset;
-                            if (!DRflag)
+                            int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            if ((Int32.Parse(HCMGlobal.MCCversion.Substring(2, 4))) > 2800) //cp location behaviour changed with season floodfight
                             {
-                                offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset1; //first cp
+                                if (DRflag)
+                                {
+                                    addy = HCMGlobal.LoadedOffsets.H2_CPLocation2[Convert.ToInt32(HCMGlobal.WinFlag)];
+                                }
                             }
                             else
                             {
-                                offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset2; //second cp
-                            }
+                                int offset;
+                                if (!DRflag)
+                                {
+                                    offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset1; //first cp
+                                }
+                                else
+                                {
+                                    offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset2; //second cp
+                                }
 
-                            int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
-                            addy[3] = offset;
+                                addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                                addy[3] = offset;
+                            }
                             if (ReadProcessMemory(HCMGlobal.GlobalProcessHandle, FindPointerAddy(HCMGlobal.GlobalProcessHandle, HCMGlobal.BaseAddress, addy), buffer, buffer.Length, out bytesWritten))
                             {
 
@@ -5714,18 +5738,29 @@ namespace WpfApp3
                                 return (false, "something went wrong trying to read DR flag for h2 injecting");
                             }
 
-                            int offset;
-                            if (!DRflag)
+                            int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                            if ((Int32.Parse(HCMGlobal.MCCversion.Substring(2, 4))) > 2800) //cp location behaviour changed with season floodfight
                             {
-                                offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset1; //first cp
+                                if (DRflag)
+                                {
+                                    addy = HCMGlobal.LoadedOffsets.H2_CPLocation2[Convert.ToInt32(HCMGlobal.WinFlag)];
+                                }
                             }
                             else
                             {
-                                offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset2; //second cp
-                            }
+                                int offset;
+                                if (!DRflag)
+                                {
+                                    offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset1; //first cp
+                                }
+                                else
+                                {
+                                    offset = HCMGlobal.LoadedOffsets.H2_CPData_DROffset2; //second cp
+                                }
 
-                            int[] addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
-                            addy[3] = offset;
+                                addy = HCMGlobal.LoadedOffsets.H2_CPLocation[Convert.ToInt32(HCMGlobal.WinFlag)];
+                                addy[3] = offset;
+                            }
 
                             //setup a 2d array with the values we need to preserve (offset, length)
                             int[][] PreserveLocations = HCMGlobal.LoadedOffsets.H2_CPData_PreserveLocations; //first let's checkpoints load at all, second one fixes restart-level bug
