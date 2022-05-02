@@ -21,7 +21,7 @@
 
   "gameindicatormagic": [
     [ 0x03FB2910, 0x0 ],
-    [ 0x3E55280, 0x0 ]
+    [ 0x3E55368, 0x0 ]
   ],
   "menuindicator": [
     [ 0x3E7BAA9 ],
