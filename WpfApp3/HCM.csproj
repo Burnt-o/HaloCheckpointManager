@@ -147,6 +147,7 @@
     <None Include="offsets\1.2094.0.0.json" />
     <None Include="offsets\1.2028.0.0.json" />
     <None Include="offsets\1.1955.0.0.json" />
+    <None Include="offsets\1.2862.0.0.json" />
     <None Include="offsets\1.2845.0.0.json" />
     <None Include="offsets\Updates.json" />
     <None Include="packages.config" />
