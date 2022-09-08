@@ -433,6 +433,9 @@ namespace WpfApp3
         
         public MainWindow()
         {
+
+            Debug("change");
+
             InitializeComponent();
             DataContext = this;
 
