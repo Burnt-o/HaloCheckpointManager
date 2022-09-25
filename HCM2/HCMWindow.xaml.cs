@@ -31,44 +31,66 @@ namespace HCM.Views
         #region Contructor
         public HCMWindow()
         {
-            InitializeComponent();
-
-            GameSaveCollection testCheckpoints = new();
-            testCheckpoints.Load();
-
-            GameSaveFolder testFolder = new("A folder", testCheckpoints);
-
-            // Create the controller that  
-            // handles user interaction.
-            _controller = new HCMWindowController(this, testCheckpoints);
-
-            //uh
             
+
+
+            
+            GameSaveCollection testSaveCollection = new GameSaveCollection();
+            testSaveCollection.Add(new GameSave("My First Checkpoint", DateTime.Now, "a10", 3, TimeSpan.FromSeconds(6), DateTime.Now));
+            _controller = new HCMWindowController(this, testSaveCollection);
+
+            GameSaveFolder folder1 = new GameSaveFolder("folder1", testSaveCollection);
+
+            Folders = new List<GameSaveFolder>();
+            Folders.Add(folder1);
 
 
             // Use the list of Xray objects as 
             // this Window's data source.
 
-            base.DataContext = testCheckpoints;
+            //base.DataContext = testCheckpoints;
+            this.DataContext = this;
+            InitializeComponent();
 
         }
         #endregion //Constructor
+
+        public List<GameSaveFolder> Folders { get; set; }
+
+        private void RunTestCode()
+        {
+
+            
+            List<GameSaveFolder> folders = new List<GameSaveFolder>();
+            GameSaveCollection testCollection1 = new GameSaveCollection();
+            testCollection1.Add(new GameSave("My First Checkpoint", DateTime.Now, "a10", 3, TimeSpan.FromSeconds(6), DateTime.Now));
+
+            GameSaveCollection testCollection2 = new GameSaveCollection();
+
+            GameSaveFolder folder1 = new GameSaveFolder("folder1", testCollection1);
+            GameSaveFolder folder2 = new GameSaveFolder("folder2", testCollection2);
+
+            folders.Add(folder1);
+            folders.Add(folder2);
+            
+
+        }
 
         #region Command Sinks
 
         // These methods handle events of  
         // the RenameCheckpoint command.
 
-        void RenameCheckpoint_CanExecute(
+        void RenameItem_CanExecute(
             object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _controller.IsACheckpointSelected;
         }
 
-        void RenameCheckpoint_Executed(
+        void RenameItem_Executed(
             object sender, ExecutedRoutedEventArgs e)
         {
-            _controller.RenameSelectedGameSave("hi mark");
+            _controller.RenameSelectedItem("hi mark");
         }
 
         #endregion // Command Sinks

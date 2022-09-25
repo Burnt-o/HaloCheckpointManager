@@ -12,18 +12,20 @@
         WindowStartupLocation="CenterScreen">
 
     <!-- 
-  Establish handlers for the RenameCheckpoint command's events. 
+  Establish handlers for the RenameItem command's events. 
   -->
     <Window.CommandBindings>
         <CommandBinding 
-      Command="{x:Static HCM:Commands.RenameSelectedCheckpoint}" 
-      CanExecute="RenameCheckpoint_CanExecute" 
-      Executed="RenameCheckpoint_Executed" 
+      Command="{x:Static HCM:Commands.RenameSelectedItem}" 
+      CanExecute="RenameItem_CanExecute" 
+      Executed="RenameItem_Executed" 
       />
     </Window.CommandBindings>
 
     <!-- 
   This is the View applied to the Model.
   -->
-    <views:HCMWindowView Margin="21,49,300,165"/>
+    <Grid>
+        <views:HCMWindowView />
+    </Grid>
 </Window>

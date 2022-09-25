@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HCM.Model;
+using System.Collections.ObjectModel;
+using System.Collections;
+using System.Diagnostics;
 
 namespace HCM.Views
 {
@@ -24,19 +27,22 @@ namespace HCM.Views
         public HCMWindowView()
         {
             InitializeComponent();
+            HCMWindow window = Window.GetWindow(App.Current.MainWindow) as HCMWindow;
+            if (window != null)
+            {
+                Trace.WriteLine("winodw wasn't null");
+                testTreeView.ItemsSource = window.Folders;
+            }
+            else
+            {
+                Trace.WriteLine("christ kill me");
+            }
+           
 
-            List<GameSaveFolder> folders = new List<GameSaveFolder>();
-            GameSaveCollection testCollection1 = new GameSaveCollection();
-            testCollection1.Load();
-            GameSaveCollection testCollection2 = new GameSaveCollection();
-            testCollection2.Load();
-            GameSaveFolder folder1 = new GameSaveFolder("folder1", testCollection1);
-            GameSaveFolder folder2 = new GameSaveFolder("folder1", testCollection2);
 
-            folders.Add(folder1);
-            folders.Add(folder2);
-
-            testTreeView.ItemsSource = folders;
         }
+
+        public List<GameSaveFolder> Folders { get; set; }
+
     }
 }

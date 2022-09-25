@@ -3,26 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace HCM.Model
 {
-    public class GameSaveFolder
+    public class GameSaveFolder : TreeItem
     {
-        public GameSaveFolder(string folderName, GameSaveCollection gameSaveCollection)
+
+        public GameSaveFolder(string folderName, GameSaveCollection gameSaveCollection) : base(folderName)
         { 
-        _folderName = folderName;
             _gameSaveCollection = gameSaveCollection;
         }
 
-        private string _folderName;
         private GameSaveCollection _gameSaveCollection;
-        public string FolderName 
-        { 
-            get 
-            { 
-                return _folderName; 
-            } 
-        }
 
         public GameSaveCollection GameSaveCollection
         {
@@ -32,6 +25,7 @@ namespace HCM.Model
             }
         }
 
+        
 
 
     }

@@ -41,14 +41,14 @@ namespace HCM.Controllers
             get { return _gameSaveTreeView.CurrentItem != null; }
         }
 
-        public void RenameSelectedGameSave(string newGameSaveName)
+        public void RenameSelectedItem(string newItemName)
         {
-                GameSave? selectedCheckpoint = _gameSaveTreeView.CurrentItem as GameSave;
+                GameSave? selectedItem = _gameSaveTreeView.CurrentItem as GameSave;
 
-                if (selectedCheckpoint == null)
-                    throw new ArgumentNullException("_checkpointView.CurrentItem");
+                if (selectedItem == null)
+                    throw new ArgumentNullException(nameof(selectedItem));
 
-                selectedCheckpoint.GameSaveName = newGameSaveName;
+                selectedItem.Name = newItemName;
         }
 
         #endregion // Command Handlers

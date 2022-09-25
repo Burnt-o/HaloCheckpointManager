@@ -17,45 +17,35 @@
         <views:CreationDateToDisplayTextConverter 
       x:Key="CreationDateConverter" 
       />
-        
 
-        <!-- 
-    This is used to render an Xray object in the ListBox. 
-    -->
-        
-        
-        <!--<DataTemplate DataType="{x:Type model:GameSave}">
-            <Border>
-                <Border.Child>
-                    <TextBlock >
-            <Run>Name:</Run>
-            <TextBlock Text="{Binding Path=GameSaveName}" />
-          </TextBlock>
-                </Border.Child>
-                <Border.ToolTip>
-                    <TextBlock>
-            <Run>Creation Date:</Run>
-            <TextBlock 
-              Text="{Binding 
-              Path=CreatedDateTime, 
-              Converter={StaticResource CreationDateConverter}}" 
-              />
-          </TextBlock>
-                </Border.ToolTip>
-            </Border>
-        </DataTemplate>-->
+
+
     </UserControl.Resources>
 
-    <DockPanel Margin="2">
+    <Grid x:Name="MainGrid">
+
+        <Grid.Resources>
+            <Style TargetType="TreeViewItem">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                        <Setter Property="Background" Value="White" />
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                        <Setter Property="Background" Value="WhiteSmoke" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+
         <TreeView Name="testTreeView">
             <TreeView.Resources>
                  <HierarchicalDataTemplate DataType="{x:Type model:GameSaveFolder}" ItemsSource="{Binding GameSaveCollection}">
-                        <TextBlock Text="{Binding FolderName}" />
+                        <TextBlock Text="{Binding Name}" />
                  </HierarchicalDataTemplate>
 
                 <DataTemplate DataType="{x:Type model:GameSave}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding GameSaveName}" />
+                        <TextBlock Text="{Binding Name}" />
                         <TextBlock Text=" (" Foreground="Green" />
                         <TextBlock Text="{Binding LevelName}" Foreground="Green" />
                         <TextBlock Text=" years)" Foreground="Green" />
@@ -65,5 +55,6 @@
 
             
         </TreeView>
-    </DockPanel>
+        <Button Content="Button" Height="20" Width="30" Margin="694,318,76,112"/>
+    </Grid>
 </UserControl>

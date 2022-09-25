@@ -11,13 +11,13 @@ namespace HCM
         /// Executed when the selected Xray's 
         /// image should be displayed.
         /// </summary>
-        public static readonly RoutedUICommand RenameSelectedCheckpoint;
+        public static readonly RoutedUICommand RenameSelectedItem;
 
         static Commands()
         {
-            RenameSelectedCheckpoint = new RoutedUICommand(
+            RenameSelectedItem = new RoutedUICommand(
                 "Lemme rename you",
-                "RenameCheckpoint",
+                "RenameItem",
                 typeof(Commands));
         }
     }
