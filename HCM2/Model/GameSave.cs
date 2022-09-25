@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System;
 using System.ComponentModel;
 using System.Runtime;
 
 namespace HCM.Model
 {
-    public class Checkpoint : INotifyPropertyChanged
+    public class GameSave : INotifyPropertyChanged
     {
 
         #region Data
-        string _checkpointName;
+        string _gameSaveName;
         DateTime _modifiedDateTime;
         readonly string _levelName;
         readonly uint _difficulty;
@@ -24,9 +23,9 @@ namespace HCM.Model
         #endregion // Data
 
         #region Constructor
-        public Checkpoint(string checkpointName, DateTime modifiedDateTime, string levelName, uint difficulty, TimeSpan levelTime, DateTime createdDateTime)
+        public GameSave(string gameSaveName, DateTime modifiedDateTime, string levelName, uint difficulty, TimeSpan levelTime, DateTime createdDateTime)
         {
-            _checkpointName = checkpointName;
+            _gameSaveName = gameSaveName;
             _modifiedDateTime = modifiedDateTime;   
             _levelName = levelName;
             _difficulty = difficulty;
@@ -38,13 +37,13 @@ namespace HCM.Model
 
         #region Properties
 
-        public string CheckpointName
+        public string GameSaveName
         {
-            get { return _checkpointName; }
+            get { return _gameSaveName; }
             set
             {
-                _checkpointName = value;
-                this.OnPropertyChanged("CheckpointName");
+                _gameSaveName = value;
+                this.OnPropertyChanged("GameSaveName");
             }
         }
 

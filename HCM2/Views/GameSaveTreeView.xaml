@@ -18,15 +18,18 @@
       x:Key="CreationDateConverter" 
       />
         
+
         <!-- 
     This is used to render an Xray object in the ListBox. 
     -->
-        <DataTemplate DataType="{x:Type model:Checkpoint}">
+        
+        
+        <!--<DataTemplate DataType="{x:Type model:GameSave}">
             <Border>
                 <Border.Child>
                     <TextBlock >
             <Run>Name:</Run>
-            <TextBlock Text="{Binding Path=CheckpointName}" />
+            <TextBlock Text="{Binding Path=GameSaveName}" />
           </TextBlock>
                 </Border.Child>
                 <Border.ToolTip>
@@ -40,21 +43,27 @@
           </TextBlock>
                 </Border.ToolTip>
             </Border>
-        </DataTemplate>
+        </DataTemplate>-->
     </UserControl.Resources>
 
     <DockPanel Margin="2">
-        <Button 
-      Command="{x:Static HCM:Commands.RenameSelectedCheckpoint}" 
-      Content="RenameCheckpoint"
-      DockPanel.Dock="Bottom"
-      HorizontalAlignment="Center" 
-      Margin="0,4"
-      />
+        <TreeView Name="testTreeView">
+            <TreeView.Resources>
+                 <HierarchicalDataTemplate DataType="{x:Type model:GameSaveFolder}" ItemsSource="{Binding GameSaveCollection}">
+                        <TextBlock Text="{Binding FolderName}" />
+                 </HierarchicalDataTemplate>
 
-        <ListBox 
-      IsSynchronizedWithCurrentItem="True" 
-      ItemsSource="{Binding Path=.}" 
-      />
+                <DataTemplate DataType="{x:Type model:GameSave}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding GameSaveName}" />
+                        <TextBlock Text=" (" Foreground="Green" />
+                        <TextBlock Text="{Binding LevelName}" Foreground="Green" />
+                        <TextBlock Text=" years)" Foreground="Green" />
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.Resources>
+
+            
+        </TreeView>
     </DockPanel>
 </UserControl>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HCM.Model;
 
 namespace HCM.Views
 {
@@ -23,6 +24,19 @@ namespace HCM.Views
         public HCMWindowView()
         {
             InitializeComponent();
+
+            List<GameSaveFolder> folders = new List<GameSaveFolder>();
+            GameSaveCollection testCollection1 = new GameSaveCollection();
+            testCollection1.Load();
+            GameSaveCollection testCollection2 = new GameSaveCollection();
+            testCollection2.Load();
+            GameSaveFolder folder1 = new GameSaveFolder("folder1", testCollection1);
+            GameSaveFolder folder2 = new GameSaveFolder("folder1", testCollection2);
+
+            folders.Add(folder1);
+            folders.Add(folder2);
+
+            testTreeView.ItemsSource = folders;
         }
     }
 }

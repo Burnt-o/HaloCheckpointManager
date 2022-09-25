@@ -25,5 +25,5 @@
     <!-- 
   This is the View applied to the Model.
   -->
-    <views:HCMWindowView />
+    <views:HCMWindowView Margin="21,49,300,165"/>
 </Window>

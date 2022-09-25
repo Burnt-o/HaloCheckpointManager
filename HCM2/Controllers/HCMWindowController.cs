@@ -12,24 +12,24 @@ namespace HCM.Controllers
     {
         #region Data
 
-        readonly ICollectionView _checkpointView;
+        readonly ICollectionView _gameSaveTreeView;
         readonly HCMWindow _hcmWindow;
 
         #endregion // Data
 
 
         #region Constructor
-        public HCMWindowController(HCMWindow hcmWindow, CheckpointCollection checkpointCollection)
+        public HCMWindowController(HCMWindow hcmWindow, GameSaveCollection gameSaveCollection)
         {
             if (hcmWindow == null)
                 throw new ArgumentNullException("hcmWindow");
 
-            if (checkpointCollection == null)
-                throw new ArgumentNullException("checkpointCollection");
+            if (gameSaveCollection == null)
+                throw new ArgumentNullException("gameSaveCollection");
 
             _hcmWindow = hcmWindow;
 
-            _checkpointView = CollectionViewSource.GetDefaultView(checkpointCollection);
+            _gameSaveTreeView = CollectionViewSource.GetDefaultView(gameSaveCollection);
         }
         #endregion // Constructor
 
@@ -38,17 +38,17 @@ namespace HCM.Controllers
         public bool IsACheckpointSelected
         {
             // Return true if there is a selected Checkpoint in the UI.
-            get { return _checkpointView.CurrentItem != null; }
+            get { return _gameSaveTreeView.CurrentItem != null; }
         }
 
-        public void RenameSelectedCheckpoint(string newCheckpointName)
+        public void RenameSelectedGameSave(string newGameSaveName)
         {
-                Checkpoint? selectedCheckpoint = _checkpointView.CurrentItem as Checkpoint;
+                GameSave? selectedCheckpoint = _gameSaveTreeView.CurrentItem as GameSave;
 
                 if (selectedCheckpoint == null)
                     throw new ArgumentNullException("_checkpointView.CurrentItem");
 
-                selectedCheckpoint.CheckpointName = newCheckpointName;
+                selectedCheckpoint.GameSaveName = newGameSaveName;
         }
 
         #endregion // Command Handlers

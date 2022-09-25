@@ -33,14 +33,22 @@ namespace HCM.Views
         {
             InitializeComponent();
 
-            CheckpointCollection testCheckpoints = CheckpointCollection.Load();
+            GameSaveCollection testCheckpoints = new();
+            testCheckpoints.Load();
+
+            GameSaveFolder testFolder = new("A folder", testCheckpoints);
 
             // Create the controller that  
             // handles user interaction.
             _controller = new HCMWindowController(this, testCheckpoints);
 
+            //uh
+            
+
+
             // Use the list of Xray objects as 
             // this Window's data source.
+
             base.DataContext = testCheckpoints;
 
         }
@@ -60,7 +68,7 @@ namespace HCM.Views
         void RenameCheckpoint_Executed(
             object sender, ExecutedRoutedEventArgs e)
         {
-            _controller.RenameSelectedCheckpoint("hi mark");
+            _controller.RenameSelectedGameSave("hi mark");
         }
 
         #endregion // Command Sinks
