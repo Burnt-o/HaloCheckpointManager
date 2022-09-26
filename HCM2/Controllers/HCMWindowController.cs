@@ -5,6 +5,10 @@ using System.Reflection;
 using System.Windows.Data;
 using HCM.Model;
 using HCM.Views;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+
 
 namespace HCM.Controllers
 {
@@ -19,17 +23,17 @@ namespace HCM.Controllers
 
 
         #region Constructor
-        public HCMWindowController(HCMWindow hcmWindow, GameSaveCollection gameSaveCollection)
+        public HCMWindowController(HCMWindow hcmWindow, ObservableCollection<TreeItem> treeItems)
         {
             if (hcmWindow == null)
                 throw new ArgumentNullException("hcmWindow");
 
-            if (gameSaveCollection == null)
+            if (treeItems == null)
                 throw new ArgumentNullException("gameSaveCollection");
 
             _hcmWindow = hcmWindow;
 
-            _gameSaveTreeView = CollectionViewSource.GetDefaultView(gameSaveCollection);
+            _gameSaveTreeView = CollectionViewSource.GetDefaultView(treeItems);
         }
         #endregion // Constructor
 
@@ -41,14 +45,18 @@ namespace HCM.Controllers
             get { return _gameSaveTreeView.CurrentItem != null; }
         }
 
+
+
         public void RenameSelectedItem(string newItemName)
         {
-                GameSave? selectedItem = _gameSaveTreeView.CurrentItem as GameSave;
+
+                TreeItem? selectedItem = _gameSaveTreeView.CurrentItem as TreeItem;
+                TreeItem? temp =  
 
                 if (selectedItem == null)
-                    throw new ArgumentNullException(nameof(selectedItem));
+                    throw new ArgumentNullException("selectedItem");
 
-                selectedItem.Name = newItemName;
+                selectedItem.Name = "oh hi mark";
         }
 
         #endregion // Command Handlers

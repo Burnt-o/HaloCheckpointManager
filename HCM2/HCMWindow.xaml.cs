@@ -25,7 +25,7 @@ namespace HCM.Views
         #region Data
 
         readonly HCMWindowController _controller;
-
+        readonly GameSaveManager _gameSaveManager;
         #endregion //Data
 
         #region Contructor
@@ -33,16 +33,10 @@ namespace HCM.Views
         {
             
 
-
+            _gameSaveManager = new GameSaveManager();
             
-            GameSaveCollection testSaveCollection = new GameSaveCollection();
-            testSaveCollection.Add(new GameSave("My First Checkpoint", DateTime.Now, "a10", 3, TimeSpan.FromSeconds(6), DateTime.Now));
-            _controller = new HCMWindowController(this, testSaveCollection);
+            _controller = new HCMWindowController(this, GameSaveManager.TreeItems);
 
-            GameSaveFolder folder1 = new GameSaveFolder("folder1", testSaveCollection);
-
-            Folders = new List<GameSaveFolder>();
-            Folders.Add(folder1);
 
 
             // Use the list of Xray objects as 
@@ -55,26 +49,15 @@ namespace HCM.Views
         }
         #endregion //Constructor
 
-        public List<GameSaveFolder> Folders { get; set; }
-
-        private void RunTestCode()
+        public GameSaveManager GameSaveManager
         {
-
-            
-            List<GameSaveFolder> folders = new List<GameSaveFolder>();
-            GameSaveCollection testCollection1 = new GameSaveCollection();
-            testCollection1.Add(new GameSave("My First Checkpoint", DateTime.Now, "a10", 3, TimeSpan.FromSeconds(6), DateTime.Now));
-
-            GameSaveCollection testCollection2 = new GameSaveCollection();
-
-            GameSaveFolder folder1 = new GameSaveFolder("folder1", testCollection1);
-            GameSaveFolder folder2 = new GameSaveFolder("folder2", testCollection2);
-
-            folders.Add(folder1);
-            folders.Add(folder2);
-            
-
+            get
+            { 
+                return _gameSaveManager;
+            }
         }
+
+
 
         #region Command Sinks
 

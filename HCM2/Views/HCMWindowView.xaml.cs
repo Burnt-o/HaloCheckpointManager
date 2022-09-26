@@ -31,7 +31,7 @@ namespace HCM.Views
             if (window != null)
             {
                 Trace.WriteLine("winodw wasn't null");
-                testTreeView.ItemsSource = window.Folders;
+                testTreeView.ItemsSource = window.GameSaveManager.TreeItems;
             }
             else
             {
@@ -41,8 +41,6 @@ namespace HCM.Views
 
 
         }
-
-        public List<GameSaveFolder> Folders { get; set; }
 
     }
 }
