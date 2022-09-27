@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ArrayOfEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsi:element name="pointerdata" type="valuelist"/>
+	<Entry>
+		<Key xsi:type="xsd:string">H1_Checkpoint</Key>
+		<Value xsi:type="pointerdata"> versionTest, 0123456 </Value>
+	</Entry>
+	<Entry>
+		<Key xsi:type="xsd:string">MyOtherKey</Key>
+		<Value xsi:type="pointerdata"> versionTest, 987654</Value>
+	</Entry>
+</ArrayOfEntry>

@@ -39,23 +39,27 @@ namespace HCM3
 
         /// <summary>
         /// Runs a few checks to see if HCM is good and setup ready-to-go. Is only run on HCM startup.
-        /// 1: Check that the process is elevated. HCM needs admin permissions to read/write process memory.
-        /// 2: Check that it has file read/write access in it's local folder.
-        /// 3: Check that the local folder contains certain folders. It will attempt to create them if they don't exist.
-        /// 4: Check that we have required assemblies that HCM needs to run.  
         /// </summary>
         /// <returns>Bool, true if all checks passed, false otherwise. 
         /// Also outs a string that describes what went wrong, if something went wrong.
         /// This string is intended to be presented to the user via a MessageBox</returns>
-        public bool InitializeHCM(out string errorString)
+        public bool HCMSetupChecks(out string errorString)
         {
-            //used to convey information about the exception/error that caused a check to fail.
+            // 1: Check that the process is elevated. HCM needs admin permissions to read/write process memory.
+            // 2: Check that it has file read/write access in it's local folder.
+            // 3: Check that the local folder contains certain folders. It will attempt to create them if they don't exist.
+            // 4: Check that we have required assemblies that HCM needs to run.  
+
+            // Local functions will out to this, which will be appended to the errorString
             string error;
 
-            //errorString = "cum";
-            //return true;
-
+            #region Is Elevated?
             // Check if HCM is running with elevated (Administrator) privileges.
+            bool IsElevated()
+            {
+                return (WindowsIdentity.GetCurrent().Owner?.IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid)).GetValueOrDefault();
+            }
+
             if (!IsElevated())
             {
                 errorString = "HCM needs admin privileges to operate, the application will now close." +
@@ -64,49 +68,10 @@ namespace HCM3
                     "\nfeel free to inspect/build the source from over at \n github.com/Burnt-o/HaloCheckpointManager";
                 return false;
             }
+            #endregion
 
+            #region Have File Access?
             //Check if HCM has file access to it's local directory. We test this by making a temporary subdirectory, checking it exists, then deleting it.
-            if (!HaveFileAccess(out error))
-            {
-                errorString = "HCM needs file read/write permissions in it's local directory." +
-                    "\nDouble check the security permissions of the directory HCM is stored inside."
-                    + "\n\nError: " + error;
-                return false;
-            }
-
-            //Check if we have the required files and folders. Create them with default values if we don't, only returns false if it still failed to create them.
-            if (!HaveRequiredFolders(out error))
-            {
-                errorString = "HCM tried to create it's required working directories but failed." +
-                    "\nDouble check the security permissions of the directory HCM is stored inside."
-                    + "\n\nError: " + error;
-                return false;
-            }
-
-            //Check if we have the required assemblies, like BurntMemory.dll, etc. Get's a list of missing files if any are missing.
-             if (!HaveRequiredFiles(out string missingFiles))
-             {
-                 errorString = "HCM is missing required files from it's local directory!" +
-                     "\nYou may have to re-download HCM to get the required files."
-                     + "\n\nMissing files: " + missingFiles;
-                 return false;
-             }
-
-
-
-
-
-            errorString = "Success!";
-            return true;
-
-
-            #region Local Functions
-
-            bool IsElevated()
-            {
-                return (WindowsIdentity.GetCurrent().Owner?.IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid)).GetValueOrDefault();
-            }
-
             bool HaveFileAccess(out string error)
             {
                 error = "";
@@ -114,10 +79,9 @@ namespace HCM3
                 {
                     string localFolder = Directory.GetCurrentDirectory();
                     string testFolder = localFolder + $@"\testDir";
-                    
+
                     var obj = Directory.CreateDirectory(testFolder);
-                    Trace.WriteLine(obj.FullName);
-                   
+
                     if (Directory.Exists(testFolder))
                     {
                         Directory.Delete(testFolder, false);
@@ -127,7 +91,7 @@ namespace HCM3
                     {
                         return false;
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -135,13 +99,24 @@ namespace HCM3
                     return false;
                 }
             }
+            
+            if (!HaveFileAccess(out error))
+            {
+                errorString = "HCM needs file read/write permissions in it's local directory." +
+                    "\nDouble check the security permissions of the directory HCM is stored inside."
+                    + "\n\nError: " + error;
+                return false;
+            }
+            #endregion
 
+            #region Have Required Folders?
+            //Check if we have the required files and folders. Create them with default values if we don't, only returns false if it still failed to create them.
             bool HaveRequiredFolders(out string error)
             {
                 error = "";
                 foreach (var folder in _requiredFolders)
                 {
-                    var folderPath =Directory.GetCurrentDirectory() + $@"\{folder}";
+                    var folderPath = Directory.GetCurrentDirectory() + $@"\{folder}";
                     try
                     {
                         Directory.CreateDirectory(folderPath);
@@ -152,29 +127,48 @@ namespace HCM3
                         return false;
                     }
                 }
+
                 return true;
             }
+            
+            if (!HaveRequiredFolders(out error))
+            {
+                errorString = "HCM tried to create it's required working directories but failed." +
+                    "\nDouble check the security permissions of the directory HCM is stored inside."
+                    + "\n\nError: " + error;
+                return false;
+            }
+            #endregion
 
+            #region Have Required Files?
+            //Check if we have the required assemblies, like BurntMemory.dll, etc. Get's a list of missing files if any are missing.
             bool HaveRequiredFiles(out string missingAssemblies)
             {
                 missingAssemblies = "";
                 foreach (var assembly in _requiredFiles)
                 {
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), assembly);
-                    Trace.WriteLine(filePath);
                     if (!File.Exists(filePath))
                     {
-                        missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" :", ") + assembly ;
+                        missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly;
                     }
                 }
 
                 return missingAssemblies == "";
-
             }
-
-
+            
+            if (!HaveRequiredFiles(out string missingFiles))
+            {
+                errorString = "HCM is missing required files from it's local directory!" +
+                    "\nYou may have to re-download HCM to get the required files."
+                    + "\n\nMissing files: " + missingFiles;
+                return false;
+            } 
             #endregion
 
+            // All checks passed, return success!
+            errorString = "Success!";
+            return true;
 
         }
 

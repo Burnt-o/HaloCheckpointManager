@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BurntMemory\BurntMemory\BurntMemory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
