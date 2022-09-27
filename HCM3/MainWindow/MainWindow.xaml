@@ -11,5 +11,8 @@
         >
     <Grid>
 
+        <Button x:Name="Button1" Content="Button1" Margin="99,154,564,308" Command="{Binding Command}"/>
+        <Button x:Name="Button2" Content="Button2" Margin="491,114,103,308" Command="{Binding Command}"/>
+
     </Grid>
 </Window>

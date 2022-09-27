@@ -17,10 +17,6 @@ namespace HCM3
         #region Properties
         private Dictionary<string, Dictionary<string, ReadWrite.Pointer>> Pointers { get; set; } = new()
         {
-            { "H1_Checkpoint", new() },
-            { "H1_Revert", new() },
-            { "H1_CoreSave", new() },
-            { "H1_CoreLoad", new() },
         };
 
 
@@ -34,15 +30,7 @@ namespace HCM3
 
         #endregion
 
-        public class PointerContainer
-        {
-            public PointerContainer(string name, string version, string? module = null, int[]? offsets = null)
-            {
-                Trace.WriteLine("name: " + name);
-                Trace.WriteLine("version: " + version);
-                Trace.WriteLine("module: " + module);
-            }
-        }
+
 
         public bool LoadPointersFromGit(out string exceptionString)
         {
@@ -74,22 +62,32 @@ namespace HCM3
                 // Deserialise
                 XDocument doc = XDocument.Parse(xml);
 
+                if (doc.Root == null)
+                {
+                    return false;
+                }
+
                 foreach (XElement e in doc.Root.Elements())
                 {
                     if (e.Name == "Pointer")
                     {
-                        //TODO; deal with nullability (missing elements)
-                        //TODO: parse hexadecimal numbers
-                        string name = e.Element("Name").Value;
-                        Trace.WriteLine(name);
-                        string version = e.Element("Version").Value;
-                        Trace.WriteLine(version);
-                        string module = e.Element("Module").Value;
-                        Trace.WriteLine(module);
-                        int[] offsets = e.Element("Offsets").Elements().Select(x => XmlConvert.ToInt32(x.Value)).ToArray();
-                        Trace.WriteLine("0: " + offsets[0]);
-                        Trace.WriteLine("1: " + offsets[1]);
-                        Trace.WriteLine("2: " + offsets[2]);
+                        // TODO: parse hexadecimal numbers in pointerOffsets
+                        // Read the data from the Pointer element (if the data exists)
+                        string? pointerName = e.Element("Name") == null ? null : e.Element("Name").Value;
+                        string? pointerVersion = e.Element("Version") == null ? null : e.Element("Version").Value;
+                        string? pointerModule = e.Element("Module") == null ? null : e.Element("Module").Value;
+                        int[]? pointerOffsets = e.Element("Module") == null ? null : e.Element("Offsets").Elements().Select(x => XmlConvert.ToInt32(x.Value)).ToArray();
+
+                        // Check that all the data actually exists
+                        if (!(pointerName == null || pointerVersion == null || pointerModule == null || pointerOffsets == null))
+                        {
+                            // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys
+                            ReadWrite.Pointer newPointer = new(pointerModule, pointerOffsets);
+                            Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
+                            versionDictionary.Add(pointerVersion, newPointer);
+                            Pointers.Add(pointerName, versionDictionary);
+                            Trace.WriteLine("Added new pointer, name: " + pointerName + ", module: " + pointerModule + ", version: " + pointerVersion);
+                        }
                     }
 
 
@@ -104,16 +102,21 @@ namespace HCM3
             return true;
         }
 
-        public ReadWrite.Pointer? GetPointer(string pointerKey, string versionKey)
+        public ReadWrite.Pointer? GetPointer(string pointerName, string pointerVersion)
         {
-            Dictionary<string, ReadWrite.Pointer> pointerVersionDictionary = Pointers[pointerKey];
-            if (pointerVersionDictionary == null)
-            {
-                return null;
-            }
+                bool success = Pointers.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
+                if (!success || pointerVersionDictionary == null)
+                {
+                    return null;
+                }
 
-            ReadWrite.Pointer pointer = pointerVersionDictionary[versionKey];
-            return pointer;
+                success = pointerVersionDictionary.TryGetValue(pointerVersion, out ReadWrite.Pointer? pointer);
+                if (!success || pointer == null)
+                {
+                    return null;
+                }
+
+                return pointer;
         }
     }
 }

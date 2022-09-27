@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using BurntMemory;
 
 namespace HCM3
 {
@@ -40,23 +42,20 @@ namespace HCM3
                 System.Windows.Application.Current.Shutdown();
             }
 
+            // Create collection of all our ReadWrite.Pointers and load them from the online repository
             PointerCollection pcollection = new();
-            bool success = pcollection.LoadPointersFromGit(out string error);
-
-            if (!success)
+            if (!pcollection.LoadPointersFromGit(out string error))
             {
                 System.Windows.MessageBox.Show(error, "Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
 
-            // Initialize some properties
-            // Starting with Offsets. 
-                // You know what, let's just grab EVERY offset file on app start up. Hm. 
-                // Well load it into our classes for every offset of every version that's online anyway.
-                // Don't forget we may well be using Xero's database thingy.
-                // In any case, we need a PointerCollection object, and a List<PointerCollection> (key is game version number).
-                // ORRRR have a single PointerCollection object, consisting of many List<Pointer> (key is game version number).
-                // We'll figure out binding of buttons to whether a pointer for that thing is valid or not later.
+            UIActionProperties bps = new(Command1, CommandCan);
+            Button1.DataContext = bps;
+
+            UIActionProperties bps2 = new(Command2, CommandCan);
+            Button2.DataContext = bps2;
+
 
             //Each button could be bound to it's own CanExecute property. This property assess both whether we have valid pointers
             //  (for this game version) for all the things the button wants us to do, AND whether we're attached and in a valid gamestate.
@@ -64,20 +63,35 @@ namespace HCM3
             //Whenever gamestate changes, update CanExecute.
             //Whenever pointers are freshly loaded, update CanExecute (well, maybe we only load once at the start).
             //Every buttton call starts by updating the gamestate, which will update CanExecute for it.
-            
+
         }
         #endregion // Constructor
 
         #region Properties
+        private bool testme = true;
 
+        private void Command1(object? parameter)
+        {
+            Trace.WriteLine("WOOOOOO");
+        }
 
+        private void Command2(object? parameter)
+        {
+            testme = false;
+            Trace.WriteLine("aaaaaaaaarrrrrrrr");
+        }
 
+        private bool CommandCan(object? parameter)
+        {
+            return testme;
+        }
         #endregion // Properties
 
         private void Window_Closed(object sender, EventArgs e)
         {
             Settings.Default.Save();
         }
+
 
 
     }
