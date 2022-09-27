@@ -40,7 +40,14 @@ namespace HCM3
                 System.Windows.Application.Current.Shutdown();
             }
 
+            PointerCollection pcollection = new();
+            bool success = pcollection.LoadPointersFromGit(out string error);
 
+            if (!success)
+            {
+                System.Windows.MessageBox.Show(error, "Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.Application.Current.Shutdown();
+            }
 
             // Initialize some properties
             // Starting with Offsets. 
