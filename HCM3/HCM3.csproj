@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Updates\" />
+    <Folder Include="Commands\Halo 2\" />
+    <Folder Include="Commands\Halo 3\" />
+    <Folder Include="Commands\Halo 3 ODST\" />
+    <Folder Include="Commands\Halo Reach\" />
+    <Folder Include="Commands\Halo 4\" />
   </ItemGroup>
 
   <ItemGroup>

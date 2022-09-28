@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Principal;
-
+using System.Windows;
 using System.Diagnostics;
 
 namespace HCM3
 {
-    public partial class MainWindow
+    public class HCMSetup
     {
 
         #region Data
@@ -36,6 +36,7 @@ namespace HCM3
 
 
         #endregion // Data
+
 
         /// <summary>
         /// Runs a few checks to see if HCM is good and setup ready-to-go. Is only run on HCM startup.

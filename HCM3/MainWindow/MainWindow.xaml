@@ -4,14 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCM3"
+        xmlns:commands="clr-namespace:HCM3.Commands"
         mc:Ignorable="d"
         Title="HaloCheckpointManager" Height="593" Width="820"
         MinHeight="593" MinWidth="555"
         Closed="Window_Closed"
         >
     <Grid>
+        <Grid.DataContext>
+            <commands:Commands/>
+        </Grid.DataContext>
 
-        <Button x:Name="Button1" Content="Button1" Margin="99,154,564,308" Command="{Binding Command}"/>
+        <Button x:Name="Button1" Content="Button1" Margin="99,154,564,308" Command="{Binding H1CheckpointProp}" />
         <Button x:Name="Button2" Content="Button2" Margin="491,114,103,308" Command="{Binding Command}"/>
 
     </Grid>

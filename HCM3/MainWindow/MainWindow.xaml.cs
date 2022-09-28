@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using BurntMemory;
+using HCM3.Commands;
 
 namespace HCM3
 {
@@ -32,10 +33,11 @@ namespace HCM3
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
+       HCMSetup setup = new();
+
 
             // Run some checks; have admin priviledges, have file access, have required folders & files.
-            if (!HCMSetupChecks(out string errorMessage))
+            if (!setup.HCMSetupChecks(out string errorMessage))
             {
                 // If a check fails, tell the user why, then shutdown the application.
                 System.Windows.MessageBox.Show(errorMessage, "Error", System.Windows.MessageBoxButton.OK);
@@ -50,43 +52,23 @@ namespace HCM3
                 System.Windows.Application.Current.Shutdown();
             }
 
-            UIActionProperties bps = new(Command1, CommandCan);
-            Button1.DataContext = bps;
+            HCMTasks tasks = new();
 
-            UIActionProperties bps2 = new(Command2, CommandCan);
-            Button2.DataContext = bps2;
+            //Setup command object that will be datacontext for binding of HCM's commands. They need the pointer collection and and a reference to MainWindow
+            HCM3.Commands.Commands CommandObject = new(pcollection, tasks);
+            Button1.DataContext = CommandObject;
+
+            
+            DataContext = this;
 
 
-            //Each button could be bound to it's own CanExecute property. This property assess both whether we have valid pointers
-            //  (for this game version) for all the things the button wants us to do, AND whether we're attached and in a valid gamestate.
-
-            //Whenever gamestate changes, update CanExecute.
-            //Whenever pointers are freshly loaded, update CanExecute (well, maybe we only load once at the start).
-            //Every buttton call starts by updating the gamestate, which will update CanExecute for it.
 
         }
         #endregion // Constructor
 
         #region Properties
-        private bool testme = true;
 
-        private void Command1(object? parameter)
-        {
-            Trace.WriteLine("WOOOOOO");
-        }
-
-        private void Command2(object? parameter)
-        {
-            testme = false;
-            Trace.WriteLine("aaaaaaaaarrrrrrrr");
-        }
-
-        private bool CommandCan(object? parameter)
-        {
-            return testme;
-        }
-        #endregion // Properties
-
+        #endregion
         private void Window_Closed(object sender, EventArgs e)
         {
             Settings.Default.Save();
