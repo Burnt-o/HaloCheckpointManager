@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="HCM3.TestViews.CheckpointListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HCM3.TestViews"
+             xmlns:b="clr-namespace:HCM3"
+             mc:Ignorable="d" 
+             d:DesignHeight="593" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                        <Setter Property="Background" Value="White" />
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                        <Setter Property="Background" Value="WhiteSmoke" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+           
+        </Grid.Resources>
+
+        <ListView AlternationCount="2" >
+            <ListView.View >
+                <GridView >
+                    <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="f" Width="36" Height="17"/>
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" b:GridColumn.MinWidth="55" Width="Auto">
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="30"/>
+                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35"/>
+                    <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="50"/>
+                </GridView>
+                
+            </ListView.View>
+            <ListView.Items>
+                <TextBlock Text="123" />
+                <TextBlock Text="123" />
+                <TextBlock Text="123" />
+                <TextBlock Text="123" />
+            </ListView.Items>
+        </ListView>
+    </Grid>
+</UserControl>

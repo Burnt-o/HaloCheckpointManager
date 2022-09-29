@@ -3,20 +3,66 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:HCM3.TestViews"
         xmlns:local="clr-namespace:HCM3"
         xmlns:commands="clr-namespace:HCM3.Commands"
         mc:Ignorable="d"
         Title="HaloCheckpointManager" Height="593" Width="820"
-        MinHeight="593" MinWidth="555"
+        MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
         >
-    <Grid>
-        <Grid.DataContext>
+
+    <TabControl>
+        <TabItem x:Name="Halo1Tab" Header="Halo 1">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition MaxWidth="300" MinWidth="300"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2">
+
+                </uc:CheckpointListControl>
+
+                <Border Grid.Column="1" Grid.RowSpan="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="1" Height="261" Background="#FFE5E5E5">
+                </Border>
+                <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="261" VerticalAlignment="Top">
+
+                </uc:CheckpointDetailControl>
+
+                <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="1" Background="WhiteSmoke">
+                    
+                </Border>
+
+                <Border Grid.Column="2" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="1" Background="#FFE5E5E5">
+                    
+                </Border>
+                <Grid Grid.Column="2">
+                    
+                </Grid>
+
+            </Grid>
+
+        </TabItem>
+
+    </TabControl>
+
+    <!--<Grid>
+        
+
+        -->
+    <!--<Grid.DataContext>
             <commands:Commands/>
         </Grid.DataContext>
 
         <Button x:Name="Button1" Content="Button1" Margin="99,154,564,308" Command="{Binding H1CheckpointProp}" />
-        <Button x:Name="Button2" Content="Button2" Margin="491,114,103,308" Command="{Binding Command}"/>
+        <Button x:Name="Button2" Content="Button2" Margin="491,114,103,308" Command="{Binding Command}"/>-->
+    <!--
 
-    </Grid>
+    </Grid>-->
 </Window>

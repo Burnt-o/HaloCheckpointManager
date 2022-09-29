@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="HCM3.TestViews.CheckpointDetailControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HCM3.TestViews"
+             xmlns:a="clr-namespace:HCM3"
+             mc:Ignorable="d" 
+             d:DesignHeight="255" d:DesignWidth="200">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="45" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="115"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+
+
+
+        </Grid.RowDefinitions>
+
+        
+
+        <!--Image Display Stuff (complicated cos of rounded corners effect)-->
+        <Grid Grid.ColumnSpan="3" Margin="5,5,5,5">
+            <WrapPanel Name ="container">
+                <Image VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill">
+                    <Image.Source>
+                    <BitmapImage DecodePixelWidth="300" UriSource="/images/05b_deltatowers_anni.png" />
+                        </Image.Source>
+                </Image>
+                <WrapPanel.OpacityMask>
+                    <VisualBrush >
+                        <VisualBrush.Visual>
+                            <Border 
+                            Background="White" CornerRadius="15" />
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </WrapPanel.OpacityMask>
+            </WrapPanel>
+        </Grid>
+
+        <!--<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
+
+        <WrapPanel Name ="container">
+            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill">
+                <Image.Source>
+                        <BitmapImage DecodePixelWidth="300" UriSource="/images/05b_deltatowers_anni.png" />
+                </Image.Source>
+            </Image>
+
+                <WrapPanel.OpacityMask>
+                    <VisualBrush >
+                        <VisualBrush.Visual>
+                            <Border 
+                           
+                            Background="White" CornerRadius="15" />
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </WrapPanel.OpacityMask>
+            </WrapPanel>
+        </Grid>-->
+        
+        <!--/Image Display Stuff-->
+
+
+        <Border Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="WhiteSmoke" Margin="-5,2,10,4" CornerRadius="7" />
+
+        <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="CheckpointNameGoesHere"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Time:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Level:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Version:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Created:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+
+
+        
+
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Legendary"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="00:02:15.28"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="Lone Wolf"  TextAlignment="Justify"  Height="20" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="1.2645.0.0"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="22/09/30 22:14:23"  TextAlignment="Justify"  Height="20" />
+        
+        <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="0,0,0,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Dump" Width="50" Margin="20,-3,1,1"/>
+
+            <Button Grid.Column="1" Content="Inject" Width="50" Margin="1,-3,20,1"/>
+            
+            
+        </Grid>
+    </Grid>
+</UserControl>

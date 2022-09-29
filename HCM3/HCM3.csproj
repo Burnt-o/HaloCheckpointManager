@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\05b_deltatowers_anni.png" />
+    <None Remove="TestViews\b30_clas.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Commands\Halo 2\" />
     <Folder Include="Commands\Halo 3\" />
     <Folder Include="Commands\Halo 3 ODST\" />
@@ -17,6 +22,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BurntMemory\BurntMemory\BurntMemory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\05b_deltatowers_anni.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
