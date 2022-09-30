@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3.TestViews
+namespace HCM3.View
 {
     /// <summary>
     /// Interaction logic for CheckpointDetailControl.xaml

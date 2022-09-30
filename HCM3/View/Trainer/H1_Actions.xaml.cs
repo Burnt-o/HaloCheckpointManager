@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3
+namespace HCM3.View.Trainer
 {
     /// <summary>
-    /// Interaction logic for CheckpointList.xaml
+    /// Interaction logic for H1_Actions.xaml
     /// </summary>
-    public partial class CheckpointList : UserControl
+    public partial class H1_Actions : UserControl
     {
-        public CheckpointList()
+        public H1_Actions()
         {
             InitializeComponent();
         }

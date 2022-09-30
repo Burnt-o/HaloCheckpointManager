@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <None Remove="images\05b_deltatowers_anni.png" />
-    <None Remove="TestViews\b30_clas.png" />
+    <None Remove="View\b30_clas.png" />
   </ItemGroup>
 
   <ItemGroup>

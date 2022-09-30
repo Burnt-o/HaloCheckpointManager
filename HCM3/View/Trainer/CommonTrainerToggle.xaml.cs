@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3.TestViews
+namespace HCM3.View.Trainer
 {
     /// <summary>
-    /// Interaction logic for CheckpointDataControl.xaml
+    /// Interaction logic for CommonTrainerToggle.xaml
     /// </summary>
-    public partial class CheckpointDataControl : UserControl
+    public partial class CommonTrainerToggle : UserControl
     {
-        public CheckpointDataControl()
+        public CommonTrainerToggle()
         {
             InitializeComponent();
         }

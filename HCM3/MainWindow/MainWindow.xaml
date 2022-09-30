@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:uc="clr-namespace:HCM3.TestViews"
+        xmlns:uc="clr-namespace:HCM3.View"
+        xmlns:uct="clr-namespace:HCM3.View.Trainer"
         xmlns:local="clr-namespace:HCM3"
         xmlns:commands="clr-namespace:HCM3.Commands"
         mc:Ignorable="d"
@@ -25,23 +26,16 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2">
+                <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2"/>
 
-                </uc:CheckpointListControl>
 
-                <Border Grid.Column="1" Grid.RowSpan="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="1" Height="261" Background="#FFE5E5E5">
-                </Border>
-                <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="261" VerticalAlignment="Top">
+                <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="261" VerticalAlignment="Top"/>
 
-                </uc:CheckpointDetailControl>
 
-                <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="1" Background="WhiteSmoke">
-                    
-                </Border>
+                <uc:FolderExplorer Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Margin="1"/>
 
-                <Border Grid.Column="2" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="1" Background="#FFE5E5E5">
-                    
-                </Border>
+                <uct:H1_Actions Grid.Column="2" Grid.RowSpan="2" Margin="1"/>
+
                 <Grid Grid.Column="2">
                     
                 </Grid>

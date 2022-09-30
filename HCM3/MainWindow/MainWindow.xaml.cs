@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using BurntMemory;
 using HCM3.Commands;
-using HCM3.TestViews;
+using HCM3.View;
 using System.Collections.ObjectModel;
 
 namespace HCM3
