@@ -16,13 +16,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using BurntMemory;
-using System.Windows;
 using HCM3.View;
 using System.Collections.ObjectModel;
 using HCM3.ViewModel;
 using HCM3.Model;
 
-using System.Collections.ObjectModel;
 
 namespace HCM3.View
 {
@@ -38,7 +36,7 @@ namespace HCM3.View
         #region Constructor
         public MainWindow()
         {
-            InitializeComponent();
+            
        HCMSetup setup = new();
 
 
@@ -59,14 +57,30 @@ namespace HCM3.View
             }
 
             HCMTasks tasks = new();
+            HaloMemory HaloMemory = new HaloMemory();
+            InitializeComponent();
+            ObservableCollection<Checkpoint> checkpointsH1 = new();
 
+            ObservableCollection<Checkpoint> checkpointsH2 = new();
+            ObservableCollection<Checkpoint> checkpointsH3 = new();
+            ObservableCollection<Checkpoint> checkpointsH3ODST = new();
+            ObservableCollection<Checkpoint> checkpointsHReach = new();
+            ObservableCollection<Checkpoint> checkpointsH4 = new();
 
-            var history = new ObservableCollection<string>();
-            var H1model = new Halo1Model();
-            var H1viewModel = new Halo1ViewModel(H1model, history);
-            DataContext = H1viewModel;
+            Halo1Model H1model = new Halo1Model(HaloMemory, checkpointsH1);
+            Halo1ViewModel H1viewModel = new Halo1ViewModel(H1model, checkpointsH1);
+            
+            checkpointsH1.Add(new Checkpoint("c1"));
+            checkpointsH1.Add(new Checkpoint("c2"));
+            checkpointsH1.Add(new Checkpoint("c3"));
+            Checkpoint test = new Checkpoint("c4");
+            checkpointsH1.Add(test);
+            this.DataContext = H1viewModel;
+           
+            test.CheckpointName = "grrr";
+            
 
-
+            //checkpointsH1.Add(new Checkpoint());
 
         }
         #endregion // Constructor
@@ -83,27 +97,7 @@ namespace HCM3.View
 
     }
 
-    public class Checkpoint
-    {
-        public Checkpoint(string a, string b, string c = "Easy", string d = "00:01:28", string e = "22/09/03", string f = "2645")
-        { 
-            Name = a;
-            Level = b;
-            Diff = c;
-            IGT = d;
-            Created = e;
-            Version = f;
-
-        }
-        public int MinWidth = 10;
-        public string Name { get; set; }
-        public string Level { get; set; }
-        public string Diff { get; set; }
-        public string IGT { get; set; }
-        public string Created { get; set; }
-        public string Version { get; set; }
-
-    }
+   
 
 
 

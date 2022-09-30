@@ -20,6 +20,7 @@ namespace HCM3.View
     /// </summary>
     internal partial class Halo1Control : UserControl
     {
+
         public Halo1Control()
         {
             InitializeComponent();

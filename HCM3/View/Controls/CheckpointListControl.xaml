@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HCM3.View.Controls"
+             xmlns:cnv="clr-namespace:HCM3.Converters"
              xmlns:b="clr-namespace:HCM3.View"
+              xmlns:viewModels="clr-namespace:HCM3.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="593" d:DesignWidth="300">
+             d:DesignHeight="593" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:Halo1ViewModel}">
     <Grid>
         <Grid.Resources>
+            <cnv:DifficultyConverter x:Key="DifficultyConverter" />
+            <cnv:IGTConverter x:Key="IGTConverter" />
             <Style TargetType="ListViewItem">
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
@@ -23,38 +28,34 @@
            
         </Grid.Resources>
 
-        <ListView AlternationCount="2" >
+        <ListView AlternationCount="2"  ItemsSource="{Binding CheckpointCollectionH1}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListView.View >
                 <GridView >
-                    <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35">
+                    <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <TextBlock Text="f" Width="36" Height="17"/>
+                                    
+                                    <!--used to be a textblock here, to format level icon. Think I'll just remove the icon feature though-->
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
 
                     </GridViewColumn>
-                    <GridViewColumn Header="Name" b:GridColumn.MinWidth="55" Width="Auto">
+                    <GridViewColumn Header="Name" b:GridColumn.MinWidth="55" Width="90" DisplayMemberBinding="{Binding CheckpointName}">
                         <GridViewColumn.HeaderContainerStyle>
                             <Style TargetType="{x:Type GridViewColumnHeader}">
                                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                             </Style>
                         </GridViewColumn.HeaderContainerStyle>
                     </GridViewColumn>
-                    <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="30"/>
-                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35"/>
-                    <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="50"/>
+                    <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="30" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"/>
+                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}, ConverterParameter=H1, StringFormat='{}{0:mm\\:ss\\:ff}'}" />
+                    <GridViewColumn Header="Version" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameVersion}"/>
+                    <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="50" DisplayMemberBinding="{Binding CreatedOn}"/>
                 </GridView>
-                
+
             </ListView.View>
-            <ListView.Items>
-                <TextBlock Text="123" />
-                <TextBlock Text="123" />
-                <TextBlock Text="123" />
-                <TextBlock Text="123" />
-            </ListView.Items>
         </ListView>
     </Grid>
 </UserControl>

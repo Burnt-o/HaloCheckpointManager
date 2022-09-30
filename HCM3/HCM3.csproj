@@ -18,6 +18,8 @@
     <Folder Include="Commands\Halo 3 ODST\" />
     <Folder Include="Commands\Halo Reach\" />
     <Folder Include="Commands\Halo 4\" />
+    <Folder Include="Converters\Details\" />
+    <Folder Include="Converters\List\" />
   </ItemGroup>
 
   <ItemGroup>

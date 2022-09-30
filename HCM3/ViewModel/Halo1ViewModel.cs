@@ -8,24 +8,21 @@ namespace HCM3.ViewModel
 
     internal sealed class Halo1ViewModel : Presenter
     {
+        public string LevelName { get; set; } // for testing
         private readonly Halo1Model _model;
-        private string _someText = string.Empty;
+        public ObservableCollection<Checkpoint> CheckpointCollectionH1 { get; set; }
 
-        public Halo1ViewModel(Halo1Model model, ObservableCollection<string> history)
+        public Halo1ViewModel(Halo1Model model, ObservableCollection<Checkpoint> checkpointCollectionH1)
         {
-            (_model, History) = (model, history);
+           // (_model, CheckpointCollectionH1) = (model, checkpointCollectionH1);
+           _model = model;
+            //TODO remove this, let it get passed in by constructor
+            CheckpointCollectionH1 = checkpointCollectionH1;
+            LevelName = "ARGH";
         }
-        public string SomeText
-        {
-            get => _someText;
-            set => Update(ref _someText, value);
-        }
-
-        public ObservableCollection<string> History { get; }
 
         public ICommand PrintTextCommand => new Command(_ => _model.PrintText());
 
-        private void OnUpdate() => SomeText = string.Empty;
     }
 
 }

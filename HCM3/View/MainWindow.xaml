@@ -17,7 +17,7 @@
 
     <TabControl>
         <TabItem x:Name="Halo1Tab" Header="Halo 1">
-            <local:Halo1Control/>
+            <local:Halo1Control x:Name="Halo1Control"/>
         </TabItem>
 
     </TabControl>
