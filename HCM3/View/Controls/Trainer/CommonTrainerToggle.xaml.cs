@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3.View.Trainer
+namespace HCM3.View.Controls.Trainer
 {
     /// <summary>
-    /// Interaction logic for H1_Actions.xaml
+    /// Interaction logic for CommonTrainerToggle.xaml
     /// </summary>
-    public partial class H1_Actions : UserControl
+    public partial class CommonTrainerToggle : UserControl
     {
-        public H1_Actions()
+        public CommonTrainerToggle()
         {
             InitializeComponent();
         }

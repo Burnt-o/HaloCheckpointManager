@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3.View.Trainer
+namespace HCM3.View.Controls.Trainer
 {
     /// <summary>
     /// Interaction logic for CommonTrainerHeader.xaml

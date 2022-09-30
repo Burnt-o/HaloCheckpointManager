@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3.View
+namespace HCM3.View.Controls
 {
     /// <summary>
-    /// Interaction logic for CheckpointDetailControl.xaml
+    /// Interaction logic for FolderExplorer.xaml
     /// </summary>
-    public partial class CheckpointDetailControl : UserControl
+    public partial class FolderExplorer : UserControl
     {
-        public CheckpointDetailControl()
+        public FolderExplorer()
         {
             InitializeComponent();
         }

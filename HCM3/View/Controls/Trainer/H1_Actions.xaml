@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="HCM3.View.Trainer.H1_Actions"
+﻿<UserControl x:Class="HCM3.View.Controls.Trainer.H1_Actions"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:HCM3.View.Trainer"
+             xmlns:local="clr-namespace:HCM3.View.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="547" d:DesignWidth="298">
     <Grid>

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HCM3.View
+namespace HCM3.View.Controls.Trainer
 {
     /// <summary>
-    /// Interaction logic for FolderExplorer.xaml
+    /// Interaction logic for H1_Actions.xaml
     /// </summary>
-    public partial class FolderExplorer : UserControl
+    public partial class H1_Actions : UserControl
     {
-        public FolderExplorer()
+        public H1_Actions()
         {
             InitializeComponent();
         }

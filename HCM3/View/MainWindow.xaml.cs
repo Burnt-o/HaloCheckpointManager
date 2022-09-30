@@ -16,11 +16,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using BurntMemory;
-using HCM3.Commands;
+using System.Windows;
 using HCM3.View;
 using System.Collections.ObjectModel;
+using HCM3.ViewModel;
+using HCM3.Model;
 
-namespace HCM3
+using System.Collections.ObjectModel;
+
+namespace HCM3.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -56,21 +60,11 @@ namespace HCM3
 
             HCMTasks tasks = new();
 
-            //Setup command object that will be datacontext for binding of HCM's commands. They need the pointer collection and and a reference to MainWindow
-            //HCM3.Commands.Commands CommandObject = new(pcollection, tasks);
-            //Button1.DataContext = CommandObject;
 
-
-            ObservableCollection<Checkpoint> custdata = new();
-            custdata.Add(new Checkpoint("ah", "ee"));
-            custdata.Add(new Checkpoint("ah", "essfe"));
-            custdata.Add(new Checkpoint("sadfasdfh", "ee"));
-            custdata.Add(new Checkpoint("ah", "esse"));
-            custdata.Add(new Checkpoint("asfsfh", "ee"));
-            DataContext = custdata;
-    
-
-           
+            var history = new ObservableCollection<string>();
+            var H1model = new Halo1Model();
+            var H1viewModel = new Halo1ViewModel(H1model, history);
+            DataContext = H1viewModel;
 
 
 
