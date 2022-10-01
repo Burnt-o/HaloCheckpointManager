@@ -15,35 +15,17 @@ namespace HCM3.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double divisor;
-            Trace.WriteLine("EEEE: " + value.ToString());
-            switch (parameter as string)
-            {
-                case "H1":
-                    divisor = 30;
-                    break;
-
-                case "H2":
-                case "H3":
-                case "OD":
-                case "HR":
-                case "H4":
-                    divisor = 60;
-                    break;
-
-                default:
-                    Trace.WriteLine("IGTConverter recieved bad parameter");
-                    Trace.WriteLine(parameter as string);
-                    throw new NotImplementedException();
+            int gameTicks = (int)value;
+            if (gameTicks == 0)
+            { 
+            return TimeSpan.Zero;
             }
-            
 
-            Trace.WriteLine("FFFF: " + ((int)value / divisor));
-            TimeSpan gameTime = TimeSpan.FromSeconds((int)value / divisor);
-            string format = @"mm\:ss\.ff";
+            string game = HCM3.Settings.Default.SelectedGame;
+            double divisor = (game == "H1") ? (double)30 : (double)60;
+            double seconds = gameTicks / divisor;
 
-
-            return gameTime;
+            return TimeSpan.FromSeconds(seconds);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

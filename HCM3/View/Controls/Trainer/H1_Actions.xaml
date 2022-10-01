@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HCM3.View.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="547" d:DesignWidth="298">
-    <Grid>
+    <Grid Width="298" Height="Auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="40"/>

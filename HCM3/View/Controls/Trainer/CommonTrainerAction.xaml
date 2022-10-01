@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:HCM3.View.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:Halo1ViewModel}" x:ClassModifier="internal">
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}" x:ClassModifier="internal">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"/>

@@ -3,11 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
+
 
 namespace HCM3.Model
 {
+    internal sealed class CheckpointModel
+    {
+        
+        public HaloMemory HaloMemory;
+        public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
+        public CheckpointModel(HaloMemory haloMemory, ObservableCollection<Checkpoint> checkpointCollection)
+        { 
+        HaloMemory = haloMemory;
+            CheckpointCollection = checkpointCollection;
+        }
+        public void PrintText()
+        {
+            Trace.WriteLine("Hello from CheckpointModel!");
+        }
+    }
+
     public class Checkpoint
     {
         public string CheckpointName { get; set; }
@@ -30,4 +47,5 @@ namespace HCM3.Model
 
 
     }
+
 }

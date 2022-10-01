@@ -18,10 +18,10 @@ namespace HCM3.View
     /// <summary>
     /// Interaction logic for Halo1Control.xaml
     /// </summary>
-    internal partial class Halo1Control : UserControl
+    internal partial class CheckpointControl : UserControl
     {
 
-        public Halo1Control()
+        public CheckpointControl()
         {
             InitializeComponent();
         }

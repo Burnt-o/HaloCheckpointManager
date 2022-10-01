@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="HCM3.View.Halo1Control"
+﻿<UserControl x:Class="HCM3.View.CheckpointControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,20 +8,20 @@
              xmlns:local="clr-namespace:HCM3.View"
              xmlns:viewModels="clr-namespace:HCM3.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="593" d:DesignWidth="820"
-             d:DataContext="{d:DesignInstance viewModels:Halo1ViewModel}" x:ClassModifier="internal">
-    <Grid >
+             d:DesignHeight="593" d:DesignWidth="520"
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}" x:ClassModifier="internal">
+    <Grid Width="Auto">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="200"/>
+            <ColumnDefinition MinWidth="200" Width="*"/>
             <ColumnDefinition Width="200"/>
-            <ColumnDefinition MaxWidth="300" MinWidth="300"/>
+
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2"/>
+        <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2" Width="Auto"/>
 
 
         <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="261" VerticalAlignment="Top"/>
@@ -29,11 +29,9 @@
 
         <uc:FolderExplorer Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Margin="1"/>
 
-        <uct:H1_Actions Grid.Column="2" Grid.RowSpan="2" Margin="1" />
+        
 
-        <Grid Grid.Column="2">
 
-        </Grid>
 
     </Grid>
 </UserControl>

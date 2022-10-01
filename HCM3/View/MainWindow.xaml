@@ -7,21 +7,39 @@
         xmlns:uct="clr-namespace:HCM3.View.Controls.Trainer"
         xmlns:local="clr-namespace:HCM3.View"
         xmlns:commands="clr-namespace:HCM3.Commands"
-        xmlns:viewModels="clr-namespace:HCM3.ViewModel"
+        xmlns:viewModel="clr-namespace:HCM3.ViewModel"
         mc:Ignorable="d"
         Title="HaloCheckpointManager" Height="593" Width="820"
         MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
-        d:DataContext="{d:DesignInstance viewModels:Halo1ViewModel}"
+        d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         >
-
-    <TabControl>
+    
+    <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}" >
         <TabItem x:Name="Halo1Tab" Header="Halo 1">
-            <local:Halo1Control x:Name="Halo1Control"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+                <local:CheckpointControl Grid.Column="0" />
+                <uct:H1_Actions Grid.Column="1" />
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="Halo2Tab" Header="Halo 2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:CheckpointControl Grid.Column="0" />
+                <uct:H1_Actions Grid.Column="1"/>
+            </Grid>
         </TabItem>
 
-    </TabControl>
 
+    </TabControl>
+    
     <!--<Grid>
         
 

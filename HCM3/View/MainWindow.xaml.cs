@@ -67,16 +67,17 @@ namespace HCM3.View
             ObservableCollection<Checkpoint> checkpointsHReach = new();
             ObservableCollection<Checkpoint> checkpointsH4 = new();
 
-            Halo1Model H1model = new Halo1Model(HaloMemory, checkpointsH1);
-            Halo1ViewModel H1viewModel = new Halo1ViewModel(H1model, checkpointsH1);
+            CheckpointModel H1model = new CheckpointModel(HaloMemory, checkpointsH1);
+            CheckpointViewModel H1viewModel = new CheckpointViewModel(H1model, checkpointsH1);
             
             checkpointsH1.Add(new Checkpoint("c1"));
             checkpointsH1.Add(new Checkpoint("c2"));
             checkpointsH1.Add(new Checkpoint("c3"));
             Checkpoint test = new Checkpoint("c4");
             checkpointsH1.Add(test);
-            this.DataContext = H1viewModel;
-           
+
+
+            this.DataContext = new MainViewModel(new MainModel(), Halo1Tab, Halo2Tab);
             test.CheckpointName = "grrr";
             
 
