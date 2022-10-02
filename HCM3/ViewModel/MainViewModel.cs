@@ -28,23 +28,21 @@ namespace HCM3.ViewModel
             }
         }
 
-        private readonly MainModel _model;
         
         public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
         public CheckpointModel CheckpointModel { get; set; }
         public CheckpointViewModel CheckpointViewModel { get; set; }
 
-        public MainViewModel(MainModel model, TabItem Halo1, TabItem Halo2)
+        public MainModel MainModel { get; set; }
+
+        public MainViewModel(MainModel model, PointerCollection pointerCollection)
         {
-            _model = model;
+            MainModel = model;
             HaloMemory HaloMemory = new();
 
             CheckpointCollection = new();
-            CheckpointModel = new(HaloMemory, CheckpointCollection);
+            CheckpointModel = new(HaloMemory, CheckpointCollection, pointerCollection);
             CheckpointViewModel = new(CheckpointModel, CheckpointCollection);
-            Halo1.DataContext = CheckpointViewModel;
-            Halo2.DataContext = CheckpointViewModel;
-
 
             Checkpoint checkpoint = new Checkpoint("hiii");
             CheckpointCollection.Add(checkpoint);
@@ -57,10 +55,11 @@ namespace HCM3.ViewModel
 
 
         //handler
-        private void SelectedTabIndex_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void SelectedTabIndex_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             // TODO: set the settings option in here (note to self; let's just make the settings only for actually loading into HCM; we can store everything else here in mainviewmodel. Maybe just make the checkpointview subscribe to this sti event?)
             Trace.WriteLine("STI event raised woo! sender: " + sender.ToString() + ", e: " + e.PropertyName);
+            CheckpointModel.RefreshCheckpointList(SelectedTabIndex);
 
             // TODO: tell the checkpointviewmodel to refresh it's list. or just make it subscribe to this idk
             // TODO: tell the trainerviewmodel to er .. actually not sure how that's gonna work yet

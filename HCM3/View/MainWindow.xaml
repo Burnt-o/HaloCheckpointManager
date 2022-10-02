@@ -15,14 +15,14 @@
         d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         >
     
-    <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}" >
+    <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}"  >
         <TabItem x:Name="Halo1Tab" Header="Halo 1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-                <local:CheckpointControl Grid.Column="0" />
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}"/>
                 <uct:H1_Actions Grid.Column="1" />
             </Grid>
         </TabItem>
@@ -32,7 +32,7 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <local:CheckpointControl Grid.Column="0" />
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
                 <uct:H1_Actions Grid.Column="1"/>
             </Grid>
         </TabItem>

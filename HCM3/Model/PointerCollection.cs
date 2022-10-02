@@ -17,7 +17,9 @@ namespace HCM3
         #region Properties
         private Dictionary<string, Dictionary<string, ReadWrite.Pointer>> Pointers { get; set; } = new()
         {
+            { "H1_CheckpointData_LevelName", new Dictionary<string, ReadWrite.Pointer>() }
         };
+
 
 
         #endregion
@@ -56,6 +58,12 @@ namespace HCM3
 			                    <Offset>30</Offset>
 		                    </Offsets>
                     </Pointer>
+                    <Pointer>
+	                    <Name>H1_CheckpointData_LevelName</Name>
+	                    <Version>1.2645.0.0</Version>
+		                    <IntPtr>26
+                            </IntPtr>
+                    </Pointer>
                     </Pointers>";
 
 
@@ -73,20 +81,37 @@ namespace HCM3
                     {
                         // TODO: parse hexadecimal numbers in pointerOffsets
                         // Read the data from the Pointer element (if the data exists)
-                        string? pointerName = e.Element("Name") == null ? null : e.Element("Name").Value;
-                        string? pointerVersion = e.Element("Version") == null ? null : e.Element("Version").Value;
-                        string? pointerModule = e.Element("Module") == null ? null : e.Element("Module").Value;
-                        int[]? pointerOffsets = e.Element("Module") == null ? null : e.Element("Offsets").Elements().Select(x => XmlConvert.ToInt32(x.Value)).ToArray();
+                        string? pointerName = e.Element("Name") == null ? null : e.Element("Name")?.Value;
+                        string? pointerVersion = e.Element("Version") == null ? null : e.Element("Version")?.Value;
+                        string? pointerModule = e.Element("Module") == null ? null : e.Element("Module")?.Value;
+                        int[]? pointerOffsets = e.Element("Module") == null ? null : e.Element("Offsets")?.Elements().Select(x => XmlConvert.ToInt32(x.Value)).ToArray();
+                        IntPtr? pointerIntPtr = e.Element("IntPtr") == null ? null : (IntPtr?)XmlConvert.ToInt32(e.Element("IntPtr").Value);
 
-                        // Check that all the data actually exists
-                        if (!(pointerName == null || pointerVersion == null || pointerModule == null || pointerOffsets == null))
+                        // Check that all the data actually exists and make the pointer
+                        if (pointerName != null && pointerVersion != null)
                         {
-                            // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys
-                            ReadWrite.Pointer newPointer = new(pointerModule, pointerOffsets);
-                            Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
-                            versionDictionary.Add(pointerVersion, newPointer);
-                            Pointers.Add(pointerName, versionDictionary);
-                            Trace.WriteLine("Added new pointer, name: " + pointerName + ", module: " + pointerModule + ", version: " + pointerVersion);
+                           
+                            if (pointerIntPtr != null)
+                            {
+                                ReadWrite.Pointer newPointer = new ReadWrite.Pointer(pointerIntPtr);
+                                // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys    
+                                Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
+                                versionDictionary.Add(pointerVersion, newPointer);
+                                Pointers.Add(pointerName, versionDictionary);
+                                Trace.WriteLine("Added new pointer, name: " + pointerName);
+                            }
+                            else
+                            {
+                                if (pointerModule != null && pointerOffsets != null)
+                                {
+                                    ReadWrite.Pointer newPointer = new ReadWrite.Pointer(pointerModule, pointerOffsets);
+                                    // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys    
+                                    Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
+                                    versionDictionary.Add(pointerVersion, newPointer);
+                                    Pointers.Add(pointerName, versionDictionary);
+                                    Trace.WriteLine("Added new pointer, name: " + pointerName);
+                                }
+                            }
                         }
                     }
 
@@ -129,6 +154,8 @@ namespace HCM3
 
             return pointerVersionDictionary.ContainsKey(pointerVersion);
         }
+
+
 
     }
 }

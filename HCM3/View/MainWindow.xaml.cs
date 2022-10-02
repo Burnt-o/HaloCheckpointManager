@@ -59,26 +59,8 @@ namespace HCM3.View
             HCMTasks tasks = new();
             HaloMemory HaloMemory = new HaloMemory();
             InitializeComponent();
-            ObservableCollection<Checkpoint> checkpointsH1 = new();
 
-            ObservableCollection<Checkpoint> checkpointsH2 = new();
-            ObservableCollection<Checkpoint> checkpointsH3 = new();
-            ObservableCollection<Checkpoint> checkpointsH3ODST = new();
-            ObservableCollection<Checkpoint> checkpointsHReach = new();
-            ObservableCollection<Checkpoint> checkpointsH4 = new();
-
-            CheckpointModel H1model = new CheckpointModel(HaloMemory, checkpointsH1);
-            CheckpointViewModel H1viewModel = new CheckpointViewModel(H1model, checkpointsH1);
-            
-            checkpointsH1.Add(new Checkpoint("c1"));
-            checkpointsH1.Add(new Checkpoint("c2"));
-            checkpointsH1.Add(new Checkpoint("c3"));
-            Checkpoint test = new Checkpoint("c4");
-            checkpointsH1.Add(test);
-
-
-            this.DataContext = new MainViewModel(new MainModel(), Halo1Tab, Halo2Tab);
-            test.CheckpointName = "grrr";
+            this.DataContext = new MainViewModel(new MainModel(pcollection, HaloMemory), pcollection);
             
 
             //checkpointsH1.Add(new Checkpoint());
