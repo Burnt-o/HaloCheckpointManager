@@ -13,17 +13,13 @@ namespace HCM3.Model
 {
     internal sealed partial class CheckpointModel
     {
-        
-        public HaloMemory HaloMemory;
         public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
+        public MainModel MainModel { get; init; }
 
-        private PointerCollection PointerCollection { get; init; }
-
-        public CheckpointModel(HaloMemory haloMemory, ObservableCollection<Checkpoint> checkpointCollection, PointerCollection pcollection)
+        public CheckpointModel(MainModel mainModel)
         { 
-        HaloMemory = haloMemory;
-            CheckpointCollection = checkpointCollection;
-            PointerCollection = pcollection;
+            MainModel = mainModel;
+            CheckpointCollection = new();
         }
         public void PrintText()
         {

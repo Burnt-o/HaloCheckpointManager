@@ -23,7 +23,6 @@ namespace HCM3.Model
 
 
             string saveFolderPath = @"Saves\" + Dictionaries.TabIndexToRootFolderPath[selectedTabIndex];
-
             if (!Directory.Exists(saveFolderPath))
             {
                 Trace.WriteLine("RefreshCheckpointList: saveFolderPath didn't exist!");
@@ -55,7 +54,7 @@ namespace HCM3.Model
             // Magic happens over in the decoder. Add our new checkpoint to the list
             foreach (FileInfo checkpointFile in checkpointFileArray)
             {
-                Checkpoint? cp = decoder.ReadCheckpointFromFile(checkpointFile, selectedTabIndex, PointerCollection);
+                Checkpoint? cp = decoder.ReadCheckpointFromFile(checkpointFile, selectedTabIndex, MainModel.PointerCollection);
                 if (cp != null)
                 {
                     CheckpointCollection.Add(cp);

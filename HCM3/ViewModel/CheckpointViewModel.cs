@@ -8,15 +8,16 @@ namespace HCM3.ViewModel
 
     internal class CheckpointViewModel : Presenter
     {
-        private readonly CheckpointModel _model;
+        private readonly CheckpointModel CheckpointModel;
         public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
 
-        public CheckpointViewModel(CheckpointModel model, ObservableCollection<Checkpoint> checkpointCollection)
+        public CheckpointViewModel(CheckpointModel checkpointModel)
         {
-           (_model, CheckpointCollection) = (model, checkpointCollection);
+            CheckpointModel = checkpointModel;
+            CheckpointCollection = CheckpointModel.CheckpointCollection;
         }
 
-        public ICommand PrintTextCommand => new Command(_ => _model.PrintText());
+        public ICommand PrintTextCommand => new Command(_ => CheckpointModel.PrintText());
 
     }
 

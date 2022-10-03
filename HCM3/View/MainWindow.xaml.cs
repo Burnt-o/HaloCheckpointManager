@@ -56,11 +56,15 @@ namespace HCM3.View
                 System.Windows.Application.Current.Shutdown();
             }
 
-            HCMTasks tasks = new();
             HaloMemory HaloMemory = new HaloMemory();
             InitializeComponent();
 
-            this.DataContext = new MainViewModel(new MainModel(pcollection, HaloMemory), pcollection);
+
+
+            MainModel mainModel = new(pcollection, HaloMemory);
+            MainViewModel mainViewModel = new(mainModel);
+
+            this.DataContext = mainViewModel;
             
 
             //checkpointsH1.Add(new Checkpoint());
