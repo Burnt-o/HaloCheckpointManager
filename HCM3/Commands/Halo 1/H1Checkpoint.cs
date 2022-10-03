@@ -28,14 +28,16 @@ namespace HCM3.Commands
 
             public bool CanExecute(object? parameter)
             {
-                return (_commands.HavePointers(_requiredPointers, _commands._HCMTasks.HaloState.CurrentMCCVersion));
+                //return (_commands.HavePointers(_requiredPointers, _commands._HCMTasks.HaloState.CurrentMCCVersion));
+                return true;
             }
 
             public void Execute(object? parameter)
             {
                 Trace.WriteLine("EEEEEEEEE");
                 //need to setup async tasks here
-                _commands._HCMTasks.H1Checkpoint();
+                //_commands._HCMTasks.H1Checkpoint();
+                
             }
 
 

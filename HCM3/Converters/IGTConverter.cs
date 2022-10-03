@@ -27,7 +27,8 @@ namespace HCM3.Converters
             return TimeSpan.Zero;
             }
 
-            string game = HCM3.Settings.Default.SelectedGame;
+            //TODO; change this to reference tabindex directorly (this is part of the view/viewmodel after all
+            string game = HCM3.Properties.Settings.Default.SelectedGame;
             double divisor = (game == "H1") ? (double)30 : (double)60;
             double seconds = gameTicks / divisor;
 

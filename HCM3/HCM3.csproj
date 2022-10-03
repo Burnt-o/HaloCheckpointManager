@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="images\05b_deltatowers_anni.png" />
+    <None Remove="Images\05b_deltatowers_anni.png" />
     <None Remove="View\b30_clas.png" />
   </ItemGroup>
 
@@ -27,13 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="images\05b_deltatowers_anni.png">
+    <Resource Include="Images\05b_deltatowers_anni.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Settings.Designer.cs">
+    <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Settings.settings">
+    <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>

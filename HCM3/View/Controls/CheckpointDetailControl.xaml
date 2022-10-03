@@ -33,7 +33,7 @@
 
         <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
             <Border.Background>
-                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/images/05b_deltatowers_anni.png"/>
+                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/Images/05b_deltatowers_anni.png"/>
             </Border.Background>
         </Border>
 

@@ -8,7 +8,7 @@ using System.Security.Principal;
 using System.Windows;
 using System.Diagnostics;
 
-namespace HCM3
+namespace HCM3.Startup
 {
     public class HCMSetup
     {
