@@ -20,6 +20,8 @@
     <Folder Include="Commands\Halo 4\" />
     <Folder Include="Converters\Details\" />
     <Folder Include="Converters\List\" />
+    <Folder Include="Model\TrainerModelH2\" />
+    <Folder Include="Model\TrainerModelH1\" />
   </ItemGroup>
 
   <ItemGroup>

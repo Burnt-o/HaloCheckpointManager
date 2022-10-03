@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 
-namespace HCM3.Model
+namespace HCM3.Model.CheckpointModels
 {
     internal sealed partial class CheckpointModel
     {
-        public void RefreshCheckpointList(int selectedTabIndex)
+        public void RefreshCheckpointList()
         {
+            int selectedTabIndex = MainModel.SelectedTabIndex;
             if (selectedTabIndex == 6) // 6 is Settings tab, so no need to refresh the checkpointlist. 
             {
                 Trace.WriteLine("RefreshCheckpointList: tabindex is 6 so not refreshing checkpoint collection");

@@ -7,7 +7,7 @@ using System.IO;
 using System.Diagnostics;
 
 
-namespace HCM3.Model
+namespace HCM3.Model.CheckpointModels
 {
     internal class CheckpointFileDecoder
     {

@@ -27,8 +27,8 @@ namespace HCM3.View
         }
     }
 
-
-    //yoink https://stackoverflow.com/a/61475351
+    // Needed a way to set a minimum width on ListView columns, sooo
+    // yoink https://stackoverflow.com/a/61475351
     public static class GridColumn
     {
         public static readonly DependencyProperty MinWidthProperty =

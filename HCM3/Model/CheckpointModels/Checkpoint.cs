@@ -3,14 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace HCM3.Model
+namespace HCM3.Model.CheckpointModels
 {
-    public class Checkpoint
+    public class Checkpoint : INotifyPropertyChanged
     {
         // TODO: might make these all nullable types eventually. Probably shouldn't though.
         // Ah but if checkpoint read error then it's either nullable props or don't display the checkpoint at all...
-        public string CheckpointName { get; set; } // Actual filename of the checkpoint.bin file.
+        private string _checkpointName;
+        public string CheckpointName // Actual filename of the checkpoint.bin file.
+        {
+        get
+            {
+                return _checkpointName;
+            }
+            set
+            {
+                _checkpointName = value;
+                OnPropertyChanged();
+            }
+        } 
         public string LevelName { get; set; } // Name of the level as 3-letter-code
         public int Difficulty { get; set; } // Difficulty of the game, 0 for Easy, 3 for Legendary
         public int GameTickCount { get; set; } // How many ticks the game was along when the checkpoint was made
@@ -19,9 +33,12 @@ namespace HCM3.Model
 
         public DateTime ModifiedOn { get; set; } // Used for sorting checkpoints
 
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public Checkpoint(string checkpointName, string levelName = "test", int difficulty = 3, int gameTickCount = 1615, string gameVersion = "1.2645.0.0", DateTime createdOn = new DateTime(), DateTime modifiedOn = new DateTime())
         {
-            CheckpointName = checkpointName;
+            _checkpointName = checkpointName;
             LevelName = levelName;
             Difficulty = difficulty;
             GameTickCount = gameTickCount;
@@ -31,6 +48,9 @@ namespace HCM3.Model
         }
 
 
-
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }

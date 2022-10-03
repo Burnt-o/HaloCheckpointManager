@@ -15,9 +15,9 @@ namespace HCM3.Model
         public DLLInjector DLLInjector;
         public SpeedhackManager SpeedhackManager;
 
-        public HaloMemory()
+        public HaloMemory(MainModel mainModel)
         { 
-        HaloState = new HaloState();
+        HaloState = new HaloState(mainModel);
         ReadWrite = new ReadWrite(HaloState);
         DebugManager = new DebugManager(HaloState, ReadWrite);
         DLLInjector = new DLLInjector(HaloState, ReadWrite);

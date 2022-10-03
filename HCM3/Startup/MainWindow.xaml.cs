@@ -33,6 +33,9 @@ namespace HCM3.Startup
         #endregion // Data
 
 
+
+        internal MainModel Model { get; init; }
+
         #region Constructor
         public MainWindow()
         {
@@ -44,7 +47,7 @@ namespace HCM3.Startup
             if (!setup.HCMSetupChecks(out string errorMessage))
             {
                 // If a check fails, tell the user why, then shutdown the application.
-                System.Windows.MessageBox.Show(errorMessage, "Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show(errorMessage, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
 
@@ -52,17 +55,17 @@ namespace HCM3.Startup
             PointerCollection pcollection = new();
             if (!pcollection.LoadPointersFromGit(out string error))
             {
-                System.Windows.MessageBox.Show(error, "Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
 
-            HaloMemory HaloMemory = new HaloMemory();
+
             InitializeComponent();
 
 
 
-            MainModel mainModel = new(pcollection, HaloMemory);
-            MainViewModel mainViewModel = new(mainModel);
+            Model = new(pcollection);
+            MainViewModel mainViewModel = new(Model);
 
             this.DataContext = mainViewModel;
             
@@ -77,6 +80,8 @@ namespace HCM3.Startup
         #endregion
         private void Window_Closed(object sender, EventArgs e)
         {
+            //Model.HaloMemory.SpeedhackManager.RemoveSpeedHack();
+            //Model.HaloMemory.DebugManager.GracefullyCloseDebugger();
             Properties.Settings.Default.Save();
         }
 

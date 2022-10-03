@@ -5,17 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using BurntMemory;
 
-namespace HCM3
+namespace HCM3.Model
 {
     public class HaloState : BurntMemory.AttachState
     {
 
 
-        public HaloState()
+        internal HaloState(MainModel mainModel)
         {
             _currentHaloState = (int)HaloStateEnum.Unattached;
-            _currentMCCVersion = "none";
+            MainModel = mainModel;
         }
+
+        internal MainModel MainModel { get; init; }
 
         public enum HaloStateEnum
         { 
@@ -32,21 +34,7 @@ namespace HCM3
 
         }
 
-        private string _currentMCCVersion;
-        public string CurrentMCCVersion
-        {
-            get
-            { 
-            return _currentMCCVersion;
-            }
-            set
-            {
-                if (_currentMCCVersion != value)
-                { 
-                // Need to raise event
-                }
-            }
-        }
+        public string? CurrentMCCVersion { get; set; }
 
         private int _currentHaloState;
         public int CurrentHaloState
@@ -58,10 +46,12 @@ namespace HCM3
         set 
             {
                 if (_currentHaloState != value)
-                { 
-                // Need to raise event
+                {
+                    _currentHaloState = value;
+                    // Raise event
+                    HaloStateEvents.HALOSTATECHANGED_EVENT_INVOKE(this, new HaloStateEvents.HaloStateChangedEventArgs(_currentHaloState));
                 }
-                _currentHaloState = value;
+
             }
         }
 
@@ -77,9 +67,20 @@ namespace HCM3
         }
 
         private void UpdateHaloState()
-        { 
-        
-        }
+        {
+            // If not attached.
+            if (!this.Attached)
+            {
+                CurrentHaloState = (int)HaloStateEnum.Unattached;
+                return;
+            }
 
+            ReadWrite.Pointer? gameIndicatorPointer = MainModel.PointerCollection.GetPointer("MCC_GameIndicator", CurrentMCCVersion);
+
+            if (gameIndicatorPointer == null)
+            {
+                CurrentHaloState = (int)HaloStateEnum.Unattached;
+            }
+        }
     }
 }

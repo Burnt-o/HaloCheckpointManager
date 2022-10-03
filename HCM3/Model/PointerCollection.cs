@@ -40,13 +40,13 @@ namespace HCM3
             try
             {
                 // Download the xml from git
-                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/Pointers.xml";
-                System.Net.WebClient client = new System.Net.WebClient();
-                string xml = client.DownloadString(url);
+                //string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/Pointers.xml";
+                //System.Net.WebClient client = new System.Net.WebClient();
+                //string xml = client.DownloadString(url);
 
 
                 // but actually for testing & learning let's just do this
-                xml = @"
+                string xml = @"
                     <Pointers>
                     <Pointer>
 	                    <Name>H1_Checkpoint</Name>
@@ -121,15 +121,22 @@ namespace HCM3
             }
             catch (Exception ex)
             {
-                exceptionString = ex.Message;
+                exceptionString = "HCM failed to download MCC version offset data. Check your internet connection, " +
+                    "\\nor double check that HCM has the correct permissions."
+                    + "\\nError: " + ex.Message;
                 return false;
             }
             return true;
         }
 
-        public ReadWrite.Pointer? GetPointer(string pointerName, string pointerVersion)
+        public ReadWrite.Pointer? GetPointer(string? pointerName, string? pointerVersion)
         {
-                bool success = Pointers.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
+            if (pointerName == null || pointerVersion == null)
+            {
+                return null;
+            }
+
+            bool success = Pointers.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
                 if (!success || pointerVersionDictionary == null)
                 {
                     return null;
@@ -144,8 +151,13 @@ namespace HCM3
                 return pointer;
         }
 
-        public bool PointerExists(string pointerName, string pointerVersion)
+        public bool PointerExists(string? pointerName, string? pointerVersion)
         {
+            if (pointerName == null || pointerVersion == null)
+            {
+                return false;
+            }
+
             bool success = Pointers.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
             if (!success || pointerVersionDictionary == null)
             {

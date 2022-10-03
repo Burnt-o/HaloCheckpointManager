@@ -2,6 +2,7 @@
 using HCM3.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using HCM3.Model.CheckpointModels;
 
 namespace HCM3.ViewModel
 {
@@ -9,12 +10,14 @@ namespace HCM3.ViewModel
     internal class CheckpointViewModel : Presenter
     {
         private readonly CheckpointModel CheckpointModel;
-        public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
+        public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
+        public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
 
         public CheckpointViewModel(CheckpointModel checkpointModel)
         {
-            CheckpointModel = checkpointModel;
-            CheckpointCollection = CheckpointModel.CheckpointCollection;
+            this.CheckpointModel = checkpointModel;
+            this.CheckpointCollection = new ObservableCollection<Checkpoint>(CheckpointModel.CheckpointCollection);
+            this.SaveFolderHierarchy = new ObservableCollection<SaveFolder>(CheckpointModel.SaveFolderHierarchy);
         }
 
         public ICommand PrintTextCommand => new Command(_ => CheckpointModel.PrintText());

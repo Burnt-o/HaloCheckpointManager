@@ -7,7 +7,7 @@ using BurntMemory;
 
 namespace HCM3
 {
-    public class HCMTasks
+/*    public class HCMTasks
     {
         public HaloState HaloState { get; init; }
         public ReadWrite ReadWrite { get; init; }
@@ -29,5 +29,5 @@ namespace HCM3
         { 
         
         }
-    }
+    }*/
 }

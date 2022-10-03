@@ -5,11 +5,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HCM3.View.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="255" d:DesignWidth="200">
+             d:DesignHeight="255" d:DesignWidth="200"
+             xmlns:viewModels="clr-namespace:HCM3.ViewModel"
+             xmlns:CheckpointModel="clr-namespace:HCM3.Model.CheckpointModels"
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
+    
     <Grid>
-        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="WhiteSmoke">
-            <TreeView Margin="3" BorderThickness="0" Background="Transparent">
-                
+
+        
+        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="Transparent">
+
+            <TreeView Margin="3" BorderThickness="0" Background="Transparent" ItemsSource="{Binding SaveFolderHierarchy}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
+
+
+                        <TextBlock FontWeight="Bold" Text="a" />
+
+
+                        <HierarchicalDataTemplate.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="b"/>
+                            </DataTemplate>
+                        </HierarchicalDataTemplate.ItemTemplate>
+
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
             </TreeView>
         </Border>
     </Grid>
