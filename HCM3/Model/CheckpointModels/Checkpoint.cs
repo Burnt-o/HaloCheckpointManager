@@ -25,18 +25,18 @@ namespace HCM3.Model.CheckpointModels
                 OnPropertyChanged();
             }
         } 
-        public string LevelName { get; set; } // Name of the level as 3-letter-code
-        public int Difficulty { get; set; } // Difficulty of the game, 0 for Easy, 3 for Legendary
-        public int GameTickCount { get; set; } // How many ticks the game was along when the checkpoint was made
-        public string GameVersion { get; set; } // Version of the game, read from the end of the checkpoint file (where HCM writes it on dump)
-        public DateTime CreatedOn { get; set; } // Date the checkpoint was created (from file metadata)
+        public string? LevelName { get; set; } // Name of the level as 3-letter-code
+        public int? Difficulty { get; set; } // Difficulty of the game, 0 for Easy, 3 for Legendary
+        public int? GameTickCount { get; set; } // How many ticks the game was along when the checkpoint was made
+        public string? GameVersion { get; set; } // Version of the game, read from the end of the checkpoint file (where HCM writes it on dump)
+        public DateTime? CreatedOn { get; set; } // Date the checkpoint was created (from file metadata)
 
-        public DateTime ModifiedOn { get; set; } // Used for sorting checkpoints
+        public DateTime? ModifiedOn { get; set; } // Used for sorting checkpoints
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Checkpoint(string checkpointName, string levelName = "test", int difficulty = 3, int gameTickCount = 1615, string gameVersion = "1.2645.0.0", DateTime createdOn = new DateTime(), DateTime modifiedOn = new DateTime())
+        public Checkpoint(string checkpointName, string? levelName, int? difficulty, int? gameTickCount, string? gameVersion, DateTime? createdOn, DateTime? modifiedOn)
         {
             _checkpointName = checkpointName;
             LevelName = levelName;

@@ -16,10 +16,7 @@ namespace HCM3.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
-            {
-                Trace.WriteLine("null value for IGT converter");
-                return "Error";
-            }
+                return "???";
 
             int gameTicks = (int)value; // Should be stored in the 
             if (gameTicks <= 0) // To avoid dividing 0 later. Should never be negative unless there was an error reading the checkpoint data.

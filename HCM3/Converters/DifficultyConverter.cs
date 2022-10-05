@@ -15,6 +15,9 @@ namespace HCM3.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
+            if (value == null)
+                return "???";
+
             Dictionary<int, string> DifficultyMap = new()
                 {
                     { 0, "Easy" },
@@ -24,6 +27,7 @@ namespace HCM3.Converters
                 };
             
           //TODO: image mapping for the difficulty icons.. 
+
 
 
             return (string) DifficultyMap[(int)value];

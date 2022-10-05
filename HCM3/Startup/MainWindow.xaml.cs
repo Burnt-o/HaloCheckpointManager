@@ -53,7 +53,7 @@ namespace HCM3.Startup
 
             // Create collection of all our ReadWrite.Pointers and load them from the online repository
             PointerCollection pcollection = new();
-            if (!pcollection.LoadPointersFromGit(out string error))
+            if (!pcollection.LoadPointersFromGit(out string error, out string? HighestSupportMCCVersion))
             {
                 System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
@@ -64,7 +64,7 @@ namespace HCM3.Startup
 
 
 
-            Model = new(pcollection);
+            Model = new(pcollection, HighestSupportMCCVersion);
             MainViewModel mainViewModel = new(Model);
 
             this.DataContext = mainViewModel;
@@ -79,10 +79,11 @@ namespace HCM3.Startup
 
         #endregion
         private void Window_Closed(object sender, EventArgs e)
-        {
-            //Model.HaloMemory.SpeedhackManager.RemoveSpeedHack();
-            //Model.HaloMemory.DebugManager.GracefullyCloseDebugger();
+        { 
             Properties.Settings.Default.Save();
+            Model.HaloMemory.SpeedhackManager.RemoveSpeedHack(sender, e);
+            Model.HaloMemory.DebugManager.GracefullyCloseDebugger(sender, e);
+            
         }
 
 

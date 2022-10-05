@@ -34,44 +34,33 @@ namespace HCM3
 
 
 
-        public bool LoadPointersFromGit(out string exceptionString)
+        public bool LoadPointersFromGit(out string exceptionString, out string? HighestSupportMCCVersion)
         {
+            HighestSupportMCCVersion = null;
             exceptionString = "";
             try
             {
-                // Download the xml from git
-                //string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/Pointers.xml";
-                //System.Net.WebClient client = new System.Net.WebClient();
-                //string xml = client.DownloadString(url);
-
-
-                // but actually for testing & learning let's just do this
-                string xml = @"
-                    <Pointers>
-                    <Pointer>
-	                    <Name>H1_Checkpoint</Name>
-	                    <Version>1.2645.0.0</Version>
-		                    <Module>halo1.dll</Module>
-		                    <Offsets>
-			                    <Offset>10</Offset>
-			                    <Offset>20</Offset>
-			                    <Offset>30</Offset>
-		                    </Offsets>
-                    </Pointer>
-                    <Pointer>
-	                    <Name>H1_CheckpointData_LevelName</Name>
-	                    <Version>1.2645.0.0</Version>
-		                    <IntPtr>26
-                            </IntPtr>
-                    </Pointer>
-                    </Pointers>";
-
+                const bool useOnline = false;
+                string xml;
+                if (useOnline)
+                {
+                    // Download the xml from git
+                    string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/Pointers.xml";
+                    System.Net.WebClient client = new System.Net.WebClient();
+                    xml = client.DownloadString(url);
+                }
+                else
+                {
+                    // Grab it from local repo for testing so that I don't have to push it to git everytime
+                    xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\GitPointers.xml");
+                }
 
                 // Deserialise
                 XDocument doc = XDocument.Parse(xml);
 
                 if (doc.Root == null)
                 {
+                    exceptionString = "Something went wrong parsing the Pointer data xml file; 'doc.Root' was null.";
                     return false;
                 }
 
@@ -79,18 +68,17 @@ namespace HCM3
                 {
                     if (e.Name == "Pointer")
                     {
-                        // TODO: parse hexadecimal numbers in pointerOffsets
                         // Read the data from the Pointer element (if the data exists)
                         string? pointerName = e.Element("Name") == null ? null : e.Element("Name")?.Value;
                         string? pointerVersion = e.Element("Version") == null ? null : e.Element("Version")?.Value;
                         string? pointerModule = e.Element("Module") == null ? null : e.Element("Module")?.Value;
-                        int[]? pointerOffsets = e.Element("Module") == null ? null : e.Element("Offsets")?.Elements().Select(x => XmlConvert.ToInt32(x.Value)).ToArray();
-                        IntPtr? pointerIntPtr = e.Element("IntPtr") == null ? null : (IntPtr?)XmlConvert.ToInt32(e.Element("IntPtr").Value);
+                        int[]? pointerOffsets = e.Element("Offsets") == null ? null : e.Element("Offsets")?.Elements().Select(x => ParseHexNumber(x.Value)).ToArray();
+                        IntPtr? pointerIntPtr = e.Element("IntPtr") == null ? null : (IntPtr?)ParseHexNumber(e.Element("IntPtr").Value);
 
                         // Check that all the data actually exists and make the pointer
                         if (pointerName != null && pointerVersion != null)
                         {
-                           
+
                             if (pointerIntPtr != null)
                             {
                                 ReadWrite.Pointer newPointer = new ReadWrite.Pointer(pointerIntPtr);
@@ -114,6 +102,10 @@ namespace HCM3
                             }
                         }
                     }
+                    else if (e.Name == "HighestSupportMCCVersion")
+                    {
+                        HighestSupportMCCVersion = e.Value;
+                    }
 
 
                 }
@@ -127,6 +119,13 @@ namespace HCM3
                 return false;
             }
             return true;
+
+
+            int ParseHexNumber(string? s)
+            {
+                return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) : Convert.ToInt32(s);
+            }
+
         }
 
         public ReadWrite.Pointer? GetPointer(string? pointerName, string? pointerVersion)

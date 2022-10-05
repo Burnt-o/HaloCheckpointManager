@@ -19,11 +19,13 @@ namespace HCM3.Model
 
         public CheckpointModels.CheckpointModel CheckpointModel { get; init; }
 
-        public string? CurrentAttachedVersion { get; set; }
+        public string? CurrentAttachedMCCVersion { get; set; }
+        public string? HighestSupportMCCVersion { get; set; }
         public int SelectedTabIndex { get; set; }
 
-        public MainModel(PointerCollection pcollection)
-        { 
+        public MainModel(PointerCollection pcollection, string? highestSupportMCCVersion)
+        {
+            HighestSupportMCCVersion = highestSupportMCCVersion;
         PointerCollection = pcollection;
         HaloMemory = new(this);
         CheckpointModel = new(this);
@@ -36,17 +38,29 @@ namespace HCM3.Model
 
         }
 
+        // Popped by BurntMemory.HaloState(aka AttachState) when it detaches from the MCC process
         private void Events_DEATTACH_EVENT(object? sender, EventArgs e)
         {
-            CurrentAttachedVersion = null;
+            CurrentAttachedMCCVersion = null;
             Trace.WriteLine("MainModel detected BurntMemory DEtach; Set current MCC version to null");
         }
 
+        // Popped by BurntMemory.HaloState(aka AttachState) when it attaches to the MCC process
         private void Events_ATTACH_EVENT(object? sender, Events.AttachedEventArgs e)
         {
+
+            string? potentialVersion = HaloMemory.HaloState.ProcessVersion;
+            if (potentialVersion != null && potentialVersion.StartsWith("1."))
+            {
+                CurrentAttachedMCCVersion = potentialVersion;
+            }
+            else
+            {
+                CurrentAttachedMCCVersion = null;
+            }
+
             
-            CurrentAttachedVersion = HaloMemory.HaloState.CurrentMCCVersion;
-            Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version");
+            Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version to " + CurrentAttachedMCCVersion);
             App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
             {
             this.CheckpointModel.RefreshCheckpointList();

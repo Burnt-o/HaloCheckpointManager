@@ -15,35 +15,35 @@ namespace HCM3.Model
         {
             _currentHaloState = (int)HaloStateEnum.Unattached;
             MainModel = mainModel;
+
         }
 
         internal MainModel MainModel { get; init; }
 
         public enum HaloStateEnum
-        { 
-        Unattached = -2,
-        Menu = -1,
-        Halo1 = 0,
-        Halo2 = 1,
-        Halo3 = 2,
-        Halo3ODST = 5,
+        {
+            Unattached = -2,
+            Menu = -1,
+            Halo1 = 0,
+            Halo2 = 1,
+            Halo3 = 2,
+            Halo3ODST = 5,
             Halo4 = 3,
             HaloReach = 6,
             Halo2MP = 4,
-        
+
 
         }
 
-        public string? CurrentMCCVersion { get; set; }
 
         private int _currentHaloState;
         public int CurrentHaloState
-        { 
-        get 
-            { 
-                return _currentHaloState; 
+        {
+            get
+            {
+                return _currentHaloState;
             }
-        set 
+            set
             {
                 if (_currentHaloState != value)
                 {
@@ -75,12 +75,15 @@ namespace HCM3.Model
                 return;
             }
 
-            ReadWrite.Pointer? gameIndicatorPointer = MainModel.PointerCollection.GetPointer("MCC_GameIndicator", CurrentMCCVersion);
+            ReadWrite.Pointer? gameIndicatorPointer = MainModel.PointerCollection.GetPointer("MCC_GameIndicator", MainModel.CurrentAttachedMCCVersion);
 
             if (gameIndicatorPointer == null)
             {
                 CurrentHaloState = (int)HaloStateEnum.Unattached;
             }
         }
+
+
     }
 }
+
