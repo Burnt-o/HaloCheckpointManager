@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using HCM3.Model.CheckpointModels;
 using System.Diagnostics;
 
+
 namespace HCM3.Model
 {
     internal class MainModel
@@ -46,17 +47,26 @@ namespace HCM3.Model
             
             CurrentAttachedVersion = HaloMemory.HaloState.CurrentMCCVersion;
             Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version");
-            // TODO: add check on this event in mainviewmodel, that checks if mcc version is in pointercollections list of supported versions and pops a warning if not.
-            CheckpointModel.RefreshCheckpointList(); // CheckpointList cares about the current MCC version when trying to interpret .bins that don't have a version string. It'll assume they are current version.
+            App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+            {
+            this.CheckpointModel.RefreshCheckpointList();
+            });
+
         }
 
         // MainViewModel triggers an event when the Tab Control has it's tab changed, which calls this. 
         public void HCMTabChanged(int selectedTabIndex)
         {
             SelectedTabIndex = selectedTabIndex;
-            CheckpointModel.RefreshCheckpointList();
-            CheckpointModel.RefreshSaveFolderTree();
+
+            App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+            {
+                this.CheckpointModel.RefreshCheckpointList();
+                this.CheckpointModel.RefreshSaveFolderTree();
+            });
         }
+
+
 
     }
 }
