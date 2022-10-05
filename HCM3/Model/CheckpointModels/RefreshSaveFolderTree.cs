@@ -40,14 +40,17 @@ namespace HCM3.Model.CheckpointModels
             DirectoryInfo rootFolderInfo = new DirectoryInfo(rootSaveFolderPath);
             SaveFolder RootFolder = GetAllFoldersUnder(rootFolderInfo);
 
+
+            foreach (SaveFolder saveFolder in RootFolder.Children)
+            { 
+            SaveFolderHierarchy.Add(saveFolder);
+            }
+
             // Update the SaveFolderHierarchy by adding our RootFolder to it.
             //SaveFolderHierarchy.Add(RootFolder);
             // For testing purposes:
             SaveFolder testfolder = new("ah", "baha", new ObservableCollection<SaveFolder>() );
-            SaveFolderHierarchy.Add(testfolder);
-            SaveFolderHierarchy.Add(testfolder);
-            SaveFolderHierarchy.Add(testfolder);
-            SaveFolderHierarchy.Add(testfolder);
+
 
             // The recursive function that gets nested subfolders
             SaveFolder GetAllFoldersUnder(DirectoryInfo folderInfo)

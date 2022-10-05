@@ -11,27 +11,24 @@
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
     
     <Grid>
+        <Grid.Resources>
+            <HierarchicalDataTemplate DataType="{x:Type CheckpointModel:SaveFolder}"
+                                ItemsSource = "{Binding Path=Children}" >
+                <TextBlock Text="{Binding Path=SaveFolderName}"/>
+            </HierarchicalDataTemplate>
 
+        </Grid.Resources>
         
-        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="Transparent">
-
-            <TreeView Margin="3" BorderThickness="0" Background="Transparent" ItemsSource="{Binding SaveFolderHierarchy}">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
+       <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="Transparent">
 
 
-                        <TextBlock FontWeight="Bold" Text="a" />
+                <TreeView>
+                    <TreeViewItem ItemsSource="{Binding SaveFolderHierarchy}" Header="Root"/>
+                </TreeView>
 
 
-                        <HierarchicalDataTemplate.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="b"/>
-                            </DataTemplate>
-                        </HierarchicalDataTemplate.ItemTemplate>
 
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
+          
         </Border>
     </Grid>
 </UserControl>

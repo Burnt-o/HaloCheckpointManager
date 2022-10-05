@@ -16,8 +16,9 @@ namespace HCM3.ViewModel
         public CheckpointViewModel(CheckpointModel checkpointModel)
         {
             this.CheckpointModel = checkpointModel;
-            this.CheckpointCollection = new ObservableCollection<Checkpoint>(CheckpointModel.CheckpointCollection);
-            this.SaveFolderHierarchy = new ObservableCollection<SaveFolder>(CheckpointModel.SaveFolderHierarchy);
+            this.CheckpointCollection = CheckpointModel.CheckpointCollection;
+            this.SaveFolderHierarchy = CheckpointModel.SaveFolderHierarchy;
+
         }
 
         public ICommand PrintTextCommand => new Command(_ => CheckpointModel.PrintText());
