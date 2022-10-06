@@ -50,13 +50,10 @@ namespace HCM3.Model.CheckpointModels
                     }
                 }
 
-                // Now let's create a checkpoint file decoder object. 
-                CheckpointFileDecoder decoder = new();
-
                 // Magic happens over in the decoder. Add our new checkpoint to the list
                 foreach (FileInfo checkpointFile in checkpointFileArray)
                 {
-                    Checkpoint? cp = decoder.ReadCheckpointFromFile(checkpointFile, selectedTabIndex, MainModel);
+                    Checkpoint? cp = CheckpointFileDecoder.ReadCheckpointFromFile(checkpointFile, selectedTabIndex, MainModel);
                     if (cp != null)
                     {
                         CheckpointCollection.Add(cp);

@@ -15,7 +15,8 @@ namespace HCM3.Model
 {
     internal class MainModel
     {
-        public DataPointers PointerCollection { get; init; }
+        public DataPointers DataPointers { get; init; }
+        public DataCheckpoints DataCheckpoints { get; init; }
         public HaloMemory HaloMemory { get; init; }
 
         public CheckpointModels.CheckpointModel CheckpointModel { get; init; }
@@ -37,12 +38,20 @@ namespace HCM3.Model
             }
 
             // Create collection of all our ReadWrite.Pointers and load them from the online repository
-            PointerCollection = new();
-            if (!PointerCollection.LoadPointerDataFromGit(out string error, out string? highestSupportMCCVersion))
+            DataPointers = new();
+            if (!DataPointers.LoadPointerDataFromGit(out string error))
             {
                 System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
+
+            DataCheckpoints = new();
+            if (!DataCheckpoints.LoadCheckpointDataFromGit(out string error2, out string? highestSupportMCCVersion))
+            {
+                System.Windows.MessageBox.Show(error2, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.Application.Current.Shutdown();
+            }
+
             HighestSupportMCCVersion = highestSupportMCCVersion;
 
             // Halo Memory, our extension of BurntMemory for read/write and other interactions with MCCs memory

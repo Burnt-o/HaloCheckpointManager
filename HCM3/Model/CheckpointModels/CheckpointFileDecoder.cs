@@ -86,7 +86,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetLevelCode = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess)?.Address;
+                                int? offsetLevelCode = mainModel.DataCheckpoints.GetCheckpointOffset(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -105,7 +105,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetGameTickCount = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess)?.Address;
+                                int? offsetGameTickCount = mainModel.DataCheckpoints.GetCheckpointOffset(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -120,7 +120,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetDifficulty = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess)?.Address;
+                                int? offsetDifficulty = mainModel.DataCheckpoints.GetCheckpointOffset(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data

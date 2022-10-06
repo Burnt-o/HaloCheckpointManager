@@ -8,6 +8,7 @@
              d:DesignHeight="255" d:DesignWidth="200"
              xmlns:viewModels="clr-namespace:HCM3.ViewModel"
              xmlns:CheckpointModel="clr-namespace:HCM3.Model.CheckpointModels"
+            xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
     
     <Grid>
@@ -18,17 +19,19 @@
             </HierarchicalDataTemplate>
 
         </Grid.Resources>
-        
-       <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="Transparent">
+        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="Transparent">
+        </Border>
+        <TreeView Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged" >
 
 
-                <TreeView>
-                    <TreeViewItem ItemsSource="{Binding SaveFolderHierarchy}" Header="Root"/>
-                </TreeView>
+        </TreeView>
+
+
+
 
 
 
           
-        </Border>
+        
     </Grid>
 </UserControl>

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using HCM3.ViewModel;
 
 namespace HCM3.View.Controls
 {
@@ -23,6 +25,12 @@ namespace HCM3.View.Controls
         public FolderExplorer()
         {
             InitializeComponent();
+        }
+
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            CheckpointViewModel vm = this.DataContext as CheckpointViewModel;
+            vm.FolderChanged(sender, e);
         }
     }
 }

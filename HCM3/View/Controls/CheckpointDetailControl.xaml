@@ -16,11 +16,13 @@
             <cnv:DifficultyConverter x:Key="DifficultyConverter" />
             <cnv:IGTConverter x:Key="IGTConverter" />
             <cnv:LevelNameConverter x:Key="LevelNameConverter" />
+            <cnv:LevelImageConverter x:Key="LevelImageConverter" />
+            <cnv:DateTimeConverter x:Key="DateTimeConverter" />
         </Grid.Resources>
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="45" />
+            <ColumnDefinition Width="65" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -43,7 +45,14 @@
 
         <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
             <Border.Background>
-                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/Images/H2/05b_deltatowers_anni.png"/>
+                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/Images/nofile.png">
+                </ImageBrush>
+            </Border.Background>
+        </Border>
+        <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
+            <Border.Background>
+                <ImageBrush Stretch="Fill" ImageSource="{Binding LevelName, Converter={StaticResource LevelImageConverter}}">
+                </ImageBrush>
             </Border.Background>
         </Border>
 
@@ -63,7 +72,7 @@
         <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss\\.ff}'}"  TextAlignment="Justify"  Height="20"  />
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding LevelName, Converter={StaticResource LevelNameConverter}}"  TextAlignment="Justify"  Height="20" />
         <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding GameVersion}"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CreatedOn}"  TextAlignment="Justify"  Height="20" />
+        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CreatedOn,  Converter={StaticResource DateTimeConverter}}"  TextAlignment="Justify"  Height="20" />
         
         <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="0,0,0,3">
             <Grid.ColumnDefinitions>

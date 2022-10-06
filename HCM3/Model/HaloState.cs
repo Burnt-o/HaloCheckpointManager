@@ -75,7 +75,7 @@ namespace HCM3.Model
                 return;
             }
 
-            ReadWrite.Pointer? gameIndicatorPointer = MainModel.PointerCollection.GetPointer("MCC_GameIndicator", MainModel.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? gameIndicatorPointer = MainModel.DataPointers.GetPointer("MCC_GameIndicator", MainModel.CurrentAttachedMCCVersion);
 
             if (gameIndicatorPointer == null)
             {

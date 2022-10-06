@@ -5,5 +5,8 @@
     <Setting Name="LastSelectedTab" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="ImageMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">clas</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

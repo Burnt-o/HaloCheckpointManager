@@ -34,5 +34,17 @@ namespace HCM3.Properties {
                 this["LastSelectedTab"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("clas")]
+        public string ImageMode {
+            get {
+                return ((string)(this["ImageMode"]));
+            }
+            set {
+                this["ImageMode"] = value;
+            }
+        }
     }
 }

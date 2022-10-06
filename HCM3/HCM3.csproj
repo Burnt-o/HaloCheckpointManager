@@ -206,6 +206,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\BurntMemory\BurntMemory\BurntMemory.csproj" />
   </ItemGroup>
 

@@ -5,6 +5,11 @@ using System.Windows.Input;
 using HCM3.Model.CheckpointModels;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows;
+using System;
+using Microsoft.Xaml.Behaviors;
+
 
 namespace HCM3.ViewModel
 {
@@ -14,6 +19,17 @@ namespace HCM3.ViewModel
         private readonly CheckpointModel CheckpointModel;
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
+
+        private SaveFolder? _selectedSaveFolder;
+        public SaveFolder? SelectedSaveFolder
+        {
+            get { return _selectedSaveFolder; }
+            set
+            {
+                _selectedSaveFolder = value;
+                OnPropertyChanged(nameof(SelectedSaveFolder));
+            }
+        }
 
         private Checkpoint? _selectedCheckpoint;
         public Checkpoint? SelectedCheckpoint
@@ -35,6 +51,7 @@ namespace HCM3.ViewModel
             this.PropertyChanged += Handle_PropertyChanged;
 
 
+
         }
 
         private void Handle_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -43,9 +60,24 @@ namespace HCM3.ViewModel
             {
                 Trace.WriteLine("selected checkpoint changed");
             }
+            else if (e.PropertyName == nameof(SelectedSaveFolder))
+            {
+
+                Trace.WriteLine("uhhhhhhhhhhhhhhhhhhhhhhhhhhh " + SelectedSaveFolder?.SaveFolderName);
+            }
         }
 
         public ICommand PrintTextCommand => new Command(_ => CheckpointModel.PrintText());
+
+        public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            Trace.WriteLine("let's do it the easy way");
+            SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
+            if (saveFolder != null)
+            {
+                Trace.WriteLine("Selected Folder Path: " + saveFolder.SaveFolderPath);
+            }
+        }
 
     }
 
