@@ -34,43 +34,20 @@ namespace HCM3.Startup
 
 
 
-        internal MainModel Model { get; init; }
+        internal MainModel mainModel { get; init; }
 
         #region Constructor
         public MainWindow()
         {
-            
-       HCMSetup setup = new();
-
-
-            // Run some checks; have admin priviledges, have file access, have required folders & files.
-            if (!setup.HCMSetupChecks(out string errorMessage))
-            {
-                // If a check fails, tell the user why, then shutdown the application.
-                System.Windows.MessageBox.Show(errorMessage, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
-                System.Windows.Application.Current.Shutdown();
-            }
-
-            // Create collection of all our ReadWrite.Pointers and load them from the online repository
-            PointerCollection pcollection = new();
-            if (!pcollection.LoadPointersFromGit(out string error, out string? HighestSupportMCCVersion))
-            {
-                System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
-                System.Windows.Application.Current.Shutdown();
-            }
-
 
             InitializeComponent();
 
+            // MVVM pattern. Model doesn't know about ViewModel.
+            mainModel = new();
+            MainViewModel mainViewModel = new(mainModel);
 
-
-            Model = new(pcollection, HighestSupportMCCVersion);
-            MainViewModel mainViewModel = new(Model);
-
+            // View's datacontext is ViewModel
             this.DataContext = mainViewModel;
-            
-
-            //checkpointsH1.Add(new Checkpoint());
 
         }
         #endregion // Constructor
@@ -81,12 +58,9 @@ namespace HCM3.Startup
         private void Window_Closed(object sender, EventArgs e)
         { 
             Properties.Settings.Default.Save();
-            Model.HaloMemory.SpeedhackManager.RemoveSpeedHack(sender, e);
-            Model.HaloMemory.DebugManager.GracefullyCloseDebugger(sender, e);
-            
+            mainModel.HaloMemory.SpeedhackManager.RemoveSpeedHack(sender, e);
+            mainModel.HaloMemory.DebugManager.GracefullyCloseDebugger(sender, e);
         }
-
-
 
     }
 

@@ -25,13 +25,13 @@ namespace HCM3.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("H1")]
-        public string SelectedGame {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LastSelectedTab {
             get {
-                return ((string)(this["SelectedGame"]));
+                return ((int)(this["LastSelectedTab"]));
             }
             set {
-                this["SelectedGame"] = value;
+                this["LastSelectedTab"] = value;
             }
         }
     }

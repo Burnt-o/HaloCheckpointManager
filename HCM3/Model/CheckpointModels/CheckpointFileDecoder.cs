@@ -65,6 +65,7 @@ namespace HCM3.Model.CheckpointModels
                         else if (mainModel.CurrentAttachedMCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
                         {
                             checkpointVersionGuess = mainModel.CurrentAttachedMCCVersion;
+                            Trace.WriteLine("setting ver string to current attached version: " + checkpointVersionGuess);
                         }
                         else if (mainModel.HighestSupportMCCVersion != null) //otherwise set it the highest supported version we loaded from git
                         {
@@ -85,7 +86,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetLevelCode = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersion)?.Address;
+                                int? offsetLevelCode = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess)?.Address;
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -100,7 +101,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetGameTickCount = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersion)?.Address;
+                                int? offsetGameTickCount = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess)?.Address;
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -115,7 +116,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetDifficulty = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersion)?.Address;
+                                int? offsetDifficulty = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess)?.Address;
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data

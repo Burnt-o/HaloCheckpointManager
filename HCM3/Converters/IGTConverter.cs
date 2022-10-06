@@ -18,15 +18,18 @@ namespace HCM3.Converters
             if (value == null)
                 return "???";
 
-            int gameTicks = (int)value; // Should be stored in the 
+            int gameTicks = (int)value; 
             if (gameTicks <= 0) // To avoid dividing 0 later. Should never be negative unless there was an error reading the checkpoint data.
-            { 
-            return TimeSpan.Zero;
+            {
+                return "???";
             }
 
-            //TODO; change this to reference tabindex directorly (this is part of the view/viewmodel after all
-            string game = HCM3.Properties.Settings.Default.SelectedGame;
-            double divisor = (game == "H1") ? (double)30 : (double)60;
+            // So I'd like this to check what the current tab index is directly, but haven't figured out how.
+            // ConverterParameter won't seem to work since this is from a control under the tab control.
+            // For now we'll used the saved setting which should always be accurate.
+            int game = HCM3.Properties.Settings.Default.LastSelectedTab;
+            // Halo 1 (game/tab 0) runs at 30 ticks per sec, the rest at 60.
+            double divisor = (game == 0) ? (double)30 : (double)60;
             double seconds = gameTicks / divisor;
 
             return TimeSpan.FromSeconds(seconds);

@@ -4,11 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HCM3.View.Controls"
+             xmlns:viewModels="clr-namespace:HCM3.ViewModel"
              xmlns:a="clr-namespace:HCM3"
+             xmlns:cnv="clr-namespace:HCM3.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="255" d:DesignWidth="200">
+             d:DesignHeight="255" d:DesignWidth="200"
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
 
-    <Grid>
+    <Grid DataContext="{Binding SelectedCheckpoint}">
+        <Grid.Resources>
+            <cnv:DifficultyConverter x:Key="DifficultyConverter" />
+            <cnv:IGTConverter x:Key="IGTConverter" />
+            <cnv:LevelNameConverter x:Key="LevelNameConverter" />
+        </Grid.Resources>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="45" />
@@ -33,13 +42,13 @@
 
         <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
             <Border.Background>
-                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/Images/05b_deltatowers_anni.png"/>
+                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/Images/H2/05b_deltatowers_anni.png"/>
             </Border.Background>
         </Border>
 
         <Border Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="WhiteSmoke" Margin="-5,2,10,4" CornerRadius="7" />
 
-        <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="CheckpointNameGoesHere"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
+        <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Time:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Level:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
@@ -47,13 +56,13 @@
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Created:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
 
 
-        
 
-        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="Legendary"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="00:02:15.28"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="Lone Wolf"  TextAlignment="Justify"  Height="20" />
-        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="1.2645.0.0"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="22/09/30 22:14:23"  TextAlignment="Justify"  Height="20" />
+
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss\\.ff}'}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding LevelName, Converter={StaticResource LevelNameConverter}}"  TextAlignment="Justify"  Height="20" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding GameVersion}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CreatedOn}"  TextAlignment="Justify"  Height="20" />
         
         <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="0,0,0,3">
             <Grid.ColumnDefinitions>

@@ -29,12 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\05b_deltatowers_anni.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

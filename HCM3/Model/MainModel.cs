@@ -8,6 +8,7 @@ using BurntMemory;
 using System.Collections.ObjectModel;
 using HCM3.Model.CheckpointModels;
 using System.Diagnostics;
+using HCM3.Startup;
 
 
 namespace HCM3.Model
@@ -23,15 +24,38 @@ namespace HCM3.Model
         public string? HighestSupportMCCVersion { get; set; }
         public int SelectedTabIndex { get; set; }
 
-        public MainModel(PointerCollection pcollection, string? highestSupportMCCVersion)
+        // Constructor
+        public MainModel()
         {
-            HighestSupportMCCVersion = highestSupportMCCVersion;
-        PointerCollection = pcollection;
-        HaloMemory = new(this);
-        CheckpointModel = new(this);
+            HCMSetup setup = new();
+            // Run some checks; have admin priviledges, have file access, have required folders & files.
+            if (!setup.HCMSetupChecks(out string errorMessage))
+            {
+                // If a check fails, tell the user why, then shutdown the application.
+                System.Windows.MessageBox.Show(errorMessage, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.Application.Current.Shutdown();
+            }
 
+            // Create collection of all our ReadWrite.Pointers and load them from the online repository
+            PointerCollection = new();
+            if (!PointerCollection.LoadPointersFromGit(out string error, out string? highestSupportMCCVersion))
+            {
+                System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.Application.Current.Shutdown();
+            }
+            HighestSupportMCCVersion = highestSupportMCCVersion;
+
+            // Halo Memory, our extension of BurntMemory for read/write and other interactions with MCCs memory
+            HaloMemory = new(this);
+
+            // CheckpointModel handles the data used by the Checkpoint Library
+            CheckpointModel = new(this);
+
+            // Subscribe to attach/detach of MCC process
             BurntMemory.Events.ATTACH_EVENT += Events_ATTACH_EVENT;
             BurntMemory.Events.DEATTACH_EVENT += Events_DEATTACH_EVENT;
+
+            // Tell HaloMemory to try to attach to MCC, both steam and winstore versions
             HaloMemory.HaloState.ProcessesToAttach = new string[] { "MCC-Win64-Shipping", "MCCWinStore-Win64-Shipping" };
             HaloMemory.HaloState.TryToAttachTimer.Enabled = true;
             
@@ -42,13 +66,13 @@ namespace HCM3.Model
         private void Events_DEATTACH_EVENT(object? sender, EventArgs e)
         {
             CurrentAttachedMCCVersion = null;
+            HaloMemory.HaloState.TryToAttachTimer.Enabled = true;
             Trace.WriteLine("MainModel detected BurntMemory DEtach; Set current MCC version to null");
         }
 
         // Popped by BurntMemory.HaloState(aka AttachState) when it attaches to the MCC process
         private void Events_ATTACH_EVENT(object? sender, Events.AttachedEventArgs e)
         {
-
             string? potentialVersion = HaloMemory.HaloState.ProcessVersion;
             if (potentialVersion != null && potentialVersion.StartsWith("1."))
             {
@@ -59,8 +83,9 @@ namespace HCM3.Model
                 CurrentAttachedMCCVersion = null;
             }
 
-            
             Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version to " + CurrentAttachedMCCVersion);
+
+            // Also we want to refresh the checkpoint list in case the CurrentAttachedMCCVersion changed (it's used to read data from checkpoints)
             App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
             {
             this.CheckpointModel.RefreshCheckpointList();

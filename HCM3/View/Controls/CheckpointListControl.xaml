@@ -14,6 +14,7 @@
         <Grid.Resources>
             <cnv:DifficultyConverter x:Key="DifficultyConverter" />
             <cnv:IGTConverter x:Key="IGTConverter" />
+        
             <Style TargetType="ListViewItem">
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
@@ -28,7 +29,7 @@
            
         </Grid.Resources>
 
-        <ListView AlternationCount="2"  ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListView.View >
                 <GridView >
                     <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}" >
@@ -50,7 +51,7 @@
                         </GridViewColumn.HeaderContainerStyle>
                     </GridViewColumn>
                     <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="30" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"/>
-                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss\\:ff}'}" />
+                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss}'}" />
                     <GridViewColumn Header="Version" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameVersion}"/>
                     <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="50" DisplayMemberBinding="{Binding CreatedOn}"/>
                 </GridView>
