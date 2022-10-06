@@ -1,20 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Pointers>
-	<Pointer>
-		<Name>H1_CheckpointData_LevelCode</Name>
-		<Version>1.2645.0.0</Version>
-		<IntPtr>11</IntPtr>
-	</Pointer>
-	<Pointer>
-		<Name>H1_CheckpointData_GameTickCount</Name>
-		<Version>1.2645.0.0</Version>
-		<IntPtr>0x2F4</IntPtr>
-	</Pointer>
-	<Pointer>
-		<Name>H1_CheckpointData_Difficulty</Name>
-		<Version>1.2645.0.0</Version>
-		<IntPtr>0x126</IntPtr>
-	</Pointer>
+
 	<Pointer>
 		<Name>H1_CheckpointMake</Name>
 		<Version>1.2645.0.0</Version>

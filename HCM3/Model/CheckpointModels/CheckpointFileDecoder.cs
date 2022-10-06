@@ -91,8 +91,12 @@ namespace HCM3.Model.CheckpointModels
                                 {
                                     // Use the offset to seek to the correct location and read the data
                                     readBinary.BaseStream.Seek((long)offsetLevelCode, SeekOrigin.Begin);
-                                    checkpointLevelCode = new string(readBinary.ReadChars(3));
-                                    Trace.WriteLine("levelcode: " + checkpointLevelCode);
+                                    checkpointLevelCode = new string(readBinary.ReadChars(64));
+                                    checkpointLevelCode = checkpointLevelCode.Substring(checkpointLevelCode.LastIndexOf("\\") + 1);
+                                    checkpointLevelCode = checkpointLevelCode.Substring(checkpointLevelCode.LastIndexOf("\\") + 1);
+                                    char[] exceptions = new char[] { '_' };
+                                    checkpointLevelCode = String.Concat(checkpointLevelCode.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                                    Trace.WriteLine("\\nlevelcode4: " + checkpointLevelCode);
                                 }
                             }
                             catch { checkpointLevelCode = null; }

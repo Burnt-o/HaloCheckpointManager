@@ -12,12 +12,11 @@ using System.Xml;
 
 namespace HCM3
 {
-    public class PointerCollection
+    public class DataPointers
     {
         #region Properties
-        private Dictionary<string, Dictionary<string, ReadWrite.Pointer>> Pointers { get; set; } = new()
+        private Dictionary<string, Dictionary<string, ReadWrite.Pointer>> PointerData { get; set; } = new()
         {
-            { "H1_CheckpointData_LevelName", new Dictionary<string, ReadWrite.Pointer>() }
         };
 
 
@@ -25,18 +24,17 @@ namespace HCM3
         #endregion
 
         #region Constructor
-        public PointerCollection()
+        public DataPointers()
         {
-            Pointers = new();
+            PointerData = new();
         }
 
         #endregion
 
 
 
-        public bool LoadPointersFromGit(out string exceptionString, out string? HighestSupportMCCVersion)
+        public bool LoadPointerDataFromGit(out string exceptionString)
         {
-            HighestSupportMCCVersion = null;
             exceptionString = "";
             try
             {
@@ -45,14 +43,14 @@ namespace HCM3
                 if (useOnline)
                 {
                     // Download the xml from git
-                    string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/Pointers.xml";
+                    string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/PointerData.xml";
                     System.Net.WebClient client = new System.Net.WebClient();
                     xml = client.DownloadString(url);
                 }
                 else
                 {
                     // Grab it from local repo for testing so that I don't have to push it to git everytime
-                    xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\GitPointers.xml");
+                    xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml");
                 }
 
                 // Deserialise
@@ -73,38 +71,18 @@ namespace HCM3
                         string? pointerVersion = e.Element("Version") == null ? null : e.Element("Version")?.Value;
                         string? pointerModule = e.Element("Module") == null ? null : e.Element("Module")?.Value;
                         int[]? pointerOffsets = e.Element("Offsets") == null ? null : e.Element("Offsets")?.Elements().Select(x => ParseHexNumber(x.Value)).ToArray();
-                        IntPtr? pointerIntPtr = e.Element("IntPtr") == null ? null : (IntPtr?)ParseHexNumber(e.Element("IntPtr").Value);
+                        //IntPtr? pointerIntPtr = e.Element("IntPtr") == null ? null : (IntPtr?)ParseHexNumber(e.Element("IntPtr").Value);
 
                         // Check that all the data actually exists and make the pointer
-                        if (pointerName != null && pointerVersion != null)
+                        if (pointerName != null && pointerVersion != null && pointerModule != null && pointerOffsets != null)
                         {
-
-                            if (pointerIntPtr != null)
-                            {
-                                ReadWrite.Pointer newPointer = new ReadWrite.Pointer(pointerIntPtr);
-                                // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys    
-                                Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
-                                versionDictionary.Add(pointerVersion, newPointer);
-                                Pointers.Add(pointerName, versionDictionary);
-                                Trace.WriteLine("Added new pointer, name: " + pointerName);
-                            }
-                            else
-                            {
-                                if (pointerModule != null && pointerOffsets != null)
-                                {
                                     ReadWrite.Pointer newPointer = new ReadWrite.Pointer(pointerModule, pointerOffsets);
                                     // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys    
                                     Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
                                     versionDictionary.Add(pointerVersion, newPointer);
-                                    Pointers.Add(pointerName, versionDictionary);
+                                    PointerData.Add(pointerName, versionDictionary);
                                     Trace.WriteLine("Added new pointer, name: " + pointerName);
-                                }
-                            }
                         }
-                    }
-                    else if (e.Name == "HighestSupportMCCVersion")
-                    {
-                        HighestSupportMCCVersion = e.Value;
                     }
 
 
@@ -135,7 +113,7 @@ namespace HCM3
                 return null;
             }
 
-            bool success = Pointers.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
+            bool success = PointerData.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
                 if (!success || pointerVersionDictionary == null)
                 {
                     return null;
@@ -150,23 +128,7 @@ namespace HCM3
                 return pointer;
         }
 
-        public bool PointerExists(string? pointerName, string? pointerVersion)
-        {
-            if (pointerName == null || pointerVersion == null)
-            {
-                return false;
-            }
-
-            bool success = Pointers.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
-            if (!success || pointerVersionDictionary == null)
-            {
-                return false;
-            }
-
-            return pointerVersionDictionary.ContainsKey(pointerVersion);
-        }
-
-
+       
 
     }
 }

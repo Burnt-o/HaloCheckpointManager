@@ -15,7 +15,7 @@ namespace HCM3.Model
 {
     internal class MainModel
     {
-        public PointerCollection PointerCollection { get; init; }
+        public DataPointers PointerCollection { get; init; }
         public HaloMemory HaloMemory { get; init; }
 
         public CheckpointModels.CheckpointModel CheckpointModel { get; init; }
@@ -38,7 +38,7 @@ namespace HCM3.Model
 
             // Create collection of all our ReadWrite.Pointers and load them from the online repository
             PointerCollection = new();
-            if (!PointerCollection.LoadPointersFromGit(out string error, out string? highestSupportMCCVersion))
+            if (!PointerCollection.LoadPointerDataFromGit(out string error, out string? highestSupportMCCVersion))
             {
                 System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CheckpointData>
+	<HighestSupportVersion>1.2969.0.0</HighestSupportVersion>
+	<Data>
+		<Name>H1_CheckpointData_LevelCode</Name>
+		<Version>1.2645.0.</Version>
+		<Offset>11</Offset>
+	</Data>
+	<Data>
+		<Name>H1_CheckpointData_GameTickCount</Name>
+		<Version>1.2645.0.0</Version>
+		<Offset>0x2F4</Offset>
+	</Data>
+	<Data>
+		<Name>H1_CheckpointData_Difficulty</Name>
+		<Version>1.2645.0.0</Version>
+		<Offset>0x126</Offset>
+	</Data>
+</CheckpointData>
