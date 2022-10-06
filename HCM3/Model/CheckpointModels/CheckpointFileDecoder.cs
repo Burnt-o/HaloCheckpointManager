@@ -12,26 +12,29 @@ namespace HCM3.Model.CheckpointModels
     internal class CheckpointFileDecoder
     {
 
-        public Checkpoint? ReadCheckpointFromFile(FileInfo checkpointFile, int gameIndex, PointerCollection pcollection, string? CurrentAttachedMCCVersion, string? HighestSupportMCCVersion)
-        {
-            // Need this for accessing pointercollection later
-            string gameString = Dictionaries.TabIndexTo2LetterGameCode[gameIndex];
 
-            
-            string? checkpointName = checkpointFile.Name;
+        public Checkpoint? ReadCheckpointFromFile(FileInfo checkpointFile, int gameIndex, MainModel mainModel)
+        {
+
+
+            // Setup checkpoint data we're going to try to populate
+            string? checkpointName = null;
+            string? checkpointLevelCode = null;
+            int? checkpointDifficulty = null;
+            int? checkpointGameTickCount = null;
+            string? checkpointVersion = null;
+            DateTime checkpointCreatedOn = checkpointFile.CreationTime;
+            DateTime checkpointModifiedOn = checkpointFile.LastWriteTime;
+
             // We want to trim off the ".bin" part of the filename.
+            checkpointName = checkpointFile.Name;
             checkpointName = checkpointName[..checkpointName.LastIndexOf(".")];
 
             // We don't allow checkpoints with empty/null filenames
-            if (checkpointName == null)
+            if (checkpointName == null || checkpointName == "")
             {
                 return null;
             }
-
-            // Grab file metadata
-            DateTime? checkpointCreatedTime = checkpointFile.CreationTime;
-            DateTime? checkpointModifedTime = checkpointFile.LastWriteTime;
-
 
             // Next, check if the filesize is reasonable. If not we'll return null.
             // Valid range is 100kb to 100mb, pulled out my ass.
@@ -40,16 +43,8 @@ namespace HCM3.Model.CheckpointModels
                 return null;
             }
 
-            // Setup the variables we'll be trying to get from the file's data
-            string? checkpointLevelCode = null;
-            int? checkpointDifficulty = null;
-            int? checkpointGameTickCount = null;
-            string? checkpointVersion = null;
-
-            // This will let us know if we were able to read the versionString from the file or not
-            bool ableToReadVersionString = false;
-
             // Now load the whole damn file into memory and read some data from it
+            // If it fails then we'll leave the associated values as null
             try
             {
                 using (FileStream readStream = new FileStream(checkpointFile.FullName, FileMode.Open))
@@ -59,17 +54,38 @@ namespace HCM3.Model.CheckpointModels
                         // Go to the end of the checkpoint file and see if there's a valid version string written there.
                         // (Version string is 10 chars long)
                         readBinary.BaseStream.Seek(-10, SeekOrigin.End);
-                        checkpointVersion = new string(readBinary.ReadChars(10));
-                        Trace.WriteLine("read ver string: " + checkpointVersion);
-                        checkpointVersion = EvaluateCheckpointVersion(checkpointVersion, out bool eh);
-                        ableToReadVersionString = eh;
-                        if (checkpointVersion != null)
+                        string? checkpointVersionGuess = new string(readBinary.ReadChars(10));
+                        Trace.WriteLine("read ver string: " + checkpointVersionGuess);
+
+                        // If that string started with "1." then it's probably a valid version string, so we'll set checkpointVersion to it too
+                        if (checkpointVersionGuess != null && checkpointVersionGuess.StartsWith("1."))
                         {
-                            //LEVELCODE
-                            // Grab the offset; if it exists
+                            checkpointVersion = checkpointVersionGuess;
+                        }
+                        else if (mainModel.CurrentAttachedMCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
+                        {
+                            checkpointVersionGuess = mainModel.CurrentAttachedMCCVersion;
+                        }
+                        else if (mainModel.HighestSupportMCCVersion != null) //otherwise set it the highest supported version we loaded from git
+                        {
+                            checkpointVersionGuess = mainModel.HighestSupportMCCVersion;
+                        }
+                        else
+                        {
+                            checkpointVersionGuess = null;
+                        }
+
+                        // Now let's try to actually read the data from the file
+                        // Each will be in it's own trycatch so that one can fail without the others failing
+                        if (checkpointVersionGuess != null)
+                        {
+                            // Need this for accessing pointercollection
+                            string gameString = Dictionaries.TabIndexTo2LetterGameCode[gameIndex];
+                            // Read LevelCode
                             try
                             {
-                                int? offsetLevelCode = (int?)pcollection.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersion)?.Address;
+                                // Grab the offset; if it exists
+                                int? offsetLevelCode = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersion)?.Address;
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -78,29 +94,28 @@ namespace HCM3.Model.CheckpointModels
                                     Trace.WriteLine("levelcode: " + checkpointLevelCode);
                                 }
                             }
-                            catch { }
+                            catch { checkpointLevelCode = null; }
 
-                            //GAMETICKCOUNT
-                            // Grab the offset; if it exists
+                            // Read GameTickCount
                             try
                             {
-                                int? offsetGameTickCount = (int?)pcollection.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersion)?.Address;
+                                // Grab the offset; if it exists
+                                int? offsetGameTickCount = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersion)?.Address;
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
                                     readBinary.BaseStream.Seek((long)offsetGameTickCount, SeekOrigin.Begin);
                                     // read integer
                                     checkpointGameTickCount = readBinary.ReadInt32();
-
                                 }
                             }
-                            catch { }
+                            catch { checkpointGameTickCount = null; }
 
-                            //Difficulty
-                            // Grab the offset; if it exists
+                            // Read Difficulty
                             try
                             {
-                                int? offsetDifficulty = (int?)pcollection.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersion)?.Address;
+                                // Grab the offset; if it exists
+                                int? offsetDifficulty = (int?)mainModel.PointerCollection.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersion)?.Address;
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -109,74 +124,21 @@ namespace HCM3.Model.CheckpointModels
                                     checkpointDifficulty = (int)readBinary.ReadBytes(1)[0];
                                 }
                             }
-                            catch { }
+                            catch { checkpointDifficulty = null; }
                         }
                     }
                 }
-
-
             }
-            catch (Exception e)
+            catch (Exception e) // Reading from file failed, so set those checkpoint values to null
             {
                 Trace.WriteLine("Failed reading checkpoint from file: " + e.Message);
                 checkpointLevelCode = null;
                 checkpointDifficulty = null;
                 checkpointGameTickCount = null;
-                ableToReadVersionString = false;
             }
 
-            //If we couldn't read the version string then set the new Checkpoint property to "Unknown" or something.
-            if (!ableToReadVersionString)
-            {
-                checkpointVersion = null;
-            }
-            Trace.WriteLine("handing version string: " + checkpointVersion);
-
-            return new Checkpoint(checkpointName, checkpointLevelCode, checkpointDifficulty, checkpointGameTickCount, checkpointVersion, null, null); // Then return a new checkpoint with as many valid properties as we managed to get (checkpointName is definitely not null)
-
-              
-            
-            string? EvaluateCheckpointVersion (string? checkpointFileString, out bool checkpointFileStringWasValid)
-            {
-                // Takes in the string read from the end of the checkpoint file.
-                // If it's null we just return null.
-                if (checkpointFileString == null)
-                {
-                    checkpointFileStringWasValid = false;
-                    return null;
-                }
-
-                
-
-                // If that string started with "1." then it's probably a valid version string, so we'll return itself
-                if (checkpointFileString.StartsWith("1."))
-                {
-                    checkpointFileStringWasValid = true;
-                    return checkpointFileString;
-                }
-
-                // Otherwise let's grab the current version of MCC that HCM is attached to.. if we're attached.
-                if (CurrentAttachedMCCVersion != null)
-                {
-                    checkpointFileStringWasValid = false;
-                    return CurrentAttachedMCCVersion;
-                }
-
-                // OTHERWISE otherwise let's grab the highest version we have data on in the PointerCollection
-                if (HighestSupportMCCVersion != null)
-                {
-                    checkpointFileStringWasValid = false;
-                    return HighestSupportMCCVersion;
-                }
-
-                // Welp, guess we got nothing
-                checkpointFileStringWasValid = false;
-                return null;
-
-            }
-
+            // Return whatever data we were able to get (all might be null except checkpointName, createdOn, and ModifiedOn)
+            return new Checkpoint(checkpointName, checkpointLevelCode, checkpointDifficulty, checkpointGameTickCount, checkpointVersion, checkpointCreatedOn, checkpointModifiedOn); // Then return a new checkpoint with as many valid properties as we managed to get (checkpointName is definitely not null)
         }
-
-
     }
 }
