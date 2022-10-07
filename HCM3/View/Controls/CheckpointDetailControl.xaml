@@ -11,7 +11,7 @@
              d:DesignHeight="255" d:DesignWidth="200"
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
 
-    <Grid DataContext="{Binding SelectedCheckpoint}">
+    <Grid >
         <Grid.Resources>
             <cnv:DifficultyConverter x:Key="DifficultyConverter" />
             <cnv:IGTConverter x:Key="IGTConverter" />
@@ -58,7 +58,7 @@
 
         <Border Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="WhiteSmoke" Margin="-5,2,10,4" CornerRadius="7" />
 
-        <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
+        <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding SelectedCheckpoint.CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Time:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
         <TextBlock Grid.Row="4" Grid.Column="0" Text="Level:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
@@ -68,11 +68,11 @@
 
 
 
-        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss\\.ff}'}"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding LevelName, Converter={StaticResource LevelNameConverter}}"  TextAlignment="Justify"  Height="20" />
-        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding GameVersion}"  TextAlignment="Justify"  Height="20"  />
-        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CreatedOn,  Converter={StaticResource DateTimeConverter}}"  TextAlignment="Justify"  Height="20" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.Difficulty, Converter={StaticResource DifficultyConverter}}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss\\.ff}'}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.LevelName, Converter={StaticResource LevelNameConverter}}"  TextAlignment="Justify"  Height="20" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.GameVersion}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.CreatedOn,  Converter={StaticResource DateTimeConverter}}"  TextAlignment="Justify"  Height="20" />
         
         <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="0,0,0,3">
             <Grid.ColumnDefinitions>
@@ -80,9 +80,9 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Dump" Width="50" Margin="20,-3,1,1"/>
+            <Button Grid.Column="0" Content="Dump" Width="50" Margin="20,-3,1,1" Command="{Binding Dump}"/>
 
-            <Button Grid.Column="1" Content="Inject" Width="50" Margin="1,-3,20,1"/>
+            <Button Grid.Column="1" Content="Inject" Width="50" Margin="1,-3,20,1" Command="{Binding Inject}"/>
             
             
         </Grid>

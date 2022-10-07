@@ -128,7 +128,25 @@ namespace HCM3
                 return pointer;
         }
 
-       
+        public bool PointerExists(string? pointerName, string? pointerVersion)
+        {
+            if (pointerName == null || pointerVersion == null)
+            {
+                return false;
+            }
+
+            bool success = PointerData.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
+            if (!success || pointerVersionDictionary == null)
+            {
+                return false;
+            }
+
+            success = pointerVersionDictionary.TryGetValue(pointerVersion, out ReadWrite.Pointer? pointer);
+            return success && pointer != null;
+
+        }
+
+
 
     }
 }

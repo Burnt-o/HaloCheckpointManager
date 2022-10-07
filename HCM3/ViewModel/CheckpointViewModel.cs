@@ -25,6 +25,8 @@ namespace HCM3.ViewModel
 
         public MainViewModel MainViewModel { get; private set; }
 
+        public MainModel MainModel { get; private set; }
+
         private Checkpoint? _selectedCheckpoint;
         public Checkpoint? SelectedCheckpoint
         { 
@@ -36,7 +38,7 @@ namespace HCM3.ViewModel
             }
         }
 
-        public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel)
+        public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel, MainModel mainModel)
         {
             this.CheckpointModel = checkpointModel;
             this.CheckpointCollection = CheckpointModel.CheckpointCollection;
@@ -44,6 +46,7 @@ namespace HCM3.ViewModel
             this.RootSaveFolder = CheckpointModel.RootSaveFolder;
             this.PropertyChanged += Handle_PropertyChanged;
             this.MainViewModel = mainViewModel;
+            this.MainModel = mainModel;
 
 
         }
@@ -58,7 +61,15 @@ namespace HCM3.ViewModel
 
         }
 
-        public ICommand PrintTextCommand => new Command(_ => CheckpointModel.PrintText());
+
+
+        private ICommand _dump;
+        public ICommand Dump
+        {
+            get { return _dump ?? (_dump = new DumpCommand(CheckpointModel)); }
+            set { _dump = value; }
+        }
+        public ICommand Inject { get; private set; }
 
         public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -70,14 +81,45 @@ namespace HCM3.ViewModel
                 Properties.Settings.Default.LastSelectedFolder[MainViewModel.SelectedTabIndex] = saveFolder.SaveFolderPath;
             }
             
-            
-
             CheckpointModel.SelectedSaveFolder = saveFolder;
             CheckpointModel.RefreshCheckpointList();
 
             
         }
 
+        public class DumpCommand : ICommand
+        {
+            public DumpCommand(CheckpointModel checkpointModel)
+            {
+                CheckpointModel = checkpointModel;
+            }
+
+            private CheckpointModel CheckpointModel { get; set; }
+            public bool CanExecute(object? parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object? parameter)
+            {
+                try
+                {
+                    CheckpointModel.TryDump();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show("Failed to dump! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                }
+                
+            }
+
+            public event EventHandler? CanExecuteChanged;
+        }
+
+
     }
+
+
+
 
 }

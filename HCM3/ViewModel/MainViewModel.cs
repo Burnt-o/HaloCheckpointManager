@@ -36,7 +36,7 @@ namespace HCM3.ViewModel
         {
             MainModel = mainModel;
 
-            CheckpointViewModel = new(MainModel.CheckpointModel, this);
+            CheckpointViewModel = new(MainModel.CheckpointModel, this, mainModel);
 
             this.PropertyChanged += Handle_PropertyChanged;
 

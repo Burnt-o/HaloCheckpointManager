@@ -9,6 +9,20 @@ namespace HCM3.Model
     internal static class Dictionaries
     {
 
+        public enum HaloStateEnum
+        {
+            Unattached = -2,
+            Menu = -1,
+            Halo1 = 0,
+            Halo2 = 1,
+            Halo2MP = 1,
+            Halo3 = 2,
+            Halo3ODST = 3,
+            HaloReach = 4,
+            Halo4 = 5,
+
+        }
+
         public static readonly Dictionary<int, string> TabIndexToRootFolderPath = new()
         {
             { 0, @"Halo 1" },

@@ -13,27 +13,14 @@ namespace HCM3.Model
 
         internal HaloState(MainModel mainModel)
         {
-            _currentHaloState = (int)HaloStateEnum.Unattached;
+            _currentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
             MainModel = mainModel;
 
         }
 
         internal MainModel MainModel { get; init; }
 
-        public enum HaloStateEnum
-        {
-            Unattached = -2,
-            Menu = -1,
-            Halo1 = 0,
-            Halo2 = 1,
-            Halo3 = 2,
-            Halo3ODST = 5,
-            Halo4 = 3,
-            HaloReach = 6,
-            Halo2MP = 4,
 
-
-        }
 
 
         private int _currentHaloState;
@@ -71,7 +58,7 @@ namespace HCM3.Model
             // If not attached.
             if (!this.Attached)
             {
-                CurrentHaloState = (int)HaloStateEnum.Unattached;
+                CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
                 return;
             }
 
@@ -79,7 +66,7 @@ namespace HCM3.Model
 
             if (gameIndicatorPointer == null)
             {
-                CurrentHaloState = (int)HaloStateEnum.Unattached;
+                CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
             }
         }
 

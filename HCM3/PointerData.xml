@@ -12,6 +12,16 @@
 		</Offsets>
 	</Pointer>
 	<Pointer>
+		<Name>H1_CheckpointLocation</Name>
+		<Version>1.2645.0.0</Version>
+		<Module>main</Module>
+		<Offsets>
+			<Offset>0x03B80E98</Offset>
+			<Offset>0x8</Offset>
+			<Offset>0x2AF828C</Offset>
+		</Offsets>
+	</Pointer>
+	<Pointer>
 		<Name>MCC_GameIndicator</Name>
 		<Version>1.2645.0.0</Version>
 		<Module>main</Module>
