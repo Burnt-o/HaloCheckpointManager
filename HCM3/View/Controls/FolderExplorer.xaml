@@ -138,6 +138,7 @@
 
         </Style>
     </UserControl.Resources>
+    <Border Height="Auto" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="WhiteSmoke">
     
     <Grid>
         <Grid.Resources>
@@ -147,9 +148,8 @@
             </HierarchicalDataTemplate>
 
         </Grid.Resources>
-        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="WhiteSmoke">
-        </Border>
-        <TreeView Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged"  ItemContainerStyle="{StaticResource TreeViewItemContainerStyle1}">
+
+        <TreeView Height="Auto" Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged"  ItemContainerStyle="{StaticResource TreeViewItemContainerStyle1}">
 
 
         </TreeView>
@@ -162,4 +162,5 @@
           
         
     </Grid>
+    </Border>
 </UserControl>
