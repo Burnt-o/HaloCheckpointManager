@@ -15,9 +15,15 @@ namespace HCM3.Model.CheckpointModels
     {
         public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; set; }
+        public SaveFolder? RootSaveFolder { get; private set; }
 
         private CheckpointFileDecoder CheckpointFileDecoder = new();
         public MainModel MainModel { get; init; }
+
+        public SaveFolder? SelectedSaveFolder { get; set; }
+
+        public Checkpoint? SelectedCheckpoint { get; set; }
+
 
         public CheckpointModel(MainModel mainModel)
         { 

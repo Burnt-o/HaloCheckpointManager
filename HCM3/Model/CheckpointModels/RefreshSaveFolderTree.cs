@@ -39,7 +39,7 @@ namespace HCM3.Model.CheckpointModels
             // Recursive function that creates nested subfolder SaveFolder objects and turns it all into a Root SaveFolder
             DirectoryInfo rootFolderInfo = new DirectoryInfo(rootSaveFolderPath);
             SaveFolder RootFolder = GetAllFoldersUnder(rootFolderInfo);
-
+            RootSaveFolder = RootFolder;
             SaveFolderHierarchy.Add(RootFolder);
 
 

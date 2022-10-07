@@ -9,7 +9,8 @@ using System.Windows.Controls;
 using System.Windows;
 using System;
 using Microsoft.Xaml.Behaviors;
-
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace HCM3.ViewModel
 {
@@ -20,16 +21,9 @@ namespace HCM3.ViewModel
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
 
-        private SaveFolder? _selectedSaveFolder;
-        public SaveFolder? SelectedSaveFolder
-        {
-            get { return _selectedSaveFolder; }
-            set
-            {
-                _selectedSaveFolder = value;
-                OnPropertyChanged(nameof(SelectedSaveFolder));
-            }
-        }
+        public SaveFolder? RootSaveFolder { get; private set; }
+
+        public MainViewModel MainViewModel { get; private set; }
 
         private Checkpoint? _selectedCheckpoint;
         public Checkpoint? SelectedCheckpoint
@@ -42,14 +36,14 @@ namespace HCM3.ViewModel
             }
         }
 
-        public CheckpointViewModel(CheckpointModel checkpointModel)
+        public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel)
         {
             this.CheckpointModel = checkpointModel;
             this.CheckpointCollection = CheckpointModel.CheckpointCollection;
             this.SaveFolderHierarchy = CheckpointModel.SaveFolderHierarchy;
-
+            this.RootSaveFolder = CheckpointModel.RootSaveFolder;
             this.PropertyChanged += Handle_PropertyChanged;
-
+            this.MainViewModel = mainViewModel;
 
 
         }
@@ -59,24 +53,29 @@ namespace HCM3.ViewModel
             if (e.PropertyName == nameof(SelectedCheckpoint))
             {
                 Trace.WriteLine("selected checkpoint changed");
+                CheckpointModel.SelectedCheckpoint = SelectedCheckpoint;
             }
-            else if (e.PropertyName == nameof(SelectedSaveFolder))
-            {
 
-                Trace.WriteLine("uhhhhhhhhhhhhhhhhhhhhhhhhhhh " + SelectedSaveFolder?.SaveFolderName);
-            }
         }
 
         public ICommand PrintTextCommand => new Command(_ => CheckpointModel.PrintText());
 
         public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            Trace.WriteLine("let's do it the easy way");
             SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
+            Trace.WriteLine("Selected Folder Path: " + saveFolder?.SaveFolderPath);
+
             if (saveFolder != null)
             {
-                Trace.WriteLine("Selected Folder Path: " + saveFolder.SaveFolderPath);
+                Properties.Settings.Default.LastSelectedFolder[MainViewModel.SelectedTabIndex] = saveFolder.SaveFolderPath;
             }
+            
+            
+
+            CheckpointModel.SelectedSaveFolder = saveFolder;
+            CheckpointModel.RefreshCheckpointList();
+
+            
         }
 
     }

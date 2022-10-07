@@ -4,13 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace HCM3.Model.CheckpointModels
 {
-    public class SaveFolder
+    public class SaveFolder : INotifyPropertyChanged
     {
         public string SaveFolderPath { get; set; }
         public string SaveFolderName { get; set; }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public ObservableCollection<SaveFolder> Children { get; set; }
 
@@ -20,6 +34,11 @@ namespace HCM3.Model.CheckpointModels
             SaveFolderPath = saveFolderPath;
             SaveFolderName = saveFolderName;
             Children = children;
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
     }

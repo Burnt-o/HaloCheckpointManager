@@ -23,8 +23,13 @@ namespace HCM3.Model.CheckpointModels
                 // Clear the checkpoint collection. We're about to re-populate it.
                 CheckpointCollection.Clear();
 
-
-                string saveFolderPath = @"Saves\" + Dictionaries.TabIndexToRootFolderPath[selectedTabIndex];
+                string? saveFolderPath = SelectedSaveFolder?.SaveFolderPath;
+            if (saveFolderPath == null)
+            { 
+                // Set it to root folder
+            saveFolderPath = @"Saves\" + Dictionaries.TabIndexToRootFolderPath[selectedTabIndex];
+            }
+                
                 if (!Directory.Exists(saveFolderPath))
                 {
                     Trace.WriteLine("RefreshCheckpointList: saveFolderPath didn't exist!");
