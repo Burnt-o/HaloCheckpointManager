@@ -11,11 +11,13 @@ using System;
 using Microsoft.Xaml.Behaviors;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Windows.Data;
+using GongSolutions.Wpf.DragDrop;
 
 namespace HCM3.ViewModel
 {
 
-    internal class CheckpointViewModel : Presenter
+    internal class CheckpointViewModel : Presenter, IDropTarget
     {
         private readonly CheckpointModel CheckpointModel;
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
@@ -38,6 +40,28 @@ namespace HCM3.ViewModel
             }
         }
 
+        void IDropTarget.DragOver(IDropInfo dropInfo)
+        {
+            Checkpoint? sourceItem = dropInfo.Data as Checkpoint;
+            Checkpoint? targetItem = dropInfo.TargetItem as Checkpoint;
+
+            if (sourceItem != null && targetItem != null)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        void IDropTarget.Drop(IDropInfo dropInfo)
+        {
+            Checkpoint? sourceItem = (Checkpoint)dropInfo.Data;
+            Checkpoint? targetItem = (Checkpoint)dropInfo.TargetItem;
+            if (sourceItem != null && targetItem != null)
+            {
+                CheckpointModel.SwapLastWriteTimes(sourceItem, targetItem);
+            }
+        }
+
         public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel, MainModel mainModel)
         {
             this.CheckpointModel = checkpointModel;
@@ -48,6 +72,10 @@ namespace HCM3.ViewModel
             this.MainViewModel = mainViewModel;
             this.MainModel = mainModel;
 
+            ListCollectionView view = (ListCollectionView)CollectionViewSource
+                    .GetDefaultView(this.CheckpointCollection);
+
+            view.CustomSort = new SortCheckpointsByLastWriteTime();
 
         }
 
@@ -59,6 +87,21 @@ namespace HCM3.ViewModel
                 CheckpointModel.SelectedCheckpoint = SelectedCheckpoint;
             }
 
+        }
+
+        public class SortCheckpointsByLastWriteTime : IComparer
+        {
+            public int Compare(object x, object y)
+            {
+                Checkpoint cx = (Checkpoint)x;
+                Checkpoint cy = (Checkpoint)y;
+
+                if (cx.ModifiedOn == null || cy.ModifiedOn == null)
+                { return 0; }
+
+                int? diff =  (int?)(cx.ModifiedOn - cy.ModifiedOn)?.TotalSeconds;
+                return diff == null ? 0 : (int)diff;
+            }
         }
 
 

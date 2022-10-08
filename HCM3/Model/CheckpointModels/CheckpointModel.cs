@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using HCM3.ViewModel;
 using System.ComponentModel;
+using System.IO;
 
 
 namespace HCM3.Model.CheckpointModels
@@ -37,8 +38,28 @@ namespace HCM3.Model.CheckpointModels
         }
 
 
+        public void SwapLastWriteTimes(Checkpoint source, Checkpoint target)
+        {
+            DateTime? sourceLWT = source.ModifiedOn;
+            DateTime? targetLWT = target.ModifiedOn;
+
+            FileInfo? sourceFI = new(SelectedSaveFolder?.SaveFolderPath + @"\\" + source.CheckpointName + ".bin");
+            FileInfo? targetFI = new(SelectedSaveFolder?.SaveFolderPath + @"\\" + target.CheckpointName + ".bin");
+
+            Trace.WriteLine("Source: " + sourceFI.FullName);
+            Trace.WriteLine("Target: " + targetFI.FullName);
+            if (sourceFI != null && targetFI != null && File.Exists(sourceFI.FullName) && File.Exists(targetFI.FullName) && sourceLWT.HasValue && targetLWT.HasValue)
+            {
+                Trace.WriteLine("SWAPPING");
+                sourceFI.LastWriteTime = (DateTime)targetLWT;
+                targetFI.LastWriteTime = (DateTime)sourceLWT;
+                RefreshCheckpointList();
+            }
+
+            
 
 
+        }
         
 
     }

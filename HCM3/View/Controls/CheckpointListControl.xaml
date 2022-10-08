@@ -9,6 +9,7 @@
               xmlns:viewModels="clr-namespace:HCM3.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="593" d:DesignWidth="300"
+             xmlns:dd="urn:gong-wpf-dragdrop"
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
     <Grid>
         <Grid.Resources>
@@ -29,7 +30,7 @@
            
         </Grid.Resources>
 
-        <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
             <ListView.View >
                 <GridView >
                     <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}" >
