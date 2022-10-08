@@ -14,6 +14,10 @@ namespace HCM3.Model.CheckpointModels
     {
         public void TryDump()
         {
+
+            // Update HaloState
+            MainModel.HaloMemory.HaloState.UpdateHaloState();
+
             // Check that we're loaded into the game that matches the tab whose checkpoint we're trying to dump
             Dictionaries.HaloStateEnum game = (Dictionaries.HaloStateEnum)this.MainModel.HaloMemory.HaloState.CurrentHaloState;
 
@@ -71,7 +75,9 @@ namespace HCM3.Model.CheckpointModels
                     ReadWrite.Pointer? pointer = MainModel.DataPointers.GetPointer(requiredPointerName, MCCversion);
                 if (pointer == null)
                 {
-                    throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC.");
+                    throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
+                        + $"\nSpecifically: {requiredPointerName}"
+                        ); ;
                 }
                 requiredPointers.Add(requiredPointerName[3..], pointer); // Cut off the gamecode part so we can just refer to the rest of the name later
             }
@@ -117,6 +123,17 @@ namespace HCM3.Model.CheckpointModels
             {
                 throw new InvalidOperationException("Couldn't read checkpoint data from game");
             }
+
+
+            // Add version string to checkpoint
+            if (MainModel.CurrentAttachedMCCVersion != null && MainModel.CurrentAttachedMCCVersion.Length == 10)
+            {
+                byte[] versionStringChars = Encoding.ASCII.GetBytes(MainModel.CurrentAttachedMCCVersion);
+                Array.Copy(versionStringChars, 0, CheckpointData, CheckpointData.Length - 10, versionStringChars.Length);
+            }
+                
+
+            
 
 
             // Ask user what they want to name the checkpoint file
