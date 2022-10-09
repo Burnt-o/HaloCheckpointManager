@@ -38,27 +38,21 @@ namespace HCM3.Model.CheckpointModels
         }
 
 
-        public void SwapLastWriteTimes(Checkpoint source, Checkpoint target)
+        public void BatchModCheckpointLWTs(List<Checkpoint> listCheckpoints, List<DateTime?> listLWT)
         {
-            DateTime? sourceLWT = source.ModifiedOn;
-            DateTime? targetLWT = target.ModifiedOn;
-
-            FileInfo? sourceFI = new(SelectedSaveFolder?.SaveFolderPath + @"\\" + source.CheckpointName + ".bin");
-            FileInfo? targetFI = new(SelectedSaveFolder?.SaveFolderPath + @"\\" + target.CheckpointName + ".bin");
-
-            Trace.WriteLine("Source: " + sourceFI.FullName);
-            Trace.WriteLine("Target: " + targetFI.FullName);
-            if (sourceFI != null && targetFI != null && File.Exists(sourceFI.FullName) && File.Exists(targetFI.FullName) && sourceLWT.HasValue && targetLWT.HasValue)
+            for (int i = 0; i < listCheckpoints.Count; i++)
             {
-                Trace.WriteLine("SWAPPING");
-                sourceFI.LastWriteTime = (DateTime)targetLWT;
-                targetFI.LastWriteTime = (DateTime)sourceLWT;
-                RefreshCheckpointList();
+                string checkpointPath = SelectedSaveFolder?.SaveFolderPath + "\\" + listCheckpoints[i].CheckpointName + ".bin";
+                FileInfo checkpointInfo = new(checkpointPath);
+                if (checkpointInfo.Exists && listLWT[i] != null)
+                {
+                    checkpointInfo.LastWriteTime = (DateTime)listLWT[i];
+                }
+                else
+                {
+                    Trace.WriteLine("Something went wrong modifying CheckpointLWTs; path: " + checkpointPath);
+                }
             }
-
-            
-
-
         }
         
 

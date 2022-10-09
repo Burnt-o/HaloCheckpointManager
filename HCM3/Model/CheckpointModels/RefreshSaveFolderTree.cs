@@ -38,27 +38,28 @@ namespace HCM3.Model.CheckpointModels
 
             // Recursive function that creates nested subfolder SaveFolder objects and turns it all into a Root SaveFolder
             DirectoryInfo rootFolderInfo = new DirectoryInfo(rootSaveFolderPath);
-            SaveFolder RootFolder = GetAllFoldersUnder(rootFolderInfo);
+            SaveFolder RootFolder = GetAllFoldersUnder(rootFolderInfo, null);
             RootSaveFolder = RootFolder;
             SaveFolderHierarchy.Add(RootFolder);
 
 
             // The recursive function that gets nested subfolders
-            SaveFolder GetAllFoldersUnder(DirectoryInfo folderInfo)
+            SaveFolder GetAllFoldersUnder(DirectoryInfo folderInfo, string? parentPath)
             {
                 //Trace.WriteLine("GetAllFoldersUnder hit, " + folderInfo.Name);
                 List<DirectoryInfo> subFolderInfo = new(folderInfo.EnumerateDirectories());
                 List<SaveFolder> subFolders = new();
+                string thisPath = folderInfo.FullName;
                 foreach (DirectoryInfo subFolderInfoNested in subFolderInfo)
                 {
                     // Recursion woo
-                    subFolders.Add(GetAllFoldersUnder(subFolderInfoNested));
+                    subFolders.Add(GetAllFoldersUnder(subFolderInfoNested, thisPath) );
                 }
                 string folderName = folderInfo.Name;
                 string folderPath = folderInfo.FullName;
                 //Convert List to OC
                 ObservableCollection<SaveFolder> subFoldersOC = new(subFolders);
-                return new SaveFolder(folderPath, folderName, subFoldersOC);
+                return new SaveFolder(folderPath, folderName, subFoldersOC, parentPath);
             }
 
         }

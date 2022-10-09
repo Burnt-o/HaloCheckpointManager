@@ -27,21 +27,16 @@
                 </Style.Triggers>
             </Style>
 
-           
+
         </Grid.Resources>
 
         <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
+
+
             <ListView.View >
                 <GridView >
-                    <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    
-                                    <!--used to be a textblock here, to format level icon. Think I'll just remove the icon feature though-->
-                                </Grid>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
+                    <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}"  >
+
 
                     </GridViewColumn>
                     <GridViewColumn Header="Name" b:GridColumn.MinWidth="55" Width="90" DisplayMemberBinding="{Binding CheckpointName}">
@@ -55,9 +50,11 @@
                     <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss}'}" />
                     <GridViewColumn Header="Version" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameVersion}"/>
                     <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="50" DisplayMemberBinding="{Binding CreatedOn}"/>
+                    
                 </GridView>
 
             </ListView.View>
+            
         </ListView>
     </Grid>
 </UserControl>
