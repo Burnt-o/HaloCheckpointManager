@@ -57,9 +57,11 @@ namespace HCM3.Model.CheckpointModels
                 }
                 string folderName = folderInfo.Name;
                 string folderPath = folderInfo.FullName;
+                DateTime? createdDateTime = folderInfo.CreationTime;
                 //Convert List to OC
                 ObservableCollection<SaveFolder> subFoldersOC = new(subFolders);
-                return new SaveFolder(folderPath, folderName, subFoldersOC, parentPath);
+                subFoldersOC = new (subFoldersOC.OrderBy(c => c.CreatedOn));
+                return new SaveFolder(folderPath, folderName, subFoldersOC, parentPath, createdDateTime);
             }
 
         }

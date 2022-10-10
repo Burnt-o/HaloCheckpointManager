@@ -54,7 +54,24 @@ namespace HCM3.Model.CheckpointModels
                 }
             }
         }
-        
+
+        public void BatchModSaveFolderCreatedOns(List<SaveFolder> listSaveFolders, List<DateTime?> listCreatedOns)
+        {
+            for (int i = 0; i < listSaveFolders.Count; i++)
+            {
+                string saveFolderPath = listSaveFolders[i].SaveFolderPath;
+                DirectoryInfo saveFolderInfo = new(saveFolderPath);
+                if (saveFolderInfo.Exists && listCreatedOns[i] != null)
+                {
+                    saveFolderInfo.CreationTime = (DateTime)listCreatedOns[i];
+                }
+                else
+                {
+                    Trace.WriteLine("Something went wrong modifying SaveFolderCreatedOns; path: " + saveFolderPath);
+                }
+            }
+        }
+
 
     }
 

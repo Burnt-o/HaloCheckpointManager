@@ -28,15 +28,17 @@ namespace HCM3.Model.CheckpointModels
 
         public ObservableCollection<SaveFolder> Children { get; set; }
 
+        public DateTime? CreatedOn { get; set; }
         public string? ParentPath { get; set; }
 
         //So uh should the savefolder objects store info about their hierarchy in the tree view?
-        public SaveFolder(string saveFolderPath, string saveFolderName, ObservableCollection<SaveFolder> children, string? parentPath)
+        public SaveFolder(string saveFolderPath, string saveFolderName, ObservableCollection<SaveFolder> children, string? parentPath, DateTime? createdOn)
         {
             SaveFolderPath = saveFolderPath;
             SaveFolderName = saveFolderName;
             Children = children;
             ParentPath = parentPath;
+            CreatedOn = createdOn;
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
