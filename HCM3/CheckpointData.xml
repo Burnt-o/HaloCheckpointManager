@@ -19,6 +19,16 @@
 		<Version>1.2645.0.0</Version>
 		<Offset>0x126</Offset>
 	</Data>
+	<Data>
+		<Name>H1_CheckpointData_PreserveLocations</Name>
+		<Version>1.2645.0.0</Version>
+		<PreserveLocations>
+			<Location>
+				<Offset>0</Offset>
+				<Length>0</Length>
+			</Location>
+		</PreserveLocations>
+	</Data>
 	<!--/1.2645.0.0-->
 	<!--/Halo 1-->
 </CheckpointData>

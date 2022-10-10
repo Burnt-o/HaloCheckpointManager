@@ -9,15 +9,17 @@ using System.Xml.XPath;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using HCM3.Model.CheckpointModels;
 
 namespace HCM3
 {
     public class DataCheckpoints
     {
         #region Properties
-        private Dictionary<string, Dictionary<string,int>> CheckpointData { get; set; } = new()
+        private Dictionary<string, Dictionary<string,object>> CheckpointData { get; set; } = new()
         {
         };
+
 
 
 
@@ -67,24 +69,36 @@ namespace HCM3
                 {
                     if (e.Name == "Data")
                     {
+                        Trace.WriteLine("reading CheckpointData");
                         string? dataName = e.Element("Name") == null ? null : e.Element("Name")?.Value;
                         string? dataVersion = e.Element("Version") == null ? null : e.Element("Version")?.Value;
                         int? dataOffset = e.Element("Offset") == null ? null : ParseHexNumber(e.Element("Offset").Value);
-
+                        PreserveLocation[]? preserveLocations = e.Element("PreserveLocations") == null ? null : e.Element("PreserveLocations")?.Elements().Select(x => ParseLocation(x)).ToArray();
 
 
                         // Check that all the data actually exists and make the entry
-                        if (dataName != null && dataVersion != null && dataOffset != null)
+                        if (dataName != null && dataVersion != null)
                         {
-                            Dictionary<string, int> versionDictionary = new();
-                            versionDictionary.Add(dataVersion, (int)dataOffset);
-                            CheckpointData.Add(dataName, versionDictionary);
+                            if (dataOffset != null)
+                            {
+                                Dictionary<string, object> versionDictionary = new();
+                                versionDictionary.Add(dataVersion, (int)dataOffset);
+                                CheckpointData.Add(dataName, versionDictionary);
+                            }
+                            else if (preserveLocations != null)
+                            {
+                                Trace.WriteLine("Adding preserveLocations[] object to dictionary!");
+                                Dictionary<string, object> versionDictionary = new();
+                                versionDictionary.Add(dataVersion, (PreserveLocation[])preserveLocations);
+                                CheckpointData.Add(dataName, versionDictionary);
+                            }
                         }
                     }
                     else if (e.Name == "HighestSupportMCCVersion")
                     {
                         HighestSupportMCCVersion = e.Value;
                     }
+
 
 
                 }
@@ -99,6 +113,32 @@ namespace HCM3
             }
             return true;
 
+            PreserveLocation? ParseLocation(XElement? location)
+            {
+                Trace.WriteLine("got here at least");
+                if (location == null) return null;
+                Trace.WriteLine("location: " + location.ToString());
+                try
+                {
+                    
+                    int? Offset = ParseHexNumber(location.Element("Offset")?.Value);
+                    int? Length = ParseHexNumber(location.Element("Length")?.Value);
+
+                    if (Offset == null || Length == null)
+                    {
+                        Trace.WriteLine("offset or length was null when parsing location");
+                        return null;
+                    }
+                        
+                    return new PreserveLocation((int)Offset, (int)Length);
+                }
+                catch
+                {
+                    return null;
+                }
+
+
+            }
 
             int? ParseHexNumber(string? s)
             {
@@ -109,26 +149,26 @@ namespace HCM3
 
         }
 
-        public int? GetCheckpointOffset(string? dataName, string? dataVersion)
+        public object? GetCheckpointData(string? dataName, string? dataVersion)
         {
             if (dataName == null || dataVersion == null)
             {
                 return null;
             }
 
-            bool success = CheckpointData.TryGetValue(dataName, out Dictionary<string, int>? dataVersionDictionary);
+            bool success = CheckpointData.TryGetValue(dataName, out Dictionary<string, object>? dataVersionDictionary);
             if (!success || dataVersionDictionary == null)
             {
                 return null;
             }
 
-            success = dataVersionDictionary.TryGetValue(dataVersion, out int dataOffset);
-            if (!success)
+            success = dataVersionDictionary.TryGetValue(dataVersion, out object? dataObject);
+            if (!success || dataObject == null)
             {
                 return null;
             }
 
-            return dataOffset;
+            return dataObject;
         }
 
 

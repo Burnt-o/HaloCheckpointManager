@@ -99,7 +99,12 @@ namespace HCM3.ViewModel
             get { return _dump ?? (_dump = new DumpCommand(CheckpointModel)); }
             set { _dump = value; }
         }
-        public ICommand Inject { get; private set; }
+        private ICommand _inject;
+        public ICommand Inject
+        {
+            get { return _inject ?? (_inject = new InjectCommand(CheckpointModel)); }
+            set { _inject = value; }
+        }
 
         public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -146,6 +151,34 @@ namespace HCM3.ViewModel
             public event EventHandler? CanExecuteChanged;
         }
 
+        public class InjectCommand : ICommand
+        {
+            public InjectCommand(CheckpointModel checkpointModel)
+            {
+                CheckpointModel = checkpointModel;
+            }
+
+            private CheckpointModel CheckpointModel { get; set; }
+            public bool CanExecute(object? parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object? parameter)
+            {
+                try
+                {
+                    CheckpointModel.TryInject();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show("Failed to Inject! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                }
+
+            }
+
+            public event EventHandler? CanExecuteChanged;
+        }
 
     }
 
