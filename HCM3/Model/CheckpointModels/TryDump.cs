@@ -12,7 +12,7 @@ namespace HCM3.Model.CheckpointModels
 {
     internal sealed partial class CheckpointModel
     {
-        public void TryDump()
+        public void TryDump(SaveFolder? SelectedSaveFolder)
         {
 
             // Update HaloState
@@ -30,9 +30,9 @@ namespace HCM3.Model.CheckpointModels
             }
 
             // Check that the folder we're going to dump the file into actually exists
-            if (!Directory.Exists(this.SelectedSaveFolder?.SaveFolderPath))
+            if (!Directory.Exists(SelectedSaveFolder?.SaveFolderPath))
             {
-                throw new InvalidOperationException("TryDump didn't have a valid folder to save the checkpoint to " + this.SelectedSaveFolder?.SaveFolderPath);
+                throw new InvalidOperationException("TryDump didn't have a valid folder to save the checkpoint to " + SelectedSaveFolder?.SaveFolderPath);
             }
 
 
@@ -141,7 +141,7 @@ namespace HCM3.Model.CheckpointModels
                                                        "Name your dumped checkpoint",
                                                        "",
                                                        -1, -1);
-            string proposedSave = (this.SelectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
+            string proposedSave = (SelectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
             if (userInput != null && userInput != "" && !File.Exists(proposedSave))
                 try
@@ -155,7 +155,7 @@ namespace HCM3.Model.CheckpointModels
                     }
 
                     //Refresh the list now that we have a new checkpoint
-                    this.RefreshCheckpointList();
+                    this.RefreshCheckpointList(SelectedSaveFolder);
                 }
                 catch (Exception ex)
                 {

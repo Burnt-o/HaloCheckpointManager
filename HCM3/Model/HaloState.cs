@@ -68,12 +68,11 @@ namespace HCM3.Model
             }
             set
             {
-                if (_currentHaloState != value)
-                {
+
                     _currentHaloState = value;
                     // Raise event
                     HaloStateEvents.HALOSTATECHANGED_EVENT_INVOKE(this, new HaloStateEvents.HaloStateChangedEventArgs(_currentHaloState));
-                }
+
 
             }
         }

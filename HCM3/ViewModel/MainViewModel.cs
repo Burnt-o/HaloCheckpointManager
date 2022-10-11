@@ -49,11 +49,9 @@ namespace HCM3.ViewModel
         {
             if (e.PropertyName == nameof(SelectedTabIndex))
             {
-               
-
 
                 // Tell main model that the tab changed so it can refresh checkpoint details to be of the correct game/folder
-                MainModel.HCMTabChanged(SelectedTabIndex);
+                MainModel.OnHCMTabChanged(SelectedTabIndex, CheckpointViewModel.SelectedSaveFolder);
 
                 // Now let's try to set the selected folder to whatever folder was last selected on this tab
                 if (MainModel.CheckpointModel.RootSaveFolder != null)

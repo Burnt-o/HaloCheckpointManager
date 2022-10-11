@@ -14,8 +14,10 @@ namespace HCM3.Model.CheckpointModels
 {
     internal sealed partial class CheckpointModel
     {
-        public void TryInject()
+        public void TryInject(SaveFolder? SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
         {
+            if (SelectedCheckpoint == null) throw new Exception("No checkpoint was selected!");
+
             // Update HaloState
             MainModel.HaloMemory.HaloState.UpdateHaloState();
 
@@ -31,10 +33,10 @@ namespace HCM3.Model.CheckpointModels
             }
 
             // Check that the file we're going to inject actually exists
-            string checkpointPath = this.SelectedSaveFolder?.SaveFolderPath + "\\" + this.SelectedCheckpoint?.CheckpointName + ".bin";
+            string checkpointPath = SelectedSaveFolder?.SaveFolderPath + "\\" + SelectedCheckpoint?.CheckpointName + ".bin";
             if (!File.Exists(checkpointPath))
             {
-                throw new Exception("TryDump didn't have a valid folder to save the checkpoint to " + this.SelectedSaveFolder?.SaveFolderPath);
+                throw new Exception("TryDump didn't have a valid folder to save the checkpoint to " + SelectedSaveFolder?.SaveFolderPath);
             }
 
 

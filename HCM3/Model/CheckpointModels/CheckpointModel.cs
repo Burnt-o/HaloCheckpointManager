@@ -21,9 +21,9 @@ namespace HCM3.Model.CheckpointModels
         private CheckpointFileDecoder CheckpointFileDecoder = new();
         public MainModel MainModel { get; init; }
 
-        public SaveFolder? SelectedSaveFolder { get; set; }
+        //public SaveFolder? SelectedSaveFolder { get; set; }
 
-        public Checkpoint? SelectedCheckpoint { get; set; }
+        //public Checkpoint? SelectedCheckpoint { get; set; }
 
 
         public CheckpointModel(MainModel mainModel)
@@ -38,7 +38,7 @@ namespace HCM3.Model.CheckpointModels
         }
 
 
-        public void BatchModCheckpointLWTs(List<Checkpoint> listCheckpoints, List<DateTime?> listLWT)
+        public void BatchModCheckpointLWTs(List<Checkpoint> listCheckpoints, List<DateTime?> listLWT, SaveFolder? SelectedSaveFolder)
         {
             for (int i = 0; i < listCheckpoints.Count; i++)
             {

@@ -10,7 +10,7 @@ namespace HCM3.Model.CheckpointModels
 {
     internal sealed partial class CheckpointModel
     {
-        public void RefreshCheckpointList()
+        public void RefreshCheckpointList(SaveFolder? SelectedSaveFolder)
         {
 
                 int selectedTabIndex = MainModel.SelectedTabIndex;

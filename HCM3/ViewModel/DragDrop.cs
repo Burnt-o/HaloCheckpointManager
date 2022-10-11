@@ -123,10 +123,10 @@ namespace HCM3.ViewModel
 
                 // Pass the two lists to checkpointmodel to actually apply the LWTs to the files.
                 // The new list of checkpoints gets the old list of LWTs, thus reordering them
-                CheckpointModel.BatchModCheckpointLWTs(listCheckpoints, listLWT);
+                CheckpointModel.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
 
                 // Refresh the list
-                CheckpointModel.RefreshCheckpointList();
+                CheckpointModel.RefreshCheckpointList(SelectedSaveFolder);
             }
 
 

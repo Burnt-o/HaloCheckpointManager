@@ -17,13 +17,14 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Linq;
+using HCM3.ViewModel.Commands;
 
 namespace HCM3.ViewModel
 {
 
     internal partial class CheckpointViewModel : Presenter, IDropTarget
     {
-        private readonly CheckpointModel CheckpointModel;
+        internal readonly CheckpointModel CheckpointModel;
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
 
@@ -45,6 +46,31 @@ namespace HCM3.ViewModel
             }
         }
 
+        private SaveFolder? _selectedSaveFolder;
+        public SaveFolder? SelectedSaveFolder 
+        { get { return _selectedSaveFolder; }
+            set 
+            {
+                _selectedSaveFolder = value;
+                OnPropertyChanged(nameof(SelectedSaveFolder));
+            }
+        }
+
+
+        // Evalutes whether the HCM tab is aligned with the current MCC in-game game. So buttons like dump can only work if you're actually in that game.
+        private bool _tabAlignedWithHaloState;
+        public bool TabAlignedWithHaloState
+        {
+            get { return _tabAlignedWithHaloState;}
+            set 
+            { if (_tabAlignedWithHaloState != value)
+                {
+                    _tabAlignedWithHaloState = value;
+                    OnPropertyChanged(nameof(TabAlignedWithHaloState));
+                        
+                   } 
+            }
+        }
         
 
         public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel, MainModel mainModel)
@@ -53,7 +79,6 @@ namespace HCM3.ViewModel
             this.CheckpointCollection = CheckpointModel.CheckpointCollection;
             this.SaveFolderHierarchy = CheckpointModel.SaveFolderHierarchy;
             this.RootSaveFolder = CheckpointModel.RootSaveFolder;
-            this.PropertyChanged += Handle_PropertyChanged;
             this.MainViewModel = mainViewModel;
             this.MainModel = mainModel;
 
@@ -64,16 +89,28 @@ namespace HCM3.ViewModel
 
             view.CustomSort = new SortCheckpointsByLastWriteTime();
 
+            // Need to subscribe to HaloStateChanged of mainmodel, and tab changed of mainviewmodel,
+            // So we can update TabAlignedWithInGame
+            MainViewModel.PropertyChanged += (obj, args) => { UpdateTabAlignedWithHaloState(); };
+            HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { UpdateTabAlignedWithHaloState(); };
+
+            //Subscribe to AttachEvent so we can tell CheckpointModel to refreshList
+            HaloStateEvents.ATTACH_EVENT += (obj, args) =>
+            {
+                App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+                {
+                    this.CheckpointModel.RefreshCheckpointList(SelectedSaveFolder);
+                });
+            };
+
+            
+
         }
 
-        private void Handle_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(SelectedCheckpoint))
-            {
-                Trace.WriteLine("selected checkpoint changed");
-                CheckpointModel.SelectedCheckpoint = SelectedCheckpoint;
-            }
 
+        private void UpdateTabAlignedWithHaloState()
+        {
+            TabAlignedWithHaloState = (MainViewModel.SelectedTabIndex == MainModel.HaloMemory.HaloState.CurrentHaloState);
         }
 
         public class SortCheckpointsByLastWriteTime : IComparer
@@ -91,21 +128,6 @@ namespace HCM3.ViewModel
             }
         }
 
-
-
-        private ICommand _dump;
-        public ICommand Dump
-        {
-            get { return _dump ?? (_dump = new DumpCommand(CheckpointModel)); }
-            set { _dump = value; }
-        }
-        private ICommand _inject;
-        public ICommand Inject
-        {
-            get { return _inject ?? (_inject = new InjectCommand(CheckpointModel)); }
-            set { _inject = value; }
-        }
-
         public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
@@ -115,117 +137,32 @@ namespace HCM3.ViewModel
             {
                 Properties.Settings.Default.LastSelectedFolder[MainViewModel.SelectedTabIndex] = saveFolder.SaveFolderPath;
             }
-            
-            CheckpointModel.SelectedSaveFolder = saveFolder;
-            CheckpointModel.RefreshCheckpointList();
 
-            
+
+
+            CheckpointModel.RefreshCheckpointList(this.SelectedSaveFolder);
+
+
         }
 
-        public class DumpCommand : ICommand
+        private ICommand _dump;
+        public ICommand Dump
         {
-            public DumpCommand(CheckpointModel checkpointModel)
-            {
-                CheckpointModel = checkpointModel;
-                
-                // Note to self. Need to restructure how viewmodel vs model has selectedtabindex, selected checkpoint etc etc. 
-                // Also this command should probably be getting handed the viewmodel instead of the model
-
-                //CheckpointModel.MainModel.SelectedTabIndex.PropertyChanged += (obj, args) => { RaiseCanExecuteChanged(); };
-                HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { RaiseCanExecuteChanged(); };
-            }
-
-            private CheckpointModel CheckpointModel { get; set; }
-            public bool CanExecute(object? parameter)
-            {
-                //return true;
-                Trace.WriteLine("dump Can execute checked");
-                return (CheckpointModel.MainModel.SelectedTabIndex == CheckpointModel.MainModel.HaloMemory.HaloState.CurrentHaloState);
-            }
-
-            public void Execute(object? parameter)
-            {
-                try
-                {
-                    CheckpointModel.TryDump();
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show("Failed to dump! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
-                }
-                
-            }
-
-            public void RaiseCanExecuteChanged()
-            {
-                App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
-                {
-                    _canExecuteChanged?.Invoke(this, EventArgs.Empty);
-                });
-                
-            }
-
-            //should rewrite this to be a regular event.. then we need to raise it from uh selectedTabIndex changing and from CurrentHaloState getting changed.
-            //alternatively. have those things raise PropertyChanged, and we just subscribe to that.
-            private EventHandler? _canExecuteChanged;
-
-            public event EventHandler? CanExecuteChanged
-            {
-                add
-                {
-                    _canExecuteChanged += value;
-                    CommandManager.RequerySuggested += value;
-                }
-                remove
-                {
-                    _canExecuteChanged -= value;
-                    CommandManager.RequerySuggested -= value;
-                }
-            }
+            get { return _dump ?? (_dump = new DumpCommand(this)); }
+            set { _dump = value; }
         }
-
-        public class InjectCommand : ICommand
+        private ICommand _inject;
+        public ICommand Inject
         {
-            public InjectCommand(CheckpointModel checkpointModel)
-            {
-                CheckpointModel = checkpointModel;
-            }
-
-            private CheckpointModel CheckpointModel { get; set; }
-            public bool CanExecute(object? parameter)
-            {
-                //return true;
-                Trace.WriteLine("inject Can execute checked");
-                return (CheckpointModel.SelectedCheckpoint != null) && (CheckpointModel.MainModel.SelectedTabIndex == CheckpointModel.MainModel.HaloMemory.HaloState.CurrentHaloState);
-            }
-
-            public void Execute(object? parameter)
-            {
-                try
-                {
-                    CheckpointModel.TryInject();
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show("Failed to Inject! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
-                }
-
-            }
-
-            public event EventHandler? CanExecuteChanged
-            {
-                add
-                {
-                    CommandManager.RequerySuggested += value;
-                }
-                remove
-                {
-                    CommandManager.RequerySuggested -= value;
-                }
-            }
-
-           
+            get { return _inject ?? (_inject = new InjectCommand(this)); }
+            set { _inject = value; }
         }
+
+
+
+        
+
+        
 
     }
 

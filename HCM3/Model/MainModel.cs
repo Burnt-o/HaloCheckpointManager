@@ -88,22 +88,19 @@ namespace HCM3.Model
             Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version to " + CurrentAttachedMCCVersion);
 
             // Also we want to refresh the checkpoint list in case the CurrentAttachedMCCVersion changed (it's used to read data from checkpoints)
-            App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
-            {
-            this.CheckpointModel.RefreshCheckpointList();
-            });
+
 
         }
 
         // MainViewModel triggers an event when the Tab Control has it's tab changed, which calls this. 
-        public void HCMTabChanged(int selectedTabIndex)
+        public void OnHCMTabChanged(int selectedTabIndex, SaveFolder? SelectedSaveFolder)
         {
             SelectedTabIndex = selectedTabIndex;
 
             App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
             {
-                this.CheckpointModel.RefreshCheckpointList();
                 this.CheckpointModel.RefreshSaveFolderTree();
+                this.CheckpointModel.RefreshCheckpointList(SelectedSaveFolder);
             });
         }
 
