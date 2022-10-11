@@ -9,13 +9,14 @@ using System.Xml.XPath;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using HCM3.Model.CheckpointModels;
 
 namespace HCM3
 {
     public class DataPointers
     {
         #region Properties
-        private Dictionary<string, Dictionary<string, ReadWrite.Pointer>> PointerData { get; set; } = new()
+        private Dictionary<string, Dictionary<string, Object>> PointerData { get; set; } = new()
         {
         };
 
@@ -33,8 +34,9 @@ namespace HCM3
 
 
 
-        public bool LoadPointerDataFromGit(out string exceptionString)
+        public bool LoadPointerDataFromGit(out string exceptionString, out string? HighestSupportedMCCVersion)
         {
+            HighestSupportedMCCVersion = null;
             exceptionString = "";
             try
             {
@@ -64,42 +66,72 @@ namespace HCM3
 
                 foreach (XElement e in doc.Root.Elements())
                 {
-                    if (e.Name == "Pointer")
+                    if (e.Name == "HighestSupportedVersion")
                     {
-                        // Read the data from the Pointer element (if the data exists)
-                        string? pointerName = e.Element("Name") == null ? null : e.Element("Name")?.Value;
-                        string? pointerVersion = e.Element("Version") == null ? null : e.Element("Version")?.Value;
-                        string? pointerModule = e.Element("Module") == null ? null : e.Element("Module")?.Value;
-                        int[]? pointerOffsets = e.Element("Offsets") == null ? null : e.Element("Offsets")?.Elements().Select(x => ParseHexNumber(x.Value)).ToArray();
-                        IntPtr? pointerIntPtr = e.Element("IntPtr") == null ? null : (IntPtr?)ParseHexNumber(e.Element("IntPtr").Value);
-
-                        // Check that all the data actually exists and make the pointer
-                        if (pointerName != null && pointerVersion != null)
+                        HighestSupportedMCCVersion = e.Value == null || e.Value == "" ? null : e.Value;
+                        Trace.WriteLine("Loaded HighestSupportedMCCVersion, value: " + HighestSupportedMCCVersion);
+                    }
+                    else if (e.Name == "Version")
+                    {
+                        Trace.WriteLine("1Version: " + e.Attribute("Version")?.Value);
+                        string? pointerVersion = e.Attribute("Version")?.Value == null ? null : e.Attribute("Version")?.Value;
+                        
+                        foreach (XElement entry in e.Elements())
                         {
-                            ReadWrite.Pointer newPointer;
+                            string? pointerName = null;
+                            object? objectToStore = null;
 
-                            if (pointerIntPtr != null)
+                            if (entry.Attribute("Type")?.Value == "int")
                             {
-                                newPointer = new ReadWrite.Pointer(pointerIntPtr);
-                                // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys    
-                                Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
-                                versionDictionary.Add(pointerVersion, newPointer);
-                                PointerData.Add(pointerName, versionDictionary);
-                                Trace.WriteLine("Added new pointer IntPtr, name: " + pointerName);
+                                Trace.WriteLine("Processing int entry");
+                                pointerName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
+                                int? pointerOffset = entry.Element("Offset") == null ? null : ParseHexNumber(entry.Element("Offset")?.Value);
+
+                                if (pointerOffset.HasValue)
+                                {
+                                    objectToStore = (int)pointerOffset;
+                                }
+
                             }
-                            else if (pointerModule != null && pointerOffsets != null)
+                            if (entry.Attribute("Type")?.Value == "PreserveLocation[]")
                             {
-                                newPointer = new ReadWrite.Pointer(pointerModule, pointerOffsets);
-                                // Load the pointer into the Pointers dictionary, with pointerName and pointerVersion as the keys    
-                                Dictionary<string, ReadWrite.Pointer> versionDictionary = new();
-                                versionDictionary.Add(pointerVersion, newPointer);
-                                PointerData.Add(pointerName, versionDictionary);
-                                Trace.WriteLine("Added new pointer mod & offsets, name: " + pointerName);
+                                Trace.WriteLine("Processing PreserveLocation[] entry");
+                                pointerName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
+                                PreserveLocation?[]? preserveLocations = entry.Element("PreserveLocations") == null ? null : entry.Element("PreserveLocations")?.Elements().Select(x => ParseLocation(x)).ToArray();
+
+                                if (preserveLocations != null && preserveLocations.Any() && preserveLocations[0] != null)
+                                {
+                                    objectToStore = preserveLocations;
+                                }
+                            }
+                            else if (entry.Attribute("Type")?.Value == "ReadWrite.Pointer")
+                            {
+                                Trace.WriteLine("Processing ReadWrite.Pointer entry");
+                                // Read the data from the Pointer element (if the data exists)
+                                pointerName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
+                                string? pointerModule = entry.Element("Module") == null ? null : entry.Element("Module")?.Value;
+                                int[]? pointerOffsets = entry.Element("Offsets") == null ? null : entry.Element("Offsets")?.Elements().Select(x => ParseHexNumber(x.Value)).ToArray();
+
+
+                                // Check that all the data actually exists and make the pointer
+                                if (pointerModule != null && pointerOffsets != null)
+                                {
+                                    objectToStore = new ReadWrite.Pointer(pointerModule, pointerOffsets);
+                                }
                             }
 
+                            if (pointerName != null && pointerVersion != null && objectToStore != null)
+                            {
+                                // Load the object into the Pointers dictionary, with pointerName and pointerVersion as the keys    
+                                Dictionary<string, Object> versionDictionary = new();
+                                versionDictionary.Add(pointerVersion, objectToStore);
+                                PointerData.Add(pointerName, versionDictionary);
+                                Trace.WriteLine("Added new object to pointer dictionary, name: " + pointerName + ", version: " + pointerVersion + ", type: " + objectToStore.GetType().ToString());
+                            }
 
-                                    
                         }
+
+
                     }
 
 
@@ -121,47 +153,58 @@ namespace HCM3
                 return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) : Convert.ToInt32(s);
             }
 
+            PreserveLocation? ParseLocation(XElement? location)
+            {
+                Trace.WriteLine("got here at least");
+                if (location == null) return null;
+                Trace.WriteLine("location: " + location.ToString());
+                try
+                {
+
+                    int? Offset = ParseHexNumber(location.Element("Offset")?.Value);
+                    int? Length = ParseHexNumber(location.Element("Length")?.Value);
+
+                    if (Offset == null || Length == null)
+                    {
+                        Trace.WriteLine("offset or length was null when parsing location");
+                        return null;
+                    }
+
+                    return new PreserveLocation((int)Offset, (int)Length);
+                }
+                catch
+                {
+                    return null;
+                }
+
+
+            }
+
         }
 
-        public ReadWrite.Pointer? GetPointer(string? pointerName, string? pointerVersion)
+        public object? GetPointer(string? pointerName, string? pointerVersion)
         {
             if (pointerName == null || pointerVersion == null)
             {
                 return null;
             }
 
-            bool success = PointerData.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
+            bool success = PointerData.TryGetValue(pointerName, out Dictionary<string, object>? pointerVersionDictionary);
                 if (!success || pointerVersionDictionary == null)
                 {
                     return null;
                 }
 
-                success = pointerVersionDictionary.TryGetValue(pointerVersion, out ReadWrite.Pointer? pointer);
+                success = pointerVersionDictionary.TryGetValue(pointerVersion, out object? pointer);
                 if (!success || pointer == null)
                 {
                     return null;
                 }
 
-                return pointer;
+                return (object)pointer;
         }
 
-        public bool PointerExists(string? pointerName, string? pointerVersion)
-        {
-            if (pointerName == null || pointerVersion == null)
-            {
-                return false;
-            }
-
-            bool success = PointerData.TryGetValue(pointerName, out Dictionary<string, ReadWrite.Pointer>? pointerVersionDictionary);
-            if (!success || pointerVersionDictionary == null)
-            {
-                return false;
-            }
-
-            success = pointerVersionDictionary.TryGetValue(pointerVersion, out ReadWrite.Pointer? pointer);
-            return success && pointer != null;
-
-        }
+        
 
 
 

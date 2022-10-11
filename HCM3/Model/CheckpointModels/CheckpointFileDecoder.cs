@@ -86,7 +86,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetLevelCode = (int?)mainModel.DataCheckpoints.GetCheckpointData(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
+                                int? offsetLevelCode = (int?)mainModel.DataPointers.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -105,7 +105,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetGameTickCount = (int?)mainModel.DataCheckpoints.GetCheckpointData(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
+                                int? offsetGameTickCount = (int?)mainModel.DataPointers.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -120,7 +120,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetDifficulty = (int?)mainModel.DataCheckpoints.GetCheckpointData(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
+                                int? offsetDifficulty = (int?)mainModel.DataPointers.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data

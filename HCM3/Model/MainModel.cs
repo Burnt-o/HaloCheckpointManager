@@ -16,7 +16,6 @@ namespace HCM3.Model
     internal class MainModel
     {
         public DataPointers DataPointers { get; init; }
-        public DataCheckpoints DataCheckpoints { get; init; }
         public HaloMemory HaloMemory { get; init; }
 
         public CheckpointModels.CheckpointModel CheckpointModel { get; init; }
@@ -37,20 +36,14 @@ namespace HCM3.Model
                 System.Windows.Application.Current.Shutdown();
             }
 
-            // Create collection of all our ReadWrite.Pointers and load them from the online repository
+            // Create collection of all our ReadWrite.Pointers (and other data) and load them from the online repository
             DataPointers = new();
-            if (!DataPointers.LoadPointerDataFromGit(out string error))
+            if (!DataPointers.LoadPointerDataFromGit(out string error, out string? highestSupportMCCVersion))
             {
                 System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
 
-            DataCheckpoints = new();
-            if (!DataCheckpoints.LoadCheckpointDataFromGit(out string error2, out string? highestSupportMCCVersion))
-            {
-                System.Windows.MessageBox.Show(error2, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
-                System.Windows.Application.Current.Shutdown();
-            }
 
             HighestSupportMCCVersion = highestSupportMCCVersion;
 

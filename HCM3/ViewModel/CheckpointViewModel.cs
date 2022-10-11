@@ -127,12 +127,20 @@ namespace HCM3.ViewModel
             public DumpCommand(CheckpointModel checkpointModel)
             {
                 CheckpointModel = checkpointModel;
+                
+                // Note to self. Need to restructure how viewmodel vs model has selectedtabindex, selected checkpoint etc etc. 
+                // Also this command should probably be getting handed the viewmodel instead of the model
+
+                //CheckpointModel.MainModel.SelectedTabIndex.PropertyChanged += (obj, args) => { RaiseCanExecuteChanged(); };
+                HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { RaiseCanExecuteChanged(); };
             }
 
             private CheckpointModel CheckpointModel { get; set; }
             public bool CanExecute(object? parameter)
             {
-                return true;
+                //return true;
+                Trace.WriteLine("dump Can execute checked");
+                return (CheckpointModel.MainModel.SelectedTabIndex == CheckpointModel.MainModel.HaloMemory.HaloState.CurrentHaloState);
             }
 
             public void Execute(object? parameter)
@@ -148,7 +156,32 @@ namespace HCM3.ViewModel
                 
             }
 
-            public event EventHandler? CanExecuteChanged;
+            public void RaiseCanExecuteChanged()
+            {
+                App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+                {
+                    _canExecuteChanged?.Invoke(this, EventArgs.Empty);
+                });
+                
+            }
+
+            //should rewrite this to be a regular event.. then we need to raise it from uh selectedTabIndex changing and from CurrentHaloState getting changed.
+            //alternatively. have those things raise PropertyChanged, and we just subscribe to that.
+            private EventHandler? _canExecuteChanged;
+
+            public event EventHandler? CanExecuteChanged
+            {
+                add
+                {
+                    _canExecuteChanged += value;
+                    CommandManager.RequerySuggested += value;
+                }
+                remove
+                {
+                    _canExecuteChanged -= value;
+                    CommandManager.RequerySuggested -= value;
+                }
+            }
         }
 
         public class InjectCommand : ICommand
@@ -161,7 +194,9 @@ namespace HCM3.ViewModel
             private CheckpointModel CheckpointModel { get; set; }
             public bool CanExecute(object? parameter)
             {
-                return true;
+                //return true;
+                Trace.WriteLine("inject Can execute checked");
+                return (CheckpointModel.SelectedCheckpoint != null) && (CheckpointModel.MainModel.SelectedTabIndex == CheckpointModel.MainModel.HaloMemory.HaloState.CurrentHaloState);
             }
 
             public void Execute(object? parameter)
@@ -177,7 +212,19 @@ namespace HCM3.ViewModel
 
             }
 
-            public event EventHandler? CanExecuteChanged;
+            public event EventHandler? CanExecuteChanged
+            {
+                add
+                {
+                    CommandManager.RequerySuggested += value;
+                }
+                remove
+                {
+                    CommandManager.RequerySuggested -= value;
+                }
+            }
+
+           
         }
 
     }

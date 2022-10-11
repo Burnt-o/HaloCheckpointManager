@@ -20,6 +20,18 @@ namespace HCM3.Model
             // Need to subscribe to AttachStates onAttach/onDetach events to update Halo State
             HaloStateEvents.ATTACH_EVENT += HaloStateEvents_ATTACH_EVENT;
             HaloStateEvents.DEATTACH_EVENT += HaloStateEvents_DEATTACH_EVENT;
+
+            //setup currentHaloState updater timer
+            UpdateCurrentHaloStateTimer.Elapsed += new System.Timers.ElapsedEventHandler(this.UpdateHaloState);
+            UpdateCurrentHaloStateTimer.Interval = 1000;
+            UpdateCurrentHaloStateTimer.Enabled = true;
+        }
+
+        // Timer that will periodically update CurrentHaloState
+        private static readonly System.Timers.Timer _updateCurrentHaloStateTimer = new System.Timers.Timer();
+        public System.Timers.Timer UpdateCurrentHaloStateTimer
+        {
+            get { return _updateCurrentHaloStateTimer; }
         }
 
         private void HaloStateEvents_DEATTACH_EVENT(object? sender, EventArgs e)
@@ -77,6 +89,11 @@ namespace HCM3.Model
             return CurrentHaloState;
         }
 
+        public void UpdateHaloState(object? sender, System.Timers.ElapsedEventArgs? args)
+        {
+            //Don't care about those args
+            UpdateHaloState();
+        }
         public void UpdateHaloState()
         {
             // If not attached.
@@ -88,17 +105,23 @@ namespace HCM3.Model
             }
 
             
-            ReadWrite.Pointer? gameIndicatorPointer = MainModel.DataPointers.GetPointer($"MCC_GameIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
-            ReadWrite.Pointer? stateIndicatorPointer = MainModel.DataPointers.GetPointer($"MCC_StateIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
-            ReadWrite.Pointer? menuIndicatorPointer = MainModel.DataPointers.GetPointer($"MCC_MenuIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? gameIndicatorPointer = (ReadWrite.Pointer?)MainModel.DataPointers.GetPointer($"MCC_GameIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? stateIndicatorPointer = (ReadWrite.Pointer?)MainModel.DataPointers.GetPointer($"MCC_StateIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? menuIndicatorPointer = (ReadWrite.Pointer?)MainModel.DataPointers.GetPointer($"MCC_MenuIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
+
             if (gameIndicatorPointer == null || stateIndicatorPointer == null || menuIndicatorPointer == null)
             {
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
+                return;
             }
 
             byte? gameIndicator = MainModel.HaloMemory.ReadWrite.ReadByte(gameIndicatorPointer);
             byte? stateIndicator = MainModel.HaloMemory.ReadWrite.ReadByte(stateIndicatorPointer);
             byte? menuIndicator = MainModel.HaloMemory.ReadWrite.ReadByte(menuIndicatorPointer);
+
+            Trace.WriteLine("gameInd: " + gameIndicator.ToString());
+            Trace.WriteLine("stateInd: " + stateIndicator.ToString());
+            Trace.WriteLine("menuInd: " + menuIndicator.ToString());
 
             if (menuIndicator != 07 && stateIndicator != 44)
             {

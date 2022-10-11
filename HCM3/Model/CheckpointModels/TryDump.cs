@@ -69,10 +69,10 @@ namespace HCM3.Model.CheckpointModels
             }
 
             // Load the required pointers into a dictionary
-            Dictionary<string, ReadWrite.Pointer> requiredPointers = new();
+            Dictionary<string, object> requiredPointers = new();
             foreach (string requiredPointerName in requiredPointerNames)
             {
-                    ReadWrite.Pointer? pointer = MainModel.DataPointers.GetPointer(requiredPointerName, MCCversion);
+                    object? pointer = MainModel.DataPointers.GetPointer(requiredPointerName, MCCversion);
                 if (pointer == null)
                 {
                     throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
@@ -84,11 +84,11 @@ namespace HCM3.Model.CheckpointModels
 
             // Alright, time to read the data
             // Setup checkpoint data buffer to length of the checkpoint
-            byte[]? CheckpointData = new byte[(int)requiredPointers["CheckpointLength"].Address];
+            byte[]? CheckpointData = new byte[(int)requiredPointers["CheckpointLength"]];
             switch ((int)game)
             {
                 case 0:
-                    CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData(requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                    CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
                     break;
 
                 case 1:
@@ -96,18 +96,18 @@ namespace HCM3.Model.CheckpointModels
                 case 3:
                 case 4:
                 case 5:
-                    byte? doubleRevertFlag = (byte?)this.MainModel.HaloMemory.ReadWrite.ReadBytes(requiredPointers["DoubleRevertFlag"])?.GetValue(0);
+                    byte? doubleRevertFlag = (byte?)this.MainModel.HaloMemory.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
                     if (doubleRevertFlag == null)
                     {
                         throw new InvalidOperationException("Failed to read double revert flag");
                     }
                     if (doubleRevertFlag == 0)
                     {
-                        CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData(requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                        CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
                     }
                     else if (doubleRevertFlag == 1)
                     {
-                        CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData(requiredPointers["CheckpointLocation2"], CheckpointData.Length);
+                        CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
                     }
                     else 
                     {
