@@ -137,8 +137,7 @@ namespace HCM3.ViewModel
             {
                 Properties.Settings.Default.LastSelectedFolder[MainViewModel.SelectedTabIndex] = saveFolder.SaveFolderPath;
             }
-
-
+            this.SelectedSaveFolder = saveFolder;
 
             CheckpointModel.RefreshCheckpointList(this.SelectedSaveFolder);
 
@@ -158,11 +157,17 @@ namespace HCM3.ViewModel
             set { _inject = value; }
         }
 
+        private ICommand _deleteCheckpoint;
+        public ICommand DeleteCheckpoint
+        {
+            get { return _deleteCheckpoint ?? (_deleteCheckpoint = new DeleteCheckpointCommand(this)); }
+            set { _deleteCheckpoint = value; }
+        }
 
 
-        
 
-        
+
+
 
     }
 
