@@ -22,7 +22,7 @@ namespace HCM3.ViewModel.Commands
             //HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { RaiseCanExecuteChanged(); };
             CheckpointViewModel.PropertyChanged += (obj, args) =>
             {
-                if (args.PropertyName == nameof(CheckpointViewModel.TabAlignedWithHaloState))
+                if (args.PropertyName == nameof(CheckpointViewModel.SelectedGameSameAsActualGame))
                 {
                     RaiseCanExecuteChanged();
                 }
@@ -34,7 +34,7 @@ namespace HCM3.ViewModel.Commands
         {
             //return true;
             Trace.WriteLine("dump CanExecute checked");
-            return (CheckpointViewModel.TabAlignedWithHaloState);
+            return (CheckpointViewModel.SelectedGameSameAsActualGame);
         }
 
         public void Execute(object? parameter)
@@ -42,6 +42,7 @@ namespace HCM3.ViewModel.Commands
             try
             {
                 CheckpointViewModel.CheckpointModel.TryDump(CheckpointViewModel.SelectedSaveFolder);
+                CheckpointViewModel.RefreshCheckpointList();
             }
             catch (Exception ex)
             {

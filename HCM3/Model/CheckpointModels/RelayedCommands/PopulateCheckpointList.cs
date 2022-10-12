@@ -5,35 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
-
+using System.Collections.ObjectModel;
 namespace HCM3.Model.CheckpointModels
 {
     internal sealed partial class CheckpointModel
     {
-        public void RefreshCheckpointList(SaveFolder? SelectedSaveFolder)
+
+        // TODO: make this static
+        public ObservableCollection<Checkpoint> PopulateCheckpointList(SaveFolder? SelectedSaveFolder, int SelectedGame)
         {
+            ObservableCollection<Checkpoint> checkpointCollection = new();
 
-                int selectedTabIndex = MainModel.SelectedTabIndex;
-                if (selectedTabIndex == 6) // 6 is Settings tab, so no need to refresh the checkpointlist. 
-                {
-                    Trace.WriteLine("RefreshCheckpointList: tabindex is 6 so not refreshing checkpoint collection");
-                    return;
-                }
 
-                // Clear the checkpoint collection. We're about to re-populate it.
-                CheckpointCollection.Clear();
+
 
                 string? saveFolderPath = SelectedSaveFolder?.SaveFolderPath;
             if (saveFolderPath == null)
             { 
                 // Set it to root folder
-            saveFolderPath = @"Saves\" + Dictionaries.TabIndexToRootFolderPath[selectedTabIndex];
+            saveFolderPath = @"Saves\" + Dictionaries.TabIndexToRootFolderPath[SelectedGame];
             }
                 
                 if (!Directory.Exists(saveFolderPath))
                 {
                     Trace.WriteLine("RefreshCheckpointList: saveFolderPath didn't exist!");
-                    return;
+                    return checkpointCollection;
                 }
 
                 // We only want files with ".bin" extension.
@@ -42,7 +38,7 @@ namespace HCM3.Model.CheckpointModels
                 if (!checkpointFileArray.Any()) // If no files of type .bin in directory, then we leave the checkpoint collection empty.
                 {
                     Trace.WriteLine("RefreshCheckpointList: saveFolderPath had no .bin files so leaving checkpointCollection empty.");
-                    return;
+                    return checkpointCollection;
                 }
 
                 // Need to fix files so that none of them have the exact same LastWriteTime ("last modified on" file metadata), since we use this property for sorting
@@ -58,18 +54,19 @@ namespace HCM3.Model.CheckpointModels
                 // Magic happens over in the decoder. Add our new checkpoint to the list
                 foreach (FileInfo checkpointFile in checkpointFileArray)
                 {
-                    Checkpoint? cp = CheckpointFileDecoder.ReadCheckpointFromFile(checkpointFile, selectedTabIndex, MainModel);
+                    Checkpoint? cp = CheckpointFileDecoder.ReadCheckpointFromFile(checkpointFile, SelectedGame, MainModel);
                     if (cp != null)
                     {
-                        CheckpointCollection.Add(cp);
+                    checkpointCollection.Add(cp);
                     }
                 }
 
 
+            return checkpointCollection;
 
 
                 // Checks if a file has the same LastWriteTime as any other file in an array (besides itself, of course)
-                bool FileHasSameTime(FileInfo[] checkpointFileArray, FileInfo currentfile)
+            bool FileHasSameTime(FileInfo[] checkpointFileArray, FileInfo currentfile)
                 {
                     foreach (FileInfo File in checkpointFileArray)
                     {

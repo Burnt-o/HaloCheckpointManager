@@ -30,6 +30,7 @@ namespace HCM3.ViewModel
 
         public MainModel MainModel { get; set; }
 
+        public int SelectedGame { get; set; }
         public CheckpointViewModel CheckpointViewModel { get; init; }
 
         public MainViewModel(MainModel mainModel)
@@ -40,8 +41,12 @@ namespace HCM3.ViewModel
 
             this.PropertyChanged += Handle_PropertyChanged;
 
+            // Need to subscribe to HaloStateChanged of mainmodel, and tab changed of this mainViewModel,
+            HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { IsSelectedGameSameAsActualGame(); };
+
             // Load in selected tab to what it was when HCM closed last
             SelectedTabIndex = Properties.Settings.Default.LastSelectedTab;
+
         }
 
 
@@ -49,59 +54,25 @@ namespace HCM3.ViewModel
         {
             if (e.PropertyName == nameof(SelectedTabIndex))
             {
-
-                // Tell main model that the tab changed so it can refresh checkpoint details to be of the correct game/folder
-                MainModel.OnHCMTabChanged(SelectedTabIndex, CheckpointViewModel.SelectedSaveFolder);
-
-                // Now let's try to set the selected folder to whatever folder was last selected on this tab
-                if (MainModel.CheckpointModel.RootSaveFolder != null)
+                if (SelectedTabIndex != 6) //Settings tab == 6
                 {
-                    // Get the last selected folder from the app settings string collection
-                    string? lastSelectedFolder = Properties.Settings.Default.LastSelectedFolder?[SelectedTabIndex];
-                    bool ableToSetLastFolder = false; // a flag that can be set in foreach loop and used for root folder fallback if not set
-                    if (lastSelectedFolder != null)
-                    {
-                        IEnumerable<SaveFolder> flattenedTree = FlattenTree(MainModel.CheckpointModel.RootSaveFolder);
-                        foreach (SaveFolder sf in flattenedTree)
-                        {
-                            // If it matches!
-                            if (sf.SaveFolderPath == lastSelectedFolder)
-                            {
-                                Trace.WriteLine("Resetting last selected folder to " + sf.SaveFolderPath);
-                                sf.IsSelected = true;
-                                ableToSetLastFolder = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!ableToSetLastFolder)
-                    {
-                        // If we weren't able to reset it then default to root folder
-                        MainModel.CheckpointModel.RootSaveFolder.IsSelected = true;
-                    }
-
+                    CheckpointViewModel.SelectedGame = SelectedTabIndex;
+                    this.SelectedGame = SelectedTabIndex;
+                    this.CheckpointViewModel.RefreshSaveFolderTree();
+                    this.CheckpointViewModel.RefreshCheckpointList();
                 }
-                
+                IsSelectedGameSameAsActualGame();
 
                 // Save the selected tab to settings so we can load it in next time HCM starts
                 Properties.Settings.Default.LastSelectedTab = SelectedTabIndex;
             }
         }
 
-        private static IEnumerable<SaveFolder> FlattenTree(SaveFolder node)
+        private void IsSelectedGameSameAsActualGame()
         {
-            if (node == null)
-            {
-                yield break;
-            }
-            yield return node;
-            foreach (var n in node.Children)
-            {
-                foreach (var innerN in FlattenTree(n))
-                {
-                    yield return innerN;
-                }
-            }
+            CheckpointViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == MainModel.HaloMemory.HaloState.CurrentHaloState);
         }
+
+
     }
 }

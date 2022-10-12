@@ -28,6 +28,7 @@ namespace HCM3.ViewModel.Commands
             try
             {
                 CheckpointViewModel.CheckpointModel.DeleteCheckpoint(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint);
+                CheckpointViewModel.RefreshCheckpointList();
             }
             catch (Exception ex)
             {

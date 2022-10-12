@@ -18,7 +18,7 @@ namespace HCM3.ViewModel.Commands
 
             CheckpointViewModel.PropertyChanged += (obj, args) =>
             {
-                if (args.PropertyName == nameof(CheckpointViewModel.TabAlignedWithHaloState))
+                if (args.PropertyName == nameof(CheckpointViewModel.SelectedGameSameAsActualGame))
                 {
                     RaiseCanExecuteChanged();
                 }
@@ -34,7 +34,7 @@ namespace HCM3.ViewModel.Commands
         {
             //return true;
             Trace.WriteLine("inject Can execute checked");
-            return (CheckpointViewModel.TabAlignedWithHaloState && CheckpointViewModel.SelectedCheckpoint != null);
+            return (CheckpointViewModel.SelectedGameSameAsActualGame && CheckpointViewModel.SelectedCheckpoint != null);
         }
 
         public void Execute(object? parameter)

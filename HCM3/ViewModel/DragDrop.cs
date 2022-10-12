@@ -126,7 +126,7 @@ namespace HCM3.ViewModel
                 CheckpointModel.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
 
                 // Refresh the list
-                CheckpointModel.RefreshCheckpointList(SelectedSaveFolder);
+                this.RefreshCheckpointList();
             }
 
 
@@ -169,7 +169,7 @@ namespace HCM3.ViewModel
                     CheckpointModel.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
 
                     // Refresh the tree
-                    CheckpointModel.RefreshSaveFolderTree();
+                    this.RefreshSaveFolderTree();
 
                 }
             }

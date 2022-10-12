@@ -14,23 +14,14 @@ namespace HCM3.Model.CheckpointModels
 {
     internal sealed partial class CheckpointModel
     {
-        public ObservableCollection<Checkpoint> CheckpointCollection { get; set; }
-        public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; set; }
-        public SaveFolder? RootSaveFolder { get; private set; }
 
         private CheckpointFileDecoder CheckpointFileDecoder = new();
         public MainModel MainModel { get; init; }
-
-        //public SaveFolder? SelectedSaveFolder { get; set; }
-
-        //public Checkpoint? SelectedCheckpoint { get; set; }
 
 
         public CheckpointModel(MainModel mainModel)
         { 
             MainModel = mainModel;
-            CheckpointCollection = new();
-            SaveFolderHierarchy = new();
         }
         public void PrintText()
         {
@@ -38,7 +29,7 @@ namespace HCM3.Model.CheckpointModels
         }
 
 
-        public void BatchModCheckpointLWTs(List<Checkpoint> listCheckpoints, List<DateTime?> listLWT, SaveFolder? SelectedSaveFolder)
+        public static void BatchModCheckpointLWTs(List<Checkpoint> listCheckpoints, List<DateTime?> listLWT, SaveFolder? SelectedSaveFolder)
         {
             for (int i = 0; i < listCheckpoints.Count; i++)
             {
@@ -55,7 +46,7 @@ namespace HCM3.Model.CheckpointModels
             }
         }
 
-        public void BatchModSaveFolderCreatedOns(List<SaveFolder> listSaveFolders, List<DateTime?> listCreatedOns)
+        public static void BatchModSaveFolderCreatedOns(List<SaveFolder> listSaveFolders, List<DateTime?> listCreatedOns)
         {
             for (int i = 0; i < listSaveFolders.Count; i++)
             {

@@ -154,8 +154,7 @@ namespace HCM3.Model.CheckpointModels
                         throw new InvalidOperationException("Failed to save checkpoint data to file, not sure why. Check local file read/write permissions?");
                     }
 
-                    //Refresh the list now that we have a new checkpoint
-                    this.RefreshCheckpointList(SelectedSaveFolder);
+
                 }
                 catch (Exception ex)
                 {

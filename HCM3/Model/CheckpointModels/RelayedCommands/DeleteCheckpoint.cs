@@ -21,7 +21,6 @@ namespace HCM3.Model.CheckpointModels
 
             File.Delete(savePath);
 
-            this.RefreshCheckpointList(SelectedSaveFolder);
         }
 
     }

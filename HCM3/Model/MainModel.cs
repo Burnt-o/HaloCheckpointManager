@@ -92,17 +92,7 @@ namespace HCM3.Model
 
         }
 
-        // MainViewModel triggers an event when the Tab Control has it's tab changed, which calls this. 
-        public void OnHCMTabChanged(int selectedTabIndex, SaveFolder? SelectedSaveFolder)
-        {
-            SelectedTabIndex = selectedTabIndex;
 
-            App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
-            {
-                this.CheckpointModel.RefreshSaveFolderTree();
-                this.CheckpointModel.RefreshCheckpointList(SelectedSaveFolder);
-            });
-        }
 
 
 

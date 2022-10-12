@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Linq;
 using HCM3.ViewModel.Commands;
+using System.IO;
 
 namespace HCM3.ViewModel
 {
@@ -30,26 +31,25 @@ namespace HCM3.ViewModel
 
         public SaveFolder? RootSaveFolder { get; private set; }
 
-
-        public MainViewModel MainViewModel { get; private set; }
-
         public MainModel MainModel { get; private set; }
+
+        public int SelectedGame { get; set; } //CheckpointVM doesn't know about settings tab
 
         private Checkpoint? _selectedCheckpoint;
         public Checkpoint? SelectedCheckpoint
-        { 
+        {
             get { return _selectedCheckpoint; }
-            set 
-            { 
-            _selectedCheckpoint = value;
+            set
+            {
+                _selectedCheckpoint = value;
                 OnPropertyChanged(nameof(SelectedCheckpoint));
             }
         }
 
         private SaveFolder? _selectedSaveFolder;
-        public SaveFolder? SelectedSaveFolder 
+        public SaveFolder? SelectedSaveFolder
         { get { return _selectedSaveFolder; }
-            set 
+            set
             {
                 _selectedSaveFolder = value;
                 OnPropertyChanged(nameof(SelectedSaveFolder));
@@ -58,28 +58,27 @@ namespace HCM3.ViewModel
 
 
         // Evalutes whether the HCM tab is aligned with the current MCC in-game game. So buttons like dump can only work if you're actually in that game.
-        private bool _tabAlignedWithHaloState;
-        public bool TabAlignedWithHaloState
+        private bool _selectedGameSameAsActualGame;
+        public bool SelectedGameSameAsActualGame
         {
-            get { return _tabAlignedWithHaloState;}
-            set 
-            { if (_tabAlignedWithHaloState != value)
+            get { return _selectedGameSameAsActualGame; }
+            set
+            { if (_selectedGameSameAsActualGame != value)
                 {
-                    _tabAlignedWithHaloState = value;
-                    OnPropertyChanged(nameof(TabAlignedWithHaloState));
-                        
-                   } 
+                    _selectedGameSameAsActualGame = value;
+                    OnPropertyChanged(nameof(SelectedGameSameAsActualGame));
+
+                }
             }
         }
-        
+
 
         public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel, MainModel mainModel)
         {
             this.CheckpointModel = checkpointModel;
-            this.CheckpointCollection = CheckpointModel.CheckpointCollection;
-            this.SaveFolderHierarchy = CheckpointModel.SaveFolderHierarchy;
-            this.RootSaveFolder = CheckpointModel.RootSaveFolder;
-            this.MainViewModel = mainViewModel;
+            this.CheckpointCollection = new();
+            this.SaveFolderHierarchy = new();
+            this.RootSaveFolder = null;
             this.MainModel = mainModel;
 
             ListCollectionView view = (ListCollectionView)CollectionViewSource
@@ -89,29 +88,95 @@ namespace HCM3.ViewModel
 
             view.CustomSort = new SortCheckpointsByLastWriteTime();
 
-            // Need to subscribe to HaloStateChanged of mainmodel, and tab changed of mainviewmodel,
-            // So we can update TabAlignedWithInGame
-            MainViewModel.PropertyChanged += (obj, args) => { UpdateTabAlignedWithHaloState(); };
-            HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { UpdateTabAlignedWithHaloState(); };
+
 
             //Subscribe to AttachEvent so we can tell CheckpointModel to refreshList
             HaloStateEvents.ATTACH_EVENT += (obj, args) =>
             {
                 App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
                 {
-                    this.CheckpointModel.RefreshCheckpointList(SelectedSaveFolder);
+                    RefreshCheckpointList();
                 });
             };
-
             
+            RefreshSaveFolderTree();
+            RefreshCheckpointList();
+
+
 
         }
 
-
-        private void UpdateTabAlignedWithHaloState()
+        public void RefreshCheckpointList()
         {
-            TabAlignedWithHaloState = (MainViewModel.SelectedTabIndex == MainModel.HaloMemory.HaloState.CurrentHaloState);
+            this.CheckpointCollection.Clear();
+            ObservableCollection<Checkpoint> newCollection = this.CheckpointModel.PopulateCheckpointList(this.SelectedSaveFolder, this.SelectedGame);
+            foreach (Checkpoint c in newCollection)
+            {
+                this.CheckpointCollection.Add(c);
+            }
+            Trace.WriteLine("refreshed ccollection count: " + CheckpointCollection.Count);
         }
+
+        public void RefreshSaveFolderTree()
+        {
+            this.SaveFolderHierarchy.Clear();
+            ObservableCollection<SaveFolder> newHierarchy = this.CheckpointModel.PopulateSaveFolderTree(out SaveFolder? rootFolder, this.SelectedGame);
+            this.RootSaveFolder = rootFolder;
+            foreach (SaveFolder s in newHierarchy)
+            {
+                this.SaveFolderHierarchy.Add(s);
+            }
+
+
+                // Now let's try to set the selected folder to whatever folder was last selected on this tab
+                if (this.RootSaveFolder != null)
+                {
+                    bool ableToSetLastFolder = false; // a flag that can be set in foreach loop and used for root folder fallback if not set
+                string? lastSelectedFolder = Properties.Settings.Default.LastSelectedFolder?[SelectedGame];
+                if (lastSelectedFolder != null)
+                    {
+                        IEnumerable<SaveFolder> flattenedTree = FlattenTree(this.RootSaveFolder);
+                        foreach (SaveFolder sf in flattenedTree)
+                        {
+                            // If it matches!
+                            if (sf.SaveFolderPath == lastSelectedFolder && Directory.Exists(lastSelectedFolder))
+                            {
+                                Trace.WriteLine("Resetting last selected folder to " + sf.SaveFolderPath);
+                                sf.IsSelected = true;
+                                ableToSetLastFolder = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ableToSetLastFolder)
+                    {
+                        // If we weren't able to reset it then default to root folder
+                        this.RootSaveFolder.IsSelected = true;
+                    }
+
+                }
+
+
+
+
+            IEnumerable<SaveFolder> FlattenTree(SaveFolder node)
+            {
+                if (node == null)
+                {
+                    yield break;
+                }
+                yield return node;
+                foreach (var n in node.Children)
+                {
+                    foreach (var innerN in FlattenTree(n))
+                    {
+                        yield return innerN;
+                    }
+                }
+            }
+        }
+
+
 
         public class SortCheckpointsByLastWriteTime : IComparer
         {
@@ -130,16 +195,16 @@ namespace HCM3.ViewModel
 
         public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            Trace.WriteLine("FolderChanged");
             SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
             Trace.WriteLine("Selected Folder Path: " + saveFolder?.SaveFolderPath);
 
             if (saveFolder != null)
             {
-                Properties.Settings.Default.LastSelectedFolder[MainViewModel.SelectedTabIndex] = saveFolder.SaveFolderPath;
+                Properties.Settings.Default.LastSelectedFolder[this.SelectedGame] = saveFolder.SaveFolderPath;
             }
             this.SelectedSaveFolder = saveFolder;
-
-            CheckpointModel.RefreshCheckpointList(this.SelectedSaveFolder);
+            this.RefreshCheckpointList();
 
 
         }
