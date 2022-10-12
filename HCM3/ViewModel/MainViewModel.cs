@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Diagnostics;
 using HCM3.Model.CheckpointModels;
+using HCM3.Services;
 
 namespace HCM3.ViewModel
 {
@@ -28,16 +29,20 @@ namespace HCM3.ViewModel
             }
         }
 
-        public MainModel MainModel { get; set; }
+        //public MainModel MainModel { get; set; }
 
         public int SelectedGame { get; set; }
         public CheckpointViewModel CheckpointViewModel { get; init; }
 
-        public MainViewModel(MainModel mainModel)
-        {
-            MainModel = mainModel;
+        public HaloMemoryService HaloMemoryService { get; init; }
 
-            CheckpointViewModel = new(MainModel.CheckpointModel, this, mainModel);
+        public MainViewModel(HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel) //(MainModel mainModel, HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel)
+        {
+            //MainModel = mainModel;
+            this.HaloMemoryService = haloMemoryService;
+
+            // Note to self; is this the best way to do this?
+            this.CheckpointViewModel = checkpointViewModel;
 
             this.PropertyChanged += Handle_PropertyChanged;
 
@@ -70,7 +75,7 @@ namespace HCM3.ViewModel
 
         private void IsSelectedGameSameAsActualGame()
         {
-            CheckpointViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == MainModel.HaloMemory.HaloState.CurrentHaloState);
+            CheckpointViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == this.HaloMemoryService.HaloState.CurrentHaloState);
         }
 
 

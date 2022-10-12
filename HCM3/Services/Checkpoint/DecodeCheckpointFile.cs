@@ -5,15 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
+using HCM3.Model.CheckpointModels;
+using HCM3.Model;
 
 
-namespace HCM3.Model.CheckpointModels
+namespace HCM3.Services
+    
 {
-    internal class CheckpointFileDecoder
-    {
+    public partial class CheckpointServices
+    { 
 
-
-        public Checkpoint? ReadCheckpointFromFile(FileInfo checkpointFile, int gameIndex, MainModel mainModel)
+        public Checkpoint? DecodeCheckpointFile(FileInfo checkpointFile, int gameIndex)
         {
 
 
@@ -62,14 +64,14 @@ namespace HCM3.Model.CheckpointModels
                         {
                             checkpointVersion = checkpointVersionGuess;
                         }
-                        else if (mainModel.CurrentAttachedMCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
+                        else if (HaloMemoryService.HaloState.CurrentAttachedMCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
                         {
-                            checkpointVersionGuess = mainModel.CurrentAttachedMCCVersion;
+                            checkpointVersionGuess = HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
                             Trace.WriteLine("setting ver string to current attached version: " + checkpointVersionGuess);
                         }
-                        else if (mainModel.HighestSupportMCCVersion != null) //otherwise set it the highest supported version we loaded from git
+                        else if (this.DataPointersService.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git
                         {
-                            checkpointVersionGuess = mainModel.HighestSupportMCCVersion;
+                            checkpointVersionGuess = this.DataPointersService.HighestSupportedMCCVersion;
                         }
                         else
                         {
@@ -86,7 +88,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetLevelCode = (int?)mainModel.DataPointers.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
+                                int? offsetLevelCode = (int?)this.DataPointersService.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -105,7 +107,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetGameTickCount = (int?)mainModel.DataPointers.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
+                                int? offsetGameTickCount = (int?)this.DataPointersService.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -120,7 +122,7 @@ namespace HCM3.Model.CheckpointModels
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetDifficulty = (int?)mainModel.DataPointers.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
+                                int? offsetDifficulty = (int?)this.DataPointersService.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data

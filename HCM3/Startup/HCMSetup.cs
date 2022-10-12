@@ -38,6 +38,7 @@ namespace HCM3.Startup
         #endregion // Data
 
 
+
         /// <summary>
         /// Runs a few checks to see if HCM is good and setup ready-to-go. Is only run on HCM startup.
         /// </summary>

@@ -7,10 +7,11 @@ using System.Diagnostics;
 using HCM3.Model;
 using System.IO;
 using System.Collections.ObjectModel;
+using HCM3.Model.CheckpointModels;
 
-namespace HCM3.Model.CheckpointModels
+namespace HCM3.Services
 {
-    internal sealed partial class CheckpointModel
+    public partial class CheckpointServices
     {
         // TODO: make this static
         public ObservableCollection<SaveFolder> PopulateSaveFolderTree(out SaveFolder? RootFolder, int SelectedGame)

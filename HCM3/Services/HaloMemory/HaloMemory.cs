@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BurntMemory;
+using HCM3.Model;
 
-namespace HCM3.Model
+namespace HCM3.Services
 {
-    internal class HaloMemory
+    public class HaloMemoryService
     {
         public HaloState HaloState;
         public ReadWrite ReadWrite;
@@ -15,9 +16,9 @@ namespace HCM3.Model
         public DLLInjector DLLInjector;
         public SpeedhackManager SpeedhackManager;
 
-        public HaloMemory(MainModel mainModel)
+        public HaloMemoryService(DataPointersService dataPointersService)
         { 
-        HaloState = new HaloState(mainModel);
+        HaloState = new HaloState(dataPointersService, this);
         ReadWrite = new ReadWrite(HaloState);
         DebugManager = new DebugManager(HaloState, ReadWrite);
         DLLInjector = new DLLInjector(HaloState, ReadWrite);

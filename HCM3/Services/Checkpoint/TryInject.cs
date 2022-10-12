@@ -9,39 +9,40 @@ using BurntMemory;
 using System.IO;
 using HCM3;
 using System.Security.Cryptography;
+using HCM3.Model.CheckpointModels;
 
-namespace HCM3.Model.CheckpointModels
+namespace HCM3.Services
 {
-    internal sealed partial class CheckpointModel
+    public partial class CheckpointServices
     {
-        public void TryInject(SaveFolder? SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
+        public void TryInject(SaveFolder? selectedSaveFolder, Checkpoint? selectedCheckpoint, int selectedGame)
         {
-            if (SelectedCheckpoint == null) throw new Exception("No checkpoint was selected!");
+            if (selectedCheckpoint == null) throw new Exception("No checkpoint was selected!");
 
             // Update HaloState
-            MainModel.HaloMemory.HaloState.UpdateHaloState();
+            this.HaloMemoryService.HaloState.UpdateHaloState();
 
             // Check that we're loaded into the game that matches the tab whose checkpoint we're trying to dump
-            Dictionaries.HaloStateEnum game = (Dictionaries.HaloStateEnum)this.MainModel.HaloMemory.HaloState.CurrentHaloState;
+            Dictionaries.HaloStateEnum game = (Dictionaries.HaloStateEnum)this.HaloMemoryService.HaloState.CurrentHaloState;
 
-            if ((int)game != this.MainModel.SelectedTabIndex)
+            if ((int)game != selectedGame)
             {
                 throw new Exception("HCM didn't detect that you were in the right game: \n" +
-                    "Expected: " + Dictionaries.TabIndexTo2LetterGameCode[this.MainModel.SelectedTabIndex] + "\n" +
+                    "Expected: " + Dictionaries.TabIndexTo2LetterGameCode[selectedGame] + "\n" +
                     "Actual: " + game.ToString()
                     );
             }
 
             // Check that the file we're going to inject actually exists
-            string checkpointPath = SelectedSaveFolder?.SaveFolderPath + "\\" + SelectedCheckpoint?.CheckpointName + ".bin";
+            string checkpointPath = selectedSaveFolder?.SaveFolderPath + "\\" + selectedCheckpoint?.CheckpointName + ".bin";
             if (!File.Exists(checkpointPath))
             {
-                throw new Exception("TryDump didn't have a valid folder to save the checkpoint to " + SelectedSaveFolder?.SaveFolderPath);
+                throw new Exception("TryDump didn't have a valid folder to save the checkpoint to " + selectedSaveFolder?.SaveFolderPath);
             }
 
 
             string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)game];
-            string? MCCversion = this.MainModel.CurrentAttachedMCCVersion;
+            string? MCCversion = this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
 
             if (MCCversion == null)
             {
@@ -68,7 +69,7 @@ namespace HCM3.Model.CheckpointModels
             Dictionary<string, object> requiredPointers = new();
             foreach (string requiredPointerName in requiredPointerNames)
             {
-                object? pointer = MainModel.DataPointers.GetPointer(requiredPointerName, MCCversion);
+                object? pointer = this.DataPointersService.GetPointer(requiredPointerName, MCCversion);
                 if (pointer == null)
                 {
                     //throw new Exception("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
@@ -113,7 +114,7 @@ namespace HCM3.Model.CheckpointModels
                 case 3:
                 case 4:
                 case 5:
-                    doubleRevertFlag = (byte?)this.MainModel.HaloMemory.ReadWrite.ReadBytes((ReadWrite.Pointer)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
+                    doubleRevertFlag = (byte?)this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
                     if (doubleRevertFlag == null)
                     {
                         throw new Exception("Failed to read double revert flag");
@@ -153,7 +154,7 @@ namespace HCM3.Model.CheckpointModels
                     if (preserveLocation != null && preserveLocation.Length != 0 && !(preserveLocation.Offset + preserveLocation.Length > checkpointData.Length))
                     {
                         // Read from game
-                        byte[]? preservedGameData = this.MainModel.HaloMemory.ReadWrite.ReadBytes(inGameCheckpointLocation + preserveLocation.Offset, preserveLocation.Length);
+                        byte[]? preservedGameData = this.HaloMemoryService.ReadWrite.ReadBytes(inGameCheckpointLocation + preserveLocation.Offset, preserveLocation.Length);
                         if (preservedGameData == null) throw new Exception("couldn't read PreserveLocations");
                         // Overwrite that part of checkpointData
                         preservedGameData.CopyTo(checkpointData, preserveLocation.Offset);
@@ -189,7 +190,7 @@ namespace HCM3.Model.CheckpointModels
 
 
             // Now, time to finally inject the checkpoint
-            bool success = this.MainModel.HaloMemory.ReadWrite.WriteData(inGameCheckpointLocation, checkpointData, false);
+            bool success = this.HaloMemoryService.ReadWrite.WriteData(inGameCheckpointLocation, checkpointData, false);
 
             if (!success) throw new Exception("Failed to inject the checkpoint into game memory");
 
@@ -223,7 +224,7 @@ namespace HCM3.Model.CheckpointModels
                 Array.Copy(checkpointData, (int)loadedBSPoffset, loadedBSPData, 0, (int)loadedBSPlength);
 
                 // Now set the in-game-memory cached BSPs to those listed in checkpointData
-                bool success2 = this.MainModel.HaloMemory.ReadWrite.WriteData(cachedBSPPointer, loadedBSPData, false);
+                bool success2 = this.HaloMemoryService.ReadWrite.WriteData(cachedBSPPointer, loadedBSPData, false);
 
                 if (!success2) throw new Exception("Failed to write cachedBSP data to game memory");
 

@@ -5,17 +5,47 @@ using System.Text;
 using System.Threading.Tasks;
 using BurntMemory;
 using System.Diagnostics;
+using HCM3.Model;
 
-namespace HCM3.Model
+namespace HCM3.Services
 {
+    public class HaloStateEvents : BurntMemory.Events
+    {
+        public class HaloStateChangedEventArgs : EventArgs
+        {
+            public HaloStateChangedEventArgs(int newHaloState)
+            {
+                NewHaloState = newHaloState;
+            }
+            public int NewHaloState { get; init; }
+        }
+
+
+
+        public static event EventHandler<HaloStateChangedEventArgs>? HALOSTATECHANGED_EVENT;
+
+        public static void HALOSTATECHANGED_EVENT_INVOKE(object? sender, HaloStateChangedEventArgs e)
+        {
+            EventHandler<HaloStateChangedEventArgs>? handler = HALOSTATECHANGED_EVENT;
+            if (handler != null)
+            {
+                handler(sender, e);
+            }
+        }
+    }
+
     public class HaloState : BurntMemory.AttachState
     {
 
-
-        internal HaloState(MainModel mainModel)
+        private DataPointersService DataPointersService { get; init; }
+        private HaloMemoryService HaloMemoryService { get; init; } //self ref? 
+        public HaloState(DataPointersService dataPointersService, HaloMemoryService haloMemoryService)
         {
+            var servicecollection = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
+            this.HaloMemoryService = haloMemoryService;
+            this.DataPointersService = dataPointersService;
             _currentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
-            MainModel = mainModel;
+
 
             // Need to subscribe to AttachStates onAttach/onDetach events to update Halo State
             HaloStateEvents.ATTACH_EVENT += HaloStateEvents_ATTACH_EVENT;
@@ -37,7 +67,11 @@ namespace HCM3.Model
         private void HaloStateEvents_DEATTACH_EVENT(object? sender, EventArgs e)
         {
             MCCType = null;
+            CurrentAttachedMCCVersion = null;
+            Trace.WriteLine("MainModel detected BurntMemory DEtach; Set current MCC version to null");
             UpdateHaloState();
+            this.HaloMemoryService.HaloState.TryToAttachTimer.Enabled = true;
+
         }
 
         private void HaloStateEvents_ATTACH_EVENT(object? sender, Events.AttachedEventArgs e)
@@ -46,15 +80,27 @@ namespace HCM3.Model
             if (nameOfAttachedProcess == "MCC-Win64-Shipping")
             {
                 MCCType = "Steam";
+                string? potentialVersion = this.HaloMemoryService.HaloState.ProcessVersion;
+                if (potentialVersion != null && potentialVersion.StartsWith("1."))
+                {
+                    CurrentAttachedMCCVersion = potentialVersion;
+                }
+                else
+                {
+                    CurrentAttachedMCCVersion = null;
+                }
+                Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version to " + CurrentAttachedMCCVersion);
             }
             else
             {
                 MCCType = "WinStore";
+                CurrentAttachedMCCVersion = DataPointersService.HighestSupportedMCCVersion;
             }
             UpdateHaloState();
+
+
         }
 
-        internal MainModel MainModel { get; init; }
 
         public string? MCCType { get; set; }
 
@@ -76,6 +122,8 @@ namespace HCM3.Model
 
             }
         }
+
+        public string? CurrentAttachedMCCVersion { get; set; }
 
 
 
@@ -104,19 +152,20 @@ namespace HCM3.Model
             }
 
             
-            ReadWrite.Pointer? gameIndicatorPointer = (ReadWrite.Pointer?)MainModel.DataPointers.GetPointer($"MCC_GameIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
-            ReadWrite.Pointer? stateIndicatorPointer = (ReadWrite.Pointer?)MainModel.DataPointers.GetPointer($"MCC_StateIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
-            ReadWrite.Pointer? menuIndicatorPointer = (ReadWrite.Pointer?)MainModel.DataPointers.GetPointer($"MCC_MenuIndicator_{MCCType}", MainModel.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? gameIndicatorPointer = (ReadWrite.Pointer?)DataPointersService.GetPointer($"MCC_GameIndicator_{MCCType}", this.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? stateIndicatorPointer = (ReadWrite.Pointer?)DataPointersService.GetPointer($"MCC_StateIndicator_{MCCType}", this.CurrentAttachedMCCVersion);
+            ReadWrite.Pointer? menuIndicatorPointer = (ReadWrite.Pointer?)DataPointersService.GetPointer($"MCC_MenuIndicator_{MCCType}", this.CurrentAttachedMCCVersion);
 
             if (gameIndicatorPointer == null || stateIndicatorPointer == null || menuIndicatorPointer == null)
             {
+                Trace.WriteLine("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
                 return;
             }
 
-            byte? gameIndicator = MainModel.HaloMemory.ReadWrite.ReadByte(gameIndicatorPointer);
-            byte? stateIndicator = MainModel.HaloMemory.ReadWrite.ReadByte(stateIndicatorPointer);
-            byte? menuIndicator = MainModel.HaloMemory.ReadWrite.ReadByte(menuIndicatorPointer);
+            byte? gameIndicator = this.HaloMemoryService.ReadWrite.ReadByte(gameIndicatorPointer);
+            byte? stateIndicator = this.HaloMemoryService.ReadWrite.ReadByte(stateIndicatorPointer);
+            byte? menuIndicator = this.HaloMemoryService.ReadWrite.ReadByte(menuIndicatorPointer);
 
             Trace.WriteLine("gameInd: " + gameIndicator.ToString());
             Trace.WriteLine("stateInd: " + stateIndicator.ToString());

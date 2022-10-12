@@ -7,17 +7,20 @@ using System.Windows.Input;
 using HCM3.Model;
 using HCM3.ViewModel;
 using System.Diagnostics;
+using HCM3.Services;
 
 namespace HCM3.ViewModel.Commands
 {
     internal class DeleteCheckpointCommand : ICommand
     {
-        internal DeleteCheckpointCommand(CheckpointViewModel checkpointViewModel)
+        internal DeleteCheckpointCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
         {
-            CheckpointViewModel = checkpointViewModel;
+            this.CheckpointViewModel = checkpointViewModel;
+            this.CheckpointServices = checkpointServices;
         }
 
-        private CheckpointViewModel CheckpointViewModel { get; set; }
+        private CheckpointViewModel CheckpointViewModel { get; init; }
+        private CheckpointServices CheckpointServices { get; init; }
         public bool CanExecute(object? parameter)
         {
             return (CheckpointViewModel.SelectedCheckpoint != null);
@@ -27,7 +30,7 @@ namespace HCM3.ViewModel.Commands
         {
             try
             {
-                CheckpointViewModel.CheckpointModel.DeleteCheckpoint(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint);
+                CheckpointServices.DeleteCheckpoint(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint);
                 CheckpointViewModel.RefreshCheckpointList();
             }
             catch (Exception ex)

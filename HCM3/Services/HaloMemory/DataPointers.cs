@@ -10,10 +10,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using HCM3.Model.CheckpointModels;
+using HCM3.Model;
 
-namespace HCM3
+namespace HCM3.Services
 {
-    public class DataPointers
+    public class DataPointersService
     {
         #region Properties
         private Dictionary<string, Dictionary<string, Object>> PointerData { get; set; } = new()
@@ -25,18 +26,21 @@ namespace HCM3
         #endregion
 
         #region Constructor
-        public DataPointers()
+        public DataPointersService()
         {
             PointerData = new();
+            HighestSupportedMCCVersion = null;
         }
 
         #endregion
 
+        public string? HighestSupportedMCCVersion { get; set; }
 
 
-        public bool LoadPointerDataFromGit(out string exceptionString, out string? HighestSupportedMCCVersion)
+
+        public bool LoadPointerDataFromGit(out string exceptionString)
         {
-            HighestSupportedMCCVersion = null;
+
             exceptionString = "";
             try
             {
@@ -68,8 +72,8 @@ namespace HCM3
                 {
                     if (e.Name == "HighestSupportedVersion")
                     {
-                        HighestSupportedMCCVersion = e.Value == null || e.Value == "" ? null : e.Value;
-                        Trace.WriteLine("Loaded HighestSupportedMCCVersion, value: " + HighestSupportedMCCVersion);
+                        this.HighestSupportedMCCVersion = e.Value == null || e.Value == "" ? null : e.Value;
+                        Trace.WriteLine("Loaded HighestSupportedMCCVersion, value: " + this.HighestSupportedMCCVersion);
                     }
                     else if (e.Name == "Version")
                     {

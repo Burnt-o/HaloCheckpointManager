@@ -7,37 +7,39 @@ using System.Collections.ObjectModel;
 using HCM3.Model;
 using BurntMemory;
 using System.IO;
+using HCM3.Model.CheckpointModels;
 
-namespace HCM3.Model.CheckpointModels
+
+namespace HCM3.Services
 {
-    internal sealed partial class CheckpointModel
+    public partial class CheckpointServices
     {
-        public void TryDump(SaveFolder? SelectedSaveFolder)
+        public void TryDump(SaveFolder? selectedSaveFolder, int selectedGame)
         {
 
             // Update HaloState
-            MainModel.HaloMemory.HaloState.UpdateHaloState();
+            this.HaloMemoryService.HaloState.UpdateHaloState();
 
             // Check that we're loaded into the game that matches the tab whose checkpoint we're trying to dump
-            Dictionaries.HaloStateEnum game = (Dictionaries.HaloStateEnum)this.MainModel.HaloMemory.HaloState.CurrentHaloState;
+            Dictionaries.HaloStateEnum game = (Dictionaries.HaloStateEnum)this.HaloMemoryService.HaloState.CurrentHaloState;
 
-            if ((int)game != this.MainModel.SelectedTabIndex)
+            if ((int)game != selectedGame)
             {
                 throw new InvalidOperationException("HCM didn't detect that you were in the right game: \n" +
-                    "Expected: " + Dictionaries.TabIndexTo2LetterGameCode[this.MainModel.SelectedTabIndex] + "\n" +
+                    "Expected: " + Dictionaries.TabIndexTo2LetterGameCode[selectedGame] + "\n" +
                     "Actual: " + game.ToString()
                     );
             }
 
             // Check that the folder we're going to dump the file into actually exists
-            if (!Directory.Exists(SelectedSaveFolder?.SaveFolderPath))
+            if (!Directory.Exists(selectedSaveFolder?.SaveFolderPath))
             {
-                throw new InvalidOperationException("TryDump didn't have a valid folder to save the checkpoint to " + SelectedSaveFolder?.SaveFolderPath);
+                throw new InvalidOperationException("TryDump didn't have a valid folder to save the checkpoint to " + selectedSaveFolder?.SaveFolderPath);
             }
 
 
             string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)game];
-            string? MCCversion = this.MainModel.CurrentAttachedMCCVersion;
+            string? MCCversion = this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
 
             if (MCCversion == null)
             {
@@ -72,7 +74,7 @@ namespace HCM3.Model.CheckpointModels
             Dictionary<string, object> requiredPointers = new();
             foreach (string requiredPointerName in requiredPointerNames)
             {
-                    object? pointer = MainModel.DataPointers.GetPointer(requiredPointerName, MCCversion);
+                    object? pointer = this.DataPointersService.GetPointer(requiredPointerName, MCCversion);
                 if (pointer == null)
                 {
                     throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
@@ -88,7 +90,7 @@ namespace HCM3.Model.CheckpointModels
             switch ((int)game)
             {
                 case 0:
-                    CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                    CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
                     break;
 
                 case 1:
@@ -96,18 +98,18 @@ namespace HCM3.Model.CheckpointModels
                 case 3:
                 case 4:
                 case 5:
-                    byte? doubleRevertFlag = (byte?)this.MainModel.HaloMemory.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
+                    byte? doubleRevertFlag = (byte?)this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
                     if (doubleRevertFlag == null)
                     {
                         throw new InvalidOperationException("Failed to read double revert flag");
                     }
                     if (doubleRevertFlag == 0)
                     {
-                        CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
                     }
                     else if (doubleRevertFlag == 1)
                     {
-                        CheckpointData = this.MainModel.HaloMemory.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
+                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
                     }
                     else 
                     {
@@ -126,9 +128,9 @@ namespace HCM3.Model.CheckpointModels
 
 
             // Add version string to checkpoint
-            if (MainModel.CurrentAttachedMCCVersion != null && MainModel.CurrentAttachedMCCVersion.Length == 10)
+            if (this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion != null && this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion.Length == 10)
             {
-                byte[] versionStringChars = Encoding.ASCII.GetBytes(MainModel.CurrentAttachedMCCVersion);
+                byte[] versionStringChars = Encoding.ASCII.GetBytes(this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
                 Array.Copy(versionStringChars, 0, CheckpointData, CheckpointData.Length - 10, versionStringChars.Length);
             }
                 
@@ -141,7 +143,7 @@ namespace HCM3.Model.CheckpointModels
                                                        "Name your dumped checkpoint",
                                                        "",
                                                        -1, -1);
-            string proposedSave = (SelectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
+            string proposedSave = (selectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
             if (userInput != null && userInput != "" && !File.Exists(proposedSave))
                 try

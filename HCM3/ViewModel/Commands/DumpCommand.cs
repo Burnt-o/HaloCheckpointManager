@@ -7,32 +7,32 @@ using System.Windows.Input;
 using HCM3.Model;
 using HCM3.ViewModel;
 using System.Diagnostics;
+using HCM3.Services;
 
 namespace HCM3.ViewModel.Commands
 {
-    internal class DumpCommand : ICommand
+    public class DumpCommand : ICommand
     {
-        internal DumpCommand(CheckpointViewModel checkpointViewModel)
+        internal DumpCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
         {
-            CheckpointViewModel = checkpointViewModel;
+            this.CheckpointServices = checkpointServices;
+            this.CheckpointViewModel = checkpointViewModel;
 
-            // Note to self. Need to restructure how viewmodel vs model has selectedtabindex, selected checkpoint etc etc. 
-            // Also this command should probably be getting handed the viewmodel instead of the model
-
-            //HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { RaiseCanExecuteChanged(); };
-            CheckpointViewModel.PropertyChanged += (obj, args) =>
-            {
-                if (args.PropertyName == nameof(CheckpointViewModel.SelectedGameSameAsActualGame))
-                {
-                    RaiseCanExecuteChanged();
-                }
-            };
+            //TODO: add this to checkpoint view model ?
+            //CheckpointViewModel.PropertyChanged += (obj, args) =>
+            //{
+            //    if (args.PropertyName == nameof(CheckpointViewModel.SelectedGameSameAsActualGame))
+            //    {
+            //        RaiseCanExecuteChanged();
+            //    }
+            //};
         }
 
-        private CheckpointViewModel CheckpointViewModel { get; set; }
+        private CheckpointServices CheckpointServices { get; init; }
+        private CheckpointViewModel CheckpointViewModel { get; init; }
         public bool CanExecute(object? parameter)
         {
-            //return true;
+            return true;
             Trace.WriteLine("dump CanExecute checked");
             return (CheckpointViewModel.SelectedGameSameAsActualGame);
         }
@@ -41,7 +41,7 @@ namespace HCM3.ViewModel.Commands
         {
             try
             {
-                CheckpointViewModel.CheckpointModel.TryDump(CheckpointViewModel.SelectedSaveFolder);
+                CheckpointServices.TryDump(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedGame);
                 CheckpointViewModel.RefreshCheckpointList();
             }
             catch (Exception ex)

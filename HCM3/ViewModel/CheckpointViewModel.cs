@@ -19,19 +19,20 @@ using System.Collections.Generic;
 using System.Linq;
 using HCM3.ViewModel.Commands;
 using System.IO;
+using System.ComponentModel;
+using HCM3.Services;
 
 namespace HCM3.ViewModel
 {
 
     internal partial class CheckpointViewModel : Presenter, IDropTarget
     {
-        internal readonly CheckpointModel CheckpointModel;
+
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
 
         public SaveFolder? RootSaveFolder { get; private set; }
 
-        public MainModel MainModel { get; private set; }
 
         public int SelectedGame { get; set; } //CheckpointVM doesn't know about settings tab
 
@@ -73,13 +74,24 @@ namespace HCM3.ViewModel
         }
 
 
-        public CheckpointViewModel(CheckpointModel checkpointModel, MainViewModel mainViewModel, MainModel mainModel)
+        [Obsolete("Only for design data", true)]
+        public CheckpointViewModel()
         {
-            this.CheckpointModel = checkpointModel;
+            if (!IsInDesignModeStatic)
+            {
+                throw new Exception("Use only for design mode");
+            }
+        }
+
+
+        private CheckpointServices CheckpointServices { get; init; }
+        public CheckpointViewModel(CheckpointServices checkpointServices)
+        {
+            this.CheckpointServices = checkpointServices;
+
             this.CheckpointCollection = new();
             this.SaveFolderHierarchy = new();
             this.RootSaveFolder = null;
-            this.MainModel = mainModel;
 
             ListCollectionView view = (ListCollectionView)CollectionViewSource
                     .GetDefaultView(this.CheckpointCollection);
@@ -106,10 +118,11 @@ namespace HCM3.ViewModel
 
         }
 
+        // Move to services??
         public void RefreshCheckpointList()
         {
             this.CheckpointCollection.Clear();
-            ObservableCollection<Checkpoint> newCollection = this.CheckpointModel.PopulateCheckpointList(this.SelectedSaveFolder, this.SelectedGame);
+            ObservableCollection<Checkpoint> newCollection = this.CheckpointServices.PopulateCheckpointList(this.SelectedSaveFolder, this.SelectedGame);
             foreach (Checkpoint c in newCollection)
             {
                 this.CheckpointCollection.Add(c);
@@ -120,7 +133,7 @@ namespace HCM3.ViewModel
         public void RefreshSaveFolderTree()
         {
             this.SaveFolderHierarchy.Clear();
-            ObservableCollection<SaveFolder> newHierarchy = this.CheckpointModel.PopulateSaveFolderTree(out SaveFolder? rootFolder, this.SelectedGame);
+            ObservableCollection<SaveFolder> newHierarchy = this.CheckpointServices.PopulateSaveFolderTree(out SaveFolder? rootFolder, this.SelectedGame);
             this.RootSaveFolder = rootFolder;
             foreach (SaveFolder s in newHierarchy)
             {
@@ -209,23 +222,25 @@ namespace HCM3.ViewModel
 
         }
 
+
+
         private ICommand _dump;
         public ICommand Dump
         {
-            get { return _dump ?? (_dump = new DumpCommand(this)); }
+            get { return _dump ?? (_dump = new DumpCommand(this, CheckpointServices)); }
             set { _dump = value; }
         }
         private ICommand _inject;
         public ICommand Inject
         {
-            get { return _inject ?? (_inject = new InjectCommand(this)); }
+            get { return _inject ?? (_inject = new InjectCommand(this, CheckpointServices)); }
             set { _inject = value; }
         }
 
         private ICommand _deleteCheckpoint;
         public ICommand DeleteCheckpoint
         {
-            get { return _deleteCheckpoint ?? (_deleteCheckpoint = new DeleteCheckpointCommand(this)); }
+            get { return _deleteCheckpoint ?? (_deleteCheckpoint = new DeleteCheckpointCommand(this, CheckpointServices)); }
             set { _deleteCheckpoint = value; }
         }
 

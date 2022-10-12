@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="593" d:DesignWidth="300"
              xmlns:dd="urn:gong-wpf-dragdrop"
-             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel, IsDesignTimeCreatable=True}">
     <Grid>
         <Grid.Resources>
             <cnv:DifficultyConverter x:Key="DifficultyConverter" />

@@ -7,14 +7,16 @@ using System.Windows.Input;
 using HCM3.Model;
 using HCM3.ViewModel;
 using System.Diagnostics;
+using HCM3.Services;
 
 namespace HCM3.ViewModel.Commands
 {
     internal class InjectCommand : ICommand
     {
-        internal InjectCommand(CheckpointViewModel checkpointViewModel)
+        internal InjectCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
         {
-            CheckpointViewModel = checkpointViewModel;
+            this.CheckpointViewModel = checkpointViewModel;
+            this.CheckpointServices = checkpointServices;
 
             CheckpointViewModel.PropertyChanged += (obj, args) =>
             {
@@ -29,7 +31,8 @@ namespace HCM3.ViewModel.Commands
             };
         }
 
-        private CheckpointViewModel CheckpointViewModel { get; set; }
+        private CheckpointViewModel CheckpointViewModel { get; init; }
+        private CheckpointServices CheckpointServices { get; init; }
         public bool CanExecute(object? parameter)
         {
             //return true;
@@ -41,7 +44,7 @@ namespace HCM3.ViewModel.Commands
         {
             try
             {
-                CheckpointViewModel.CheckpointModel.TryInject(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint);
+                CheckpointServices.TryInject(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint, CheckpointViewModel.SelectedGame);
             }
             catch (Exception ex)
             {

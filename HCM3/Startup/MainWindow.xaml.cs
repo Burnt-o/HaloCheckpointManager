@@ -34,20 +34,13 @@ namespace HCM3.Startup
 
 
 
-        internal MainModel mainModel { get; init; }
-
         #region Constructor
         public MainWindow()
         {
 
             InitializeComponent();
 
-            // MVVM pattern. Model doesn't know about ViewModel.
-            mainModel = new();
-            MainViewModel mainViewModel = new(mainModel);
 
-            // View's datacontext is ViewModel
-            this.DataContext = mainViewModel;
 
         }
         #endregion // Constructor
@@ -58,8 +51,8 @@ namespace HCM3.Startup
         private void Window_Closed(object sender, EventArgs e)
         { 
             Properties.Settings.Default.Save();
-            mainModel.HaloMemory.SpeedhackManager.RemoveSpeedHack(sender, e);
-            mainModel.HaloMemory.DebugManager.GracefullyCloseDebugger(sender, e);
+            //mainModel.HaloMemory.SpeedhackManager.RemoveSpeedHack(sender, e);
+            //mainModel.HaloMemory.DebugManager.GracefullyCloseDebugger(sender, e);
         }
 
     }

@@ -123,7 +123,7 @@ namespace HCM3.ViewModel
 
                 // Pass the two lists to checkpointmodel to actually apply the LWTs to the files.
                 // The new list of checkpoints gets the old list of LWTs, thus reordering them
-                CheckpointModel.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
+                this.CheckpointServices.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
 
                 // Refresh the list
                 this.RefreshCheckpointList();
@@ -166,7 +166,7 @@ namespace HCM3.ViewModel
 
                     // Pass the two lists to checkpointmodel to actually apply the createdOns to the folders.
                     // The new list of saveFolders gets the old list of createdOnss, thus reordering them
-                    CheckpointModel.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
+                    this.CheckpointServices.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
 
                     // Refresh the tree
                     this.RefreshSaveFolderTree();

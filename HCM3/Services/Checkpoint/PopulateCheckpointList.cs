@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
-namespace HCM3.Model.CheckpointModels
+using HCM3.Model.CheckpointModels;
+using HCM3.Model;
+namespace HCM3.Services
 {
-    internal sealed partial class CheckpointModel
+    public partial class CheckpointServices
     {
 
-        // TODO: make this static
+        // TODO: make this static (Need to make CheckpointFileDecoder static, which means adding pointerData as a service
         public ObservableCollection<Checkpoint> PopulateCheckpointList(SaveFolder? SelectedSaveFolder, int SelectedGame)
         {
             ObservableCollection<Checkpoint> checkpointCollection = new();
@@ -54,7 +56,7 @@ namespace HCM3.Model.CheckpointModels
                 // Magic happens over in the decoder. Add our new checkpoint to the list
                 foreach (FileInfo checkpointFile in checkpointFileArray)
                 {
-                    Checkpoint? cp = CheckpointFileDecoder.ReadCheckpointFromFile(checkpointFile, SelectedGame, MainModel);
+                    Checkpoint? cp = DecodeCheckpointFile(checkpointFile, SelectedGame);
                     if (cp != null)
                     {
                     checkpointCollection.Add(cp);

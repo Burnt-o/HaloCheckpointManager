@@ -7,9 +7,15 @@ using System.IO;
 using System.Diagnostics;
 using HCM3.Model.CheckpointModels;
 
-namespace HCM3.Model.CheckpointModels
+namespace HCM3.Services
 {
-    internal sealed partial class CheckpointModel
+
+    //public interface IService
+    //{
+
+    //}
+
+    public partial class CheckpointServices
     {
         public void DeleteCheckpoint(SaveFolder? SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
         {
@@ -22,6 +28,6 @@ namespace HCM3.Model.CheckpointModels
             File.Delete(savePath);
 
         }
-
     }
+   
 }

@@ -201,12 +201,13 @@
     <Folder Include="Commands\Halo 4\" />
     <Folder Include="Converters\Details\" />
     <Folder Include="Converters\List\" />
-    <Folder Include="Model\TrainerModelH2\" />
-    <Folder Include="Model\TrainerModelH1\" />
+    <Folder Include="Services\TrainerH2Services\" />
+    <Folder Include="Services\TrainerH1Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="gong-wpf-dragdrop" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
 
