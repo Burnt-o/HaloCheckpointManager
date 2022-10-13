@@ -34,11 +34,14 @@ namespace HCM3.ViewModel
         public int SelectedGame { get; set; }
         public CheckpointViewModel CheckpointViewModel { get; init; }
 
+        public TrainerViewModel TrainerViewModel { get; init; }
+
         public HaloMemoryService HaloMemoryService { get; init; }
 
-        public MainViewModel(HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel) //(MainModel mainModel, HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel)
+        public MainViewModel(HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel, TrainerViewModel trainerViewModel) //(MainModel mainModel, HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel)
         {
-            //MainModel = mainModel;
+            this.TrainerViewModel = trainerViewModel;
+
             this.HaloMemoryService = haloMemoryService;
 
             // Note to self; is this the best way to do this?
@@ -62,6 +65,7 @@ namespace HCM3.ViewModel
                 if (SelectedTabIndex != 6) //Settings tab == 6
                 {
                     CheckpointViewModel.SelectedGame = SelectedTabIndex;
+                    TrainerViewModel.SelectedGame = SelectedTabIndex;
                     this.SelectedGame = SelectedTabIndex;
                     this.CheckpointViewModel.RefreshSaveFolderTree();
                     this.CheckpointViewModel.RefreshCheckpointList();
@@ -76,6 +80,7 @@ namespace HCM3.ViewModel
         private void IsSelectedGameSameAsActualGame()
         {
             CheckpointViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == this.HaloMemoryService.HaloState.CurrentHaloState);
+            TrainerViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == this.HaloMemoryService.HaloState.CurrentHaloState);
         }
 
 

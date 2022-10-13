@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="HCM3.View.Controls.Trainer.H1TrainerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HCM3.View.Controls.Trainer"
+             xmlns:viewModels="clr-namespace:HCM3.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="547" d:DesignWidth="298"
+             d:DataContext="{d:DesignInstance viewModels:TrainerViewModel, IsDesignTimeCreatable=True}" 
+             >
+    <Grid Width="298" Height="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.RowSpan="10" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="#FFE5E5E5"/>
+        <local:CommonTrainerHeader Grid.Row="0"/>
+        <local:CommonTrainerAction Grid.Row="1" DataContext="{Binding Path=Button_ForceCheckpoint}"/>
+        <local:CommonTrainerAction Grid.Row="2" DataContext="{Binding Path=Button_ForceRevert}"/>
+        <local:CommonTrainerAction Grid.Row="3" DataContext="{Binding Path=Button_ForceCoreSave}"/>
+        <local:CommonTrainerAction Grid.Row="4" DataContext="{Binding Path=Button_ForceCoreLoad}"/>
+        <local:CommonTrainerToggle Grid.Row="5" DataContext="{Binding Path=Button_ToggleInvuln}"/>
+        <local:CommonTrainerToggle Grid.Row="6" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
+        <local:CommonTrainerToggle Grid.Row="7" DataContext="{Binding Path=Button_ToggleMedusa}"/>
+        <local:CommonTrainerToggle Grid.Row="8" DataContext="{Binding Path=Button_ToggleBool}"/>
+    </Grid>
+</UserControl>

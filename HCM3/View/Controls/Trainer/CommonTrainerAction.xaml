@@ -7,7 +7,8 @@
              xmlns:local="clr-namespace:HCM3.View.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}" x:ClassModifier="internal">
+             d:DataContext="{d:DesignInstance viewModels:ButtonViewModel, IsDesignTimeCreatable=True}" x:ClassModifier="internal"
+             >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"/>
@@ -16,10 +17,10 @@
             <ColumnDefinition Width="*"/>
 
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0" Command="{Binding PrintTextCommand}"/>
-        <Label Grid.Column="1" Content="[Hotkey Text]" Padding="0,11,0,0"/>
-        <Button Grid.Column="2" Margin="3,10,3,10" Content="Do" Padding="0,0,0,0"/>
-        <Label Grid.Column="3" Content="[Effect Text]" Padding="0,11,0,0"/>
+        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0" Command="{Binding Path=ChangeHotkeyCommand}"/>
+        <Label Grid.Column="1" Content="{Binding Path=HotkeyText}" Padding="0,11,0,0"/>
+        <Button Grid.Column="2" Margin="3,10,3,10" Content="Do" Padding="0,0,0,0" Command="{Binding Path=ExecuteCommand}"/>
+        <Label Grid.Column="3" Content="{Binding Path=EffectText}" Padding="0,11,0,0"/>
 
     </Grid>
 </UserControl>

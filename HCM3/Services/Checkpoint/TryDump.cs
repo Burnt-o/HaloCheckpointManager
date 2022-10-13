@@ -17,19 +17,8 @@ namespace HCM3.Services
         public void TryDump(SaveFolder? selectedSaveFolder, int selectedGame)
         {
 
-            // Update HaloState
-            this.HaloMemoryService.HaloState.UpdateHaloState();
-
-            // Check that we're loaded into the game that matches the tab whose checkpoint we're trying to dump
-            Dictionaries.HaloStateEnum game = (Dictionaries.HaloStateEnum)this.HaloMemoryService.HaloState.CurrentHaloState;
-
-            if ((int)game != selectedGame)
-            {
-                throw new InvalidOperationException("HCM didn't detect that you were in the right game: \n" +
-                    "Expected: " + Dictionaries.TabIndexTo2LetterGameCode[selectedGame] + "\n" +
-                    "Actual: " + game.ToString()
-                    );
-            }
+            this.CommonServices.IsGameCorrect(selectedGame);
+            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
 
             // Check that the folder we're going to dump the file into actually exists
             if (!Directory.Exists(selectedSaveFolder?.SaveFolderPath))
@@ -38,17 +27,9 @@ namespace HCM3.Services
             }
 
 
-            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)game];
-            string? MCCversion = this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
-
-            if (MCCversion == null)
-            {
-                throw new InvalidOperationException("HCM couldn't detect which version of MCC was running");
-            }
-
-            // Check that we have the required pointers to do a checkpoint dump
+            // Load the required pointers to do a checkpoint dump
             List<string> requiredPointerNames = new();
-            switch ((int)game)
+            switch ((int)selectedGame)
             {
                 case 0:
                     requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
@@ -67,27 +48,16 @@ namespace HCM3.Services
                     break;
 
                 default:
-                    throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + game.ToString());
+                    throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + selectedGame.ToString());
             }
 
             // Load the required pointers into a dictionary
-            Dictionary<string, object> requiredPointers = new();
-            foreach (string requiredPointerName in requiredPointerNames)
-            {
-                    object? pointer = this.DataPointersService.GetPointer(requiredPointerName, MCCversion);
-                if (pointer == null)
-                {
-                    throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
-                        + $"\nSpecifically: {requiredPointerName}"
-                        ); ;
-                }
-                requiredPointers.Add(requiredPointerName[3..], pointer); // Cut off the gamecode part so we can just refer to the rest of the name later
-            }
+            Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
             // Alright, time to read the data
             // Setup checkpoint data buffer to length of the checkpoint
             byte[]? CheckpointData = new byte[(int)requiredPointers["CheckpointLength"]];
-            switch ((int)game)
+            switch ((int)selectedGame)
             {
                 case 0:
                     CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
@@ -118,7 +88,7 @@ namespace HCM3.Services
                     break;
 
                 default:
-                    throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + game.ToString());
+                    throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + selectedGame.ToString());
             }
 
             if (CheckpointData == null)

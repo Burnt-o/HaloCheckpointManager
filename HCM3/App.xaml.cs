@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using HCM3.Startup;
 using System.Diagnostics;
 using HCM3.Services;
+using HCM3.Services.Trainer;
 using HCM3.ViewModel.Commands;
 
 namespace HCM3
@@ -41,17 +42,21 @@ namespace HCM3
 
 
             services.AddSingleton<MainWindow>();
-            //services.AddSingleton<MainModel>();
+
+            //ViewModels
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<CheckpointViewModel>();
+            services.AddSingleton<TrainerViewModel>();
 
             //General Services
+            services.AddSingleton<CommonServices>();
             services.AddSingleton<DataPointersService>();
             services.AddSingleton<HaloMemoryService>();
 
 
-            //Checkpoint Services
+            //ViewModel interaction Services
             services.AddSingleton<CheckpointServices>();
+            services.AddSingleton<TrainerServices>();
         }
 
         //might have to remove sender parameter here

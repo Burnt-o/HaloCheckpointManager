@@ -10,10 +10,13 @@ namespace HCM3.Services
     {
         public HaloMemoryService HaloMemoryService { get; init; }
         public DataPointersService DataPointersService { get; init; }
-        public CheckpointServices(HaloMemoryService haloMemoryService, DataPointersService dataPointersService)
+
+        public CommonServices CommonServices { get; init; }
+        public CheckpointServices(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices)
         { 
         this.HaloMemoryService = haloMemoryService;
         this.DataPointersService = dataPointersService;
+            this.CommonServices = commonServices;   
         }
         
     }

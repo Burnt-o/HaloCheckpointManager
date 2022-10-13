@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uc="clr-namespace:HCM3.View.Controls"
-        xmlns:uct="clr-namespace:HCM3.View.Controls.Trainer"
+        xmlns:userControls="clr-namespace:HCM3.View.Controls.Trainer"
         xmlns:local="clr-namespace:HCM3.View"
         xmlns:commands="clr-namespace:HCM3.Commands"
         xmlns:viewModel="clr-namespace:HCM3.ViewModel"
@@ -16,24 +16,73 @@
         >
     
     <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}"  >
-        <TabItem x:Name="Halo1Tab" Header="Halo 1">
+        <TabItem  Header="Halo 1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
                 <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}"/>
-                <uct:H1_Actions Grid.Column="1" />
+                <userControls:H1TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
             </Grid>
         </TabItem>
-        <TabItem x:Name="Halo2Tab" Header="Halo 2">
+        <TabItem  Header="Halo 2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
-                <uct:H1_Actions Grid.Column="1"/>
+                <userControls:H2TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+            </Grid>
+        </TabItem>
+        <TabItem  Header="Halo 3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                <userControls:H3TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+            </Grid>
+        </TabItem>
+        <TabItem  Header="Halo 3 ODST">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                <userControls:ODTrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+            </Grid>
+        </TabItem>
+        <TabItem  Header="Halo Reach">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                <userControls:HRTrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+            </Grid>
+        </TabItem>
+        <TabItem  Header="Halo 4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                <userControls:H4TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+            </Grid>
+        </TabItem>
+        <TabItem  Header="Settings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
             </Grid>
         </TabItem>
 
