@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using HCM3.Model;
 using BurntMemory;
 using System.IO;
 using HCM3;
 using System.Security.Cryptography;
-using HCM3.Model.CheckpointModels;
+using HCM3.Models;
+using HCM3.Helpers;
 
 namespace HCM3.Services
 {

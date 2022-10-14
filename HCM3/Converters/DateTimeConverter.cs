@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
-using HCM3.Model;
+using HCM3.Models;
 namespace HCM3.Converters
 {
     public class DateTimeConverter : IValueConverter

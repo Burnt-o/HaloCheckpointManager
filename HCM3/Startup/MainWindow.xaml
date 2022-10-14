@@ -3,16 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:uc="clr-namespace:HCM3.View.Controls"
-        xmlns:userControls="clr-namespace:HCM3.View.Controls.Trainer"
-        xmlns:local="clr-namespace:HCM3.View"
-        xmlns:commands="clr-namespace:HCM3.Commands"
-        xmlns:viewModel="clr-namespace:HCM3.ViewModel"
+        xmlns:uc="clr-namespace:HCM3.Views.Controls"
+        xmlns:userControls="clr-namespace:HCM3.Views.Controls.Trainer"
+        xmlns:local="clr-namespace:HCM3.Views"
+        xmlns:commands="clr-namespace:HCM3.ViewModels.Commands"
+        xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
         Title="HaloCheckpointManager" Height="593" Width="820"
         MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
-        d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
+       
         >
     
     <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}"  >

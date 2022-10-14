@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HCM3.Model;
+using HCM3.Models;
+using HCM3.Helpers;
 using BurntMemory;
 using System.Diagnostics;
 

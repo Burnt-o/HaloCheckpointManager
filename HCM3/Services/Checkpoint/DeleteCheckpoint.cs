@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
-using HCM3.Model.CheckpointModels;
+using HCM3.Models;
 
 namespace HCM3.Services
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BurntMemory;
-using HCM3.Model;
+using HCM3.Models;
 
 namespace HCM3.Services
 {

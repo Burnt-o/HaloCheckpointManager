@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
-using HCM3.Model;
+using HCM3.Models;
+using HCM3.Helpers;
 
 namespace HCM3.Converters
 

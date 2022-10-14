@@ -9,8 +9,8 @@ using System.Xml.XPath;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using HCM3.Model.CheckpointModels;
-using HCM3.Model;
+using HCM3.Models;
+using HCM3.Helpers;
 
 namespace HCM3.Services
 {

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using HCM3.Model;
 using System.IO;
 using System.Collections.ObjectModel;
-using HCM3.Model.CheckpointModels;
+using HCM3.Models;
+using HCM3.Helpers;
 
 namespace HCM3.Services
 {

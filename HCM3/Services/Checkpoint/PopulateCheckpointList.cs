@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
-using HCM3.Model.CheckpointModels;
-using HCM3.Model;
+using HCM3.Models;
+using HCM3.Helpers;
 namespace HCM3.Services
 {
     public partial class CheckpointServices

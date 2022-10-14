@@ -7,10 +7,11 @@ using System;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
-using HCM3.Model;
+using HCM3.Models;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.IO;
+using HCM3.Helpers;
 namespace HCM3.Converters
 {
     public class DifficultyConverterAsIcon : IValueConverter

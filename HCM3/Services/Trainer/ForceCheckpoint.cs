@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using HCM3.Model;
+using HCM3.Models;
+using HCM3.Helpers;
 using BurntMemory;
 using System.Threading;
 namespace HCM3.Services.Trainer

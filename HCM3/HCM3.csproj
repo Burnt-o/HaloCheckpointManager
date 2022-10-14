@@ -190,15 +190,10 @@
     <None Remove="Images\OD\sc140_clas.png" />
     <None Remove="Images\OD\sc150_anni.png" />
     <None Remove="Images\OD\sc150_clas.png" />
-    <None Remove="View\b30_clas.png" />
+    <None Remove="Views\b30_clas.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Halo 2\" />
-    <Folder Include="Commands\Halo 3\" />
-    <Folder Include="Commands\Halo 3 ODST\" />
-    <Folder Include="Commands\Halo Reach\" />
-    <Folder Include="Commands\Halo 4\" />
     <Folder Include="Converters\Details\" />
     <Folder Include="Converters\List\" />
     <Folder Include="Services\TrainerH2Services\" />
@@ -410,19 +405,19 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="View\Controls\Trainer\HRTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\HRTrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\Trainer\H4TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\H4TrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\Trainer\ODTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\ODTrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\Trainer\H2TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\H2TrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\Trainer\H3TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\H3TrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -442,23 +437,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="View\Controls\Trainer\HRTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\HRTrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\Trainer\H4TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\H4TrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\Trainer\ODTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\ODTrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\Trainer\H2TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\H2TrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\Trainer\H3TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\H3TrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

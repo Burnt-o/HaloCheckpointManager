@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HCM3.Model
+namespace HCM3.Helpers
 {
     internal static class Dictionaries
     {

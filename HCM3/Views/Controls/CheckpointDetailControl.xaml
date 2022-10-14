@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="HCM3.Views.Controls.CheckpointDetailControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HCM3.Views.Controls"
+             xmlns:viewModels="clr-namespace:HCM3.ViewModels"
+             xmlns:a="clr-namespace:HCM3"
+             xmlns:cnv="clr-namespace:HCM3.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="255" d:DesignWidth="200"
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
+
+    <Grid >
+        <Grid.Resources>
+            <cnv:DifficultyConverter x:Key="DifficultyConverter" />
+            <cnv:IGTConverter x:Key="IGTConverter" />
+            <cnv:LevelNameConverter x:Key="LevelNameConverter" />
+            <cnv:LevelImageConverter x:Key="LevelImageConverter" />
+            <cnv:DateTimeConverter x:Key="DateTimeConverter" />
+        </Grid.Resources>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="65" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="115"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+
+
+
+        </Grid.RowDefinitions>
+
+        <Border  Grid.RowSpan="8" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="0" Height="261" Background="#FFE5E5E5">
+
+        </Border>
+
+        <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
+            <Border.Background>
+                <ImageBrush Stretch="Fill" ImageSource="pack://application:,,,/HCM3;component/Images/nofile.png">
+                </ImageBrush>
+            </Border.Background>
+        </Border>
+        <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
+            <Border.Background>
+                <ImageBrush Stretch="Fill" ImageSource="{Binding LevelName, Converter={StaticResource LevelImageConverter}}">
+                </ImageBrush>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="WhiteSmoke" Margin="-5,2,10,4" CornerRadius="7" />
+
+        <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding SelectedCheckpoint.CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Time:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Level:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Version:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Created:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+
+
+
+
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.Difficulty, Converter={StaticResource DifficultyConverter}}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.GameTickCount, Converter={StaticResource IGTConverter}, StringFormat='{}{0:mm\\:ss\\.ff}'}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.LevelName, Converter={StaticResource LevelNameConverter}}"  TextAlignment="Justify"  Height="20" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.GameVersion}"  TextAlignment="Justify"  Height="20"  />
+        <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding SelectedCheckpoint.CreatedOn,  Converter={StaticResource DateTimeConverter}}"  TextAlignment="Justify"  Height="20" />
+        
+        <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="0,0,0,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Dump" Width="50" Margin="20,-3,1,1" Command="{Binding Dump}"/>
+
+            <Button Grid.Column="1" Content="Inject" Width="50" Margin="1,-3,20,1" Command="{Binding Inject}"/>
+            
+            
+        </Grid>
+    </Grid>
+</UserControl>

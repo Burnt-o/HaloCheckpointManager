@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HCM3.Model.CheckpointModels;
+using HCM3.Models;
 using System.IO;
 using System.Diagnostics;
 
-namespace HCM3.Services 
+namespace HCM3.Services
 { 
     public partial class CheckpointServices
     {

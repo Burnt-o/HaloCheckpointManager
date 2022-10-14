@@ -5,16 +5,16 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using HCM3.View;
+using HCM3.Views;
 using System.Collections.ObjectModel;
-using HCM3.ViewModel;
-using HCM3.Model;
+using HCM3.ViewModels;
+using HCM3.Models;
 using Microsoft.Extensions.DependencyInjection;
 using HCM3.Startup;
 using System.Diagnostics;
 using HCM3.Services;
 using HCM3.Services.Trainer;
-using HCM3.ViewModel.Commands;
+using HCM3.ViewModels.Commands;
 
 namespace HCM3
 {

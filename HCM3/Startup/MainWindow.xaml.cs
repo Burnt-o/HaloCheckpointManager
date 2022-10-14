@@ -16,10 +16,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using BurntMemory;
-using HCM3.View;
+using HCM3.Views;
 using System.Collections.ObjectModel;
-using HCM3.ViewModel;
-using HCM3.Model;
+using HCM3.ViewModels;
+using HCM3.Models;
 
 
 namespace HCM3.Startup
