@@ -91,11 +91,18 @@ namespace HCM3.Services
                     CurrentAttachedMCCVersion = null;
                 }
                 Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version to " + CurrentAttachedMCCVersion);
+                ReadWrite.Pointer? modulePointer = (ReadWrite.Pointer?)this.DataPointersService.GetPointer("H1_ModuleSteam", CurrentAttachedMCCVersion);
+                if (modulePointer == null)
+                {
+                    Trace.WriteLine("module pointer was null somehow?");
+                }
+                this.SetModulePointer("halo1.dll", modulePointer);
             }
             else
             {
                 MCCType = "WinStore";
                 CurrentAttachedMCCVersion = DataPointersService.HighestSupportedMCCVersion;
+                this.SetModulePointer("halo1.dll", (ReadWrite.Pointer?)this.DataPointersService.GetPointer("H1_ModuleWinStore", CurrentAttachedMCCVersion));
             }
             UpdateHaloState();
 

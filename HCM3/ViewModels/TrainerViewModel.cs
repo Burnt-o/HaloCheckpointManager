@@ -43,7 +43,7 @@ namespace HCM3.ViewModels
             this.TrainerServices = trainerServices;
             SelectedGame = 0;
             this.Button_ForceCheckpoint = new ButtonViewModel("none", "Force Checkpoint", new ForceCheckpointCommand(this, this.TrainerServices));
-            this.Button_ForceRevert = new ButtonViewModel("none", "Force Revert", null);
+            this.Button_ForceRevert = new ButtonViewModel("none", "Force Revert", new ForceRevertCommand(this, this.TrainerServices));
             this.Button_ForceCoreSave = new ButtonViewModel("none", "Force Core save", null);
             this.Button_ForceCoreLoad = new ButtonViewModel("none", "Force Core load", null);
             this.Button_ToggleInvuln = new ButtonViewModel("none", "Invulnerability", null);

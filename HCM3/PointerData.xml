@@ -6,30 +6,42 @@
 	<Version Version="1.2645.0.0">
 		<!--Halo 1-->
 		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_CurrentTickCount</Name>
+			<Name>H1_ModuleSteam</Name>
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03B80E98</Offset>
 				<Offset>0x8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_ModuleWinStore</Name>
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A23830</Offset>
+				<Offset>0x8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_CurrentTickCount</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
 				<Offset>0x2B5FCE8</Offset>
 			</Offsets>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_PrintMessageText</Name>
-			<Module>main</Module>
+			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x03B80E98</Offset>
-				<Offset>0x8</Offset>
 				<Offset>0x2A54C98</Offset>
 				<Offset>0x4</Offset>
 			</Offsets>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CPMessageCall</Name>
-			<Module>main</Module>
+			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x03B80E98</Offset>
-				<Offset>0x8</Offset>
 				<Offset>0xADC050</Offset>
 			</Offsets>
 		</Entry>
@@ -39,10 +51,8 @@
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_PrintMessageTickCount</Name>
-			<Module>main</Module>
+			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x03B80E98</Offset>
-				<Offset>0x8</Offset>
 				<Offset>0x2A54C98</Offset>
 				<Offset>0</Offset>
 			</Offsets>
@@ -51,73 +61,57 @@
 			<Name>H1_PrintMessageFlags</Name>
 			<Array>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x80</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x81</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x82</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x83</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x84</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x85</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x86</Offset>
 				</Offsets>
 			</Element>
 			<Element>
-				<Module>main</Module>
+				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0x03B80E98</Offset>
-					<Offset>0x8</Offset>
 					<Offset>0x2A54C98</Offset>
 					<Offset>0x87</Offset>
 				</Offsets>
@@ -139,19 +133,22 @@
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceCheckpoint</Name>
-			<Module>main</Module>
+			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x03B80E98</Offset>
-				<Offset>0x8</Offset>
 				<Offset>0x2AF8247</Offset>
 			</Offsets>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_CheckpointLocation1</Name>
-			<Module>main</Module>
+			<Name>H1_ForceRevert</Name>
+			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x03B80E98</Offset>
-				<Offset>0x8</Offset>
+				<Offset>0x2AF8242</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_CheckpointLocation1</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
 				<Offset>0x02AF3D40</Offset>
 				<Offset>0x28</Offset>
 				<Offset>0x14</Offset>
