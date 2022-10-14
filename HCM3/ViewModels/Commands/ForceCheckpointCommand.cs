@@ -5,21 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Diagnostics;
-
+using HCM3.ViewModels.MVVM;
 using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels.Commands
 {
-    public class ForceCheckpointCommand : ICommand
+    public class ForceCheckpointCommand : ITrainerCommand
     {
         internal ForceCheckpointCommand(TrainerViewModel trainerViewModel, TrainerServices trainerServices)
             {
                     this.TrainerServices = trainerServices;
             this.TrainerViewModel = trainerViewModel;
+
         }
 
         private TrainerServices TrainerServices { get; init; }
         private TrainerViewModel TrainerViewModel { get; init; }
+
+        public ActionControlViewModel ActionControlViewModel { get; set; }
 
 
         public bool CanExecute(object? parameter)

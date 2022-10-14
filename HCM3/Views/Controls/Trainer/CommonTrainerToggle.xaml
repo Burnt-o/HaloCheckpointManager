@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:HCM3.Views.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:ButtonViewModel, IsDesignTimeCreatable=True}"  
+             d:DataContext="{d:DesignInstance viewModels:ActionControlViewModel, IsDesignTimeCreatable=True}"  
              >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -17,9 +17,9 @@
             <ColumnDefinition Width="*"/>
 
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0"/>
+        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0"  Command="{Binding Path=ChangeHotkeyCommand}"/>
         <Label Grid.Column="1" Content="{Binding Path=HotkeyText}" Padding="0,11,0,0"/>
-        <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding Path=ExecuteCommand}" IsChecked="{Binding Path=IsChecked}"/>
         <Label Grid.Column="3" Content="{Binding Path=EffectText}" Padding="0,11,0,0"/>
     </Grid>
 </UserControl>

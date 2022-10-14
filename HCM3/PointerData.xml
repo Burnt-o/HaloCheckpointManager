@@ -23,6 +23,7 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Entry>
+		<!--Print Message stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CurrentTickCount</Name>
 			<Module>halo1.dll</Module>
@@ -131,6 +132,8 @@
 			<Element>0xFF</Element>
 			</Array>
 		</Entry>
+		<!--/Print Message stuff-->
+		<!--Trainer stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceCheckpoint</Name>
 			<Module>halo1.dll</Module>
@@ -145,6 +148,50 @@
 				<Offset>0x2AF8242</Offset>
 			</Offsets>
 		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_ForceCoreSave</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF8259</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_ForceCoreLoad</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF825A</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_BP_PlayerAddy</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAF17F7</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_BP_ShieldBreak</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xC047a7</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_BP_ShieldChip</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xC046F7</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H1_BP_Health</Name>
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xC03FE3</Offset>
+			</Offsets>
+		</Entry>
+		<!--/Trainer stuff-->
+		<!--Checkpoint management stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CheckpointLocation1</Name>
 			<Module>halo1.dll</Module>
@@ -179,6 +226,7 @@
 				</PreserveLocation>
 			</Array>
 		</Entry>
+		<!--/Checkpoint management stuff-->
 		<!--/Halo 1-->
 		<!--MCC Steam-->
 		<Entry Type="ReadWrite.Pointer">

@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace HCM3.ViewModels.MVVM
 {
-    internal abstract class Presenter : INotifyPropertyChanged
+    public abstract class Presenter : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

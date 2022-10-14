@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:HCM3.Views.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:ButtonViewModel, IsDesignTimeCreatable=True}" x:ClassModifier="internal"
+             d:DataContext="{d:DesignInstance viewModels:ActionControlViewModel, IsDesignTimeCreatable=True}" x:ClassModifier="internal"
              >
     <Grid>
         <Grid.ColumnDefinitions>

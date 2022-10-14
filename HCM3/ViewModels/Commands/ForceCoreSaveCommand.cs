@@ -5,32 +5,40 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Diagnostics;
+using HCM3.ViewModels.MVVM;
+using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels.Commands
 {
-    public class ChangeHotkeyCommand : ICommand
+    public class ForceCoreSaveCommand : ITrainerCommand
     {
-
-        public ChangeHotkeyCommand(ActionControlViewModel actionControlViewModel)
-        {
-            this.ActionControlViewModel = actionControlViewModel;
-
+        internal ForceCoreSaveCommand(TrainerViewModel trainerViewModel, TrainerServices trainerServices)
+            {
+                    this.TrainerServices = trainerServices;
+            this.TrainerViewModel = trainerViewModel;
         }
 
-        private ActionControlViewModel ActionControlViewModel { get; init; }
+        private TrainerServices TrainerServices { get; init; }
+        private TrainerViewModel TrainerViewModel { get; init; }
+        public ActionControlViewModel ActionControlViewModel { get; set; }
+
         public bool CanExecute(object? parameter)
         {
-            return true;
+            //return true;
+            return TrainerViewModel.SelectedGameSameAsActualGame;
         }
 
         public void Execute(object? parameter)
         {
+            try
+            {
+                TrainerServices.ForceCoreSave(TrainerViewModel.SelectedGame);
 
-            ActionControlViewModel.HotkeyText = "ya changed";
-            Trace.WriteLine("User commanded ChangeHotkey, parameter: " + parameter?.ToString());
-            Trace.WriteLine("HOTKEY: " + ActionControlViewModel.HotkeyText);
-            //ActionControlViewModel.OnHotkeyPress(); this is the arg we want to hotkey to execute
-
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Failed to Force Core Save! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+            }
 
         }
 
@@ -58,6 +66,5 @@ namespace HCM3.ViewModels.Commands
                 CommandManager.RequerySuggested -= value;
             }
         }
-
     }
 }

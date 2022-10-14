@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Diagnostics;
-
+using HCM3.ViewModels.MVVM;
 using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels.Commands
 {
-    public class ForceRevertCommand : ICommand
+    public class ForceRevertCommand : ITrainerCommand
     {
         internal ForceRevertCommand(TrainerViewModel trainerViewModel, TrainerServices trainerServices)
             {
@@ -20,7 +20,7 @@ namespace HCM3.ViewModels.Commands
 
         private TrainerServices TrainerServices { get; init; }
         private TrainerViewModel TrainerViewModel { get; init; }
-
+        public ActionControlViewModel ActionControlViewModel { get; set; }
 
         public bool CanExecute(object? parameter)
         {
