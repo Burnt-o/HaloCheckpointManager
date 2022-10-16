@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using HCM3.ViewModels.MVVM;
 using System.Windows.Input;
 using HCM3.ViewModels.Commands;
+using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels
 {
-    public class ActionControlViewModel : Presenter, IControlWithHotkey
+    public class ToggleControlViewModel : Presenter, IControlWithHotkey
     {
 
         private string _hotkeyText;
@@ -28,24 +29,33 @@ namespace HCM3.ViewModels
 
         public ICommand? ExecuteCommand { get; init; }
 
-        //public bool IsEnabled { get; set; } //only used by toggle controls
+        private bool _isChecked;
+        public bool IsChecked //only used by toggle controls
+        {
+            get { return _isChecked; }
+            set
+            {
+                _isChecked = value;
+                OnPropertyChanged(nameof(IsChecked));
+            }
+        }
 
 
-
-        public ActionControlViewModel()
+        public ToggleControlViewModel()
         {
             //parameterless constructor for design view
             this.EffectText = "Effect";
             this.HotkeyText = "Hotkey";
         }
 
-        public ActionControlViewModel(string hotkeyText, string effectText, ICommand? executeCommand) 
+        //instead of sending the command, we send the object property within PersistentCheatService, so we can bind IsChecked to it's isChecked
+        public ToggleControlViewModel(string hotkeyText, string effectText, IPersistentCheatService? persistentCheatService)
         {
             this.EffectText = effectText;
             this.HotkeyText = hotkeyText;
-            this.ExecuteCommand = executeCommand;
+            this.ExecuteCommand = new RelayCommand(o => persistentCheatService.ToggleCheat(), o => true);
             this.ChangeHotkeyCommand = new(this);
-            //this.IsEnabled = false;
+            this.IsChecked = false;
         }
 
         public void OnHotkeyPress()

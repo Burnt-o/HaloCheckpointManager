@@ -19,7 +19,7 @@ namespace HCM3.Services
         {
             if (selectedCheckpoint == null) throw new Exception("No checkpoint was selected!");
 
-            this.CommonServices.IsGameCorrect(selectedGame);
+            this.CommonServices.CheckGameIsAligned(selectedGame);
             string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
 
             // Check that the file we're going to inject actually exists

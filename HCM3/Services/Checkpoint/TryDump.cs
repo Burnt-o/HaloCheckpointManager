@@ -17,7 +17,7 @@ namespace HCM3.Services
         public void TryDump(SaveFolder? selectedSaveFolder, int selectedGame)
         {
 
-            this.CommonServices.IsGameCorrect(selectedGame);
+            this.CommonServices.CheckGameIsAligned(selectedGame);
             string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
 
             // Check that the folder we're going to dump the file into actually exists

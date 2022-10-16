@@ -20,7 +20,19 @@ namespace HCM3.Services
             this.DataPointersService = dataPointersService;
         }
 
-        public void IsGameCorrect(int selectedGame)
+        public int GetLoadedGame()
+        {
+            this.HaloMemoryService.HaloState.UpdateHaloState();
+            int game = this.HaloMemoryService.HaloState.CurrentHaloState;
+            if (game < 0 || game > 6)
+            {
+                Dictionaries.HaloStateEnum gameEnum = (Dictionaries.HaloStateEnum)game;
+                throw new Exception("Game wasn't valid! AttachState: " + gameEnum.ToString());
+            }
+            return game;
+        }
+
+        public void CheckGameIsAligned(int selectedGame)
         {
             // Update HaloState
             this.HaloMemoryService.HaloState.UpdateHaloState();
@@ -73,7 +85,7 @@ namespace HCM3.Services
 
         public bool PrintMessage(string message, int selectedGame)
         {
-            IsGameCorrect(selectedGame);
+            CheckGameIsAligned(selectedGame);
             string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
 
             List<string> requiredPointerNames = new();

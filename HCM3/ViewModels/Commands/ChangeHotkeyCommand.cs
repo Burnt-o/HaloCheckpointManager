@@ -11,13 +11,13 @@ namespace HCM3.ViewModels.Commands
     public class ChangeHotkeyCommand : ICommand
     {
 
-        public ChangeHotkeyCommand(ActionControlViewModel actionControlViewModel)
+        public ChangeHotkeyCommand(IControlWithHotkey iControlWithHotkey)
         {
-            this.ActionControlViewModel = actionControlViewModel;
+            this.IControlWithHotkey = iControlWithHotkey;
 
         }
 
-        private ActionControlViewModel ActionControlViewModel { get; init; }
+        private IControlWithHotkey IControlWithHotkey { get; init; }
         public bool CanExecute(object? parameter)
         {
             return true;
@@ -26,10 +26,10 @@ namespace HCM3.ViewModels.Commands
         public void Execute(object? parameter)
         {
 
-            ActionControlViewModel.HotkeyText = "ya changed";
+            IControlWithHotkey.HotkeyText = "ya changed";
             Trace.WriteLine("User commanded ChangeHotkey, parameter: " + parameter?.ToString());
-            Trace.WriteLine("HOTKEY: " + ActionControlViewModel.HotkeyText);
-            //ActionControlViewModel.OnHotkeyPress(); this is the arg we want to hotkey to execute
+            Trace.WriteLine("HOTKEY: " + IControlWithHotkey.HotkeyText);
+
 
 
         }

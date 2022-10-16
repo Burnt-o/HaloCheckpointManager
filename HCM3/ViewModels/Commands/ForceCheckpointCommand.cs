@@ -10,7 +10,7 @@ using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels.Commands
 {
-    public class ForceCheckpointCommand : ITrainerCommand
+    public class ForceCheckpointCommand : ICommand
     {
         internal ForceCheckpointCommand(TrainerViewModel trainerViewModel, TrainerServices trainerServices)
             {
@@ -22,7 +22,6 @@ namespace HCM3.ViewModels.Commands
         private TrainerServices TrainerServices { get; init; }
         private TrainerViewModel TrainerViewModel { get; init; }
 
-        public ActionControlViewModel ActionControlViewModel { get; set; }
 
 
         public bool CanExecute(object? parameter)
@@ -35,7 +34,7 @@ namespace HCM3.ViewModels.Commands
         {
             try
             {
-                TrainerServices.ForceCheckpoint(TrainerViewModel.SelectedGame);
+                TrainerServices.ForceCheckpoint();
 
             }
             catch (Exception ex)

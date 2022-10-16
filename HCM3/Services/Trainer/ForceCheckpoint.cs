@@ -13,12 +13,26 @@ namespace HCM3.Services.Trainer
     public partial class TrainerServices
     {
 
-        public void ForceCheckpoint(int selectedGame)
+        public void ForceCheckpoint()
         {
-            Trace.WriteLine("ForceCheckpoint called, game: " + selectedGame);
 
-            this.CommonServices.IsGameCorrect(selectedGame);
-            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
+
+            ////// need a place to debug dll injection, gonna use forceCheckpoint to inject
+            ///
+            //bool DLLunload = this.HaloMemoryService.DLLInjector.UnloadDLL("HCMInternal.dll");
+            //Trace.WriteLine("DLL unload success: " + DLLunload);
+            bool DLLsuccess = this.HaloMemoryService.DLLInjector.InjectDLL("HCMInternal.dll");
+            Trace.WriteLine("DLL success: " + DLLsuccess);
+            return;
+
+
+
+
+
+            Trace.WriteLine("ForceCheckpoint called");
+            this.HaloMemoryService.HaloState.UpdateHaloState();
+            int loadedGame = this.CommonServices.GetLoadedGame();
+            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)loadedGame];
           
 
             List<string> requiredPointerNames = new();
@@ -40,7 +54,7 @@ namespace HCM3.Services.Trainer
             bool success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer?)requiredPointers["CPMessageCall"], nop, true);
 
             // Call PrintMessage("Custom Checkpoint... Done")
-            success = success && this.CommonServices.PrintMessage("Custom Checkpoint... Done", selectedGame);
+            success = success && this.CommonServices.PrintMessage("Custom Checkpoint... Done", loadedGame);
 
 
             if (!success) throw new Exception("Error while formatting checkpoint message string");
@@ -56,7 +70,6 @@ namespace HCM3.Services.Trainer
 
             // Restore message call bytes
             this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer?)requiredPointers["CPMessageCall"], originalCPMessageCall, true);
-
 
 
 

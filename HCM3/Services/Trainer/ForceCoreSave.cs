@@ -17,7 +17,7 @@ namespace HCM3.Services.Trainer
         {
             Trace.WriteLine("ForceCoreSave called, game: " + selectedGame);
 
-            this.CommonServices.IsGameCorrect(selectedGame);
+            this.CommonServices.CheckGameIsAligned(selectedGame);
             string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
           
 
