@@ -58,6 +58,7 @@ namespace HCM3
             services.AddSingleton<PersistentCheatManager>();
             services.AddSingleton<CheckpointServices>();
             services.AddSingleton<TrainerServices>();
+            services.AddSingleton<InternalServices>();
             services.AddSingleton<PC_ToggleInvuln>();
         }
 

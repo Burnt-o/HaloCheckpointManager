@@ -16,13 +16,22 @@ namespace HCM3.Services.Trainer
         public void ForceCheckpoint()
         {
 
+            try
+            {
+                bool DLLsuccess = this.InternalServices.InjectHCMInternal();
+                Trace.WriteLine("DLL success: " + DLLsuccess);
+            }
+            catch (Exception ex)
+            { 
+            Trace.WriteLine("Internal stuff failed: " + ex.Message);
+            }
 
-            ////// need a place to debug dll injection, gonna use forceCheckpoint to inject
-            ///
-            //bool DLLunload = this.HaloMemoryService.DLLInjector.UnloadDLL("HCMInternal.dll");
-            //Trace.WriteLine("DLL unload success: " + DLLunload);
-            bool DLLsuccess = this.HaloMemoryService.DLLInjector.InjectDLL("HCMInternal.dll");
-            Trace.WriteLine("DLL success: " + DLLsuccess);
+            /*      bool DLLsuccess = this.HaloMemoryService.DLLInjector.InjectDLL("HCMInternal.dll");
+                  Trace.WriteLine("DLL success: " + DLLsuccess);
+
+      */
+
+
             return;
 
 
