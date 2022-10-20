@@ -13,5 +13,13 @@ namespace HCM3.Services.Trainer
         public bool IsChecked { get; set; } // for binding by ToggleControlViewModel
 
         public void ToggleCheat();
+
+
+        public bool ApplyCheat();
+
+        public void RemoveCheat();
+
+        // Used by PersistentCheatManager's recheck timer too see if hook still exists (/needs reapplying)
+        public bool IsCheatApplied();
     }
 }

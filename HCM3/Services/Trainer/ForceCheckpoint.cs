@@ -16,27 +16,6 @@ namespace HCM3.Services.Trainer
         public void ForceCheckpoint()
         {
 
-            try
-            {
-                bool DLLsuccess = this.InternalServices.InjectHCMInternal();
-                Trace.WriteLine("DLL success: " + DLLsuccess);
-            }
-            catch (Exception ex)
-            { 
-            Trace.WriteLine("Internal stuff failed: " + ex.Message);
-            }
-
-            /*      bool DLLsuccess = this.HaloMemoryService.DLLInjector.InjectDLL("HCMInternal.dll");
-                  Trace.WriteLine("DLL success: " + DLLsuccess);
-
-      */
-
-
-            return;
-
-
-
-
 
             Trace.WriteLine("ForceCheckpoint called");
             this.HaloMemoryService.HaloState.UpdateHaloState();

@@ -11,6 +11,7 @@ using System.IO;
 using System.Xml;
 using HCM3.Models;
 using HCM3.Helpers;
+using Keystone;
 
 namespace HCM3.Services
 {
@@ -141,7 +142,7 @@ namespace HCM3.Services
                                     if (!entryArray.All(y => y != null)) throw new Exception("int[]: entryArray had some null elements");
 
                                     entryToStore = (int[])entryArray.Cast<int>().ToArray(); ;
-                                    
+
                                 }
                                 else if (entry.Attribute("Type")?.Value == "byte[]")
                                 {
@@ -156,6 +157,35 @@ namespace HCM3.Services
 
                                     entryToStore = (byte[])entryArray.Cast<byte>().ToArray();
 
+                                }
+                                else if (entry.Attribute("Type")?.Value == "string")
+                                {
+                                    Trace.WriteLine("Processing string entry");
+                                    // Read the data from the Pointer element (if the data exists)
+                                    entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
+                                    entryToStore = entry.Element("Value") == null ? null : (string)entry.Element("Value")?.Value;
+                                }
+                                else if (entry.Attribute("Type")?.Value == "byte[] from ASM")
+                                {
+                                    // DON'T USE THIS if you have addresses to evaluate in your asm string
+                                    Trace.WriteLine("Processing byte[] from ASM entry");
+                                    // Read the data from the Pointer element (if the data exists)
+                                    entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
+                                    string? ASMstring = entry.Element("Value") == null ? null : entry.Element("Value")?.Value;
+                                    if (ASMstring == null) throw new Exception("ASM string was null");
+                                    Trace.WriteLine("ASMString: " + ASMstring);
+
+                                    using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
+                                    {
+                                        byte[] ASMBytes = keystone.Assemble(ASMstring, 0, out _, out _);
+                                        Trace.WriteLine("asmfromstring: \n");
+                                        for (int i = 0; i < ASMBytes.Length; i++)
+                                        {
+                                            Trace.Write(ASMBytes[i].ToString("X2"));
+                                        }
+                                        Trace.WriteLine(" ");
+                                        entryToStore = ASMBytes;
+                                    }
                                 }
 
 

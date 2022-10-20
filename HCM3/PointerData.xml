@@ -162,34 +162,33 @@
 				<Offset>0x2AF825A</Offset>
 			</Offsets>
 		</Entry>
+		
+		<!--Invuln stuff-->
 		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_BP_PlayerAddy</Name>
+			<Name>H1_Invuln_OGLocation</Name>
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xAF17F7</Offset>
+				<Offset>0xC02600</Offset>
 			</Offsets>
 		</Entry>
+
 		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_BP_ShieldBreak</Name>
+			<Name>H1_Invuln_PlayerDatum</Name>
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xC047a7</Offset>
+				<Offset>0x1C6346C</Offset>
 			</Offsets>
 		</Entry>
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_BP_ShieldChip</Name>
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0xC046F7</Offset>
-			</Offsets>
+		<Entry Type="byte[] from ASM">
+			<Name>H1_Invuln_OGCode</Name>
+			<Value>mov rax, rsp; push rbp; push rbx; push rsi; push rdi; push r12; push r13; push r14; push r15;</Value>
 		</Entry>
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_BP_Health</Name>
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0xC03FE3</Offset>
-			</Offsets>
+		<Entry Type="string">
+			<Name>H1_Invuln_DetourCode</Name>
+			<Value>push rax; mov rax,[_playerDatumAddy]; cmp rdx, rax; pop rax; jne 03h; ret; mov rax, rsp; push rbp; push rbx; push rsi; push rdi; push r12; push r13; push r14; push r15; jmp _returnControl</Value>
 		</Entry>
+	
+
 		<!--/Trainer stuff-->
 		<!--Checkpoint management stuff-->
 		<Entry Type="ReadWrite.Pointer">

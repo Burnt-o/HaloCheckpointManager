@@ -8,15 +8,18 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
 
-namespace HCM3.Services
+namespace HCM3.Services.Trainer
 {
-    public class InternalServices
+    public partial class InternalServices
     {
 
 
 
-        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+/*        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);*/
+
+        private Dictionary<string, IntPtr> InternalFunctions { get; set; }
+        public bool InternalFunctionsLoaded { get; private set; }
 
         public HaloMemoryService HaloMemoryService { get; init; }
         public DataPointersService DataPointersService { get; init; }
@@ -28,106 +31,75 @@ namespace HCM3.Services
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
             this.CommonServices = commonServices;
+
+            InternalFunctions = new();
+            InternalFunctionsLoaded = false;
         }
 
 
-        public IntPtr? handleToInternalDLL { get; set; }
-
-        public IntPtr? fpChangeText { get; set; }
-
-        public bool InjectHCMInternal()
+        public bool InjectInternal()
         {
-            if (!this.HaloMemoryService.DLLInjector.InjectDLL("HCMInternal.dll", out IntPtr? moduleHandle)) throw new Exception("failed to inject?");
-
-            if (moduleHandle == null) throw new Exception("module handle null?");
-
-
-            //now load HCM into our own process
-            IntPtr loadLibraryAddr = PInvokes.GetProcAddress(PInvokes.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
-            // Search for the named dll in the apps local folder.
-            string currentfolder = System.AppDomain.CurrentDomain.BaseDirectory;
-            string dllPath = currentfolder + "HCMInternal.dll";
-            Trace.WriteLine("DLL path: " + dllPath);
-            IntPtr allocMemAddress2;
-            int sizeToAlloc = ((dllPath.Length + 1) * Marshal.SizeOf(typeof(char)));
-
-            allocMemAddress2 = PInvokes.VirtualAllocEx(Process.GetCurrentProcess().Handle, IntPtr.Zero, (uint)sizeToAlloc, PInvokes.ALLOC_FLAGS.MEM_COMMIT | PInvokes.ALLOC_FLAGS.MEM_RESERVE, PInvokes.ALLOC_FLAGS.PAGE_READWRITE);
-            PInvokes.WriteProcessMemory(Process.GetCurrentProcess().Handle, allocMemAddress2, Encoding.Default.GetBytes(dllPath), sizeToAlloc, out _);
-            PInvokes.CreateRemoteThread(Process.GetCurrentProcess().Handle, IntPtr.Zero, 0, (IntPtr)loadLibraryAddr, allocMemAddress2, 0, IntPtr.Zero);
-            Thread.Sleep(100);
-            handleToInternalDLL = moduleHandle;
-
-            // now we need to get info on the HCMInternal loaded within HCM, which we run GetProcAddress on the functions we want the IntPtrs to, then subtract the module address to get the offset
-            IntPtr? ourDLL = null;
-            using (Process curProcess = Process.GetCurrentProcess())
+            List<string> listOfInternalFunctions = new();
+            listOfInternalFunctions.Add("ChangeDisplayText");
+            listOfInternalFunctions.Add("IsTextDisplaying");
+            try
             {
-                foreach (ProcessModule module in curProcess.Modules)
+                SetupInternal(listOfInternalFunctions);
+            }
+            catch (Exception ex)
+            { 
+            Trace.WriteLine ("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.Message);
+            }
+            return this.CheckInternalLoaded();
+        }
+
+
+
+        public IntPtr VirtualAllocExNear(IntPtr processHandle, int size, IntPtr location)
+        {
+
+            Trace.WriteLine("LOCATION:::::::: " + location.ToString("X"));
+            //search within 2gb (2gb is actual max for 32bit jump)
+            IntPtr min = IntPtr.Subtract(location, 0x8000000);
+            IntPtr max = IntPtr.Add(location, 0x8000000);
+            PInvokes.MEMORY_BASIC_INFORMATION mbi = new();
+            uint mbiLength = (uint)System.Runtime.InteropServices.Marshal.SizeOf(mbi);
+
+            Trace.WriteLine("Size of mbi: " + (int)System.Runtime.InteropServices.Marshal.SizeOf(mbi));
+
+
+            // go forward first
+            for (IntPtr Addr = location; Addr.ToInt64() < max.ToInt64(); Addr = IntPtr.Add(Addr, size))
+            {
+                if (PInvokes.VirtualQueryEx(processHandle, Addr, out mbi, mbiLength) == 0)
                 {
-                    Trace.WriteLine("module: " + module.ModuleName);
-                    if (module.ModuleName == "HCMInternal.dll")
-                    {
-                        ourDLL = module.BaseAddress;
-                        break;
-                    }
+                    //VirtualQuery failed
+                    int lastError = Marshal.GetLastWin32Error();
+                    Trace.WriteLine("Virtual query failed: " + lastError);
+                    throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError);
+
                 }
+                //Trace.WriteLine("Got here at least 1");
+                if (mbi.RegionSize == IntPtr.Zero) continue; //this should never happen if virtualQuery succeeded
+                //Trace.WriteLine("Got here at least 2");
+                //Trace.WriteLine(mbi.State.ToString("X"));
+                if (mbi.State != 0x10000) continue; //not MEM_FREE
+                Trace.WriteLine("Got here at least 3");
+                //Virtual alloc needs 64k aligned addys, so get lowest 4 bytes using bitwise masking, then subtract that from the base address
+                IntPtr tryAlloc = (IntPtr)(mbi.BaseAddress.ToUInt64() - (mbi.BaseAddress.ToUInt64() & 0xFFFF));
+                IntPtr? actualAlloc = PInvokes.VirtualAllocEx(processHandle, tryAlloc, (uint)size, PInvokes.ALLOC_FLAGS.MEM_COMMIT | PInvokes.ALLOC_FLAGS.MEM_RESERVE, PInvokes.ALLOC_FLAGS.PAGE_EXECUTE_READWRITE);
+
+                if (actualAlloc != null && actualAlloc != IntPtr.Zero) return (IntPtr)actualAlloc.Value;
+
             }
+           
 
-            if (ourDLL == null) throw new Exception("couldn't find HCMInternal inside HCM");
-            Trace.WriteLine("ourDLL IntPtr: " + ((Int64)ourDLL).ToString("X"));
-            IntPtr? functionPointer = GetProcAddress((IntPtr)ourDLL, "ChangeText");
+            throw new Exception("Failed to find free memory page near target location");
 
-            if (functionPointer == IntPtr.Zero)
-            {
-                Trace.WriteLine("trying second thing");
-                functionPointer = GetProcAddress((IntPtr)ourDLL, "ChangeText = ChangeText");
-            }
+            
 
-            if (functionPointer == null || functionPointer == IntPtr.Zero) throw new Exception("couldn't find exported function in ourDLL");
+           
 
-
-            Trace.WriteLine("functionPointer IntPtr: " + ((Int64)functionPointer).ToString("X"));
-            //now substract handleToInternalDLL from functionPointer to get offset
-            Int64 fpOffset = (Int64)functionPointer - (Int64)ourDLL;
-            Trace.WriteLine("fpOffset: " + fpOffset);
-            IntPtr fpInternal = IntPtr.Add((IntPtr)handleToInternalDLL, (int)fpOffset);
-
-            //now as a test, I want to try calling the function
-            //We can do this with createremote thread, but first we need to write the parameters somewhere in memory
-            string textParameter = "cummiesss";
-            IntPtr MCCHandle = (IntPtr)this.HaloMemoryService.HaloState.processHandle;
-            int sizeToAlloc2 = ((textParameter.Length + 1) * Marshal.SizeOf(typeof(char)));
-            IntPtr? allocMemAddress = PInvokes.VirtualAllocEx(MCCHandle, IntPtr.Zero, (uint)sizeToAlloc2, PInvokes.ALLOC_FLAGS.MEM_COMMIT | PInvokes.ALLOC_FLAGS.MEM_RESERVE, PInvokes.ALLOC_FLAGS.PAGE_READWRITE);
-            if (allocMemAddress == null) throw new Exception("couldn't alloc memory for parameter");
-
-            PInvokes.VirtualProtectEx(MCCHandle, (IntPtr)allocMemAddress, sizeToAlloc2, PInvokes.PAGE_READWRITE, out uint lpflOldProtect);
-            PInvokes.WriteProcessMemory(MCCHandle, (IntPtr)allocMemAddress, Encoding.Default.GetBytes(textParameter), sizeToAlloc2, out _);
-            PInvokes.VirtualProtectEx(MCCHandle, (IntPtr)allocMemAddress, sizeToAlloc2, lpflOldProtect, out _);
-
-            IntPtr? threadID = PInvokes.CreateRemoteThread(MCCHandle, IntPtr.Zero, 0, fpInternal, (IntPtr)allocMemAddress, 0, IntPtr.Zero);
-            if (threadID == null) return false;
-
-            uint waitFor = PInvokes.WaitForSingleObject((IntPtr)threadID, 3000);
-            PInvokes.CloseHandle((IntPtr)threadID);
-            PInvokes.VirtualFreeEx(MCCHandle, (IntPtr)allocMemAddress, textParameter.Length, PInvokes.AllocationType.Release);
-            if (waitFor == 0x00000080) // WAIT_ABANDONED
-            {
-                Trace.WriteLine("callInternalFunc: Wait abandoned!");
-            }
-            else if (waitFor == 0x00000102) // WAIT_TIMEOUT
-            {
-                Trace.WriteLine("callInternalFunc: Wait timeout!");
-            }
-            Trace.WriteLine("callInternalFunc: remote thread completed!");
-            PInvokes.GetExitCodeThread((IntPtr)threadID, out uint exitCode);
-            Trace.WriteLine("callInternalFunc: remote thread exit code: " + exitCode);
-
-            if (exitCode == 0)
-            {
-                //Failed!
-                int lastError = Marshal.GetLastWin32Error();
-                Trace.WriteLine("callInternalFunc: ERROR! info: " + lastError);
-            }
-            return true;
 
 
         }

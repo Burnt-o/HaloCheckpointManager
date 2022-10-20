@@ -35,10 +35,25 @@ static void MyDrawOutlinedText(int x, int y, RGBA* color, std::string text, int 
 	ImGui::GetOverlayDrawList()->AddText(ImVec2(x, y), ImGui::ColorConvertFloat4ToU32(ImVec4(color->R / 255.0, color->G / 255.0, color->B / 255.0, color->A / 255.0)), text.c_str());
 }
 
-extern "C" _declspec(dllexport) void ChangeText(const TCHAR* pChars)
+
+extern "C" __declspec(dllexport) void ChangeDisplayText(const TCHAR* pChars)
 {
+
 	std::string inputText(pChars);
 	textToPrint = inputText;
+}
+
+extern "C" __declspec(dllexport) int IsTextDisplaying()
+{
+	if (textToPrint == "hi")
+	{
+		return 2;
+	}
+	else
+	{
+		return 1;
+	}
+
 }
 
 void InitImGui()
@@ -143,7 +158,7 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		processName = path.substr(path.find_last_of("/\\") + 1);
 		if (processName.find("MCC") != std::string::npos)
 		{
-			textToPrint = processName;
+			textToPrint = "hi";
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
 		}
 		

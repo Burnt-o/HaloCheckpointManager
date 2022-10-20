@@ -13,7 +13,6 @@ namespace HCM3.Services
         public HaloState HaloState;
         public ReadWrite ReadWrite;
         public DebugManager DebugManager;
-        public DLLInjector DLLInjector;
         public SpeedhackManager SpeedhackManager;
 
         public HaloMemoryService(DataPointersService dataPointersService)
@@ -21,8 +20,7 @@ namespace HCM3.Services
         HaloState = new HaloState(dataPointersService, this);
         ReadWrite = new ReadWrite(HaloState);
         DebugManager = new DebugManager(HaloState, ReadWrite);
-        DLLInjector = new DLLInjector(HaloState, ReadWrite);
-        SpeedhackManager = new SpeedhackManager(HaloState, ReadWrite, DLLInjector);
+        SpeedhackManager = new SpeedhackManager(HaloState, ReadWrite);
         }
 
     }
