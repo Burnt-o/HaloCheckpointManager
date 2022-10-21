@@ -29,16 +29,9 @@ namespace HCM3.ViewModels
 
         public ICommand? ExecuteCommand { get; init; }
 
-        private bool _isChecked;
-        public bool IsChecked //only used by toggle controls
-        {
-            get { return _isChecked; }
-            set
-            {
-                _isChecked = value;
-                OnPropertyChanged(nameof(IsChecked));
-            }
-        }
+
+
+        public IPersistentCheatService PersistentCheatService { get; init; }
 
 
         public ToggleControlViewModel()
@@ -55,7 +48,9 @@ namespace HCM3.ViewModels
             this.HotkeyText = hotkeyText;
             this.ExecuteCommand = new RelayCommand(o => persistentCheatService.ToggleCheat(), o => true);
             this.ChangeHotkeyCommand = new(this);
-            this.IsChecked = false;
+
+            //for binding to IsChecked
+            this.PersistentCheatService = persistentCheatService;
         }
 
         public void OnHotkeyPress()

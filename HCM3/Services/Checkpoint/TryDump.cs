@@ -18,7 +18,7 @@ namespace HCM3.Services
         {
 
             this.CommonServices.CheckGameIsAligned(selectedGame);
-            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)selectedGame];
 
             // Check that the folder we're going to dump the file into actually exists
             if (!Directory.Exists(selectedSaveFolder?.SaveFolderPath))

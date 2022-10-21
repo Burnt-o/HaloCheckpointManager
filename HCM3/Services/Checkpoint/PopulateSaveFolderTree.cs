@@ -21,7 +21,7 @@ namespace HCM3.Services
 
 
             // Get the "root" save folder for the game
-            string? rootSaveFolderName = Dictionaries.TabIndexToRootFolderPath.GetValueOrDefault(SelectedGame);
+            string? rootSaveFolderName = Dictionaries.GameToRootFolderPath.GetValueOrDefault(SelectedGame);
             string? rootSaveFolderPath = @"Saves\" + rootSaveFolderName;
             Trace.WriteLine("RefreshSaveFolderTree: rootsavefolderpath = " + rootSaveFolderPath);
 

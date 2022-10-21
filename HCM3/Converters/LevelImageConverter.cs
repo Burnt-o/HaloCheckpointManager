@@ -26,7 +26,7 @@ namespace HCM3.Converters
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.
             int game = HCM3.Properties.Settings.Default.LastSelectedTab;
-            string gameID = Dictionaries.TabIndexTo2LetterGameCode[game];
+            string gameID = Dictionaries.GameTo2LetterGameCode[game];
             string imageModeSuffix = HCM3.Properties.Settings.Default.ImageMode;
             string URL = $"Images/{gameID}/{valueString}_{imageModeSuffix}.png";
 

@@ -12,38 +12,62 @@
         Title="HaloCheckpointManager" Height="593" Width="820"
         MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
-       
+      d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
         >
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate  x:Key="Halo1" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:H1TrainerControl/>
+            </DataTemplate>
+            <DataTemplate  x:Key="Halo2" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:H2TrainerControl />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
     
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <ContentControl Grid.Column="1"  MinWidth="298" MaxWidth="298" Content="{Binding TrainerViewModel}" >
+
+            <ContentControl.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Value="H1" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Halo1}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="H2" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Halo2}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+        <!--<userControls:H1TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>-->
     <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}"  >
+        
         <TabItem  Header="Halo 1">
+            
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition  />
-                    <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}"/>
-                <userControls:H1TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+
+                <local:CheckpointControl DataContext="{Binding Path=CheckpointViewModel}"/>
+
             </Grid>
         </TabItem>
         <TabItem  Header="Halo 2">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition  />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+
                 <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
-                <userControls:H2TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+               
             </Grid>
         </TabItem>
         <TabItem  Header="Halo 3">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition  />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+
                 <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
-                <userControls:H3TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
+
             </Grid>
         </TabItem>
         <TabItem  Header="Halo 3 ODST">
@@ -52,9 +76,8 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
-                <userControls:ODTrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
-            </Grid>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
         </TabItem>
         <TabItem  Header="Halo Reach">
             <Grid>
@@ -62,9 +85,8 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
-                <userControls:HRTrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
-            </Grid>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
         </TabItem>
         <TabItem  Header="Halo 4">
             <Grid>
@@ -72,23 +94,19 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
-                <userControls:H4TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>
-            </Grid>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
         </TabItem>
         <TabItem  Header="Settings">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition  />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+
 
             </Grid>
         </TabItem>
 
 
     </TabControl>
-    
+    </Grid>
     <!--<Grid>
         
 

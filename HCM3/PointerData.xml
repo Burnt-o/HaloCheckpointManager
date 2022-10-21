@@ -132,7 +132,7 @@
 			<Element>0xFF</Element>
 			</Array>
 		</Entry>
-		<!--/Print Message stuff-->
+		<!--/end Print Message stuff-->
 		<!--Trainer stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceCheckpoint</Name>
@@ -185,11 +185,12 @@
 		</Entry>
 		<Entry Type="string">
 			<Name>H1_Invuln_DetourCode</Name>
-			<Value>push rax; mov rax,[_playerDatumAddy]; cmp rdx, rax; pop rax; jne 03h; ret; mov rax, rsp; push rbp; push rbx; push rsi; push rdi; push r12; push r13; push r14; push r15; jmp _returnControl</Value>
+			<Value>push rax; mov eax,[_playerDatumAddy]; cmp edx, eax; pop rax; jne 03h; ret; mov rax, rsp; push rbp; push rbx; push rsi; push rdi; push r12; push r13; push r14; push r15; jmp _returnControl</Value>
 		</Entry>
+		<!--/end Invuln stuff-->
 	
 
-		<!--/Trainer stuff-->
+		<!--/end Trainer stuff-->
 		<!--Checkpoint management stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CheckpointLocation1</Name>
@@ -225,8 +226,53 @@
 				</PreserveLocation>
 			</Array>
 		</Entry>
-		<!--/Checkpoint management stuff-->
-		<!--/Halo 1-->
+		<!--/end Checkpoint management stuff-->
+		<!--/end Halo 1-->
+		<!--Halo 2-->
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H2_ModuleSteam</Name>
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B80E98</Offset>
+				<Offset>0x28</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H2_ModuleWinStore</Name>
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A23830</Offset>
+				<Offset>0x28</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Entry>
+		<!--Invuln stuff-->
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H2_Invuln_OGLocation</Name>
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x916090</Offset>
+			</Offsets>
+		</Entry>
+
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H2_Invuln_PlayerDatum</Name>
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xD523A4</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="byte[] from ASM">
+			<Name>H2_Invuln_OGCode</Name>
+			<Value>mov rax, rsp; mov [rax+20h], r9w; mov [rax+18h], r8w</Value>
+		</Entry>
+		<Entry Type="string">
+			<Name>H2_Invuln_DetourCode</Name>
+			<Value>push rax; mov eax,[_playerDatumAddy]; cmp edx, eax; pop rax; jne 03h; ret; mov rax, rsp; mov [rax+20h], r9w; mov [rax+18h], r8w; jmp _returnControl</Value>
+		</Entry>
+		<!--/end Invuln stuff-->
+		<!--/end Halo 2-->
 		<!--MCC Steam-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_GameIndicator_Steam</Name>
@@ -250,7 +296,7 @@
 				<Offset>0x3A4A7C9</Offset>
 			</Offsets>
 		</Entry>
-		<!--/MCC Steam-->
+		<!--/end MCC Steam-->
 	</Version>
 	<!--/1.2645.0.0-->
 

@@ -51,7 +51,7 @@
         </Border>
         <Border CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
             <Border.Background>
-                <ImageBrush Stretch="Fill" ImageSource="{Binding LevelName, Converter={StaticResource LevelImageConverter}}">
+                <ImageBrush Stretch="Fill" ImageSource="{Binding SelectedCheckpoint.LevelName, Converter={StaticResource LevelImageConverter}}">
                 </ImageBrush>
             </Border.Background>
         </Border>

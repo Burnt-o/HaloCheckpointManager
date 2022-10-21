@@ -45,19 +45,44 @@ namespace HCM3.Services
             exceptionString = "";
             try
             {
-                const bool useOnline = false;
-                string xml;
-                if (useOnline)
+
+                string? xml = null;
+                string localPointerDataPath = Directory.GetCurrentDirectory() + "\\PointerData.xml";
+
+
+                // Download the xml from git
+                try
                 {
-                    // Download the xml from git
+                    throw new Exception("for debugging we'll use local file");
                     string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/PointerData.xml";
                     System.Net.WebClient client = new System.Net.WebClient();
                     xml = client.DownloadString(url);
+
+                    //Write the contents to local PointerData.xml for offline use
+                    if (File.Exists(localPointerDataPath)) File.Delete(localPointerDataPath);
+                    File.WriteAllText(localPointerDataPath, xml);
                 }
-                else
+                catch
                 {
-                    // Grab it from local repo for testing so that I don't have to push it to git everytime
-                    xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml");
+                    // Couldn't grab online data, try offline backup
+                    Trace.WriteLine("Couldn't find online xml data, trying local backup");
+                    if (File.Exists(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml"))
+                    {
+                        Trace.WriteLine("grabbing debug xml from repo");
+                        xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml");
+                    }
+                    else if (File.Exists(localPointerDataPath))
+                    {
+                        Trace.WriteLine("grabbing local xml data");
+                        xml = File.ReadAllText(localPointerDataPath);
+                    }
+                }
+
+
+                if (xml == null) 
+                {
+                    Trace.WriteLine("couldn't find xml data onlien or offline!");
+                    return false;
                 }
 
                 // Deserialise

@@ -29,6 +29,7 @@
         <local:CommonTrainerToggle Grid.Row="5" DataContext="{Binding Path=Button_ToggleInvuln}"/>
         <local:CommonTrainerToggle Grid.Row="6" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
         <local:CommonTrainerToggle Grid.Row="7" DataContext="{Binding Path=Button_ToggleMedusa}"/>
-        <local:CommonTrainerToggle Grid.Row="8" DataContext="{Binding Path=Button_ToggleBool}"/>
+
+        <local:CommonTrainerToggle Grid.Row="9" DataContext="{Binding Path=Button_ToggleBool}"/>
     </Grid>
 </UserControl>

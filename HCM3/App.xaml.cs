@@ -37,6 +37,8 @@ namespace HCM3
 
         }
 
+        private TextWriterTraceListener Logger { get; set; }
+
         private void ConfigureServices(ServiceCollection services)
         {
 
@@ -44,9 +46,10 @@ namespace HCM3
             services.AddSingleton<MainWindow>();
 
             //ViewModels
-            services.AddSingleton<MainViewModel>();
             services.AddSingleton<CheckpointViewModel>();
             services.AddSingleton<TrainerViewModel>();
+            services.AddSingleton<MainViewModel>();
+
 
             //General Services
             services.AddSingleton<CommonServices>();
@@ -65,6 +68,9 @@ namespace HCM3
         //might have to remove sender parameter here
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            this.Logger = new("file.log");
+            Trace.Listeners.Add(this.Logger);
+
             Trace.WriteLine("OnStartup is run");
 
             HCMSetup setup = new();
@@ -102,6 +108,7 @@ namespace HCM3
         private HaloMemoryService? HaloMemoryService { get; set; }
         private void Application_Exit(object? sender, ExitEventArgs? e)
         {
+            this.Logger.Flush();
             if (HaloMemoryService != null)
             {
                 HaloMemoryService.DebugManager.GracefullyCloseDebugger(sender, e);

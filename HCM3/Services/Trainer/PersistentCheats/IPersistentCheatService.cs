@@ -10,6 +10,7 @@ namespace HCM3.Services.Trainer
     //for members of PersistentCheatManager
     public interface IPersistentCheatService : INotifyPropertyChanged
     {
+
         public bool IsChecked { get; set; } // for binding by ToggleControlViewModel
 
         public void ToggleCheat();

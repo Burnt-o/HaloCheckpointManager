@@ -37,8 +37,14 @@ namespace HCM3.ViewModels
 
         public HaloMemoryService HaloMemoryService { get; init; }
 
+
+
+
+
         public MainViewModel(HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel, TrainerViewModel trainerViewModel) //(MainModel mainModel, HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel)
         {
+ 
+
             this.TrainerViewModel = trainerViewModel;
 
             this.HaloMemoryService = haloMemoryService;

@@ -75,6 +75,29 @@ namespace HCM3.Services
 
         }
 
+        private void LoadModulePointers()
+        {
+            List<int> supportedGames = new() { 0, 1, };
+
+            foreach (int supportedGame in supportedGames)
+            {
+                string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[supportedGame];
+                string gameDLLname = Dictionaries.GameToDLLname[supportedGame];
+
+                ReadWrite.Pointer? modulePointer = (ReadWrite.Pointer?)this.DataPointersService.GetPointer($"{gameAs2Letters}_Module{MCCType}", CurrentAttachedMCCVersion);
+                if (modulePointer == null)
+                {
+                    Trace.WriteLine("module pointer was null somehow?");
+                    continue;
+                }
+                this.SetModulePointer(gameDLLname, modulePointer);
+
+
+            }
+        
+        }
+
+
         private void HaloStateEvents_ATTACH_EVENT(object? sender, Events.AttachedEventArgs e)
         {
             Trace.WriteLine("name of attached processsssss: " + nameOfAttachedProcess);
@@ -91,19 +114,15 @@ namespace HCM3.Services
                     CurrentAttachedMCCVersion = null;
                 }
                 Trace.WriteLine("MainModel detected BurntMemory attach; Set current MCC version to " + CurrentAttachedMCCVersion);
-                ReadWrite.Pointer? modulePointer = (ReadWrite.Pointer?)this.DataPointersService.GetPointer("H1_ModuleSteam", CurrentAttachedMCCVersion);
-                if (modulePointer == null)
-                {
-                    Trace.WriteLine("module pointer was null somehow?");
-                }
-                this.SetModulePointer("halo1.dll", modulePointer);
+
+
             }
             else
             {
                 MCCType = "WinStore";
                 CurrentAttachedMCCVersion = DataPointersService.HighestSupportedMCCVersion;
-                this.SetModulePointer("halo1.dll", (ReadWrite.Pointer?)this.DataPointersService.GetPointer("H1_ModuleWinStore", CurrentAttachedMCCVersion));
             }
+            LoadModulePointers();
             UpdateHaloState();
 
 

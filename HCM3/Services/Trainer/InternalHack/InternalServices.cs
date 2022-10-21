@@ -57,7 +57,7 @@ namespace HCM3.Services.Trainer
 
         public IntPtr VirtualAllocExNear(IntPtr processHandle, int size, IntPtr location)
         {
-
+            int incrementor = 1000; 
             Trace.WriteLine("LOCATION:::::::: " + location.ToString("X"));
             //search within 2gb (2gb is actual max for 32bit jump)
             IntPtr min = IntPtr.Subtract(location, 0x8000000);
@@ -69,7 +69,7 @@ namespace HCM3.Services.Trainer
 
 
             // go forward first
-            for (IntPtr Addr = location; Addr.ToInt64() < max.ToInt64(); Addr = IntPtr.Add(Addr, size))
+            for (IntPtr Addr = location; Addr.ToInt64() < max.ToInt64(); Addr = IntPtr.Add(Addr, incrementor))
             {
                 if (PInvokes.VirtualQueryEx(processHandle, Addr, out mbi, mbiLength) == 0)
                 {
@@ -79,12 +79,25 @@ namespace HCM3.Services.Trainer
                     throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError);
 
                 }
-                //Trace.WriteLine("Got here at least 1");
-                if (mbi.RegionSize == IntPtr.Zero) continue; //this should never happen if virtualQuery succeeded
-                //Trace.WriteLine("Got here at least 2");
-                //Trace.WriteLine(mbi.State.ToString("X"));
-                if (mbi.State != 0x10000) continue; //not MEM_FREE
-                Trace.WriteLine("Got here at least 3");
+
+               
+
+                if (mbi.State != 0x10000) //not MEM_FREE
+                {
+                    // Set incrementor to regionSize (+1000 in case regionsize was really small)
+                    incrementor =  (int)mbi.RegionSize + 1000;
+                    if (incrementor <= 0) Trace.WriteLine("INCREMENTOR IS NEGATIVE AHHHHHHHH");
+                    Trace.WriteLine("incrementer: " + incrementor.ToString("X") + ", regionsize: " + ((int)mbi.RegionSize).ToString("X") + ", size: " + size + ", mbi state: " + mbi.State.ToString("X"));
+                    continue;
+                }
+
+                // memory region not big enough
+                if (mbi.RegionSize.ToUInt32() < (uint)size)
+                {
+                    Trace.WriteLine("Region size wasn't big enough!");
+                        continue;
+                }
+
                 //Virtual alloc needs 64k aligned addys, so get lowest 4 bytes using bitwise masking, then subtract that from the base address
                 IntPtr tryAlloc = (IntPtr)(mbi.BaseAddress.ToUInt64() - (mbi.BaseAddress.ToUInt64() & 0xFFFF));
                 IntPtr? actualAlloc = PInvokes.VirtualAllocEx(processHandle, tryAlloc, (uint)size, PInvokes.ALLOC_FLAGS.MEM_COMMIT | PInvokes.ALLOC_FLAGS.MEM_RESERVE, PInvokes.ALLOC_FLAGS.PAGE_EXECUTE_READWRITE);
@@ -92,7 +105,47 @@ namespace HCM3.Services.Trainer
                 if (actualAlloc != null && actualAlloc != IntPtr.Zero) return (IntPtr)actualAlloc.Value;
 
             }
-           
+
+            Trace.WriteLine("let's try going backward");
+            incrementor = 1000;
+            // now go backwards
+            for (IntPtr Addr = location; Addr.ToInt64() < max.ToInt64(); Addr = IntPtr.Subtract(Addr, incrementor))
+            {
+                if (PInvokes.VirtualQueryEx(processHandle, Addr, out mbi, mbiLength) == 0)
+                {
+                    //VirtualQuery failed
+                    int lastError = Marshal.GetLastWin32Error();
+                    Trace.WriteLine("Virtual query failed: " + lastError);
+                    throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError);
+
+                }
+
+
+
+                if (mbi.State != 0x10000) //not MEM_FREE
+                {
+                    // Set incrementor to regionSize (+1000 in case regionsize was really small)
+                    incrementor = (int)mbi.RegionSize + 1000;
+                    if (incrementor <= 0) Trace.WriteLine("INCREMENTOR IS NEGATIVE AHHHHHHHH");
+                    Trace.WriteLine("incrementer: " + incrementor.ToString("X") + ", regionsize: " + ((int)mbi.RegionSize).ToString("X") + ", size: " + size + ", mbi state: " + mbi.State.ToString("X"));
+                    continue;
+                }
+
+                // memory region not big enough
+                if (mbi.RegionSize.ToUInt32() < (uint)size)
+                {
+                    Trace.WriteLine("Region size wasn't big enough!");
+                    continue;
+                }
+
+                //Virtual alloc needs 64k aligned addys, so get lowest 4 bytes using bitwise masking, then subtract that from the base address
+                IntPtr tryAlloc = (IntPtr)(mbi.BaseAddress.ToUInt64() - (mbi.BaseAddress.ToUInt64() & 0xFFFF));
+                IntPtr? actualAlloc = PInvokes.VirtualAllocEx(processHandle, tryAlloc, (uint)size, PInvokes.ALLOC_FLAGS.MEM_COMMIT | PInvokes.ALLOC_FLAGS.MEM_RESERVE, PInvokes.ALLOC_FLAGS.PAGE_EXECUTE_READWRITE);
+
+                if (actualAlloc != null && actualAlloc != IntPtr.Zero) return (IntPtr)actualAlloc.Value;
+
+            }
+
 
             throw new Exception("Failed to find free memory page near target location");
 

@@ -23,7 +23,7 @@ namespace HCM3.Helpers
 
         }
 
-        public static readonly Dictionary<int, string> TabIndexToRootFolderPath = new()
+        public static readonly Dictionary<int, string> GameToRootFolderPath = new()
         {
             { 0, @"Halo 1" },
             { 1, @"Halo 2" },
@@ -33,7 +33,7 @@ namespace HCM3.Helpers
             { 5, @"Halo 4" },
         };
 
-        public static readonly Dictionary<int, string> TabIndexTo2LetterGameCode = new()
+        public static readonly Dictionary<int, string> GameTo2LetterGameCode = new()
         {
             { 0, @"H1" },
             { 1, @"H2" },
@@ -41,8 +41,19 @@ namespace HCM3.Helpers
             { 3, @"OD" },
             { 4, @"HR" },
             { 5, @"H4" },
+            { -2, @"UN"},
+            { -1, @"MN"},
         };
 
+        public static readonly Dictionary<int, string> GameToDLLname = new()
+        {
+            { 0, @"halo1.dll" },
+            { 1, @"halo2.dll" },
+            { 2, @"halo3.dll" },
+            { 3, @"halo3odst.dll" },
+            { 4, @"haloreach.dll" },
+            { 5, @"halo4.dll" },
+        };
 
 
 

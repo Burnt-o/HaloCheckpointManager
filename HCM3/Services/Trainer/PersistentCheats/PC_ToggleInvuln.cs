@@ -24,7 +24,7 @@ namespace HCM3.Services.Trainer
             this.DataPointersService = dataPointersService;
             this.CommonServices = commonServices;
             this.InternalServices = internalServices;   
-
+            IsChecked = false;
         }
 
         public HaloMemoryService HaloMemoryService { get; init; }
@@ -52,6 +52,7 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat() 
         {
+            Trace.WriteLine("User commanded ToggleInvuln !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
             {
                 Trace.WriteLine("turning invuln off");
@@ -62,87 +63,99 @@ namespace HCM3.Services.Trainer
             else
             {
                 Trace.WriteLine("turning invuln on");
-                IsChecked = ApplyCheat();
+                IsChecked = true;
+                ApplyCheat();
+                if (!IsCheatApplied())
+                {
+                    IsChecked = false;
+                    Trace.WriteLine("IsCheatApplied failed!!");
+                }
             }
         }
 
 
         public void RemoveCheat()
         {
-
+            // should check first if IsCheatApplied
             try
             {
                 this.HaloMemoryService.HaloState.UpdateHaloState();
-                int game = this.CommonServices.GetLoadedGame();
+                int loadedGame = this.CommonServices.GetLoadedGame();
 
+                string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-                switch (game)
-                {
-                    case 0:
-                        List<string> requiredPointerNames = new();
-                        requiredPointerNames.Add($"H1_Invuln_OGLocation");
-                        requiredPointerNames.Add($"H1_Invuln_OGCode");
+                List<string> requiredPointerNames = new();
+                        requiredPointerNames.Add($"{gameAs2Letters}_Invuln_OGLocation");
+                        requiredPointerNames.Add($"{gameAs2Letters}_Invuln_OGCode");
 
                         Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
                         byte[] ogCode = (byte[])requiredPointers["Invuln_OGCode"];
                         this.HaloMemoryService.ReadWrite.WriteData((ReadWrite.Pointer)requiredPointers["Invuln_OGLocation"], ogCode, true);
-                        break;
 
-                    default:
-                        break;
-                }
             }
             catch (Exception ex)
             { 
             //stop doing this
+            System.Windows.MessageBox.Show("Failed removing cheat? ex; " + ex.Message);
             }
         }
 
         public bool IsCheatApplied()
         {
-            if (hookASM == null) return false;
+            if (hookASM == null) return false; // hook is not applied, otherwise hookASM bytes wouldn't be null
             //use RPM to check if bytes are og or not
-            int game;
+            int loadedGame;
+            
 
             try
             {
                 this.HaloMemoryService.HaloState.UpdateHaloState();
-                game = this.CommonServices.GetLoadedGame();
+                loadedGame = this.CommonServices.GetLoadedGame();
             }
             catch
             {
-                return false; // ??? will this always be accurate
+                // MCC isn't inside a game right now (or unattached), so cheat probably not loaded.
+                // Do we need to add an out var here to tell the internal hack not to change message? no wait I want it to disable if in menu.. but what if hook still active in game DLL then they load back in?
+                return false; 
             }
 
-            switch (game)
+            // Test loaded game only. if loaded game doesn't have pointers then it can't have had cheat anyway
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
+            List<string> requiredPointerNames = new();
+            requiredPointerNames.Add($"{gameAs2Letters}_Invuln_OGLocation");
+            Dictionary<string, object> requiredPointers;
+            try
             {
-                case 0:
-                    List<string> requiredPointerNames = new();
-                    requiredPointerNames.Add($"H1_Invuln_OGLocation");
-
-                    Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
-
-                    byte[]? actualCode = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer)requiredPointers["Invuln_OGLocation"], 3);
-                    if (actualCode == null) return false; // will this always be accurate?
-
-
-
-                    for (int i = 0; i < actualCode.Length; i++)
-                    {
-                        if (actualCode[i] != hookASM[i]) return false;
-                    }
-                    
-                    return true;
-
-                default:
-                    break;
+                requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
+            }
+            catch
+            {
+                Trace.WriteLine("Didn't have required pointers so cheat can't be active");
+                return false;
             }
 
-                return true;
+            // Just read 3 bytes for the test
+            byte[]? actualCode = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer)requiredPointers["Invuln_OGLocation"], 3);
+            if (actualCode == null) return false; // couldn't read bytes at og code, game not loaded? this shouldn't happen, I think
+
+
+
+            for (int i = 0; i < actualCode.Length; i++)
+            {
+                // If the code at hook location doesn't match the hook bytes then cheat isn't active
+                if (actualCode[i] != hookASM[i]) return false;
+            }
+                    
+            return true;
+
+
         }
 
+
         private byte[]? hookASM { get; set; }
+
+        private byte[]? originalBytes { get; set; }
 
         private IntPtr? DetourHandle { get; set; } = null;
 
@@ -154,24 +167,25 @@ namespace HCM3.Services.Trainer
             {
                 
                 this.HaloMemoryService.HaloState.UpdateHaloState();
-                int game = this.CommonServices.GetLoadedGame();
+                int loadedGame = this.CommonServices.GetLoadedGame();
+                string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
+                Trace.WriteLine("Attempting to apply cheat to " + gameAs2Letters);
 
-                switch (game)
-                {
-                    case 0:
-                        using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
+
+                using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
                         {
                             List<string> requiredPointerNames = new();
-                            requiredPointerNames.Add($"H1_Invuln_OGLocation");
-                            requiredPointerNames.Add($"H1_Invuln_OGCode");
-                         //   requiredPointerNames.Add($"H1_Invuln_HookCode"); 
-                            requiredPointerNames.Add($"H1_Invuln_DetourCode");
-                            requiredPointerNames.Add($"H1_Invuln_PlayerDatum");
+                            requiredPointerNames.Add($"{gameAs2Letters}_Invuln_OGLocation");
+                            requiredPointerNames.Add($"{gameAs2Letters}_Invuln_OGCode");
+                            requiredPointerNames.Add($"{gameAs2Letters}_Invuln_DetourCode");
+                            requiredPointerNames.Add($"{gameAs2Letters}_Invuln_PlayerDatum");
 
                             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
-                            // Get handle of original code we're going to detour
-                            IntPtr? ogCodeAddy = this.HaloMemoryService.ReadWrite.ResolvePointer((ReadWrite.Pointer?)requiredPointers["Invuln_OGLocation"]);
+                    // Get handle of original code we're going to detour
+                    ReadWrite.Pointer? ogCodePointer = (ReadWrite.Pointer?)requiredPointers["Invuln_OGLocation"];
+                    if (ogCodePointer == null) throw new Exception("didn't have pointer to og code");
+                            IntPtr? ogCodeAddy = this.HaloMemoryService.ReadWrite.ResolvePointer(ogCodePointer);
                             if (ogCodeAddy == null) throw new Exception("couldn't read og code addy");
 
 
@@ -180,11 +194,13 @@ namespace HCM3.Services.Trainer
 
                             // we only need like 30 bytes but this also acts as the incrementer for VirtualAllocExNear; larger values are far faster.
                                 // Maybe I should make the incrementer a seperate value...
-                            int sizeToAlloc = 10000;
+                            int sizeToAlloc = 50;
 
                             //First deallocate previous detourHandle, if we'd enabled invuln before
+                            //TODO CHECK IF THIS IS DEALLOCATING
                             if (this.DetourHandle != null)
                             {
+                         Trace.WriteLine("Deallocated previous memory page at " + this.DetourHandle.Value.ToString("X"));
                                 PInvokes.VirtualFreeEx(MCCProcess.Handle, this.DetourHandle.Value, sizeToAlloc, PInvokes.AllocationType.Release);
                                 this.DetourHandle = null;
                             }
@@ -235,6 +251,9 @@ namespace HCM3.Services.Trainer
                             Trace.WriteLine("");
                             Trace.WriteLine("");
 
+
+                    this.hookASM = hookASMbytes; // used by IsCheatApplied, not sure if this is the best way to do this.
+
                             
                             // Let's setup our detour code now
                             IntPtr? playerDatumAddy = this.HaloMemoryService.ReadWrite.ResolvePointer((ReadWrite.Pointer?)requiredPointers["Invuln_PlayerDatum"]);
@@ -277,15 +296,14 @@ namespace HCM3.Services.Trainer
                             Trace.WriteLine("Copy paste those bytes to: " + detourHandle.ToString("X"));
                             // Then write the hook
                             this.HaloMemoryService.ReadWrite.WriteData(new ReadWrite.Pointer(ogCodeAddy), hookASMbytes, true);
+
+
                             return true;
                         }
-                        break;
-
-                    default:
-                        throw new Exception("Invulnerability not implemented for this game yet");
+                       
 
                 }
-            }
+            
             catch (Exception ex)
             {
                 Trace.WriteLine("Failed to enable Invulnerability! \n" + ex.Message);
@@ -295,7 +313,7 @@ namespace HCM3.Services.Trainer
             }
 
 
-            return true;
+
         }
 
        

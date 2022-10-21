@@ -83,7 +83,7 @@ namespace HCM3.Services
                         if (checkpointVersionGuess != null)
                         {
                             // Need this for accessing pointercollection
-                            string gameString = Dictionaries.TabIndexTo2LetterGameCode[gameIndex];
+                            string gameString = Dictionaries.GameTo2LetterGameCode[gameIndex];
                             // Read LevelCode
                             try
                             {

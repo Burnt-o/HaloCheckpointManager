@@ -1,8 +1,12 @@
 #include "includes.h"
 #include <string>
+#include <iostream>
+
+typedef HRESULT(__stdcall* ResizeBuffers)(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Present oPresent;
+ResizeBuffers oResizeBuffers;
 HWND window = NULL;
 WNDPROC oWndProc;
 ID3D11Device* pDevice = NULL;
@@ -78,8 +82,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 {
 	if (!init)
 	{
+		std::cout << "\nAttempting to init d3d device - Love, hkPresent.";
 		if (SUCCEEDED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)& pDevice)))
 		{
+			std::cout << "\nSuccesfully got the id of the d3d11 device.";
 			pDevice->GetImmediateContext(&pContext);
 			DXGI_SWAP_CHAIN_DESC sd;
 			pSwapChain->GetDesc(&sd);
@@ -90,11 +96,20 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 			pBackBuffer->Release();
 			oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
 			InitImGui();
+			std::cout << "\nSuccesfully initialised d3d hook.";
 			init = true;
 		}
 
 		else
 			return oPresent(pSwapChain, SyncInterval, Flags);
+	}
+
+	if (mainRenderTargetView == nullptr) {
+		std::cout << "\nmainRenderTargetView was null! Attempting to create a new one.";
+		ID3D11Texture2D* pBackBuffer;
+		pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+		pDevice->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
+		pBackBuffer->Release();
 	}
 
 	ImGui_ImplDX11_NewFrame();
@@ -116,7 +131,49 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
+HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
+{
+/*
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();*/
+	
+	std::cout << "\nhkResizeBuffers called";
 
+	if (mainRenderTargetView) {
+		std::cout << "\nReleasing mainRenderTargetView";
+		pContext->OMSetRenderTargets(0, 0, 0);
+		mainRenderTargetView->Release();
+		//mainRenderTargetView = nullptr;
+	}
+	std::cout << "\ngetting original ResizeBuffers";
+	HRESULT hr = oResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+
+	std::cout << "\n";
+	std::cout << "\ngetting the new d3d device";
+	ID3D11Texture2D* pBuffer;
+	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
+	// Perform error handling here!
+
+	pDevice->CreateRenderTargetView(pBuffer, NULL, &mainRenderTargetView);
+	// Perform error handling here!
+	pBuffer->Release();
+
+	std::cout << "\nSetting render target ?";
+	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+
+	std::cout << "\nSetting up the viewport?";
+	// Set up the viewport.
+	D3D11_VIEWPORT vp;
+	vp.Width = Width;
+	vp.Height = Height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	pContext->RSSetViewports(1, &vp);
+
+	return hr;
+}
 
 
 DWORD WINAPI MainThread(void* pHandle)
@@ -125,6 +182,7 @@ DWORD WINAPI MainThread(void* pHandle)
 	if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
 	{
 		kiero::bind(8, (void**)&oPresent, hkPresent);
+		kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
 
 		while (!GetAsyncKeyState(VK_END));
 	}
@@ -142,6 +200,10 @@ DWORD WINAPI MainThread(void* pHandle)
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 {
 
+	//stdout to console (if console exists)
+
+
+
 	LPSTR processPath = new CHAR[256];
 	std::string path;
 	std::string processName;
@@ -158,6 +220,14 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		processName = path.substr(path.find_last_of("/\\") + 1);
 		if (processName.find("MCC") != std::string::npos)
 		{
+			//Setup console for debugging (will remove in release)
+			AllocConsole();
+			FILE* pCout;
+			freopen_s(&pCout, "conout$", "w", stdout);
+			std::cout << "\nHCMInternal.dll injected.";
+			
+
+
 			textToPrint = "hi";
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
 		}
@@ -165,6 +235,9 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		break;
 	case DLL_PROCESS_DETACH:
 		kiero::shutdown();
+		
+		FreeConsole();
+		
 		break;
 	}
 	return TRUE;

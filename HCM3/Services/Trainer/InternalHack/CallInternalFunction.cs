@@ -14,7 +14,7 @@ namespace HCM3.Services.Trainer
 
         public uint? CallInternalFunction(string functionName, object? param)
         {
-
+            Trace.WriteLine("CallInternalFunction, params: " + functionName + ", " + param?.ToString());
             Process MCCProcess = Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID);
             IntPtr? paramMemAddress = null;
             int? paramSizeToAlloc = null;
@@ -79,11 +79,7 @@ namespace HCM3.Services.Trainer
                 // Wait for the thread to finish executing (or some timeout)
                 uint waitFor = PInvokes.WaitForSingleObject((IntPtr)remoteThreadHandle, 3000);
 
-                // Clean up after ourselves
-                PInvokes.CloseHandle((IntPtr)remoteThreadHandle);
-                remoteThreadHandle = null;
-                PInvokes.VirtualFreeEx(MCCProcess.Handle, (IntPtr)paramMemAddress, (int)paramSizeToAlloc, PInvokes.AllocationType.Release);
-                paramMemAddress = null;
+
 
                 // Check if the thread completed
                 if (waitFor == 0x00000080) // WAIT_ABANDONED

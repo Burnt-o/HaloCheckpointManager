@@ -32,10 +32,14 @@ namespace HCM3.Services.Trainer
 
         private void CheatStateChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!UpdateInternalDisplayWithActiveCheats())
-            {
-                Trace.WriteLine("Something went wrong trying to update the internal display when " + sender.ToString() + " changed state");
+            try { UpdateInternalDisplayWithActiveCheats(); }
+            catch (Exception ex) 
+            { 
+                Trace.WriteLine("Something went wrong trying to update the internal display when " + 
+                    sender?.ToString() + " changed state, ex: " + ex.Message + "\n" + ex.StackTrace); 
             }
+
+
         }
 
         public bool AnyCheatsEnabled()
@@ -49,13 +53,19 @@ namespace HCM3.Services.Trainer
             return false;
         }
 
-        public bool UpdateInternalDisplayWithActiveCheats()
+        public void UpdateInternalDisplayWithActiveCheats()
         {
+            Trace.WriteLine("Updating internal display with active cheats");
             if (this.InternalServices.CheckInternalLoaded() == false || this.InternalServices.InternalFunctionsLoaded == false )
             {
-                if (!this.InternalServices.InjectInternal()) return false;
+                if (!this.InternalServices.InjectInternal()) throw new Exception("Internal dll wasn't loaded, then failed injecting internal dll");
             }
 
+            Trace.WriteLine("Checking if listOfCheats is valid");
+            if (listOfCheats == null) throw new Exception("listOfCheats was null");
+            if (!listOfCheats.Any()) throw new Exception("listOfCheats wasn't null but had no entries");
+
+            Trace.WriteLine("Iterating over antive cheats");
             List<string> activeCheats = new List<string>();
             foreach (KeyValuePair<string, IPersistentCheatService> entry in listOfCheats)
             {
@@ -65,11 +75,12 @@ namespace HCM3.Services.Trainer
                 }
             }
 
+            Trace.WriteLine("ActiveCheats count: " + activeCheats.Count);
 
             string activeCheatsString;
             if (activeCheats.Count == 0)
             {
-                activeCheatsString = "";
+                activeCheatsString = " ";
             }
             else if (activeCheats.Count == 1)
             {
@@ -79,15 +90,14 @@ namespace HCM3.Services.Trainer
             {
                 activeCheatsString = "HCM Active Cheats: " + string.Join(",", activeCheats);
             }
-            try
-            {
+
                 this.InternalServices.CallInternalFunction("ChangeDisplayText", activeCheatsString);
-            }
-            catch (Exception ex)
+            Trace.WriteLine("Changed Display text, now checking if text is displaying");
+
+            if (!this.InternalServices.CheckInternalTextDisplaying())
             {
-                Trace.WriteLine("Failed updating internal display state, " + ex.Message);
+                throw new Exception("CheckInternalTextDisplaying failed");
             }
-            return (this.InternalServices.CheckInternalTextDisplaying());
         }
 
 

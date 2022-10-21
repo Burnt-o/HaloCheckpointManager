@@ -43,7 +43,7 @@ namespace HCM3.Services
             if ((int)game != selectedGame)
             {
                 throw new InvalidOperationException("HCM didn't detect that you were in the right game: \n" +
-                    "Expected: " + Dictionaries.TabIndexTo2LetterGameCode[selectedGame] + "\n" +
+                    "Expected: " + Dictionaries.GameTo2LetterGameCode[selectedGame] + "\n" +
                     "Actual: " + game.ToString()
                     );
             }
@@ -86,7 +86,7 @@ namespace HCM3.Services
         public bool PrintMessage(string message, int selectedGame)
         {
             CheckGameIsAligned(selectedGame);
-            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)selectedGame];
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)selectedGame];
 
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_CurrentTickCount");

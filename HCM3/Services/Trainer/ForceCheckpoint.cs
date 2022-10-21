@@ -20,7 +20,7 @@ namespace HCM3.Services.Trainer
             Trace.WriteLine("ForceCheckpoint called");
             this.HaloMemoryService.HaloState.UpdateHaloState();
             int loadedGame = this.CommonServices.GetLoadedGame();
-            string gameAs2Letters = Dictionaries.TabIndexTo2LetterGameCode[(int)loadedGame];
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
           
 
             List<string> requiredPointerNames = new();
