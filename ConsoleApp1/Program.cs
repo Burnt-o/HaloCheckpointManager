@@ -7,7 +7,7 @@ Trace.WriteLine("Hello, World!");
 
 //mov dword ptr [rbp-28]; mov [rsp+74], r10d; mov rax, 00007FFF87E9346Ch; cmp r14, [rax]; mov rax 00007FFF86E32FB5h; jmp [rax]
 // somethings wrong with the final operand here
-string ASMstring = "je 3h";
+string ASMstring = "mov dword ptr [rbp-28h], 00000000";
 
 
     using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
