@@ -252,7 +252,14 @@
 			<Name>H2_Invuln_OGLocation</Name>
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x916090</Offset>
+				<Offset>0x91662D</Offset>
+			</Offsets>
+		</Entry>
+		<Entry Type="ReadWrite.Pointer">
+			<Name>H2_Invuln_SkipDamage</Name>
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x916895</Offset>
 			</Offsets>
 		</Entry>
 
@@ -265,11 +272,12 @@
 		</Entry>
 		<Entry Type="byte[] from ASM">
 			<Name>H2_Invuln_OGCode</Name>
-			<Value>mov rax, rsp; mov [rax+20h], r9w; mov [rax+18h], r8w</Value>
+			<Value>inc eax; cmp eax,[rsp+40h] </Value>
 		</Entry>
+		
 		<Entry Type="string">
 			<Name>H2_Invuln_DetourCode</Name>
-			<Value>push rax; mov eax,[_playerDatumAddy]; cmp edx, eax; pop rax; jne 03h; ret; mov rax, rsp; mov [rax+20h], r9w; mov [rax+18h], r8w; jmp _returnControl</Value>
+			<Value>push rax; mov eax,[_playerDatumAddy]; cmp r11d, eax; pop rax; jne 07h; jmp _skipDamage; inc eax; cmp eax,[rsp+40h]; jmp _returnControl</Value>
 		</Entry>
 		<!--/end Invuln stuff-->
 		<!--/end Halo 2-->

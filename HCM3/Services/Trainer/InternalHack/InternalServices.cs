@@ -126,7 +126,11 @@ namespace HCM3.Services.Trainer
                 {
                     // Set incrementor to regionSize (+1000 in case regionsize was really small)
                     incrementor = (int)mbi.RegionSize + 1000;
-                    if (incrementor <= 0) Trace.WriteLine("INCREMENTOR IS NEGATIVE AHHHHHHHH");
+                    if (incrementor <= 0)
+                    {
+                        throw new Exception("INCREMENTOR IS NEGATIVE AHHHHHHHH");
+                    }
+                    
                     Trace.WriteLine("incrementer: " + incrementor.ToString("X") + ", regionsize: " + ((int)mbi.RegionSize).ToString("X") + ", size: " + size + ", mbi state: " + mbi.State.ToString("X"));
                     continue;
                 }

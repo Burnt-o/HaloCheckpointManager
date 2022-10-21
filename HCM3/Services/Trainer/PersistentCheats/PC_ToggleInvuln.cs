@@ -180,7 +180,22 @@ namespace HCM3.Services.Trainer
                             requiredPointerNames.Add($"{gameAs2Letters}_Invuln_DetourCode");
                             requiredPointerNames.Add($"{gameAs2Letters}_Invuln_PlayerDatum");
 
+                            
+
                             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
+
+                    //might just integrate this into all of the requiredPointers, not sure if all games will need _skipDamage or not
+                    bool skipDamageOffsetNeeded = ((string)requiredPointers["Invuln_DetourCode"]).Contains("_skipDamage");
+                    if (skipDamageOffsetNeeded)
+                    {
+                        List<string> extraPointerName = new();
+                        extraPointerName.Add($"{gameAs2Letters}_Invuln_SkipDamage");
+                         Dictionary<string, object> newPointers = this.CommonServices.GetRequiredPointers(extraPointerName);
+                        foreach (var pointer in newPointers)
+                        {
+                            requiredPointers.Add(pointer.Key, pointer.Value);
+                        }
+                    }
 
                     // Get handle of original code we're going to detour
                     ReadWrite.Pointer? ogCodePointer = (ReadWrite.Pointer?)requiredPointers["Invuln_OGLocation"];
@@ -269,8 +284,15 @@ namespace HCM3.Services.Trainer
 
 
                             Dictionary<string, IntPtr> resolver2 = new();
-                            //resolver2.Add("_playerDatumAddy", (IntPtr)playerDatumAddy);
-                            resolver2.Add("_returnControl", (IntPtr)instructionAfterOGcode); //add 6 cos jmp resolution is relative to end of instruction, not star
+                            resolver2.Add("_returnControl", (IntPtr)instructionAfterOGcode);
+
+                    if (skipDamageOffsetNeeded)
+                    { 
+                    IntPtr? skipDamageHandle = this.HaloMemoryService.ReadWrite.ResolvePointer((ReadWrite.Pointer?)requiredPointers["Invuln_SkipDamage"]);
+                        if (skipDamageHandle == null) throw new Exception("couldn't read skipDamageHandle");
+
+                        resolver2.Add("_skipDamage", (IntPtr)skipDamageHandle);
+                    }
                          
                             string playerDatumAddyString = "0x" + playerDatumAddy.Value.ToInt64().ToString("X");
                             string detourASMstring = (string)requiredPointers["Invuln_DetourCode"];
