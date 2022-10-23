@@ -58,7 +58,7 @@ namespace HCM3
 
 
             //ViewModel interaction Services
-            services.AddSingleton<PersistentCheatManager>();
+            services.AddSingleton<PersistentCheatService>();
             services.AddSingleton<CheckpointServices>();
             services.AddSingleton<TrainerServices>();
             services.AddSingleton<InternalServices>();

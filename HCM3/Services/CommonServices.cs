@@ -58,6 +58,23 @@ namespace HCM3.Services
         }
 
 
+        //override for if you just want a single pointer
+        public object GetRequiredPointers(string requiredPointerName)
+        {
+            string? MCCversion = this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
+
+            if (MCCversion == null)
+            {
+                throw new InvalidOperationException("HCM couldn't detect which version of MCC was running");
+            }
+
+            object? pointer = this.DataPointersService.GetPointer(requiredPointerName, MCCversion);
+
+            return pointer ?? throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
+                    + $"\nSpecifically: {requiredPointerName}"
+                    ); ;
+        }
+
         public Dictionary<string, object> GetRequiredPointers(List<string> requiredPointerNames)
         {
             string? MCCversion = this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion;

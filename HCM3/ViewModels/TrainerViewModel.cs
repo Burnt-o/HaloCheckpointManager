@@ -41,7 +41,7 @@ namespace HCM3.ViewModels
 
         public TrainerServices TrainerServices { get; init; }
 
-        public PersistentCheatManager PersistentCheatManager { get; init; }
+        public PersistentCheatService PersistentCheatManager { get; init; }
 
         // for design mode
         [Obsolete]
@@ -69,7 +69,7 @@ namespace HCM3.ViewModels
                 this.UserControlToShow = "H1";
         }
 
-        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatManager persistentCheatManager)
+        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager)
         {
 
 

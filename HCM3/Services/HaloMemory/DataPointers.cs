@@ -12,6 +12,7 @@ using System.Xml;
 using HCM3.Models;
 using HCM3.Helpers;
 using Keystone;
+using HCM3.Services.Trainer;
 
 namespace HCM3.Services
 {
@@ -174,13 +175,12 @@ namespace HCM3.Services
                                     Trace.WriteLine("Processing int[] entry");
                                     // Read the data from the Pointer element (if the data exists)
                                     entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
-                                    byte?[]? entryArray = entry.Element("Array") == null ? null : entry.Element("Array")?.Elements().Select(x => (byte?)ParseHexNumber(x.Value)).ToArray();
+                                    byte[]? entryArray = entry.Element("Array") == null ? null : StringToByteArray(entry.Element("Array")?.Value);
 
                                     if (entryArray == null) throw new Exception("byte[]: entryArray was null");
                                     if (!entryArray.Any()) throw new Exception("byte[]: entryArray didn't have any elements");
-                                    if (!entryArray.All(y => y != null)) throw new Exception("byte[]: entryArray had some null elements");
 
-                                    entryToStore = (byte[])entryArray.Cast<byte>().ToArray();
+                                    entryToStore = (byte[])entryArray;
 
                                 }
                                 else if (entry.Attribute("Type")?.Value == "string")
@@ -190,27 +190,39 @@ namespace HCM3.Services
                                     entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
                                     entryToStore = entry.Element("Value") == null ? null : (string)entry.Element("Value")?.Value;
                                 }
-                                else if (entry.Attribute("Type")?.Value == "byte[] from ASM")
+                                else if (entry.Attribute("Type")?.Value == "DetourInfoObject")
                                 {
-                                    // DON'T USE THIS if you have addresses to evaluate in your asm string
-                                    Trace.WriteLine("Processing byte[] from ASM entry");
+                                    Trace.WriteLine("Processing DetourInfoObject entry");
                                     // Read the data from the Pointer element (if the data exists)
-                                    entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
-                                    string? ASMstring = entry.Element("Value") == null ? null : entry.Element("Value")?.Value;
-                                    if (ASMstring == null) throw new Exception("ASM string was null");
-                                    Trace.WriteLine("ASMString: " + ASMstring);
+                                    entryName = entry.Element("Name")?.Value ?? throw new Exception("failed reading entry name"); 
+                                    ReadWrite.Pointer? OriginalCodeLocation = entry.Element("OriginalCodeLocation") == null ? throw new Exception("failed reading entry OGL") : ParsePointer(entry.Element("OriginalCodeLocation"));
+                                    int? SizeToAlloc = entry.Element("SizeToAlloc") == null ? throw new Exception("failed reading entry SizeToAlloc") : ParseHexNumber(entry.Element("SizeToAlloc")?.Value);
+                                    string? DetourCodeASM = entry.Element("DetourCodeASM")?.Value ?? throw new Exception("failed reading entry DetourCodeASM");
+                                    string? HookCodeASM = entry.Element("HookCodeASM")?.Value ?? throw new Exception("failed reading entry HookCodeASM");
 
-                                    using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
+                                    byte[]? OriginalCodeBytes = entry.Element("OriginalCodeBytes") == null ? throw new Exception("failed reading entry OriginalCodeBytes") : StringToByteArray(entry.Element("OriginalCodeBytes")?.Value);
+
+                                    if (OriginalCodeLocation == null || SizeToAlloc == null || DetourCodeASM == null || HookCodeASM == null || OriginalCodeBytes == null || !OriginalCodeBytes.Any()) throw new Exception("failed reading entry for detourinfoobject, null values");
+
+                                    // Parse symbols in symbolPointers xml
+                                    Dictionary<string, ReadWrite.Pointer> SymbolPointers = new();
+                                    Trace.WriteLine("EHH2");
+                                    if (entry.Element("SymbolPointers") != null && entry.Element("SymbolPointers").HasElements)
                                     {
-                                        byte[] ASMBytes = keystone.Assemble(ASMstring, 0, out _, out _);
-                                        Trace.WriteLine("asmfromstring: \n");
-                                        for (int i = 0; i < ASMBytes.Length; i++)
+                                        foreach (XElement Pointer in entry.Element("SymbolPointers").Elements())
                                         {
-                                            Trace.Write(ASMBytes[i].ToString("X2"));
+     
+                                            ReadWrite.Pointer? newPointer = ParsePointer(Pointer);
+                                            string? symbolName = Pointer.Element("Symbol")?.Value ?? throw new Exception("failed reading symbol for symbolPointer");
+                                            if (newPointer == null || symbolName == null) throw new Exception("failed reading symbolpointer");
+                                            SymbolPointers.Add(symbolName, newPointer);
+
                                         }
-                                        Trace.WriteLine(" ");
-                                        entryToStore = ASMBytes;
                                     }
+                                    // Parse automatic symbol $returnControl
+                                    // returnControl is OriginalCodeLocation + the number of bytes in Original Code bytes
+                                    SymbolPointers.Add("$returnControl", OriginalCodeLocation + OriginalCodeBytes.Length);
+                                    entryToStore = new DetourInfoObject(OriginalCodeLocation, OriginalCodeBytes, SizeToAlloc.Value, DetourCodeASM, HookCodeASM, SymbolPointers);
                                 }
 
 
@@ -297,6 +309,34 @@ namespace HCM3.Services
                 }
 
 
+            }
+
+            string ByteArrayToString(byte[] byteArray)
+            {
+                string ByteArrayToString = "";
+                for (int i = 0; i < byteArray.Length; i++)
+                {
+                    ByteArrayToString = ByteArrayToString + "0x" + byteArray[i].ToString("X2") + ",";
+                }
+
+                Trace.WriteLine(ByteArrayToString);
+                ByteArrayToString = ByteArrayToString.Remove(ByteArrayToString.Length - 1);
+                Trace.WriteLine(ByteArrayToString);
+                return ByteArrayToString;
+            }
+
+            byte[] StringToByteArray(string str)
+            {
+
+                str = str.Replace("0x", "");
+                str = str.Replace(" ", "");
+                string[] splitstr = str.Split(',');
+                byte[] byteArray = new byte[splitstr.Length];
+                for (int i = 0; i < splitstr.Length; i++)
+                {
+                    byteArray[i] = Convert.ToByte(splitstr[i], 16);
+                }
+                return byteArray;
             }
 
         }

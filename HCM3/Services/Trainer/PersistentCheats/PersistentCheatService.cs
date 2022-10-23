@@ -8,22 +8,27 @@ using BurntMemory;
 
 namespace HCM3.Services.Trainer
 {
-    public class PersistentCheatManager
+    public partial class PersistentCheatService
     {
         public PC_ToggleInvuln PC_ToggleInvuln { get; init; }
 
         private bool initInternal = true;
-        Dictionary<string, IPersistentCheatService> listOfCheats { get; set; }
+        Dictionary<string, IPersistentCheat> listOfCheats { get; set; }
 
         public InternalServices InternalServices { get; init; }
-        public PersistentCheatManager(PC_ToggleInvuln pC_ToggleInvuln, InternalServices internalServices)
+        public HaloMemoryService HaloMemoryService { get; init; }
+
+        public PersistentCheatService(PC_ToggleInvuln pC_ToggleInvuln, InternalServices internalServices, HaloMemoryService haloMemoryService)
         {
             this.InternalServices = internalServices;
             this.PC_ToggleInvuln = pC_ToggleInvuln;
+            PC_ToggleInvuln.PersistentCheatService = (this);
+            this.HaloMemoryService = haloMemoryService;
+
             listOfCheats = new();
             listOfCheats.Add("Invulnerability", pC_ToggleInvuln);
 
-            foreach (IPersistentCheatService cheat in listOfCheats.Values)
+            foreach (IPersistentCheat cheat in listOfCheats.Values)
             { 
                 //subscribe to every cheats PropertyChanged (raised by the IsChecked bool) so we can tell the internal dll
             cheat.PropertyChanged += CheatStateChanged;
@@ -46,7 +51,7 @@ namespace HCM3.Services.Trainer
         {
             if (listOfCheats.Count == 0) return false;
 
-            foreach (IPersistentCheatService cheat in listOfCheats.Values)
+            foreach (IPersistentCheat cheat in listOfCheats.Values)
             {
                 if (cheat.IsChecked == true) return true;
             }
@@ -67,7 +72,7 @@ namespace HCM3.Services.Trainer
 
             Trace.WriteLine("Iterating over antive cheats");
             List<string> activeCheats = new List<string>();
-            foreach (KeyValuePair<string, IPersistentCheatService> entry in listOfCheats)
+            foreach (KeyValuePair<string, IPersistentCheat> entry in listOfCheats)
             {
                 if (entry.Value.IsChecked == true)
                 {

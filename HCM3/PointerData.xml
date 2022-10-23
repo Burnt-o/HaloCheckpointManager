@@ -121,16 +121,7 @@
 		</Entry>
 		<Entry Type="byte[]">
 			<Name>H1_PrintMessageFlagValues</Name>
-			<Array>
-			<Element>0</Element>
-			<Element>0</Element>
-			<Element>1</Element>
-			<Element>0</Element>
-			<Element>0xFF</Element>
-			<Element>0xFF</Element>
-			<Element>0xFF</Element>
-			<Element>0xFF</Element>
-			</Array>
+			<Array>0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF</Array>
 		</Entry>
 		<!--/end Print Message stuff-->
 		<!--Trainer stuff-->
@@ -164,29 +155,29 @@
 		</Entry>
 		
 		<!--Invuln stuff-->
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_Invuln_OGLocation</Name>
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0xC02FA5</Offset>
-			</Offsets>
+		<Entry Type="DetourInfoObject">
+			<Name>H1_Invuln_DetourInfo</Name>
+			<OriginalCodeLocation>
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0xC02FA5</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xC7, 0x45, 0xD8, 0x00, 0x00, 0x00, 0x00, 0x44, 0x89, 0x54, 0x24, 0x74, 0x83, 0xF9, 0xFF</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>mov dword ptr [rbp-28h], 00000000; mov dword ptr [rsp+74h], r10d; push rax; mov eax,[@playerDatum]; cmp r14d, eax; pop rax; je 05h; cmp ecx, -01h;  jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol> <!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo1.dll</Module>
+					<Offsets><Offset>0x2846FF0</Offset></Offsets>
+				</Pointer>
+			</SymbolPointers>
+			
 		</Entry>
-
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H1_Invuln_PlayerDatum</Name>
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0x1C6346C</Offset>
-			</Offsets>
-		</Entry>
-		<Entry Type="byte[] from ASM">
-			<Name>H1_Invuln_OGCode</Name>
-			<Value>mov dword ptr [rbp-28h], 00000000; mov dword ptr [rsp+74h], r10d; cmp ecx, -01h; </Value>
-		</Entry>
-		<Entry Type="string">
-			<Name>H1_Invuln_DetourCode</Name>
-			<Value>mov dword ptr [rbp-28h], 00000000; mov dword ptr [rsp+74h], r10d; push rax; mov eax,[_playerDatumAddy]; cmp r14d, eax; pop rax; je 05h; cmp ecx, -01h;  jmp _returnControl</Value>
-		</Entry>
+		
+		
 		<!--/end Invuln stuff-->
 	
 
@@ -248,36 +239,37 @@
 			</Offsets>
 		</Entry>
 		<!--Invuln stuff-->
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H2_Invuln_OGLocation</Name>
-			<Module>halo2.dll</Module>
-			<Offsets>
-				<Offset>0x91662D</Offset>
-			</Offsets>
-		</Entry>
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H2_Invuln_SkipDamage</Name>
-			<Module>halo2.dll</Module>
-			<Offsets>
-				<Offset>0x916895</Offset>
-			</Offsets>
-		</Entry>
+		<Entry Type="DetourInfoObject">
+			<Name>H2_Invuln_DetourInfo</Name>
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x91662D</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xFF, 0xC0, 0x3B, 0x44, 0x24, 0x40</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r11d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xD523A4</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x916895</Offset>
+					</Offsets>
+				</Pointer>
+			</SymbolPointers>
 
-		<Entry Type="ReadWrite.Pointer">
-			<Name>H2_Invuln_PlayerDatum</Name>
-			<Module>halo2.dll</Module>
-			<Offsets>
-				<Offset>0xD523A4</Offset>
-			</Offsets>
-		</Entry>
-		<Entry Type="byte[] from ASM">
-			<Name>H2_Invuln_OGCode</Name>
-			<Value>inc eax; cmp eax,[rsp+40h] </Value>
-		</Entry>
-		
-		<Entry Type="string">
-			<Name>H2_Invuln_DetourCode</Name>
-			<Value>push rax; mov eax,[_playerDatumAddy]; cmp r11d, eax; pop rax; jne 07h; jmp _skipDamage; inc eax; cmp eax,[rsp+40h]; jmp _returnControl</Value>
 		</Entry>
 		<!--/end Invuln stuff-->
 		<!--/end Halo 2-->

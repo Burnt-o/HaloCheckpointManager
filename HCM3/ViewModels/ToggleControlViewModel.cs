@@ -31,7 +31,7 @@ namespace HCM3.ViewModels
 
 
 
-        public IPersistentCheatService PersistentCheatService { get; init; }
+        public IPersistentCheat PersistentCheatService { get; init; }
 
 
         public ToggleControlViewModel()
@@ -42,7 +42,7 @@ namespace HCM3.ViewModels
         }
 
         //instead of sending the command, we send the object property within PersistentCheatService, so we can bind IsChecked to it's isChecked
-        public ToggleControlViewModel(string hotkeyText, string effectText, IPersistentCheatService? persistentCheatService)
+        public ToggleControlViewModel(string hotkeyText, string effectText, IPersistentCheat? persistentCheatService)
         {
             this.EffectText = effectText;
             this.HotkeyText = hotkeyText;

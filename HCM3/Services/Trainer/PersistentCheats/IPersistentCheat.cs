@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace HCM3.Services.Trainer
 {
     //for members of PersistentCheatManager
-    public interface IPersistentCheatService : INotifyPropertyChanged
+    public interface IPersistentCheat : INotifyPropertyChanged
     {
 
         public bool IsChecked { get; set; } // for binding by ToggleControlViewModel
