@@ -404,19 +404,25 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\HRTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\TrainerViews\HRTrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\H4TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\TrainerViews\H4TrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\ODTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\TrainerViews\UNTrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\H2TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\TrainerViews\MNTrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\H3TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\TrainerViews\ODTrainerControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Controls\Trainer\TrainerViews\H2TrainerControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Controls\Trainer\TrainerViews\H3TrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -436,23 +442,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Controls\Trainer\HRTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\TrainerViews\HRTrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\H4TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\TrainerViews\H4TrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\ODTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\TrainerViews\UNTrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\H2TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\TrainerViews\MNTrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\H3TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\TrainerViews\ODTrainerControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Controls\Trainer\TrainerViews\H2TrainerControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Controls\Trainer\TrainerViews\H3TrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

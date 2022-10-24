@@ -20,11 +20,24 @@ namespace HCM3.Services.Trainer
 
                 Process HCMProcess = Process.GetCurrentProcess();
                 IntPtr HCMInternalHandle = BurntMemory.DLLInjector.InjectDLL("HCMInternal.dll", HCMProcess);
+            IntPtr SpeedhackInternalHandle = BurntMemory.DLLInjector.InjectDLL("Speedhack.dll", HCMProcess);
 
             // Inject HCMInternal into MCC process
 
             Process MCCProcess = Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID);
-            IntPtr MCCInternalHandle = BurntMemory.DLLInjector.InjectDLL("HCMInternal.dll", MCCProcess);
+            IntPtr MCCHCMHandle = BurntMemory.DLLInjector.InjectDLL("HCMInternal.dll", MCCProcess);
+            IntPtr MCCSpeedhackHandle = BurntMemory.DLLInjector.InjectDLL("Speedhack.dll", MCCProcess);
+
+
+            IntPtr speedhackPointerSet = PInvokes.GetProcAddress(SpeedhackInternalHandle, "setAllToSpeed");
+            if (speedhackPointerSet == IntPtr.Zero) throw new Exception("Couldn't find function pointer: " + "speedhack setAllToSpeed");
+            Int64 speedhackOffsetSet = (Int64)speedhackPointerSet - (Int64)SpeedhackInternalHandle;
+            this.setAllToSpeed = IntPtr.Add(MCCSpeedhackHandle, (int)speedhackOffsetSet);
+
+            IntPtr speedhackPointerGet = PInvokes.GetProcAddress(SpeedhackInternalHandle, "getSpeed");
+            if (speedhackPointerGet == IntPtr.Zero) throw new Exception("Couldn't find function pointer: " + "speedhack getSpeed");
+            Int64 speedhackOffsetGet = (Int64)speedhackPointerGet - (Int64)SpeedhackInternalHandle;
+            this.getSpeed = IntPtr.Add(MCCSpeedhackHandle, (int)speedhackOffsetGet);
 
             foreach (string functionName in internalFunctionNames)
             {
@@ -40,7 +53,7 @@ namespace HCM3.Services.Trainer
                 Int64 functionOffset = (Int64)functionPointer - (Int64)HCMInternalHandle;
 
                 // Now we get the internal function pointer by adding functionOffset to the handle to MCC's HCMInternal.dll
-                IntPtr internalFunctionPointer = IntPtr.Add(MCCInternalHandle, (int)functionOffset);
+                IntPtr internalFunctionPointer = IntPtr.Add(MCCHCMHandle, (int)functionOffset);
 
                 // And add to our dictionary
                 InternalFunctions.Add(functionName, internalFunctionPointer);

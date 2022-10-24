@@ -22,6 +22,25 @@
             <DataTemplate  x:Key="Halo2" DataType="{x:Type viewModels:TrainerViewModel}">
                 <userControls:H2TrainerControl />
             </DataTemplate>
+            <DataTemplate  x:Key="Halo3" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:H3TrainerControl />
+            </DataTemplate>
+            <DataTemplate  x:Key="Halo3ODST" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:ODTrainerControl />
+            </DataTemplate>
+            <DataTemplate  x:Key="HaloReach" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:HRTrainerControl />
+            </DataTemplate>
+            <DataTemplate  x:Key="Halo4" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:H4TrainerControl />
+            </DataTemplate>
+            <DataTemplate  x:Key="Menu" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:MNTrainerControl/>
+            </DataTemplate>
+            <DataTemplate  x:Key="None" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:UNTrainerControl />
+            </DataTemplate>
+
         </ResourceDictionary>
     </Window.Resources>
     
@@ -40,6 +59,24 @@
                         </DataTrigger>
                         <DataTrigger  Value="H2" Binding="{Binding TrainerViewModel.UserControlToShow}">
                             <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Halo2}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="H3" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Halo3}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="OD" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Halo3ODST}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="HR" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource HaloReach}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="H4" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Halo4}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="UN" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource None}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="MN" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Menu}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

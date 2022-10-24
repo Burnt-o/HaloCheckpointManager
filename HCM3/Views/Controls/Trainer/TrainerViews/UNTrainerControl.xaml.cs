@@ -16,12 +16,11 @@ using System.Windows.Shapes;
 namespace HCM3.Views.Controls.Trainer
 {
     /// <summary>
-    /// Interaction logic for CommonTrainerHeader.xaml
+    /// Interaction logic for H1_Actions.xaml
     /// </summary>
-    public partial class CommonTrainerHeader : UserControl
+    public partial class UNTrainerControl : UserControl
     {
-
-        public CommonTrainerHeader()
+        public UNTrainerControl()
         {
             InitializeComponent();
         }

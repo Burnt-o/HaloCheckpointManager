@@ -12,9 +12,10 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="*"/>
-
         </Grid.ColumnDefinitions>
-        <Label Grid.Column="1" Content="Hotkey" Padding="0"/>
-        <Label Grid.Column="3" Content="Effect" Padding="0"/>
+
+        <Label Grid.Column="1" Content="Hotkey" Padding="0,5,0,0"/>
+        <Label Grid.Column="3" Content="Effect" Padding="0,5,0,0"/>
+
     </Grid>
 </UserControl>

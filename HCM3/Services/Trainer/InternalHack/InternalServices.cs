@@ -14,6 +14,12 @@ namespace HCM3.Services.Trainer
     {
 
         private Dictionary<string, IntPtr> InternalFunctions { get; set; }
+
+        //Accessed by SetSpeedHack
+        private IntPtr setAllToSpeed { get; set; }
+
+        //Accessed by GetSpeedHack
+        private IntPtr getSpeed { get; set; }
         public bool InternalFunctionsLoaded { get; private set; }
 
         public HaloMemoryService HaloMemoryService { get; init; }
@@ -27,6 +33,8 @@ namespace HCM3.Services.Trainer
             InternalFunctions = new();
             InternalFunctionsLoaded = false;
         }
+
+
 
 
         public bool InjectInternal()

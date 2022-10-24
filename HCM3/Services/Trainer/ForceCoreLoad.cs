@@ -13,13 +13,14 @@ namespace HCM3.Services.Trainer
     public partial class TrainerServices
     {
 
-        public void ForceCoreLoad(int selectedGame)
+        public void ForceCoreLoad()
         {
-            Trace.WriteLine("ForceCoreLoad called, game: " + selectedGame);
+            Trace.WriteLine("ForceCoreLoad called");
 
-            this.CommonServices.CheckGameIsAligned(selectedGame);
-            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)selectedGame];
-          
+            this.HaloMemoryService.HaloState.UpdateHaloState();
+            int loadedGame = this.CommonServices.GetLoadedGame();
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
+
 
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_ForceCoreLoad");

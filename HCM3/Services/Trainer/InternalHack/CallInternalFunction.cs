@@ -22,12 +22,24 @@ namespace HCM3.Services.Trainer
             // Try-Finally so we can free the above resources if something goes wrong
             try
             {
+                IntPtr functionPointer;
 
-                if (!InternalFunctions.TryGetValue(functionName, out IntPtr functionPointer))
+                if (functionName == "SetSpeedHack")
                 {
-                    throw new ArgumentException("Couldn't find functionPointer of name: " + functionName);
+                    functionPointer = this.setAllToSpeed;
                 }
-
+                else if (functionName == "GetSpeedHack")
+                {
+                    functionPointer = this.getSpeed;
+                }
+                else
+                {
+                    if (!InternalFunctions.TryGetValue(functionName, out functionPointer))
+                    {
+                        throw new ArgumentException("Couldn't find functionPointer of name: " + functionName);
+                    }
+                }
+                
 
                 // Now check if there is a param. Convert it to bytes if it's a valid type.
                 byte[]? paramData = null;
@@ -35,6 +47,14 @@ namespace HCM3.Services.Trainer
                 { 
                 case string:
                         paramData = Encoding.Default.GetBytes((string)param);
+                        break;
+
+                    case float:
+                        paramData = BitConverter.GetBytes((float)param);
+                        break;
+
+                    case double:
+                        paramData = BitConverter.GetBytes((double)param);
                         break;
 
                     default:
@@ -99,12 +119,13 @@ namespace HCM3.Services.Trainer
                     // Null return. Either a void function was called or the function failed.
                     int lastError = Marshal.GetLastWin32Error();
                     Trace.WriteLine("Remote Thread exited zero. If failure, last error was: " + lastError);
-                    return null;
+                    return 0;
                 }
                 else
                 { 
                     // IMPORTANT: can only return up to 32 bytes
                     // So I hope the return value you care about fits in that
+                    
                 return exitCode;
                 }
 

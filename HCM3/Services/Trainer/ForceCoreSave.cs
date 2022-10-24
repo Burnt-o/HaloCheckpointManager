@@ -13,13 +13,13 @@ namespace HCM3.Services.Trainer
     public partial class TrainerServices
     {
 
-        public void ForceCoreSave(int selectedGame)
+        public void ForceCoreSave()
         {
-            Trace.WriteLine("ForceCoreSave called, game: " + selectedGame);
+            Trace.WriteLine("ForceCoreSave called");
 
-            this.CommonServices.CheckGameIsAligned(selectedGame);
-            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)selectedGame];
-          
+            this.HaloMemoryService.HaloState.UpdateHaloState();
+            int loadedGame = this.CommonServices.GetLoadedGame();
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_ForceCoreSave");
@@ -27,7 +27,7 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
-            this.CommonServices.PrintMessage("Core Save... Done", selectedGame);
+            this.CommonServices.PrintMessage("Core Save... Done", loadedGame);
 
             // Set the make coresave flag
             this.HaloMemoryService.ReadWrite.WriteData(

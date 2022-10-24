@@ -62,7 +62,10 @@ namespace HCM3
             services.AddSingleton<CheckpointServices>();
             services.AddSingleton<TrainerServices>();
             services.AddSingleton<InternalServices>();
-            services.AddSingleton<PC_ToggleInvuln>();
+
+            //Persistent Cheats (note to self, I might want to instead use member injection)
+            services.AddSingleton<PC_Invulnerability>();
+            services.AddSingleton<PC_Speedhack>();
         }
 
         //might have to remove sender parameter here
