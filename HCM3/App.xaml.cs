@@ -87,11 +87,19 @@ namespace HCM3
 
             var dataPointersService = _serviceProvider.GetService<DataPointersService>();
             // Create collection of all our ReadWrite.Pointers (and other data) and load them from the online repository
-            if (!dataPointersService.LoadPointerDataFromGit(out string error))
+            string pointerErrors = "";
+            try
             {
-                System.Windows.MessageBox.Show(error, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                dataPointersService.LoadPointerDataFromSource2(out pointerErrors);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
+            if (pointerErrors != "")
+            { System.Windows.MessageBox.Show("Some pointers failed to load. Yell at Burnt for making typos." + pointerErrors, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK); }
+
 
             // Tell HaloMemory to try to attach to MCC, both steam and winstore versions
             var haloMemoryService = _serviceProvider.GetService<HaloMemoryService>();

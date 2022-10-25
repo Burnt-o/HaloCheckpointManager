@@ -75,7 +75,7 @@ namespace HCM3.Services
                     ); ;
         }
 
-        public Dictionary<string, object> GetRequiredPointers(List<string> requiredPointerNames)
+        public Dictionary<string, object> GetRequiredPointers(List<string> requiredPointerNames, bool throwOnFailure = true)
         {
             string? MCCversion = this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
 
@@ -90,9 +90,17 @@ namespace HCM3.Services
                 object? pointer = this.DataPointersService.GetPointer(requiredPointerName, MCCversion);
                 if (pointer == null)
                 {
-                    throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
-                        + $"\nSpecifically: {requiredPointerName}"
-                        );
+                    if (throwOnFailure)
+                    {
+                        throw new InvalidOperationException("HCM doesn't have offsets loaded to perform this operation with this version of MCC."
+                            + $"\nSpecifically: {requiredPointerName}"
+                            );
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
                 }
                 requiredPointers.Add(requiredPointerName[3..], pointer); // Cut off the gamecode part so we can just refer to the rest of the name later
             }

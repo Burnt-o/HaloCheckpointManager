@@ -35,6 +35,15 @@ namespace HCM3.Services
             // Load the required pointers to do a checkpoint inject
             List<string> requiredPointerNames = new();
 
+            switch (selectedGame)
+            {
+                case 0:
+                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
+                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
+                    break;
+            }
+
+
                     requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
                     requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation2");
                     requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
