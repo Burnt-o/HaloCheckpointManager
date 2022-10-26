@@ -8,11 +8,11 @@ Trace.WriteLine("Hello, World!");
 
 //mov dword ptr [rbp-28]; mov [rsp+74], r10d; mov rax, 00007FFF87E9346Ch; cmp r14, [rax]; mov rax 00007FFF86E32FB5h; jmp [rax]
 // somethings wrong with the final operand here
-/*string ASMstring = "mov dword ptr [rbp-28h], 00000000";
+string ASMstring = "push rax; mov eax, 0; cmp r11d, eax; pop rax; je 11h; test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp 1; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp 2";
 
 
-    using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
-    {
+using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
+{
     try
     {
         byte[] parsed = keystone.Assemble(ASMstring, 0, out _, out _);
@@ -25,15 +25,15 @@ Trace.WriteLine("Hello, World!");
         Trace.WriteLine("");
 
     }
-    catch(KeystoneException ex)
-{
+    catch (KeystoneException ex)
+    {
         Trace.WriteLine("Ex: " + ex.Error.ToString());
-        
+
         Trace.WriteLine(keystone.GetLastKeystoneError().ToString());
+    }
+
 }
-
-}*/
-
+/*
 byte[] test = new byte[5] { 0x0, 0x34, 0xFF, 0xFF, 0x90 };
 string teststring = ByteArrayToString(test);
 Trace.WriteLine(teststring);
@@ -82,4 +82,4 @@ byte[] StringToByteArray(string str)
         byteArray[i] = Convert.ToByte(splitstr[i], 16);
     }
     return byteArray;
-}
+}*/

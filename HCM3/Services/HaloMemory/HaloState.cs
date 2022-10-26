@@ -77,21 +77,28 @@ namespace HCM3.Services
 
         private void LoadModulePointers()
         {
-            List<int> supportedGames = new() { 0, 1, };
+            List<int> supportedGames = new() { 0, 1, 2, 3, 4, 5 };
 
             foreach (int supportedGame in supportedGames)
             {
-                string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[supportedGame];
-                string gameDLLname = Dictionaries.GameToDLLname[supportedGame];
-
-                ReadWrite.Pointer? modulePointer = (ReadWrite.Pointer?)this.DataPointersService.GetPointer($"{gameAs2Letters}_Module{MCCType}", CurrentAttachedMCCVersion);
-                if (modulePointer == null)
+                try
                 {
-                    Trace.WriteLine("module pointer was null somehow?");
+                    string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[supportedGame];
+                    string gameDLLname = Dictionaries.GameToDLLname[supportedGame];
+
+                    ReadWrite.Pointer? modulePointer = (ReadWrite.Pointer?)this.DataPointersService.GetPointer($"{gameAs2Letters}_Module{MCCType}", CurrentAttachedMCCVersion);
+                    if (modulePointer == null)
+                    {
+                        Trace.WriteLine("module pointer was null somehow?");
+                        continue;
+                    }
+                    this.SetModulePointer(gameDLLname, modulePointer);
+                }
+                catch (Exception ex)
+                { 
+                Trace.WriteLine("Loading a module pointer failed: " + ex.Message);
                     continue;
                 }
-                this.SetModulePointer(gameDLLname, modulePointer);
-
 
             }
         

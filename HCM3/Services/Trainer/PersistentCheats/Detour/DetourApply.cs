@@ -15,6 +15,7 @@ namespace HCM3.Services.Trainer
         {
 
             // Get location of original code where we're going to apply the hook
+            Trace.WriteLine("detourinfo OGLocation: " + detourInfo.OriginalCodeLocation.Offsets[0].ToString());
             IntPtr ogCodeHandle = this.HaloMemoryService.ReadWrite.ResolvePointer(detourInfo.OriginalCodeLocation) ?? throw new Exception("Couldn't read location of origianl code");
 
             // Get process Handle

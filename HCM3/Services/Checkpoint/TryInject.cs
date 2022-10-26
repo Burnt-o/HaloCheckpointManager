@@ -29,34 +29,18 @@ namespace HCM3.Services
                 throw new Exception("TryDump didn't have a valid folder to save the checkpoint to " + selectedSaveFolder?.SaveFolderPath);
             }
 
-
-
-
             // Load the required pointers to do a checkpoint inject
+            Dictionary<string, bool> injectRequirements = (Dictionary<string, bool>)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_InjectRequirements");
+
             List<string> requiredPointerNames = new();
-
-            switch (selectedGame)
+            foreach (KeyValuePair<string, bool> kvp in injectRequirements)
             {
-                case 0:
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
-                    break;
+                if (kvp.Value)
+                { 
+                requiredPointerNames.Add($"{gameAs2Letters}_" + kvp.Key);
+                }
             }
-
-
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation2");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
-                    requiredPointerNames.Add($"{gameAs2Letters}_DoubleRevertFlag");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointData_PreserveLocations");
-            requiredPointerNames.Add($"{gameAs2Letters}_CheckpointData_SHAoffset");
-            requiredPointerNames.Add($"{gameAs2Letters}_CheckpointData_SHAlength");
-            requiredPointerNames.Add($"{gameAs2Letters}_CheckpointData_LoadedBSPoffset");
-            requiredPointerNames.Add($"{gameAs2Letters}_CheckpointData_LoadedBSPlength");
-            requiredPointerNames.Add($"{gameAs2Letters}_LoadedBSP1");
-            requiredPointerNames.Add($"{gameAs2Letters}_LoadedBSP2");
-
-
+          
             // Load the required pointers into a dictionary
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
@@ -84,39 +68,33 @@ namespace HCM3.Services
             // Let's get the pointer to the inGameCheckpoint that we're going to overwrite
             ReadWrite.Pointer inGameCheckpointLocation;
             byte? doubleRevertFlag = null;
-            switch ((int)selectedGame)
+
+            if (injectRequirements["DoubleRevertFlag"])
             {
-                case 0:
+                doubleRevertFlag = (byte?)this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
+                if (doubleRevertFlag == null)
+                {
+                    throw new Exception("Failed to read double revert flag");
+                }
+                if (doubleRevertFlag == 0)
+                {
                     inGameCheckpointLocation = (ReadWrite.Pointer)requiredPointers["CheckpointLocation1"];
-                    break;
-
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                    doubleRevertFlag = (byte?)this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
-                    if (doubleRevertFlag == null)
-                    {
-                        throw new Exception("Failed to read double revert flag");
-                    }
-                    if (doubleRevertFlag == 0)
-                    {
-                        inGameCheckpointLocation = (ReadWrite.Pointer)requiredPointers["CheckpointLocation1"];
-                    }
-                    else if (doubleRevertFlag == 1)
-                    {
-                        inGameCheckpointLocation = (ReadWrite.Pointer)requiredPointers["CheckpointLocation2"];
-                    }
-                    else
-                    {
-                        throw new Exception("doubleRevertFlag was an invalid value (not 0 or 1)");
-                    }
-                    break;
-
-                default:
-                    throw new Exception("2 TryInject was fed an invalid game, somehow. " + selectedGame.ToString());
+                }
+                else if (doubleRevertFlag == 1)
+                {
+                    inGameCheckpointLocation = (ReadWrite.Pointer)requiredPointers["CheckpointLocation2"];
+                }
+                else
+                {
+                    throw new Exception("doubleRevertFlag was an invalid value (not 0 or 1)");
+                }
             }
+            else
+            {
+                inGameCheckpointLocation = (ReadWrite.Pointer)requiredPointers["CheckpointLocation1"];
+            }
+
+
 
 
 
@@ -126,9 +104,9 @@ namespace HCM3.Services
             // Easiest way to implement this is to just read the data from the game and overwrite the checkpointData at those locations.
 
             // First, get the PreserveLocations for this game. If null, then don't bother fixing preserve locations for this game.
-            PreserveLocation[]? preserveLocations = (PreserveLocation[]?)requiredPointers["CheckpointData_PreserveLocations"];
-            if (preserveLocations != null)
+            if (injectRequirements["CheckpointData_PreserveLocations"])
             {
+                PreserveLocation[] preserveLocations = (PreserveLocation[])requiredPointers["CheckpointData_PreserveLocations"];
                 // Now loop over each one, read the data from the game, and overwrite that part of checkpointData
                 foreach (PreserveLocation preserveLocation in preserveLocations)
                 {
@@ -144,31 +122,29 @@ namespace HCM3.Services
             }
 
 
-
             // Next, for some games we have to fix the SHA checksum of the checkpoint
             // Currently just h3, ODST, and halo reach
-
-            // Get offset of SHA checksum relative to checkpoint file start
-            int? shaOffset = (int?)requiredPointers["CheckpointData_SHAoffset"];
-            int? shaLength = (int?)requiredPointers["CheckpointData_SHAlength"];
-            // If offsets are null then don't bother for this game
-            if (shaOffset != null && shaLength != null)
+            if (injectRequirements["CheckpointData_SHAoffset"] && injectRequirements["CheckpointData_SHAlength"])
             {
-                // Zero out the hash at the offset
-                byte[] zeroes = new byte[(int)shaLength];
-                zeroes.CopyTo(checkpointData, (int)shaOffset);
+                // Get offset of SHA checksum relative to checkpoint file start
+                int shaOffset = (int)requiredPointers["CheckpointData_SHAoffset"];
+                int shaLength = (int)requiredPointers["CheckpointData_SHAlength"];
+                // If offsets are null then don't bother for this game
 
-                // Calculate the checksum
-                byte[]? newHash;
-                using (SHA1 cryptoProvider = SHA1.Create())
-                {
-                    newHash = cryptoProvider.ComputeHash(checkpointData);
-                }
+                    // Zero out the hash at the offset
+                    byte[] zeroes = new byte[(int)shaLength];
+                    zeroes.CopyTo(checkpointData, (int)shaOffset);
 
-                // Write the new hash 
-                newHash.CopyTo(checkpointData, (int)shaOffset);
+                    // Calculate the checksum
+                    byte[]? newHash;
+                    using (SHA1 cryptoProvider = SHA1.Create())
+                    {
+                        newHash = cryptoProvider.ComputeHash(checkpointData);
+                    }
+
+                    // Write the new hash 
+                    newHash.CopyTo(checkpointData, (int)shaOffset);
             }
-
 
             // Now, time to finally inject the checkpoint
             bool success = this.HaloMemoryService.ReadWrite.WriteData(inGameCheckpointLocation, checkpointData, false);
@@ -177,38 +153,39 @@ namespace HCM3.Services
 
             // Okay, checkpoint should be injected. But we still need to fix the in-game memories cached BSPs to match those of our checkpoint
             // This is only appliciable to some games. Currently just h2, h3, and ODST.
-            ReadWrite.Pointer? pointerLoadedBSP1 = (ReadWrite.Pointer?)requiredPointers["LoadedBSP1"];
-            ReadWrite.Pointer? pointerLoadedBSP2 = (ReadWrite.Pointer?)requiredPointers["LoadedBSP2"];
-            int? loadedBSPoffset = (int?)requiredPointers["CheckpointData_LoadedBSPoffset"];
-            int? loadedBSPlength = (int?)requiredPointers["CheckpointData_LoadedBSPlength"];
-            // Skip this step if pointers are null
-            if (pointerLoadedBSP1 != null && pointerLoadedBSP2 != null && loadedBSPoffset != null && loadedBSPlength != null)
+            if (injectRequirements["LoadedBSP1"] && injectRequirements["LoadedBSP2"] && injectRequirements["CheckpointData_LoadedBSPoffset"] && injectRequirements["CheckpointData_LoadedBSPlength"] && injectRequirements["DoubleRevertFlag"])
             {
-                if (doubleRevertFlag == null) throw new Exception("doubleRevertFlag was null when trying to fix LoadedBSPs");
+                ReadWrite.Pointer pointerLoadedBSP1 = (ReadWrite.Pointer)requiredPointers["LoadedBSP1"];
+                ReadWrite.Pointer pointerLoadedBSP2 = (ReadWrite.Pointer)requiredPointers["LoadedBSP2"];
+                int loadedBSPoffset = (int)requiredPointers["CheckpointData_LoadedBSPoffset"];
+                int loadedBSPlength = (int)requiredPointers["CheckpointData_LoadedBSPlength"];
+                // Skip this step if pointers are null
 
-                // Load the pointer to the in-game memory that stores information about cached BSPs
-                ReadWrite.Pointer? cachedBSPPointer = null;
-                if (doubleRevertFlag == 0)
-                {
-                    cachedBSPPointer = pointerLoadedBSP1;
-                }
-                else if (doubleRevertFlag == 1)
-                { 
-                    cachedBSPPointer = pointerLoadedBSP2; 
-                }
+                    if (doubleRevertFlag == null) throw new Exception("doubleRevertFlag was null when trying to fix LoadedBSPs");
 
-                if (cachedBSPPointer == null) throw new Exception("couldn't get pointer to LoadedBSP, DR was: " + doubleRevertFlag.ToString());
+                    // Load the pointer to the in-game memory that stores information about cached BSPs
+                    ReadWrite.Pointer? cachedBSPPointer = null;
+                    if (doubleRevertFlag == 0)
+                    {
+                        cachedBSPPointer = pointerLoadedBSP1;
+                    }
+                    else if (doubleRevertFlag == 1)
+                    {
+                        cachedBSPPointer = pointerLoadedBSP2;
+                    }
 
-                // Now we need to get the correct BSP cache data from checkpointData
-                byte[] loadedBSPData = new byte[(int)loadedBSPlength];
-                // Copy the data from checkpointData
-                Array.Copy(checkpointData, (int)loadedBSPoffset, loadedBSPData, 0, (int)loadedBSPlength);
+                    if (cachedBSPPointer == null) throw new Exception("couldn't get pointer to LoadedBSP, DR was: " + doubleRevertFlag.ToString());
 
-                // Now set the in-game-memory cached BSPs to those listed in checkpointData
-                bool success2 = this.HaloMemoryService.ReadWrite.WriteData(cachedBSPPointer, loadedBSPData, false);
+                    // Now we need to get the correct BSP cache data from checkpointData
+                    byte[] loadedBSPData = new byte[(int)loadedBSPlength];
+                    // Copy the data from checkpointData
+                    Array.Copy(checkpointData, (int)loadedBSPoffset, loadedBSPData, 0, (int)loadedBSPlength);
 
-                if (!success2) throw new Exception("Failed to write cachedBSP data to game memory");
+                    // Now set the in-game-memory cached BSPs to those listed in checkpointData
+                    bool success2 = this.HaloMemoryService.ReadWrite.WriteData(cachedBSPPointer, loadedBSPData, false);
 
+                    if (!success2) throw new Exception("Failed to write cachedBSP data to game memory");
+                
             }
 
             // Wew, we're done!

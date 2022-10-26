@@ -212,6 +212,21 @@
 
 		<!--/end Trainer stuff-->
 		<!--Checkpoint management stuff-->
+	<Entry Type="Dictionary&lt;string, bool&gt;">
+		<Name>H1_InjectRequirements</Name>
+		<Version Version="1.2645.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>false</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>false</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+				<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
+	</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CheckpointLocation1</Name>
 			<Version Version="1.2645.0.0">
@@ -245,17 +260,6 @@
 			<Name>H1_CheckpointData_Difficulty</Name>
 			<Version Version="1.2645.0.0">
 			<Offset>0x126</Offset>
-			</Version>
-		</Entry>
-		<Entry Type="PreserveLocation[]">
-			<Name>H1_CheckpointData_PreserveLocations</Name>
-			<Version Version="1.2645.0.0">
-			<Array>
-				<PreserveLocation>
-					<Offset>0</Offset>
-					<Length>0</Length>
-				</PreserveLocation>
-			</Array>
 			</Version>
 		</Entry>
 		<!--/end Checkpoint management stuff-->
@@ -439,11 +443,20 @@
 		<Entry Type="Dictionary&lt;string, bool&gt;">
 			<Name>H2_InjectRequirements</Name>
 			<Version Version="1.2645.0.0">
+				<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
+				<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
-			<SHAoffset>false</SHAoffset>
-			<LoadedBSP>true</LoadedBSP>
-			</Version>
+				<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+				<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+				<LoadedBSP1>true</LoadedBSP1>
+				<LoadedBSP2>true</LoadedBSP2>
+				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+					<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+			
+		
+		
+		</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			
@@ -466,6 +479,36 @@
 			</Offsets>
 			</Version>
 		</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_LoadedBSP1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14729E0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_LoadedBSP2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14742F0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_CheckpointData_LoadedBSPoffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1D7A</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_CheckpointData_LoadedBSPlength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>1</Offset>
+		</Version>
+	</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointLength</Name>
 			<Version Version="1.2645.0.0">
@@ -511,6 +554,287 @@
 		</Entry>
 		<!--/end Checkpoint management stuff-->
 		<!--/end Halo 2-->
+	<!--Halo 3-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_ModuleSteam</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B80E98</Offset>
+				<Offset>0x48</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_ModuleWinStore</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A23830</Offset>
+				<Offset>0x48</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Print Message stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_CurrentTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x2a1f34c</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_PrintMessageText</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01215500</Offset>
+				<Offset>0x23E8</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_CPMessageCall</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xbb24a</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CPMessageCallLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_PrintMessageTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01215500</Offset>
+				<Offset>0x2320</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer[]">
+		<Name>H3_PrintMessageFlags</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<Element>
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x01215500</Offset>
+						<Offset>0x2327</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
+	</Entry>
+	<Entry Type="byte[]">
+		<Name>H3_PrintMessageFlagValues</Name>
+		<Version Version="1.2645.0.0">
+			<Array>1</Array>
+		</Version>
+	</Entry>
+	<!--/end Print Message stuff-->
+	<!--Trainer stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_ForceCheckpoint</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1e1d90b</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_ForceRevert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E1D90A</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_DoubleRevertFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1d91f08</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Invuln stuff-->
+	<Entry Type="DetourInfoObject">
+		<Name>H3_Invuln_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x34DABE</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h; test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x9C4DCC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x34DC37</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<!--/end Invuln stuff-->
+	<!--/end Trainer stuff-->
+	<!--Checkpoint management stuff-->
+	<Entry Type="Dictionary&lt;string, bool&gt;">
+		<Name>H3_InjectRequirements</Name>
+		<Version Version="1.2645.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>true</LoadedBSP1>
+			<LoadedBSP2>true</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+
+		<Name>H3_CheckpointLocation1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01F623A0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_CheckpointLocation2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01F623A0</Offset>
+				<Offset>0x870000</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_LoadedBSP1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1DA2558</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_LoadedBSP2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1DB2BF8</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_LoadedBSPoffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10648</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_LoadedBSPlength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>44</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x870000</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_LevelCode</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>28</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x470220</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_Difficulty</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x274</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="PreserveLocation[]">
+		<Name>H3_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>8</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x481098</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x485290</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x48108C</Offset>
+					<Length>8</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x485294</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4852FE</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
+	</Entry>
+	<!--/end Checkpoint management stuff-->
+	<!--/end Halo 3-->
 		<!--MCC Steam-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_GameIndicator_Steam</Name>

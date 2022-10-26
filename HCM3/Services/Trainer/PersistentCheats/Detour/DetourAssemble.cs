@@ -64,9 +64,11 @@ namespace HCM3.Services.Trainer
                         if (line.Contains(entry.Key))
                         {
                             resolvedLine = resolvedLine.Replace(entry.Key, entry.Value.ToInt64().ToString("X") + "h");
+                            break;
                         }
                     }
 
+                    bool NeedToPadTo6Bytes = false;
                     // Resolve rip-relative symbols
                     foreach (KeyValuePair<string, IntPtr> entry in resolveSymbolsRelative)
                     {
@@ -74,18 +76,37 @@ namespace HCM3.Services.Trainer
                         { 
                             string resolved = "0" + ((ulong)entry.Value.ToInt64() - rip).ToString("X") + "h";
                             resolvedLine = resolvedLine.Replace(entry.Key, resolved);
+                            NeedToPadTo6Bytes = true;
+                            break;
                         }
                     }
 
                     Trace.WriteLine("Assembling line: " + resolvedLine);
                     // Assemble using keystone into bytes
                     byte[] resolvedBytes = keystone.Assemble(resolvedLine, 0, out int bytesAssembled, out _);
+                    
+                    //jmp instructions need to be always 6 bytes long for consistency
+                    if (NeedToPadTo6Bytes && bytesAssembled < 6)
+                    {
+                        byte[] tempResolvedBytes = new byte[6];
+                        Array.Fill(tempResolvedBytes, (byte)0x90);
+                        Array.Copy(resolvedBytes, tempResolvedBytes, resolvedBytes.Length);
+                        resolvedBytes = tempResolvedBytes;
+                    }
+
                     // Add to all assembled bytes and increment bytesAssembledTotal, statementsAssembledTotal
                     assembledBytes = assembledBytes.Concat(resolvedBytes).ToArray();
                     bytesAssembledTotal += bytesAssembled;
                     statementsAssembledTotal++;
                     // Increment rip by bytes assembled
-                    rip = rip + (ulong)bytesAssembled;
+                    if (!NeedToPadTo6Bytes)
+                    {
+                        rip = rip + (ulong)bytesAssembled;
+                    }
+                    else
+                    {
+                        rip = rip + 6;
+                    }
 
                 }
             }
