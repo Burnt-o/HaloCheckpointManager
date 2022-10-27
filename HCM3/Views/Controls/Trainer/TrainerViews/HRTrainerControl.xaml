@@ -35,15 +35,15 @@
         <Border Grid.RowSpan="12" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="LightGray" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo Reach" Grid.Row="0" />
         <local:CommonTrainerHeader Grid.Row="1" Grid.ColumnSpan="2" />
-        <local:CommonTrainerAction Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}" IsEnabled="false"/>
-        <local:CommonTrainerAction Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" IsEnabled="false"/>
-        <local:CommonTrainerAction Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceDoubleRevert}" IsEnabled="false"/>
+        <local:CommonTrainerAction Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}"/>
+        <local:CommonTrainerAction Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}"/>
+        <local:CommonTrainerAction Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceDoubleRevert}" />
         <local:CommonTrainerAction Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" IsEnabled="false"/>
         <local:CommonTrainerAction Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" IsEnabled="false"/>
         <local:CommonTrainerToggle Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}" IsEnabled="false"/>
         <local:TrainerSpeedHack Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
         <local:CommonTrainerToggle Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="false"/>
-        <local:CommonTrainerToggle Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" />
         <local:CommonTrainerToggle Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" IsEnabled="false"/>
         <local:CommonTrainerToggle Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_TogglePanCam}" IsEnabled="false"/>
 

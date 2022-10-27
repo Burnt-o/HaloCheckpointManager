@@ -66,6 +66,7 @@ namespace HCM3
             //Persistent Cheats (note to self, I might want to instead use member injection)
             services.AddSingleton<PC_Invulnerability>();
             services.AddSingleton<PC_Speedhack>();
+            services.AddSingleton<PC_BlockCPs>();
         }
 
         //might have to remove sender parameter here

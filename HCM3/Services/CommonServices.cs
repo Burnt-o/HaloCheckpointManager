@@ -144,8 +144,8 @@ namespace HCM3.Services
 
 
 
-
-            bool success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageText"], messageData, false);
+            bool success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageTickCount"], currentTickCount, false);
+            success = success && this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageText"], messageData, false);
 
             for (int i = 0; i < printMessageFlagPointers.Length; i++)
             {
@@ -153,7 +153,7 @@ namespace HCM3.Services
                 success = success && this.HaloMemoryService.ReadWrite.WriteBytes(printMessageFlagPointers[i], printMessageFlagValues[i], false);
             }
 
-            success = success && this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageTickCount"], currentTickCount, false);
+
 
             return success;
 

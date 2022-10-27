@@ -77,7 +77,7 @@ namespace HCM3.Services
 
         private void LoadModulePointers()
         {
-            List<int> supportedGames = new() { 0, 1, 2};
+            List<int> supportedGames = new() { 0, 1, 2, 3, 4, 5};
 
             foreach (int supportedGame in supportedGames)
             {

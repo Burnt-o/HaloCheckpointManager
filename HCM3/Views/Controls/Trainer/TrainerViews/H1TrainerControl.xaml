@@ -51,7 +51,7 @@
         <local:CommonTrainerToggle Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleMedusa}" IsEnabled="false"/>
         <local:CommonTrainerToggle Grid.Row="11" Grid.ColumnSpan="2"  DataContext="{Binding Path=Button_ToggleBool}" IsEnabled="false"/>
         <local:CommonTrainerToggle Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="false"/>
-        <local:CommonTrainerToggle Grid.Row="13" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="13" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" />
         <local:CommonTrainerToggle Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" IsEnabled="false"/>
     </Grid>
     </ScrollViewer>

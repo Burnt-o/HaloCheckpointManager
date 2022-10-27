@@ -63,8 +63,7 @@ namespace HCM3.Services
             }
 
             // Modify the checkpointData to remove the version string at end of file
-            byte[] endZeroArray = new byte[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            endZeroArray.CopyTo(checkpointData, checkpointData[^10]);
+            Array.Fill(checkpointData, (byte)0, checkpointData.Length - 10, 10);
 
             // Let's get the pointer to the inGameCheckpoint that we're going to overwrite
             ReadWrite.Pointer inGameCheckpointLocation;
@@ -156,6 +155,8 @@ namespace HCM3.Services
             }
 
             // Now, time to finally inject the checkpoint
+            Trace.WriteLine("Length of injected checkpoint: " + checkpointData.Length.ToString("X"));
+            Trace.WriteLine("Injecting it to: " + this.HaloMemoryService.ReadWrite.ResolvePointer(inGameCheckpointLocation)?.ToString("X"));
             bool success = this.HaloMemoryService.ReadWrite.WriteData(inGameCheckpointLocation, checkpointData, false);
 
             if (!success) throw new Exception("Failed to inject the checkpoint into game memory");

@@ -178,7 +178,15 @@
 				</Offsets>
 			</Version>
 		</Entry>
-		
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_NaturalCheckpointCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAC15EE</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
 		<!--Invuln stuff-->
 		<Entry Type="DetourInfoObject">
 			<Name>H1_Invuln_DetourInfo</Name>
@@ -402,6 +410,15 @@
 			</Offsets>
 			</Version>
 		</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_NaturalCheckpointCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x69D6B8</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
 		<!--Invuln stuff-->
 		<Entry Type="DetourInfoObject">
 			<Name>H2_Invuln_DetourInfo</Name>
@@ -671,6 +688,15 @@
 			</Offsets>
 		</Version>
 	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_NaturalCheckpointCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1c6411</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
 	<!--Invuln stuff-->
 	<Entry Type="DetourInfoObject">
 		<Name>H3_Invuln_DetourInfo</Name>
@@ -832,7 +858,7 @@
 				</PreserveLocation>
 				<PreserveLocation>
 					<Offset>0x481098</Offset>
-					<Length>0x16</Length>
+					<Length>16</Length>
 				</PreserveLocation>
 				<PreserveLocation>
 					<Offset>0x485290</Offset>
@@ -855,6 +881,858 @@
 	</Entry>
 	<!--/end Checkpoint management stuff-->
 	<!--/end Halo 3-->
+	<!--Halo 3 ODST-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_ModuleSteam</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B80E98</Offset>
+				<Offset>0xA8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_ModuleWinStore</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A23830</Offset>
+				<Offset>0xA8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Print Message stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_CurrentTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2bf3b38</Offset> 
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_PrintMessageText</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0125d080</Offset>
+				<Offset>0x3190</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_CPMessageCall</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xbee16</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CPMessageCallLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_PrintMessageTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0125d080</Offset>
+				<Offset>0x3258</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer[]">
+		<Name>OD_PrintMessageFlags</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<Element>
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x0125d080</Offset>
+						<Offset>0x3251</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
+	</Entry>
+	<Entry Type="byte[]">
+		<Name>OD_PrintMessageFlagValues</Name>
+		<Version Version="1.2645.0.0">
+			<Array>1</Array>
+		</Version>
+	</Entry>
+	<!--/end Print Message stuff-->
+	<!--Trainer stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_ForceCheckpoint</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x203125c</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_ForceRevert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x203125F</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_DoubleRevertFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1fa5608</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_NaturalCheckpointCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1e285b</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Invuln stuff-->
+	<Entry Type="DetourInfoObject">
+		<Name>OD_Invuln_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3odst.dll</Module>
+				<Offsets>
+					<Offset>0x34DABE</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x9C4DCC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x74DC34</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x34DC37</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<!--/end Invuln stuff-->
+	<!--/end Trainer stuff-->
+	<!--Checkpoint management stuff-->
+	<Entry Type="Dictionary&lt;string, bool&gt;">
+		<Name>OD_InjectRequirements</Name>
+		<Version Version="1.2645.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>true</LoadedBSP1>
+			<LoadedBSP2>true</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+
+		<Name>OD_CheckpointLocation1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x021461C0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_CheckpointLocation2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x021461C0</Offset>
+				<Offset>0x970000</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_LoadedBSP1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1FB5B40</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_LoadedBSP2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1FC60D8</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_LoadedBSPoffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10530</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_LoadedBSPlength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>60</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_SHAoffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10580</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_SHAlength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x970000</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_LevelCode</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x15</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x480D50</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_Difficulty</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x26C</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="PreserveLocation[]">
+		<Name>OD_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+
+				<PreserveLocation>
+					<Offset>0x48101C</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x481028</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4864A4</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x48650E</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
+	</Entry>
+	<!--/end Checkpoint management stuff-->
+	<!--/end Halo 3 ODST-->
+	<!--Halo Reach-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_ModuleSteam</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B80E98</Offset>
+				<Offset>0xC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_ModuleWinStore</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A23830</Offset>
+				<Offset>0xC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Print Message stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_CurrentTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2A92790</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_PrintMessageText</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x018712c0</Offset>
+				<Offset>0x420</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_CPMessageCall</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x35d30</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CPMessageCallLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_PrintMessageTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x018712c0</Offset>
+				<Offset>0x39C</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer[]">
+		<Name>HR_PrintMessageFlags</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<Element>
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x018712c0</Offset>
+						<Offset>0x38C</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
+	</Entry>
+	<Entry Type="byte[]">
+		<Name>HR_PrintMessageFlagValues</Name>
+		<Version Version="1.2645.0.0">
+			<Array>1</Array>
+		</Version>
+	</Entry>
+	<!--/end Print Message stuff-->
+	<!--Trainer stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_ForceCheckpoint</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x250cd6e</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_ForceRevert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x250CD6B</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_DoubleRevertFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x23c9b1c</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_NaturalCheckpointCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x159c92</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Invuln stuff-->
+	<Entry Type="DetourInfoObject">
+		<Name>HR_Invuln_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x34DABE</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x9C4DCC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x74DC34</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x34DC37</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<!--/end Invuln stuff-->
+	<!--/end Trainer stuff-->
+	<!--Checkpoint management stuff-->
+	<Entry Type="Dictionary&lt;string, bool&gt;">
+		<Name>HR_InjectRequirements</Name>
+		<Version Version="1.2645.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+
+		<Name>HR_CheckpointLocation1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x026ABEB0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_CheckpointLocation2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x026ABEC0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+	<Entry Type="int">
+		<Name>HR_CheckpointData_SHAoffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1F320</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointData_SHAlength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0xA60000</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointData_LevelCode</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1017B</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10FD54</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointData_Difficulty</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10304</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="PreserveLocation[]">
+		<Name>HR_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x5E5284</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x5DFD00</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
+	</Entry>
+	<!--/end Checkpoint management stuff-->
+	<!--/end Halo Reach-->
+	<!--Halo 4-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_ModuleSteam</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B80E98</Offset>
+				<Offset>0x68</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_ModuleWinStore</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A23830</Offset>
+				<Offset>0x68</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Print Message stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_CurrentTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xfb47e8</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_PrintMessageText</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E46E10</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_CPMessageCall</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x66f63</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CPMessageCallLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_PrintMessageTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E46E08</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer[]">
+		<Name>H4_PrintMessageFlags</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DF8</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DF9</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DFA</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DFB</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DFC</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DFD</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DFE</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2E46DFF</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
+	</Entry>
+	<Entry Type="byte[]">
+		<Name>H4_PrintMessageFlagValues</Name>
+		<Version Version="1.2645.0.0">
+			<Array>0,0,0,0,0,0,0,0</Array>
+		</Version>
+	</Entry>
+	<!--/end Print Message stuff-->
+	<!--Trainer stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_ForceCheckpoint</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2686edf</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_ForceRevert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2686EDB</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_DoubleRevertFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x250f16c</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_NaturalCheckpointCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x181572</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--Invuln stuff-->
+	<Entry Type="DetourInfoObject">
+		<Name>H4_Invuln_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x34DABE</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x9C4DCC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x74DC34</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x34DC37</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<!--/end Invuln stuff-->
+	<!--/end Trainer stuff-->
+	<!--Checkpoint management stuff-->
+	<Entry Type="Dictionary&lt;string, bool&gt;">
+		<Name>H4_InjectRequirements</Name>
+		<Version Version="1.2645.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+
+		<Name>H4_CheckpointLocation1</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x0282A760</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_CheckpointLocation2</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x0282A760</Offset>
+				<Offset>0xA40000</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CheckpointLength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0xA33000</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CheckpointData_LevelCode</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1CD77</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CheckpointData_Difficulty</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1CF08</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="PreserveLocation[]">
+		<Name>H4_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2645.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x55CF18</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
+	</Entry>
+	<!--/end Checkpoint management stuff-->
+	<!--/end Halo 4-->
 		<!--MCC Steam-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_GameIndicator_Steam</Name>

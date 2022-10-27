@@ -31,7 +31,7 @@ namespace HCM3.Services.Trainer
 
         public HaloMemoryService HaloMemoryService { get; init; }
 
-        public PersistentCheatService PersistentCheatService { get; set; }
+
         public DataPointersService DataPointersService { get; init; }
 
         public CommonServices CommonServices { get; init; }

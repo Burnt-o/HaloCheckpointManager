@@ -113,7 +113,8 @@ new RelayCommand(o => { TrainerServices.ForceCoreSave(); }, o => true));
             this.Button_ForceCoreLoad = new ActionControlViewModel("none", "Force Core load",
 new RelayCommand(o => { TrainerServices.ForceCoreLoad(); }, o => true));
 
-            this.Button_ForceDoubleRevert = new ActionControlViewModel("none", "Force Double Revert", null);
+            this.Button_ForceDoubleRevert = new ActionControlViewModel("none", "Force Double Revert",
+new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.ForceRevert(); }, o => true));
 
             this.Button_Teleport = new ActionControlViewModel("none", "Teleport", null);
             this.Button_Launch = new ActionControlViewModel("none", "Launch", null);
@@ -121,11 +122,12 @@ new RelayCommand(o => { TrainerServices.ForceCoreLoad(); }, o => true));
 
             this.Button_ToggleInvuln = new ToggleControlViewModel("none", "Invulnerability", PersistentCheatManager.PC_Invulnerability);
             this.Button_ToggleSpeedhack = new SpeedHackControlViewModel("none", "Speedhack", PersistentCheatManager.PC_Speedhack);
+            this.Button_ToggleNaturals = new ToggleControlViewModel("none", "Block Natural CPs", PersistentCheatManager.PC_BlockCPs);
             this.Button_ToggleMedusa = new ToggleControlViewModel("none", "Cheat Medusa", null);
             this.Button_ToggleBool = new ToggleControlViewModel("none", "BOOL practice mode", null);
             this.Button_TogglePanCam = new ToggleControlViewModel("none", "PanCam", null);
             this.Button_ToggleAcro = new ToggleControlViewModel("none", "Acrophobia", null);
-            this.Button_ToggleNaturals = new ToggleControlViewModel("none", "Block Natural CPs", null);
+            
             this.Button_ToggleInfo = new ToggleControlViewModel("none", "Display Info", null);
             this.Button_ToggleFlyHack = new ToggleControlViewModel("none", "Fly Hack", null);
             this.Button_ToggleSprintMeter = new ToggleControlViewModel("none", "Sprint Meter", null);
