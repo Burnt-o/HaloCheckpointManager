@@ -40,6 +40,9 @@
             <DataTemplate  x:Key="None" DataType="{x:Type viewModels:TrainerViewModel}">
                 <userControls:UNTrainerControl />
             </DataTemplate>
+            <DataTemplate  x:Key="Load" DataType="{x:Type viewModels:TrainerViewModel}">
+                <userControls:LDTrainerControl />
+            </DataTemplate>
 
         </ResourceDictionary>
     </Window.Resources>
@@ -49,7 +52,7 @@
             <ColumnDefinition  />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <ContentControl Grid.Column="1"  MinWidth="298" MaxWidth="298" Content="{Binding TrainerViewModel}" >
+        <ContentControl Grid.Column="1"  MinWidth="303" MaxWidth="303" Height="auto" Content="{Binding TrainerViewModel}" >
 
             <ContentControl.Style>
                 <Style>
@@ -77,6 +80,9 @@
                         </DataTrigger>
                         <DataTrigger  Value="MN" Binding="{Binding TrainerViewModel.UserControlToShow}">
                             <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Menu}"/>
+                        </DataTrigger>
+                        <DataTrigger  Value="LD" Binding="{Binding TrainerViewModel.UserControlToShow}">
+                            <Setter Property="ContentControl.ContentTemplate" Value="{StaticResource Load}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

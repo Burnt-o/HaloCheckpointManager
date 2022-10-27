@@ -410,6 +410,9 @@
     <Compile Update="Views\Controls\Trainer\TrainerViews\H4TrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Controls\Trainer\TrainerViews\LDTrainerControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Controls\Trainer\TrainerViews\UNTrainerControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -447,6 +450,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Controls\Trainer\TrainerViews\H4TrainerControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Controls\Trainer\TrainerViews\LDTrainerControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

@@ -6,10 +6,12 @@
              xmlns:local="clr-namespace:HCM3.Views.Controls.Trainer"
              xmlns:viewModels="clr-namespace:HCM3.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="547" d:DesignWidth="298"
+             d:DesignHeight="647" d:DesignWidth="298"
              d:DataContext="{d:DesignInstance viewModels:TrainerViewModel, IsDesignTimeCreatable=True}" 
              >
-    <Grid Width="298" Height="Auto">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid Width="298">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125"/>
             <ColumnDefinition/>
@@ -25,20 +27,33 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*" MinHeight="5"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="11" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="#FFE5E5E5" Grid.ColumnSpan="2"/>
-        <Border Grid.RowSpan="9" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="LightGray" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
+        <Border Grid.RowSpan="17" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="#FFE5E5E5" Grid.ColumnSpan="2"/>
+        <Border Grid.RowSpan="14" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="LightGray" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo 1" Grid.Row="0" />
         <local:CommonTrainerHeader Grid.Row="1" Grid.ColumnSpan="2" />
         <local:CommonTrainerAction Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}"/>
         <local:CommonTrainerAction Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}"/>
         <local:CommonTrainerAction Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreSave}"/>
         <local:CommonTrainerAction Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreLoad}"/>
-        <local:CommonTrainerToggle Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}"/>
-        <local:TrainerSpeedHack Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
-        <local:CommonTrainerToggle Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleMedusa}"/>
-        <local:CommonTrainerToggle Grid.Row="9" Grid.ColumnSpan="2"  DataContext="{Binding Path=Button_ToggleBool}"/>
+        <local:CommonTrainerAction Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" IsEnabled="false"/>
+        <local:CommonTrainerAction Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}"/>
+        <local:TrainerSpeedHack Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}" />
+        <local:CommonTrainerToggle Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleMedusa}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="11" Grid.ColumnSpan="2"  DataContext="{Binding Path=Button_ToggleBool}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="13" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" IsEnabled="false"/>
+        <local:CommonTrainerToggle Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" IsEnabled="false"/>
     </Grid>
+    </ScrollViewer>
+
 </UserControl>

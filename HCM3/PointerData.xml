@@ -593,7 +593,7 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01215500</Offset>
-				<Offset>0x23E8</Offset>
+				<Offset>0x2258</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -630,7 +630,7 @@
 					<Module>halo3.dll</Module>
 					<Offsets>
 						<Offset>0x01215500</Offset>
-						<Offset>0x2327</Offset>
+						<Offset>0x2319</Offset>
 					</Offsets>
 				</Element>
 			</Array>
@@ -683,7 +683,7 @@
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
 			<SizeToAlloc>30</SizeToAlloc>
-			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h; test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
@@ -692,6 +692,14 @@
 					<Module>halo3.dll</Module>
 					<Offsets>
 						<Offset>0x9C4DCC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x74DC34</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
@@ -779,6 +787,18 @@
 		</Version>
 	</Entry>
 	<Entry Type="int">
+		<Name>H3_CheckpointData_SHAoffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10688</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_SHAlength</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
 		<Name>H3_CheckpointLength</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x870000</Offset>
@@ -812,7 +832,7 @@
 				</PreserveLocation>
 				<PreserveLocation>
 					<Offset>0x481098</Offset>
-					<Length>16</Length>
+					<Length>0x16</Length>
 				</PreserveLocation>
 				<PreserveLocation>
 					<Offset>0x485290</Offset>

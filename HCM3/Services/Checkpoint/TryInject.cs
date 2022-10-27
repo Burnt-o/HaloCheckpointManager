@@ -10,6 +10,7 @@ using HCM3;
 using System.Security.Cryptography;
 using HCM3.Models;
 using HCM3.Helpers;
+using System.Diagnostics;
 
 namespace HCM3.Services
 {
@@ -136,14 +137,22 @@ namespace HCM3.Services
                     zeroes.CopyTo(checkpointData, (int)shaOffset);
 
                     // Calculate the checksum
-                    byte[]? newHash;
+                    //byte[] newHash = new byte[(int)shaLength];
                     using (SHA1 cryptoProvider = SHA1.Create())
                     {
-                        newHash = cryptoProvider.ComputeHash(checkpointData);
+                    byte[] newHash = cryptoProvider.ComputeHash(checkpointData);
+
+                    Trace.WriteLine("newHash: \n");
+                    foreach (byte b in newHash)
+                    {
+                        Trace.Write(b.ToString("X2"));
                     }
 
                     // Write the new hash 
                     newHash.CopyTo(checkpointData, (int)shaOffset);
+                }
+
+
             }
 
             // Now, time to finally inject the checkpoint
