@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using BurntMemory;
+using HCM3.Helpers;
 
 namespace HCM3.Services.Trainer
 {
@@ -42,7 +43,30 @@ namespace HCM3.Services.Trainer
                 //subscribe to every cheats PropertyChanged (raised by the IsChecked bool) so we can tell the internal dll
             cheat.PropertyChanged += CheatStateChanged;
             }
+
+            //Subscribe to halostatechanged so we can update which cheats are still enabled or not
+            //HaloStateEvents.HALOSTATECHANGED_EVENT += CheckCheats;
+
+            // And also a timer
+         System.Timers.Timer UpdateCurrentHaloStateTimer = new System.Timers.Timer();
+            UpdateCurrentHaloStateTimer.Elapsed += new System.Timers.ElapsedEventHandler(this.CheckCheats);
+            UpdateCurrentHaloStateTimer.Interval = 3000;
+            UpdateCurrentHaloStateTimer.Enabled = true;
+
         }
+
+        private void CheckCheats(object? sender, EventArgs? e)
+        {
+            Trace.WriteLine("Checking Persistent Cheats");
+            int currentHaloState = this.HaloMemoryService.HaloState.CurrentHaloState;
+            if (currentHaloState == (int)Dictionaries.HaloStateEnum.Unattached) return;
+
+            foreach (KeyValuePair<string, IPersistentCheat> kv in listOfCheats)
+            {
+                    kv.Value.IsChecked = kv.Value.IsCheatApplied();
+            }
+        }
+
 
         private void CheatStateChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -54,6 +78,25 @@ namespace HCM3.Services.Trainer
             }
 
 
+        }
+
+
+        public void RemoveAllCheats()
+        {
+            foreach (KeyValuePair<string, IPersistentCheat> kv in listOfCheats)
+            {
+                if (kv.Value.IsChecked)
+                {
+                    try
+                    {
+                        kv.Value.RemoveCheat();
+                    }
+                    catch (Exception ex){ Trace.WriteLine("Shutdown error removing cheat: " + kv.Key);  }
+
+                }
+            }
+
+            this.CheckCheats(this, EventArgs.Empty);
         }
 
         public bool AnyCheatsEnabled()
@@ -102,7 +145,7 @@ namespace HCM3.Services.Trainer
             }
             else
             {
-                activeCheatsString = "HCM Active Cheats: " + string.Join(",", activeCheats);
+                activeCheatsString = "HCM Active Cheats: " + string.Join(", ", activeCheats);
             }
 
                 this.InternalServices.CallInternalFunction("ChangeDisplayText", activeCheatsString);

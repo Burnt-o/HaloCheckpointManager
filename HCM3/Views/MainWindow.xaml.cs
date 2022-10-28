@@ -16,13 +16,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using BurntMemory;
-using HCM3.Views;
 using System.Collections.ObjectModel;
 using HCM3.ViewModels;
 using HCM3.Models;
 
 
-namespace HCM3.Startup
+namespace HCM3.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -104,7 +104,6 @@ namespace HCM3
 
             // Tell HaloMemory to try to attach to MCC, both steam and winstore versions
             var haloMemoryService = _serviceProvider.GetService<HaloMemoryService>();
-            this.HaloMemoryService = haloMemoryService;
             haloMemoryService.HaloState.ProcessesToAttach = new string[] { "MCC-Win64-Shipping", "MCCWinStore-Win64-Shipping" };
             haloMemoryService.HaloState.TryToAttachTimer.Enabled = true;
 
@@ -117,16 +116,7 @@ namespace HCM3
             mainWindow.Show();
         }
 
-        private HaloMemoryService? HaloMemoryService { get; set; }
-        private void Application_Exit(object? sender, ExitEventArgs? e)
-        {
-            this.Logger.Flush();
-            if (HaloMemoryService != null)
-            {
-                HaloMemoryService.DebugManager.GracefullyCloseDebugger(sender, e);
-                HaloMemoryService.SpeedhackManager.RemoveSpeedHack(sender, e);
 
-            }
-        }
+
     }
 }
