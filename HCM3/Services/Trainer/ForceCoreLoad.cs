@@ -31,9 +31,9 @@ namespace HCM3.Services.Trainer
 
 
                 // Set the make core load flag
-            this.HaloMemoryService.ReadWrite.WriteData(
+            this.HaloMemoryService.ReadWrite.WriteByte(
                 (ReadWrite.Pointer?)requiredPointers["ForceCoreLoad"],
-                new byte[1] { (byte)0x1 },
+                (byte)1,
                 false);
 
         

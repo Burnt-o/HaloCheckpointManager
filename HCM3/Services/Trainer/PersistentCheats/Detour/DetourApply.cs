@@ -61,10 +61,10 @@ namespace HCM3.Services.Trainer
             }
 
             // Now write our detour code at the allocated memory address
-            this.HaloMemoryService.ReadWrite.WriteData(new ReadWrite.Pointer(detourHandle), detourCodeBytes, true);
+            this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(detourHandle), detourCodeBytes, true);
             Trace.WriteLine("Wrote detour code to allocated: " + detourHandle.ToString("X"));
             // Then write the hook
-            this.HaloMemoryService.ReadWrite.WriteData(new ReadWrite.Pointer(ogCodeHandle), hookCodeBytes, true);
+            this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(ogCodeHandle), hookCodeBytes, true);
 
             // Return detourHandle so the IPersistentCheat can deallocate it when needed
             return detourHandle;

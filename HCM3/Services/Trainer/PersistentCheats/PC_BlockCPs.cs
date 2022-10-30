@@ -109,7 +109,7 @@ namespace HCM3.Services.Trainer
 
             if (actualInstruction == 0)
             {
-                this.HaloMemoryService.ReadWrite.WriteBytes(codePointer, 1, true);
+                this.HaloMemoryService.ReadWrite.WriteByte(codePointer, (byte)1, true);
             }
 
 
@@ -189,7 +189,7 @@ namespace HCM3.Services.Trainer
 
                 if (actualInstruction == 1)
                 {
-                    this.HaloMemoryService.ReadWrite.WriteBytes(codePointer, 0, true);
+                    this.HaloMemoryService.ReadWrite.WriteByte(codePointer, (byte)0, true);
                     return true;
                 }
 

@@ -17,31 +17,31 @@
     <Window.Resources>
         <ResourceDictionary>
             <DataTemplate  x:Key="Halo1" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:H1TrainerControl/>
+                <userControls:H1TrainerView/>
             </DataTemplate>
             <DataTemplate  x:Key="Halo2" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:H2TrainerControl />
+                <userControls:H2TrainerView />
             </DataTemplate>
             <DataTemplate  x:Key="Halo3" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:H3TrainerControl />
+                <userControls:H3TrainerView />
             </DataTemplate>
             <DataTemplate  x:Key="Halo3ODST" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:ODTrainerControl />
+                <userControls:ODTrainerView />
             </DataTemplate>
             <DataTemplate  x:Key="HaloReach" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:HRTrainerControl />
+                <userControls:HRTrainerView />
             </DataTemplate>
             <DataTemplate  x:Key="Halo4" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:H4TrainerControl />
+                <userControls:H4TrainerView />
             </DataTemplate>
             <DataTemplate  x:Key="Menu" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:MNTrainerControl/>
+                <userControls:MNTrainerView/>
             </DataTemplate>
             <DataTemplate  x:Key="None" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:UNTrainerControl />
+                <userControls:UNTrainerView />
             </DataTemplate>
             <DataTemplate  x:Key="Load" DataType="{x:Type viewModels:TrainerViewModel}">
-                <userControls:LDTrainerControl />
+                <userControls:LDTrainerView />
             </DataTemplate>
 
         </ResourceDictionary>

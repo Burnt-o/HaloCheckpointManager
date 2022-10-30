@@ -66,5 +66,77 @@ namespace HCM3.Properties {
                 this["LastSelectedFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TeleportModeForward {
+            get {
+                return ((bool)(this["TeleportModeForward"]));
+            }
+            set {
+                this["TeleportModeForward"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float TeleportX {
+            get {
+                return ((float)(this["TeleportX"]));
+            }
+            set {
+                this["TeleportX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float TeleportY {
+            get {
+                return ((float)(this["TeleportY"]));
+            }
+            set {
+                this["TeleportY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float TeleportZ {
+            get {
+                return ((float)(this["TeleportZ"]));
+            }
+            set {
+                this["TeleportZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public float TeleportLength {
+            get {
+                return ((float)(this["TeleportLength"]));
+            }
+            set {
+                this["TeleportLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TeleportIgnoreZ {
+            get {
+                return ((bool)(this["TeleportIgnoreZ"]));
+            }
+            set {
+                this["TeleportIgnoreZ"] = value;
+            }
+        }
     }
 }

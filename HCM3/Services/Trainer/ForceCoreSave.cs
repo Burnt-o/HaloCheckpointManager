@@ -30,9 +30,9 @@ namespace HCM3.Services.Trainer
             this.CommonServices.PrintMessage("Core Save... Done", loadedGame);
 
             // Set the make coresave flag
-            this.HaloMemoryService.ReadWrite.WriteData(
+            this.HaloMemoryService.ReadWrite.WriteByte(
                 (ReadWrite.Pointer?)requiredPointers["ForceCoreSave"],
-                new byte[1] { (byte)0x1 },
+                (byte)1,
                 false);
 
         

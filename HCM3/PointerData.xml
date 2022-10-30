@@ -4,6 +4,8 @@
 
 
 		<!--Halo 1-->
+
+	
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ModuleSteam</Name>
 			<Version Version="1.2645.0.0">
@@ -216,7 +218,117 @@
 		
 		
 		<!--/end Invuln stuff-->
-	
+	<!--Datum Evaluation stuff (for teleport and boost)-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_PlayerDatum</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2846FF0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_EntityOffsetTable</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1AD9000</Offset>
+				<Offset>0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_EntityTable</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2A54C90</Offset>
+				<Offset>0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerOffsetIndex</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x40</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerAddyIndex</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x34</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_Xpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x18</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_Ypos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1C</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_Zpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x20</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_Xvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x24</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_Yvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x28</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_Zvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x2C</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="uint">
+		<Name>H1_PlayerData_VehicleNullValue</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0xFFFFFFFF</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_PlayerData_VehicleIndex</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0xD8</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_ViewHori</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02A52D70</Offset>
+				<Offset>0x1C</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_ViewVert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02A52D70</Offset>
+				<Offset>0x20</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<!--/end Datum Evaluation stuff (for teleport and boost)-->
 
 		<!--/end Trainer stuff-->
 		<!--Checkpoint management stuff-->

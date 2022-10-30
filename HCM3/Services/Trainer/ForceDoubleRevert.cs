@@ -32,9 +32,9 @@ namespace HCM3.Services.Trainer
                 if (doubleRevertFlag == null || (doubleRevertFlag != 0 && doubleRevertFlag != 1)) throw new Exception("Couldn't read double revert flag");
 
                 // Set the double revert flag to the inverse value
-                this.HaloMemoryService.ReadWrite.WriteData(
+                this.HaloMemoryService.ReadWrite.WriteByte(
                     doubleRevertFlagPointer,
-                    new byte[1] { (byte)(doubleRevertFlag == 0 ? 1 : 0) },
+                    (byte)(doubleRevertFlag == 0 ? 1 : 0),
                     false);
 
             }

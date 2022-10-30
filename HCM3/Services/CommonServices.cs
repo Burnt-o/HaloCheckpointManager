@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace HCM3.Services
 {
-    public class CommonServices
+    public partial class CommonServices
     {
         public HaloMemoryService HaloMemoryService { get; init; }
         public DataPointersService DataPointersService { get; init; }
@@ -150,7 +150,7 @@ namespace HCM3.Services
             for (int i = 0; i < printMessageFlagPointers.Length; i++)
             {
 
-                success = success && this.HaloMemoryService.ReadWrite.WriteBytes(printMessageFlagPointers[i], printMessageFlagValues[i], false);
+                success = success && this.HaloMemoryService.ReadWrite.WriteByte(printMessageFlagPointers[i], printMessageFlagValues[i], false);
             }
 
 
@@ -158,6 +158,9 @@ namespace HCM3.Services
             return success;
 
         }
+
+
+
 
 
 

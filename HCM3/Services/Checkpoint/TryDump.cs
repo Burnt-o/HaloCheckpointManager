@@ -60,7 +60,7 @@ namespace HCM3.Services
             switch ((int)selectedGame)
             {
                 case 0:
-                    CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                    CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
                     break;
 
                 case 1:
@@ -75,11 +75,11 @@ namespace HCM3.Services
                     }
                     if (doubleRevertFlag == 0)
                     {
-                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
                     }
                     else if (doubleRevertFlag == 1)
                     {
-                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadData((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
+                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
                     }
                     else 
                     {

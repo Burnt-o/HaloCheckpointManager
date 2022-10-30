@@ -404,28 +404,31 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\HRTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\ButtonViews\TeleportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\H4TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\HRTrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\LDTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\H4TrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\UNTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\LDTrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\MNTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\UNTrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\ODTrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\MNTrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\H2TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\ODTrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\TrainerViews\H3TrainerControl.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\H2TrainerView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Controls\Trainer\H3TrainerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -445,35 +448,39 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Controls\Trainer\TrainerViews\HRTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\ButtonViews\TeleportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\H4TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\HRTrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\LDTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\H4TrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\UNTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\LDTrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\MNTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\UNTrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\ODTrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\MNTrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\H2TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\ODTrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\TrainerViews\H3TrainerControl.xaml">
+    <Page Update="Views\Controls\Trainer\H2TrainerView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Controls\Trainer\H3TrainerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

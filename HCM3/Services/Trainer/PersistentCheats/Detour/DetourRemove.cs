@@ -16,7 +16,7 @@ namespace HCM3.Services.Trainer
 
 
                 // Need to restore original bytes at hook location
-                this.HaloMemoryService.ReadWrite.WriteData(detourInfo.OriginalCodeLocation, detourInfo.OriginalCodeBytes, true);
+                this.HaloMemoryService.ReadWrite.WriteBytes(detourInfo.OriginalCodeLocation, detourInfo.OriginalCodeBytes, true);
 
 
             // Deallocate previous memory

@@ -99,7 +99,11 @@ namespace HCM3.Services
             switch (type)
             {
                 case "int":
-                    returnObject = ParseHexNumber(entry.Element("Offset")?.Value);
+                    returnObject = ParseHexNumberInt(entry.Element("Offset")?.Value);
+                    break;
+
+                case "uint":
+                    returnObject = ParseHexNumberUint(entry.Element("Offset")?.Value);
                     break;
 
                 case "PreserveLocation[]":
@@ -119,7 +123,7 @@ namespace HCM3.Services
                     break;
 
                 case "int[]":
-                    int[] intArray = entry.Element("Array")?.Elements().Select(x => ParseHexNumber(x.Value)).ToArray();
+                    int[] intArray = entry.Element("Array")?.Elements().Select(x => ParseHexNumberInt(x.Value)).ToArray();
                     if (!intArray.Any()) throw new Exception("Emptry intArray");
                     returnObject = intArray;
                     break;
@@ -178,8 +182,8 @@ namespace HCM3.Services
             try
             {
 
-                int? Offset = ParseHexNumber(location.Element("Offset")?.Value);
-                int? Length = ParseHexNumber(location.Element("Length")?.Value);
+                int? Offset = ParseHexNumberInt(location.Element("Offset")?.Value);
+                int? Length = ParseHexNumberInt(location.Element("Length")?.Value);
 
                 if (Offset == null || Length == null)
                 {
@@ -198,18 +202,25 @@ namespace HCM3.Services
         }
 
 
-        int ParseHexNumber(string? s)
+        int ParseHexNumberInt(string? s)
         {
             if (s == null)
                 throw new Exception("int was null");
+
             return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) : Convert.ToInt32(s);
+        }
+        uint ParseHexNumberUint(string? s)
+        {
+            if (s == null)
+                throw new Exception("uint was null");
+            return s.StartsWith("0x") ? Convert.ToUInt32(s.Substring(2), 16) : Convert.ToUInt32(s);
         }
 
 
         ReadWrite.Pointer ParsePointer(XElement entry)
         {
             string? pointerModule = entry.Element("Module") == null ? null : entry.Element("Module")?.Value;
-            int[]? pointerOffsets = entry.Element("Offsets") == null ? null : entry.Element("Offsets")?.Elements().Select(x => ParseHexNumber(x.Value)).ToArray();
+            int[]? pointerOffsets = entry.Element("Offsets") == null ? null : entry.Element("Offsets")?.Elements().Select(x => ParseHexNumberInt(x.Value)).ToArray();
 
             if (pointerModule == null) throw new Exception("ReadWrite.Pointer: pointerModule was null, name: " + entry.Element("Name")?.Value);
             if (pointerOffsets == null) throw new Exception("ReadWrite.Pointer: pointerOffsets was null, name: " + entry.Element("Name")?.Value);
@@ -220,7 +231,7 @@ namespace HCM3.Services
         DetourInfoObject ParseDetourInfoObject(XElement entry)
         {
             ReadWrite.Pointer OriginalCodeLocation = ParsePointer(entry.Element("OriginalCodeLocation"));
-            int SizeToAlloc = ParseHexNumber(entry.Element("SizeToAlloc")?.Value);
+            int SizeToAlloc = ParseHexNumberInt(entry.Element("SizeToAlloc")?.Value);
             string DetourCodeASM = entry.Element("DetourCodeASM")?.Value ?? throw new Exception("failed reading entry DetourCodeASM");
             string HookCodeASM = entry.Element("HookCodeASM")?.Value ?? throw new Exception("failed reading entry HookCodeASM");
 

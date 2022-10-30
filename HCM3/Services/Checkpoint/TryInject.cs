@@ -157,7 +157,7 @@ namespace HCM3.Services
             // Now, time to finally inject the checkpoint
             Trace.WriteLine("Length of injected checkpoint: " + checkpointData.Length.ToString("X"));
             Trace.WriteLine("Injecting it to: " + this.HaloMemoryService.ReadWrite.ResolvePointer(inGameCheckpointLocation)?.ToString("X"));
-            bool success = this.HaloMemoryService.ReadWrite.WriteData(inGameCheckpointLocation, checkpointData, false);
+            bool success = this.HaloMemoryService.ReadWrite.WriteBytes(inGameCheckpointLocation, checkpointData, false);
 
             if (!success) throw new Exception("Failed to inject the checkpoint into game memory");
 
@@ -192,7 +192,7 @@ namespace HCM3.Services
                     Array.Copy(checkpointData, (int)loadedBSPoffset, loadedBSPData, 0, (int)loadedBSPlength);
 
                     // Now set the in-game-memory cached BSPs to those listed in checkpointData
-                    bool success2 = this.HaloMemoryService.ReadWrite.WriteData(cachedBSPPointer, loadedBSPData, false);
+                    bool success2 = this.HaloMemoryService.ReadWrite.WriteBytes(cachedBSPPointer, loadedBSPData, false);
 
                     if (!success2) throw new Exception("Failed to write cachedBSP data to game memory");
                 

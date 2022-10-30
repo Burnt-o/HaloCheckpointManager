@@ -48,9 +48,9 @@ namespace HCM3.Services.Trainer
             if (!success) throw new Exception("Error while formatting checkpoint message string");
 
                 // Set the make checkpoint flag
-            this.HaloMemoryService.ReadWrite.WriteData(
+            this.HaloMemoryService.ReadWrite.WriteByte(
                 (ReadWrite.Pointer?)requiredPointers["ForceCheckpoint"],
-                new byte[1] { (byte)0x1 },
+                (byte)1,
                 false);
 
             // wait 50ms
@@ -59,6 +59,29 @@ namespace HCM3.Services.Trainer
             // Restore message call bytes
             this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer?)requiredPointers["CPMessageCall"], originalCPMessageCall, true);
 
+
+
+
+            //As a completely unrelated test
+            try
+            {
+                ReadWrite.Pointer playerDatumPointer = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"H1_PlayerDatum");
+                uint playerDatum = this.HaloMemoryService.ReadWrite.ReadInteger(playerDatumPointer).Value;
+                IntPtr playerAddy = this.CommonServices.GetAddressFromDatum(playerDatum);
+                Trace.WriteLine("Player Address Test: " + playerAddy.ToString("X"));
+
+                //for test, let's teleport the player!
+                IntPtr playerXposPointer = IntPtr.Add(playerAddy, 0x18);
+                float playerXpos = (float)this.HaloMemoryService.ReadWrite.ReadFloat(new ReadWrite.Pointer(playerXposPointer));
+                this.HaloMemoryService.ReadWrite.WriteFloat(new ReadWrite.Pointer(playerXposPointer), playerXpos + 1, false);
+
+
+
+            }
+            catch
+            { 
+            
+            }
 
 
         }
