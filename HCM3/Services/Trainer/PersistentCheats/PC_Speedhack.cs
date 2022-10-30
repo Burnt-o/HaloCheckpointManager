@@ -114,6 +114,8 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat()
         {
+
+
             Trace.WriteLine("User commanded ToggleSpeedhack !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
             {

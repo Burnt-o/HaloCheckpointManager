@@ -28,9 +28,9 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
+            if (!this.InternalServices.PrintTemporaryMessageInternal("Core load forced.")) throw new Exception("Error printing message");
 
-
-                // Set the make core load flag
+            // Set the make core load flag
             this.HaloMemoryService.ReadWrite.WriteByte(
                 (ReadWrite.Pointer?)requiredPointers["ForceCoreLoad"],
                 (byte)1,

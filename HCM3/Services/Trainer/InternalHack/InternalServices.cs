@@ -42,6 +42,7 @@ namespace HCM3.Services.Trainer
             List<string> listOfInternalFunctions = new();
             listOfInternalFunctions.Add("ChangeDisplayText");
             listOfInternalFunctions.Add("IsTextDisplaying");
+            listOfInternalFunctions.Add("PrintTemporaryMessage");
             try
             {
                 SetupInternal(listOfInternalFunctions);

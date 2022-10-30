@@ -27,8 +27,11 @@ namespace HCM3.Services.Trainer
 
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
-            
-                // Set the make revert flag
+
+            if (!this.InternalServices.PrintTemporaryMessageInternal("Revert forced.")) throw new Exception("Error printing message");
+
+
+            // Set the make revert flag
             this.HaloMemoryService.ReadWrite.WriteByte(
                 (ReadWrite.Pointer?)requiredPointers["ForceRevert"],
                 (byte)1,

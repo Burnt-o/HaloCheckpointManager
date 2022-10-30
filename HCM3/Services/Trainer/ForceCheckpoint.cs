@@ -25,27 +25,13 @@ namespace HCM3.Services.Trainer
 
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_ForceCheckpoint");
-            requiredPointerNames.Add($"{gameAs2Letters}_CPMessageCall");
-            requiredPointerNames.Add($"{gameAs2Letters}_CPMessageCallLength");
+
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
 
-            // Read Bytes at CPMessageCall, so we can restore them later
-            byte[]? originalCPMessageCall = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CPMessageCall"], (int)requiredPointers["CPMessageCallLength"]);
+            if (!this.InternalServices.PrintTemporaryMessageInternal("Checkpoint forced.")) throw new Exception("Error printing message");
 
-            if (originalCPMessageCall == null) throw new Exception("couldn't read original checkpoint message call");
-
-            // Nop message call bytes
-            byte[] nop = new byte[originalCPMessageCall.Length];
-            Array.Fill(nop, (byte)0x90);
-            bool success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer?)requiredPointers["CPMessageCall"], nop, true);
-
-            // Call PrintMessage("Custom Checkpoint... Done")
-            success = success && this.CommonServices.PrintMessage("Custom Checkpoint... Done", loadedGame);
-
-
-            if (!success) throw new Exception("Error while formatting checkpoint message string");
 
                 // Set the make checkpoint flag
             this.HaloMemoryService.ReadWrite.WriteByte(
@@ -53,35 +39,6 @@ namespace HCM3.Services.Trainer
                 (byte)1,
                 false);
 
-            // wait 50ms
-            Thread.Sleep(50);
-
-            // Restore message call bytes
-            this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer?)requiredPointers["CPMessageCall"], originalCPMessageCall, true);
-
-
-
-
-            //As a completely unrelated test
-            try
-            {
-                ReadWrite.Pointer playerDatumPointer = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"H1_PlayerDatum");
-                uint playerDatum = this.HaloMemoryService.ReadWrite.ReadInteger(playerDatumPointer).Value;
-                IntPtr playerAddy = this.CommonServices.GetAddressFromDatum(playerDatum);
-                Trace.WriteLine("Player Address Test: " + playerAddy.ToString("X"));
-
-                //for test, let's teleport the player!
-                IntPtr playerXposPointer = IntPtr.Add(playerAddy, 0x18);
-                float playerXpos = (float)this.HaloMemoryService.ReadWrite.ReadFloat(new ReadWrite.Pointer(playerXposPointer));
-                this.HaloMemoryService.ReadWrite.WriteFloat(new ReadWrite.Pointer(playerXposPointer), playerXpos + 1, false);
-
-
-
-            }
-            catch
-            { 
-            
-            }
 
 
         }

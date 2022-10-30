@@ -1,6 +1,9 @@
 #include "includes.h"
 #include <string>
 #include <iostream>
+#include <vector>
+#include <chrono>
+#include <ctime>    
 
 
 typedef HRESULT(__stdcall* ResizeBuffers)(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
@@ -26,7 +29,7 @@ typedef struct
 RGBA red = { 255,0,0,255 };
 RGBA green = { 0,255,0,255 };
 
-static void MyDrawOutlinedText(int x, int y, RGBA* color, std::string text, int outlineWidth, float outlineStrength)
+static void DrawPersistentMessages(int x, int y, RGBA* color, std::string text, int outlineWidth, float outlineStrength)
 {
 	//outlineWidth values that aren't 1 look terrible.. need to look into how to just blur text
 	if (outlineWidth > 0 && outlineStrength >= 0 && outlineStrength <= 1)
@@ -38,6 +41,77 @@ static void MyDrawOutlinedText(int x, int y, RGBA* color, std::string text, int 
 	}
 	
 	ImGui::GetOverlayDrawList()->AddText(ImVec2(x, y), ImGui::ColorConvertFloat4ToU32(ImVec4(color->R / 255.0, color->G / 255.0, color->B / 255.0, color->A / 255.0)), text.c_str());
+}
+
+
+class TemporaryMessage
+{
+public:
+	std::string messageText;
+	std::chrono::steady_clock::time_point messageTimestamp;
+};
+
+std::vector<TemporaryMessage> temporaryMessages;
+double messageExpiryTime_ms = 3000;
+static void DrawTemporaryMessages(int x, int y, RGBA* color, int outlineWidth, float outlineStrength)
+{
+
+	//iterate over temporaryMessages map
+	std::vector<TemporaryMessage>::iterator it;
+	auto curr_time = std::chrono::high_resolution_clock::now();
+
+	//create a copy of temporaryMessages map as we will want to make changes to it
+
+	int numberOfValidMessages = 0;
+	int verticalSeperation = 20;
+	for (it = temporaryMessages.begin(); it != temporaryMessages.end();)
+	{
+		std::string currentMessageText = it->messageText;
+		std::chrono::steady_clock::time_point currentMessageTime = it->messageTimestamp;
+
+		//calculate how long it's been (in milliseconds
+		double difference = std::chrono::duration<double, std::milli>(curr_time - currentMessageTime).count();
+
+		// if larger than messageExpiryTime, delete from temporaryMessages & continue loop
+		if (difference > messageExpiryTime_ms)
+		{
+			std::cout << "\nErasing old message.";
+				it = temporaryMessages.erase(it);
+			continue;
+		}
+
+		
+
+		// calculate fade value of text
+		float opacityValue;
+		double half_messageExpiryTime_ms = (messageExpiryTime_ms / 2);
+		if (difference < half_messageExpiryTime_ms)
+		{
+			opacityValue = 1;
+		}
+		else
+		{
+			opacityValue = 1 - ((difference - half_messageExpiryTime_ms) / half_messageExpiryTime_ms);
+		}
+
+//		std::cout << "\nThisMessage opacity: " << opacityValue;
+
+		// Add to the draw list
+		int placeY = y + (numberOfValidMessages * verticalSeperation);
+		if (outlineWidth > 0 && outlineStrength >= 0 && outlineStrength <= 1)
+		{
+			ImGui::GetOverlayDrawList()->AddText(ImVec2(x, placeY - outlineWidth), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength * opacityValue)), currentMessageText.c_str());
+			ImGui::GetOverlayDrawList()->AddText(ImVec2(x, placeY + outlineWidth), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength * opacityValue)), currentMessageText.c_str());
+			ImGui::GetOverlayDrawList()->AddText(ImVec2(x - outlineWidth, placeY), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength * opacityValue)), currentMessageText.c_str());
+			ImGui::GetOverlayDrawList()->AddText(ImVec2(x + outlineWidth, placeY), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength * opacityValue)), currentMessageText.c_str());
+		}
+
+		ImGui::GetOverlayDrawList()->AddText(ImVec2(x, placeY), ImGui::ColorConvertFloat4ToU32(ImVec4(color->R / 255.0, color->G / 255.0, color->B / 255.0, (color->A / 255.0) * opacityValue)), currentMessageText.c_str());
+		numberOfValidMessages++;
+		it++;
+	}
+
+
 }
 
 
@@ -58,6 +132,24 @@ extern "C" __declspec(dllexport) int IsTextDisplaying()
 	{
 		return 1;
 	}
+
+}
+
+
+extern "C" __declspec(dllexport) int PrintTemporaryMessage(const TCHAR * pChars)
+{
+	std::string inputText(pChars);
+	auto curr_time = std::chrono::high_resolution_clock::now();
+
+	TemporaryMessage tmessage;
+	tmessage.messageText = inputText;
+	tmessage.messageTimestamp = curr_time;
+	//messages go to the front
+	temporaryMessages.insert(temporaryMessages.begin(), tmessage);
+
+	std::cout << "\nAdded to tempMessages map, count: " << temporaryMessages.size();
+
+		return 1;
 
 }
 
@@ -117,8 +209,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	MyDrawOutlinedText(10, 10, &green, textToPrint, 1, 0.5);
-
+	DrawPersistentMessages(10, 10, &green, textToPrint, 1, 0.5);
+	DrawTemporaryMessages(10, 30, &green, 1, 0.5);
 	//ImGui::GetOverlayDrawList()->AddText(textPosition, textColor, textContent.c_str());
 
 	/*ImGui::Text("HELLO BURNT, HERE'S A FUNNY NUMBER: %d", 69);

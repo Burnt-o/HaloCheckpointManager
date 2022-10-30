@@ -31,6 +31,9 @@ namespace HCM3.Services.Trainer
 
                 if (doubleRevertFlag == null || (doubleRevertFlag != 0 && doubleRevertFlag != 1)) throw new Exception("Couldn't read double revert flag");
 
+
+                if (!this.InternalServices.PrintTemporaryMessageInternal("Double revert forced. ")) throw new Exception("Error printing message");
+
                 // Set the double revert flag to the inverse value
                 this.HaloMemoryService.ReadWrite.WriteByte(
                     doubleRevertFlagPointer,

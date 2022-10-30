@@ -27,7 +27,7 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
-            this.CommonServices.PrintMessage("Core Save... Done", loadedGame);
+            if (!this.InternalServices.PrintTemporaryMessageInternal("Core save forced.")) throw new Exception("Error printing message");
 
             // Set the make coresave flag
             this.HaloMemoryService.ReadWrite.WriteByte(

@@ -48,7 +48,7 @@ namespace HCM3.Services.Trainer
             float viewHori = this.HaloMemoryService.ReadWrite.ReadFloat((ReadWrite.Pointer)requiredPointers["ViewHori"]).Value;
             float viewVert = this.HaloMemoryService.ReadWrite.ReadFloat((ReadWrite.Pointer)requiredPointers["ViewVert"]).Value;
 
-            // Now, let's do some math to figure out what the new velition should be.
+            // Now, let's do some math to figure out what the new velocities should be.
             float normalisedX = (float)(Math.Cos(viewVert) * Math.Cos(viewHori));
             float normalisedY = (float)(Math.Cos(viewVert) * Math.Sin(viewHori));
             float normalisedZ = (float)(Math.Sin(viewVert));
@@ -58,7 +58,9 @@ namespace HCM3.Services.Trainer
             float newYvel = oldYvel + (normalisedY * addSpeed);
             float newZvel = oldZvel + (normalisedZ * addSpeed);
 
-            // Write the new velitions
+            if (!this.InternalServices.PrintTemporaryMessageInternal($"Launching with {addSpeed} force")) throw new Exception("Error printing message");
+
+            // Write the new velocities
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXvelPtr, newXvel);
             this.HaloMemoryService.ReadWrite.WriteFloat(playerYvelPtr, newYvel);
             this.HaloMemoryService.ReadWrite.WriteFloat(playerZvelPtr, newZvel);

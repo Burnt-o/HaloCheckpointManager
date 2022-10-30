@@ -35,9 +35,13 @@ namespace HCM3.Services.Trainer
             IntPtr playerYposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Ypos"]);
             IntPtr playerZposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Zpos"]);
 
+            if (!this.InternalServices.PrintTemporaryMessageInternal($"Teleporting to {x}, {y}, {z}")) throw new Exception("Error printing message");
+
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXposPtr, x);
             this.HaloMemoryService.ReadWrite.WriteFloat(playerYposPtr, y);
             this.HaloMemoryService.ReadWrite.WriteFloat(playerZposPtr, z);
+
+
 
         }
 
@@ -91,6 +95,8 @@ namespace HCM3.Services.Trainer
             float newXpos = oldXpos + (normalisedX * length);
             float newYpos = oldYpos + (normalisedY * length);
             float newZpos = oldZpos + (normalisedZ * length);
+
+            if (!this.InternalServices.PrintTemporaryMessageInternal($"Teleporting to {newXpos}, {newYpos}, {newZpos}")) throw new Exception("Error printing message");
 
             // Write the new positions
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXposPtr, newXpos);
