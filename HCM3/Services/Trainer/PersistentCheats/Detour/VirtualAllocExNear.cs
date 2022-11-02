@@ -16,8 +16,8 @@ namespace HCM3.Services.Trainer
             int incrementor = 1000;
             Trace.WriteLine("LOCATION:::::::: " + location.ToString("X"));
             //search within 2gb (2gb is actual max for 32bit jump)
-            IntPtr min = IntPtr.Subtract(location, 0x8000000);
-            IntPtr max = IntPtr.Add(location, 0x8000000);
+            IntPtr min = IntPtr.Subtract(location, 0x7000000);
+            IntPtr max = IntPtr.Add(location, 0x7000000);
             PInvokes.MEMORY_BASIC_INFORMATION mbi = new();
             uint mbiLength = (uint)System.Runtime.InteropServices.Marshal.SizeOf(mbi);
 
@@ -32,8 +32,8 @@ namespace HCM3.Services.Trainer
                     //VirtualQuery failed
                     int lastError = Marshal.GetLastWin32Error();
                     Trace.WriteLine("Virtual query failed: " + lastError);
-                    throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError);
-
+                    //throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError + ", add: " + Addr.ToString("X") + ", starting loc: " + location.ToString("X"));
+                    continue;
                 }
 
 

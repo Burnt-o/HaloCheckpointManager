@@ -122,7 +122,7 @@ new RelayCommand(o => { TrainerServices.TeleportForward(5, false); }, o => true)
             this.Button_Teleport = new TeleportViewModel("none", "Teleport", trainerServices);
 
             this.Button_Launch = new GenericActionViewModel("none", "Launch",
-new RelayCommand(o => { TrainerServices.BoostForward((float)0.2); }, o => true));
+new RelayCommand(o => { TrainerServices.BoostForward((float)10); }, o => true));
 
 
 

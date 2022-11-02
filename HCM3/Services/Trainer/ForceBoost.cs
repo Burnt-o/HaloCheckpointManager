@@ -36,7 +36,9 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
+            Trace.WriteLine("before adding negagtive offset: " + playerVehiObject.ToString("X"));
             IntPtr playerXvelPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Xvel"]);
+            Trace.WriteLine("after adding negagtive offset: " + playerXvelPtr.ToString("X"));
             IntPtr playerYvelPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Yvel"]);
             IntPtr playerZvelPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Zvel"]);
 

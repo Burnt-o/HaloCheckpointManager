@@ -53,7 +53,11 @@ namespace HCM3.Services.Trainer
             UpdateCurrentHaloStateTimer.Interval = 3000;
             UpdateCurrentHaloStateTimer.Enabled = true;
 
+            
+
         }
+
+
 
         private void CheckCheats(object? sender, EventArgs? e)
         {
@@ -137,7 +141,7 @@ namespace HCM3.Services.Trainer
             string activeCheatsString;
             if (activeCheats.Count == 0)
             {
-                activeCheatsString = " ";
+                activeCheatsString = "HCM";
             }
             else if (activeCheats.Count == 1)
             {
@@ -154,6 +158,14 @@ namespace HCM3.Services.Trainer
             if (!this.InternalServices.CheckInternalTextDisplaying())
             {
                 throw new Exception("CheckInternalTextDisplaying failed");
+            }
+        }
+
+        public void RemoveInternalText()
+        {
+            if (this.InternalServices.CheckInternalLoaded() == true && this.InternalServices.InternalFunctionsLoaded == true)
+            {
+                this.InternalServices.CallInternalFunction("ChangeDisplayText", " ");
             }
         }
 

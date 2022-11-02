@@ -19,7 +19,8 @@ namespace HCM3.Services.Trainer
             IntPtr ogCodeHandle = this.HaloMemoryService.ReadWrite.ResolvePointer(detourInfo.OriginalCodeLocation) ?? throw new Exception("Couldn't read location of origianl code");
 
             // Get process Handle
-            Process MCCProcess = Process.GetProcessById(((int?)this.HaloMemoryService.HaloState.ProcessID) ?? throw new Exception("Couldn't get process info"));
+            uint pID = this.HaloMemoryService.HaloState.ProcessID ?? throw new Exception("Couldn't get process ID");
+            Process MCCProcess = Process.GetProcessById(((int?)pID) ?? throw new Exception("Couldn't get process info"));
             IntPtr processHandle = MCCProcess.Handle;
 
             // Allocate some memory for our detour that hook will jump to
@@ -29,6 +30,7 @@ namespace HCM3.Services.Trainer
             Dictionary<string, ReadWrite.Pointer> symbolPointers = new();
             symbolPointers = symbolPointers.Concat(detourInfo.SymbolPointers).ToDictionary(x=>x.Key, x=>x.Value);
             symbolPointers.Add("$detourHandle", new ReadWrite.Pointer(detourHandle));
+            symbolPointers.Add("@detourHandle", new ReadWrite.Pointer(detourHandle));
 
             // Assemble hook bytes
             byte[] originalCodeBytes = detourInfo.OriginalCodeBytes;
@@ -60,11 +62,23 @@ namespace HCM3.Services.Trainer
                 if (actualCodeBytes[i] != originalCodeBytes[i]) throw new Exception("Original Code not the correct value: corrupt game state?");
             }
 
-            // Now write our detour code at the allocated memory address
-            this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(detourHandle), detourCodeBytes, true);
-            Trace.WriteLine("Wrote detour code to allocated: " + detourHandle.ToString("X"));
-            // Then write the hook
-            this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(ogCodeHandle), hookCodeBytes, true);
+
+            // Suspend all threads to prevent them executing the code as it's being written.
+            try
+            {
+                PInvokes.DebugActiveProcess(pID);
+                // Now write our detour code at the allocated memory address
+                this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(detourHandle), detourCodeBytes, true);
+                Trace.WriteLine("Wrote detour code to allocated: " + detourHandle.ToString("X"));
+                // Then write the hook
+                this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(ogCodeHandle), hookCodeBytes, true);
+                // Resume threads
+            }
+            finally
+            {
+                PInvokes.DebugActiveProcessStop(pID);
+            }
+            
 
             // Return detourHandle so the IPersistentCheat can deallocate it when needed
             return detourHandle;

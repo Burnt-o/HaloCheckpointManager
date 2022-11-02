@@ -567,7 +567,130 @@
 
 		</Entry>
 		<!--/end Invuln stuff-->
-		<!--/end Trainer stuff-->
+	<!--Datum Evaluation stuff (for teleport and boost)-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_PlayerDatum</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xD523A4</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_EntityOffsetTable</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x1783E50</Offset>
+				<Offset>0x58</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_EntityTable</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x1783E68</Offset>
+				<Offset>0x57</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="DetourInfoObject">
+		<Name>H2_PlayerData_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x8DD7DF</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x 8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xD523A4</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_Xpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x0</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_Ypos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x4</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_Zpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x8</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_Xvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>-0x30</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_Yvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>-0x2C</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_Zvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>-0x28</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_PlayerData_VisualOffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x40</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_ViewHori</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x014C3B58</Offset>
+				<Offset>0x38</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_ViewVert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x014C3B58</Offset>
+				<Offset>0x3C</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+	<!--/end Datum Evaluation stuff (for teleport and boost)-->
+
+	<!--/end Trainer stuff-->
 		<!--Checkpoint management stuff-->
 		<Entry Type="Dictionary&lt;string, bool&gt;">
 			<Name>H2_InjectRequirements</Name>
@@ -1572,6 +1695,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3F94F90</Offset>
+				<Offset>0x68</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ModuleWinStore</Name>
@@ -1579,6 +1710,14 @@
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03A23830</Offset>
+				<Offset>0x68</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3DE6578</Offset>
 				<Offset>0x68</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -1698,6 +1837,12 @@
 				<Offset>0x2686edf</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2936D1F</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ForceRevert</Name>
@@ -1707,6 +1852,12 @@
 				<Offset>0x2686EDB</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2936D1B</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_DoubleRevertFlag</Name>
@@ -1714,6 +1865,12 @@
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x250f16c</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x27BEF7C</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1786,6 +1943,18 @@
 			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
 			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 
@@ -1794,6 +1963,13 @@
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x0282A760</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x02AD7F80</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -1807,16 +1983,29 @@
 				<Offset>0xA40000</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x02AD7F80</Offset>
+				<Offset>0xAF0000</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointLength</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0xA33000</Offset>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<Offset>0xAE5000</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointData_LevelCode</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1CD77</Offset>
+		</Version>
+		<Version Version="1.2969.0.0">
 			<Offset>0x1CD77</Offset>
 		</Version>
 	</Entry>
@@ -1825,10 +2014,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x2E424</Offset>
 		</Version>
+		<Version Version="1.2969.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointData_Difficulty</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1CF08</Offset>
+		</Version>
+		<Version Version="1.2969.0.0">
 			<Offset>0x1CF08</Offset>
 		</Version>
 	</Entry>
@@ -1842,6 +2037,8 @@
 				</PreserveLocation>
 			</Array>
 		</Version>
+
+		
 	</Entry>
 	<!--/end Checkpoint management stuff-->
 	<!--/end Halo 4-->
@@ -1849,29 +2046,48 @@
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_GameIndicator_Steam</Name>
 			<Version Version="1.2645.0.0">
-			<Module>main</Module>
-			<Offsets>
-				<Offset>0x3B81270</Offset>
-				<Offset>0</Offset>
-			</Offsets>
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3B81270</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.2969.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3F94E90</Offset>
+					<Offset>0</Offset>
+				</Offsets>
 			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_StateIndicator_Steam</Name>
 			<Version Version="1.2645.0.0">
-			<Module>main</Module>
-			<Offsets>
-				<Offset>0x3b40d69</Offset>
-			</Offsets>
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3b40d69</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.2969.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3F519E9</Offset>
+				</Offsets>
 			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_MenuIndicator_Steam</Name>
 			<Version Version="1.2645.0.0">
-			<Module>main</Module>
-			<Offsets>
-				<Offset>0x3A4A7C9</Offset>
-			</Offsets>
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3A4A7C9</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.2969.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3E5DF29</Offset>
+				</Offsets>
 			</Version>
 		</Entry>
 		<!--/end MCC Steam-->

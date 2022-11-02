@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using HCM3.Helpers;
 using BurntMemory;
+using System.Threading;
 
 namespace HCM3.Services.Trainer
 {
@@ -16,12 +17,18 @@ namespace HCM3.Services.Trainer
 
         public CommonServices CommonServices { get; init; }
         public InternalServices InternalServices { get; init; }
-        public TrainerServices(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
+
+        public PersistentCheatService PersistentCheatService { get; init; }
+        public TrainerServices(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices, PersistentCheatService persistentCheatService)
         {
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
             this.CommonServices = commonServices;
             this.InternalServices = internalServices;
+            this.PersistentCheatService = persistentCheatService;
+
+            this.SetupPatches();
+            HaloStateEvents.HALOSTATECHANGED_EVENT += ApplyPatches;
         }
 
         public IntPtr GetPlayerVehiObjectAddress()
@@ -33,28 +40,54 @@ namespace HCM3.Services.Trainer
             int loadedGame = this.CommonServices.GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-
-            List<string> requiredPointerNames = new();
-            requiredPointerNames.Add($"{gameAs2Letters}_PlayerDatum");
-            requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_VehicleIndex");
-            requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_VehicleNullValue");
-
-            Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
-
-            uint playerDatum = this.HaloMemoryService.ReadWrite.ReadInteger((ReadWrite.Pointer)requiredPointers["PlayerDatum"]).Value;
-            IntPtr playerAddy = this.CommonServices.GetAddressFromDatum(playerDatum);
-
-
-            //check if player in vehicle, if so we want to modify that vehicle instead of the player
-            uint playerVehicleDatum = (uint)this.HaloMemoryService.ReadWrite.ReadInteger(IntPtr.Add(playerAddy, (int)requiredPointers["PlayerData_VehicleIndex"]));
-            if (playerVehicleDatum != (uint)requiredPointers["PlayerData_VehicleNullValue"])
+            if (gameAs2Letters == "H1")
             {
-                playerAddy = this.CommonServices.GetAddressFromDatum(playerVehicleDatum);
+                List<string> requiredPointerNames = new();
+                requiredPointerNames.Add($"{gameAs2Letters}_PlayerDatum");
+                requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_VehicleIndex");
+                requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_VehicleNullValue");
+
+                Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
+
+                uint playerDatum = this.HaloMemoryService.ReadWrite.ReadInteger((ReadWrite.Pointer)requiredPointers["PlayerDatum"]).Value;
+                IntPtr playerAddy = this.CommonServices.GetAddressFromDatum(playerDatum);
+
+
+                //check if player in vehicle, if so we want to modify that vehicle instead of the player
+                uint playerVehicleDatum = (uint)this.HaloMemoryService.ReadWrite.ReadInteger(IntPtr.Add(playerAddy, (int)requiredPointers["PlayerData_VehicleIndex"]));
+                if (playerVehicleDatum != (uint)requiredPointers["PlayerData_VehicleNullValue"])
+                {
+                    playerAddy = this.CommonServices.GetAddressFromDatum(playerVehicleDatum);
+                }
+
+                Trace.WriteLine("PlayerVehiObjectAddress: " + playerAddy.ToString("X"));
+
+                return playerAddy;
+            }
+            else if (gameAs2Letters == "H2")
+            {
+                if (this.listOfPatches["H2PlayerData"].PatchHandle == null || !IsPatchApplied("H2PlayerData"))
+                {
+                    if (IsPatchApplied("H2PlayerData"))
+                    {
+                        RemovePatch("H2PlayerData");
+                    }
+                    ApplyPatch("H2PlayerData");
+                    Thread.Sleep(30);
+                }
+
+                IntPtr? detourHandle = this.listOfPatches["H2PlayerData"].PatchHandle;
+                if (detourHandle == null) throw new Exception("Couldn't get detourHandle of H2PlayerData");
+                    IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
+                if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t H2PlayerData");
+                    return playerAddy.Value;
+               
             }
 
-            Trace.WriteLine("PlayerVehiObjectAddress: " + playerAddy.ToString("X"));
+            throw new NotImplementedException();
 
-            return playerAddy;
+
+
 
         }
 

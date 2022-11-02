@@ -149,9 +149,18 @@ namespace HCM3.Services
             set
             {
 
+                if (_currentHaloState != value)
+                {
                     _currentHaloState = value;
                     // Raise event
                     HaloStateEvents.HALOSTATECHANGED_EVENT_INVOKE(this, new HaloStateEvents.HaloStateChangedEventArgs(_currentHaloState));
+                }
+                else
+                {
+                    _currentHaloState = value;
+                }
+
+
 
 
             }
@@ -205,7 +214,7 @@ namespace HCM3.Services
             Trace.WriteLine("stateInd: " + stateIndicator.ToString());
             Trace.WriteLine("menuInd: " + menuIndicator.ToString());
 
-            if (menuIndicator != 07 && stateIndicator != 44)
+            if (menuIndicator == 00 && stateIndicator != 44)
             {
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Menu;
             }

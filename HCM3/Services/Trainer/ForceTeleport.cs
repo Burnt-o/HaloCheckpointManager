@@ -49,13 +49,23 @@ namespace HCM3.Services.Trainer
         public void TeleportForward(float length, bool ignoreZ)
         {
 
+
+
+
             Trace.WriteLine("TeleportForward called");
             this.HaloMemoryService.HaloState.UpdateHaloState();
             int loadedGame = this.CommonServices.GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
 
+
+
+
+
+
             IntPtr playerVehiObject = this.GetPlayerVehiObjectAddress();
+            Trace.WriteLine("PlayerVehicleObject: " + playerVehiObject.ToString("X"));
+            if (playerVehiObject == IntPtr.Zero) throw new Exception("playerVehiObject was IntPtr.Zero!");
 
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_ViewHori");
@@ -63,6 +73,11 @@ namespace HCM3.Services.Trainer
             requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_Xpos");
             requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_Ypos");
             requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_Zpos");
+
+            if (gameAs2Letters == "H2")
+            {
+                requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_VisualOffset");
+            }
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
@@ -102,6 +117,19 @@ namespace HCM3.Services.Trainer
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXposPtr, newXpos);
             this.HaloMemoryService.ReadWrite.WriteFloat(playerYposPtr, newYpos);
             if (!ignoreZ) this.HaloMemoryService.ReadWrite.WriteFloat(playerZposPtr, newZpos);
+
+            if (gameAs2Letters == "H2")
+            {
+                //repeat position writing at +0x48
+                playerXposPtr = IntPtr.Add(playerXposPtr, (int)requiredPointers["PlayerData_VisualOffset"]);
+                playerYposPtr = IntPtr.Add(playerYposPtr, (int)requiredPointers["PlayerData_VisualOffset"]);
+                playerZposPtr = IntPtr.Add(playerZposPtr, (int)requiredPointers["PlayerData_VisualOffset"]);
+
+                this.HaloMemoryService.ReadWrite.WriteFloat(playerXposPtr, newXpos);
+                this.HaloMemoryService.ReadWrite.WriteFloat(playerYposPtr, newYpos);
+                if (!ignoreZ) this.HaloMemoryService.ReadWrite.WriteFloat(playerZposPtr, newZpos);
+            }
+
 
         }
 

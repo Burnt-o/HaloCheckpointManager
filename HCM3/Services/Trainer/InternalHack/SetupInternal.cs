@@ -23,10 +23,22 @@ namespace HCM3.Services.Trainer
             IntPtr SpeedhackInternalHandle = BurntMemory.DLLInjector.InjectDLL("Speedhack.dll", HCMProcess);
 
             // Inject HCMInternal into MCC process
+            uint pID = this.HaloMemoryService.HaloState.ProcessID ?? throw new Exception("Couldn't get process ID");
+            Process MCCProcess = Process.GetProcessById((int)pID);
 
-            Process MCCProcess = Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID);
-            IntPtr MCCHCMHandle = BurntMemory.DLLInjector.InjectDLL("HCMInternal.dll", MCCProcess);
-            IntPtr MCCSpeedhackHandle = BurntMemory.DLLInjector.InjectDLL("Speedhack.dll", MCCProcess);
+            IntPtr MCCHCMHandle;
+            IntPtr MCCSpeedhackHandle;
+            try
+            {
+                PInvokes.DebugActiveProcess(pID);
+                MCCHCMHandle = BurntMemory.DLLInjector.InjectDLL("HCMInternal.dll", MCCProcess);
+                MCCSpeedhackHandle = BurntMemory.DLLInjector.InjectDLL("Speedhack.dll", MCCProcess);
+                
+            }
+            finally
+            {
+                PInvokes.DebugActiveProcessStop(pID);
+            }
 
 
             IntPtr speedhackPointerSet = PInvokes.GetProcAddress(SpeedhackInternalHandle, "setAllToSpeed");

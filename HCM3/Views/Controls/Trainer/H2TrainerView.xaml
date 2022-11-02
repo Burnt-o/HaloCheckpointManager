@@ -38,8 +38,8 @@
         <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}"/>
             <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" />
             <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceDoubleRevert}"/>
-            <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" IsEnabled="false"/>
-            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" IsEnabled="false"/>
+            <local:TeleportView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" />
+            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" />
             <local:GenericToggleView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}"/>
         <local:SpeedhackView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
             <local:GenericToggleView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="false"/>

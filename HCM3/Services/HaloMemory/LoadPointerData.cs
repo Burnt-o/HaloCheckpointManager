@@ -164,9 +164,20 @@ namespace HCM3.Services
             if (entryObject == null) throw new Exception("entryObject was somehow null at StoreObject");
             if (entryObject.GetType() == typeof(System.Xml.Linq.XElement)) throw new Exception("Accidentally parsed XElement");
 
-            Dictionary<string, Object> versionDictionary = new();
-            versionDictionary.Add(entryVersion, entryObject);
-            PointerData.Add(entryName, versionDictionary);
+
+
+            if (PointerData.ContainsKey(entryName))
+            {
+                PointerData[entryName].Add(entryVersion, entryObject);
+            }
+            else
+            {
+                Dictionary<string, Object> versionDictionary = new();
+                versionDictionary.Add(entryVersion, entryObject);
+                PointerData.Add(entryName, versionDictionary);
+            }
+
+
             Trace.WriteLine("Added new object to pointer dictionary, name: " + entryName + ", version: " + entryVersion + ", type: " + entryObject.GetType().ToString());
         }
 
@@ -207,12 +218,25 @@ namespace HCM3.Services
             if (s == null)
                 throw new Exception("int was null");
 
-            return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) : Convert.ToInt32(s);
+            if (s == "0x0" || s == "0") return 0;
+
+            int sign = 1;
+            if (s.StartsWith("-"))
+            {
+                sign = -1;
+                s = s.Substring(1);
+            }
+
+
+            return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) * sign : Convert.ToInt32(s) * sign;
         }
         uint ParseHexNumberUint(string? s)
         {
             if (s == null)
                 throw new Exception("uint was null");
+
+            if (s == "0x0" || s == "0") return 0;
+
             return s.StartsWith("0x") ? Convert.ToUInt32(s.Substring(2), 16) : Convert.ToUInt32(s);
         }
 

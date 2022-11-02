@@ -172,7 +172,7 @@ namespace HCM3.ViewModels
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Failed to execute Teleport! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show("Failed to execute Teleport! \n" + ex.Message + ex.StackTrace, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
             }
         }
 
