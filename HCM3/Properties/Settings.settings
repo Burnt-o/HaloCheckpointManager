@@ -37,5 +37,8 @@
     <Setting Name="TeleportIgnoreZ" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="LaunchSpeed" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

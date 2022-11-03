@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace HCM3.Views.Controls.Trainer
 {
     /// <summary>
-    /// Interaction logic for TrainerSpeedHack.xaml
+    /// Interaction logic for CommonTrainerAction.xaml
     /// </summary>
-    public partial class TeleportView : UserControl
+    internal partial class GenericActionWithOptionView : UserControl
     {
-        public TeleportView()
+        public GenericActionWithOptionView()
         {
             InitializeComponent();
         }

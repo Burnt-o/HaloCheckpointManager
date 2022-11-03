@@ -27,6 +27,7 @@ namespace HCM3.ViewModels
         public ChangeHotkeyCommand? ChangeHotkeyCommand { get; init; }
 
         public ICommand? ExecuteCommand { get; init; }
+        public ICommand OpenOptionsWindowCommand { get; init; }
 
         //public bool IsEnabled { get; set; } //only used by toggle controls
 

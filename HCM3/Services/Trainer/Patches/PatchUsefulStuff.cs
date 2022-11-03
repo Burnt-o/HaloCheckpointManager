@@ -108,7 +108,7 @@ namespace HCM3.Services.Trainer
         }
 
         //only run on HCM shutdown
-        public void RemovePatches()
+        public void RemoveAllPatches()
         {
             this.HaloMemoryService.HaloState.UpdateHaloState();
             int loadedGame = this.HaloMemoryService.HaloState.CurrentHaloState;

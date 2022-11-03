@@ -17,6 +17,9 @@ namespace HCM3
 
             var PersistentCheatService = _serviceProvider.GetService<PersistentCheatService>();
             PersistentCheatService.RemoveAllCheats();
+
+            var TrainerServices = _serviceProvider.GetService<TrainerServices>();
+            TrainerServices.RemoveAllPatches();
         }
     }
 }

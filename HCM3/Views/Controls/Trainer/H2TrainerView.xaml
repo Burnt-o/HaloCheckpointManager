@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:HCM3.Views.Controls.Trainer"
              xmlns:viewModels="clr-namespace:HCM3.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="547" d:DesignWidth="298"
+             d:DesignHeight="547" d:DesignWidth="348"
              d:DataContext="{d:DesignInstance viewModels:TrainerViewModel, IsDesignTimeCreatable=True}" >
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Width="298" Height="Auto">
+        <Grid Width="348" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125"/>
             <ColumnDefinition/>
@@ -38,8 +38,8 @@
         <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}"/>
             <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" />
             <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceDoubleRevert}"/>
-            <local:TeleportView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" />
-            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" />
+            <local:GenericActionWithOptionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" />
+            <local:GenericActionWithOptionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" />
             <local:GenericToggleView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}"/>
         <local:SpeedhackView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
             <local:GenericToggleView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="false"/>

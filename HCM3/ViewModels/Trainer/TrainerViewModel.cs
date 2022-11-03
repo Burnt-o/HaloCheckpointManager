@@ -15,7 +15,8 @@ namespace HCM3.ViewModels
     internal class TrainerViewModel : Presenter
     {
 
-
+        public InjectViewModel Button_InjectCheckpoint { get; set; }
+        public DumpViewModel Button_DumpCheckpoint { get; set; }
         public GenericActionViewModel Button_ForceCheckpoint { get; set; }
         public GenericActionViewModel Button_ForceRevert { get; set; }
 
@@ -23,7 +24,7 @@ namespace HCM3.ViewModels
         public GenericActionViewModel Button_ForceCoreSave { get; set; }
         public GenericActionViewModel Button_ForceCoreLoad { get; set; }
         public TeleportViewModel Button_Teleport { get; set; }
-        public GenericActionViewModel Button_Launch { get; set; }
+        public LaunchViewModel Button_Launch { get; set; }
 
         public GenericToggleViewModel Button_ToggleInvuln { get; set; }
         public SpeedhackViewModel Button_ToggleSpeedhack { get; set; }
@@ -64,6 +65,8 @@ namespace HCM3.ViewModels
         [Obsolete]
         public TrainerViewModel()
         {
+            this.Button_InjectCheckpoint = new InjectViewModel("none", "Inject Checkpoint", null);
+            this.Button_DumpCheckpoint = new DumpViewModel("none", "Dump Checkpoint", null);
 
             this.Button_ForceCheckpoint = new GenericActionViewModel("none", "Force Checkpoint", null);
             this.Button_ForceRevert = new GenericActionViewModel("none", "Force Revert", null);
@@ -71,7 +74,7 @@ namespace HCM3.ViewModels
             this.Button_ForceCoreSave = new GenericActionViewModel("none", "Force Core save", null);
             this.Button_ForceCoreLoad = new GenericActionViewModel("none", "Force Core load", null);
             this.Button_Teleport = new TeleportViewModel("none", "Teleport", null);
-            this.Button_Launch = new GenericActionViewModel("none", "Launch", null);
+            this.Button_Launch = new LaunchViewModel("none", "Launch", null);
             this.Button_ToggleInvuln = new GenericToggleViewModel("none", "Invulnerability", null);
             this.Button_ToggleSpeedhack = new SpeedhackViewModel("none", "Speedhack", null);
             this.Button_ToggleMedusa = new GenericToggleViewModel("none", "Cheat Medusa", null);
@@ -93,13 +96,16 @@ namespace HCM3.ViewModels
                 this.UserControlToShow = gameAs2Letters;
         }
 
-        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager)
+        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager, CheckpointViewModel checkpointViewModel)
         {
 
 
             this.TrainerServices = trainerServices;
             this.PersistentCheatManager = persistentCheatManager;
             SelectedGame = 0;
+
+            this.Button_InjectCheckpoint = new InjectViewModel("none", "Inject Checkpoint", checkpointViewModel);
+            this.Button_DumpCheckpoint = new DumpViewModel("none", "Dump Checkpoint", checkpointViewModel);
 
             this.Button_ForceCheckpoint = new GenericActionViewModel("none", "Force Checkpoint", 
                 new RelayCommand(o => { TrainerServices.ForceCheckpoint(); }, o => true));
@@ -121,8 +127,9 @@ new RelayCommand(o => { TrainerServices.TeleportForward(5, false); }, o => true)
 
             this.Button_Teleport = new TeleportViewModel("none", "Teleport", trainerServices);
 
-            this.Button_Launch = new GenericActionViewModel("none", "Launch",
-new RelayCommand(o => { TrainerServices.BoostForward((float)10); }, o => true));
+            this.Button_Launch = new LaunchViewModel("none", "Launch", trainerServices);
+
+
 
 
 

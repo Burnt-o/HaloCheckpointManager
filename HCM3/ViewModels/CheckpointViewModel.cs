@@ -244,7 +244,12 @@ namespace HCM3.ViewModels
             set { _deleteCheckpoint = value; }
         }
 
-
+        private ICommand _renameCheckpoint;
+        public ICommand RenameCheckpoint
+        {
+            get { return _renameCheckpoint ?? (_renameCheckpoint = new RenameCheckpointCommand(this, CheckpointServices)); }
+            set { _renameCheckpoint = value; }
+        }
 
 
 

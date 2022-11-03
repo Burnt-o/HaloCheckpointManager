@@ -42,7 +42,7 @@ namespace HCM3.ViewModels
         }
 
         //instead of sending the command, we send the object property within PersistentCheatService, so we can bind IsChecked to it's isChecked
-        public SpeedhackViewModel(string hotkeyText, string effectText, PC_Speedhack pC_Speedhack)
+        public SpeedhackViewModel(string hotkeyText, string effectText, PC_Speedhack? pC_Speedhack)
         {
             this.PC_Speedhack = pC_Speedhack; //for binding to IsChecked
             this.EffectText = effectText;

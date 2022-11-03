@@ -11,9 +11,9 @@ using HCM3.Services;
 
 namespace HCM3.ViewModels.Commands
 {
-    internal class DeleteCheckpointCommand : ICommand
+    internal class RenameCheckpointCommand : ICommand
     {
-        internal DeleteCheckpointCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
+        internal RenameCheckpointCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
         {
             this.CheckpointViewModel = checkpointViewModel;
             this.CheckpointServices = checkpointServices;
@@ -30,12 +30,13 @@ namespace HCM3.ViewModels.Commands
         {
             try
             {
-                CheckpointServices.DeleteCheckpoint(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint);
+
+                CheckpointServices.RenameCheckpoint(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint);
                 CheckpointViewModel.RefreshCheckpointList();
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Failed to delete checkpoint! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show("Failed to rename checkpoint! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
             }
 
         }

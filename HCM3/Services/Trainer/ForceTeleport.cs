@@ -46,6 +46,35 @@ namespace HCM3.Services.Trainer
         }
 
 
+        public (float, float, float) TeleportGetPosition()
+        {
+            Trace.WriteLine("TeleportToLocation called");
+            this.HaloMemoryService.HaloState.UpdateHaloState();
+            int loadedGame = this.CommonServices.GetLoadedGame();
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
+
+
+            IntPtr playerVehiObject = this.GetPlayerVehiObjectAddress();
+
+            List<string> requiredPointerNames = new();
+            requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_Xpos");
+            requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_Ypos");
+            requiredPointerNames.Add($"{gameAs2Letters}_PlayerData_Zpos");
+
+            Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
+
+            IntPtr playerXposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Xpos"]);
+            IntPtr playerYposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Ypos"]);
+            IntPtr playerZposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Zpos"]);
+
+            float oldXpos = this.HaloMemoryService.ReadWrite.ReadFloat(playerXposPtr).Value;
+            float oldYpos = this.HaloMemoryService.ReadWrite.ReadFloat(playerYposPtr).Value;
+            float oldZpos = this.HaloMemoryService.ReadWrite.ReadFloat(playerZposPtr).Value;
+
+            return (oldXpos, oldYpos, oldZpos);
+        }
+
+
         public void TeleportForward(float length, bool ignoreZ)
         {
 

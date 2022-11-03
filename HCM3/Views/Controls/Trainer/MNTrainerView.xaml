@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:HCM3.Views.Controls.Trainer"
              xmlns:viewModels="clr-namespace:HCM3.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="547" d:DesignWidth="298"
+             d:DesignHeight="547" d:DesignWidth="348"
              d:DataContext="{d:DesignInstance viewModels:TrainerViewModel, IsDesignTimeCreatable=True}" >
-    <Grid Width="298" Height="Auto">
+    <Grid Width="348" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="125"/>
             <ColumnDefinition/>

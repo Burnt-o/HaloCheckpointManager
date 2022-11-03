@@ -116,6 +116,7 @@ namespace HCM3.Services
             string proposedSave = (selectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
             if (userInput != null && userInput != "" && !File.Exists(proposedSave))
+            {
                 try
                 {
                     // Now dump the data to a file in the saveFolder location
@@ -132,7 +133,7 @@ namespace HCM3.Services
                 {
                     throw new InvalidOperationException("Failed to save checkpoint data to file; was your name valid and unique? \nError: " + ex.Message);
                 }
-
+            }
         }
 
     }

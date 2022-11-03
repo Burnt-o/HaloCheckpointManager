@@ -40,6 +40,8 @@ namespace HCM3.ViewModels
 
         public ICommand? ExecuteCommand { get; init; }
 
+        public ICommand? FillPositionCommand { get; init; }
+
         public ICommand OpenOptionsWindowCommand { get; init; }
 
         #region User inputted properties
@@ -126,7 +128,7 @@ namespace HCM3.ViewModels
             this.HotkeyText = "Hotkey";
         }
 
-        public TeleportViewModel(string hotkeyText, string effectText, TrainerServices trainerServices) 
+        public TeleportViewModel(string hotkeyText, string effectText, TrainerServices? trainerServices) 
         {
             //load default values from settings
             this.TeleportModeForward = Properties.Settings.Default.TeleportModeForward;
@@ -145,8 +147,28 @@ namespace HCM3.ViewModels
             this.ExecuteCommand = new RelayCommand(o => { ExecuteTeleport(); }, o => true);
             //this.IsEnabled = false;
 
+            this.FillPositionCommand = new RelayCommand(o => {
+                FillPosition();
+            }, o => true);
+
             this.PropertyChanged += TeleportViewModel_PropertyChanged;
         }
+
+        private void FillPosition()
+        {
+            try
+            {
+                (float, float, float) tuple = this.TrainerServices.TeleportGetPosition();
+                TeleportX = tuple.Item1;
+                TeleportY = tuple.Item2;
+                TeleportZ = tuple.Item3;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Failed to fill positions with current location! \n" + ex.Message + ex.StackTrace, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+            }
+        }
+
 
         private void TeleportViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

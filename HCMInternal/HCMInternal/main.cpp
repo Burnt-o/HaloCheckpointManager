@@ -124,6 +124,7 @@ extern "C" __declspec(dllexport) void ChangeDisplayText(const TCHAR* pChars)
 
 extern "C" __declspec(dllexport) int IsTextDisplaying()
 {
+	return 1;
 	if (textToPrint == "hi")
 	{
 		return 2;
@@ -268,6 +269,33 @@ HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width
 	return hr;
 }
 
+
+extern "C" __declspec(dllexport) DWORD WINAPI InitHook(bool enable)
+{
+	if (enable)
+	{
+		if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
+		{
+			kiero::bind(8, (void**)&oPresent, hkPresent);
+			kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
+
+			return TRUE;
+		}
+		else
+		{
+			return FALSE;
+		}
+
+	}
+	else
+	{
+		kiero::shutdown();
+		return TRUE;
+	}
+
+
+
+}
 
 DWORD WINAPI MainThread(void* pHandle)
 {

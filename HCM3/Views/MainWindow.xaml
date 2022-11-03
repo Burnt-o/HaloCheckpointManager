@@ -9,7 +9,7 @@
         xmlns:commands="clr-namespace:HCM3.ViewModels.Commands"
         xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
-        Title="HaloCheckpointManager" Height="593" Width="820"
+        Title="HaloCheckpointManager" Height="593" Width="870"
         MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
       d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
@@ -52,7 +52,7 @@
             <ColumnDefinition  />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <ContentControl Grid.Column="1"  MinWidth="303" MaxWidth="303" Height="auto" Content="{Binding TrainerViewModel}" >
+        <ContentControl Grid.Column="1"  MinWidth="353" MaxWidth="353" Height="auto" Content="{Binding TrainerViewModel}" >
 
             <ContentControl.Style>
                 <Style>
