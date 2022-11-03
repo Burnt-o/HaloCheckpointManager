@@ -10,6 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="593" d:DesignWidth="300"
              xmlns:dd="urn:gong-wpf-dragdrop"
+
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel, IsDesignTimeCreatable=True}">
     <Grid>
         <Grid.Resources>
@@ -37,9 +38,17 @@
         <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" >
             <ListView.Resources>
                 <ContextMenu x:Key="CheckpointContextMenu">
-                    <MenuItem Header="Delete"
-            Command="{Binding DeleteCheckpoint}"
-            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                    <MenuItem Header="Inject" 
+                        Command="{Binding Path=Parent.DataContext.Inject, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                    <MenuItem Header="Rename" 
+                        Command="{Binding Path=Parent.DataContext.RenameCheckpoint, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                        <MenuItem Header="Delete" 
+            Command="{Binding Path=Parent.DataContext.DeleteCheckpoint, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
                 </ContextMenu>
             </ListView.Resources>
 
