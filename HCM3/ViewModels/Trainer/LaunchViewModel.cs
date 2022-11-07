@@ -10,37 +10,19 @@ using HCM3.Services.Trainer;
 using System.Windows;
 using HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions;
 using System.Diagnostics;
+using HCM3.Services;
+using XInputium.XInput;
 
 namespace HCM3.ViewModels
 {
-    public class LaunchViewModel : Presenter, IControlWithHotkey
+    public class LaunchViewModel : ActionToggleBase
     {
 
-        private string _hotkeyText;
-        public string HotkeyText
-        {
-            get { return _hotkeyText; }
-            set
-            {
-                _hotkeyText = value;
-                OnPropertyChanged(nameof(HotkeyText));
-            }
-        }
-
-        private string _effectText;
-        public string EffectText
-        { 
-        get { return _effectText; }
-            set { _effectText = value; OnPropertyChanged(nameof(EffectText)); }
-        }
+      
 
         public string OptionText { get; set; }
 
-        public ChangeHotkeyCommand? ChangeHotkeyCommand { get; init; }
-
-        public ICommand? ExecuteCommand { get; init; }
-
-
+       
         public ICommand OpenOptionsWindowCommand { get; init; }
 
         #region User inputted properties
@@ -66,15 +48,16 @@ namespace HCM3.ViewModels
             win.DataContext = this;
             win.ShowDialog();
         }
-
         public LaunchViewModel()
         {
+            if (!IsInDesignModeStatic) throw new Exception("This should only be run in design mode");
+
             //parameterless constructor for design view
             this.EffectText = "Effect";
             this.HotkeyText = "Hotkey";
         }
 
-        public LaunchViewModel(string hotkeyText, string effectText, TrainerServices? trainerServices) 
+        public LaunchViewModel(string effectText, TrainerServices? trainerServices, HotkeyManager? hotkeyManager) 
         {
             //load default values from settings
             this.LaunchSpeed = Properties.Settings.Default.LaunchSpeed;
@@ -83,10 +66,34 @@ namespace HCM3.ViewModels
             this.TrainerServices = trainerServices;
             
             this.EffectText = "Launch";
-            this.HotkeyText = hotkeyText;
-            this.ChangeHotkeyCommand = new(this);
+ 
             this.OpenOptionsWindowCommand = new RelayCommand(o => { OpenOptionsWindow(); }, o => true);
             this.ExecuteCommand = new RelayCommand(o => { ExecuteLaunch(); }, o => true);
+
+            this.NameOfBinding = effectText.Replace(" ", "");
+
+
+            HotkeyManager = hotkeyManager;
+            this.OpenHotkeyWindowCommand = new RelayCommand(o => { OpenHotkeyWindow(); }, o => { return true; });
+
+
+            // Load from deserialised bindings
+            if (HotkeyManager.RegisteredKBbindings.ContainsKey(NameOfBinding))
+            {
+                Tuple<int?, Action?> KBbinding = HotkeyManager.RegisteredKBbindings[NameOfBinding];
+                HotkeyManager.KB_InitHotkey(NameOfBinding, KBbinding.Item1, OnHotkeyPress);
+                this.KBhotkey = KBbinding.Item1;
+            }
+
+            if (HotkeyManager.RegisteredGPbindings.ContainsKey(NameOfBinding))
+            {
+                Tuple<XInputButton?, Action?> GPbinding = HotkeyManager.RegisteredGPbindings[NameOfBinding];
+                HotkeyManager.GP_InitHotkey(NameOfBinding, GPbinding.Item1, OnHotkeyPress);
+                this.GPhotkey = GPbinding.Item1;
+            }
+
+
+            SetHotkeyText();
 
         }
 
@@ -107,9 +114,6 @@ namespace HCM3.ViewModels
             }
         }
 
-        public void OnHotkeyPress()
-        {
-            ExecuteLaunch();
-        }
+
     }
 }

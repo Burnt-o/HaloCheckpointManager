@@ -7,54 +7,67 @@ using HCM3.ViewModels.MVVM;
 using System.Windows.Input;
 using HCM3.ViewModels.Commands;
 
+using System.Diagnostics;
+using HCM3.Services;
+using XInputium.XInput;
+
+
 namespace HCM3.ViewModels
 {
-    public class GenericActionViewModel : Presenter, IControlWithHotkey
+    public class GenericActionViewModel : ActionToggleBase
     {
-
-        private string _hotkeyText;
-        public string HotkeyText
-        {
-            get { return _hotkeyText; }
-            set
-            {
-                _hotkeyText = value;
-                OnPropertyChanged(nameof(HotkeyText));
-            }
-        }
-        public string EffectText { get; set; }
-
-        public ChangeHotkeyCommand? ChangeHotkeyCommand { get; init; }
-
-        public ICommand? ExecuteCommand { get; init; }
-        public ICommand OpenOptionsWindowCommand { get; init; }
-
-        //public bool IsEnabled { get; set; } //only used by toggle controls
-
-
 
         public GenericActionViewModel()
         {
+            if (!IsInDesignModeStatic) throw new Exception("This should only be run in design mode");
+
             //parameterless constructor for design view
             this.EffectText = "Effect";
             this.HotkeyText = "Hotkey";
         }
 
-        public GenericActionViewModel(string hotkeyText, string effectText, ICommand? executeCommand) 
+        public GenericActionViewModel(string effectText, ICommand? executeCommand, HotkeyManager? hotkeyManager)
         {
             this.EffectText = effectText;
-            this.HotkeyText = hotkeyText;
             this.ExecuteCommand = executeCommand;
-            this.ChangeHotkeyCommand = new(this);
-            //this.IsEnabled = false;
+            this.NameOfBinding = effectText.Replace(" ", "");
+
+
+            if (hotkeyManager == null)
+            {
+                this.HotkeyText = "N/A";
+                return;
+            }
+
+
+            HotkeyManager = hotkeyManager;
+            this.OpenHotkeyWindowCommand = new RelayCommand(o => { OpenHotkeyWindow(); }, o => { return true; });
+
+
+            // Load from deserialised bindings
+            if (HotkeyManager.RegisteredKBbindings.ContainsKey(NameOfBinding))
+            {
+                Tuple<int?, Action?> KBbinding = HotkeyManager.RegisteredKBbindings[NameOfBinding];
+                HotkeyManager.KB_InitHotkey(NameOfBinding, KBbinding.Item1, OnHotkeyPress);
+                this.KBhotkey = KBbinding.Item1;
+            }
+
+            if (HotkeyManager.RegisteredGPbindings.ContainsKey(NameOfBinding))
+            {
+                Tuple<XInputButton?, Action?> GPbinding = HotkeyManager.RegisteredGPbindings[NameOfBinding];
+                HotkeyManager.GP_InitHotkey(NameOfBinding, GPbinding.Item1, OnHotkeyPress);
+                this.GPhotkey = GPbinding.Item1;
+            }
+
+
+            SetHotkeyText();
         }
 
-        public void OnHotkeyPress()
-        {
-            if (ExecuteCommand != null && ExecuteCommand.CanExecute(null))
-            {
-                ExecuteCommand.Execute(null);
-            }
-        }
+
+
+
+
+
+
     }
 }

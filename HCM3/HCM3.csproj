@@ -203,6 +203,8 @@
     <PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="NonInvasiveKeyboardHookLibrary.Fork" Version="2.1.3" />
+    <PackageReference Include="XInputium" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -404,10 +406,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\LaunchOptionsView.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\ChangeHotkeyView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\InjectOptionsView.xaml.cs">
+    <Compile Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\LaunchOptionsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Controls\Trainer\ButtonViews\GenericActionWithOptionView.xaml.cs">
@@ -457,11 +459,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\LaunchOptionsView.xaml">
+    <Page Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\ChangeHotkeyView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\InjectOptionsView.xaml">
+    <Page Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\LaunchOptionsView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

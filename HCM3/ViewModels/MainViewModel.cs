@@ -12,19 +12,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Diagnostics;
 using HCM3.Services;
+using NonInvasiveKeyboardHookLibrary;
 
 namespace HCM3.ViewModels
 {
     internal sealed class MainViewModel : Presenter
     {
-        private int _selectedTabIndex; 
-        public int SelectedTabIndex 
+        private int _selectedTabIndex;
+        public int SelectedTabIndex
         {
             get { return _selectedTabIndex; }
-            set 
-            { 
-            _selectedTabIndex = value;
-            OnPropertyChanged(nameof(SelectedTabIndex));
+            set
+            {
+                _selectedTabIndex = value;
+                OnPropertyChanged(nameof(SelectedTabIndex));
             }
         }
 
@@ -37,6 +38,7 @@ namespace HCM3.ViewModels
 
         public HaloMemoryService HaloMemoryService { get; init; }
 
+        public KeyboardHookManager KeyboardHookManager { get; init; }
 
 
 
@@ -59,6 +61,16 @@ namespace HCM3.ViewModels
 
             // Load in selected tab to what it was when HCM closed last
             SelectedTabIndex = Properties.Settings.Default.LastSelectedTab;
+
+            KeyboardHookManager = new ();
+            KeyboardHookManager.Start();
+
+            // Register virtual key code 0x60 = NumPad0
+            KeyboardHookManager.RegisterHotkey(0x60, () =>
+            {
+                Trace.WriteLine("NumPad0 detected");
+            });
+
 
         }
 

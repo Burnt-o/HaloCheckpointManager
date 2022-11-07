@@ -81,6 +81,9 @@ namespace HCM3.ViewModels
             {
                 throw new Exception("Use only for design mode");
             }
+
+
+
         }
 
 
@@ -145,7 +148,13 @@ namespace HCM3.ViewModels
                 if (this.RootSaveFolder != null)
                 {
                     bool ableToSetLastFolder = false; // a flag that can be set in foreach loop and used for root folder fallback if not set
-                string? lastSelectedFolder = Properties.Settings.Default.LastSelectedFolder?[SelectedGame];
+
+                string? lastSelectedFolder = null;
+                if (Properties.Settings.Default.LastSelectedFolder != null && Properties.Settings.Default.LastSelectedFolder.Count > SelectedGame && SelectedGame >= 0)
+                {
+                    lastSelectedFolder = Properties.Settings.Default.LastSelectedFolder?[SelectedGame];
+                }
+                    
                 if (lastSelectedFolder != null)
                     {
                         IEnumerable<SaveFolder> flattenedTree = FlattenTree(this.RootSaveFolder);
@@ -249,6 +258,13 @@ namespace HCM3.ViewModels
         {
             get { return _renameCheckpoint ?? (_renameCheckpoint = new RenameCheckpointCommand(this, CheckpointServices)); }
             set { _renameCheckpoint = value; }
+        }
+
+        private ICommand _openInExplorer;
+        public ICommand OpenInExplorer
+        {
+            get { return _openInExplorer ?? (_openInExplorer = new OpenInExplorerCommand(this, CheckpointServices)); }
+            set { _openInExplorer = value; }
         }
 
 

@@ -40,11 +40,15 @@ namespace HCM3.Services
 
         private DataPointersService DataPointersService { get; init; }
         private HaloMemoryService HaloMemoryService { get; init; } //self ref? 
-        public HaloState(DataPointersService dataPointersService, HaloMemoryService haloMemoryService)
+
+        private HotkeyManager HotkeyManager { get; init; }
+        public HaloState(DataPointersService dataPointersService, HaloMemoryService haloMemoryService, HotkeyManager hotkeyManager)
         {
             var servicecollection = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
+            this.HotkeyManager = hotkeyManager;
+
             _currentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
 
 
@@ -56,6 +60,17 @@ namespace HCM3.Services
             UpdateCurrentHaloStateTimer.Elapsed += new System.Timers.ElapsedEventHandler(this.UpdateHaloState);
             UpdateCurrentHaloStateTimer.Interval = 1000;
             UpdateCurrentHaloStateTimer.Enabled = true;
+
+            //setup gamepad input reader
+            gamepadUpdateTimer.Elapsed += GamepadUpdateTimer_Elapsed;
+            gamepadUpdateTimer.Interval = 30;
+            gamepadUpdateTimer.Enabled = false;
+
+        }
+
+        private void GamepadUpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            this.HotkeyManager.gamepad.Update();
         }
 
         // Timer that will periodically update CurrentHaloState
@@ -65,6 +80,9 @@ namespace HCM3.Services
             get { return _updateCurrentHaloStateTimer; }
         }
 
+        private static readonly System.Timers.Timer gamepadUpdateTimer = new System.Timers.Timer();
+
+
         private void HaloStateEvents_DEATTACH_EVENT(object? sender, EventArgs e)
         {
             MCCType = null;
@@ -72,6 +90,7 @@ namespace HCM3.Services
             Trace.WriteLine("MainModel detected BurntMemory DEtach; Set current MCC version to null");
             UpdateHaloState();
             this.HaloMemoryService.HaloState.TryToAttachTimer.Enabled = true;
+            gamepadUpdateTimer.Enabled = false;
 
         }
 
@@ -131,7 +150,7 @@ namespace HCM3.Services
             }
             LoadModulePointers();
             UpdateHaloState();
-
+            gamepadUpdateTimer.Enabled = true;
 
         }
 

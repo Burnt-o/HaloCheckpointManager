@@ -17,7 +17,7 @@
             <ColumnDefinition Width="*"/>
 
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0" Command="{Binding Path=ChangeHotkeyCommand}"/>
+        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0" Command="{Binding Path=OpenHotkeyWindowCommand}"/>
         <Label Grid.Column="1" Content="{Binding Path=HotkeyText}" Padding="0,11,0,0"/>
         <Button Grid.Column="2" Margin="3,10,3,10" Content="Do" Padding="0,0,0,0" Command="{Binding Path=ExecuteCommand}"/>
         <Label Grid.Column="3" Content="{Binding Path=EffectText}" Padding="0,11,0,0"/>

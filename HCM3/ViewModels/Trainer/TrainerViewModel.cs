@@ -15,8 +15,8 @@ namespace HCM3.ViewModels
     internal class TrainerViewModel : Presenter
     {
 
-        public InjectViewModel Button_InjectCheckpoint { get; set; }
-        public DumpViewModel Button_DumpCheckpoint { get; set; }
+        public GenericActionViewModel Button_InjectCheckpoint { get; set; }
+        public GenericActionViewModel Button_DumpCheckpoint { get; set; }
         public GenericActionViewModel Button_ForceCheckpoint { get; set; }
         public GenericActionViewModel Button_ForceRevert { get; set; }
 
@@ -65,26 +65,26 @@ namespace HCM3.ViewModels
         [Obsolete]
         public TrainerViewModel()
         {
-            this.Button_InjectCheckpoint = new InjectViewModel("none", "Inject Checkpoint", null);
-            this.Button_DumpCheckpoint = new DumpViewModel("none", "Dump Checkpoint", null);
+            this.Button_InjectCheckpoint = new GenericActionViewModel("Inject Checkpoint", null, null);
+            this.Button_DumpCheckpoint = new GenericActionViewModel("Dump Checkpoint", null, null);
 
-            this.Button_ForceCheckpoint = new GenericActionViewModel("none", "Force Checkpoint", null);
-            this.Button_ForceRevert = new GenericActionViewModel("none", "Force Revert", null);
-            this.Button_ForceDoubleRevert = new GenericActionViewModel("none", "Force Double Revert", null);
-            this.Button_ForceCoreSave = new GenericActionViewModel("none", "Force Core save", null);
-            this.Button_ForceCoreLoad = new GenericActionViewModel("none", "Force Core load", null);
-            this.Button_Teleport = new TeleportViewModel("none", "Teleport", null);
-            this.Button_Launch = new LaunchViewModel("none", "Launch", null);
-            this.Button_ToggleInvuln = new GenericToggleViewModel("none", "Invulnerability", null);
-            this.Button_ToggleSpeedhack = new SpeedhackViewModel("none", "Speedhack", null);
-            this.Button_ToggleMedusa = new GenericToggleViewModel("none", "Cheat Medusa", null);
-            this.Button_ToggleBool = new GenericToggleViewModel("none", "BOOL practice mode", null);
-            this.Button_ToggleAcro = new GenericToggleViewModel("none", "Acrophobia", null);
-            this.Button_ToggleNaturals = new GenericToggleViewModel("none", "Block Natural CPs", null);
-            this.Button_ToggleInfo = new GenericToggleViewModel("none", "Display Info", null);
-            this.Button_TogglePanCam = new GenericToggleViewModel("none", "PanCam", null);
-            this.Button_ToggleFlyHack = new GenericToggleViewModel("none", "Fly Hack", null);
-            this.Button_ToggleSprintMeter = new GenericToggleViewModel("none", "Sprint Meter", null);
+            this.Button_ForceCheckpoint = new GenericActionViewModel("Force Checkpoint", null, null);
+            this.Button_ForceRevert = new GenericActionViewModel("Force Revert", null, null);
+            this.Button_ForceDoubleRevert = new GenericActionViewModel("Force Double Revert", null, null);
+            this.Button_ForceCoreSave = new GenericActionViewModel("Force Core save", null, null);
+            this.Button_ForceCoreLoad = new GenericActionViewModel("Force Core load", null, null);
+            this.Button_Teleport = new TeleportViewModel("Teleport", null, null);
+            this.Button_Launch = new LaunchViewModel("Launch", null, null);
+            this.Button_ToggleInvuln = new GenericToggleViewModel("Invulnerability", null, null);
+            this.Button_ToggleSpeedhack = new SpeedhackViewModel("Speedhack", null, null);
+            this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", null, null);
+            this.Button_ToggleBool = new GenericToggleViewModel("BOOL practice mode", null, null);
+            this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", null, null);
+            this.Button_ToggleNaturals = new GenericToggleViewModel("Block Natural CPs", null, null);
+            this.Button_ToggleInfo = new GenericToggleViewModel("Display Info", null, null);
+            this.Button_TogglePanCam = new GenericToggleViewModel("PanCam", null, null);
+            this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
+            this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
         }
 
         private void HaloStateEvents_HALOSTATECHANGED_EVENT(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
@@ -96,7 +96,7 @@ namespace HCM3.ViewModels
                 this.UserControlToShow = gameAs2Letters;
         }
 
-        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager, CheckpointViewModel checkpointViewModel)
+        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager, CheckpointViewModel checkpointViewModel, HotkeyManager hotkeyManager)
         {
 
 
@@ -104,48 +104,75 @@ namespace HCM3.ViewModels
             this.PersistentCheatManager = persistentCheatManager;
             SelectedGame = 0;
 
-            this.Button_InjectCheckpoint = new InjectViewModel("none", "Inject Checkpoint", checkpointViewModel);
-            this.Button_DumpCheckpoint = new DumpViewModel("none", "Dump Checkpoint", checkpointViewModel);
-
-            this.Button_ForceCheckpoint = new GenericActionViewModel("none", "Force Checkpoint", 
-                new RelayCommand(o => { TrainerServices.ForceCheckpoint(); }, o => true));
-            this.Button_ForceRevert = new GenericActionViewModel("none", "Force Revert",
-    new RelayCommand(o => { TrainerServices.ForceRevert(); }, o => true));
-
-            this.Button_ForceCoreSave = new GenericActionViewModel("none", "Force Core save",
-new RelayCommand(o => { TrainerServices.ForceCoreSave(); }, o => true));
 
 
-            this.Button_ForceCoreLoad = new GenericActionViewModel("none", "Force Core load",
-new RelayCommand(o => { TrainerServices.ForceCoreLoad(); }, o => true));
+            this.Button_InjectCheckpoint = new GenericActionViewModel(
+                "Inject",
+                checkpointViewModel.Inject,
+                hotkeyManager
+                );
 
-            this.Button_ForceDoubleRevert = new GenericActionViewModel("none", "Force Double Revert",
-new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.ForceRevert(); }, o => true));
+            this.Button_DumpCheckpoint = new GenericActionViewModel(
+    "Dump",
+    checkpointViewModel.Dump,
+    hotkeyManager
+    );
 
-/*            this.Button_Teleport = new ActionControlViewModel("none", "Teleport",
-new RelayCommand(o => { TrainerServices.TeleportForward(5, false); }, o => true));*/
+            this.Button_ForceCheckpoint = new GenericActionViewModel(
+                "Force Checkpoint", 
+                new RelayCommand(o => { TrainerServices.ForceCheckpoint(); }, o => true),
+                hotkeyManager
+                );
 
-            this.Button_Teleport = new TeleportViewModel("none", "Teleport", trainerServices);
+            this.Button_ForceRevert = new GenericActionViewModel(
+                "Force Revert",
+    new RelayCommand(o => { TrainerServices.ForceRevert(); }, o => true),
+                    hotkeyManager
+    );
 
-            this.Button_Launch = new LaunchViewModel("none", "Launch", trainerServices);
+            this.Button_ForceCoreSave = new GenericActionViewModel(
+                "Force Core save",
+new RelayCommand(o => { TrainerServices.ForceCoreSave(); }, o => true),
+                hotkeyManager
+);
+
+
+            this.Button_ForceCoreLoad = new GenericActionViewModel( 
+                "Force Core load",
+new RelayCommand(o => { TrainerServices.ForceCoreLoad(); }, o => true),
+                hotkeyManager
+);
+
+            this.Button_ForceDoubleRevert = new GenericActionViewModel(
+                "Force Double Revert",
+new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.ForceRevert(); }, o => true),
+                hotkeyManager
+);
+
+
+
+            this.Button_Teleport = new TeleportViewModel("Teleport", trainerServices, hotkeyManager);
+
+            this.Button_Launch = new LaunchViewModel("Launch", trainerServices, hotkeyManager);
 
 
 
 
 
-            this.Button_ToggleInvuln = new GenericToggleViewModel("none", "Invulnerability", PersistentCheatManager.PC_Invulnerability);
-            this.Button_ToggleSpeedhack = new SpeedhackViewModel("none", "Speedhack", PersistentCheatManager.PC_Speedhack);
-            this.Button_ToggleNaturals = new GenericToggleViewModel("none", "Block Natural CPs", PersistentCheatManager.PC_BlockCPs);
-            this.Button_ToggleMedusa = new GenericToggleViewModel("none", "Cheat Medusa", null);
-            this.Button_ToggleBool = new GenericToggleViewModel("none", "BOOL practice mode", null);
-            this.Button_TogglePanCam = new GenericToggleViewModel("none", "PanCam", null);
-            this.Button_ToggleAcro = new GenericToggleViewModel("none", "Acrophobia", null);
+            this.Button_ToggleInvuln = new GenericToggleViewModel("Invulnerability", PersistentCheatManager.PC_Invulnerability, hotkeyManager);
+            this.Button_ToggleSpeedhack = new SpeedhackViewModel("Speedhack", PersistentCheatManager.PC_Speedhack, hotkeyManager);
+            this.Button_ToggleNaturals = new GenericToggleViewModel("Block Natural CPs", PersistentCheatManager.PC_BlockCPs, hotkeyManager);
+         this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", null, null);
+            this.Button_ToggleBool = new GenericToggleViewModel("BOOL practice mode", null, null);
+            this.Button_TogglePanCam = new GenericToggleViewModel("PanCam", null, null);
+            this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", null, null);
             
-            this.Button_ToggleInfo = new GenericToggleViewModel("none", "Display Info", null);
-            this.Button_ToggleFlyHack = new GenericToggleViewModel("none", "Fly Hack", null);
-            this.Button_ToggleSprintMeter = new GenericToggleViewModel("none", "Sprint Meter", null);
+            this.Button_ToggleInfo = new GenericToggleViewModel("Display Info", null, null);
+            this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
+            this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
             UserControlToShow = "LD";
             HaloStateEvents.HALOSTATECHANGED_EVENT += HaloStateEvents_HALOSTATECHANGED_EVENT;
+            hotkeyManager.KB_ReloadHotkeys();
         }
     }
 

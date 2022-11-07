@@ -18,7 +18,7 @@
             <ColumnDefinition Width="*"/>
 
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0"  Command="{Binding Path=ChangeHotkeyCommand}"/>
+        <Button Grid.Column="0" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0"  Command="{Binding Path=OpenHotkeyWindowCommand}"/>
         <Label Grid.Column="1" Content="{Binding Path=HotkeyText}" Padding="0,11,0,0"/>
         <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding Path=ExecuteCommand}"  helpers:ToggleButtonEx.IsChecked="{Binding Path=PersistentCheatService.IsChecked, Mode=OneWay}"/>
         <Label Grid.Column="3" Content="{Binding Path=EffectText}" Padding="0,11,0,0"/>

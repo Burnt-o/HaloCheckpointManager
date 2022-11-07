@@ -8,7 +8,10 @@ namespace HCM3.Startup
 {
     public class Shutdown
     {
-
+        public Shutdown()
+        {
+            Properties.Settings.Default.Save();
+        }
 
     }
 }

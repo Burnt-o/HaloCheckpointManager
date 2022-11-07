@@ -78,14 +78,13 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <!--<Button Grid.Column="0" Content="Dump" Width="50" Margin="20,-3,1,1" Command="{Binding Dump}"/>
+            <Button Grid.Column="0" Content="Delete" Width="50"  Command="{Binding DeleteCheckpoint}"/>
+            <Button Grid.Column="1" Content="Explore" Width="50"   Command="{Binding OpenInExplorer}"/>
 
-            <Button Grid.Column="1" Content="Inject" Width="50" Margin="1,-3,20,1" Command="{Binding Inject}"/>-->
-            <Button Grid.Column="1" Content="Delete" Width="50" Margin="20,-3,1,1" Command="{Binding DeleteCheckpoint}"/>
-
-            <Button Grid.Column="0" Content="Rename" Width="50" Margin="1,-3,20,1" Command="{Binding RenameCheckpoint}"/>
+            <Button Grid.Column="2" Content="Rename" Width="50" Command="{Binding RenameCheckpoint}"/>
             
         </Grid>
     </Grid>

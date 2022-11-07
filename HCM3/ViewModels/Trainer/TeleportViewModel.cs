@@ -10,36 +10,17 @@ using HCM3.Services.Trainer;
 using System.Windows;
 using HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions;
 using System.Diagnostics;
+using HCM3.Services;
+using XInputium.XInput;
 
 namespace HCM3.ViewModels
 {
-    public class TeleportViewModel : Presenter, IControlWithHotkey
+    public class TeleportViewModel : ActionToggleBase
     {
-
-        private string _hotkeyText;
-        public string HotkeyText
-        {
-            get { return _hotkeyText; }
-            set
-            {
-                _hotkeyText = value;
-                OnPropertyChanged(nameof(HotkeyText));
-            }
-        }
-
-        private string _effectText;
-        public string EffectText
-        { 
-        get { return _effectText; }
-            set { _effectText = value; OnPropertyChanged(nameof(EffectText)); }
-        }
 
         public string OptionText { get; set; }
 
-        public ChangeHotkeyCommand? ChangeHotkeyCommand { get; init; }
-
-        public ICommand? ExecuteCommand { get; init; }
-
+       
         public ICommand? FillPositionCommand { get; init; }
 
         public ICommand OpenOptionsWindowCommand { get; init; }
@@ -123,12 +104,14 @@ namespace HCM3.ViewModels
 
         public TeleportViewModel()
         {
+            if (!IsInDesignModeStatic) throw new Exception("This should only be run in design mode");
+
             //parameterless constructor for design view
             this.EffectText = "Effect";
             this.HotkeyText = "Hotkey";
         }
 
-        public TeleportViewModel(string hotkeyText, string effectText, TrainerServices? trainerServices) 
+        public TeleportViewModel(string effectText, TrainerServices? trainerServices, HotkeyManager? hotkeyManager)
         {
             //load default values from settings
             this.TeleportModeForward = Properties.Settings.Default.TeleportModeForward;
@@ -141,17 +124,41 @@ namespace HCM3.ViewModels
             this.TrainerServices = trainerServices;
             
             this.EffectText = TeleportModeForward ? "Tele Forward" : "Tele Position";
-            this.HotkeyText = hotkeyText;
-            this.ChangeHotkeyCommand = new(this);
+
+
             this.OpenOptionsWindowCommand = new RelayCommand(o => { OpenOptionsWindow(); }, o => true);
             this.ExecuteCommand = new RelayCommand(o => { ExecuteTeleport(); }, o => true);
-            //this.IsEnabled = false;
 
             this.FillPositionCommand = new RelayCommand(o => {
                 FillPosition();
             }, o => true);
 
             this.PropertyChanged += TeleportViewModel_PropertyChanged;
+
+            this.NameOfBinding = effectText.Replace(" ", "");
+
+
+            HotkeyManager = hotkeyManager;
+            this.OpenHotkeyWindowCommand = new RelayCommand(o => { OpenHotkeyWindow(); }, o => { return true; });
+
+
+            // Load from deserialised bindings
+            if (HotkeyManager.RegisteredKBbindings.ContainsKey(NameOfBinding))
+            {
+                Tuple<int?, Action?> KBbinding = HotkeyManager.RegisteredKBbindings[NameOfBinding];
+                HotkeyManager.KB_InitHotkey(NameOfBinding, KBbinding.Item1, OnHotkeyPress);
+                this.KBhotkey = KBbinding.Item1;
+            }
+
+            if (HotkeyManager.RegisteredGPbindings.ContainsKey(NameOfBinding))
+            {
+                Tuple<XInputButton?, Action?> GPbinding = HotkeyManager.RegisteredGPbindings[NameOfBinding];
+                HotkeyManager.GP_InitHotkey(NameOfBinding, GPbinding.Item1, OnHotkeyPress);
+                this.GPhotkey = GPbinding.Item1;
+            }
+
+
+            SetHotkeyText();
         }
 
         private void FillPosition()
@@ -198,9 +205,6 @@ namespace HCM3.ViewModels
             }
         }
 
-        public void OnHotkeyPress()
-        {
-            ExecuteTeleport();
-        }
+
     }
 }

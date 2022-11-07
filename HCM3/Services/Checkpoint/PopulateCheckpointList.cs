@@ -22,7 +22,7 @@ namespace HCM3.Services
 
 
                 string? saveFolderPath = SelectedSaveFolder?.SaveFolderPath;
-            if (saveFolderPath == null)
+            if (saveFolderPath == null && SelectedGame >= 0)
             { 
                 // Set it to root folder
             saveFolderPath = @"Saves\" + Dictionaries.GameToRootFolderPath[SelectedGame];

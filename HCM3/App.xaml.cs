@@ -15,6 +15,8 @@ using System.Diagnostics;
 using HCM3.Services;
 using HCM3.Services.Trainer;
 using HCM3.ViewModels.Commands;
+using NonInvasiveKeyboardHookLibrary;
+
 
 namespace HCM3
 {
@@ -67,6 +69,7 @@ namespace HCM3
             services.AddSingleton<PC_Invulnerability>();
             services.AddSingleton<PC_Speedhack>();
             services.AddSingleton<PC_BlockCPs>();
+            services.AddSingleton<HotkeyManager>();
         }
 
         //might have to remove sender parameter here
@@ -110,7 +113,11 @@ namespace HCM3
 
 
 
-          
+
+
+
+
+
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
             mainWindow.Show();

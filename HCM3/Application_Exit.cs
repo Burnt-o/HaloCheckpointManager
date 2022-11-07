@@ -20,6 +20,11 @@ namespace HCM3
 
             var TrainerServices = _serviceProvider.GetService<TrainerServices>();
             TrainerServices.RemoveAllPatches();
+
+            var HotkeyManager = _serviceProvider.GetService<HotkeyManager>();
+            HotkeyManager.SerializeBindings();
+
+
         }
     }
 }

@@ -34,7 +34,7 @@ namespace HCM3.Models
         public DateTime? ModifiedOn { get; set; } // Used for sorting checkpoints
 
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+       
 
         public Checkpoint(string checkpointName, string? levelName, int? difficulty, int? gameTickCount, string? gameVersion, DateTime? createdOn, DateTime? modifiedOn)
         {
@@ -46,7 +46,7 @@ namespace HCM3.Models
             CreatedOn = createdOn;
             ModifiedOn = modifiedOn;
         }
-
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {

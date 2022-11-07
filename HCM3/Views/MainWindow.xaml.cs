@@ -19,7 +19,8 @@ using BurntMemory;
 using System.Collections.ObjectModel;
 using HCM3.ViewModels;
 using HCM3.Models;
-
+using HCM3.Startup;
+using HCM3.Services;
 
 namespace HCM3.Views
 {
@@ -49,10 +50,13 @@ namespace HCM3.Views
         #endregion
         private void Window_Closed(object sender, EventArgs e)
         { 
-            Properties.Settings.Default.Save();
-            //mainModel.HaloMemory.SpeedhackManager.RemoveSpeedHack(sender, e);
-            //mainModel.HaloMemory.DebugManager.GracefullyCloseDebugger(sender, e);
+            Shutdown sd = new Shutdown();
         }
+
+
+
+
+
 
     }
 

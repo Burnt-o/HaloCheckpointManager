@@ -57,6 +57,9 @@ namespace HCM3.ViewModels
             {
                 // Trying to move a SaveFolder relative to another SaveFolder (within the same level).
                 // Only valid if both saveFolders share a parent directory.
+
+
+
                 string? sourceParent = ((SaveFolder?)dropInfo.Data)?.ParentPath;
                 string? targetParent = ((SaveFolder?)dropInfo.TargetItem)?.ParentPath;
 
@@ -64,7 +67,9 @@ namespace HCM3.ViewModels
                 {
                     dropInfo.Effects = DragDropEffects.Move;
                     //TODO: figure out why this wigs out with treeview, unlike the highlight adorner
+                    
                     dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+
                 }
                 else
                 {

@@ -15,9 +15,9 @@ namespace HCM3.Services
         public DebugManager DebugManager;
         public SpeedhackManager SpeedhackManager;
 
-        public HaloMemoryService(DataPointersService dataPointersService)
+        public HaloMemoryService(DataPointersService dataPointersService, HotkeyManager hotkeyManager)
         { 
-        HaloState = new HaloState(dataPointersService, this);
+        HaloState = new HaloState(dataPointersService, this, hotkeyManager);
         ReadWrite = new ReadWrite(HaloState);
         DebugManager = new DebugManager(HaloState, ReadWrite);
         SpeedhackManager = new SpeedhackManager(HaloState, ReadWrite);

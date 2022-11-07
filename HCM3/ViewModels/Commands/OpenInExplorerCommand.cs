@@ -4,33 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using HCM3.Models;
+using HCM3.ViewModels;
 using System.Diagnostics;
+using HCM3.Services;
 
 namespace HCM3.ViewModels.Commands
 {
-    public class ChangeHotkeyCommand : ICommand
+    internal class OpenInExplorerCommand : ICommand
     {
-
-        public ChangeHotkeyCommand(IControlWithHotkey iControlWithHotkey)
+        internal OpenInExplorerCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
         {
-            this.IControlWithHotkey = iControlWithHotkey;
-
+            this.CheckpointViewModel = checkpointViewModel;
+            this.CheckpointServices = checkpointServices;
         }
 
-        private IControlWithHotkey IControlWithHotkey { get; init; }
+        private CheckpointViewModel CheckpointViewModel { get; init; }
+        private CheckpointServices CheckpointServices { get; init; }
         public bool CanExecute(object? parameter)
         {
-            return true;
+            return (CheckpointViewModel.SelectedSaveFolder != null);
         }
 
         public void Execute(object? parameter)
         {
-
-            IControlWithHotkey.HotkeyText = "ya changed";
-            Trace.WriteLine("User commanded ChangeHotkey, parameter: " + parameter?.ToString());
-            Trace.WriteLine("HOTKEY: " + IControlWithHotkey.HotkeyText);
-
-
+            try
+            {
+                CheckpointServices.OpenInExplorer(CheckpointViewModel.SelectedSaveFolder);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Failed to open in explorer! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+            }
 
         }
 
@@ -58,6 +63,5 @@ namespace HCM3.ViewModels.Commands
                 CommandManager.RequerySuggested -= value;
             }
         }
-
     }
 }
