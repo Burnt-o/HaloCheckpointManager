@@ -17,6 +17,8 @@ namespace HCM3.ViewModels
     public class GenericActionViewModel : ActionToggleBase
     {
 
+
+
         public GenericActionViewModel()
         {
             if (!IsInDesignModeStatic) throw new Exception("This should only be run in design mode");
@@ -28,6 +30,7 @@ namespace HCM3.ViewModels
 
         public GenericActionViewModel(string effectText, ICommand? executeCommand, HotkeyManager? hotkeyManager)
         {
+
             this.EffectText = effectText;
             this.ExecuteCommand = executeCommand;
             this.NameOfBinding = effectText.Replace(" ", "");

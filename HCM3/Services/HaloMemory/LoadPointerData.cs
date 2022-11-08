@@ -37,7 +37,7 @@ namespace HCM3.Services
             {
                 // Couldn't grab online data, try offline backup
                 Trace.WriteLine("Couldn't find online xml data, trying local backup");
-                if (File.Exists(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml"))
+                if (localPointerDataPath.Contains(@"mauri\source\repos") && File.Exists(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml"))
                 {
                     Trace.WriteLine("grabbing debug xml from repo");
                     xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml");
@@ -150,6 +150,13 @@ namespace HCM3.Services
                     }
                     returnObject = entryDictionary;
                 break;
+
+                case "List<string>":
+                    string? mergedString = entry.Element("ListString").Value;
+                    if (!mergedString.Any()) throw new Exception("Empty mergedString in list<string>");
+                    List<string> unmerged = mergedString.Split(", ").ToList();
+                    returnObject = unmerged;
+                    break;
 
 
                 default:

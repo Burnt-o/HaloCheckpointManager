@@ -41,7 +41,7 @@ namespace HCM3.ViewModels
 
         public GenericToggleViewModel Button_ToggleSprintMeter { get; set; }
 
-
+        List<ActionToggleBase> listOfButtons { get; set; }
 
         private string _userControlToShow;
         public string UserControlToShow
@@ -60,6 +60,10 @@ namespace HCM3.ViewModels
         public TrainerServices TrainerServices { get; init; }
 
         public PersistentCheatService PersistentCheatManager { get; init; }
+
+        public DataPointersService DataPointersService { get; init; }
+
+        public HaloMemoryService HaloMemoryService { get; init; }
 
         // for design mode
         [Obsolete]
@@ -94,16 +98,34 @@ namespace HCM3.ViewModels
 
 
                 this.UserControlToShow = gameAs2Letters;
+            //update IsEnabled of buttons
+            List<string> buttonsToShow = new List<string>();
+            try
+            {
+                buttonsToShow = (List<string>)this.DataPointersService.GetPointer($"{gameAs2Letters}_BRP", this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
+            }
+            catch { }
+
+            foreach (ActionToggleBase atb in listOfButtons)
+            {
+                if (buttonsToShow == null)
+                {
+                    atb.IsEnabled = false;
+                    continue;
+                }
+                atb.IsEnabled = buttonsToShow.Contains(atb.NameOfBinding);
+            }
         }
 
-        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager, CheckpointViewModel checkpointViewModel, HotkeyManager hotkeyManager)
+        public TrainerViewModel(TrainerServices trainerServices, PersistentCheatService persistentCheatManager, CheckpointViewModel checkpointViewModel, HotkeyManager hotkeyManager, DataPointersService dataPointersService, HaloMemoryService haloMemoryService)
         {
-
-
+            this.HaloMemoryService = haloMemoryService;
+            this.DataPointersService = dataPointersService;
             this.TrainerServices = trainerServices;
             this.PersistentCheatManager = persistentCheatManager;
             SelectedGame = 0;
 
+            listOfButtons = new();
 
 
             this.Button_InjectCheckpoint = new GenericActionViewModel(
@@ -112,11 +134,15 @@ namespace HCM3.ViewModels
                 hotkeyManager
                 );
 
+            listOfButtons.Add(this.Button_InjectCheckpoint);
+
             this.Button_DumpCheckpoint = new GenericActionViewModel(
     "Dump",
     checkpointViewModel.Dump,
     hotkeyManager
     );
+
+            listOfButtons.Add(this.Button_DumpCheckpoint);
 
             this.Button_ForceCheckpoint = new GenericActionViewModel(
                 "Force Checkpoint", 
@@ -124,17 +150,22 @@ namespace HCM3.ViewModels
                 hotkeyManager
                 );
 
+            listOfButtons.Add(this.Button_ForceCheckpoint);
+
             this.Button_ForceRevert = new GenericActionViewModel(
                 "Force Revert",
     new RelayCommand(o => { TrainerServices.ForceRevert(); }, o => true),
                     hotkeyManager
     );
 
+            listOfButtons.Add(this.Button_ForceRevert);
+
             this.Button_ForceCoreSave = new GenericActionViewModel(
                 "Force Core save",
 new RelayCommand(o => { TrainerServices.ForceCoreSave(); }, o => true),
                 hotkeyManager
 );
+            listOfButtons.Add(this.Button_ForceCoreSave);
 
 
             this.Button_ForceCoreLoad = new GenericActionViewModel( 
@@ -143,33 +174,46 @@ new RelayCommand(o => { TrainerServices.ForceCoreLoad(); }, o => true),
                 hotkeyManager
 );
 
+            listOfButtons.Add(this.Button_ForceCoreLoad);
+
             this.Button_ForceDoubleRevert = new GenericActionViewModel(
                 "Force Double Revert",
 new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.ForceRevert(); }, o => true),
                 hotkeyManager
 );
-
+            listOfButtons.Add(this.Button_ForceDoubleRevert);
 
 
             this.Button_Teleport = new TeleportViewModel("Teleport", trainerServices, hotkeyManager);
+            listOfButtons.Add(this.Button_Teleport);
 
             this.Button_Launch = new LaunchViewModel("Launch", trainerServices, hotkeyManager);
-
+            listOfButtons.Add(this.Button_Launch);
 
 
 
 
             this.Button_ToggleInvuln = new GenericToggleViewModel("Invulnerability", PersistentCheatManager.PC_Invulnerability, hotkeyManager);
+            listOfButtons.Add(this.Button_ToggleInvuln);
             this.Button_ToggleSpeedhack = new SpeedhackViewModel("Speedhack", PersistentCheatManager.PC_Speedhack, hotkeyManager);
+            listOfButtons.Add(this.Button_ToggleSpeedhack);
             this.Button_ToggleNaturals = new GenericToggleViewModel("Block Natural CPs", PersistentCheatManager.PC_BlockCPs, hotkeyManager);
+            listOfButtons.Add(this.Button_ToggleNaturals);
          this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", null, null);
+            listOfButtons.Add(this.Button_ToggleMedusa);
             this.Button_ToggleBool = new GenericToggleViewModel("BOOL practice mode", null, null);
+            listOfButtons.Add(this.Button_ToggleBool);
             this.Button_TogglePanCam = new GenericToggleViewModel("PanCam", null, null);
+            listOfButtons.Add(this.Button_TogglePanCam);
             this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", null, null);
-            
+            listOfButtons.Add(this.Button_ToggleAcro);
+
             this.Button_ToggleInfo = new GenericToggleViewModel("Display Info", null, null);
+            listOfButtons.Add(this.Button_ToggleInfo);
             this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
+            listOfButtons.Add(this.Button_ToggleFlyHack);
             this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
+            listOfButtons.Add(this.Button_ToggleSprintMeter );
             UserControlToShow = "LD";
             HaloStateEvents.HALOSTATECHANGED_EVENT += HaloStateEvents_HALOSTATECHANGED_EVENT;
             hotkeyManager.KB_ReloadHotkeys();

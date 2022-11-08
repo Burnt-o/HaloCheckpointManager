@@ -2,11 +2,29 @@
 <Root>
 	<HighestSupportedVersion>1.2969.0.0</HighestSupportedVersion>
 
+	<!--ButtonRequiredPointers-->
+	<Entry Type="List&lt;string&gt;">
+		<Name>H1_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+	</Entry>
+	<Entry Type="List&lt;string&gt;">
+		<Name>H2_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+	</Entry>
+	<Entry Type="List&lt;string&gt;">
+		<Name>MN_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>Speedhack</ListString>
+		</Version>
+	</Entry>
+	<!--/end ButtonRequiredPointers-->
+	<!--Halo 1-->
 
-		<!--Halo 1-->
-
-	
-		<Entry Type="ReadWrite.Pointer">
+	<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ModuleSteam</Name>
 			<Version Version="1.2645.0.0">
 				<Module>main</Module>

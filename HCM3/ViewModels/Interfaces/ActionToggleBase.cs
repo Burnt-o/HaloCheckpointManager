@@ -29,6 +29,8 @@ namespace HCM3.ViewModels.MVVM
         public string EffectText { get; set; }
 
 
+
+
         public ICommand OpenHotkeyWindowCommand { get; init; }
         public ICommand? ExecuteCommand { get; init; }
 
@@ -45,7 +47,12 @@ namespace HCM3.ViewModels.MVVM
 
 
 
-
+        private bool _isEnabled = false;
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set { _isEnabled = value; OnPropertyChanged(nameof(IsEnabled)); }
+        }
 
         public void OpenOptionsWindow(Type OptionsView)
         {
@@ -84,7 +91,7 @@ namespace HCM3.ViewModels.MVVM
 
         public void OnHotkeyPress()
         {
-            if (ExecuteCommand != null && ExecuteCommand.CanExecute(null))
+            if (ExecuteCommand != null && ExecuteCommand.CanExecute(null) && this.IsEnabled)
             {
                 ExecuteCommand.Execute(null);
             }
