@@ -42,12 +42,7 @@ namespace HCM3.ViewModels
 
         TrainerServices TrainerServices { get; init; }
 
-        public void OpenOptionsWindow()
-        {
-            LaunchOptionsView win = new LaunchOptionsView();
-            win.DataContext = this;
-            win.ShowDialog();
-        }
+
         public LaunchViewModel()
         {
             if (!IsInDesignModeStatic) throw new Exception("This should only be run in design mode");
@@ -66,8 +61,8 @@ namespace HCM3.ViewModels
             this.TrainerServices = trainerServices;
             
             this.EffectText = "Launch";
- 
-            this.OpenOptionsWindowCommand = new RelayCommand(o => { OpenOptionsWindow(); }, o => true);
+
+            this.OpenOptionsWindowCommand = new RelayCommand(o => { OpenOptionsWindow(typeof(LaunchOptionsView)); }, o => true);
             this.ExecuteCommand = new RelayCommand(o => { ExecuteLaunch(); }, o => true);
 
             this.NameOfBinding = effectText.Replace(" ", "");

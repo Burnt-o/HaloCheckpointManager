@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using HCM3.ViewModels.MVVM;
+using System.Threading;
+using System.Diagnostics;
 
 namespace HCM3.ViewModels.Commands
 {
@@ -32,11 +34,15 @@ namespace HCM3.ViewModels.Commands
             return this.canExecute == null || this.canExecute(parameter);
         }
 
-        public void Execute(object? parameter)
+        public async void Execute(object? parameter)
         {
+
+            Trace.WriteLine($"Relay Command Thread : {Thread.CurrentThread.ManagedThreadId} Started");
+
             try
             {
-                this.execute(parameter);
+                var task = Task.Factory.StartNew(() => { this.execute(parameter); });
+                await task;
             }
             catch (Exception ex)
             {

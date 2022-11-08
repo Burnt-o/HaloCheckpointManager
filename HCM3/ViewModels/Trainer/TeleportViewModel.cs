@@ -57,6 +57,7 @@ namespace HCM3.ViewModels
             set
             {
                 _teleportLength = value;
+
                 Properties.Settings.Default.TeleportLength = value;
             }
         }
@@ -68,6 +69,7 @@ namespace HCM3.ViewModels
             set
             {
                 _teleportX = value;
+                OnPropertyChanged(nameof(TeleportX));
                 Properties.Settings.Default.TeleportX = value;
             }
         }
@@ -78,6 +80,7 @@ namespace HCM3.ViewModels
             set
             {
                 _teleportY = value;
+                OnPropertyChanged(nameof(TeleportY));
                 Properties.Settings.Default.TeleportY = value;
             }
         }
@@ -88,6 +91,7 @@ namespace HCM3.ViewModels
             set
             {
                 _teleportZ = value;
+                OnPropertyChanged(nameof(TeleportZ));
                 Properties.Settings.Default.TeleportZ = value;
             }
         } 
@@ -95,12 +99,7 @@ namespace HCM3.ViewModels
 
         TrainerServices TrainerServices { get; init; }
 
-        public void OpenOptionsWindow()
-        {
-            TeleportOptionsView win = new TeleportOptionsView();
-            win.DataContext = this;
-            win.ShowDialog();
-        }
+
 
         public TeleportViewModel()
         {
@@ -126,7 +125,7 @@ namespace HCM3.ViewModels
             this.EffectText = TeleportModeForward ? "Tele Forward" : "Tele Position";
 
 
-            this.OpenOptionsWindowCommand = new RelayCommand(o => { OpenOptionsWindow(); }, o => true);
+            this.OpenOptionsWindowCommand = new RelayCommand(o => { OpenOptionsWindow(typeof(TeleportOptionsView)); }, o => true);
             this.ExecuteCommand = new RelayCommand(o => { ExecuteTeleport(); }, o => true);
 
             this.FillPositionCommand = new RelayCommand(o => {

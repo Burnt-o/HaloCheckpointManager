@@ -7,7 +7,7 @@
                      xmlns:cnv="clr-namespace:HCM3.Converters"
                      xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
-        Title="Edit Teleport Options" Height="140" Width="290"
+        Title="Edit Teleport Options" Height="140" Width="294"
 Background="Transparent"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
@@ -18,7 +18,7 @@ Background="Transparent"
 WindowStyle="None"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
-    <Border BorderBrush="Gray" BorderThickness="1" Margin="0" CornerRadius="10" Background="WhiteSmoke">
+    <Border BorderBrush="Gray" BorderThickness="3"  CornerRadius="10" Background="WhiteSmoke">
     <Grid Margin="10" >
         
        

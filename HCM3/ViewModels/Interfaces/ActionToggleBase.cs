@@ -47,26 +47,38 @@ namespace HCM3.ViewModels.MVVM
 
 
 
-
+        public void OpenOptionsWindow(Type OptionsView)
+        {
+            //must occur on UI thread
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                Window win = (Window)Activator.CreateInstance(OptionsView);
+                win.Owner = App.Current.MainWindow; // makes the dialog be centers on the main window
+                win.DataContext = this;
+                win.ShowDialog();
+            });
+        }
 
 
         public void OpenHotkeyWindow()
         {
             HotkeyManager.IgnoreGamepad = true;
-            ChangeHotkeyView chv = new(KBhotkey, GPhotkey, this.HotkeyManager, NameOfBinding);
-            if (chv.ShowDialog().Value)
-            {
-                HotkeyManager.KB_ChangeHotkey(this.NameOfBinding, chv.SelectedKey, OnHotkeyPress);
-                HotkeyManager.GP_ChangeHotkey(this.NameOfBinding, chv.SelectedPad, OnHotkeyPress);
+            
+            //must occur on UI thread
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                ChangeHotkeyView chv = new(KBhotkey, GPhotkey, this.HotkeyManager, NameOfBinding);
+                if (chv.ShowDialog().Value)
+                {
+                    HotkeyManager.KB_ChangeHotkey(this.NameOfBinding, chv.SelectedKey, OnHotkeyPress);
+                    HotkeyManager.GP_ChangeHotkey(this.NameOfBinding, chv.SelectedPad, OnHotkeyPress);
 
-                this.KBhotkey = chv.SelectedKey;
-                this.GPhotkey = chv.SelectedPad;
+                    this.KBhotkey = chv.SelectedKey;
+                    this.GPhotkey = chv.SelectedPad;
 
-                SetHotkeyText();
-            }
-            else
-            {
-            }
+                    SetHotkeyText();
+                }
+            });
+
+  
             HotkeyManager.IgnoreGamepad = false;
         }
 

@@ -7,60 +7,65 @@
                      xmlns:cnv="clr-namespace:HCM3.Converters"
                      xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
-        Title="Edit Teleport Options" Height="130" Width="280"
+        Title="Edit Teleport Options" Height="115" Width="280"
                      d:DataContext="{d:DesignInstance viewModels:LaunchViewModel, IsDesignTimeCreatable=false}"  
         ResizeMode="NoResize"
         ShowInTaskbar="False"
+                WindowStyle="None"
+        Background="Transparent"
+                AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" 
         >
-    <Grid Margin="10">
-        <Grid.Resources>
-            <!-- Default settings for controls -->
-            <Style TargetType="{x:Type Label}">
-                <Setter Property="Margin" Value="0,3,5,5" />
-                <Setter Property="Padding" Value="0,0,0,5" />
-            </Style>
-            <Style TargetType="{x:Type TextBox}">
-                <Setter Property="Margin" Value="0,0,0,5" />
-            </Style>
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="Width" Value="70" />
-                <Setter Property="Height" Value="25" />
-                <Setter Property="Margin" Value="5,0,0,0" />
-            </Style>
-            <cnv:StringToFloatConverter x:Key="StringToFloat" />
-            <cnv:InverseBooleanConverter x:Key="InverseBoolean" />
-        </Grid.Resources>
-        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="50" />
-            <ColumnDefinition Width="80" />
-        </Grid.ColumnDefinitions>
+    <Border BorderBrush="Gray" BorderThickness="3" Margin="0" CornerRadius="10" Background="WhiteSmoke">
+        <Grid Margin="10">
+            <Grid.Resources>
+                <!-- Default settings for controls -->
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="Margin" Value="0,3,5,5" />
+                    <Setter Property="Padding" Value="0,0,0,5" />
+                </Style>
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="Margin" Value="0,0,0,5" />
+                </Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Width" Value="70" />
+                    <Setter Property="Height" Value="25" />
+                    <Setter Property="Margin" Value="5,0,0,0" />
+                </Style>
+                <cnv:StringToFloatConverter x:Key="StringToFloat" />
+                <cnv:InverseBooleanConverter x:Key="InverseBoolean" />
+            </Grid.Resources>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="80" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
 
+            <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Left"  >Edit Launch Options:</Label>
 
+            <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right"  >Launch Speed:</Label>
+            <TextBox x:Name="launchSpeed" Grid.Column="1" Grid.Row="1" Width="80" Text="{Binding LaunchSpeed, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
+            <!-- Accept or Cancel -->
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="okButton" Click="okButton_Click" IsDefault="True">Apply</Button>
+                <Button Name="cancelButton" IsCancel="True">Cancel</Button>
+            </StackPanel>
 
-        <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right"  >Launch Speed:</Label>
-        <TextBox x:Name="launchSpeed" Grid.Column="1" Grid.Row="1" Width="80" Text="{Binding LaunchSpeed, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
-        <!-- Accept or Cancel -->
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Name="okButton" Click="okButton_Click" IsDefault="True">Apply</Button>
-            <Button Name="cancelButton" IsCancel="True">Cancel</Button>
-        </StackPanel>
-        
-    </Grid>
+        </Grid>
+    </Border>
 </Window>
