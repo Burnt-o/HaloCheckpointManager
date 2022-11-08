@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using HCM3.Services;
 using XInputium.XInput;
+using System.Windows.Threading;
 
 namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
 {
@@ -75,8 +76,10 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             this.SelectedKey = currentKBhotkey;
             this.SelectedPad = currentGPhotkey;
             this.SelectedKeyText = currentKBhotkey != null ? KeyInterop.KeyFromVirtualKey(this.SelectedKey.Value).ToString() : null;
-            this.SelectedPadText = currentGPhotkey != null ? currentGPhotkey.ToString() : null;
+            this.SelectedPadText = currentGPhotkey != null ? "[" + currentGPhotkey.ToString() + "]": null;
             this.NameOfBinding = "Edit hotkeys for " + nameOfBinding;
+
+
 
             InitializeComponent();
 
@@ -84,11 +87,19 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             HotkeyManager.gamepad.ButtonPressed += Gamepad_ButtonPressed;
         }
 
+
         private void Gamepad_ButtonPressed(object? sender, XInputium.DigitalButtonEventArgs<XInputium.XInput.XInputButton> e)
         {
-            if (e.Button.Duration > TimeSpan.Zero) return;
-            SelectedPad = e.Button;
-            this.SelectedPadText = "[" + SelectedPad.ToString() + "]";
+            //run at high priority to prevent lag
+            Application.Current.Dispatcher.BeginInvoke(
+  DispatcherPriority.Input,
+  new Action(() => {
+
+      SelectedPad = e.Button;
+      this.SelectedPadText = "[" + SelectedPad.ToString() + "]";
+
+  }));
+
 
 
         }
@@ -96,7 +107,7 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
         private void ChangeHotkeyView_KeyUp(object sender, KeyEventArgs e)
         {
             var virtualKeyCode = KeyInterop.VirtualKeyFromKey(e.Key);
-            Trace.WriteLine("READ KEYYYYY: " + virtualKeyCode);
+            //Trace.WriteLine("READ KEYYYYY: " + virtualKeyCode);
             //TODO check for being invalid key
             SelectedKey = virtualKeyCode;
 
@@ -137,5 +148,7 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();
         }
+
+
     }
 }
