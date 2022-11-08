@@ -24,6 +24,7 @@ namespace HCM3.Services.Trainer
 
         public HaloMemoryService HaloMemoryService { get; init; }
 
+        private readonly object InjectInternalLock = new object();
 
         public InternalServices(HaloMemoryService haloMemoryService)
         {
@@ -39,17 +40,20 @@ namespace HCM3.Services.Trainer
 
         public bool InjectInternal()
         {
-            List<string> listOfInternalFunctions = new();
-            listOfInternalFunctions.Add("ChangeDisplayText");
-            listOfInternalFunctions.Add("IsTextDisplaying");
-            listOfInternalFunctions.Add("PrintTemporaryMessage");
-            try
+            lock (InjectInternalLock)
             {
-                SetupInternal(listOfInternalFunctions);
-            }
-            catch (Exception ex)
-            { 
-            Trace.WriteLine ("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.Message);
+                List<string> listOfInternalFunctions = new();
+                listOfInternalFunctions.Add("ChangeDisplayText");
+                listOfInternalFunctions.Add("IsTextDisplaying");
+                listOfInternalFunctions.Add("PrintTemporaryMessage");
+                try
+                {
+                    SetupInternal(listOfInternalFunctions);
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.Message);
+                }
             }
             return this.CheckInternalLoaded();
         }
