@@ -71,7 +71,7 @@ namespace HCM3.Services.Trainer
                 this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(detourHandle), detourCodeBytes, true);
                 Trace.WriteLine("Wrote detour code to allocated: " + detourHandle.ToString("X"));
                 // Then write the hook
-                this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(ogCodeHandle), hookCodeBytes, true);
+               this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(ogCodeHandle), hookCodeBytes, true);
                 // Resume threads
             }
             finally

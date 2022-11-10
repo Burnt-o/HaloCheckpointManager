@@ -20,7 +20,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="11" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="#FFE5E5E5" Grid.ColumnSpan="2"/>
+        <Border Grid.RowSpan="11" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
         <Label Padding="30,10,0,0" Content="Game: No MCC" Grid.Row="0" />
         <TextBlock Margin="0,0,30,0" Padding="30,10,0,0" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2" TextWrapping="Wrap" Text="HCM is currently unable to detect MCC running. Make sure you launch MCC with anticheat disabled.&#x0a;&#x0a;It's possible that you're running a version of MCC that HCM doesn't support - if MCC only just recently got a patch, you may have to wait a few days for Burnt to update HCM."/>
 

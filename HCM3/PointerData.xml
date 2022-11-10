@@ -16,6 +16,12 @@
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
+		<Name>H3_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+	</Entry>
+	<Entry Type="List&lt;string&gt;">
 		<Name>MN_BRP</Name>
 		<Version Version="1.2645.0.0">
 			<ListString>Speedhack</ListString>
@@ -994,6 +1000,94 @@
 
 	</Entry>
 	<!--/end Invuln stuff-->
+
+
+	<Entry Type="DetourInfoObject">
+		<Name>H3_PlayerData_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x342F90</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x 8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x9C4DCC</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_PlayerData_Xpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x160</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_PlayerData_Ypos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x164</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_PlayerData_Zpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x168</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_PlayerData_Xvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1E0</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_PlayerData_Yvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1E4</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_PlayerData_Zvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1E8</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_ViewHori</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00F19E44</Offset>
+				<Offset>0x34C</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_ViewVert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00F19E44</Offset>
+				<Offset>0x350</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
 	<Entry Type="Dictionary&lt;string, bool&gt;">
@@ -1267,12 +1361,12 @@
 			<OriginalCodeLocation>
 				<Module>halo3odst.dll</Module>
 				<Offsets>
-					<Offset>0x34DABE</Offset>
+					<Offset>0x3720CC</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
-			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<OriginalCodeBytes>0x48, 0x8B, 0x04, 0x32, 0x80, 0x78, 0x11, 0x04</OriginalCodeBytes>
 			<SizeToAlloc>30</SizeToAlloc>
-			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 20h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 10h; mov rax, [rdx+rsi]; cmp byte ptr [rax+11h], 04; jmp $returnControl; mov rax, [rdx+rsi]; cmp byte ptr [rax+11h], 04; mov r15, [rbp-80h]; jmp $skipDamage</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
@@ -1280,7 +1374,7 @@
 					<!--Stores the datum of the player entity, for comparison in detour-->
 					<Module>halo3odst.dll</Module>
 					<Offsets>
-						<Offset>0x9C4DCC</Offset>
+						<Offset>0xA1864C</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
@@ -1288,22 +1382,108 @@
 					<!--Stores the datum of the player entity, for comparison in detour-->
 					<Module>halo3odst.dll</Module>
 					<Offsets>
-						<Offset>0x74DC34</Offset>
+						<Offset>0x769450</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
 					<Symbol>$skipDamage</Symbol>
 					<Module>halo3odst.dll</Module>
 					<Offsets>
-						<Offset>0x34DC37</Offset>
+						<Offset>0x372364</Offset>
 					</Offsets>
 				</Pointer>
 
 			</SymbolPointers>
 		</Version>
-
 	</Entry>
 	<!--/end Invuln stuff-->
+
+	<Entry Type="DetourInfoObject">
+		<Name>OD_PlayerData_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3odst.dll</Module>
+				<Offsets>
+					<Offset>0x36708F</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x769450</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_PlayerData_Xpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x160</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_PlayerData_Ypos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x164</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_PlayerData_Zpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x168</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_PlayerData_Xvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1E0</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_PlayerData_Yvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1E4</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_PlayerData_Zvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1E8</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_ViewHori</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00F30214</Offset>
+				<Offset>0x35C</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_ViewVert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00F30214</Offset>
+				<Offset>0x360</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
 	<Entry Type="Dictionary&lt;string, bool&gt;">

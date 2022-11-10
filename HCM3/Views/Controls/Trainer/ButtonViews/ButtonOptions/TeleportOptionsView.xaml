@@ -17,7 +17,7 @@
                 AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" 
         >
-    <Border BorderBrush="Gray" BorderThickness="3" Margin="0" CornerRadius="10" Background="WhiteSmoke">
+    <Border BorderBrush="{DynamicResource Gray}" BorderThickness="3" Margin="0" CornerRadius="10" Background="{DynamicResource WhiteSmoke}">
         <Grid Margin="10">
             <Grid.Resources>
                 <!-- Default settings for controls -->

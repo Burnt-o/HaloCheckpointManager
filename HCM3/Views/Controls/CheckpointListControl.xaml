@@ -12,21 +12,12 @@
              xmlns:dd="urn:gong-wpf-dragdrop"
 
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel, IsDesignTimeCreatable=True}">
-    <Grid>
+    <Grid >
         <Grid.Resources>
             <cnv:DifficultyConverter x:Key="DifficultyConverter" />
             <cnv:IGTConverter x:Key="IGTConverter" />
         
-            <Style TargetType="ListViewItem">
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
-                        <Setter Property="Background" Value="White" />
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
-                        <Setter Property="Background" Value="WhiteSmoke" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
+
             <ContextMenu x:Key="SelectedCheckpointContext"  >
                 <MenuItem Header="Add" />
                 <MenuItem Header="Delete" />
@@ -35,7 +26,7 @@
 
         </Grid.Resources>
 
-        <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" >
+        <ListView AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Background="{DynamicResource VeryLightGray}">
             <ListView.Resources>
                 <ContextMenu x:Key="CheckpointContextMenu">
                     <MenuItem Header="Inject" 
@@ -55,6 +46,15 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}" >
                     <Setter Property="ContextMenu" Value="{StaticResource CheckpointContextMenu}" />
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                            <Setter Property="Background" Value="{DynamicResource WhiteSmoke}" />
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                            <Setter Property="Background" Value="{DynamicResource LightGray}" />
+                        </Trigger>
+
+                    </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
 

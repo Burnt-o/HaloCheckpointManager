@@ -78,10 +78,48 @@ namespace HCM3.Services.Trainer
 
                 IntPtr? detourHandle = this.listOfPatches["H2PlayerData"].PatchHandle;
                 if (detourHandle == null) throw new Exception("Couldn't get detourHandle of H2PlayerData");
-                    IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
+                IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
                 if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t H2PlayerData");
-                    return playerAddy.Value;
-               
+                return playerAddy.Value;
+
+            }
+            else if (gameAs2Letters == "H3")
+            {
+                if (this.listOfPatches["H3PlayerData"].PatchHandle == null || !IsPatchApplied("H3PlayerData"))
+                {
+                    if (IsPatchApplied("H3PlayerData"))
+                    {
+                        RemovePatch("H3PlayerData");
+                    }
+                    ApplyPatch("H3PlayerData");
+                    Thread.Sleep(30);
+                }
+
+                IntPtr? detourHandle = this.listOfPatches["H3PlayerData"].PatchHandle;
+                if (detourHandle == null) throw new Exception("Couldn't get detourHandle of H3PlayerData");
+                IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
+                if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t H3PlayerData");
+                return playerAddy.Value;
+
+            }
+            else if (gameAs2Letters == "OD")
+            {
+                if (this.listOfPatches["ODPlayerData"].PatchHandle == null || !IsPatchApplied("ODPlayerData"))
+                {
+                    if (IsPatchApplied("ODPlayerData"))
+                    {
+                        RemovePatch("ODPlayerData");
+                    }
+                    ApplyPatch("ODPlayerData");
+                    Thread.Sleep(30);
+                }
+
+                IntPtr? detourHandle = this.listOfPatches["ODPlayerData"].PatchHandle;
+                if (detourHandle == null) throw new Exception("Couldn't get detourHandle of ODPlayerData");
+                IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
+                if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t ODPlayerData");
+                return playerAddy.Value;
+
             }
 
             throw new NotImplementedException();

@@ -23,7 +23,9 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
@@ -31,21 +33,23 @@
                 <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="100" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="#FFE5E5E5" Grid.ColumnSpan="2"/>
-        <Border Grid.RowSpan="12" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="LightGray" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
+            <Border Grid.RowSpan="100" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
+            <Border Grid.RowSpan="14" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo 3" Grid.Row="0" />
         <local:TrainerColumnHeader Grid.Row="1" Grid.ColumnSpan="2" />
-        <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}"/>
-        <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" />
-        <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceDoubleRevert}" />
-        <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" IsEnabled="false"/>
-        <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" IsEnabled="false"/>
-        <local:GenericToggleView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}"/>
-        <local:SpeedhackView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}"/>
-        <local:GenericToggleView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="false"/>
-        <local:GenericToggleView Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" />
-        <local:GenericToggleView Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" IsEnabled="false"/>
-            <local:GenericToggleView Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_TogglePanCam}" IsEnabled="false"/>
+            <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_InjectCheckpoint}"/>
+            <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_DumpCheckpoint}"/>
+            <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceDoubleRevert}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericActionWithOptionView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericActionWithOptionView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericToggleView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:SpeedhackView Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericToggleView Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericToggleView Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericToggleView Grid.Row="13" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericToggleView Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_TogglePanCam}" IsEnabled="{Binding Path=IsEnabled}" />
 
     </Grid>
     </ScrollViewer>

@@ -26,7 +26,13 @@ namespace HCM3.ViewModels.MVVM
                 OnPropertyChanged(nameof(HotkeyText));
             }
         }
-        public string EffectText { get; set; }
+
+        private string _effectText;
+        public string EffectText
+        { 
+        get => _effectText;
+            set { _effectText = value; OnPropertyChanged(nameof(EffectText)); }
+        }
 
 
 

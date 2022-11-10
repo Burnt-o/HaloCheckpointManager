@@ -113,8 +113,10 @@ namespace HCM3
 
 
 
+            string appTheme = HCM3.Properties.Settings.Default.Darkmode ? "Dark" : "Light";
+            this.Resources.MergedDictionaries[0].Source = new Uri($"/Themes/{appTheme}.xaml", UriKind.Relative);
 
-
+            //this.Resources.MergedDictionaries[0].Source = new Uri($"/Themes/Dark.xaml", UriKind.Relative);
 
 
 

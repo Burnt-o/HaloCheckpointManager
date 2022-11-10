@@ -21,7 +21,8 @@ namespace HCM3.Services.Trainer
 
 
             listOfPatches.Add("H2PlayerData", new PatchObject("H2", "H2_PlayerData_DetourInfo"));
-
+            listOfPatches.Add("H3PlayerData", new PatchObject("H3", "H3_PlayerData_DetourInfo"));
+            listOfPatches.Add("ODPlayerData", new PatchObject("OD", "OD_PlayerData_DetourInfo"));
 
         }
 

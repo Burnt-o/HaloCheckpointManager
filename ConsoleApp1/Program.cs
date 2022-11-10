@@ -8,7 +8,7 @@ Trace.WriteLine("Hello, World!");
 
 //mov dword ptr [rbp-28]; mov [rsp+74], r10d; mov rax, 00007FFF87E9346Ch; cmp r14, [rax]; mov rax 00007FFF86E32FB5h; jmp [rax]
 // somethings wrong with the final operand here
-string ASMstring = "push rax; mov eax, 0; cmp r11d, eax; pop rax; je 11h; test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp 1; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp 2";
+string ASMstring = "push rax; mov eax,[0]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[1]; cmp r13d, eax; pop rax; je 13h; mov rax, [rdx+rsi]; cmp byte ptr [rax+11h], 04; jmp 3; mov rax, [rdx+rsi]; cmp byte ptr [rax+11h], 04; mov r15, [rbp-80h]; jmp 0";
 
 
 using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })

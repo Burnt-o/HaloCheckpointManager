@@ -38,8 +38,8 @@
                 <RowDefinition Height="*" MinHeight="5"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="19" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="#FFE5E5E5" Grid.ColumnSpan="2"/>
-        <Border Grid.RowSpan="16" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="LightGray" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
+            <Border Grid.RowSpan="19" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
+            <Border Grid.RowSpan="16" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo 1" Grid.Row="0" />
         <local:TrainerColumnHeader Grid.Row="1" Grid.ColumnSpan="2" />
             <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_InjectCheckpoint}" />
