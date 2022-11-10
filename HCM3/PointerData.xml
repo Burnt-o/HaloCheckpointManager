@@ -21,6 +21,19 @@
 			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
 		</Version>
 	</Entry>
+
+	<Entry Type="List&lt;string&gt;">
+		<Name>OD_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+	</Entry>
+	<Entry Type="List&lt;string&gt;">
+		<Name>HR_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>MN_BRP</Name>
 		<Version Version="1.2645.0.0">
@@ -1750,12 +1763,12 @@
 			<OriginalCodeLocation>
 				<Module>haloreach.dll</Module>
 				<Offsets>
-					<Offset>0x34DABE</Offset>
+					<Offset>0x4D4F07</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
-			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<OriginalCodeBytes>0x45, 0x33, 0xDB, 0x44, 0x38, 0x5C, 0x24, 0x44</OriginalCodeBytes>
 			<SizeToAlloc>30</SizeToAlloc>
-			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp esi, eax; pop rax; je 1Fh; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 10h; xor r11d, r11d; cmp byte ptr [rsp+44h], r11b; jmp $returnControl; jmp $skipDamage </DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
@@ -1763,7 +1776,7 @@
 					<!--Stores the datum of the player entity, for comparison in detour-->
 					<Module>haloreach.dll</Module>
 					<Offsets>
-						<Offset>0x9C4DCC</Offset>
+						<Offset>0xA68BAC</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
@@ -1771,14 +1784,14 @@
 					<!--Stores the datum of the player entity, for comparison in detour-->
 					<Module>haloreach.dll</Module>
 					<Offsets>
-						<Offset>0x74DC34</Offset>
+						<Offset>0x9D47C0</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
 					<Symbol>$skipDamage</Symbol>
 					<Module>haloreach.dll</Module>
 					<Offsets>
-						<Offset>0x34DC37</Offset>
+						<Offset>0x4D5175</Offset>
 					</Offsets>
 				</Pointer>
 
@@ -1787,6 +1800,93 @@
 
 	</Entry>
 	<!--/end Invuln stuff-->
+
+	<Entry Type="DetourInfoObject">
+		<Name>HR_PlayerData_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x46A191</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC7, 0x48, 0x8B, 0x6C, 0x24, 0x48 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rdi; mov rbp, [rsp+48h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x9D47C0</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
+
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_PlayerData_Xpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1C0</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_PlayerData_Ypos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1C4</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_PlayerData_Zpos</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1C8</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_PlayerData_Xvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x230</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_PlayerData_Yvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x234</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_PlayerData_Zvel</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x238</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_ViewHori</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01485258</Offset>
+				<Offset>0x294</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_ViewVert</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01485258</Offset>
+				<Offset>0x298</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
 	<Entry Type="Dictionary&lt;string, bool&gt;">

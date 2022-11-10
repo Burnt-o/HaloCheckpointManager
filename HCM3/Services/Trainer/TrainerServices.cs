@@ -121,6 +121,25 @@ namespace HCM3.Services.Trainer
                 return playerAddy.Value;
 
             }
+            else if (gameAs2Letters == "HR")
+            {
+                if (this.listOfPatches["HRPlayerData"].PatchHandle == null || !IsPatchApplied("HRPlayerData"))
+                {
+                    if (IsPatchApplied("HRPlayerData"))
+                    {
+                        RemovePatch("HRPlayerData");
+                    }
+                    ApplyPatch("HRPlayerData");
+                    Thread.Sleep(30);
+                }
+
+                IntPtr? detourHandle = this.listOfPatches["HRPlayerData"].PatchHandle;
+                if (detourHandle == null) throw new Exception("Couldn't get detourHandle of HRPlayerData");
+                IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
+                if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t HRPlayerData");
+                return playerAddy.Value;
+
+            }
 
             throw new NotImplementedException();
 
