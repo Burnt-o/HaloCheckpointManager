@@ -61,6 +61,11 @@ namespace HCM3.Services.Trainer
                             paramData = BitConverter.GetBytes((double)param);
                             break;
 
+
+                        case ulong:
+                            paramData = BitConverter.GetBytes((ulong)param);
+                            break;
+
                         default:
                             break;
                     }

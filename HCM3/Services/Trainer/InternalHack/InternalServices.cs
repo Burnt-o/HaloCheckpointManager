@@ -49,6 +49,7 @@ namespace HCM3.Services.Trainer
                 listOfInternalFunctions.Add("IsTextDisplaying");
                 listOfInternalFunctions.Add("PrintTemporaryMessage");
                 listOfInternalFunctions.Add("hkPresent");
+                listOfInternalFunctions.Add("RemoveHook");
                 try
                 {
                     SetupInternal(listOfInternalFunctions);

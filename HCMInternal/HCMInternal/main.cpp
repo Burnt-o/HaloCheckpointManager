@@ -292,12 +292,24 @@ HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width
 }
 
 
-extern "C" __declspec(dllexport) void WINAPI RemoveHook()
+extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr)
 {
 
 	if (!init) { return; }
 
+	std::cout << "\n???: " << *PtrToPresentPtr;
 
+	UINT64 og = (UINT64) oPresent;
+
+	UINT64* presentPtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr);
+
+	std::cout << "\ngames present pointer: " << presentPtr;
+	std::cout << "\noriginal present pointer address: " << og;
+	DWORD dwNewProtect, dwOldProtect;
+	VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
+	memcpy(presentPtr, &og, 8);
+	VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
+	//*presentPtr = og;
 
 
 }
@@ -316,8 +328,8 @@ DWORD WINAPI MainThread(void* pHandle)
 		oPresent = (Present)kiero::getMethodsTable()[8];
 		void* hkPresentPtr = (void*)hkPresent;
 
-		std::cout << "hkPresentPtr" << hkPresentPtr;
-		std::cout << "oPresent" << oPresent;
+		std::cout << "\nhkPresentPtr" << hkPresentPtr;
+		std::cout << "\noPresent" << oPresent;
 
 		
 		kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
