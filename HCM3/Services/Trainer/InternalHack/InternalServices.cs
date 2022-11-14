@@ -26,10 +26,12 @@ namespace HCM3.Services.Trainer
 
         private readonly object InjectInternalLock = new object();
 
-        public InternalServices(HaloMemoryService haloMemoryService)
+        public DataPointersService DataPointersService { get; init; }
+
+        public InternalServices(HaloMemoryService haloMemoryService, DataPointersService dataPointersService)
         {
             this.HaloMemoryService = haloMemoryService;
-
+            this.DataPointersService = dataPointersService;
 
             InternalFunctions = new();
             InternalFunctionsLoaded = false;
@@ -46,6 +48,7 @@ namespace HCM3.Services.Trainer
                 listOfInternalFunctions.Add("ChangeDisplayText");
                 listOfInternalFunctions.Add("IsTextDisplaying");
                 listOfInternalFunctions.Add("PrintTemporaryMessage");
+                listOfInternalFunctions.Add("hkPresent");
                 try
                 {
                     SetupInternal(listOfInternalFunctions);

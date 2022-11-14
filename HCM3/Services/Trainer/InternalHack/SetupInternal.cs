@@ -16,6 +16,8 @@ namespace HCM3.Services.Trainer
         {
             lock (lockSetupInternal)
             {
+                ReadWrite.Pointer presentPtr = (ReadWrite.Pointer)this.DataPointersService.GetPointer("PresentPointer", this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
+              
 
                 if (!internalFunctionNames.Any()) throw new ArgumentException("Wasn't passed a list of internal functions whose name we need to find");
 
@@ -77,6 +79,13 @@ namespace HCM3.Services.Trainer
                     InternalFunctions.Add(functionName, internalFunctionPointer);
                 }
                 InternalFunctionsLoaded = true;
+
+
+                // Now need to "hook" d3dgxi Present
+                PInvokes.DebugActiveProcess(pID);
+                IntPtr hookedPresent = InternalFunctions["hkPresent"];
+                this.HaloMemoryService.ReadWrite.WriteQword(presentPtr, (ulong)hookedPresent.ToInt64(), true);
+                PInvokes.DebugActiveProcessStop(pID);
             }
         }
 

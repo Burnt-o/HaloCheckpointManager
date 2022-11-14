@@ -3,13 +3,18 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
-#include <ctime>    
+#include <ctime>   
+#include <d3dx11.h>
+
+
+
 
 
 typedef HRESULT(__stdcall* ResizeBuffers)(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Present oPresent;
+
 ResizeBuffers oResizeBuffers;
 HWND window = NULL;
 WNDPROC oWndProc;
@@ -17,6 +22,7 @@ ID3D11Device* pDevice = NULL;
 ID3D11DeviceContext* pContext = NULL;
 ID3D11RenderTargetView* mainRenderTargetView;
 std::string textToPrint = "HaloCheckpointManager Hooked! \nCould put game info here \nlike player coordinates, health etc";
+bool test = false;
 
 
 typedef struct
@@ -28,6 +34,9 @@ typedef struct
 }RGBA;
 RGBA red = { 255,0,0,255 };
 RGBA green = { 0,255,0,255 };
+
+
+
 
 static void DrawPersistentMessages(int x, int y, RGBA* color, std::string text, int outlineWidth, float outlineStrength)
 {
@@ -115,44 +124,7 @@ static void DrawTemporaryMessages(int x, int y, RGBA* color, int outlineWidth, f
 }
 
 
-extern "C" __declspec(dllexport) void ChangeDisplayText(const TCHAR* pChars)
-{
 
-	std::string inputText(pChars);
-	textToPrint = inputText;
-}
-
-extern "C" __declspec(dllexport) int IsTextDisplaying()
-{
-	return 1;
-	if (textToPrint == "hi")
-	{
-		return 2;
-	}
-	else
-	{
-		return 1;
-	}
-
-}
-
-
-extern "C" __declspec(dllexport) int PrintTemporaryMessage(const TCHAR * pChars)
-{
-	std::string inputText(pChars);
-	auto curr_time = std::chrono::high_resolution_clock::now();
-
-	TemporaryMessage tmessage;
-	tmessage.messageText = inputText;
-	tmessage.messageTimestamp = curr_time;
-	//messages go to the front
-	temporaryMessages.insert(temporaryMessages.begin(), tmessage);
-
-	std::cout << "\nAdded to tempMessages map, count: " << temporaryMessages.size();
-
-		return 1;
-
-}
 
 void InitImGui()
 {
@@ -172,8 +144,10 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 }
 
 bool init = false;
-HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
+	
+
 	if (!init)
 	{
 		std::cout << "\nAttempting to init d3d device - Love, hkPresent.";
@@ -198,13 +172,21 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 			return oPresent(pSwapChain, SyncInterval, Flags);
 	}
 
+
+
+
+
+	
+
 	if (mainRenderTargetView == nullptr) {
 		std::cout << "\nmainRenderTargetView was null! Attempting to create a new one.";
 		ID3D11Texture2D* pBackBuffer;
 		pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 		pDevice->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
+		
 		pBackBuffer->Release();
 	}
+
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -212,17 +194,57 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 	DrawPersistentMessages(10, 10, &green, textToPrint, 1, 0.5);
 	DrawTemporaryMessages(10, 30, &green, 1, 0.5);
-	//ImGui::GetOverlayDrawList()->AddText(textPosition, textColor, textContent.c_str());
 
-	/*ImGui::Text("HELLO BURNT, HERE'S A FUNNY NUMBER: %d", 69);
-	ImGui::Begin("ImGui Window");
-	ImGui::End();*/
 
+	ImGui::EndFrame();
 	ImGui::Render();
 
 	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+
+
+
 	return oPresent(pSwapChain, SyncInterval, Flags);
+}
+
+extern "C" __declspec(dllexport) void ChangeDisplayText(const TCHAR * pChars)
+{
+
+	std::string inputText(pChars);
+	textToPrint = inputText;
+}
+
+
+extern "C" __declspec(dllexport) int IsTextDisplaying()
+{
+	if (!init)
+	{
+		return 2;
+	}
+	else
+	{
+		return 1;
+	}
+
+}
+
+
+extern "C" __declspec(dllexport) int PrintTemporaryMessage(const TCHAR * pChars)
+{
+	std::string inputText(pChars);
+	auto curr_time = std::chrono::high_resolution_clock::now();
+
+	TemporaryMessage tmessage;
+	tmessage.messageText = inputText;
+	tmessage.messageTimestamp = curr_time;
+	//messages go to the front
+	temporaryMessages.insert(temporaryMessages.begin(), tmessage);
+
+	std::cout << "\nAdded to tempMessages map, count: " << temporaryMessages.size();
+
+	return 1;
+
 }
 
 HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
@@ -270,28 +292,11 @@ HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width
 }
 
 
-extern "C" __declspec(dllexport) DWORD WINAPI InitHook(bool enable)
+extern "C" __declspec(dllexport) void WINAPI RemoveHook()
 {
-	if (enable)
-	{
-		if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
-		{
-			kiero::bind(8, (void**)&oPresent, hkPresent);
-			kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
 
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
+	if (!init) { return; }
 
-	}
-	else
-	{
-		kiero::shutdown();
-		return TRUE;
-	}
 
 
 
@@ -300,10 +305,23 @@ extern "C" __declspec(dllexport) DWORD WINAPI InitHook(bool enable)
 DWORD WINAPI MainThread(void* pHandle)
 {
 
+
+
+
+
 	if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
 	{
-		kiero::bind(8, (void**)&oPresent, hkPresent);
+		
+
+		oPresent = (Present)kiero::getMethodsTable()[8];
+		void* hkPresentPtr = (void*)hkPresent;
+
+		std::cout << "hkPresentPtr" << hkPresentPtr;
+		std::cout << "oPresent" << oPresent;
+
+		
 		kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
+
 
 		while (!GetAsyncKeyState(VK_END));
 	}

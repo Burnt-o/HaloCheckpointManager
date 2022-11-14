@@ -41,6 +41,22 @@
 		</Version>
 	</Entry>
 	<!--/end ButtonRequiredPointers-->
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>PresentPointer</Name>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+		
+	</Entry>
+	
+	
+	
 	<!--Halo 1-->
 
 	<Entry Type="ReadWrite.Pointer">
