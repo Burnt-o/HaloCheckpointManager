@@ -8,15 +8,17 @@ using HCM3.Models;
 using HCM3.ViewModels;
 using System.Diagnostics;
 using HCM3.Services;
+using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels.Commands
 {
     internal class InjectCommand : ICommand
     {
-        internal InjectCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
+        internal InjectCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices, TrainerServices trainerServices)
         {
             this.CheckpointViewModel = checkpointViewModel;
             this.CheckpointServices = checkpointServices;
+            this.TrainerServices = trainerServices;
 
             CheckpointViewModel.PropertyChanged += (obj, args) =>
             {
@@ -33,6 +35,7 @@ namespace HCM3.ViewModels.Commands
 
         private CheckpointViewModel CheckpointViewModel { get; init; }
         private CheckpointServices CheckpointServices { get; init; }
+        private TrainerServices TrainerServices { get; init; }
         public bool CanExecute(object? parameter)
         {
             //return true;
@@ -45,6 +48,20 @@ namespace HCM3.ViewModels.Commands
             try
             {
                 CheckpointServices.TryInject(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint, CheckpointViewModel.SelectedGame);
+
+                if (Properties.Settings.Default.AutoRevert)
+                {
+                    if (Properties.Settings.Default.AutoRevert && CheckpointViewModel.SelectedGame == 0)
+                    {
+                        TrainerServices.ForceCoreLoad();
+                    }
+                    else
+                    {
+                        TrainerServices.ForceRevert();
+                    }
+                    
+                }
+
             }
             catch (Exception ex)
             {

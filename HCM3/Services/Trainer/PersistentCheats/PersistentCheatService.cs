@@ -15,6 +15,8 @@ namespace HCM3.Services.Trainer
         public PC_Speedhack PC_Speedhack { get; init; }
 
         public PC_BlockCPs PC_BlockCPs { get; init; }
+        public PC_Medusa PC_Medusa { get; init; }
+        public PC_Acrophobia PC_Acrophobia { get; init; }
 
 
         Dictionary<string, IPersistentCheat> listOfCheats { get; set; }
@@ -22,21 +24,26 @@ namespace HCM3.Services.Trainer
         public InternalServices InternalServices { get; init; }
         public HaloMemoryService HaloMemoryService { get; init; }
 
-        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs)
+        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_Acrophobia pC_Acrophobia)
         {
             this.PC_Invulnerability = pC_Invulnerability;
             this.PC_Speedhack = pC_Speedhack;
             this.PC_BlockCPs = pC_BlockCPs;
+            this.PC_Medusa = pC_medusa;
+            this.PC_Acrophobia = pC_Acrophobia;
 
             this.InternalServices = internalServices;
             
             PC_Invulnerability.PersistentCheatService = (this);
+            PC_Acrophobia.PersistentCheatService = (this);
             this.HaloMemoryService = haloMemoryService;
 
             listOfCheats = new();
             listOfCheats.Add("Invulnerability", PC_Invulnerability);
             listOfCheats.Add("Speedhack", PC_Speedhack);
             listOfCheats.Add("Block Checkpoints", PC_BlockCPs);
+            listOfCheats.Add("Medusa", PC_Medusa);
+            listOfCheats.Add("Acrophobia", PC_Acrophobia);
 
             foreach (IPersistentCheat cheat in listOfCheats.Values)
             { 

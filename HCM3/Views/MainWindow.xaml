@@ -141,11 +141,14 @@
                 </Grid>
         </TabItem>
         <TabItem  Header="Settings">
-            <Grid>
-
-
-            </Grid>
-        </TabItem>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:SettingsView Grid.Column="0" DataContext="{Binding Path=SettingsViewModel}" />
+                </Grid>
+            </TabItem>
 
 
     </TabControl>

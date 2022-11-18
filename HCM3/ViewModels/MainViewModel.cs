@@ -40,12 +40,13 @@ namespace HCM3.ViewModels
 
         public KeyboardHookManager KeyboardHookManager { get; init; }
 
+        public SettingsViewModel SettingsViewModel { get; init; }
 
 
-
-        public MainViewModel(HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel, TrainerViewModel trainerViewModel) //(MainModel mainModel, HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel)
+        public MainViewModel(HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel, TrainerViewModel trainerViewModel, SettingsViewModel settingsViewModel) //(MainModel mainModel, HaloMemoryService haloMemoryService, CheckpointViewModel checkpointViewModel)
         {
  
+            this.SettingsViewModel = settingsViewModel; 
 
             this.TrainerViewModel = trainerViewModel;
 

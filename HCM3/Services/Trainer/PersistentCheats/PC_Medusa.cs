@@ -14,11 +14,11 @@ using HCM3.Helpers;
 namespace HCM3.Services.Trainer
 {
 
-    public  class PC_BlockCPs : IPersistentCheat
+    public class PC_Medusa : IPersistentCheat
     {
 
 
-        public PC_BlockCPs(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
+        public PC_Medusa(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
         {
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
@@ -55,10 +55,10 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat() 
         {
-            Trace.WriteLine("User commanded BlockCPs !!!!!!!!!!!!!!!!!!!!");
+            Trace.WriteLine("User commanded toggle medusa !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
             {
-                Trace.WriteLine("turning BlockCPs off");
+                Trace.WriteLine("turning medusa off");
                 RemoveCheat();
                 // IsChecked will only be set to false (and thus internal DLL updated) if removeCheat didn't throw
                 IsChecked = false;
@@ -66,7 +66,7 @@ namespace HCM3.Services.Trainer
             }
             else
             {
-                Trace.WriteLine("turning BlockCPs on");
+                Trace.WriteLine("turning medusa on");
 
                 // Setting IsChecked to true will tell internal DLL to display text
                 IsChecked = true;
@@ -82,16 +82,17 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 {
-                    ex.Message.Insert(0, "Failed to enabled BlockCPs! ");
+                    ex.Message.Insert(0, "Failed to enabled medusa! ");
                     IsChecked = false;
                     throw;
                 }
                 
                 if (!IsCheatApplied())
                 {
-                    try { RemoveCheat(); } catch { }
                     IsChecked = false;
-                    throw new Exception("Something went wrong and BlockCPs wasn't applied properly; gamestate may be corrupt.");
+                    try { RemoveCheat(); } catch { }
+                    
+                    throw new Exception("Something went wrong and medusa wasn't applied properly; gamestate may be corrupt.");
                     
                 }
             }
@@ -104,12 +105,12 @@ namespace HCM3.Services.Trainer
             int loadedGame = this.CommonServices.GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-            ReadWrite.Pointer? codePointer = (ReadWrite.Pointer?)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_NaturalCheckpointCode");
-            byte? actualInstruction = this.HaloMemoryService.ReadWrite.ReadByte(codePointer);
+            ReadWrite.Pointer? medusaPointer = (ReadWrite.Pointer?)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_MedusaFlag");
+            byte? medusaValue = this.HaloMemoryService.ReadWrite.ReadByte(medusaPointer);
 
-            if (actualInstruction == 0)
+            if (medusaValue == 1)
             {
-                this.HaloMemoryService.ReadWrite.WriteByte(codePointer, (byte)1, true);
+                this.HaloMemoryService.ReadWrite.WriteByte(medusaPointer, (byte)0, true);
             }
 
 
@@ -136,11 +137,11 @@ namespace HCM3.Services.Trainer
 
             // Test loaded game only. if loaded game doesn't have pointers then it can't have had cheat anyway
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
-            ReadWrite.Pointer codePointer;
+            ReadWrite.Pointer medusaPointer;
 
             try
             {
-                codePointer = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_NaturalCheckpointCode");
+                medusaPointer = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_MedusaFlag");
             }
             catch
             {
@@ -150,17 +151,10 @@ namespace HCM3.Services.Trainer
 
             try
             {
-                byte? actualInstruction = this.HaloMemoryService.ReadWrite.ReadByte(codePointer);
-                if (actualInstruction == 0)
+                byte? medusaValue = this.HaloMemoryService.ReadWrite.ReadByte(medusaPointer);
+                if (medusaValue == 1)
                 {
-
-                    ulong? testInstruction = this.HaloMemoryService.ReadWrite.ReadQword(codePointer - 9);
-                    if (testInstruction != null && testInstruction != 0)
-                    {
-                        
                         return true;
-                    }
-
                 }
                 return false;
             }
@@ -184,12 +178,12 @@ namespace HCM3.Services.Trainer
 
                 string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-                ReadWrite.Pointer? codePointer = (ReadWrite.Pointer?)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_NaturalCheckpointCode");
-                byte? actualInstruction = this.HaloMemoryService.ReadWrite.ReadByte(codePointer);
+                ReadWrite.Pointer? medusaPointer = (ReadWrite.Pointer?)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_MedusaFlag");
+                byte? medusaValue = this.HaloMemoryService.ReadWrite.ReadByte(medusaPointer);
 
-                if (actualInstruction == 1)
+                if (medusaValue == 0)
                 {
-                    this.HaloMemoryService.ReadWrite.WriteByte(codePointer, (byte)0, true);
+                    this.HaloMemoryService.ReadWrite.WriteByte(medusaPointer, (byte)1, true);
                     return true;
                 }
 
@@ -198,8 +192,8 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Failed to enable BlockCPs! \n" + ex.Message);
-                System.Windows.MessageBox.Show("Failed to enable BlockCPs! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                Trace.WriteLine("Failed to enable medusa! \n" + ex.Message);
+                System.Windows.MessageBox.Show("Failed to enable medusa! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 return false;
             }
 

@@ -6,13 +6,13 @@
 	<Entry Type="List&lt;string&gt;">
 		<Name>H1_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, CheatMedusa, Acrophobia</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>H2_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, Acrophobia</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
@@ -240,6 +240,31 @@
 			<Offsets>
 				<Offset>0xAC15EE</Offset>
 			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_MedusaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1ADB926</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="DetourInfoObject">
+		<Name>H1_Acrophobia_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0xC22B15</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x80, 0x3D, 0x33, 0x8E, 0xEB, 0x00, 0x00, 0x0F, 0x84, 0x4E, 0x02, 0x00, 0x00</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers></SymbolPointers>
 		</Version>
 	</Entry>
 		<!--Invuln stuff-->

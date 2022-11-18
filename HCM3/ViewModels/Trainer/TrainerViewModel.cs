@@ -191,22 +191,26 @@ new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.Forc
             listOfButtons.Add(this.Button_Launch);
 
 
-
-
             this.Button_ToggleInvuln = new GenericToggleViewModel("Invulnerability", PersistentCheatManager.PC_Invulnerability, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleInvuln);
             this.Button_ToggleSpeedhack = new SpeedhackViewModel("Speedhack", PersistentCheatManager.PC_Speedhack, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleSpeedhack);
             this.Button_ToggleNaturals = new GenericToggleViewModel("Block Natural CPs", PersistentCheatManager.PC_BlockCPs, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleNaturals);
-         this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", null, null);
+
+
+
+         this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", PersistentCheatManager.PC_Medusa, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleMedusa);
+
+            this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", PersistentCheatManager.PC_Acrophobia, hotkeyManager);
+            listOfButtons.Add(this.Button_ToggleAcro);
+
             this.Button_ToggleBool = new GenericToggleViewModel("BOOL practice mode", null, null);
             listOfButtons.Add(this.Button_ToggleBool);
             this.Button_TogglePanCam = new GenericToggleViewModel("PanCam", null, null);
             listOfButtons.Add(this.Button_TogglePanCam);
-            this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", null, null);
-            listOfButtons.Add(this.Button_ToggleAcro);
+
 
             this.Button_ToggleInfo = new GenericToggleViewModel("Display Info", null, null);
             listOfButtons.Add(this.Button_ToggleInfo);

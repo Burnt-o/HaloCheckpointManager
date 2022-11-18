@@ -162,5 +162,41 @@ namespace HCM3.Properties {
                 this["Darkmode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoName {
+            get {
+                return ((bool)(this["AutoName"]));
+            }
+            set {
+                this["AutoName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoRevert {
+            get {
+                return ((bool)(this["AutoRevert"]));
+            }
+            set {
+                this["AutoRevert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool H1Cores {
+            get {
+                return ((bool)(this["H1Cores"]));
+            }
+            set {
+                this["H1Cores"] = value;
+            }
+        }
     }
 }

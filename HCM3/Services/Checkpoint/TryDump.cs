@@ -27,69 +27,92 @@ namespace HCM3.Services
             }
 
 
-            // Load the required pointers to do a checkpoint dump
-            List<string> requiredPointerNames = new();
-            switch ((int)selectedGame)
+            byte[]? CheckpointData;
+            // Special case for H1 Core Saves
+            if (gameAs2Letters == "H1" && Properties.Settings.Default.H1Cores)
             {
-                case 0:
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
-                    break;
+                string coreBinPath = GetCoreBinPath();
 
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation2");
-                    requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
-                    requiredPointerNames.Add($"{gameAs2Letters}_DoubleRevertFlag");
-                    break;
-
-                default:
-                    throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + selectedGame.ToString());
-            }
-
-            // Load the required pointers into a dictionary
-            Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
-
-            // Alright, time to read the data
-            // Setup checkpoint data buffer to length of the checkpoint
-            byte[]? CheckpointData = new byte[(int)requiredPointers["CheckpointLength"]];
-            switch ((int)selectedGame)
-            {
-                case 0:
-                    CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
-                    break;
-
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                    byte? doubleRevertFlag = (byte?)this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
-                    if (doubleRevertFlag == null)
+                FileInfo checkpointInfo = new FileInfo(coreBinPath);
+                // Next let's read the checkpoint data from the file
+                using (FileStream readStream = new FileStream(coreBinPath, FileMode.Open))
+                {
+                    using (BinaryReader readBinary = new BinaryReader(readStream))
                     {
-                        throw new InvalidOperationException("Failed to read double revert flag");
+                        CheckpointData = readBinary.ReadBytes((int)checkpointInfo.Length);
                     }
-                    if (doubleRevertFlag == 0)
-                    {
+                }
+            }
+            else
+            {
+                // Load the required pointers to do a checkpoint dump
+                List<string> requiredPointerNames = new();
+                switch ((int)selectedGame)
+                {
+                    case 0:
+                        requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
+                        requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
+                        break;
+
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation1");
+                        requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLocation2");
+                        requiredPointerNames.Add($"{gameAs2Letters}_CheckpointLength");
+                        requiredPointerNames.Add($"{gameAs2Letters}_DoubleRevertFlag");
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + selectedGame.ToString());
+                }
+
+                // Load the required pointers into a dictionary
+                Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
+
+                // Alright, time to read the data
+                // Setup checkpoint data buffer to length of the checkpoint
+                CheckpointData = new byte[(int)requiredPointers["CheckpointLength"]];
+                switch ((int)selectedGame)
+                {
+                    case 0:
                         CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
-                    }
-                    else if (doubleRevertFlag == 1)
-                    {
-                        CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
-                    }
-                    else 
-                    {
-                        throw new InvalidOperationException("doubleRevertFlag was an invalid value (not 0 or 1)");
-                    }
-                    break;
+                        break;
 
-                default:
-                    throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + selectedGame.ToString());
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        byte? doubleRevertFlag = (byte?)this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["DoubleRevertFlag"])?.GetValue(0);
+                        if (doubleRevertFlag == null)
+                        {
+                            throw new InvalidOperationException("Failed to read double revert flag");
+                        }
+                        if (doubleRevertFlag == 0)
+                        {
+                            CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation1"], CheckpointData.Length);
+                        }
+                        else if (doubleRevertFlag == 1)
+                        {
+                            CheckpointData = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CheckpointLocation2"], CheckpointData.Length);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("doubleRevertFlag was an invalid value (not 0 or 1)");
+                        }
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("TryDump was fed an invalid game, somehow. " + selectedGame.ToString());
+                }
             }
+
+
+
+
 
             if (CheckpointData == null)
             {
@@ -103,16 +126,30 @@ namespace HCM3.Services
                 byte[] versionStringChars = Encoding.ASCII.GetBytes(this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
                 Array.Copy(versionStringChars, 0, CheckpointData, CheckpointData.Length - 10, versionStringChars.Length);
             }
-                
-
-            
 
 
-            // Ask user what they want to name the checkpoint file
-            string? userInput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
-                                                       "Name your dumped checkpoint",
-                                                       "",
-                                                       -1, -1);
+
+            string? userInput;
+            if (Properties.Settings.Default.AutoName)
+            {
+                userInput = gameAs2Letters + "_" + DateTime.Now.ToString("yy-MM-dd HHmmss");
+
+                int count = 2;
+                while (File.Exists(userInput))
+                {
+                    userInput = userInput + "(" + count.ToString() + ")";
+                    count++;
+                }
+
+            }
+            else
+            {
+                // Ask user what they want to name the checkpoint file
+                userInput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
+                                                           "Name your dumped checkpoint",
+                                                           "",
+                                                           -1, -1);
+            }
             string proposedSave = (selectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
             if (userInput != null && userInput != "" && !File.Exists(proposedSave))
@@ -135,6 +172,8 @@ namespace HCM3.Services
                 }
             }
         }
+
+
 
     }
 

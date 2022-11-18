@@ -50,6 +50,7 @@ namespace HCM3
             //ViewModels
             services.AddSingleton<CheckpointViewModel>();
             services.AddSingleton<TrainerViewModel>();
+            services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<MainViewModel>();
 
 
@@ -69,6 +70,9 @@ namespace HCM3
             services.AddSingleton<PC_Invulnerability>();
             services.AddSingleton<PC_Speedhack>();
             services.AddSingleton<PC_BlockCPs>();
+            services.AddSingleton<PC_Medusa>();
+            services.AddSingleton<PC_Acrophobia>();
+
             services.AddSingleton<HotkeyManager>();
         }
 

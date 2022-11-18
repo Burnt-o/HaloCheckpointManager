@@ -21,6 +21,7 @@ using HCM3.ViewModels.Commands;
 using System.IO;
 using System.ComponentModel;
 using HCM3.Services;
+using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels
 {
@@ -88,10 +89,11 @@ namespace HCM3.ViewModels
 
 
         private CheckpointServices CheckpointServices { get; init; }
-        public CheckpointViewModel(CheckpointServices checkpointServices)
+        private TrainerServices TrainerServices { get; init; }
+        public CheckpointViewModel(CheckpointServices checkpointServices, TrainerServices trainerServices)
         {
             this.CheckpointServices = checkpointServices;
-
+            this.TrainerServices = trainerServices;
             this.CheckpointCollection = new();
             this.SaveFolderHierarchy = new();
             this.RootSaveFolder = null;
@@ -113,12 +115,10 @@ namespace HCM3.ViewModels
                     RefreshCheckpointList();
                 });
             };
-            
+
             RefreshSaveFolderTree();
             RefreshCheckpointList();
-
-
-
+            TrainerServices = trainerServices;
         }
 
         // Move to services??
@@ -242,7 +242,7 @@ namespace HCM3.ViewModels
         private ICommand _inject;
         public ICommand Inject
         {
-            get { return _inject ?? (_inject = new InjectCommand(this, CheckpointServices)); }
+            get { return _inject ?? (_inject = new InjectCommand(this, CheckpointServices, TrainerServices)); }
             set { _inject = value; }
         }
 

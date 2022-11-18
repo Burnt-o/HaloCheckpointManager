@@ -406,6 +406,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Views\SettingsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\ChangeHotkeyView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -459,6 +462,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\SettingsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Controls\Trainer\ButtonViews\ButtonOptions\ChangeHotkeyView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

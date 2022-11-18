@@ -27,8 +27,18 @@ namespace HCM3.Services
             string checkpointPath = selectedSaveFolder?.SaveFolderPath + "\\" + selectedCheckpoint?.CheckpointName + ".bin";
             if (!File.Exists(checkpointPath))
             {
-                throw new Exception("TryDump didn't have a valid folder to save the checkpoint to " + selectedSaveFolder?.SaveFolderPath);
+                throw new Exception("The file HCM is trying to inject doesn't exist ?! " + selectedSaveFolder?.SaveFolderPath);
             }
+
+
+            // Special case for H1 Core Saves
+            if (gameAs2Letters == "H1" && Properties.Settings.Default.H1Cores)
+            {
+                InjectH1Core(checkpointPath);
+                return;
+            }
+
+
 
             // Load the required pointers to do a checkpoint inject
             Dictionary<string, bool> injectRequirements = (Dictionary<string, bool>)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_InjectRequirements");
@@ -201,5 +211,41 @@ namespace HCM3.Services
             // Wew, we're done!
 
         }
+
+        private void InjectH1Core(string checkpointPath)
+        {
+            FileInfo checkpointInfo = new FileInfo(checkpointPath);
+            byte[]? checkpointData;
+            // Next let's read the checkpoint data from the file
+            using (FileStream readStream = new FileStream(checkpointPath, FileMode.Open))
+            {
+                using (BinaryReader readBinary = new BinaryReader(readStream))
+                {
+                    checkpointData = readBinary.ReadBytes((int)checkpointInfo.Length);
+                }
+            }
+
+            // Check that it was read properly
+            if (checkpointData == null || (checkpointData.Length != checkpointInfo.Length))
+            {
+                throw new Exception("HCM failed to read data of checkpoint to inject");
+            }
+
+            // Modify the checkpointData to remove the version string at end of file
+            Array.Fill(checkpointData, (byte)0, checkpointData.Length - 10, 10);
+
+            string coreBinPath = GetCoreBinPath();
+
+            //write checkpoint data to corebinpath
+            File.Delete(coreBinPath);
+            File.WriteAllBytes(coreBinPath, checkpointData);
+            FileInfo test = new FileInfo(coreBinPath);
+            if (!File.Exists(test.ToString()) || test.Length < 1000)
+            {
+                throw new InvalidOperationException("Failed to save coresave data to file, not sure why. Check local file read/write permissions?");
+            }
+
+        }
+
     }
 }
