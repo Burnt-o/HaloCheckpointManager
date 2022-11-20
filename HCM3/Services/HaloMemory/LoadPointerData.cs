@@ -142,6 +142,10 @@ namespace HCM3.Services
                     returnObject = ParseDetourInfoObject(entry);
                     break;
 
+                case "PatchInfo":
+                    returnObject = ParsePatchInfoObject(entry);
+                    break;
+
                 case "Dictionary<string, bool>":
                     Dictionary<string,bool> entryDictionary = new();
                     foreach (XElement element in entry.Elements())
@@ -288,6 +292,20 @@ namespace HCM3.Services
             // returnControl is OriginalCodeLocation + the number of bytes in Original Code bytes
             SymbolPointers.Add("$returnControl", OriginalCodeLocation + OriginalCodeBytes.Length);
             return new DetourInfoObject(OriginalCodeLocation, OriginalCodeBytes, SizeToAlloc, DetourCodeASM, HookCodeASM, SymbolPointers);
+
+        }
+
+        PatchInfo ParsePatchInfoObject(XElement entry)
+        {
+
+            ReadWrite.Pointer OriginalCodeLocation = ParsePointer(entry.Element("OriginalCodeLocation"));
+            byte[] OriginalCodeBytes = entry.Element("OriginalCodeBytes") == null ? throw new Exception("failed reading entry OriginalCodeBytes") : StringToByteArray(entry.Element("OriginalCodeBytes")?.Value);
+            if (!OriginalCodeBytes.Any()) throw new Exception("failed reading entry for patchinfo, null values in OriginalCodeBytes");
+
+            byte[] PatchedCodeBytes = entry.Element("PatchedCodeBytes") == null ? throw new Exception("failed reading entry PatchedCodeBytes") : StringToByteArray(entry.Element("PatchedCodeBytes")?.Value);
+            if (!PatchedCodeBytes.Any()) throw new Exception("failed reading entry for patchinfo, null values in PatchedCodeBytes");
+
+            return new PatchInfo(OriginalCodeLocation, OriginalCodeBytes, PatchedCodeBytes);
 
         }
 

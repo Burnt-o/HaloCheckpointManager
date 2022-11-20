@@ -40,6 +40,8 @@ namespace HCM3.Services
 
 
 
+
+
             // Load the required pointers to do a checkpoint inject
             Dictionary<string, bool> injectRequirements = (Dictionary<string, bool>)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_InjectRequirements");
 

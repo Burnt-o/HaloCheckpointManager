@@ -15,6 +15,8 @@ namespace HCM3.Services.Trainer
 
         public void ForceCoreSave()
         {
+            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
             Trace.WriteLine("ForceCoreSave called");
 
             this.HaloMemoryService.HaloState.UpdateHaloState();

@@ -17,6 +17,7 @@ namespace HCM3.Services.Trainer
         public PC_BlockCPs PC_BlockCPs { get; init; }
         public PC_Medusa PC_Medusa { get; init; }
         public PC_Acrophobia PC_Acrophobia { get; init; }
+        public PC_OneHitKill PC_OneHitKill { get; init;  }
 
 
         Dictionary<string, IPersistentCheat> listOfCheats { get; set; }
@@ -24,18 +25,23 @@ namespace HCM3.Services.Trainer
         public InternalServices InternalServices { get; init; }
         public HaloMemoryService HaloMemoryService { get; init; }
 
-        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_Acrophobia pC_Acrophobia)
+        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_Acrophobia pC_Acrophobia, PC_OneHitKill pC_OneHitKill)
         {
             this.PC_Invulnerability = pC_Invulnerability;
             this.PC_Speedhack = pC_Speedhack;
             this.PC_BlockCPs = pC_BlockCPs;
             this.PC_Medusa = pC_medusa;
             this.PC_Acrophobia = pC_Acrophobia;
+            this.PC_OneHitKill = pC_OneHitKill;
 
             this.InternalServices = internalServices;
             
             PC_Invulnerability.PersistentCheatService = (this);
             PC_Acrophobia.PersistentCheatService = (this);
+            PC_OneHitKill.PersistentCheatService = (this);
+
+            //TODO: clean up above
+
             this.HaloMemoryService = haloMemoryService;
 
             listOfCheats = new();
@@ -81,9 +87,12 @@ namespace HCM3.Services.Trainer
 
         private void CheatStateChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            try { UpdateInternalDisplayWithActiveCheats(); }
+            try { UpdateInternalDisplayWithActiveCheats();
+                this.HaloMemoryService.HaloState.OverlayHooked = true;
+            }
             catch (Exception ex) 
-            { 
+            {
+                this.HaloMemoryService.HaloState.OverlayHooked = false;
                 Trace.WriteLine("Something went wrong trying to update the internal display when " + 
                     sender?.ToString() + " changed state, ex: " + ex.Message + "\n" + ex.StackTrace); 
             }
@@ -123,6 +132,8 @@ namespace HCM3.Services.Trainer
 
         public void UpdateInternalDisplayWithActiveCheats()
         {
+            
+
             Trace.WriteLine("Updating internal display with active cheats");
             if (this.InternalServices.CheckInternalLoaded() == false || this.InternalServices.InternalFunctionsLoaded == false )
             {
@@ -166,6 +177,8 @@ namespace HCM3.Services.Trainer
             {
                 throw new Exception("CheckInternalTextDisplaying failed");
             }
+
+            
         }
 
         public void RemoveInternalText()

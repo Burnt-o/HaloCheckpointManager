@@ -55,6 +55,8 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat() 
         {
+            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
             Trace.WriteLine("User commanded toggle medusa !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
             {

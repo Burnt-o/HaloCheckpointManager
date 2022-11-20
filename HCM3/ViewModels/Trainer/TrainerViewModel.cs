@@ -40,6 +40,7 @@ namespace HCM3.ViewModels
         public GenericToggleViewModel Button_ToggleFlyHack { get; set; }
 
         public GenericToggleViewModel Button_ToggleSprintMeter { get; set; }
+        public GenericToggleViewModel Button_ToggleOHK { get; set; }
 
         List<ActionToggleBase> listOfButtons { get; set; }
 
@@ -89,6 +90,7 @@ namespace HCM3.ViewModels
             this.Button_TogglePanCam = new GenericToggleViewModel("PanCam", null, null);
             this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
             this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
+            this.Button_ToggleOHK = new GenericToggleViewModel("One Hit Kill", null, null);
         }
 
         private void HaloStateEvents_HALOSTATECHANGED_EVENT(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
@@ -127,6 +129,7 @@ namespace HCM3.ViewModels
 
             listOfButtons = new();
 
+            
 
             this.Button_InjectCheckpoint = new GenericActionViewModel(
                 "Inject",
@@ -193,6 +196,11 @@ new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.Forc
 
             this.Button_ToggleInvuln = new GenericToggleViewModel("Invulnerability", PersistentCheatManager.PC_Invulnerability, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleInvuln);
+
+            this.Button_ToggleOHK = new GenericToggleViewModel("One Hit Kill", PersistentCheatManager.PC_OneHitKill, hotkeyManager);
+            listOfButtons.Add(this.Button_ToggleOHK);
+
+
             this.Button_ToggleSpeedhack = new SpeedhackViewModel("Speedhack", PersistentCheatManager.PC_Speedhack, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleSpeedhack);
             this.Button_ToggleNaturals = new GenericToggleViewModel("Block Natural CPs", PersistentCheatManager.PC_BlockCPs, hotkeyManager);

@@ -18,6 +18,7 @@ namespace HCM3.Services.Trainer
 
         public void BoostForward(float addSpeed)
         {
+            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
             Trace.WriteLine("BoostForward called");
             this.HaloMemoryService.HaloState.UpdateHaloState();

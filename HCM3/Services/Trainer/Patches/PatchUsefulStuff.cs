@@ -20,42 +20,54 @@ namespace HCM3.Services.Trainer
             listOfPatches = new();
 
 
-            listOfPatches.Add("H2PlayerData", new PatchObject("H2", "H2_PlayerData_DetourInfo"));
-            listOfPatches.Add("H3PlayerData", new PatchObject("H3", "H3_PlayerData_DetourInfo"));
-            listOfPatches.Add("ODPlayerData", new PatchObject("OD", "OD_PlayerData_DetourInfo"));
-            listOfPatches.Add("HRPlayerData", new PatchObject("HR", "HR_PlayerData_DetourInfo"));
+            listOfPatches.Add("H2PlayerData", new PatchStateObject("H2", "H2_PlayerData_DetourInfo", true));
+            listOfPatches.Add("H3PlayerData", new PatchStateObject("H3", "H3_PlayerData_DetourInfo", true));
+            listOfPatches.Add("ODPlayerData", new PatchStateObject("OD", "OD_PlayerData_DetourInfo", true));
+            listOfPatches.Add("HRPlayerData", new PatchStateObject("HR", "HR_PlayerData_DetourInfo", true));
+
+            listOfPatches.Add("H4ChecksumFix", new PatchStateObject("H4", "H4_ChecksumFix_PatchInfo", false));
 
         }
 
 
         public void ApplyPatches(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
         {
-            return;
+
             int loadedGame = e.NewHaloState;
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
             
 
-            foreach (KeyValuePair<string, PatchObject> kvp in listOfPatches)
+            foreach (KeyValuePair<string, PatchStateObject> kvp in listOfPatches)
             {
                 try
                 {
                     if (gameAs2Letters == kvp.Value.Game)
                     {
-                        DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(kvp.Value.PointerName);
-                        bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
-
-
-                        if (!originalCodeIsOriginal)
+                        if (kvp.Value.IsDetour)
                         {
-                            this.PersistentCheatService.DetourRemove(detourInfoObject, null);
+                            DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(kvp.Value.PointerName);
+                            bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
+
+
+                            if (!originalCodeIsOriginal)
+                            {
+                                this.PersistentCheatService.DetourRemove(detourInfoObject, null);
+                            }
+
+
+                            IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
+                            kvp.Value.PatchHandle = detourHandle;
+                            kvp.Value.Applied = true;
                         }
+                        else //simple patch
+                        {
+                          
+                            if (IsPatchApplied(kvp.Key, false)) RemovePatch(kvp.Key, false);
 
-
-                        IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
-                        kvp.Value.PatchHandle = detourHandle;
-                        kvp.Value.Applied = true;
-
+                            ApplyPatch(kvp.Key, false);
+                            kvp.Value.Applied = true;
+                        }
 
                     }
                 }
@@ -66,13 +78,15 @@ namespace HCM3.Services.Trainer
             }
         }
 
-        public Dictionary<string, PatchObject> listOfPatches { get; set; }
+        public Dictionary<string, PatchStateObject> listOfPatches { get; set; }
 
 
-        public void ApplyPatch(string patchName)
+        public void ApplyPatch(string patchName, bool isDetour)
         {
-
-                PatchObject ourPatch = listOfPatches[patchName];
+            PatchStateObject ourPatch = listOfPatches[patchName];
+            if (isDetour)
+            {
+                
                 DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
                 bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
 
@@ -85,28 +99,64 @@ namespace HCM3.Services.Trainer
                 IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
                 ourPatch.PatchHandle = detourHandle;
                 ourPatch.Applied = true;
-
-        }
-
-        public bool IsPatchApplied(string patchName)
-        {
-            PatchObject ourPatch = listOfPatches[patchName];
-            DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
-            return !this.PersistentCheatService.DetourCheckOG(detourInfoObject);
-        }
-
-        public void RemovePatch(string patchName)
-        {
-            PatchObject ourPatch = listOfPatches[patchName];
-            DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
-            bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
-
-            if (!originalCodeIsOriginal)
+            }
+            else //simple patch
             {
-                this.PersistentCheatService.DetourRemove(detourInfoObject, ourPatch.PatchHandle);
+                PatchInfo patchInfo = (PatchInfo)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                this.HaloMemoryService.ReadWrite.WriteBytes(patchInfo.OriginalCodeLocation, patchInfo.PatchedCodeBytes, true);
             }
 
-            ourPatch.Applied = false;
+        }
+
+        public bool IsPatchApplied(string patchName, bool isDetour)
+        {
+            PatchStateObject ourPatch = listOfPatches[patchName];
+
+            if (isDetour)
+            {
+                DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                return !this.PersistentCheatService.DetourCheckOG(detourInfoObject);
+            }
+            else //simple patch
+            {
+                PatchInfo patchInfo = (PatchInfo)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                bool codeIsPatched = true;
+
+                byte[] currentCode = this.HaloMemoryService.ReadWrite.ReadBytes(patchInfo.OriginalCodeLocation, patchInfo.OriginalCodeBytes.Length);
+
+                for (int i = 0; i < currentCode.Length; i++)
+                {
+                    if (currentCode[i] != patchInfo.PatchedCodeBytes[i])
+                    {
+                        codeIsPatched = false;
+                        break;
+                    }
+                }
+                return codeIsPatched;
+            }
+        }
+
+        public void RemovePatch(string patchName, bool isDetour)
+        {
+            PatchStateObject ourPatch = listOfPatches[patchName];
+
+            if (isDetour)
+            {
+                DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
+
+                if (!originalCodeIsOriginal)
+                {
+                    this.PersistentCheatService.DetourRemove(detourInfoObject, ourPatch.PatchHandle);
+                }
+
+                ourPatch.Applied = false;
+            }
+            else //simple patch
+            {
+                PatchInfo patchInfo = (PatchInfo)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                this.HaloMemoryService.ReadWrite.WriteBytes(patchInfo.OriginalCodeLocation, patchInfo.OriginalCodeBytes, true);
+            }
         }
 
         //only run on HCM shutdown
@@ -116,7 +166,7 @@ namespace HCM3.Services.Trainer
             int loadedGame = this.HaloMemoryService.HaloState.CurrentHaloState;
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-            foreach (KeyValuePair<string, PatchObject> kvp in listOfPatches)
+            foreach (KeyValuePair<string, PatchStateObject> kvp in listOfPatches)
             {
                 try
                 {

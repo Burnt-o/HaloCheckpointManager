@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace HCM3.Services.Trainer
 {
-    public class PatchObject
+
+    //Used to keep track of whether a patch is applied or not and how to apply it
+    public class PatchStateObject
     {
         public string Game { get; init; }
         public bool Applied { get; set; }
@@ -14,9 +16,12 @@ namespace HCM3.Services.Trainer
         public IntPtr? PatchHandle { get; set; }
         public string PointerName { get; init; }
 
+        public bool IsDetour { get; init; }
 
-        public PatchObject(string game, string pointerName)
+
+        public PatchStateObject(string game, string pointerName, bool isDetour)
         { 
+            IsDetour = isDetour;
         Game = game;
             PointerName = pointerName;
             PatchHandle = null;

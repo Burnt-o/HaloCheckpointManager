@@ -16,7 +16,7 @@ namespace HCM3.Services.Trainer
 
         public void ForceCheckpoint()
         {
-
+            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
             Trace.WriteLine("ForceCheckpoint called");
             this.HaloMemoryService.HaloState.UpdateHaloState();

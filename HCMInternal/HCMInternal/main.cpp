@@ -224,6 +224,23 @@ extern "C" __declspec(dllexport) int IsTextDisplaying()
 	}
 	else
 	{
+		if (textToPrint != "")
+		{
+			return 1;
+		}
+		return 3;
+	}
+
+}
+
+extern "C" __declspec(dllexport) int IsOverlayHooked()
+{
+	if (!init)
+	{
+		return 2;
+	}
+	else
+	{
 		return 1;
 	}
 

@@ -47,6 +47,7 @@ namespace HCM3.Services.Trainer
                 List<string> listOfInternalFunctions = new();
                 listOfInternalFunctions.Add("ChangeDisplayText");
                 listOfInternalFunctions.Add("IsTextDisplaying");
+                listOfInternalFunctions.Add("IsOverlayHooked");
                 listOfInternalFunctions.Add("PrintTemporaryMessage");
                 listOfInternalFunctions.Add("hkPresent");
                 listOfInternalFunctions.Add("RemoveHook");
@@ -59,7 +60,13 @@ namespace HCM3.Services.Trainer
                     Trace.WriteLine("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.Message);
                 }
             }
-            return this.CheckInternalLoaded();
+
+            bool success = this.CheckInternalLoaded();
+
+            if (!success) return false;
+
+            Thread.Sleep(50);
+            return this.CheckOverlayHooked();
         }
 
 

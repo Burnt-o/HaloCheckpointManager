@@ -15,6 +15,8 @@ namespace HCM3.Services.Trainer
 
         public void ForceRevert()
         {
+            
+
             Trace.WriteLine("ForceRevert called");
 
             this.HaloMemoryService.HaloState.UpdateHaloState();

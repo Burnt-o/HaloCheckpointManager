@@ -56,7 +56,9 @@ namespace HCM3.Services.Trainer
         public void ToggleCheat()
         {
             lock (AcrophobiaLock)
-            { 
+            {
+                if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
                 Trace.WriteLine("User commanded Acrophobia toggle !!!!!!!!!!!!!!!!!!!!");
                 if (IsChecked)
                 {

@@ -13,12 +13,12 @@ using HCM3.Helpers;
 
 namespace HCM3.Services.Trainer
 {
-    //TODO remove partial
-    public class PC_Invulnerability : IPersistentCheat
-    {
-        private readonly object InvulnerabilityLock = new object();
 
-        public PC_Invulnerability(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
+    public class PC_OneHitKill : IPersistentCheat
+    {
+        private readonly object OneHitKillLock = new object();
+
+        public PC_OneHitKill(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
         {
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
@@ -55,14 +55,14 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat()
         {
-            lock (InvulnerabilityLock)
+            lock (OneHitKillLock)
             {
                 if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
-                Trace.WriteLine("User commanded ToggleInvuln !!!!!!!!!!!!!!!!!!!!");
+                Trace.WriteLine("User commanded ToggleOHK !!!!!!!!!!!!!!!!!!!!");
                 if (IsChecked)
                 {
-                    Trace.WriteLine("turning invuln off");
+                    Trace.WriteLine("turning OHK off");
                     RemoveCheat();
                     // IsChecked will only be set to false (and thus internal DLL updated) if removeCheat didn't throw
                     IsChecked = false;
@@ -71,7 +71,7 @@ namespace HCM3.Services.Trainer
                 }
                 else
                 {
-                    Trace.WriteLine("turning invuln on");
+                    Trace.WriteLine("turning OHK on");
 
                     // Setting IsChecked to true will tell internal DLL to display text
                     IsChecked = true;
@@ -87,7 +87,7 @@ namespace HCM3.Services.Trainer
                     }
                     catch (Exception ex)
                     {
-                        ex.Message.Insert(0, "Failed to enabled Invulnerablity! ");
+                        ex.Message.Insert(0, "Failed to enabled OHK! ");
                         IsChecked = false;
                         throw;
                     }
@@ -96,7 +96,7 @@ namespace HCM3.Services.Trainer
                     {
                         try { RemoveCheat(); } catch { }
                         IsChecked = false;
-                        throw new Exception("Something went wrong and Invulnerability wasn't applied properly; gamestate may be corrupt.");
+                        throw new Exception("Something went wrong and OHK wasn't applied properly; gamestate may be corrupt.");
 
                     }
                 }
@@ -110,7 +110,7 @@ namespace HCM3.Services.Trainer
             int loadedGame = this.CommonServices.GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-            DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_Invuln_DetourInfo");
+            DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_OHK_DetourInfo");
 
                 this.PersistentCheatService.DetourRemove(detourInfo, this.DetourHandle);
             // If above method throws then detour handle won't be set to null (intentional)
@@ -140,7 +140,7 @@ namespace HCM3.Services.Trainer
             DetourInfoObject detourinfo;
             try
             {
-                detourinfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_Invuln_DetourInfo");
+                detourinfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_OHK_DetourInfo");
             }
             catch
             {
@@ -179,19 +179,21 @@ namespace HCM3.Services.Trainer
 
                 string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-                DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_Invuln_DetourInfo");
+                DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_OHK_DetourInfo");
 
 
                 this.DetourHandle = this.PersistentCheatService.DetourApply(detourInfo);
                 return true;
-            
+
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine("Failed to enable Invulnerability! \n" + ex.Message);
-                System.Windows.MessageBox.Show("Failed to enable Invulnerability! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
-                return false;
-            }
+            catch { return false; }
+
+            //catch (Exception ex)
+            //{
+            //    Trace.WriteLine("Failed to enable OHK! \n" + ex.Message);
+            //    System.Windows.MessageBox.Show("Failed to enable OHK! \n" + ex.Message + ex.StackTrace, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+            //    return false;
+            //}
 
 
 

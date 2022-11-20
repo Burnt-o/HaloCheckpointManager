@@ -66,13 +66,13 @@ namespace HCM3.Services.Trainer
             }
             else if (gameAs2Letters == "H2")
             {
-                if (this.listOfPatches["H2PlayerData"].PatchHandle == null || !IsPatchApplied("H2PlayerData"))
+                if (this.listOfPatches["H2PlayerData"].PatchHandle == null || !IsPatchApplied("H2PlayerData", true))
                 {
-                    if (IsPatchApplied("H2PlayerData"))
+                    if (IsPatchApplied("H2PlayerData", true))
                     {
-                        RemovePatch("H2PlayerData");
+                        RemovePatch("H2PlayerData", true);
                     }
-                    ApplyPatch("H2PlayerData");
+                    ApplyPatch("H2PlayerData", true);
                     Thread.Sleep(30);
                 }
 
@@ -85,13 +85,13 @@ namespace HCM3.Services.Trainer
             }
             else if (gameAs2Letters == "H3")
             {
-                if (this.listOfPatches["H3PlayerData"].PatchHandle == null || !IsPatchApplied("H3PlayerData"))
+                if (this.listOfPatches["H3PlayerData"].PatchHandle == null || !IsPatchApplied("H3PlayerData", true))
                 {
-                    if (IsPatchApplied("H3PlayerData"))
+                    if (IsPatchApplied("H3PlayerData", true))
                     {
-                        RemovePatch("H3PlayerData");
+                        RemovePatch("H3PlayerData", true);
                     }
-                    ApplyPatch("H3PlayerData");
+                    ApplyPatch("H3PlayerData", true);
                     Thread.Sleep(30);
                 }
 
@@ -104,13 +104,13 @@ namespace HCM3.Services.Trainer
             }
             else if (gameAs2Letters == "OD")
             {
-                if (this.listOfPatches["ODPlayerData"].PatchHandle == null || !IsPatchApplied("ODPlayerData"))
+                if (this.listOfPatches["ODPlayerData"].PatchHandle == null || !IsPatchApplied("ODPlayerData", true))
                 {
-                    if (IsPatchApplied("ODPlayerData"))
+                    if (IsPatchApplied("ODPlayerData", true))
                     {
-                        RemovePatch("ODPlayerData");
+                        RemovePatch("ODPlayerData", true);
                     }
-                    ApplyPatch("ODPlayerData");
+                    ApplyPatch("ODPlayerData", true);
                     Thread.Sleep(30);
                 }
 
@@ -123,13 +123,13 @@ namespace HCM3.Services.Trainer
             }
             else if (gameAs2Letters == "HR")
             {
-                if (this.listOfPatches["HRPlayerData"].PatchHandle == null || !IsPatchApplied("HRPlayerData"))
+                if (this.listOfPatches["HRPlayerData"].PatchHandle == null || !IsPatchApplied("HRPlayerData", true))
                 {
-                    if (IsPatchApplied("HRPlayerData"))
+                    if (IsPatchApplied("HRPlayerData", true))
                     {
-                        RemovePatch("HRPlayerData");
+                        RemovePatch("HRPlayerData", true);
                     }
-                    ApplyPatch("HRPlayerData");
+                    ApplyPatch("HRPlayerData", true);
                     Thread.Sleep(30);
                 }
 

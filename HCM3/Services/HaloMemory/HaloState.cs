@@ -198,6 +198,8 @@ namespace HCM3.Services
             return CurrentHaloState;
         }
 
+        public bool OverlayHooked { get; set; } = false;
+
         public void UpdateHaloState(object? sender, System.Timers.ElapsedEventArgs? args)
         {
             //Don't care about those args

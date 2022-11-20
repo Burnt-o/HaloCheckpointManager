@@ -72,6 +72,7 @@ namespace HCM3
             services.AddSingleton<PC_BlockCPs>();
             services.AddSingleton<PC_Medusa>();
             services.AddSingleton<PC_Acrophobia>();
+            services.AddSingleton<PC_OneHitKill>();
 
             services.AddSingleton<HotkeyManager>();
         }

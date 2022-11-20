@@ -18,7 +18,7 @@
 	<Entry Type="List&lt;string&gt;">
 		<Name>H3_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill</ListString>
 		</Version>
 	</Entry>
 
@@ -35,6 +35,15 @@
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
+		<Name>H4_BRP</Name>
+		<Version Version="1.2645.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+	</Entry>
+	<Entry Type="List&lt;string&gt;">
 		<Name>MN_BRP</Name>
 		<Version Version="1.2645.0.0">
 			<ListString>Speedhack</ListString>
@@ -42,12 +51,22 @@
 	</Entry>
 	<!--/end ButtonRequiredPointers-->
 
+	
+	<!--RE: use internal to get oPresent- scan for 8bytes that value. disassemble oPresent and check what called it, match with scan-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>PresentPointer</Name>
 		<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3F48378</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x40</Offset>
 			</Offsets>
@@ -1054,7 +1073,24 @@
 
 	</Entry>
 	<!--/end Invuln stuff-->
+	<Entry Type="DetourInfoObject">
+		<Name>H3_OHK_DetourInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x3511DF</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xF3, 0x41, 0x0F, 0x10, 0x48, 0x10, 0xF3, 0x41, 0x0F, 0x10, 0x50, 0x14</OriginalCodeBytes>
+			<SizeToAlloc>50</SizeToAlloc>
+			<DetourCodeASM>movss xmm1, [r8+10h]; movss xmm2, [r8+14h]; push rax; mov rax, [r8+14h]; test rax, rax; je 0Fh; mov eax, 47C35000h; movd xmm1, eax; movd xmm2, eax; pop rax; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>w
+			</SymbolPointers>
+		</Version>
 
+	</Entry>
 
 	<Entry Type="DetourInfoObject">
 		<Name>H3_PlayerData_DetourInfo</Name>
@@ -2268,12 +2304,37 @@
 	<!--/end Invuln stuff-->
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+	<!--RE: goto "bcrypt.BCryptDestroyHash", check what calls into this. Somewhere below this call will be a test that tests it-->
+	<Entry Type="PatchInfo">
+		<Name>H4_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x54F7B</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xED</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x52E7B</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC1</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xED</PatchedCodeBytes>
+		</Version>
+	</Entry>
+	
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>H4_InjectRequirements</Name>
 		<Version Version="1.2645.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
-			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
 			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
 			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
@@ -2285,7 +2346,7 @@
 		<Version Version="1.2969.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
-			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
 			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
 			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
@@ -2295,6 +2356,7 @@
 			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
 		</Version>
 	</Entry>
+
 	<Entry Type="ReadWrite.Pointer">
 
 		<Name>H4_CheckpointLocation1</Name>

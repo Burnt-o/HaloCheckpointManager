@@ -15,6 +15,7 @@ namespace HCM3.Services.Trainer
 
         public void TeleportToLocation(float x, float y, float z)
         {
+            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
             Trace.WriteLine("TeleportToLocation called");
             this.HaloMemoryService.HaloState.UpdateHaloState();
