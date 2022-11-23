@@ -135,7 +135,7 @@ namespace HCM3.Services.Trainer
             
 
             Trace.WriteLine("Updating internal display with active cheats");
-            if (this.InternalServices.CheckInternalLoaded() == false || this.InternalServices.InternalFunctionsLoaded == false )
+            if (this.InternalServices.CheckInternalLoaded() == false || this.InternalServices.InternalFunctionsLoaded == false || !this.HaloMemoryService.HaloState.OverlayHooked)
             {
                 if (!this.InternalServices.InjectInternal()) throw new Exception("Internal dll wasn't loaded, then failed injecting internal dll");
             }

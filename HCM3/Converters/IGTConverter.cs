@@ -32,7 +32,23 @@ namespace HCM3.Converters
             double divisor = (game == 0) ? (double)30 : (double)60;
             double seconds = gameTicks / divisor;
 
-            return TimeSpan.FromSeconds(seconds);
+            string formatter = @"mm\:ss";
+            if (seconds >= (double)3600)
+            {
+                Trace.WriteLine("ALTERNATE WAS HIT");
+                formatter = @"hh\:mm\:ss";
+            }
+
+            //for detailed checkpoint info, we want the deci-seconds
+            if (parameter != null && parameter.GetType() == typeof(string) && (string)parameter == "true")
+            {
+                formatter = formatter + @"\.ff";
+            }
+
+            TimeSpan ts = TimeSpan.FromSeconds(seconds);
+            string formattedstring = ts.ToString(formatter);
+            Trace.WriteLine(formattedstring);
+            return formattedstring;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

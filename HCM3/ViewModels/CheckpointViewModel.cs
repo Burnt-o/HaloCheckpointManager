@@ -260,6 +260,13 @@ namespace HCM3.ViewModels
             set { _renameCheckpoint = value; }
         }
 
+        private ICommand _sortCheckpoint;
+        public ICommand SortCheckpoint
+        {
+            get { return _sortCheckpoint ?? (_sortCheckpoint = new SortCheckpointCommand(this, CheckpointServices)); }
+            set { _sortCheckpoint = value; }
+        }
+
         private ICommand _openInExplorer;
         public ICommand OpenInExplorer
         {

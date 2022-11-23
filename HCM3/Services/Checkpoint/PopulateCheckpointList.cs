@@ -43,6 +43,13 @@ namespace HCM3.Services
                     return checkpointCollection;
                 }
 
+            //round every LastWriteTime to seconds
+            foreach (FileInfo checkpointFile in checkpointFileArray)
+            { 
+            checkpointFile.LastWriteTime = checkpointFile.LastWriteTime.AddTicks(-(checkpointFile.LastWriteTime.Ticks % TimeSpan.TicksPerSecond));
+            }
+
+
                 // Need to fix files so that none of them have the exact same LastWriteTime ("last modified on" file metadata), since we use this property for sorting
                 // This is done using two nested foreach loops (one here, one in local function FileHasSameTime)
                 foreach (FileInfo checkpointFile in checkpointFileArray)
@@ -53,8 +60,10 @@ namespace HCM3.Services
                     }
                 }
 
-                // Magic happens over in the decoder. Add our new checkpoint to the list
-                foreach (FileInfo checkpointFile in checkpointFileArray)
+
+
+            // Magic happens over in the decoder. Add our new checkpoint to the list
+            foreach (FileInfo checkpointFile in checkpointFileArray)
                 {
                     Checkpoint? cp = DecodeCheckpointFile(checkpointFile, SelectedGame);
                     if (cp != null)

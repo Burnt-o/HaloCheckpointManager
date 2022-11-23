@@ -25,6 +25,9 @@ namespace HCM3.Services.Trainer
             listOfPatches.Add("ODPlayerData", new PatchStateObject("OD", "OD_PlayerData_DetourInfo", true));
             listOfPatches.Add("HRPlayerData", new PatchStateObject("HR", "HR_PlayerData_DetourInfo", true));
 
+            listOfPatches.Add("H3ChecksumFix", new PatchStateObject("H3", "H3_ChecksumFix_PatchInfo", false));
+            listOfPatches.Add("ODChecksumFix", new PatchStateObject("OD", "OD_ChecksumFix_PatchInfo", false));
+            listOfPatches.Add("HRChecksumFix", new PatchStateObject("HR", "HR_ChecksumFix_PatchInfo", false));
             listOfPatches.Add("H4ChecksumFix", new PatchStateObject("H4", "H4_ChecksumFix_PatchInfo", false));
 
         }

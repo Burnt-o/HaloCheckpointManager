@@ -1180,6 +1180,22 @@
 	
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+	<Entry Type="PatchInfo">
+		<Name>H3_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0xACB53</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
+
+	</Entry>
+
+
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>H3_InjectRequirements</Name>
 		<Version Version="1.2645.0.0">
@@ -1576,6 +1592,21 @@
 	
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+	<Entry Type="PatchInfo">
+		<Name>OD_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3odst.dll</Module>
+				<Offsets>
+					<Offset>0xAFD43</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xFF</PatchedCodeBytes>
+		</Version>
+
+	</Entry>
+
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>OD_InjectRequirements</Name>
 		<Version Version="1.2645.0.0">
@@ -1966,6 +1997,21 @@
 
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+	<Entry Type="PatchInfo">
+		<Name>HR_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x22C27</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
+
+	</Entry>
+	
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>HR_InjectRequirements</Name>
 		<Version Version="1.2645.0.0">

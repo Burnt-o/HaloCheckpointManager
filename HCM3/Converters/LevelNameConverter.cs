@@ -27,10 +27,10 @@ namespace HCM3.Converters
             // Must be within bounds of array
             if (game < Dictionaries.GameToLevelCodeDictionary.Length)
             {
-                Dictionary<string, string> stringMapper = Dictionaries.GameToLevelCodeDictionary[game];
+                Dictionary<string, Dictionaries.LevelInfo> stringMapper = Dictionaries.GameToLevelCodeDictionary[game];
                 if (stringMapper.ContainsKey(valueString))
                 {
-                    return stringMapper[valueString];
+                    return stringMapper[valueString].FullName;
                 }
                 else
                 {
