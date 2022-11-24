@@ -95,6 +95,7 @@ namespace HCM3.ViewModels
 
         private void HaloStateEvents_HALOSTATECHANGED_EVENT(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
         {
+            Trace.WriteLine("TRAINERVIEWMODEL HALOSTATECHANGEDEVENT BEEN TRIGGERED");
             //this.UserControlToShow = "H1";
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[e.NewHaloState];
 
@@ -227,6 +228,7 @@ new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.Forc
             this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
             listOfButtons.Add(this.Button_ToggleSprintMeter );
             UserControlToShow = "LD";
+            //Trace.WriteLine("CURRENTHALOSTATE at start: " + this.HaloMemoryService.HaloState.CurrentHaloState);
             HaloStateEvents.HALOSTATECHANGED_EVENT += HaloStateEvents_HALOSTATECHANGED_EVENT;
             hotkeyManager.KB_ReloadHotkeys();
         }

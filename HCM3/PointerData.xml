@@ -100,7 +100,18 @@
 				</Offsets>
 			</Version>
 		</Entry>
-		<!--Print Message stuff-->
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_LevelCode</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF8288</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+	<!--Print Message stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CurrentTickCount</Name>
 			<Version Version="1.2645.0.0">

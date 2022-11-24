@@ -15,7 +15,7 @@
         
         <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30"/>
-                <ColumnDefinition MinWidth="100"/>
+                <ColumnDefinition MinWidth="150"/>
                 <ColumnDefinition MinWidth="100" Width="*" />
 
         </Grid.ColumnDefinitions>
@@ -25,7 +25,13 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
-            
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -37,7 +43,9 @@
 
             <CheckBox Grid.Row="4" Grid.Column="1" Content="Autoname dumped checkpoints" IsChecked="{Binding Path=AutoName, Mode=TwoWay}" />
             <CheckBox Grid.Row="5" Grid.Column="1" Content="Revert after injecting" IsChecked="{Binding Path=AutoRevert, Mode=TwoWay}"/>
-            <CheckBox Grid.Row="6" Grid.Column="1" Content="(Halo 1) Inject/Dump Core Saves" IsChecked="{Binding Path=H1Cores, Mode=TwoWay}" />
+            <CheckBox Grid.Row="6" Grid.Column="1" Content="Warn on injecting to wrong MCC version" IsChecked="{Binding Path=WarnInjectWrongVersion, Mode=TwoWay}"/>
+            <CheckBox Grid.Row="7" Grid.Column="1" Content="Warn on injecting to wrong level" IsChecked="{Binding Path=WarnInjectWrongLevel, Mode=TwoWay}"/>
+            <CheckBox Grid.Row="8" Grid.Column="1" Content="(Halo 1) Inject/Dump Core Saves" IsChecked="{Binding Path=H1Cores, Mode=TwoWay}" />
             
 
 

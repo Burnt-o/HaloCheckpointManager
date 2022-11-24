@@ -42,6 +42,8 @@ namespace HCM3.Services
         private HaloMemoryService HaloMemoryService { get; init; } //self ref? 
 
         private HotkeyManager HotkeyManager { get; init; }
+
+        private bool firstCheck = true;
         public HaloState(DataPointersService dataPointersService, HaloMemoryService haloMemoryService, HotkeyManager hotkeyManager)
         {
             var servicecollection = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
@@ -65,6 +67,9 @@ namespace HCM3.Services
             gamepadUpdateTimer.Elapsed += GamepadUpdateTimer_Elapsed;
             gamepadUpdateTimer.Interval = 30;
             gamepadUpdateTimer.Enabled = false;
+
+
+
 
         }
 
@@ -157,6 +162,26 @@ namespace HCM3.Services
 
         public string? MCCType { get; set; }
 
+        private string? _currentLevelCode;
+            public string? CurrentLevelCode
+        {
+            get { return _currentLevelCode; }
+            set
+            {
+                if (_currentLevelCode != value)
+                {
+                    _currentLevelCode = value;
+                    // Raise event
+                    Trace.WriteLine("Raising HaloStateChanged on level code changing");
+                    HaloStateEvents.HALOSTATECHANGED_EVENT_INVOKE(this, new HaloStateEvents.HaloStateChangedEventArgs(_currentHaloState));
+                }
+                else
+                {
+                    _currentLevelCode = value;
+                }
+            }
+
+        }
 
         private int _currentHaloState;
         public int CurrentHaloState
@@ -202,8 +227,25 @@ namespace HCM3.Services
 
         public void UpdateHaloState(object? sender, System.Timers.ElapsedEventArgs? args)
         {
-            //Don't care about those args
-            UpdateHaloState();
+
+            //need to communicate to some other stuff that subscribe to the event the initial state 
+            if (firstCheck)
+            {
+                firstCheck = false;
+
+                this.ForceAttach();
+                UpdateHaloState();
+
+                HaloStateEvents.HALOSTATECHANGED_EVENT_INVOKE(this, new HaloStateEvents.HaloStateChangedEventArgs(_currentHaloState));
+            }
+            else
+            {
+                UpdateHaloState();
+            }
+
+
+            
+
         }
         public void UpdateHaloState()
         {
@@ -212,6 +254,7 @@ namespace HCM3.Services
             {
                 Trace.WriteLine("1");
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
+                CurrentLevelCode = null;
                 return;
             }
 
@@ -224,6 +267,7 @@ namespace HCM3.Services
             {
                 Trace.WriteLine("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
+                CurrentLevelCode = null;
                 return;
             }
 
@@ -238,6 +282,7 @@ namespace HCM3.Services
             if (menuIndicator == 00 && stateIndicator != 44)
             {
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Menu;
+                CurrentLevelCode = null;
             }
             else
             {
@@ -245,34 +290,42 @@ namespace HCM3.Services
                 {
                     case 0:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Halo1;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     case 1:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Halo2;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     case 2:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Halo3;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     case 3:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Halo4;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     case 4: // I think this is the mp version of h2 (specifically h2a, not h2c)
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Halo2;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     case 5:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Halo3ODST;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     case 6:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.HaloReach;
+                        CurrentLevelCode = GetLevelCode(CurrentHaloState);
                         break;
 
                     default:
                         CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
+                        CurrentLevelCode = null;
                         break;
 
                 }
@@ -281,7 +334,29 @@ namespace HCM3.Services
 
         }
 
+        public string? GetLevelCode(int game)
+        {
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[game];
+            try
+            {
+                ReadWrite.Pointer levelNamePointer = (ReadWrite.Pointer)DataPointersService.GetPointer($"{gameAs2Letters}_LevelCode", this.CurrentAttachedMCCVersion);
+                string levelCode = this.HaloMemoryService.ReadWrite.ReadString(levelNamePointer, 64, false);
 
+                while (levelCode.Contains(@"\"))
+                {
+                    levelCode = levelCode.Substring(levelCode.LastIndexOf(@"\") + 1);
+                }
+                Trace.WriteLine("LEVEL CODE: " + levelCode);
+                return levelCode;
+                
+            }
+            catch
+            {
+                return null;
+
+            }
+            
+        }
     }
 }
 

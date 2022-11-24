@@ -43,6 +43,7 @@
             <DataTemplate  x:Key="Load" DataType="{x:Type viewModels:TrainerViewModel}">
                 <userControls:LDTrainerView />
             </DataTemplate>
+            
 
         </ResourceDictionary>
     </Window.Resources>
@@ -90,30 +91,41 @@
         </ContentControl>
         <!--<userControls:H1TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>-->
     <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}"  >
-        
-        <TabItem  Header="Halo 1">
-            
-        <Grid>
 
-                <local:CheckpointControl DataContext="{Binding Path=CheckpointViewModel}"/>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}">Halo 1</TextBlock>
+                </TabItem.Header>
+                <Grid>
+
+                <local:CheckpointControl  DataContext="{Binding Path=CheckpointViewModel}"/>
 
             </Grid>
         </TabItem>
-        <TabItem  Header="Halo 2">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}">Halo 2</TextBlock>
+                </TabItem.Header>
             <Grid>
 
                 <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
                
             </Grid>
         </TabItem>
-        <TabItem  Header="Halo 3">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}">Halo 3</TextBlock>
+                </TabItem.Header>
             <Grid>
 
                 <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
 
             </Grid>
         </TabItem>
-        <TabItem  Header="Halo 3 ODST">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Halo 3 ODST</TextBlock>
+                </TabItem.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  />
@@ -122,7 +134,10 @@
                     <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
                 </Grid>
         </TabItem>
-        <TabItem  Header="Halo Reach">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Halo Reach</TextBlock>
+                </TabItem.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  />
@@ -131,7 +146,10 @@
                     <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
                 </Grid>
         </TabItem>
-        <TabItem  Header="Halo 4">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Halo 4</TextBlock>
+                </TabItem.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  />
@@ -140,7 +158,10 @@
                     <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
                 </Grid>
         </TabItem>
-        <TabItem  Header="Settings">
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Settings</TextBlock>
+                </TabItem.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  />

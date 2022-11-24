@@ -43,6 +43,17 @@ namespace HCM3.ViewModels
             set { Properties.Settings.Default.H1Cores = value; }
         }
 
+        public bool WarnInjectWrongVersion
+        {
+            get { return Properties.Settings.Default.WarnInjectWrongVersion; }
+            set { Properties.Settings.Default.WarnInjectWrongVersion = value; }
+        }
+
+        public bool WarnInjectWrongLevel
+        {
+            get { return Properties.Settings.Default.WarnInjectWrongLevel; }
+            set { Properties.Settings.Default.WarnInjectWrongLevel = value; }
+        }
 
     }
 }

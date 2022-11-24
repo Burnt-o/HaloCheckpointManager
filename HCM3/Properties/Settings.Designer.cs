@@ -153,7 +153,7 @@ namespace HCM3.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Darkmode {
             get {
                 return ((bool)(this["Darkmode"]));
@@ -196,6 +196,30 @@ namespace HCM3.Properties {
             }
             set {
                 this["H1Cores"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WarnInjectWrongVersion {
+            get {
+                return ((bool)(this["WarnInjectWrongVersion"]));
+            }
+            set {
+                this["WarnInjectWrongVersion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool WarnInjectWrongLevel {
+            get {
+                return ((bool)(this["WarnInjectWrongLevel"]));
+            }
+            set {
+                this["WarnInjectWrongLevel"] = value;
             }
         }
     }

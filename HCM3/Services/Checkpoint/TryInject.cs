@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using HCM3.Models;
 using HCM3.Helpers;
 using System.Diagnostics;
+using System.Windows;
 
 namespace HCM3.Services
 {
@@ -72,6 +73,62 @@ namespace HCM3.Services
             if (checkpointData == null || (checkpointData.Length != checkpointInfo.Length))
             {
                 throw new Exception("HCM failed to read data of checkpoint to inject");
+            }
+
+            //Warn user if injecting checkpoint into wrong in-game level
+            if (Properties.Settings.Default.WarnInjectWrongLevel)
+            {
+                string? levelString = null;
+                try
+                {
+                    byte[] levelBytes = new byte[64];
+                    int levelNameOffset = (int)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointData_LevelCode");
+
+                Array.Copy(checkpointData, levelNameOffset, levelBytes, 0, 64);
+
+                    levelString = ASCIIEncoding.ASCII.GetString(levelBytes);
+                    while (levelString.Contains(@"\"))
+                    { levelString = levelString.Substring(levelString.LastIndexOf(@"\") + 1); }
+
+                }
+                catch (Exception ex)
+                {
+                    levelString = null;
+                    Trace.WriteLine("WarnInjectWrongLevel failed: " + ex.Message);
+                }
+
+
+                if (levelString != null && levelString != this.HaloMemoryService.HaloState.CurrentLevelCode)
+                {
+                    if (MessageBox.Show("It appears the checkpoint you're injecting is not on the same level as the current in-game level. This is very likely to cause the game to crash. Proceed anyway?", "HCM Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+
+            }
+
+            //Warn user if injecting checkpoint into wrong version of MCC
+            if (Properties.Settings.Default.WarnInjectWrongVersion)
+            {
+                byte[] versionBytes = new byte[10];
+                Array.Copy(checkpointData, checkpointData.Length - 10, versionBytes, 0, 10);
+                string? versionString = null;
+                try
+                {
+                    versionString = ASCIIEncoding.ASCII.GetString(versionBytes);
+                }
+                catch { }
+                
+
+                if (versionString != null && versionString != this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion)
+                {
+                    if (MessageBox.Show("It appears the checkpoint you're injecting may not match the version of MCC that is currently running. Proceed anyway?", "HCM Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+
             }
 
             // Modify the checkpointData to remove the version string at end of file

@@ -39,7 +39,7 @@
 
         </Grid.RowDefinitions>
 
-        <Border  Grid.RowSpan="8" Grid.ColumnSpan="3" BorderBrush="{DynamicResource Gray}" BorderThickness="1" CornerRadius="10" Margin="0" Height="261" Background="{DynamicResource VeryLightGray}">
+        <Border  Grid.RowSpan="8" Grid.ColumnSpan="3" BorderBrush="{DynamicResource Light}" BorderThickness="1" CornerRadius="10" Margin="0" Height="261" Background="{DynamicResource VeryLightGray}">
 
         </Border>
 
@@ -56,7 +56,7 @@
             </Border.Background>
         </Border>
 
-        <Border Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource WhiteSmoke}" Margin="-5,2,10,4" CornerRadius="7" />
+        <Border Grid.Row="2" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource LightGray}" Margin="-5,2,10,4" CornerRadius="7" />
 
         <TextBox Grid.Row="1" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding SelectedCheckpoint.CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0"  />

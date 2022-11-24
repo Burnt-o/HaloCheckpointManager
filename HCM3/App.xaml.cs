@@ -125,6 +125,10 @@ namespace HCM3
 
 
 
+
+
+
+
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
             mainWindow.Show();

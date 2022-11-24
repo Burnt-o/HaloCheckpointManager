@@ -41,7 +41,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="Darkmode" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AutoName" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -51,6 +51,12 @@
     </Setting>
     <Setting Name="H1Cores" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WarnInjectWrongVersion" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WarnInjectWrongLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
