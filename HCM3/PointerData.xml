@@ -1,51 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-	<HighestSupportedVersion>1.2969.0.0</HighestSupportedVersion>
+	<LatestHCMVersion>2.0.0</LatestHCMVersion>
+	<ObsoleteHCMVersions>
+		<Entry>1.9.9</Entry>
+	</ObsoleteHCMVersions>
+	
+	<HighestSupportedVersion>1.3073.0.0</HighestSupportedVersion>
 
 	<!--ButtonRequiredPointers-->
 	<Entry Type="List&lt;string&gt;">
 		<Name>H1_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, CheatMedusa, Acrophobia</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, CheatMedusa, AcrophobiaSkull, BandanaSkull, BlindSkull, DisplayInfo</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, CheatMedusa, AcrophobiaSkull, BandanaSkull, BlindSkull, DisplayInfo</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>H2_BRP</Name>
+		<Version Version="1.2448.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, AcrophobiaSkull, BandanaSkull, BlindSkull, DisplayInfo</ListString>
+		</Version>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, Acrophobia</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, AcrophobiaSkull, BandanaSkull, BlindSkull, DisplayInfo</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, AcrophobiaSkull, BandanaSkull, BlindSkull, DisplayInfo</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>H3_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
 		</Version>
 	</Entry>
 
 	<Entry Type="List&lt;string&gt;">
 		<Name>OD_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>HR_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, BlindSkull</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, BlindSkull</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>H4_BRP</Name>
 		<Version Version="1.2645.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
 		</Version>
 		<Version Version="1.2969.0.0">
-			<ListString>InjectCheckpoint, DumpCheckpoint, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Speedhack, BlockNaturalCPs</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>MN_BRP</Name>
+		<Version Version="1.2448.0.0">
+			<ListString>Speedhack</ListString>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<ListString>Speedhack</ListString>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<ListString>Speedhack</ListString>
 		</Version>
 	</Entry>
@@ -54,7 +86,15 @@
 	
 	<!--RE: use internal to get oPresent- scan for 8bytes that value. disassemble oPresent and check what called it, match with scan-->
 	<Entry Type="ReadWrite.Pointer">
-		<Name>PresentPointer</Name>
+		<Name>PresentPointer_Steam</Name>
+		<Version Version="1.2448.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A285C0</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -72,9 +112,29 @@
 			</Offsets>
 		</Version>
 		
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03FCF6D8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+		
 	</Entry>
-	
-	
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>PresentPointer_WinStore</Name>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E1EDC8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+
+	</Entry>
 	
 	<!--Halo 1-->
 
@@ -84,6 +144,14 @@
 				<Module>main</Module>
 				<Offsets>
 					<Offset>0x03B80E98</Offset>
+					<Offset>0x8</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x401C208</Offset>
 					<Offset>0x8</Offset>
 					<Offset>0x0</Offset>
 				</Offsets>
@@ -99,6 +167,14 @@
 					<Offset>0x0</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3E6B858</Offset>
+					<Offset>0x8</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 
 	<Entry Type="ReadWrite.Pointer">
@@ -107,6 +183,12 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2AF8288</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2CA07CC</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -118,6 +200,12 @@
 				<Module>halo1.dll</Module>
 				<Offsets>
 					<Offset>0x2B5FCE8</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2CEBD34</Offset>
 				</Offsets>
 			</Version>
 		</Entry>
@@ -139,10 +227,19 @@
 					<Offset>0xADC050</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0xAD4739</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CPMessageCallLength</Name>
 			<Version Version="1.2645.0.0">
+				<Offset>5</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
 				<Offset>5</Offset>
 			</Version>
 		</Entry>
@@ -235,6 +332,12 @@
 					<Offset>0x2AF8247</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2CA0787</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceRevert</Name>
@@ -242,6 +345,12 @@
 				<Module>halo1.dll</Module>
 				<Offsets>
 					<Offset>0x2AF8242</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2CA0782</Offset>
 				</Offsets>
 			</Version>
 		</Entry>
@@ -253,6 +362,12 @@
 					<Offset>0x2AF8259</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2CA0799</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceCoreLoad</Name>
@@ -260,6 +375,12 @@
 				<Module>halo1.dll</Module>
 				<Offsets>
 					<Offset>0x2AF825A</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2CA079A</Offset>
 				</Offsets>
 			</Version>
 		</Entry>
@@ -271,6 +392,12 @@
 				<Offset>0xAC15EE</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAED789</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H1_MedusaFlag</Name>
@@ -280,23 +407,182 @@
 				<Offset>0x1ADB926</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1DBE5AE</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_SkullAcrophobiaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1ADB94F</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1DBE5A7</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_SkullAcrophobiaBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_SkullBandanaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1ADB93E</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1DBE596</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_SkullBandanaBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H1_SkullBlindFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1ADB941</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1DBE599</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_SkullBlindBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0</Offset>
+		</Version>
+	</Entry>
+
+
+<!--48 83 c0 34 48 03 c1 c3 33 c0
+pdatum has value 0xE44901DA on keyes start easy
+should be 3rd of 4 results. accessed by mov [r14], ebx.
+-->
 	<Entry Type="DetourInfoObject">
-		<Name>H1_Acrophobia_DetourInfo</Name>
+		<Name>H1_DisplayInfo_DetourInfo</Name>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo1.dll</Module>
 				<Offsets>
-					<Offset>0xC22B15</Offset>
+					<Offset>0xAFF231</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
-			<OriginalCodeBytes>0x80, 0x3D, 0x33, 0x8E, 0xEB, 0x00, 0x00, 0x0F, 0x84, 0x4E, 0x02, 0x00, 0x00</OriginalCodeBytes>
-			<SizeToAlloc>30</SizeToAlloc>
-			<DetourCodeASM>jmp $returnControl</DetourCodeASM>
+			<OriginalCodeBytes>0x48, 0x83, 0xC0, 0x34, 0x48, 0x03, 0xC1</OriginalCodeBytes>
+			<SizeToAlloc>500</SizeToAlloc>
+			<DetourCodeASM>add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp dword [rcx + 0B0h], 00000000; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
-			<SymbolPointers></SymbolPointers>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0x2846FF0</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewX</Symbol>
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0x02A52D70</Offset>
+						<Offset>0x1C</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewY</Symbol>
+
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0x02A52D70</Offset>
+						<Offset>0x20</Offset>
+					</Offsets>
+				</Pointer>
+			</SymbolPointers>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0xB876F1</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x83, 0xC0, 0x34, 0x48, 0x03, 0xC1</OriginalCodeBytes>
+			<SizeToAlloc>500</SizeToAlloc>
+			<DetourCodeASM>add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp dword [rcx + 0B0h], 00000000; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0x25F6D60</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewX</Symbol>
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0x2EF4cf8</Offset>
+						<Offset>0x1C</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewY</Symbol>
+
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0x2EF4cf8</Offset>
+						<Offset>0x20</Offset>
+					</Offsets>
+				</Pointer>
+			</SymbolPointers>
 		</Version>
 	</Entry>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 		<!--Invuln stuff-->
 		<Entry Type="DetourInfoObject">
 			<Name>H1_Invuln_DetourInfo</Name>
@@ -322,6 +608,28 @@
 					</Pointer>
 				</SymbolPointers>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<OriginalCodeLocation>
+					<Module>halo1.dll</Module>
+					<Offsets>
+						<Offset>0xC18030</Offset>
+					</Offsets>
+				</OriginalCodeLocation>
+				<OriginalCodeBytes>0xC7, 0x45, 0xD8, 0x00, 0x00, 0x00, 0x00, 0x44, 0x89, 0x5D, 0x88, 0x83, 0xF9, 0xFF</OriginalCodeBytes>
+				<SizeToAlloc>30</SizeToAlloc>
+				<DetourCodeASM>mov dword ptr [rbp-28h], 00000000; mov dword ptr [rbp-78h], r11d; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 05h; cmp ecx, -01h;  jmp $returnControl</DetourCodeASM>
+				<HookCodeASM>jmp $detourHandle</HookCodeASM>
+				<SymbolPointers>
+					<Pointer>
+						<Symbol>@playerDatum</Symbol>
+						<!--Stores the datum of the player entity, for comparison in detour-->
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x25F6D60</Offset>
+						</Offsets>
+					</Pointer>
+				</SymbolPointers>
+			</Version>
 		</Entry>
 		
 		
@@ -335,7 +643,15 @@
 				<Offset>0x2846FF0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x25F6D60</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	
+	<!--scan writable "loopobjects" +30 all entries. check what writes to them, look around for pointers to objects and loopobjects. "objects"-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H1_EntityOffsetTable</Name>
 		<Version Version="1.2645.0.0">
@@ -345,7 +661,16 @@
 				<Offset>0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1dbe628</Offset>
+				<Offset>0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	
+	<!--see above. "loopobjects"-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H1_EntityTable</Name>
 		<Version Version="1.2645.0.0">
@@ -355,10 +680,23 @@
 				<Offset>0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2f01d80</Offset>
+				<Offset>0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	
+	
+	<!--note: I'm assuming for the moment that these indexes won't change between version. TODO: confirm that-->
 	<Entry Type="int">
 		<Name>H1_PlayerOffsetIndex</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x40</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x40</Offset>
 		</Version>
 	</Entry>
@@ -367,10 +705,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x34</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x34</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H1_PlayerData_Xpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x18</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x18</Offset>
 		</Version>
 	</Entry>
@@ -379,10 +723,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1C</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1C</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H1_PlayerData_Zpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x20</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x20</Offset>
 		</Version>
 	</Entry>
@@ -391,10 +741,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x24</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x24</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H1_PlayerData_Yvel</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x28</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x28</Offset>
 		</Version>
 	</Entry>
@@ -403,16 +759,25 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x2C</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x2C</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="uint">
 		<Name>H1_PlayerData_VehicleNullValue</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0xFFFFFFFF</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xFFFFFFFF</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H1_PlayerData_VehicleIndex</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0xD8</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0xD8</Offset>
 		</Version>
 	</Entry>
@@ -425,6 +790,13 @@
 				<Offset>0x1C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2EF4cf8</Offset>
+				<Offset>0x1C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H1_ViewVert</Name>
@@ -432,6 +804,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x02A52D70</Offset>
+				<Offset>0x20</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2EF4cf8</Offset>
 				<Offset>0x20</Offset>
 			</Offsets>
 		</Version>
@@ -454,6 +833,18 @@
 			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
 			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>false</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>false</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
 	</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CheckpointLocation1</Name>
@@ -465,11 +856,22 @@
 					<Offset>0x14</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x02FA0920</Offset>
+					<Offset>0x28</Offset>
+					<Offset>0x14</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CheckpointLength</Name>
 			<Version Version="1.2645.0.0">
 			<Offset>0x4BA000</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x5C0000</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="int">
@@ -477,11 +879,17 @@
 			<Version Version="1.2645.0.0">
 			<Offset>11</Offset>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>11</Offset>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CheckpointData_GameTickCount</Name>
 			<Version Version="1.2645.0.0">
 			<Offset>0x2F4</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x3DB0</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="int">
@@ -489,12 +897,23 @@
 			<Version Version="1.2645.0.0">
 			<Offset>0x126</Offset>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x126</Offset>
+			</Version>
 		</Entry>
 		<!--/end Checkpoint management stuff-->
 		<!--/end Halo 1-->
 		<!--Halo 2-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_ModuleSteam</Name>
+			<Version Version="1.2448.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3A24FF8</Offset>
+					<Offset>0x28</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -502,6 +921,14 @@
 				<Offset>0x28</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x401C208</Offset>
+					<Offset>0x28</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
 			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
@@ -514,15 +941,35 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3E6B858</Offset>
+					<Offset>0x28</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<!--Print Message stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_CurrentTickCount</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x1694754</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x176EF04</Offset>
 			</Offsets>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x15E1D74</Offset>
+				</Offsets>
 			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
@@ -534,20 +981,39 @@
 				<Offset>0x4</Offset>
 			</Offsets>
 			</Version>
+
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_CPMessageCall</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x69CA74</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x69cc74</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x678DCB</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CPMessageCallLength</Name>
+			<Version Version="1.2448.0.0">
+				<Offset>5</Offset>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Offset>5</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>5</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
@@ -605,43 +1071,243 @@
 		<!--Trainer stuff-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_ForceCheckpoint</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xD7E0CE</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD42D7E</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xE6EC8F</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_ForceRevert</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xD7E0CD</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD42D7D</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xE6EC8E</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_DoubleRevertFlag</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xE1E204</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x14728B4</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x159E814</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_NaturalCheckpointCode</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x69D4B8</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x69D6B8</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x679898</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	
+	<!--scan nw 48 8b c3 48 8b 5c 24 30 48 8b 74 24 38 48 83 c4 20  5f c3 48 8b d3 8b ce. mov rax, rbx = playerdata detour - mov rsi, [rsp+38] = display info -->
+	<Entry Type="DetourInfoObject">
+		<Name>H2_DisplayInfo_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x8DD777</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0x74, 0x24, 0x38, 0x48, 0x83, 0xC4, 0x20</OriginalCodeBytes>
+			<SizeToAlloc>500</SizeToAlloc>
+			<DetourCodeASM>mov rsi, [rsp+38h]; add rsp, 20h; push rax;push rcx;push rdi;push r10;push r11;mov r10, @detourHandle; add r10, 250h; mov rcx, @playerDatum; mov ecx, [rcx]; cmp esi, ecx; jne 1Ah;mov r11, [rbp + 14h];cmp r11d, 0FFFFFFFFh; push rax;cmovne eax, r11d;cmove eax, ecx;mov [r10 + 00B0h], eax;pop rax;push rax;mov eax, [r10 + 00B0h];test eax, eax;pop rax;je 70h;cmp dword [r10 + 00B0h], 00000000; je 6Eh;cmp [r10 + 00B0h], esi;jne 65h;mov rcx, @detourHandle; add rcx, 250h; mov edi, [rdx + 0h]; mov [rcx], edi; mov edi, [rdx + 4h]; mov [rcx + 4h], edi; mov edi, [rdx + 8h]; mov [rcx + 8h], edi; mov edi, [rdx + 50h]; mov [rcx + 0Ch], edi; mov edi, [rdx + 54h]; mov [rcx + 10h], edi; mov edi, [rdx + 58h]; mov [rcx + 14h], edi; mov edi, [rbp + 0ECh]; mov [rcx + 18h], edi; mov edi, [rbp + 0F0h]; mov [rcx + 1Ch], edi; mov rax, @viewX; mov edi, [rax];  mov [rcx + 20h], edi; mov rax, @viewY; mov edi, [rax]; mov [rcx + 24h], edi; pop r11; pop r10; pop rdi; pop rcx; pop rax; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xDA5CD4</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewX</Symbol>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x013E6198</Offset>
+						<Offset>0x38</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewY</Symbol>
+
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x013E6198</Offset>
+						<Offset>0x3C</Offset>
+					</Offsets>
+				</Pointer>
+			</SymbolPointers>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x8DD7E7</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0x74, 0x24, 0x38, 0x48, 0x83, 0xC4, 0x20</OriginalCodeBytes>
+			<SizeToAlloc>500</SizeToAlloc>
+			<DetourCodeASM>mov rsi, [rsp+38h]; add rsp, 20h; push rax;push rcx;push rdi;push r10;push r11;mov r10, @detourHandle; add r10, 250h; mov rcx, @playerDatum; mov ecx, [rcx]; cmp esi, ecx; jne 1Ah;mov r11, [rbp + 14h];cmp r11d, 0FFFFFFFFh; push rax;cmovne eax, r11d;cmove eax, ecx;mov [r10 + 00B0h], eax;pop rax;push rax;mov eax, [r10 + 00B0h];test eax, eax;pop rax;je 70h;cmp dword [r10 + 00B0h], 00000000; je 6Eh;cmp [r10 + 00B0h], esi;jne 65h;mov rcx, @detourHandle; add rcx, 250h; mov edi, [rdx + 0h]; mov [rcx], edi; mov edi, [rdx + 4h]; mov [rcx + 4h], edi; mov edi, [rdx + 8h]; mov [rcx + 8h], edi; mov edi, [rdx + 50h]; mov [rcx + 0Ch], edi; mov edi, [rdx + 54h]; mov [rcx + 10h], edi; mov edi, [rdx + 58h]; mov [rcx + 14h], edi; mov edi, [rbp + 0ECh]; mov [rcx + 18h], edi; mov edi, [rbp + 0F0h]; mov [rcx + 1Ch], edi; mov rax, @viewX; mov edi, [rax];  mov [rcx + 20h], edi; mov rax, @viewY; mov edi, [rax]; mov [rcx + 24h], edi; pop r11; pop r10; pop rdi; pop rcx; pop rax; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xD523A4</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewX</Symbol>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x014C3B58</Offset>
+						<Offset>0x38</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewY</Symbol>
+
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x014C3B58</Offset>
+						<Offset>0x3C</Offset>
+					</Offsets>
+				</Pointer>
+			</SymbolPointers>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x8d3037</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0x74, 0x24, 0x38, 0x48, 0x83, 0xC4, 0x20</OriginalCodeBytes>
+			<SizeToAlloc>500</SizeToAlloc>
+			<DetourCodeASM>mov rsi, [rsp+38h]; add rsp, 20h; push rax;push rcx;push rdi;push r10;push r11;mov r10, @detourHandle; add r10, 250h; mov rcx, @playerDatum; mov ecx, [rcx]; cmp esi, ecx; jne 1Ah;mov r11, [rbp + 14h];cmp r11d, 0FFFFFFFFh; push rax;cmovne eax, r11d;cmove eax, ecx;mov [r10 + 00B0h], eax;pop rax;push rax;mov eax, [r10 + 00B0h];test eax, eax;pop rax;je 70h;cmp dword [r10 + 00B0h], 00000000; je 6Eh;cmp [r10 + 00B0h], esi;jne 65h;mov rcx, @detourHandle; add rcx, 250h; mov edi, [rdx + 0h]; mov [rcx], edi; mov edi, [rdx + 4h]; mov [rcx + 4h], edi; mov edi, [rdx + 8h]; mov [rcx + 8h], edi; mov edi, [rdx + 50h]; mov [rcx + 0Ch], edi; mov edi, [rdx + 54h]; mov [rcx + 10h], edi; mov edi, [rdx + 58h]; mov [rcx + 14h], edi; mov edi, [rbp + 0ECh]; mov [rcx + 18h], edi; mov edi, [rbp + 0F0h]; mov [rcx + 1Ch], edi; mov rax, @viewX; mov edi, [rax];  mov [rcx + 20h], edi; mov rax, @viewY; mov edi, [rax]; mov [rcx + 24h], edi; pop r11; pop r10; pop rdi; pop rcx; pop rax; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xE7E304</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewX</Symbol>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x015E1DD0</Offset>
+						<Offset>0x38</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@viewY</Symbol>
+
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x015E1DD0</Offset>
+						<Offset>0x3C</Offset>
+					</Offsets>
+				</Pointer>
+			</SymbolPointers>
+		</Version>
+	</Entry>
+	
+		
+		
 		<!--Invuln stuff-->
 		<Entry Type="DetourInfoObject">
 			<Name>H2_Invuln_DetourInfo</Name>
+			<Version Version="1.2448.0.0">
+				<OriginalCodeLocation>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x91656D</Offset>
+					</Offsets>
+				</OriginalCodeLocation>
+				<OriginalCodeBytes>0xFF, 0xC0, 0x3B, 0x44, 0x24, 0x40</OriginalCodeBytes>
+				<SizeToAlloc>30</SizeToAlloc>
+				<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r11d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
+				<HookCodeASM>jmp $detourHandle</HookCodeASM>
+				<SymbolPointers>
+					<Pointer>
+						<Symbol>@playerDatum</Symbol>
+						<!--Stores the datum of the player entity, for comparison in detour-->
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0xDA5CD4</Offset>
+						</Offsets>
+					</Pointer>
+					<Pointer>
+						<Symbol>$skipDamage</Symbol>
+						<!--Stores the datum of the player entity, for comparison in detour-->
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x9167D5</Offset>
+						</Offsets>
+					</Pointer>
+				</SymbolPointers>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo2.dll</Module>
@@ -672,21 +1338,72 @@
 				</Pointer>
 			</SymbolPointers>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<OriginalCodeLocation>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x90C21A</Offset>
+					</Offsets>
+				</OriginalCodeLocation>
+				<OriginalCodeBytes>0xFF, 0xC0, 0x3B, 0x44, 0x24, 0x40</OriginalCodeBytes>
+				<SizeToAlloc>30</SizeToAlloc>
+				<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r11d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
+				<HookCodeASM>jmp $detourHandle</HookCodeASM>
+				<SymbolPointers>
+					<Pointer>
+						<Symbol>@playerDatum</Symbol>
+						<!--Stores the datum of the player entity, for comparison in detour-->
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0xE7E304</Offset>
+						</Offsets>
+					</Pointer>
+					<Pointer>
+						<Symbol>$skipDamage</Symbol>
+						<!--Stores the datum of the player entity, for comparison in detour-->
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x90C482</Offset>
+						</Offsets>
+					</Pointer>
+				</SymbolPointers>
+			</Version>
 
 		</Entry>
 		<!--/end Invuln stuff-->
-	<!--Datum Evaluation stuff (for teleport and boost)-->
+	<!--Datum Evaluation stuff (for teleport and boost)--> 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_PlayerDatum</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xDA5CD4</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD523A4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE7E304</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	
+	<!--scan writable loopobject. at +3C, check what writes. one of them will have a checker. dissamble, up to calling function for ptr. et is related pointer.-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_EntityOffsetTable</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x16A96B8</Offset>
+				<Offset>0x58</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -694,9 +1411,23 @@
 				<Offset>0x58</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x18B4d78</Offset>
+				<Offset>0x58</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_EntityTable</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x16a96A0</Offset>
+				<Offset>0x57</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -704,9 +1435,40 @@
 				<Offset>0x57</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x18B4d40</Offset>
+				<Offset>0x57</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="DetourInfoObject">
 		<Name>H2_PlayerData_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x8DD76F</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xDA5CD4</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo2.dll</Module>
@@ -714,7 +1476,7 @@
 					<Offset>0x8DD7DF</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
-			<OriginalCodeBytes>0x48, 0x 8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
 			<SizeToAlloc>100</SizeToAlloc>
 			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
@@ -731,52 +1493,125 @@
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x8D302F</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0xE7E304</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_Xpos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x0</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x0</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_Ypos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x4</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x4</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x4</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_Zpos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x8</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x8</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x8</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_Xvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>-0x30</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>-0x30</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>-0x30</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_Yvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>-0x2C</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>-0x2C</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>-0x2C</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_Zvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>-0x28</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>-0x28</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>-0x28</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_PlayerData_VisualOffset</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x40</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x40</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x40</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_ViewHori</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x013E6198</Offset>
+				<Offset>0x38</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -784,9 +1619,23 @@
 				<Offset>0x38</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x015E1DD0</Offset>
+				<Offset>0x38</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_ViewVert</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x013E6198</Offset>
+				<Offset>0x3C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -794,14 +1643,165 @@
 				<Offset>0x3C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x015E1DD0</Offset>
+				<Offset>0x3C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+
+	<!--turn on all scoring skulls. scan w "1 1 1 0 1 0 1 1 0 1 1 1 1 0 0 1 1 0 0 0 1 0 1 1 0 1 0 0 1 1 0 1 0", first of 2 results. + 4 is blind skull, rest relative-->
+	<!--+0x1C from blind-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_SkullAcrophobiaFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E61DA</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14C3B92</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0142</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_SkullAcrophobiaBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0</Offset>
+		</Version>
+	</Entry>
+
+	<!--+0x9 from blind-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_SkullBandanaFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E61C7</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14C3B7F</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15f012F</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_SkullBandanaBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_SkullBlindFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E61BE</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14C3B76</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15f0126</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_SkullBlindBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0</Offset>
+		</Version>
+	</Entry>
+
 
 	<!--/end Datum Evaluation stuff (for teleport and boost)-->
 
 	<!--/end Trainer stuff-->
-		<!--Checkpoint management stuff-->
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H2_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE63F80</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14741DB</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE6EDA7</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+	<!--Checkpoint management stuff-->
 		<Entry Type="Dictionary&lt;string, bool&gt;">
 			<Name>H2_InjectRequirements</Name>
+			<Version Version="1.2448.0.0">
+				<CheckpointLocation1>true</CheckpointLocation1>
+				<CheckpointLocation2>true</CheckpointLocation2>
+				<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+				<DoubleRevertFlag>true</DoubleRevertFlag>
+				<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+				<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+				<LoadedBSP1>true</LoadedBSP1>
+				<LoadedBSP2>true</LoadedBSP2>
+				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+			</Version>
 			<Version Version="1.2645.0.0">
 				<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
@@ -817,10 +1817,32 @@
 		
 		
 		</Version>
+			<Version Version="1.3073.0.0">
+				<CheckpointLocation1>true</CheckpointLocation1>
+				<CheckpointLocation2>true</CheckpointLocation2>
+				<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+				<DoubleRevertFlag>true</DoubleRevertFlag>
+				<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+				<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+				<LoadedBSP1>true</LoadedBSP1>
+				<LoadedBSP2>true</LoadedBSP2>
+				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			
 			<Name>H2_CheckpointLocation1</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x01443588</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -828,9 +1850,23 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x01650820</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_CheckpointLocation2</Name>
+			<Version Version="1.2448.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x01443588</Offset>
+					<Offset>0x3FE000</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -838,63 +1874,146 @@
 				<Offset>0x400000</Offset>
 			</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x01650830</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_LoadedBSP1</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE1FB18</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x14729E0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x159E940</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_LoadedBSP2</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE21468</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x14742F0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15A0270</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_CheckpointData_LoadedBSPoffset</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1910</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1D7A</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1d9a</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_CheckpointData_LoadedBSPlength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>1</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>1</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>1</Offset>
 		</Version>
 	</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointLength</Name>
+			<Version Version="1.2448.0.0">
+				<Offset>0x3FE000</Offset>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Offset>0x3FE000</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x3FE000</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointData_LevelCode</Name>
+			<Version Version="1.2448.0.0">
+				<Offset>23</Offset>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Offset>0x13</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x13</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointData_GameTickCount</Name>
+			<Version Version="1.2448.0.0">
+				<Offset>13992</Offset>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Offset>13920</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x36A0</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointData_Difficulty</Name>
+			<Version Version="1.2448.0.0">
+				<Offset>974</Offset>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Offset>0x3CE</Offset>
+			</Version>
+			<Version Version="1.3073.0.0">
+				<Offset>0x3EE</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="PreserveLocation[]">
 			<Name>H2_CheckpointData_PreserveLocations</Name>
+			<Version Version="1.2448.0.0">
+				<Array>
+					<PreserveLocation>
+						<Offset>0x597C</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x5A05</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x381C</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+				</Array>
+			</Version>
 			<Version Version="1.2645.0.0">
 			<Array>
 				<PreserveLocation>
@@ -911,6 +2030,26 @@
 				</PreserveLocation>
 			</Array>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Array>
+					<PreserveLocation>
+						<Offset>0x5A34</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x5ABD</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x3814</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x3808</Offset>
+						<Length>4</Length>
+					</PreserveLocation>
+				</Array>
+			</Version>
 		</Entry>
 		<!--/end Checkpoint management stuff-->
 		<!--/end Halo 2-->
@@ -921,6 +2060,14 @@
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03B80E98</Offset>
+				<Offset>0x48</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x401C208</Offset>
 				<Offset>0x48</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -936,6 +2083,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E6B858</Offset>
+				<Offset>0x48</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<!--Print Message stuff-->
 	<Entry Type="ReadWrite.Pointer">
@@ -944,6 +2099,12 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2a1f34c</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x2B34F2C</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -965,10 +2126,19 @@
 				<Offset>0xbb24a</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xB1E0E</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CPMessageCallLength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>5</Offset>
 		</Version>
 	</Entry>
@@ -1012,6 +2182,12 @@
 				<Offset>0x1e1d90b</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1EA306B</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ForceRevert</Name>
@@ -1019,6 +2195,12 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1E1D90A</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1EA306A</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1030,6 +2212,12 @@
 				<Offset>0x1d91f08</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E19CE8</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_NaturalCheckpointCode</Name>
@@ -1039,8 +2227,20 @@
 				<Offset>0x1c6411</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1BB175</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<!--Invuln stuff-->
+	<!--scan nw "4C 8D 73 08 4C 8B 65 98"
+	datum: sierra leg, scan E2EC007D writeable. 1st h3 is playerVehiDatum, 4th is playerDatum.
+	or:
+	playerdatum sc nw "41 89 4a 04 41 89 12" check what it acc
+	playervehidatum sc nw "** ** ** ** ** ** 41 bb 01 00 00 00 4c 8b 14 c8" check what it acc
+	-->
 	<Entry Type="DetourInfoObject">
 		<Name>H3_Invuln_DetourInfo</Name>
 		<Version Version="1.2645.0.0">
@@ -1081,9 +2281,48 @@
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x362857</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0xA648BC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x8ACEA4</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x3629D0</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
 
 	</Entry>
 	<!--/end Invuln stuff-->
+	<!--scan nw "f3 41 0f 10 48 10 f3 41 0f 10 50 14"-->
 	<Entry Type="DetourInfoObject">
 		<Name>H3_OHK_DetourInfo</Name>
 		<Version Version="1.2645.0.0">
@@ -1097,7 +2336,21 @@
 			<SizeToAlloc>50</SizeToAlloc>
 			<DetourCodeASM>movss xmm1, [r8+10h]; movss xmm2, [r8+14h]; push rax; mov rax, [r8+14h]; test rax, rax; je 0Fh; mov eax, 47C35000h; movd xmm1, eax; movd xmm2, eax; pop rax; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
-			<SymbolPointers>w
+			<SymbolPointers>
+			</SymbolPointers>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x365F83</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xF3, 0x41, 0x0F, 0x10, 0x48, 0x10, 0xF3, 0x41, 0x0F, 0x10, 0x50, 0x14</OriginalCodeBytes>
+			<SizeToAlloc>50</SizeToAlloc>
+			<DetourCodeASM>movss xmm1, [r8+10h]; movss xmm2, [r8+14h]; push rax; mov rax, [r8+14h]; test rax, rax; je 0Fh; mov eax, 47C35000h; movd xmm1, eax; movd xmm2, eax; pop rax; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
 			</SymbolPointers>
 		</Version>
 
@@ -1112,7 +2365,7 @@
 					<Offset>0x342F90</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
-			<OriginalCodeBytes>0x48, 0x 8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
 			<SizeToAlloc>100</SizeToAlloc>
 			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
@@ -1129,11 +2382,38 @@
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x337B0C</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x8ACEA4</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Xpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x160</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x160</Offset>
 		</Version>
 	</Entry>
@@ -1142,10 +2422,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x164</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x164</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Zpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x168</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x168</Offset>
 		</Version>
 	</Entry>
@@ -1154,16 +2440,25 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E0</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1E0</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Yvel</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E4</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1E4</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Zvel</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1E8</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x1E8</Offset>
 		</Version>
 	</Entry>
@@ -1177,6 +2472,13 @@
 				<Offset>0x34C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00FAEB14</Offset>
+				<Offset>0x34C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ViewVert</Name>
@@ -1187,10 +2489,117 @@
 				<Offset>0x350</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00FAEB14</Offset>
+				<Offset>0x350</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
-	
+
+<!-- -0x7 from blind -->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_SkullAcrophobiaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D91E68</Offset>
+				<Offset>0x10799</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01E19C48</Offset>
+				<Offset>0xFDE9</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_SkullAcrophobiaBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>5</Offset>
+		</Version>
+	</Entry>
+
+	<!-- -0xA from blind-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_SkullBandanaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D91E68</Offset>
+				<Offset>0x10796</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01E19C48</Offset>
+				<Offset>0xFDE6</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_SkullBandanaBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>7</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>7</Offset>
+		</Version>
+	</Entry>
+
+	<!--10 scoring skulls on sierra. scan nw "85 c0 8b d0 41 0f 48 d5". disassemble. check what it points to. 
+	or scan writeable "ff 05 00 00 00 00 00 00 ff 01 00 00 02 00 00 00 00 ** ** 00 0f 07". take the first 7ff4 result. blind is "02"
+	-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_SkullBlindFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D91E68</Offset>
+				<Offset>0x107A0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01E19C48</Offset>
+				<Offset>0xFDF0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_SkullBlindBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>1</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>1</Offset>
+		</Version>
+	</Entry>
+
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H3_LevelCode</Name>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E92AE4</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+
+
+	<!--scan nw "48 85 c9 0f b6 db", will be a "mov eax, 01" right after.-->
 	<Entry Type="PatchInfo">
 		<Name>H3_ChecksumFix_PatchInfo</Name>
 		<Version Version="1.2645.0.0">
@@ -1198,6 +2607,16 @@
 				<Module>halo3.dll</Module>
 				<Offsets>
 					<Offset>0xACB53</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0xA332F</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
@@ -1224,6 +2643,21 @@
 
 
 		</Version>
+		<Version Version="1.3073.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>true</LoadedBSP1>
+			<LoadedBSP2>true</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 
@@ -1232,6 +2666,13 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01F623A0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01FA7CA0</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -1245,6 +2686,13 @@
 				<Offset>0x870000</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01FA7CA0</Offset>
+				<Offset>0x870000</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_LoadedBSP1</Name>
@@ -1252,6 +2700,12 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1DA2558</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E29988</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1263,16 +2717,28 @@
 				<Offset>0x1DB2BF8</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E39678</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LoadedBSPoffset</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10648</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xFC98</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LoadedBSPlength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>44</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>44</Offset>
 		</Version>
 	</Entry>
@@ -1281,10 +2747,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x10688</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xFCD8</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_SHAlength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>20</Offset>
 		</Version>
 	</Entry>
@@ -1293,10 +2765,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x870000</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x870000</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LevelCode</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>28</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>28</Offset>
 		</Version>
 	</Entry>
@@ -1305,11 +2783,17 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x470220</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x470220</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_Difficulty</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x274</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x294</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="PreserveLocation[]">
@@ -1342,6 +2826,34 @@
 				</PreserveLocation>
 			</Array>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>8</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4806E8</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4835E0</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4806DC</Offset>
+					<Length>8</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4835E4</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4836E4</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 	</Entry>
 	<!--/end Checkpoint management stuff-->
 	<!--/end Halo 3-->
@@ -1352,6 +2864,14 @@
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03B80E98</Offset>
+				<Offset>0xA8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x401C208</Offset>
 				<Offset>0xA8</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -1367,6 +2887,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E6B858</Offset>
+				<Offset>0xA8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<!--Print Message stuff-->
 	<Entry Type="ReadWrite.Pointer">
@@ -1375,6 +2903,12 @@
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x2bf3b38</Offset> 
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2D608CC</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1396,10 +2930,19 @@
 				<Offset>0xbee16</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xBE3DA</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CPMessageCallLength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>5</Offset>
 		</Version>
 	</Entry>
@@ -1443,6 +2986,12 @@
 				<Offset>0x203125c</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20D135C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>OD_ForceRevert</Name>
@@ -1450,6 +2999,12 @@
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x203125F</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20D135F</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1461,6 +3016,12 @@
 				<Offset>0x1fa5608</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20471E8</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>OD_NaturalCheckpointCode</Name>
@@ -1468,6 +3029,12 @@
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x1e285b</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1EE777</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1512,6 +3079,44 @@
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3odst.dll</Module>
+				<Offsets>
+					<Offset>0x3A651D</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0x04, 0x32, 0x80, 0x78, 0x11, 0x04</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 20h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 10h; mov rax, [rdx+rsi]; cmp byte ptr [rax+11h], 04; jmp $returnControl; mov rax, [rdx+rsi]; cmp byte ptr [rax+11h], 04; mov r15, [rbp-80h]; jmp $skipDamage</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0xAA3F1C</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x8E479C</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x3A67B5</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
 	</Entry>
 	<!--/end Invuln stuff-->
 
@@ -1541,11 +3146,38 @@
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3odst.dll</Module>
+				<Offsets>
+					<Offset>0x370218</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3odst.dll</Module>
+					<Offsets>
+						<Offset>0x8E479C</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_PlayerData_Xpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x160</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x160</Offset>
 		</Version>
 	</Entry>
@@ -1554,10 +3186,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x164</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x164</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_PlayerData_Zpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x168</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x168</Offset>
 		</Version>
 	</Entry>
@@ -1566,10 +3204,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E0</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1E0</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_PlayerData_Yvel</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1E4</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x1E4</Offset>
 		</Version>
 	</Entry>
@@ -1578,14 +3222,27 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E8</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1E8</Offset>
+		</Version>
 	</Entry>
 
+	
+	
+	<!--scan nw "f3 0f 11 94 1f d8 00 00 00", first of 3 results, disassemble check what it writes to (viewvert)-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>OD_ViewHori</Name>
 		<Version Version="1.2645.0.0">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x00F30214</Offset>
+				<Offset>0x35C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00FDEB04</Offset>
 				<Offset>0x35C</Offset>
 			</Offsets>
 		</Version>
@@ -1599,10 +3256,114 @@
 				<Offset>0x360</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00FDEB04</Offset>
+				<Offset>0x360</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+	
+		<!--02 is blind.
+		scan nw "4c 8d 44 24 38 48 8d 54 24 50", mov byte 01 moves to very close to blind.-->
+	<!-- -0x7 from blind -->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_SkullAcrophobiaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01FA5568</Offset>
+				<Offset>0x10721</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x02047148</Offset>
+				<Offset>0xFD71</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_SkullAcrophobiaBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>5</Offset>
+		</Version>
+	</Entry>
+
+	<!-- -0xA from blind-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_SkullBandanaFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01FA5568</Offset>
+				<Offset>0x1071E</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x02047148</Offset>
+				<Offset>0xFD6E</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_SkullBandanaBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>7</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>7</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_SkullBlindFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01FA5568</Offset>
+				<Offset>0x10728</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x02047148</Offset>
+				<Offset>0xFD78</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_SkullBlindBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>1</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>1</Offset>
+		</Version>
 	</Entry>
 	
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>OD_LevelCode</Name>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20C0DD5</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	
+	<!--scan nw "8b ca 48 2b c8 48 85 c9", it's the test-->
 	<Entry Type="PatchInfo">
 		<Name>OD_ChecksumFix_PatchInfo</Name>
 		<Version Version="1.2645.0.0">
@@ -1615,12 +3376,39 @@
 			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
 			<PatchedCodeBytes>0x4D, 0x85, 0xFF</PatchedCodeBytes>
 		</Version>
+		<!--note: had to change from test r15 to test r12-->
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3odst.dll</Module>
+				<Offsets>
+					<Offset>0xAEDD3</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
 
 	</Entry>
 
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>OD_InjectRequirements</Name>
 		<Version Version="1.2645.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>true</LoadedBSP1>
+			<LoadedBSP2>true</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
+
+		<Version Version="1.3073.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
 			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
@@ -1646,6 +3434,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x021E11A0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>OD_CheckpointLocation2</Name>
@@ -1656,13 +3451,27 @@
 				<Offset>0x970000</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x021E11A0</Offset>
+				<Offset>0x970000</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	
 	<Entry Type="ReadWrite.Pointer">
 		<Name>OD_LoadedBSP1</Name>
 		<Version Version="1.2645.0.0">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x1FB5B40</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2056D70</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1674,16 +3483,28 @@
 				<Offset>0x1FC60D8</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2066958</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_LoadedBSPoffset</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10530</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xFB80</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_LoadedBSPlength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>60</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>60</Offset>
 		</Version>
 	</Entry>
@@ -1692,10 +3513,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x10580</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xFBD0</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_SHAlength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>20</Offset>
 		</Version>
 	</Entry>
@@ -1704,10 +3531,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x970000</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x970000</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_LevelCode</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x15</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x15</Offset>
 		</Version>
 	</Entry>
@@ -1716,11 +3549,17 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x480D50</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x7b3bc8</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_Difficulty</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x26C</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x28C</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="PreserveLocation[]">
@@ -1746,16 +3585,57 @@
 				</PreserveLocation>
 			</Array>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Array>
+
+				<PreserveLocation>
+					<Offset>0x48066C</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x480678</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4847F4</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x48485E</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 	</Entry>
 	<!--/end Checkpoint management stuff-->
 	<!--/end Halo 3 ODST-->
 	<!--Halo Reach-->
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_LevelCode</Name>
+
+		<Version Version="1.3073.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x275DE3C</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ModuleSteam</Name>
 		<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03B80E98</Offset>
+				<Offset>0xC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x401C208</Offset>
 				<Offset>0xC8</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -1771,14 +3651,31 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E6B858</Offset>
+				<Offset>0xC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<!--Print Message stuff-->
+	<!--scan nw "44 8b 86 d8 00 00 00" (rsi + d8 should access it)
+	or "44 ** ** d8 00 00 00 41 ** ** ff ** ** ** **** ** 8b ** ** ** ** ** 65"
+	-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_CurrentTickCount</Name>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x2A92790</Offset>
+			</Offsets>
+		</Version>
+			<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2C9E870</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1800,10 +3697,19 @@
 				<Offset>0x35d30</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x33D4C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CPMessageCallLength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>5</Offset>
 		</Version>
 	</Entry>
@@ -1847,6 +3753,12 @@
 				<Offset>0x250cd6e</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x264EC4E</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ForceRevert</Name>
@@ -1856,13 +3768,26 @@
 				<Offset>0x250CD6B</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x264EC4B</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
+	<!--try scan nw "48 c1 e1 04 48 03 c8 40 88 71 08", movsxd above it-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_DoubleRevertFlag</Name>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x23c9b1c</Offset>
+			</Offsets>
+		</Version>
+			<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x250B86C</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -1874,8 +3799,20 @@
 				<Offset>0x159c92</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x1677C2</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<!--Invuln stuff-->
+	<!--
+	playerdatum: nf start scan E2F20083 take 4th result. accessed by "mov [r10+rax*4+0004866C], ebx"
+	playerVehidatum: nf start scan E2F20083 take 1st result. accessed by 3, mov, mov, cmp
+	invuln: try scan nw "4d 8b c5 8b ce 48 89 44 24 20". it's the xor below.
+		or nw "c6 ** 85 00 00 00 02 8b", will be above.
+	-->
 	<Entry Type="DetourInfoObject">
 		<Name>HR_Invuln_DetourInfo</Name>
 		<Version Version="1.2645.0.0">
@@ -1916,6 +3853,45 @@
 
 			</SymbolPointers>
 		</Version>
+		<!--og bytes slightly different.-->
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x4DE3B2</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x45, 0x33, 0xDB, 0x44, 0x38, 0x5C, 0x24, 0x46</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp esi, eax; pop rax; je 1Fh; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 10h; xor r11d, r11d; cmp byte ptr [rsp+44h], r11b; jmp $returnControl; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0xC96110</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0xB50874</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x4DE626</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
 
 	</Entry>
 	<!--/end Invuln stuff-->
@@ -1946,11 +3922,38 @@
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x473041</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC7, 0x48, 0x8B, 0x6C, 0x24, 0x48 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rdi; mov rbp, [rsp+48h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0xB50874</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Xpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1C0</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x1C0</Offset>
 		</Version>
 	</Entry>
@@ -1959,10 +3962,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1C4</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1C4</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Zpos</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1C8</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x1C8</Offset>
 		</Version>
 	</Entry>
@@ -1971,10 +3980,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x230</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x230</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Yvel</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>0x234</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x234</Offset>
 		</Version>
 	</Entry>
@@ -1983,14 +3998,25 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x238</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x238</Offset>
+		</Version>
 	</Entry>
 
+	<!--nf start scan float 5.615067959, first 7ff3 result-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ViewHori</Name>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x01485258</Offset>
+				<Offset>0x294</Offset>
+			</Offsets>
+		</Version>
+			<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015F27A8</Offset>
 				<Offset>0x294</Offset>
 			</Offsets>
 		</Version>
@@ -2004,10 +4030,51 @@
 				<Offset>0x298</Offset>
 			</Offsets>
 		</Version>
+			<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015F27A8</Offset>
+				<Offset>0x298</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
+
+	<!--scan nw "c1 e9 04 41 84 c9", mov with big offset. 04 is blind. 5 if all scoring skulls
+	alt: "41 0f 93 c4 c1 e3 07 d1 e8"
+	"41 ** ** ** c1 ** ** d1 ** a8"
+		-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>HR_SkullBlindFlag</Name>
+		<Version Version="1.2645.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x0265FBA0</Offset>
+				<Offset>0x1F115</Offset>
+			</Offsets>
+		</Version>
+			<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x0250B760</Offset>
+				<Offset>0x1ED21</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_SkullBlindBit</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>2</Offset>
+		</Version>
+			<Version Version="1.3073.0.0">
+			<Offset>2</Offset>
+		</Version>
 	</Entry>
 
 	<!--/end Trainer stuff-->
 	<!--Checkpoint management stuff-->
+	
+		<!--scan nw "48 85 c9 0f b6 db"-->
 	<Entry Type="PatchInfo">
 		<Name>HR_ChecksumFix_PatchInfo</Name>
 		<Version Version="1.2645.0.0">
@@ -2015,6 +4082,16 @@
 				<Module>haloreach.dll</Module>
 				<Offsets>
 					<Offset>0x22C27</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
+				<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x2052B</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
@@ -2040,6 +4117,21 @@
 
 
 		</Version>
+		<Version Version="1.3073.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 
@@ -2048,6 +4140,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x026ABEB0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x027CF2E0</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -2061,6 +4160,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x027CF2F0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 
 	<Entry Type="int">
@@ -2068,10 +4174,16 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1F320</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1EC10</Offset> <!--might be 1ebfc-->
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_SHAlength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>20</Offset>
 		</Version>
 	</Entry>
@@ -2080,11 +4192,17 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0xA60000</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xA60000</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_LevelCode</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1017B</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x183</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
@@ -2092,11 +4210,17 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x10FD54</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xC6770</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_Difficulty</Name>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10304</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x304</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="PreserveLocation[]">
@@ -2113,10 +4237,33 @@
 				</PreserveLocation>
 			</Array>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x5E3E74</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x5DF5F0</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 	</Entry>
 	<!--/end Checkpoint management stuff-->
 	<!--/end Halo Reach-->
 	<!--Halo 4-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_LevelCode</Name>
+
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2AE485F</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ModuleSteam</Name>
 		<Version Version="1.2645.0.0">
@@ -2135,21 +4282,21 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
-	</Entry>
-	<Entry Type="ReadWrite.Pointer">
-		<Name>H4_ModuleWinStore</Name>
-		<Version Version="1.2645.0.0">
+		<Version Version="1.3073.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x03A23830</Offset>
+				<Offset>0x401C208</Offset>
 				<Offset>0x68</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.2969.0.0">
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>H4_ModuleWinStore</Name>
+		<Version Version="1.3073.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3DE6578</Offset>
+				<Offset>0x3E6B858</Offset>
 				<Offset>0x68</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -2162,6 +4309,12 @@
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0xfb47e8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x10C6928</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -2182,10 +4335,19 @@
 				<Offset>0x66f63</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x65764</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CPMessageCallLength</Name>
 		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>5</Offset>
 		</Version>
 	</Entry>
@@ -2275,6 +4437,12 @@
 				<Offset>0x2936D1F</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x292724F</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ForceRevert</Name>
@@ -2288,6 +4456,12 @@
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x2936D1B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x292724B</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -2305,6 +4479,12 @@
 				<Offset>0x27BEF7C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x27AF3FC</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_NaturalCheckpointCode</Name>
@@ -2314,20 +4494,30 @@
 				<Offset>0x181572</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x196DBE</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<!--Invuln stuff-->
+	<!--detour; scan nw "45 33 d2 44 38 54 24 48", xor cmp je
+	playerDatum: E2C20053 shutdown leg (using 4th result, accessed by mov [rdx+rax*4+00e27a5c], esi)
+	playerVehiDatum:  E2C20053, E3000077 when peli (accessed by 2 movs and a cmp)
+	-->
 	<Entry Type="DetourInfoObject">
 		<Name>H4_Invuln_DetourInfo</Name>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo4.dll</Module>
 				<Offsets>
-					<Offset>0x34DABE</Offset>
+					<Offset>0x6477DF</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
-			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<OriginalCodeBytes>0x45, 0x33, 0xD2, 0x44, 0x38, 0x54, 0x24, 0x48</OriginalCodeBytes>
 			<SizeToAlloc>30</SizeToAlloc>
-			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp esi, eax; pop rax; je 1Fh; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 10h; xor r10d, r10d; cmp byte ptr [rsp+048h], r10b; jmp $returnControl; xor r10d, r10d; jmp $skipDamage </DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
@@ -2335,7 +4525,7 @@
 					<!--Stores the datum of the player entity, for comparison in detour-->
 					<Module>halo4.dll</Module>
 					<Offsets>
-						<Offset>0x9C4DCC</Offset>
+						<Offset>0xE27A5C</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
@@ -2343,14 +4533,52 @@
 					<!--Stores the datum of the player entity, for comparison in detour-->
 					<Module>halo4.dll</Module>
 					<Offsets>
-						<Offset>0x74DC34</Offset>
+						<Offset>0xD38E4C</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
 					<Symbol>$skipDamage</Symbol>
 					<Module>halo4.dll</Module>
 					<Offsets>
-						<Offset>0x34DC37</Offset>
+						<Offset>0x647B68</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x640F73</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x45, 0x33, 0xD2, 0x44, 0x38, 0x54, 0x24, 0x48</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp esi, eax; pop rax; je 1Fh; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 10h; xor r10d, r10d; cmp byte ptr [rsp+048h], r10b; jmp $returnControl; xor r10d, r10d; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0xF2606C</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0xE73790</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x6412FC</Offset>
 					</Offsets>
 				</Pointer>
 
@@ -2384,6 +4612,16 @@
 			<OriginalCodeBytes>0x48, 0x85, 0xC1</OriginalCodeBytes>
 			<PatchedCodeBytes>0x4D, 0x85, 0xED</PatchedCodeBytes>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x52E7B</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xED</PatchedCodeBytes>
+		</Version>
 	</Entry>
 	
 	<Entry Type="Dictionary&lt;string, bool&gt;">
@@ -2401,6 +4639,18 @@
 			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
 		</Version>
 		<Version Version="1.2969.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
 			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
@@ -2431,6 +4681,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x02AC7A90</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_CheckpointLocation2</Name>
@@ -2448,6 +4705,13 @@
 				<Offset>0xAF0000</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x02AC7A90</Offset>
+				<Offset>0xAF0000</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointLength</Name>
@@ -2455,6 +4719,9 @@
 			<Offset>0xA33000</Offset>
 		</Version>
 		<Version Version="1.2969.0.0">
+			<Offset>0xAE5000</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0xAE5000</Offset>
 		</Version>
 	</Entry>
@@ -2466,6 +4733,9 @@
 		<Version Version="1.2969.0.0">
 			<Offset>0x1CD77</Offset>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1CD97</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointData_GameTickCount</Name>
@@ -2473,6 +4743,9 @@
 			<Offset>0x2E424</Offset>
 		</Version>
 		<Version Version="1.2969.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
 			<Offset>0x2E424</Offset>
 		</Version>
 	</Entry>
@@ -2483,6 +4756,9 @@
 		</Version>
 		<Version Version="1.2969.0.0">
 			<Offset>0x1CF08</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1CF28</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="PreserveLocation[]">
@@ -2495,6 +4771,14 @@
 				</PreserveLocation>
 			</Array>
 		</Version>
+		<Version Version="1.3073.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x5971D0</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 
 		
 	</Entry>
@@ -2503,6 +4787,13 @@
 		<!--MCC Steam-->
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_GameIndicator_Steam</Name>
+			<Version Version="1.2448.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3A253A0</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 				<Module>main</Module>
 				<Offsets>
@@ -2517,9 +4808,24 @@
 					<Offset>0</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x401C1C0</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
+	
+	
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_StateIndicator_Steam</Name>
+			<Version Version="1.2448.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x39E4DE9</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 				<Module>main</Module>
 				<Offsets>
@@ -2532,9 +4838,23 @@
 					<Offset>0x3F519E9</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3FD8E99</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
+	
+	
 		<Entry Type="ReadWrite.Pointer">
 			<Name>MCC_MenuIndicator_Steam</Name>
+			<Version Version="1.2448.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x38EF0A9</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2645.0.0">
 				<Module>main</Module>
 				<Offsets>
@@ -2547,10 +4867,47 @@
 					<Offset>0x3E5DF29</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3073.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3EE3FA9</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
+	
 		<!--/end MCC Steam-->
 
+	<!--MCC WinStore (note: only supports current patch since you can't downpatch with WinStore anyway)-->
+	<Entry Type="ReadWrite.Pointer">
+		<Name>MCC_GameIndicator_WinStore</Name>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E6B810</Offset>
+				<Offset>0</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>MCC_StateIndicator_WinStore</Name>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E28465</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
+	<Entry Type="ReadWrite.Pointer">
+		<Name>MCC_MenuIndicator_WinStore</Name>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3D33AA9</Offset>
+			</Offsets>
+		</Version>
+	</Entry>
 
+	<!--/end MCC WinStore-->
 
 	
 

@@ -153,7 +153,7 @@ namespace HCM3.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Darkmode {
             get {
                 return ((bool)(this["Darkmode"]));
@@ -220,6 +220,54 @@ namespace HCM3.Properties {
             }
             set {
                 this["WarnInjectWrongLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public float DIFontSize {
+            get {
+                return ((float)(this["DIFontSize"]));
+            }
+            set {
+                this["DIFontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int DIScreenX {
+            get {
+                return ((int)(this["DIScreenX"]));
+            }
+            set {
+                this["DIScreenX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int DIScreenY {
+            get {
+                return ((int)(this["DIScreenY"]));
+            }
+            set {
+                this["DIScreenY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int DISigDig {
+            get {
+                return ((int)(this["DISigDig"]));
+            }
+            set {
+                this["DISigDig"] = value;
             }
         }
     }

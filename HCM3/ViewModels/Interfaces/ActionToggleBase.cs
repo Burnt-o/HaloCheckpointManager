@@ -60,6 +60,14 @@ namespace HCM3.ViewModels.MVVM
             set { _isEnabled = value; OnPropertyChanged(nameof(IsEnabled)); }
         }
 
+        public Visibility Visibility
+        {
+            get
+            {
+                return IsEnabled ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
         public void OpenOptionsWindow(Type OptionsView)
         {
             //must occur on UI thread

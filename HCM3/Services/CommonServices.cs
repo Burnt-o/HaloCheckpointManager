@@ -43,8 +43,9 @@ namespace HCM3.Services
             if ((int)game != selectedGame)
             {
                 throw new InvalidOperationException("HCM didn't detect that you were in the right game: \n" +
-                    "Expected: " + Dictionaries.GameTo2LetterGameCode[selectedGame] + "\n" +
-                    "Actual: " + game.ToString()
+                    "Expected: " + Dictionaries.GameToDLLname[selectedGame] + "\n" +
+                    "Actual: " + Dictionaries.GameToDLLname[(int)game] + "\n" +
+                    "Are you sure you have the right tab selected in HCM?"
                     );
             }
 

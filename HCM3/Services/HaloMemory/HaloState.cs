@@ -132,7 +132,7 @@ namespace HCM3.Services
         private void HaloStateEvents_ATTACH_EVENT(object? sender, Events.AttachedEventArgs e)
         {
             Trace.WriteLine("name of attached processsssss: " + nameOfAttachedProcess);
-            if (nameOfAttachedProcess == "MCC-Win64-Shipping")
+            if (nameOfAttachedProcess.Equals("MCC-Win64-Shipping", StringComparison.OrdinalIgnoreCase))
             {
                 MCCType = "Steam";
                 string? potentialVersion = this.HaloMemoryService.HaloState.ProcessVersion;

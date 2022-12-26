@@ -33,7 +33,8 @@ namespace HCM3.Services
 
 
         public string? HighestSupportedMCCVersion { get; set; }
-
+        public string? LatestHCMVersion { get; set; }
+        public List<string> ObsoleteHCMVersions = new();
 
 
         public object? GetPointer(string? pointerName, string? pointerVersion)

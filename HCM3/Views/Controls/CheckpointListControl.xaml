@@ -38,7 +38,12 @@
                         Command="{Binding Path=Parent.DataContext.RenameCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
 
-                        <MenuItem Header="Delete" 
+
+                    <MenuItem Header="Change version data" 
+                        Command="{Binding Path=Parent.DataContext.ReVersionCheckpoint, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                    <MenuItem Header="Delete" 
             Command="{Binding Path=Parent.DataContext.DeleteCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
 

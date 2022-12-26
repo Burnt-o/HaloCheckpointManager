@@ -16,8 +16,8 @@ namespace HCM3.Services.Trainer
 
         public PC_BlockCPs PC_BlockCPs { get; init; }
         public PC_Medusa PC_Medusa { get; init; }
-        public PC_Acrophobia PC_Acrophobia { get; init; }
         public PC_OneHitKill PC_OneHitKill { get; init;  }
+        public PC_DisplayInfo PC_DisplayInfo { get; init; }
 
 
         Dictionary<string, IPersistentCheat> listOfCheats { get; set; }
@@ -25,20 +25,20 @@ namespace HCM3.Services.Trainer
         public InternalServices InternalServices { get; init; }
         public HaloMemoryService HaloMemoryService { get; init; }
 
-        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_Acrophobia pC_Acrophobia, PC_OneHitKill pC_OneHitKill)
+        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_OneHitKill pC_OneHitKill, PC_DisplayInfo pC_DisplayInfo)
         {
             this.PC_Invulnerability = pC_Invulnerability;
             this.PC_Speedhack = pC_Speedhack;
             this.PC_BlockCPs = pC_BlockCPs;
             this.PC_Medusa = pC_medusa;
-            this.PC_Acrophobia = pC_Acrophobia;
             this.PC_OneHitKill = pC_OneHitKill;
+            this.PC_DisplayInfo = pC_DisplayInfo;
 
             this.InternalServices = internalServices;
             
             PC_Invulnerability.PersistentCheatService = (this);
-            PC_Acrophobia.PersistentCheatService = (this);
             PC_OneHitKill.PersistentCheatService = (this);
+            PC_DisplayInfo.PersistentCheatService =(this);
 
             //TODO: clean up above
 
@@ -49,7 +49,7 @@ namespace HCM3.Services.Trainer
             listOfCheats.Add("Speedhack", PC_Speedhack);
             listOfCheats.Add("Block Checkpoints", PC_BlockCPs);
             listOfCheats.Add("Medusa", PC_Medusa);
-            listOfCheats.Add("Acrophobia", PC_Acrophobia);
+            listOfCheats.Add("Display Player Data", PC_DisplayInfo);
 
             foreach (IPersistentCheat cheat in listOfCheats.Values)
             { 
@@ -81,6 +81,7 @@ namespace HCM3.Services.Trainer
             foreach (KeyValuePair<string, IPersistentCheat> kv in listOfCheats)
             {
                     kv.Value.IsChecked = kv.Value.IsCheatApplied();
+                   
             }
         }
 

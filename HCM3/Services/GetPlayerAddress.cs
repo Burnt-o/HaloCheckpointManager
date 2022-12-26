@@ -55,6 +55,7 @@ namespace HCM3.Services
                     IntPtr EntityTable_H2 = (IntPtr)this.HaloMemoryService.ReadWrite.ResolvePointer(EntityTablePointer_H2);
                     //round down EntityTable last 4 bits
                     EntityTable_H2 = (IntPtr)(EntityTable_H2.ToInt64() & ~0xF);
+                    
                     return IntPtr.Add(EntityTable_H2, (int)PlayerOffsetIndex_H2);
                     break;
 

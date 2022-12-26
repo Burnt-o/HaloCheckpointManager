@@ -8,17 +8,17 @@ using System.Diagnostics;
 using BurntMemory;
 using Keystone;
 using HCM3.Helpers;
-
+using System.Runtime.InteropServices;
 
 
 namespace HCM3.Services.Trainer
 {
-
-    public  class PC_Acrophobia : IPersistentCheat
+    //TODO remove partial
+    public class PC_DisplayInfo : IPersistentCheat
     {
-        private readonly object AcrophobiaLock = new object();
+        private readonly object DisplayInfoLock = new object();
 
-        public PC_Acrophobia(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
+        public PC_DisplayInfo(HaloMemoryService haloMemoryService, DataPointersService dataPointersService, CommonServices commonServices, InternalServices internalServices)
         {
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
@@ -47,22 +47,24 @@ namespace HCM3.Services.Trainer
             }
             set
             {
+                if (_isChecked && !value) { this.InternalServices.CallInternalFunction("DisableDisplayInfo", null); }
                 _isChecked = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
+                
             }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat()
         {
-            lock (AcrophobiaLock)
+            lock (DisplayInfoLock)
             {
                 if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
-                Trace.WriteLine("User commanded Acrophobia toggle !!!!!!!!!!!!!!!!!!!!");
+                Trace.WriteLine("User commanded ToggleDisplayInfo !!!!!!!!!!!!!!!!!!!!");
                 if (IsChecked)
                 {
-                    Trace.WriteLine("turning Acrophobia off");
+                    Trace.WriteLine("turning invuln off");
                     RemoveCheat();
                     // IsChecked will only be set to false (and thus internal DLL updated) if removeCheat didn't throw
                     IsChecked = false;
@@ -71,7 +73,7 @@ namespace HCM3.Services.Trainer
                 }
                 else
                 {
-                    Trace.WriteLine("turning Acrophobia on");
+                    Trace.WriteLine("turning DisplayInfo on");
 
                     // Setting IsChecked to true will tell internal DLL to display text
                     IsChecked = true;
@@ -87,7 +89,7 @@ namespace HCM3.Services.Trainer
                     }
                     catch (Exception ex)
                     {
-                        ex.Message.Insert(0, "Failed to enabled Acrophobia! ");
+                        ex.Message.Insert(0, "Failed to enabled DisplayInfo! ");
                         IsChecked = false;
                         throw;
                     }
@@ -96,7 +98,7 @@ namespace HCM3.Services.Trainer
                     {
                         try { RemoveCheat(); } catch { }
                         IsChecked = false;
-                        throw new Exception("Something went wrong and Acrophobia wasn't applied properly; gamestate may be corrupt.");
+                        throw new Exception("Something went wrong and DisplayInfo wasn't applied properly; gamestate may be corrupt.");
 
                     }
                 }
@@ -110,12 +112,13 @@ namespace HCM3.Services.Trainer
             int loadedGame = this.CommonServices.GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-            DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_Acrophobia_DetourInfo");
+            DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_DisplayInfo_DetourInfo");
 
                 this.PersistentCheatService.DetourRemove(detourInfo, this.DetourHandle);
             // If above method throws then detour handle won't be set to null (intentional)
             this.DetourHandle = null;
-          
+            this.InternalServices.CallInternalFunction("DisableDisplayInfo", null);
+
         }
 
         public bool IsCheatApplied()
@@ -140,7 +143,7 @@ namespace HCM3.Services.Trainer
             DetourInfoObject detourinfo;
             try
             {
-                detourinfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_Acrophobia_DetourInfo");
+                detourinfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_DisplayInfo_DetourInfo");
             }
             catch
             {
@@ -179,17 +182,32 @@ namespace HCM3.Services.Trainer
 
                 string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-                DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_Acrophobia_DetourInfo");
+                DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_DisplayInfo_DetourInfo");
 
 
                 this.DetourHandle = this.PersistentCheatService.DetourApply(detourInfo);
+                UInt64 DetourHandleParam = (UInt64)this.DetourHandle.Value.ToInt64();
+                DetourHandleParam = DetourHandleParam + 0x250;
+
+                DisplayInfoInfo DII = new();
+                DII.DisplayInfoDetour = DetourHandleParam;
+                DII.ScreenX = Properties.Settings.Default.DIScreenX;
+                DII.ScreenY = Properties.Settings.Default.DIScreenY;
+                DII.SignificantDigits = Properties.Settings.Default.DISigDig;
+                DII.FontSize = Properties.Settings.Default.DIFontSize;
+
+
+
+
+                this.InternalServices.CallInternalFunction("EnableDisplayInfo", DII);
+
                 return true;
             
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Failed to enable Acrophobia! \n" + ex.Message);
-                System.Windows.MessageBox.Show("Failed to enable Acrophobia! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                Trace.WriteLine("Failed to enable DisplayInfo! \n" + ex.Message);
+                System.Windows.MessageBox.Show("Failed to enable DisplayInfo! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 return false;
             }
 
@@ -197,6 +215,22 @@ namespace HCM3.Services.Trainer
 
         }
 
+
+
+
        
+    }
+
+    //Call Internal Function needs to access this as well
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayInfoInfo
+    {
+        public UInt64 DisplayInfoDetour;
+        public int ScreenX;
+        public int ScreenY;
+        public int SignificantDigits;
+        public float FontSize;
+
     }
 }

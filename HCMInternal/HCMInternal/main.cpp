@@ -5,7 +5,8 @@
 #include <chrono>
 #include <ctime>   
 #include <d3dx11.h>
-
+#include <sstream>
+#include <iomanip>
 
 
 
@@ -23,6 +24,18 @@ ID3D11DeviceContext* pContext = NULL;
 ID3D11RenderTargetView* mainRenderTargetView;
 std::string textToPrint = "HaloCheckpointManager Hooked! \nCould put game info here \nlike player coordinates, health etc";
 bool test = false;
+//ImFont* DefaultFont;
+
+
+
+int ScreenWidth;
+int ScreenHeight;
+bool DefaultFontInit;
+ImFont* DefaultFont;
+
+
+bool DisplayInfoFlag = false;
+
 
 
 typedef struct
@@ -35,6 +48,16 @@ typedef struct
 RGBA red = { 255,0,0,255 };
 RGBA green = { 0,255,0,255 };
 
+typedef struct
+{
+	UINT64 DisplayInfoDetour;
+	int ScreenX;
+	int ScreenY;
+	int SignificantDigits;
+	float FontSize;
+
+}DisplayInfoInfo;
+DisplayInfoInfo DII = { 0, 0, 0, 0, 0 };
 
 
 
@@ -124,7 +147,97 @@ static void DrawTemporaryMessages(int x, int y, RGBA* color, int outlineWidth, f
 }
 
 
+static void DrawDisplayInfo(RGBA* color, int outlineWidth, float outlineStrength)
+{
+	std::string currentMessageText = "Error getting player data: ";
 
+		if (DII.DisplayInfoDetour == NULL)
+		{
+			currentMessageText = currentMessageText + "\nDisplayInfoDetour was null.";
+			std::cout << currentMessageText;
+		}
+		else
+		{
+			float* InfoPtr = reinterpret_cast<float*>(DII.DisplayInfoDetour);
+
+			//read info from the pointer
+			float xPos = *InfoPtr;
+			InfoPtr++;
+			float yPos = *InfoPtr;
+			InfoPtr++;
+			float zPos = *InfoPtr;
+			InfoPtr++;
+			float xVel = *InfoPtr;
+			InfoPtr++;
+			float yVel = *InfoPtr;
+			InfoPtr++;
+			float zVel = *InfoPtr;
+			InfoPtr++;
+			float health = *InfoPtr;
+			InfoPtr++;
+			float shields = *InfoPtr;
+			InfoPtr++;
+			float viewX = *InfoPtr;
+			InfoPtr++;
+			float viewY = *InfoPtr;
+
+			//derived values
+			float hold = (xVel * xVel) + (yVel * yVel);
+			float xyVel = sqrt(hold);
+			float xyzVel = sqrt(hold + (zVel * zVel)); 
+
+			int precision = DII.SignificantDigits;
+
+			//start writing the display info string
+			std::stringstream stream;
+			stream << "Player Data: \n";
+			stream << "Position: ";
+			stream << std::fixed << std::setprecision(precision) << xPos << ", ";
+			stream << std::fixed << std::setprecision(precision) << yPos << ", ";
+			stream << std::fixed << std::setprecision(precision) << zPos << "\n";
+
+			stream << "Velocity: ";
+			stream << std::fixed << std::setprecision(precision) << xVel << ", ";
+			stream << std::fixed << std::setprecision(precision) << yVel << ", ";
+			stream << std::fixed << std::setprecision(precision) << zVel << "\n";
+			stream << "Total XY Velocity: ";
+			stream << std::fixed << std::setprecision(precision) << xyVel << "\n";
+			stream << "Total XYZ Velocity: ";
+			stream << std::fixed << std::setprecision(precision) << xyzVel << "\n";
+			stream << "Health: ";
+			stream << std::fixed << std::setprecision(precision) << health << ", ";
+			stream << std::fixed << std::setprecision(precision) << shields << "\n";
+			stream << "View Angle: ";
+			stream << std::fixed << std::setprecision(precision) << viewX << ", ";
+			stream << std::fixed << std::setprecision(precision) << viewY << "\n";
+
+			currentMessageText = stream.str();
+		}
+
+
+		int x = DII.ScreenX;
+		int y = DII.ScreenY;
+		int fontsize = DII.FontSize;
+
+		if (!DefaultFontInit)
+		{
+			DefaultFont = ImGui::GetIO().Fonts->Fonts[0];
+			DefaultFontInit = true;
+		}
+
+				// Add to the draw list
+		if (outlineWidth > 0 && outlineStrength >= 0 && outlineStrength <= 1)
+		{
+			ImGui::GetOverlayDrawList()->AddText(DefaultFont, fontsize, ImVec2(x, y - outlineWidth), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength )), currentMessageText.c_str());
+			ImGui::GetOverlayDrawList()->AddText(DefaultFont, fontsize, ImVec2(x, y + outlineWidth), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength )), currentMessageText.c_str());
+			ImGui::GetOverlayDrawList()->AddText(DefaultFont, fontsize, ImVec2(x - outlineWidth, y), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength )), currentMessageText.c_str());
+			ImGui::GetOverlayDrawList()->AddText(DefaultFont, fontsize, ImVec2(x + outlineWidth, y), ImGui::ColorConvertFloat4ToU32(ImVec4(1 / 255.0, 1 / 255.0, 1 / 255.0, outlineStrength )), currentMessageText.c_str());
+		}
+
+		ImGui::GetOverlayDrawList()->AddText(DefaultFont, fontsize, ImVec2(x, y), ImGui::ColorConvertFloat4ToU32(ImVec4(color->R / 255.0, color->G / 255.0, color->B / 255.0, (color->A / 255.0))), currentMessageText.c_str());
+
+
+}
 
 void InitImGui()
 {
@@ -166,6 +279,11 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 			InitImGui();
 			std::cout << "\nSuccesfully initialised d3d hook.";
 			init = true;
+			RECT gameScreenRct;
+			GetWindowRect(window, &gameScreenRct);
+
+			ScreenWidth = gameScreenRct.right - gameScreenRct.left;
+			ScreenHeight = gameScreenRct.bottom - gameScreenRct.top;
 		}
 
 		else
@@ -194,7 +312,7 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 
 	DrawPersistentMessages(10, 10, &green, textToPrint, 1, 0.5);
 	DrawTemporaryMessages(10, 30, &green, 1, 0.5);
-
+	if (DisplayInfoFlag) { DrawDisplayInfo(&green, 1, 0.5); }
 
 	ImGui::EndFrame();
 	ImGui::Render();
@@ -243,6 +361,25 @@ extern "C" __declspec(dllexport) int IsOverlayHooked()
 	{
 		return 1;
 	}
+
+}
+
+extern "C" __declspec(dllexport) int EnableDisplayInfo(DisplayInfoInfo dii)
+{
+	DII.DisplayInfoDetour = dii.DisplayInfoDetour;
+	DII.FontSize = dii.FontSize;
+	DII.SignificantDigits = dii.SignificantDigits;
+	DII.ScreenX = dii.ScreenX;
+	DII.ScreenY = dii.ScreenY;
+	DisplayInfoFlag = true;
+		return 1;
+
+}
+
+extern "C" __declspec(dllexport) int DisableDisplayInfo()
+{
+	DisplayInfoFlag = false;
+	return 1;
 
 }
 
@@ -304,6 +441,11 @@ HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	pContext->RSSetViewports(1, &vp);
+
+
+
+	ScreenWidth = Width;
+	ScreenHeight = Height;
 
 	return hr;
 }
@@ -368,8 +510,7 @@ DWORD WINAPI MainThread(void* pHandle)
 BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 {
 
-	//stdout to console (if console exists)
-
+	FILE* pCout;
 
 
 	LPSTR processPath = new CHAR[256];
@@ -386,26 +527,39 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		GetModuleFileName(NULL, processPath, 256);
 		path = processPath;
 		processName = path.substr(path.find_last_of("/\\") + 1);
-		if (processName.find("MCC") != std::string::npos)
+
+		//force processName to lowercase so we can search for substring without caring about case
+		for (auto& c : processName)
 		{
-			//Setup console for debugging (will remove in release)
-			AllocConsole();
-			FILE* pCout;
-			freopen_s(&pCout, "conout$", "w", stdout);
-			std::cout << "\nHCMInternal.dll injected.";
+			c = tolower(c);
+		}
+
+		if (processName.find("mcc") != std::string::npos)
+		{
+			//Old console debugging code
+			//AllocConsole();
+			// FILE* pCout;
+			//freopen_s(&pCout, "conout$", "w", stdout);
+
+			//New log to file code
 			
+			freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
 
 
+			std::cout << "\nHCMInternal.dll injected.";
+			std::cout << "Size of DisplayInfoInfo: " << sizeof(DisplayInfoInfo);
 			textToPrint = "hi";
+			
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
 		}
 		
 		break;
 	case DLL_PROCESS_DETACH:
 		kiero::shutdown();
+		fclose(stdout);
+		//FreeConsole();
 		
-		FreeConsole();
-		
+
 		break;
 	}
 	return TRUE;

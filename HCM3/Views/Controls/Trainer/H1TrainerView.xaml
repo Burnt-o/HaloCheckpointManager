@@ -19,45 +19,47 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*" MinHeight="5"/>
         </Grid.RowDefinitions>
 
-            <Border Grid.RowSpan="19" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
-            <Border Grid.RowSpan="16" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
+            <Border Grid.RowSpan="21" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
+            <Border Grid.RowSpan="18" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo 1" Grid.Row="0" />
         <local:TrainerColumnHeader Grid.Row="1" Grid.ColumnSpan="2" />
-            <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_InjectCheckpoint}" />
-            <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_DumpCheckpoint}"/>
-            <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreSave}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericActionView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreLoad}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_InjectCheckpoint}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_DumpCheckpoint}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreSave}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreLoad}" Visibility="{Binding Path=Visibility}"/>
 
-            <local:GenericActionWithOptionView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericActionWithOptionView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericToggleView Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:SpeedhackView Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericToggleView Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleMedusa}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericToggleView Grid.Row="13" Grid.ColumnSpan="2"  DataContext="{Binding Path=Button_ToggleBool}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericToggleView Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleAcro}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericToggleView Grid.Row="15" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" IsEnabled="{Binding Path=IsEnabled}"/>
-            <local:GenericToggleView Grid.Row="16" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" IsEnabled="{Binding Path=IsEnabled}"/>
+            <local:GenericActionWithOptionView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionWithOptionView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericToggleView Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}" Visibility="{Binding Path=Visibility}"/>
+            <local:SpeedhackView Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericToggleView Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleMedusa}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericToggleView Grid.Row="13" Grid.ColumnSpan="2"  DataContext="{Binding Path=Button_ToggleBool}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_SkullAcrophobia}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="15" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_SkullBandana}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericActionView Grid.Row="16" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_SkullBlind}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericToggleView Grid.Row="17" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" Visibility="{Binding Path=Visibility}"/>
+            <local:GenericToggleWithOptionView Grid.Row="18" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" Visibility="{Binding Path=Visibility}"/>
     </Grid>
     </ScrollViewer>
 

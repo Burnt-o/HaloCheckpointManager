@@ -41,6 +41,17 @@ namespace HCM3.ViewModels.Commands
         {
             try
             {
+                //Align the game to tab (THIS SHIT IS FUCKIN BROKEN, some race condition shit with SelectedSaveFolder being null on tab change)
+                //this.CheckpointServices.CommonServices.HaloMemoryService.HaloState.UpdateHaloState();
+                //HaloState actualGame = this.CheckpointServices.CommonServices.HaloMemoryService.HaloState;
+
+                //if (actualGame.CurrentHaloState != -1)
+                //{
+                //    CheckpointViewModel.InvokeRequestTabChange(actualGame.CurrentHaloState);
+                //}
+
+                //Trace.WriteLine("THIS AInNT NULL IS IT: " + CheckpointViewModel.SelectedSaveFolder);
+
                 CheckpointServices.TryDump(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedGame);
                 CheckpointViewModel.RefreshCheckpointList();
             }

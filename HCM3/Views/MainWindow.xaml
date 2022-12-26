@@ -90,7 +90,7 @@
             </ContentControl.Style>
         </ContentControl>
         <!--<userControls:H1TrainerControl Grid.Column="1" DataContext="{Binding Path=TrainerViewModel}"/>-->
-    <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}"  >
+    <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"  >
 
             <TabItem >
                 <TabItem.Header>

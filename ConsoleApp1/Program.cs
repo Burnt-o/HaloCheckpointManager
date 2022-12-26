@@ -8,8 +8,8 @@ Trace.WriteLine("Hello, World!");
 
 //mov dword ptr [rbp-28]; mov [rsp+74], r10d; mov rax, 00007FFF87E9346Ch; cmp r14, [rax]; mov rax 00007FFF86E32FB5h; jmp [rax]
 // somethings wrong with the final operand here
-string ASMstring = "movss xmm1, [r8+10h]; movss xmm2, [r8+14h]; push rax; mov rax, [r8+14h]; test rax, rax; je 23h; mov eax, 47C5000h; movd xmm1, eax; movd xmm2, eax; pop rax";
-
+string ASMstring = "add rax, 34h; add rax, rcx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, 0; add rcx, 250h; mov rdx, 0; mov edx, [rcx]; cmp edi, ecx; jne 50h; mov ebx, [rax + 0F0h]; cmp ebx, FFFFFFFFh; cmovne [rcx + 0B0h], ebx; cmove [rcx + 0B0h], edx; cmp [rcx + 0B0h], edi; jne 100h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, 0; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, 0; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rcx; pop rax; pop rcx; pop rbp; pop rdx; jmp 0";
+ASMstring = "cmp [rsp+048h], r10b";
 
 using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
 {

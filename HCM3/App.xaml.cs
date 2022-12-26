@@ -41,6 +41,8 @@ namespace HCM3
 
         private TextWriterTraceListener Logger { get; set; }
 
+        public string CurrentHCMVersion = "2.0.0";
+
         private void ConfigureServices(ServiceCollection services)
         {
 
@@ -71,8 +73,8 @@ namespace HCM3
             services.AddSingleton<PC_Speedhack>();
             services.AddSingleton<PC_BlockCPs>();
             services.AddSingleton<PC_Medusa>();
-            services.AddSingleton<PC_Acrophobia>();
             services.AddSingleton<PC_OneHitKill>();
+            services.AddSingleton<PC_DisplayInfo>();
 
             services.AddSingleton<HotkeyManager>();
         }
@@ -109,6 +111,26 @@ namespace HCM3
             if (pointerErrors != "")
             { System.Windows.MessageBox.Show("Some pointers failed to load. Yell at Burnt for making typos." + pointerErrors, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK); }
 
+            if (dataPointersService.ObsoleteHCMVersions.Contains(this.CurrentHCMVersion))
+            {
+                //Tell the user this version of HCM is deprecated and the new version must be downloaded
+                System.Windows.MessageBox.Show("Bad HCM version, shutting down", "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.Application.Current.Shutdown();
+            }
+            else if (this.CurrentHCMVersion != dataPointersService.LatestHCMVersion)
+            {
+                //Tell the user a new HCM version exists and ask them if they would like to download it (send them to github release page)
+                if (!(MessageBox.Show("A newer version of HCM exists, probably with bugfixes or new features.\nWould you like to go to the HCM releases page now?", "Download HCM update?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))
+                {
+                    //User clicked yes, so take them to the release page
+                    System.Diagnostics.Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "https://github.com/Burnt-o/HaloCheckpointManager/releases",
+                        UseShellExecute = true
+                    });
+                }
+                
+            }
 
             // Tell HaloMemory to try to attach to MCC, both steam and winstore versions
             var haloMemoryService = _serviceProvider.GetService<HaloMemoryService>();
@@ -131,6 +153,7 @@ namespace HCM3
 
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
+            mainWindow.Title = "HaloCheckpointManager " + this.CurrentHCMVersion;
             mainWindow.Show();
         }
 

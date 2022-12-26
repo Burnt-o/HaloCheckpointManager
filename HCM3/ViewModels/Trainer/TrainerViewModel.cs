@@ -31,9 +31,11 @@ namespace HCM3.ViewModels
         public GenericToggleViewModel Button_ToggleMedusa { get; set; }
         public GenericToggleViewModel Button_ToggleBool { get; set; }
 
-        public GenericToggleViewModel Button_ToggleAcro { get; set; }
+        public GenericActionViewModel Button_SkullAcrophobia { get; set; }
+        public GenericActionViewModel Button_SkullBandana { get; set; }
+        public GenericActionViewModel Button_SkullBlind { get; set; }
         public GenericToggleViewModel Button_ToggleNaturals { get; set; }
-        public GenericToggleViewModel Button_ToggleInfo { get; set; }
+        public DisplayInfoViewModel Button_ToggleInfo { get; set; }
 
         public GenericToggleViewModel Button_TogglePanCam { get; set; }
 
@@ -84,9 +86,11 @@ namespace HCM3.ViewModels
             this.Button_ToggleSpeedhack = new SpeedhackViewModel("Speedhack", null, null);
             this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", null, null);
             this.Button_ToggleBool = new GenericToggleViewModel("BOOL practice mode", null, null);
-            this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", null, null);
+            this.Button_SkullAcrophobia = new GenericActionViewModel("Acrophobia Skull", null, null);
+            this.Button_SkullBandana = new GenericActionViewModel("Bandana Skull", null, null);
+            this.Button_SkullBlind = new GenericActionViewModel("Blind Skull", null, null);
             this.Button_ToggleNaturals = new GenericToggleViewModel("Block Natural CPs", null, null);
-            this.Button_ToggleInfo = new GenericToggleViewModel("Display Info", null, null);
+            this.Button_ToggleInfo = new DisplayInfoViewModel("Display Info", null, null);
             this.Button_TogglePanCam = new GenericToggleViewModel("PanCam", null, null);
             this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
             this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
@@ -95,7 +99,7 @@ namespace HCM3.ViewModels
 
         private void HaloStateEvents_HALOSTATECHANGED_EVENT(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
         {
-            Trace.WriteLine("TRAINERVIEWMODEL HALOSTATECHANGEDEVENT BEEN TRIGGERED");
+
             //this.UserControlToShow = "H1";
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[e.NewHaloState];
 
@@ -212,8 +216,14 @@ new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.Forc
          this.Button_ToggleMedusa = new GenericToggleViewModel("Cheat Medusa", PersistentCheatManager.PC_Medusa, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleMedusa);
 
-            this.Button_ToggleAcro = new GenericToggleViewModel("Acrophobia", PersistentCheatManager.PC_Acrophobia, hotkeyManager);
-            listOfButtons.Add(this.Button_ToggleAcro);
+            this.Button_SkullAcrophobia = new GenericActionViewModel("Acrophobia Skull", new RelayCommand(o => { TrainerServices.FlipSkull("Acrophobia"); }, o => true), hotkeyManager);
+            listOfButtons.Add(this.Button_SkullAcrophobia);
+
+            this.Button_SkullBandana = new GenericActionViewModel("Bandana Skull", new RelayCommand(o => { TrainerServices.FlipSkull("Bandana"); }, o => true), hotkeyManager);
+            listOfButtons.Add(this.Button_SkullBandana);
+
+            this.Button_SkullBlind = new GenericActionViewModel("Blind Skull", new RelayCommand(o => { TrainerServices.FlipSkull("Blind"); }, o => true), hotkeyManager);
+            listOfButtons.Add(this.Button_SkullBlind);
 
             this.Button_ToggleBool = new GenericToggleViewModel("BOOL practice mode", null, null);
             listOfButtons.Add(this.Button_ToggleBool);
@@ -221,14 +231,15 @@ new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.Forc
             listOfButtons.Add(this.Button_TogglePanCam);
 
 
-            this.Button_ToggleInfo = new GenericToggleViewModel("Display Info", null, null);
+            this.Button_ToggleInfo = new DisplayInfoViewModel("Display Info", PersistentCheatManager.PC_DisplayInfo, hotkeyManager);
             listOfButtons.Add(this.Button_ToggleInfo);
+
+
             this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
             listOfButtons.Add(this.Button_ToggleFlyHack);
             this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
             listOfButtons.Add(this.Button_ToggleSprintMeter );
             UserControlToShow = "LD";
-            //Trace.WriteLine("CURRENTHALOSTATE at start: " + this.HaloMemoryService.HaloState.CurrentHaloState);
             HaloStateEvents.HALOSTATECHANGED_EVENT += HaloStateEvents_HALOSTATECHANGED_EVENT;
             hotkeyManager.KB_ReloadHotkeys();
         }

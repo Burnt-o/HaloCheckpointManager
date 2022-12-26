@@ -16,7 +16,9 @@ namespace HCM3.Services.Trainer
         {
             lock (lockSetupInternal)
             {
-                ReadWrite.Pointer presentPtr = (ReadWrite.Pointer)this.DataPointersService.GetPointer("PresentPointer", this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
+                Trace.WriteLine("INJECTING INTERNAL");
+
+                ReadWrite.Pointer presentPtr = (ReadWrite.Pointer)this.DataPointersService.GetPointer("PresentPointer_" + this.HaloMemoryService.HaloState.MCCType, this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
               
 
                 if (!internalFunctionNames.Any()) throw new ArgumentException("Wasn't passed a list of internal functions whose name we need to find");
@@ -76,7 +78,15 @@ namespace HCM3.Services.Trainer
                     IntPtr internalFunctionPointer = IntPtr.Add(MCCHCMHandle, (int)functionOffset);
 
                     // And add to our dictionary
-                    InternalFunctions.Add(functionName, internalFunctionPointer);
+                    if (InternalFunctions.ContainsKey(functionName))
+                    {
+                        InternalFunctions[functionName] = internalFunctionPointer;
+                    }
+                    else
+                    {
+                        InternalFunctions.Add(functionName, internalFunctionPointer);
+                    }
+                    
                 }
                 InternalFunctionsLoaded = true;
 

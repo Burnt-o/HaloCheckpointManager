@@ -53,6 +53,19 @@ namespace HCM3.ViewModels
         { get { return _selectedSaveFolder; }
             set
             {
+                if (_selectedSaveFolder != value)
+                {
+                    if (value == null)
+                    {
+                        Trace.WriteLine("DEAR GOD WHY");
+                    }
+                    else
+                    {
+                        Trace.WriteLine("JGHG: " + value.SaveFolderPath);
+                    }
+
+                }
+
                 _selectedSaveFolder = value;
                 OnPropertyChanged(nameof(SelectedSaveFolder));
             }
@@ -87,6 +100,13 @@ namespace HCM3.ViewModels
 
         }
 
+        public event EventHandler<int> RequestTabChange;
+
+        public void InvokeRequestTabChange(int requestedTab)
+        { 
+        RequestTabChange?.Invoke(this, requestedTab);
+        }
+
 
         private CheckpointServices CheckpointServices { get; init; }
         private TrainerServices TrainerServices { get; init; }
@@ -104,7 +124,6 @@ namespace HCM3.ViewModels
 
 
             view.CustomSort = new SortCheckpointsByLastWriteTime();
-
 
 
             //Subscribe to AttachEvent so we can tell CheckpointModel to refreshList
@@ -258,6 +277,13 @@ namespace HCM3.ViewModels
         {
             get { return _renameCheckpoint ?? (_renameCheckpoint = new RenameCheckpointCommand(this, CheckpointServices)); }
             set { _renameCheckpoint = value; }
+        }
+
+        private ICommand _reVersionCheckpoint;
+        public ICommand ReVersionCheckpoint
+        {
+            get { return _reVersionCheckpoint ?? (_reVersionCheckpoint = new ReVersionCheckpointCommand(this, CheckpointServices)); }
+            set { _reVersionCheckpoint = value; }
         }
 
         private ICommand _sortCheckpoint;

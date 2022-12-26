@@ -25,11 +25,14 @@ namespace HCM3.Services
             // Ask user what they want to name the checkpoint file
             string? userInput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",
                                                        $"Rename checkpoint: {SelectedCheckpoint.CheckpointName}",
-                                                       "",
+                                                       $"{SelectedCheckpoint.CheckpointName}",
                                                        -1, -1);
+
+            if (userInput == null) return; //They clicked the cancel button
+
             string proposedSave = (SelectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
-            if (userInput == null || userInput == "" || File.Exists(proposedSave)) throw new InvalidOperationException("Failed to rename checkpoint; was your new name valid and unique?");
+            if (userInput == "" || File.Exists(proposedSave)) throw new InvalidOperationException("Failed to rename checkpoint; was your new name valid and unique?");
 
 
 

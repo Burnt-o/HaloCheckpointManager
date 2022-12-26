@@ -28,10 +28,25 @@ namespace HCM3.Services.Trainer
 
         public DataPointersService DataPointersService { get; init; }
 
+        private List<string> ListOfInternalFunction { get; set; }
+
+        private bool firstTime = true;
+
         public InternalServices(HaloMemoryService haloMemoryService, DataPointersService dataPointersService)
         {
             this.HaloMemoryService = haloMemoryService;
             this.DataPointersService = dataPointersService;
+
+            ListOfInternalFunction = new();
+            ListOfInternalFunction.Add("ChangeDisplayText");
+            ListOfInternalFunction.Add("IsTextDisplaying");
+            ListOfInternalFunction.Add("IsOverlayHooked");
+            ListOfInternalFunction.Add("PrintTemporaryMessage");
+            ListOfInternalFunction.Add("hkPresent");
+            ListOfInternalFunction.Add("RemoveHook");
+            ListOfInternalFunction.Add("EnableDisplayInfo");
+            ListOfInternalFunction.Add("DisableDisplayInfo");
+
 
             InternalFunctions = new();
             InternalFunctionsLoaded = false;
@@ -44,16 +59,10 @@ namespace HCM3.Services.Trainer
         {
             lock (InjectInternalLock)
             {
-                List<string> listOfInternalFunctions = new();
-                listOfInternalFunctions.Add("ChangeDisplayText");
-                listOfInternalFunctions.Add("IsTextDisplaying");
-                listOfInternalFunctions.Add("IsOverlayHooked");
-                listOfInternalFunctions.Add("PrintTemporaryMessage");
-                listOfInternalFunctions.Add("hkPresent");
-                listOfInternalFunctions.Add("RemoveHook");
+  
                 try
                 {
-                    SetupInternal(listOfInternalFunctions);
+                    SetupInternal(ListOfInternalFunction);
                 }
                 catch (Exception ex)
                 {

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using BurntMemory;
 using System.Runtime.InteropServices;
 
+
 namespace HCM3.Services.Trainer
 {
     public partial class InternalServices
@@ -64,6 +65,24 @@ namespace HCM3.Services.Trainer
 
                         case ulong:
                             paramData = BitConverter.GetBytes((ulong)param);
+                            break;
+
+                        case DisplayInfoInfo:
+                            int size = System.Runtime.InteropServices.Marshal.SizeOf(typeof(DisplayInfoInfo));
+                            paramData = new byte[size];
+
+                            IntPtr ptr = IntPtr.Zero;
+                            try
+                            {
+                                ptr = Marshal.AllocHGlobal(size);
+                                Marshal.StructureToPtr((DisplayInfoInfo)param, ptr, true);
+                                Marshal.Copy(ptr, paramData, 0, size);
+                            }
+                            finally
+                            {
+                                Marshal.FreeHGlobal(ptr);
+                            }
+                            Trace.WriteLine("Size of DisplayInfoInfo byte array:" + size);
                             break;
 
                         default:

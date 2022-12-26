@@ -69,6 +69,21 @@ namespace HCM3.Services
                         this.HighestSupportedMCCVersion = entry.Value == null || entry.Value == "" ? null : entry.Value;
                         Trace.WriteLine("Loaded HighestSupportedMCCVersion, value: " + this.HighestSupportedMCCVersion);
                     }
+                    else if (entry.Name == "LatestHCMVersion")
+                    {
+                        this.LatestHCMVersion = entry.Value == null || entry.Value == "" ? null : entry.Value;
+                        Trace.WriteLine("Loaded LatestHCMVersion, value: " + this.LatestHCMVersion);
+                    }
+                    else if (entry.Name == "ObsoleteHCMVersions")
+                    {
+                        if (entry.Value != null && entry.Value != "")
+                        {
+                            foreach (XElement ver in entry.Elements().Where(x => x.Name == "Entry"))
+                            { 
+                            this.ObsoleteHCMVersions.Add(ver.Value);
+                            }
+                        }
+                    }
                     else if (entry.Name == "Entry")
                     {
                         string entryType = entry.Attribute("Type").Value;

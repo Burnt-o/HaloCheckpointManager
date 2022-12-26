@@ -80,6 +80,7 @@ namespace HCM3.Services.Trainer
                 if (detourHandle == null) throw new Exception("Couldn't get detourHandle of H2PlayerData");
                 IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
                 if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t H2PlayerData");
+                Trace.WriteLine("H2 player info test: " + playerAddy.Value);
                 return playerAddy.Value;
 
             }
@@ -99,6 +100,7 @@ namespace HCM3.Services.Trainer
                 if (detourHandle == null) throw new Exception("Couldn't get detourHandle of H3PlayerData");
                 IntPtr? playerAddy = (IntPtr?)this.HaloMemoryService.ReadWrite.ReadQword(detourHandle.Value + 0x50);
                 if (playerAddy == null) throw new Exception("couldn't parse player addy from detour handle t H3PlayerData");
+                Trace.WriteLine("H3 player info test: " + playerAddy.Value.ToString("X"));
                 return playerAddy.Value;
 
             }
@@ -148,6 +150,25 @@ namespace HCM3.Services.Trainer
 
         }
 
+        //https://stackoverflow.com/a/560180
+        private byte ConvertToByte(System.Collections.BitArray bits)
+        {
+            if (bits.Count != 8)
+            {
+                throw new ArgumentException("illegal number of bits");
+            }
+
+            byte b = 0;
+            if (bits.Get(0)) b++;
+            if (bits.Get(1)) b += 2;
+            if (bits.Get(2)) b += 4;
+            if (bits.Get(3)) b += 8;
+            if (bits.Get(4)) b += 16;
+            if (bits.Get(5)) b += 32;
+            if (bits.Get(6)) b += 64;
+            if (bits.Get(7)) b += 128;
+            return b;
+        }
 
     }
 }

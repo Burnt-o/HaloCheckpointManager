@@ -57,6 +57,10 @@ namespace HCM3.ViewModels
 
             this.PropertyChanged += Handle_PropertyChanged;
 
+            // Subscribe to checkpoint view model requesting a tab change
+            this.CheckpointViewModel.RequestTabChange += Realign_Tab;
+
+
             // Need to subscribe to HaloStateChanged of mainmodel, and tab changed of this mainViewModel,
             HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { IsSelectedGameSameAsActualGame(); };
 
@@ -82,6 +86,7 @@ namespace HCM3.ViewModels
             {
                 if (SelectedTabIndex != 6) //Settings tab == 6
                 {
+                    Trace.WriteLine("TAB WAS CHANGED");
                     CheckpointViewModel.SelectedGame = SelectedTabIndex;
                     TrainerViewModel.SelectedGame = SelectedTabIndex;
                     this.SelectedGame = SelectedTabIndex;
@@ -93,6 +98,13 @@ namespace HCM3.ViewModels
                 // Save the selected tab to settings so we can load it in next time HCM starts
                 Properties.Settings.Default.LastSelectedTab = SelectedTabIndex;
             }
+        }
+
+
+        private void Realign_Tab(object? sender, int requestedTab)
+        { 
+            if (SelectedTabIndex != requestedTab && requestedTab >= 0 && requestedTab <= 5)
+        SelectedTabIndex = requestedTab;
         }
 
         private void IsSelectedGameSameAsActualGame()
