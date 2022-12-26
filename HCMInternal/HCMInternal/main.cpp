@@ -494,7 +494,7 @@ DWORD WINAPI MainThread(void* pHandle)
 		kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
 
 
-		while (!GetAsyncKeyState(VK_END));
+		//while (!GetAsyncKeyState(VK_END));
 	}
 
 

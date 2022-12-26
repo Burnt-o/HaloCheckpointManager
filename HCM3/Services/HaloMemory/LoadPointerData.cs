@@ -24,7 +24,6 @@ namespace HCM3.Services
             // Download the xml from git
             try
             {
-                throw new Exception("for debugging we'll use local file");
                 string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/PointerData.xml";
                 System.Net.WebClient client = new System.Net.WebClient();
                 xml = client.DownloadString(url);

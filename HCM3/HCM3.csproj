@@ -190,6 +190,7 @@
     <None Remove="Images\OD\sc140_clas.png" />
     <None Remove="Images\OD\sc150_anni.png" />
     <None Remove="Images\OD\sc150_clas.png" />
+    <None Remove="keystone.dll" />
     <None Remove="Views\b30_clas.png" />
   </ItemGroup>
 
@@ -393,6 +394,10 @@
     <Resource Include="Images\OD\sc140_clas.png" />
     <Resource Include="Images\OD\sc150_anni.png" />
     <Resource Include="Images\OD\sc150_clas.png" />
+    <Resource Include="keystone.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
