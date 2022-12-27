@@ -201,7 +201,6 @@
 
   <ItemGroup>
     <PackageReference Include="gong-wpf-dragdrop" Version="3.2.0" />
-    <PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="NonInvasiveKeyboardHookLibrary.Fork" Version="2.1.3" />

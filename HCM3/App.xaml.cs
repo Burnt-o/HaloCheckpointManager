@@ -41,7 +41,7 @@ namespace HCM3
 
         private TextWriterTraceListener Logger { get; set; }
 
-        public string CurrentHCMVersion = "2.0.0";
+        public string CurrentHCMVersion = "2.0.1";
 
         private void ConfigureServices(ServiceCollection services)
         {
