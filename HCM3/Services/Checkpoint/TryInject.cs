@@ -89,6 +89,7 @@ namespace HCM3.Services
                     levelString = ASCIIEncoding.ASCII.GetString(levelBytes);
                     
                     levelString = levelString.Substring(0, this.HaloMemoryService.HaloState.CurrentLevelCode.Length);
+                    Trace.WriteLine("length of currentlevelcode: " + this.HaloMemoryService.HaloState.CurrentLevelCode.Length + ", length of new substring: " + levelString.Length);
                     //while (levelString.Contains(@"\"))
                     //{ levelString = levelString.Substring(levelString.LastIndexOf(@"\") + 1); }
 
@@ -102,7 +103,11 @@ namespace HCM3.Services
 
                 if (levelString != null && levelString != this.HaloMemoryService.HaloState.CurrentLevelCode)
                 {
-                    if (MessageBox.Show("It appears the checkpoint you're injecting is not on the same level as the current in-game level. This is very likely to cause the game to crash. Proceed anyway?\nCheckpoint level: " + levelString + ", Current level: " + this.HaloMemoryService.HaloState.CurrentLevelCode, "HCM Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    string message = "It appears the checkpoint you're injecting is not on the same level as the current in-game level. This is very likely to cause the game to crash. Proceed anyway?\nCheckpoint level: " + levelString + "\nCurrent level: " + this.HaloMemoryService.HaloState.CurrentLevelCode;
+                    Trace.WriteLine(message);
+                    Trace.WriteLine("current level ?: " + this.HaloMemoryService.HaloState.CurrentLevelCode);
+
+                    if (MessageBox.Show(message, "HCM Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                     {
                         return;
                     }

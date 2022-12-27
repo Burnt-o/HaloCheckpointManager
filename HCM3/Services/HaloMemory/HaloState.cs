@@ -347,6 +347,15 @@ namespace HCM3.Services
                     levelCode = levelCode.Substring(levelCode.LastIndexOf(@"\") + 1);
                 }
                 Trace.WriteLine("LEVEL CODE: " + levelCode);
+                Trace.WriteLine("Levelcode length: " + levelCode.Length);
+
+                //removes whitespace much stricter than what string.trim does
+                levelCode = System.Text.RegularExpressions.Regex.Replace(levelCode, @"[\s\0]+$", "");
+
+                Trace.WriteLine("LEVEL CODE2: " + levelCode);
+                Trace.WriteLine("Levelcode length2: " + levelCode.Length);
+
+
                 return levelCode;
                 
             }
