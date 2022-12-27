@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
+    <PackageReference Include="Reloaded.Assembler" Version="1.0.14" />
   </ItemGroup>
 
 </Project>

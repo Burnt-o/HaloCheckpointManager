@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Keystone;
 using BurntMemory;
 
 namespace HCM3.Services.Trainer

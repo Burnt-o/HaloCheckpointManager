@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Keystone;
 using System.Diagnostics;
+using Reloaded.Assembler;
 
 
 
@@ -8,9 +9,38 @@ Trace.WriteLine("Hello, World!");
 
 //mov dword ptr [rbp-28]; mov [rsp+74], r10d; mov rax, 00007FFF87E9346Ch; cmp r14, [rax]; mov rax 00007FFF86E32FB5h; jmp [rax]
 // somethings wrong with the final operand here
-string ASMstring = "add rax, 34h; add rax, rcx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, 0; add rcx, 250h; mov rdx, 0; mov edx, [rcx]; cmp edi, ecx; jne 50h; mov ebx, [rax + 0F0h]; cmp ebx, FFFFFFFFh; cmovne [rcx + 0B0h], ebx; cmove [rcx + 0B0h], edx; cmp [rcx + 0B0h], edi; jne 100h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, 0; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, 0; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rcx; pop rax; pop rcx; pop rbp; pop rdx; jmp 0";
-ASMstring = "cmp [rsp+048h], r10b";
+string ASMstring = "cmp dword ptr [rcx + 0B0h], 00000000";
 
+//add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp dword [rcx + 0B0h], 00000000; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl
+
+
+var assembler = new Assembler();
+var a = assembler.GetVersion();
+Trace.WriteLine(a.ToString());
+string[] mnemonics = new[]
+{
+    "use64",
+    "cmp dword [rcx + 0B0h], 00000000",
+};
+
+
+
+try
+{
+    byte[] actual = assembler.Assemble(mnemonics);
+    for (int i = 0; i < actual.Length; i++)
+    {
+        Trace.Write(actual[i].ToString("X2"));
+    }
+}
+catch (Reloaded.Assembler.Definitions.FasmException ex)
+{ 
+Trace.WriteLine(ex.ToString());
+
+}
+
+Trace.WriteLine("");
+Trace.WriteLine("Now with keystone");
 using (Engine keystone = new Engine(Architecture.X86, Mode.X64) { ThrowOnError = true })
 {
     try

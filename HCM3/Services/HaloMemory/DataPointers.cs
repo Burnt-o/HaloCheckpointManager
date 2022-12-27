@@ -11,7 +11,6 @@ using System.IO;
 using System.Xml;
 using HCM3.Models;
 using HCM3.Helpers;
-using Keystone;
 using HCM3.Services.Trainer;
 
 namespace HCM3.Services

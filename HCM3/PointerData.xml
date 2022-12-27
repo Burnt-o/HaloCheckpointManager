@@ -506,7 +506,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x83, 0xC0, 0x34, 0x48, 0x03, 0xC1</OriginalCodeBytes>
 			<SizeToAlloc>500</SizeToAlloc>
-			<DetourCodeASM>add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp dword [rcx + 0B0h], 00000000; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl</DetourCodeASM>
+			<DetourCodeASM>add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
@@ -544,14 +544,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x83, 0xC0, 0x34, 0x48, 0x03, 0xC1</OriginalCodeBytes>
 			<SizeToAlloc>500</SizeToAlloc>
-			<DetourCodeASM>add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp dword [rcx + 0B0h], 00000000; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl</DetourCodeASM>
+			<DetourCodeASM>add rax, 34h; add rax, rcx; push rbx; push rcx; push rax; push rcx; push rbp; push rdx; mov rcx, @detourHandle; add rcx, 250h; mov rdx, @playerDatum; mov edx, [rdx]; cmp edi, edx; jne 19h; mov ebx, [rax + 0D8h]; cmp ebx, 0FFFFFFFFh; push rax; cmovne eax, ebx; cmove eax, edx; mov [rcx + 00B0h], eax; pop rax; push rax; mov eax, [rcx + 0B0h]; test eax, eax; pop rax; je 5Dh; cmp [rcx + 0B0h], edi; jne 55h; mov ebp, [rax + 18h]; mov [rcx], ebp; mov ebp, [rax + 1Ch]; mov [rcx + 4h], ebp; mov ebp, [rax + 20h]; mov [rcx + 8h], ebp; mov ebp, [rax + 24h]; mov [rcx + 0Ch], ebp; mov ebp, [rax + 28h]; mov [rcx + 10h], ebp; mov ebp, [rax + 2Ch]; mov [rcx + 14h], ebp; mov ebp, [rax + 9Ch]; mov [rcx + 18h], ebp; mov ebp, [rax + 00A0h]; mov [rcx + 1Ch], ebp; mov rax, @viewX; mov ebp, [rax]; mov [rcx + 20h], ebp; mov rax, @viewY; mov ebp, [rax]; mov [rcx + 24h], ebp; pop rdx; pop rbp; pop rcx; pop rax; pop rcx; pop rbx; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
 					<Symbol>@playerDatum</Symbol>
 					<Module>halo1.dll</Module>
 					<Offsets>
-						<Offset>0x25F6D60</Offset>
+						<Offset>0x1DD27D0</Offset>
 					</Offsets>
 				</Pointer>
 				<Pointer>
@@ -625,7 +625,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 						<!--Stores the datum of the player entity, for comparison in detour-->
 						<Module>halo1.dll</Module>
 						<Offsets>
-							<Offset>0x25F6D60</Offset>
+							<Offset>0x1DD27D0</Offset>
 						</Offsets>
 					</Pointer>
 				</SymbolPointers>
@@ -646,7 +646,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x25F6D60</Offset>
+				<Offset>0x1DD27D0</Offset>
 			</Offsets>
 		</Version>
 	</Entry>

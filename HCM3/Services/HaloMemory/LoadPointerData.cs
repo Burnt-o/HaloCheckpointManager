@@ -21,33 +21,36 @@ namespace HCM3.Services
             string localPointerDataPath = Directory.GetCurrentDirectory() + "\\PointerData.xml";
             failedReads = "";
 
-            // Download the xml from git
-            try
+            // if on developer machine, user latest local version
+            if (localPointerDataPath.Contains(@"mauri\source\repos") && File.Exists(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml"))
             {
-                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/PointerData.xml";
-                System.Net.WebClient client = new System.Net.WebClient();
-                xml = client.DownloadString(url);
-
-                //Write the contents to local PointerData.xml for offline use
-                if (File.Exists(localPointerDataPath)) File.Delete(localPointerDataPath);
-                File.WriteAllText(localPointerDataPath, xml);
+                Trace.WriteLine("grabbing debug xml from repo");
+                xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml");
             }
-            catch
+            else
             {
-                // Couldn't grab online data, try offline backup
-                Trace.WriteLine("Couldn't find online xml data, trying local backup");
-                if (localPointerDataPath.Contains(@"mauri\source\repos") && File.Exists(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml"))
+                // Download the xml from git
+                try
                 {
-                    Trace.WriteLine("grabbing debug xml from repo");
-                    xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager\HCM3\PointerData.xml");
+                    string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/PointerData.xml";
+                    System.Net.WebClient client = new System.Net.WebClient();
+                    xml = client.DownloadString(url);
+
+                    //Write the contents to local PointerData.xml for offline use
+                    if (File.Exists(localPointerDataPath)) File.Delete(localPointerDataPath);
+                    File.WriteAllText(localPointerDataPath, xml);
                 }
-                else if (File.Exists(localPointerDataPath))
+                catch
                 {
-                    Trace.WriteLine("grabbing local xml data");
-                    xml = File.ReadAllText(localPointerDataPath);
+                    // Couldn't grab online data, try offline backup
+                    Trace.WriteLine("Couldn't find online xml data, trying local backup");
+                    if (File.Exists(localPointerDataPath))
+                    {
+                        Trace.WriteLine("grabbing local xml data");
+                        xml = File.ReadAllText(localPointerDataPath);
+                    }
                 }
             }
-
             if (xml == null || !xml.Any()) throw new Exception("Couldn't find pointerdata!");
 
             // Deserialise

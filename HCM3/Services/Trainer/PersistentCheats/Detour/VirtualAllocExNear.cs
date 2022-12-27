@@ -32,6 +32,7 @@ namespace HCM3.Services.Trainer
                     //VirtualQuery failed
                     int lastError = Marshal.GetLastWin32Error();
                     Trace.WriteLine("Virtual query failed: " + lastError);
+                    incrementor = (int)mbi.RegionSize + 1000;
                     //throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError + ", add: " + Addr.ToString("X") + ", starting loc: " + location.ToString("X"));
                     continue;
                 }
