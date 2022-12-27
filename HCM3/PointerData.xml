@@ -354,6 +354,29 @@
 				</Offsets>
 			</Version>
 		</Entry>
+
+	
+	<!--Offsets relative to revert flag-->
+	<Entry Type="int">
+		<Name>H1_DeathFlagOffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x15</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+				<Offset>0x15</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="int">
+		<Name>H1_DeathTimerOffset</Name>
+		<Version Version="1.2645.0.0">
+			<Offset>0x3A</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x3A</Offset>
+		</Version>
+	</Entry>
+	
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceCoreSave</Name>
 			<Version Version="1.2645.0.0">
@@ -4616,7 +4639,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<OriginalCodeLocation>
 				<Module>halo4.dll</Module>
 				<Offsets>
-					<Offset>0x52E7B</Offset>
+					<Offset>0x5354B</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
