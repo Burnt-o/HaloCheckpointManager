@@ -57,7 +57,7 @@ namespace HCM3.ViewModels.Commands
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Failed to dump! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show("Failed to dump! \n" + ex.ToString(), "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
             }
 
         }

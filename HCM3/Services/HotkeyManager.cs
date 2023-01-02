@@ -202,7 +202,7 @@ namespace HCM3.Services
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.MessageBox.Show("Binding.xml error: " + ex.Message);
+                        System.Windows.MessageBox.Show("Binding.xml error: " + ex.ToString());
                     }
                 }
             }

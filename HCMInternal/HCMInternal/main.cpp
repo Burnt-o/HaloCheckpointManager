@@ -11,6 +11,7 @@
 
 
 
+
 typedef HRESULT(__stdcall* ResizeBuffers)(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -24,8 +25,6 @@ ID3D11DeviceContext* pContext = NULL;
 ID3D11RenderTargetView* mainRenderTargetView;
 std::string textToPrint = "HaloCheckpointManager Hooked! \nCould put game info here \nlike player coordinates, health etc";
 bool test = false;
-//ImFont* DefaultFont;
-
 
 
 int ScreenWidth;
@@ -549,7 +548,8 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 			std::cout << "\nHCMInternal.dll injected.";
 			std::cout << "Size of DisplayInfoInfo: " << sizeof(DisplayInfoInfo);
 			textToPrint = "hi";
-			
+			std::time_t curr_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+			std::cout << "Current Time: " << std::ctime(&curr_time);
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
 		}
 		

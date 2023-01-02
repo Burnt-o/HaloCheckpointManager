@@ -100,7 +100,7 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 {
-                    ex.Message.Insert(0, "Failed to update Speedhack! ");
+                    ex.ToString().Insert(0, "Failed to update Speedhack! ");
                     IsChecked = IsCheatApplied();
                     throw;
                 }
@@ -158,7 +158,7 @@ namespace HCM3.Services.Trainer
                     catch (Exception ex)
                     {
                     IsChecked = IsCheatApplied();
-                    ex.Message.Insert(0, "Failed to enabled Speedhack! ");
+                    ex.ToString().Insert(0, "Failed to enabled Speedhack! ");
                         throw;
                     }
 
@@ -200,7 +200,7 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                throw new Exception("Invalid input for speedhack! " + ex.Message); // I don't care about stacktrace being ruined lol
+                throw new Exception("Invalid input for speedhack! " + ex.ToString()); // I don't care about stacktrace being ruined lol
             }
             
             this.InternalServices.SetSpeedHackInternal(speed);

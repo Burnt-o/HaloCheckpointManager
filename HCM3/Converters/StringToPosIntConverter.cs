@@ -39,7 +39,7 @@ namespace HCM3.Converters
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Invalid data! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show("Invalid data! \n" + ex.ToString(), "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 return null;
             }
         }

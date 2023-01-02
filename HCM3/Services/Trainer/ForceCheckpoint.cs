@@ -42,22 +42,22 @@ namespace HCM3.Services.Trainer
                 false);
 
             //as an unrelated test
-            try
-            {
-                ReadWrite.Pointer pdatum = new ReadWrite.Pointer("halo2.dll", new int[] { 0xD523A4 });
-                uint pdatumactual = this.HaloMemoryService.ReadWrite.ReadInteger(pdatum).Value;
+            //try
+            //{
+            //    ReadWrite.Pointer pdatum = new ReadWrite.Pointer("halo2.dll", new int[] { 0xD523A4 });
+            //    uint pdatumactual = this.HaloMemoryService.ReadWrite.ReadInteger(pdatum).Value;
 
-                IntPtr playerAddy = this.CommonServices.GetAddressFromDatum(pdatumactual);
-                Trace.WriteLine("H2 Player addy1: " + playerAddy.ToString("X"));
+            //    IntPtr playerAddy = this.CommonServices.GetAddressFromDatum(pdatumactual);
+            //    Trace.WriteLine("H2 Player addy1: " + playerAddy.ToString("X"));
 
-                pdatumactual = pdatumactual + 1;
-                IntPtr playerAddy2 = this.CommonServices.GetAddressFromDatum(pdatumactual);
-                Trace.WriteLine("H2 Player addy2: " + playerAddy2.ToString("X"));
-            }
-            catch (Exception ex)
-            { 
-            Trace.WriteLine("Failed reading player addy: " + ex.Message);
-            }
+            //    pdatumactual = pdatumactual + 1;
+            //    IntPtr playerAddy2 = this.CommonServices.GetAddressFromDatum(pdatumactual);
+            //    Trace.WriteLine("H2 Player addy2: " + playerAddy2.ToString("X"));
+            //}
+            //catch (Exception ex)
+            //{ 
+            //Trace.WriteLine("Failed reading player addy: " + ex.ToString());
+            //}
 
 
 

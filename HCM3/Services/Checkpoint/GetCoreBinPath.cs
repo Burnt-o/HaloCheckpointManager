@@ -53,10 +53,11 @@ namespace HCM3.Services
             string mccExePath = mcc.MainModule.FileName;
 
             Trace.WriteLine("MCC EXE PATH: " + mccExePath);
+            string pathToLookFor = @"mcc\binaries\win64\MCC-Win64-Shipping.exe";
+            if (!mccExePath.Contains(pathToLookFor, StringComparison.OrdinalIgnoreCase)) throw new Exception("Couldn't evaluate path of MCC process, actual: " + mccExePath + "\nThis is an error with trying to inject core saves. Let Burnt know, \nin the meanwhile use checkpoint injection instead.");
 
-            if (!mccExePath.Contains(@"mcc\binaries\win64\MCC-Win64-Shipping.exe")) throw new Exception("Couldn't evaluate path of MCC process");
 
-            mccExePath = mccExePath.Replace(@"mcc\binaries\win64\MCC-Win64-Shipping.exe", @"core\core.bin");
+            mccExePath = mccExePath.Replace(pathToLookFor, @"core\core.bin", StringComparison.OrdinalIgnoreCase);
 
             if (!File.Exists(mccExePath)) throw new Exception("Couldn't autodetect core.bin folder path");
 

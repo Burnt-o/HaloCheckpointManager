@@ -83,7 +83,7 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 {
-                    ex.Message.Insert(0, "Failed to enabled BlockCPs! ");
+                    ex.ToString().Insert(0, "Failed to enabled BlockCPs! ");
                     IsChecked = false;
                     throw;
                 }
@@ -199,8 +199,8 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Failed to enable BlockCPs! \n" + ex.Message);
-                System.Windows.MessageBox.Show("Failed to enable BlockCPs! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                Trace.WriteLine("Failed to enable BlockCPs! \n" + ex.ToString());
+                System.Windows.MessageBox.Show("Failed to enable BlockCPs! \n" + ex.ToString(), "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 return false;
             }
 

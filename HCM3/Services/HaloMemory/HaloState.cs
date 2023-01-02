@@ -120,7 +120,7 @@ namespace HCM3.Services
                 }
                 catch (Exception ex)
                 { 
-                Trace.WriteLine("Loading a module pointer failed: " + ex.Message);
+                Trace.WriteLine("Loading a module pointer failed: " + ex.ToString());
                     continue;
                 }
 
@@ -265,7 +265,7 @@ namespace HCM3.Services
 
             if (gameIndicatorPointer == null || stateIndicatorPointer == null || menuIndicatorPointer == null)
             {
-                Trace.WriteLine("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+                Trace.WriteLine("one of the three state indicators was null! That's usually not good.");
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
                 CurrentLevelCode = null;
                 return;
@@ -275,9 +275,9 @@ namespace HCM3.Services
             byte? stateIndicator = this.HaloMemoryService.ReadWrite.ReadByte(stateIndicatorPointer);
             byte? menuIndicator = this.HaloMemoryService.ReadWrite.ReadByte(menuIndicatorPointer);
 
-            Trace.WriteLine("gameInd: " + gameIndicator.ToString());
-            Trace.WriteLine("stateInd: " + stateIndicator.ToString());
-            Trace.WriteLine("menuInd: " + menuIndicator.ToString());
+            Trace.WriteLine("gameInd: " + gameIndicator.Value.ToString("X"));
+            Trace.WriteLine("statInd: " + stateIndicator.Value.ToString("X"));
+            Trace.WriteLine("menuInd: " + menuIndicator.Value.ToString("X"));
 
             if (menuIndicator == 00 && stateIndicator != 44)
             {
@@ -346,15 +346,16 @@ namespace HCM3.Services
                 {
                     levelCode = levelCode.Substring(levelCode.LastIndexOf(@"\") + 1);
                 }
-                Trace.WriteLine("LEVEL CODE: " + levelCode);
-                Trace.WriteLine("Levelcode length: " + levelCode.Length);
+               // Trace.WriteLine("LEVEL CODE: " + levelCode);
+                //Trace.WriteLine("Levelcode length: " + levelCode.Length);
 
                 //removes whitespace much stricter than what string.trim does
                 levelCode = System.Text.RegularExpressions.Regex.Replace(levelCode, @"[\s\0]+$", "");
 
-                Trace.WriteLine("LEVEL CODE2: " + levelCode);
-                Trace.WriteLine("Levelcode length2: " + levelCode.Length);
+               // Trace.WriteLine("LEVEL CODE2: " + levelCode);
+                //Trace.WriteLine("Levelcode length2: " + levelCode.Length);
 
+                
 
                 return levelCode;
                 

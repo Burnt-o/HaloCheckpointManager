@@ -168,7 +168,7 @@ namespace HCM3.Services
                 }
                 catch (Exception ex)
                 {
-                    throw new InvalidOperationException("Failed to save checkpoint data to file; was your name valid and unique? \nError: " + ex.Message);
+                    throw new InvalidOperationException("Failed to save checkpoint data to file; was your name valid and unique? \nError: " + ex.ToString());
                 }
             }
         }

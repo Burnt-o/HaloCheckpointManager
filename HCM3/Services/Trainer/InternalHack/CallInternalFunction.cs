@@ -97,29 +97,29 @@ namespace HCM3.Services.Trainer
                     {
 
                         paramSizeToAlloc = (paramData.Length + 1) * Marshal.SizeOf(typeof(char));
-                        Trace.WriteLine("paramData is not null, length is: " + paramSizeToAlloc);
+                        //Trace.WriteLine("paramData is not null, length is: " + paramSizeToAlloc);
 
-                        foreach (byte paramByte in paramData)
-                        {
-                            Trace.WriteLine("paramByte: " + paramByte.ToString("X2"));
-                        }
+                        //foreach (byte paramByte in paramData)
+                        //{
+                        //    Trace.WriteLine("paramByte: " + paramByte.ToString("X2"));
+                        //}
 
                         paramMemAddress = PInvokes.VirtualAllocEx(MCCProcess.Handle, IntPtr.Zero, (uint)paramSizeToAlloc, PInvokes.ALLOC_FLAGS.MEM_COMMIT | PInvokes.ALLOC_FLAGS.MEM_RESERVE, PInvokes.ALLOC_FLAGS.PAGE_READWRITE);
-                        Trace.WriteLine("paramMemAddress: " + paramMemAddress);
+                        //Trace.WriteLine("paramMemAddress: " + paramMemAddress);
                         bool success = this.HaloMemoryService.ReadWrite.WriteBytes(new ReadWrite.Pointer(paramMemAddress), (byte[])paramData, true);
-                        Trace.WriteLine("successfully wrote bytes? " + success.ToString());
+                        //Trace.WriteLine("successfully wrote bytes? " + success.ToString());
                     }
                     else
                     {
                         // No parameter
-                        Trace.WriteLine("paramData is null!");
+                        //Trace.WriteLine("paramData is null!");
                         paramMemAddress = IntPtr.Zero;
                     }
 
                     // Now create a remote thread at the target function address, with paramMemAddress as the param to read
                     // Note: We can only send one parameter with this method. If we want to send "more", we need to use a struct containing the param
-                    Trace.WriteLine("function Pointer we're trying to call: " + functionPointer);
-                    Trace.WriteLine("function parameter addy we're trying to pass: " + paramMemAddress);
+                    //Trace.WriteLine("function Pointer we're trying to call: " + functionPointer);
+                    //Trace.WriteLine("function parameter addy we're trying to pass: " + paramMemAddress);
 
 
                     remoteThreadHandle = PInvokes.CreateRemoteThread(MCCProcess.Handle, IntPtr.Zero, 0, functionPointer, (IntPtr)paramMemAddress, 0, IntPtr.Zero);

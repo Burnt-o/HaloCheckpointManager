@@ -88,7 +88,7 @@ namespace HCM3.Services.Trainer
                     }
                     catch (Exception ex)
                     {
-                        ex.Message.Insert(0, "Failed to enabled DisplayInfo! ");
+                        ex.ToString().Insert(0, "Failed to enabled DisplayInfo! ");
                         IsChecked = false;
                         throw;
                     }
@@ -205,8 +205,8 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Failed to enable DisplayInfo! \n" + ex.Message);
-                System.Windows.MessageBox.Show("Failed to enable DisplayInfo! \n" + ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                Trace.WriteLine("Failed to enable DisplayInfo! \n" + ex.ToString());
+                System.Windows.MessageBox.Show("Failed to enable DisplayInfo! \n" + ex.ToString(), "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 return false;
             }
 

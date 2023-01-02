@@ -76,7 +76,7 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 { 
-                Trace.WriteLine("Error applying patch: " + ex.Message);
+                Trace.WriteLine("Error applying patch: " + ex.ToString());
                 }
             }
         }
@@ -190,7 +190,7 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine("Error removing patch: " + ex.Message);
+                    Trace.WriteLine("Error removing patch: " + ex.ToString());
                 }
             }
 

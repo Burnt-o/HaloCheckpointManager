@@ -22,7 +22,7 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Failed to call internal function PrintTemporaryMessage" + ex.Message);
+                Trace.WriteLine("Failed to call internal function PrintTemporaryMessage" + ex.ToString());
                 return false;
             }
             return (exitCode.HasValue && exitCode == 1);

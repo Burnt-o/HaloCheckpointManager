@@ -97,7 +97,7 @@ namespace HCM3.Startup
                 }
                 catch (Exception ex)
                 {
-                    error = ex.Message;
+                    error = ex.ToString();
                     return false;
                 }
             }
@@ -125,7 +125,7 @@ namespace HCM3.Startup
                     }
                     catch (Exception ex)
                     {
-                        error = ex.Message;
+                        error = ex.ToString();
                         return false;
                     }
                 }

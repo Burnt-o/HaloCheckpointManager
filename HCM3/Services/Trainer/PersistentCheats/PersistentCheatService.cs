@@ -95,7 +95,7 @@ namespace HCM3.Services.Trainer
             {
                 this.HaloMemoryService.HaloState.OverlayHooked = false;
                 Trace.WriteLine("Something went wrong trying to update the internal display when " + 
-                    sender?.ToString() + " changed state, ex: " + ex.Message + "\n" + ex.StackTrace); 
+                    sender?.ToString() + " changed state, ex: " + ex.ToString() + "\n" + ex.StackTrace); 
             }
 
 
@@ -135,17 +135,17 @@ namespace HCM3.Services.Trainer
         {
             
 
-            Trace.WriteLine("Updating internal display with active cheats");
+            //Trace.WriteLine("Updating internal display with active cheats");
             if (this.InternalServices.CheckInternalLoaded() == false || this.InternalServices.InternalFunctionsLoaded == false || !this.HaloMemoryService.HaloState.OverlayHooked)
             {
                 if (!this.InternalServices.InjectInternal()) throw new Exception("Internal dll wasn't loaded, then failed injecting internal dll");
             }
 
-            Trace.WriteLine("Checking if listOfCheats is valid");
+            //Trace.WriteLine("Checking if listOfCheats is valid");
             if (listOfCheats == null) throw new Exception("listOfCheats was null");
             if (!listOfCheats.Any()) throw new Exception("listOfCheats wasn't null but had no entries");
 
-            Trace.WriteLine("Iterating over antive cheats");
+            //Trace.WriteLine("Iterating over antive cheats");
             List<string> activeCheats = new List<string>();
             foreach (KeyValuePair<string, IPersistentCheat> entry in listOfCheats)
             {
@@ -155,7 +155,7 @@ namespace HCM3.Services.Trainer
                 }
             }
 
-            Trace.WriteLine("ActiveCheats count: " + activeCheats.Count);
+            //Trace.WriteLine("ActiveCheats count: " + activeCheats.Count);
 
             string activeCheatsString;
             if (activeCheats.Count == 0)
@@ -172,7 +172,7 @@ namespace HCM3.Services.Trainer
             }
 
                 this.InternalServices.CallInternalFunction("ChangeDisplayText", activeCheatsString);
-            Trace.WriteLine("Changed Display text, now checking if text is displaying");
+            //Trace.WriteLine("Changed Display text, now checking if text is displaying");
 
             if (!this.InternalServices.CheckInternalTextDisplaying())
             {

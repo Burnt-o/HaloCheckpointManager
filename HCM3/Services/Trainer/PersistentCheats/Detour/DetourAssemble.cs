@@ -95,10 +95,10 @@ namespace HCM3.Services.Trainer
                     byte[] resolvedBytes = asm.Assemble(new string[] { "use64", resolvedLine });
                     int bytesAssembled = resolvedBytes.Length;
 
-                    for (int i = 0; i < bytesAssembled; i++)
-                    {
-                        Trace.WriteLine(resolvedBytes[i].ToString("X"));
-                    }
+                    //for (int i = 0; i < bytesAssembled; i++)
+                    //{
+                    //    Trace.WriteLine(resolvedBytes[i].ToString("X"));
+                    //}
 
                     //jmp instructions need to be always 6 bytes long for consistency
                     if (NeedToPadTo6Bytes && bytesAssembled < 6)

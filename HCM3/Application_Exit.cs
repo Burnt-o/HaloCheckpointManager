@@ -33,8 +33,11 @@ namespace HCM3
                 var HaloMemoryService = _serviceProvider.GetService<HaloMemoryService>();
 
                 var DataPointersService = _serviceProvider.GetService<DataPointersService>();
-                ReadWrite.Pointer PresentPointer = (ReadWrite.Pointer)DataPointersService.GetPointer("PresentPointer_" + HaloMemoryService.HaloState.MCCType, HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
-                UInt64 PresentPointerRes = (UInt64)HaloMemoryService.ReadWrite.ResolvePointer(PresentPointer).Value.ToInt64();
+                ReadWrite.Pointer? PresentPointer = (ReadWrite.Pointer)DataPointersService.GetPointer("PresentPointer_" + HaloMemoryService.HaloState.MCCType, HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
+                if (PresentPointer == null) throw new Exception("Couldn't get PresentPointer");
+                IntPtr? PresentPointerResPtr = HaloMemoryService.ReadWrite.ResolvePointer(PresentPointer);
+                if (PresentPointerResPtr == null) throw new Exception("Couldn't resolve PresentPointer");
+                UInt64 PresentPointerRes = (UInt64)PresentPointerResPtr.Value.ToInt64();
                 Trace.WriteLine("DISABLING PRESENT HOOK: resolved present point: " + PresentPointerRes.ToString("X"));
                 var InternalServices = _serviceProvider.GetService<InternalServices>();
                 InternalServices.CallInternalFunction("RemoveHook", PresentPointerRes);

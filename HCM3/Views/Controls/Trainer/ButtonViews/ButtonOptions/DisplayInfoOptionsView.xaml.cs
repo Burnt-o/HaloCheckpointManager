@@ -44,7 +44,7 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             }
             catch (Exception ex)
             {
-                MessageBox.Show("One of your inputs was invalid! Error: " + ex.Message);
+                MessageBox.Show("One of your inputs was invalid! Error: " + ex.ToString());
             }
             
         }

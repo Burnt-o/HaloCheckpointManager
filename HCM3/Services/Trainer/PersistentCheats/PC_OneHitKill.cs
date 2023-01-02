@@ -86,7 +86,7 @@ namespace HCM3.Services.Trainer
                     }
                     catch (Exception ex)
                     {
-                        ex.Message.Insert(0, "Failed to enabled OHK! ");
+                        ex.ToString().Insert(0, "Failed to enabled OHK! ");
                         IsChecked = false;
                         throw;
                     }
@@ -189,8 +189,8 @@ namespace HCM3.Services.Trainer
 
             //catch (Exception ex)
             //{
-            //    Trace.WriteLine("Failed to enable OHK! \n" + ex.Message);
-            //    System.Windows.MessageBox.Show("Failed to enable OHK! \n" + ex.Message + ex.StackTrace, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+            //    Trace.WriteLine("Failed to enable OHK! \n" + ex.ToString());
+            //    System.Windows.MessageBox.Show("Failed to enable OHK! \n" + ex.ToString() + ex.StackTrace, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
             //    return false;
             //}
 

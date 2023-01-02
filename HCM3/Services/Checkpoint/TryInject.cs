@@ -97,7 +97,7 @@ namespace HCM3.Services
                 catch (Exception ex)
                 {
                     levelString = null;
-                    Trace.WriteLine("WarnInjectWrongLevel failed: " + ex.Message);
+                    Trace.WriteLine("WarnInjectWrongLevel failed: " + ex.ToString());
                 }
 
 

@@ -19,7 +19,7 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("HCM internal overlay didn't seem to be hooked, " + ex.Message);
+                Trace.WriteLine("HCM internal overlay didn't seem to be hooked, " + ex.ToString());
                 return false;
             }
         }

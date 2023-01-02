@@ -30,7 +30,7 @@ namespace HCM3.Services.Trainer
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Couldn't find HCMInternal in MCC, " + ex.Message);
+                Trace.WriteLine("Couldn't find HCMInternal in MCC, " + ex.ToString());
                 return false;
             }
         }

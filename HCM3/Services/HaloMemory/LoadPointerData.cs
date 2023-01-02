@@ -101,8 +101,8 @@ namespace HCM3.Services
                 }
                 catch (Exception ex)
                 { 
-                    failedReads = failedReads + "\n" + "Error processing an entry in pointerdata, " + ex.Message + ", entry.name: " + entry.Element("Name")?.Value + ", entry.Value: " + entry.Value;
-                Trace.WriteLine("Error processing an entry in pointerdata, " + ex.Message);
+                    failedReads = failedReads + "\n" + "Error processing an entry in pointerdata, " + ex.ToString() + ", entry.name: " + entry.Element("Name")?.Value + ", entry.Value: " + entry.Value;
+                Trace.WriteLine("Error processing an entry in pointerdata, " + ex.ToString());
                     continue;
                 }
 
@@ -207,6 +207,18 @@ namespace HCM3.Services
 
 
             Trace.WriteLine("Added new object to pointer dictionary, name: " + entryName + ", version: " + entryVersion + ", type: " + entryObject.GetType().ToString());
+
+            //for extra debugging
+            if (entryName.Contains("Indicator") && entryObject.GetType() == typeof(ReadWrite.Pointer))
+            { 
+                ReadWrite.Pointer ptr = (ReadWrite.Pointer)entryObject;
+                string offsets = "";
+                foreach (int offset in ptr.Offsets)
+                {
+                    offsets = offsets + "0x" + offset.ToString("X") + ", ";
+                }
+                Trace.WriteLine("Indicator extra data: module: " + ptr.Modulename + ", offsets: " + offsets);
+            }
         }
 
 

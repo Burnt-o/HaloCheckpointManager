@@ -66,7 +66,7 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.Message);
+                    Trace.WriteLine("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.ToString());
                 }
             }
 

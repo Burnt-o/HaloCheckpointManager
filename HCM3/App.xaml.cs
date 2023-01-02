@@ -41,7 +41,7 @@ namespace HCM3
 
         private TextWriterTraceListener Logger { get; set; }
 
-        public string CurrentHCMVersion = "2.0.1";
+        public string CurrentHCMVersion = "2.0.2";
 
         private void ConfigureServices(ServiceCollection services)
         {
@@ -86,6 +86,7 @@ namespace HCM3
             Trace.Listeners.Add(this.Logger);
 
             Trace.WriteLine("OnStartup is run");
+            Trace.WriteLine("Current time: " + DateTime.Now);
 
             HCMSetup setup = new();
             // Run some checks; have admin priviledges, have file access, have required folders & files.
@@ -105,7 +106,7 @@ namespace HCM3
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show(ex.Message, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
+                System.Windows.MessageBox.Show(ex.ToString(), "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
             if (pointerErrors != "")
