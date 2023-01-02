@@ -19,7 +19,7 @@ namespace HCM3.Services.Trainer
         {
             lock (lockCallInternalFunction)
             {
-                Trace.WriteLine("CallInternalFunction, params: " + functionName + ", " + param?.ToString());
+                Trace.WriteLine("CallInternalFunction called, params: " + functionName + ", " + param?.ToString());
                 Process MCCProcess = Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID);
                 IntPtr? paramMemAddress = null;
                 int? paramSizeToAlloc = null;

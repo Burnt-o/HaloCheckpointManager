@@ -15,13 +15,21 @@ namespace HCM3
     {
         private void Application_Exit(object? sender, ExitEventArgs? e)
         {
-           
 
-            var PersistentCheatService = _serviceProvider.GetService<PersistentCheatService>();
-            PersistentCheatService.RemoveAllCheats();
+            try
+            {
+                var PersistentCheatService = _serviceProvider.GetService<PersistentCheatService>();
+                PersistentCheatService.RemoveAllCheats();
 
-            var TrainerServices = _serviceProvider.GetService<TrainerServices>();
-            TrainerServices.RemoveAllPatches();
+
+                var TrainerServices = _serviceProvider.GetService<TrainerServices>();
+                TrainerServices.RemoveAllPatches();
+
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Failed removing cheats or patches - probably MCC was closed. ex: " + ex.ToString());
+            }
 
             var HotkeyManager = _serviceProvider.GetService<HotkeyManager>();
             HotkeyManager.SerializeBindings();

@@ -34,48 +34,80 @@ namespace HCM3.Services.Trainer
                 uint pID = this.HaloMemoryService.HaloState.ProcessID ?? throw new Exception("Couldn't get process ID");
                 Process MCCProcess = Process.GetProcessById((int)pID);
 
-                IntPtr MCCHCMHandle;
-                IntPtr MCCSpeedhackHandle;
+                IntPtr? MCCHCMHandle = null;
+                IntPtr? MCCSpeedhackHandle = null;
                 try
                 {
-                    //PInvokes.DebugActiveProcess(pID);
                     MCCHCMHandle = BurntMemory.DLLInjector.InjectDLL("HCMInternal.dll", MCCProcess);
                     MCCSpeedhackHandle = BurntMemory.DLLInjector.InjectDLL("Speedhack.dll", MCCProcess);
 
 
                 }
-                finally
+                catch (Exception e)
                 {
-                    //SO turns out pausing the process threads will cause an error, something to do with not being able to access nt.dll 
-                    //PInvokes.DebugActiveProcessStop(pID);
+                    Trace.WriteLine("Failed injection in setupInternal. This is very likely to cause issues since we won't have a handle to HCMInternal");
                 }
 
+
+                if (MCCHCMHandle == null || MCCSpeedhackHandle == null)
+                {
+                    Trace.WriteLine("Attempting handle fix");
+                    System.Diagnostics.ProcessModuleCollection modules = System.Diagnostics.Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID).Modules;
+                    foreach (System.Diagnostics.ProcessModule module in modules)
+                    {
+                        if (module.ModuleName != null && module.ModuleName.Contains("HCMInternal"))
+                        {
+                            MCCHCMHandle = module.BaseAddress;
+                            Trace.WriteLine("HCMHCMHandle fixed");
+                        }
+                        if (module.ModuleName != null && module.ModuleName.Contains("Speedhack"))
+                        {
+                            MCCSpeedhackHandle = module.BaseAddress;
+                            Trace.WriteLine("MCCSpeedhackHandle");
+                        }
+                    }
+                }
+
+
+                if (MCCHCMHandle == null) throw new Exception("MCCHCMHandle was null");
+                if (MCCSpeedhackHandle == null) throw new Exception("MCCSpeedhackHandle was null");
+
+                byte? MCCHCMstartByte = this.HaloMemoryService.ReadWrite.ReadByte(MCCHCMHandle);
+                byte? MCCSpeedhackHandlestartByte = this.HaloMemoryService.ReadWrite.ReadByte(MCCSpeedhackHandle);
+                Trace.WriteLine("Verify; MCCHCMHandle start byte: " + MCCHCMstartByte?.ToString("X") ?? "null");
+                Trace.WriteLine("Verify; MCCSpeedhackHandle start byte: " + MCCSpeedhackHandlestartByte?.ToString("X") ?? "null");
 
                 IntPtr speedhackPointerSet = PInvokes.GetProcAddress(SpeedhackInternalHandle, "setAllToSpeed");
                 if (speedhackPointerSet == IntPtr.Zero) throw new Exception("Couldn't find function pointer: " + "speedhack setAllToSpeed");
                 Int64 speedhackOffsetSet = (Int64)speedhackPointerSet - (Int64)SpeedhackInternalHandle;
-                this.setAllToSpeed = IntPtr.Add(MCCSpeedhackHandle, (int)speedhackOffsetSet);
+                this.setAllToSpeed = IntPtr.Add(MCCSpeedhackHandle.Value, (int)speedhackOffsetSet);
 
                 IntPtr speedhackPointerGet = PInvokes.GetProcAddress(SpeedhackInternalHandle, "getSpeed");
                 if (speedhackPointerGet == IntPtr.Zero) throw new Exception("Couldn't find function pointer: " + "speedhack getSpeed");
                 Int64 speedhackOffsetGet = (Int64)speedhackPointerGet - (Int64)SpeedhackInternalHandle;
-                this.getSpeed = IntPtr.Add(MCCSpeedhackHandle, (int)speedhackOffsetGet);
+                this.getSpeed = IntPtr.Add(MCCSpeedhackHandle.Value, (int)speedhackOffsetGet);
+
+
+                Trace.WriteLine("MCCHCMHandle: " + MCCHCMHandle?.ToString("X") ?? "null");
 
                 foreach (string functionName in internalFunctionNames)
                 {
+                    Trace.WriteLine("Evaluating internal function: " + functionName);
                     // Now evaluate the function offsets inside the HCMProcess's HCMInternal.dll
 
                     // Use GetProcAddress to find our function pointers
                     IntPtr functionPointer = PInvokes.GetProcAddress(HCMInternalHandle, functionName);
                     if (functionPointer == IntPtr.Zero) throw new Exception("Couldn't find function pointer: " + functionName);
-
                     // Subtract the module handle from the function pointer to get the offset.
                     // Reminder; we're doing this because the offset will be the same with the HCMInternal that gets injected into HCM
                     // (But we can only run GetProcAddress on stuff loaded in our own process)
                     Int64 functionOffset = (Int64)functionPointer - (Int64)HCMInternalHandle;
-
+                    Trace.WriteLine("functionOffset: " + functionOffset.ToString("X"));
                     // Now we get the internal function pointer by adding functionOffset to the handle to MCC's HCMInternal.dll
-                    IntPtr internalFunctionPointer = IntPtr.Add(MCCHCMHandle, (int)functionOffset);
+                    IntPtr internalFunctionPointer = IntPtr.Add(MCCHCMHandle.Value, (int)functionOffset);
+                    Trace.WriteLine("internalFunctionPointer: " + internalFunctionPointer.ToString("X"));
+                    byte? startByte = this.HaloMemoryService.ReadWrite.ReadByte(internalFunctionPointer);
+                    Trace.WriteLine("start byte of function: " + startByte?.ToString("X") ?? "null");
 
                     // And add to our dictionary
                     if (InternalFunctions.ContainsKey(functionName))
@@ -100,6 +132,11 @@ namespace HCM3.Services.Trainer
                 IntPtr hookedPresent = InternalFunctions["hkPresent"];
                 Trace.WriteLine("Address of hkPresent (allegedly): " + NullableIntPtrToHexString(hookedPresent));
 
+                if (valueOfOriginalPresent != null && valueOfOriginalPresent.Value == (ulong)hookedPresent.ToInt64())
+                {
+                    Trace.WriteLine("Hook appears to already be applied,  no need to apply it again: bailing");
+                    return;
+                }
 
 
                 IntPtr? hcmInternal = null;
@@ -146,9 +183,11 @@ namespace HCM3.Services.Trainer
                 }
 
                 PInvokes.DebugActiveProcess(pID);
+                
                 Trace.WriteLine("Pausing MCC process");
                 this.HaloMemoryService.ReadWrite.WriteQword(presentPtr, (ulong)hookedPresent.ToInt64(), true);
                 PInvokes.DebugActiveProcessStop(pID);
+                System.Threading.Thread.Sleep(50);
                 Trace.WriteLine("Unpausing MCC process");
 
 
