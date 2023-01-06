@@ -122,75 +122,101 @@ namespace HCM3.Services.Trainer
                 }
                 InternalFunctionsLoaded = true;
 
-
-                // Now need to "hook" d3dgxi Present
-                Trace.WriteLine("HOOKING PRESENT POINTER - IF THIS GOES WRONG, MCC WILL CRASH");
-                IntPtr? resolvedPresentPtr = this.HaloMemoryService.ReadWrite.ResolvePointer(presentPtr);
-                Trace.WriteLine("Address of present pointer: " + NullableIntPtrToHexString(resolvedPresentPtr));
-                ulong? valueOfOriginalPresent = this.HaloMemoryService.ReadWrite.ReadQword(resolvedPresentPtr);
-                Trace.WriteLine("Value of original present: " + (valueOfOriginalPresent != null ? valueOfOriginalPresent.Value.ToString("X") : "null"));
-                IntPtr hookedPresent = InternalFunctions["hkPresent"];
-                Trace.WriteLine("Address of hkPresent (allegedly): " + NullableIntPtrToHexString(hookedPresent));
-
-                if (valueOfOriginalPresent != null && valueOfOriginalPresent.Value == (ulong)hookedPresent.ToInt64())
-                {
-                    Trace.WriteLine("Hook appears to already be applied,  no need to apply it again: bailing");
-                    return;
-                }
-
-
-                IntPtr? hcmInternal = null;
-
-                try
+                if (!Properties.Settings.Default.DisableOverlay)
                 {
 
-                    System.Diagnostics.ProcessModuleCollection modules = System.Diagnostics.Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID).Modules;
-                    foreach (System.Diagnostics.ProcessModule module in modules)
+                    // Now need to "hook" d3dgxi Present
+                    Trace.WriteLine("HOOKING PRESENT POINTER - IF THIS GOES WRONG, MCC WILL CRASH");
+                    IntPtr? resolvedPresentPtr = this.HaloMemoryService.ReadWrite.ResolvePointer(presentPtr);
+                    Trace.WriteLine("Address of present pointer: " + NullableIntPtrToHexString(resolvedPresentPtr));
+                    ulong? valueOfOriginalPresent = this.HaloMemoryService.ReadWrite.ReadQword(resolvedPresentPtr);
+                    Trace.WriteLine("Value of original present: " + (valueOfOriginalPresent != null ? valueOfOriginalPresent.Value.ToString("X") : "null"));
+                    IntPtr hookedPresent = InternalFunctions["hkPresent"];
+                    Trace.WriteLine("Address of hkPresent (allegedly): " + NullableIntPtrToHexString(hookedPresent));
+
+                    if (valueOfOriginalPresent != null && valueOfOriginalPresent.Value == (ulong)hookedPresent.ToInt64())
                     {
-                        if (module.ModuleName != null && module.ModuleName.Contains("HCMInternal"))
+                        Trace.WriteLine("Hook appears to already be applied,  no need to apply it again: bailing");
+                        return;
+                    }
+
+
+                    IntPtr? hcmInternal = null;
+
+                    try
+                    {
+
+                        System.Diagnostics.ProcessModuleCollection modules = System.Diagnostics.Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID).Modules;
+                        foreach (System.Diagnostics.ProcessModule module in modules)
                         {
-                            hcmInternal = module.BaseAddress;
-                            break;
+                            if (module.ModuleName != null && module.ModuleName.Contains("HCMInternal"))
+                            {
+                                hcmInternal = module.BaseAddress;
+                                break;
+                            }
                         }
                     }
-                }
-                catch (Exception e)
-                { 
-                }
-
-                IntPtr? verifyHook = null;
-                if (hcmInternal != null)
-                {
-                    verifyHook = IntPtr.Add(hcmInternal.Value, 0x2C3C0);
-                }
-                Trace.WriteLine("verifyHook: " + NullableIntPtrToHexString(verifyHook));
-                byte? startofhook1 = this.HaloMemoryService.ReadWrite.ReadByte(hookedPresent);
-                byte? startofhook2 = this.HaloMemoryService.ReadWrite.ReadByte(verifyHook);
-
-                if (hookedPresent != verifyHook || startofhook1 != 0x40 || startofhook2 != 0x40)
-                {
-                    Trace.WriteLine("We got a serious issue");
-
-                    Trace.WriteLine("startofhook1: " + startofhook1);
-                    Trace.WriteLine("startofhook2: " + startofhook2);
-
-                    //Attempt at a fix
-                    if (startofhook2 == 0x40)
+                    catch (Exception e)
                     {
-                        Trace.WriteLine("Attempting fix, change hookPresent address");
-                        hookedPresent = verifyHook.Value;
                     }
+
+                    IntPtr? verifyHook = null;
+                    if (hcmInternal != null)
+                    {
+                        verifyHook = IntPtr.Add(hcmInternal.Value, 0x2C3C0);
+                    }
+                    Trace.WriteLine("verifyHook: " + NullableIntPtrToHexString(verifyHook));
+                    byte? startofhook1 = this.HaloMemoryService.ReadWrite.ReadByte(hookedPresent);
+                    byte? startofhook2 = this.HaloMemoryService.ReadWrite.ReadByte(verifyHook);
+
+                    if (hookedPresent != verifyHook || startofhook1 != 0x40 || startofhook2 != 0x40)
+                    {
+                        Trace.WriteLine("We got a serious issue");
+
+                        Trace.WriteLine("startofhook1: " + startofhook1);
+                        Trace.WriteLine("startofhook2: " + startofhook2);
+
+                        //Attempt at a fix
+                        if (startofhook2 == 0x40)
+                        {
+                            Trace.WriteLine("Attempting fix, change hookPresent address");
+                            hookedPresent = verifyHook.Value;
+                        }
+                    }
+
+                    PInvokes.DebugActiveProcess(pID);
+
+
+
+                    
+                    Trace.WriteLine("Pausing MCC process");
+                    this.HaloMemoryService.ReadWrite.WriteQword(presentPtr, (ulong)hookedPresent.ToInt64(), true);
+                    PInvokes.DebugActiveProcessStop(pID);
+                    System.Threading.Thread.Sleep(50);
+                    Trace.WriteLine("Unpausing MCC process");
+                }
+                else
+                {
+                    try
+                    {
+                        Trace.WriteLine("Attempting to remove hook on user request");
+                        ReadWrite.Pointer? PresentPointer = (ReadWrite.Pointer)DataPointersService.GetPointer("PresentPointer_" + HaloMemoryService.HaloState.MCCType, HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
+                        if (PresentPointer == null) throw new Exception("Couldn't get PresentPointer");
+                        IntPtr? PresentPointerResPtr = HaloMemoryService.ReadWrite.ResolvePointer(PresentPointer);
+                        if (PresentPointerResPtr == null) throw new Exception("Couldn't resolve PresentPointer");
+                        UInt64 PresentPointerRes = (UInt64)PresentPointerResPtr.Value.ToInt64();
+                        Trace.WriteLine("DISABLING PRESENT HOOK: resolved present point: " + PresentPointerRes.ToString("X"));
+                        CallInternalFunction("RemoveHook", PresentPointerRes);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine("Error removing hook: " + ex.ToString());
+                    }
+
                 }
 
-                PInvokes.DebugActiveProcess(pID);
+
                 
-                Trace.WriteLine("Pausing MCC process");
-                this.HaloMemoryService.ReadWrite.WriteQword(presentPtr, (ulong)hookedPresent.ToInt64(), true);
-                PInvokes.DebugActiveProcessStop(pID);
-                System.Threading.Thread.Sleep(50);
-                Trace.WriteLine("Unpausing MCC process");
-
-
 
 
                 string NullableIntPtrToHexString(IntPtr? ptr)

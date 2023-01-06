@@ -15,7 +15,7 @@ namespace HCM3.Services.Trainer
 
         public void TeleportToLocation(float x, float y, float z)
         {
-            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
 
             Trace.WriteLine("TeleportToLocation called");
             this.HaloMemoryService.HaloState.UpdateHaloState();
@@ -36,7 +36,7 @@ namespace HCM3.Services.Trainer
             IntPtr playerYposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Ypos"]);
             IntPtr playerZposPtr = IntPtr.Add(playerVehiObject, (int)requiredPointers["PlayerData_Zpos"]);
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal($"Teleporting to {x}, {y}, {z}")) throw new Exception("Error printing message");
+            GenericPrint($"Teleporting to {x}, {y}, {z}");
 
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXposPtr, x);
             this.HaloMemoryService.ReadWrite.WriteFloat(playerYposPtr, y);
@@ -141,7 +141,10 @@ namespace HCM3.Services.Trainer
             float newYpos = oldYpos + (normalisedY * length);
             float newZpos = oldZpos + (normalisedZ * length);
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal($"Teleporting to {newXpos}, {newYpos}, {newZpos}")) throw new Exception("Error printing message");
+
+            GenericPrint($"Teleporting to {newXpos}, {newYpos}, {newZpos}");
+
+
 
             // Write the new positions
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXposPtr, newXpos);

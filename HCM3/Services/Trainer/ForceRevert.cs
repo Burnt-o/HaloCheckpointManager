@@ -30,7 +30,9 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal("Revert forced.")) throw new Exception("Error printing message");
+
+            //only bother printing the message if overlay is enabled
+            if (!Properties.Settings.Default.DisableOverlay && !this.InternalServices.PrintTemporaryMessageInternal("Revert forced.")) throw new Exception("Error printing message");
 
 
             IntPtr RevertFlag = this.HaloMemoryService.ReadWrite.ResolvePointer((ReadWrite.Pointer?)requiredPointers["ForceRevert"]).Value;

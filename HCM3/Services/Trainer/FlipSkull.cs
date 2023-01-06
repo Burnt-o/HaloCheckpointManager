@@ -42,11 +42,11 @@ namespace HCM3.Services.Trainer
 
                 if (currentSkullStatus)
                 {
-                    if (!this.InternalServices.PrintTemporaryMessageInternal($"Turning {skullName} Off. ")) throw new Exception("Error printing message");
+                    GenericPrint($"Turning {skullName} Off. ");
                 }
                 else
                 {
-                    if (!this.InternalServices.PrintTemporaryMessageInternal($"Turning {skullName} On. ")) throw new Exception("Error printing message");
+                    GenericPrint($"Turning {skullName} On. ");
                 }
                 
                 ba.Set(skullFlagBitPosition, !currentSkullStatus);

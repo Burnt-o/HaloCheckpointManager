@@ -104,8 +104,10 @@ namespace HCM3.Services.Trainer
 
         public void RemoveAllCheats()
         {
+            Trace.WriteLine("REMOVING ALL CHEATS");
             foreach (KeyValuePair<string, IPersistentCheat> kv in listOfCheats)
             {
+                Trace.WriteLine("processing " + kv.Key + ", isChecked? " + kv.Value.IsChecked);
                 if (kv.Value.IsChecked)
                 {
                     try

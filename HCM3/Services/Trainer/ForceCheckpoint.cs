@@ -16,7 +16,9 @@ namespace HCM3.Services.Trainer
 
         public void ForceCheckpoint()
         {
-            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
+
+            
 
             Trace.WriteLine("ForceCheckpoint called");
             this.HaloMemoryService.HaloState.UpdateHaloState();
@@ -31,11 +33,9 @@ namespace HCM3.Services.Trainer
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal("Checkpoint forced.")) throw new Exception("Error printing message");
+            GenericPrint("Checkpoint forced.", true);
 
-
-
-                // Set the make checkpoint flag
+            // Set the make checkpoint flag
             this.HaloMemoryService.ReadWrite.WriteByte(
                 (ReadWrite.Pointer?)requiredPointers["ForceCheckpoint"],
                 (byte)1,

@@ -36,16 +36,18 @@
                 <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
             <Label Content="HCM Settings" Grid.Column="1" Grid.Row="0" FontWeight="Bold"/>
-            <Label Content="UI" Grid.Column="1" Grid.Row="1" FontWeight="Bold"/>
-            <CheckBox Grid.Row="2" Grid.Column="1" Content="Dark Mode (not implemented yet)" IsChecked="{Binding Path=DarkMode, Mode=TwoWay}" IsEnabled="False" />
+            <CheckBox Grid.Row="1" Grid.Column="1" Content="Disable Overlay (will break some functions)" IsChecked="{Binding Path=DisableOverlay, Mode=TwoWay}"/>
+            <Label Content="UI" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
+            <CheckBox Grid.Row="3" Grid.Column="1" Content="Dark Mode (not implemented yet)" IsChecked="{Binding Path=DarkMode, Mode=TwoWay}" IsEnabled="False" />
 
-            <Label Content="Inject/Dump" Grid.Column="1" Grid.Row="3" FontWeight="Bold"/>
+            <Label Content="Inject/Dump" Grid.Column="1" Grid.Row="4" FontWeight="Bold"/>
 
-            <CheckBox Grid.Row="4" Grid.Column="1" Content="Autoname dumped checkpoints" IsChecked="{Binding Path=AutoName, Mode=TwoWay}" />
-            <CheckBox Grid.Row="5" Grid.Column="1" Content="Revert after injecting" IsChecked="{Binding Path=AutoRevert, Mode=TwoWay}"/>
-            <CheckBox Grid.Row="6" Grid.Column="1" Content="Warn on injecting to wrong MCC version" IsChecked="{Binding Path=WarnInjectWrongVersion, Mode=TwoWay}"/>
-            <CheckBox Grid.Row="7" Grid.Column="1" Content="Warn on injecting to wrong level" IsChecked="{Binding Path=WarnInjectWrongLevel, Mode=TwoWay}"/>
-            <CheckBox Grid.Row="8" Grid.Column="1" Content="(Halo 1) Inject/Dump Core Saves instead of Checkpoints" IsChecked="{Binding Path=H1Cores, Mode=TwoWay}" />
+            <CheckBox Grid.Row="5" Grid.Column="1" Content="Autoname dumped checkpoints" IsChecked="{Binding Path=AutoName, Mode=TwoWay}" />
+            <CheckBox Grid.Row="6" Grid.Column="1" Content="Revert after injecting" IsChecked="{Binding Path=AutoRevert, Mode=TwoWay}"/>
+            <CheckBox Grid.Row="7" Grid.Column="1" Content="Warn on injecting to wrong MCC version" IsChecked="{Binding Path=WarnInjectWrongVersion, Mode=TwoWay}"/>
+            <CheckBox Grid.Row="8" Grid.Column="1" Content="Warn on injecting to wrong level" IsChecked="{Binding Path=WarnInjectWrongLevel, Mode=TwoWay}"/>
+            <CheckBox Grid.Row="9" Grid.Column="1" Content="(Halo 1) Inject/Dump Core Saves instead of Checkpoints" IsChecked="{Binding Path=H1Cores, Mode=TwoWay}" />
+        
             
 
 

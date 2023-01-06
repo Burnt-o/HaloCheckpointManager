@@ -113,7 +113,11 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat()
         {
-
+            if (Properties.Settings.Default.DisableOverlay)
+            {
+                RemoveCheat();
+                throw new Exception("This cheat requires the overlay to be enabled - see the Settings tab.");
+            }
 
             Trace.WriteLine("User commanded ToggleSpeedhack !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
@@ -125,6 +129,8 @@ namespace HCM3.Services.Trainer
             }
             else
             {
+
+
                 double test;
                 try
                 {
@@ -171,6 +177,7 @@ namespace HCM3.Services.Trainer
         public void RemoveCheat()
         {
             this.InternalServices.SetSpeedHackInternal((double)1);
+            IsChecked = false;
         }
 
         public bool IsCheatApplied()

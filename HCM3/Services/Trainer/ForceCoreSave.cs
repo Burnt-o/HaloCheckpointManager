@@ -15,7 +15,7 @@ namespace HCM3.Services.Trainer
 
         public void ForceCoreSave()
         {
-            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
 
             Trace.WriteLine("ForceCoreSave called");
 
@@ -29,7 +29,7 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal("Core save forced.")) throw new Exception("Error printing message");
+            GenericPrint("Core save forced.");
 
             // Set the make coresave flag
             this.HaloMemoryService.ReadWrite.WriteByte(

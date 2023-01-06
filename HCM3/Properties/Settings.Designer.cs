@@ -270,5 +270,17 @@ namespace HCM3.Properties {
                 this["DISigDig"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisableOverlay {
+            get {
+                return ((bool)(this["DisableOverlay"]));
+            }
+            set {
+                this["DisableOverlay"] = value;
+            }
+        }
     }
 }

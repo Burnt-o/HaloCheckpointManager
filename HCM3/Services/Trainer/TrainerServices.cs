@@ -170,5 +170,27 @@ namespace HCM3.Services.Trainer
             return b;
         }
 
+
+
+
+        public void GenericPrint(string messageToPrint, bool needToDisableCheckpointText = false)
+        {
+            if (!Properties.Settings.Default.DisableOverlay)
+            {
+                if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+                if (!this.InternalServices.PrintTemporaryMessageInternal(messageToPrint)) throw new Exception("Error printing message");
+            }
+            else
+            {
+                //throw new Exception ("Overlay needs to be enabled for this cheat to work")
+                if (!this.CommonServices.PrintMessage(messageToPrint, needToDisableCheckpointText))
+                {
+                    throw new Exception("Failed to print in-game message");
+                }
+            }
+        }
+
+
+
     }
 }

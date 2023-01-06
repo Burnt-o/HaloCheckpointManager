@@ -58,6 +58,12 @@ namespace HCM3.Services.Trainer
         {
             lock (DisplayInfoLock)
             {
+                if (Properties.Settings.Default.DisableOverlay)
+                {
+                    RemoveCheat();
+                    throw new Exception("This cheat requires the overlay to be enabled - see the Settings tab.");
+                }
+
                 if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
                 Trace.WriteLine("User commanded ToggleDisplayInfo !!!!!!!!!!!!!!!!!!!!");
@@ -117,7 +123,7 @@ namespace HCM3.Services.Trainer
             // If above method throws then detour handle won't be set to null (intentional)
             this.DetourHandle = null;
             this.InternalServices.CallInternalFunction("DisableDisplayInfo", null);
-
+            IsChecked = false;
         }
 
         public bool IsCheatApplied()

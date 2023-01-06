@@ -28,7 +28,8 @@ namespace HCM3.Services.Trainer
 
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal("Core load forced.")) throw new Exception("Error printing message");
+            //only bother printing message if overlay enabled
+            if (!Properties.Settings.Default.DisableOverlay && !this.InternalServices.PrintTemporaryMessageInternal("Core load forced.")) throw new Exception("Error printing message");
 
             // Set the make core load flag
             this.HaloMemoryService.ReadWrite.WriteByte(

@@ -18,7 +18,7 @@ namespace HCM3.Services.Trainer
 
         public void BoostForward(float addSpeed)
         {
-            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
 
             Trace.WriteLine("BoostForward called");
             this.HaloMemoryService.HaloState.UpdateHaloState();
@@ -61,7 +61,7 @@ namespace HCM3.Services.Trainer
             float newYvel = oldYvel + (normalisedY * addSpeed);
             float newZvel = oldZvel + (normalisedZ * addSpeed);
 
-            if (!this.InternalServices.PrintTemporaryMessageInternal($"Launching with {addSpeed} force")) throw new Exception("Error printing message");
+            GenericPrint($"Launching with {addSpeed} force");
 
             // Write the new velocities
             this.HaloMemoryService.ReadWrite.WriteFloat(playerXvelPtr, newXvel);

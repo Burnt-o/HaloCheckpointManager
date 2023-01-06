@@ -275,7 +275,21 @@ namespace HCM3.Services
             }
 
             // Wew, we're done! Let the user know
-            if (!this.InternalServices.PrintTemporaryMessageInternal("Checkpoint injected. ")) throw new Exception("Error printing message");
+            string messageToPrint = "Checkpoint injected. ";
+            if (!Properties.Settings.Default.DisableOverlay)
+            {
+                if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+                if (!this.InternalServices.PrintTemporaryMessageInternal(messageToPrint)) throw new Exception("Error printing message");
+            }
+            else
+            {
+                //throw new Exception ("Overlay needs to be enabled for this cheat to work")
+                if (!this.CommonServices.PrintMessage(messageToPrint))
+                {
+                    throw new Exception("Failed to print in-game message");
+                }
+            }
+
 
         }
 

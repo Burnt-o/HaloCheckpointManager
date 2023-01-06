@@ -25,6 +25,7 @@ ID3D11DeviceContext* pContext = NULL;
 ID3D11RenderTargetView* mainRenderTargetView;
 std::string textToPrint = "HaloCheckpointManager Hooked! \nCould put game info here \nlike player coordinates, health etc";
 bool test = false;
+bool overlayForcefullyDisabled = true;
 
 
 int ScreenWidth;
@@ -304,7 +305,7 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 		pBackBuffer->Release();
 	}
 
-
+	overlayForcefullyDisabled = false;
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -341,7 +342,7 @@ extern "C" __declspec(dllexport) int IsTextDisplaying()
 	}
 	else
 	{
-		if (textToPrint != "")
+		if (textToPrint != "" && !overlayForcefullyDisabled)
 		{
 			return 1;
 		}
@@ -352,7 +353,7 @@ extern "C" __declspec(dllexport) int IsTextDisplaying()
 
 extern "C" __declspec(dllexport) int IsOverlayHooked()
 {
-	if (!init)
+	if (!init || overlayForcefullyDisabled)
 	{
 		return 2;
 	}
@@ -450,6 +451,13 @@ HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width
 }
 
 
+
+extern "C" __declspec(dllexport) void WINAPI EnableHook()
+{
+
+
+}
+
 extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr)
 {
 
@@ -460,15 +468,20 @@ extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr)
 	UINT64 og = (UINT64) oPresent;
 
 	UINT64* presentPtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr);
-
+	UINT64 currentPtr = *presentPtr;
 	std::cout << "\ngames present pointer: " << presentPtr;
 	std::cout << "\noriginal present pointer address: " << og;
-	DWORD dwNewProtect, dwOldProtect;
-	VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
-	memcpy(presentPtr, &og, 8);
-	VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
-	//*presentPtr = og;
 
+	if (currentPtr != og)
+	{
+		DWORD dwNewProtect, dwOldProtect;
+		VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
+		memcpy(presentPtr, &og, 8);
+		VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
+
+	}
+	textToPrint = "";
+	overlayForcefullyDisabled = true;
 
 }
 

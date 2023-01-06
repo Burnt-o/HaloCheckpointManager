@@ -5,12 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using HCM3.ViewModels.MVVM;
 using System.Windows;
-
+using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels
 {
     internal class SettingsViewModel : Presenter
     {
+        public InternalServices InternalServices { get; set; }
+        public PersistentCheatService PersistentCheatService { get; set; }
+
+        public SettingsViewModel(InternalServices internalServices, PersistentCheatService persistentCheatService)
+        { 
+        InternalServices = internalServices;
+            PersistentCheatService = persistentCheatService;
+        }
 
         public bool DarkMode
         {
@@ -53,6 +61,20 @@ namespace HCM3.ViewModels
         {
             get { return Properties.Settings.Default.WarnInjectWrongLevel; }
             set { Properties.Settings.Default.WarnInjectWrongLevel = value; }
+        }
+
+        public bool DisableOverlay
+        {
+            get { return Properties.Settings.Default.DisableOverlay; }
+            set { 
+                Properties.Settings.Default.DisableOverlay = value;
+                InternalServices.InjectInternal();
+                if (value)
+                {
+                    PersistentCheatService.RemoveAllCheats();
+                }
+            
+            }
         }
 
     }

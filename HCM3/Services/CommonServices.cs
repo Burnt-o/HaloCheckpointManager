@@ -7,6 +7,7 @@ using HCM3.Models;
 using HCM3.Helpers;
 using BurntMemory;
 using System.Diagnostics;
+using System.Threading;
 
 namespace HCM3.Services
 {
@@ -109,10 +110,10 @@ namespace HCM3.Services
         }
 
 
-        public bool PrintMessage(string message, int selectedGame)
+        public bool PrintMessage(string message, bool needToDisableCheckpointText = false)
         {
-            CheckGameIsAligned(selectedGame);
-            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)selectedGame];
+            int loadedGame = GetLoadedGame();
+            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_CurrentTickCount");
@@ -144,15 +145,61 @@ namespace HCM3.Services
             }
 
 
+            bool success = false;
+            if (needToDisableCheckpointText)
+            {
+                ReadWrite.Pointer CPMessageCall = (ReadWrite.Pointer)GetRequiredPointers($"{gameAs2Letters}_CPMessageCall");
+                int CPMessageCallLength = (int)GetRequiredPointers($"{gameAs2Letters}_CPMessageCallLength");
 
-            bool success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageTickCount"], currentTickCount, false);
-            success = success && this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageText"], messageData, false);
+                byte[] ogBytes = this.HaloMemoryService.ReadWrite.ReadBytes(CPMessageCall, CPMessageCallLength);
 
-            for (int i = 0; i < printMessageFlagPointers.Length; i++)
+                if (ogBytes == null) throw new Exception("ogBytes was null");
+
+                if (ogBytes[0] != 0x90)
+                {
+                    byte[] nopBytes = new byte[CPMessageCallLength];
+                    Array.Fill(nopBytes, (byte)0x90);
+                    this.HaloMemoryService.ReadWrite.WriteBytes(CPMessageCall, nopBytes, true);
+                }
+
+
+                success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageTickCount"], currentTickCount, false);
+                success = success && this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageText"], messageData, false);
+
+                for (int i = 0; i < printMessageFlagPointers.Length; i++)
+                {
+                    success = success && this.HaloMemoryService.ReadWrite.WriteByte(printMessageFlagPointers[i], printMessageFlagValues[i], false);
+                }
+
+
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    System.Threading.Thread.Sleep(50);
+                    byte? test = this.HaloMemoryService.ReadWrite.ReadByte(CPMessageCall);
+                    if (test == 0x90)
+                    {
+                        this.HaloMemoryService.ReadWrite.WriteBytes(CPMessageCall, ogBytes, true);
+                    }
+                }).Start();
+               
+
+
+
+            }
+            else
             {
 
-                success = success && this.HaloMemoryService.ReadWrite.WriteByte(printMessageFlagPointers[i], printMessageFlagValues[i], false);
+                success = this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageTickCount"], currentTickCount, false);
+                success = success && this.HaloMemoryService.ReadWrite.WriteBytes((ReadWrite.Pointer)requiredPointers["PrintMessageText"], messageData, false);
+
+                for (int i = 0; i < printMessageFlagPointers.Length; i++)
+                {
+
+                    success = success && this.HaloMemoryService.ReadWrite.WriteByte(printMessageFlagPointers[i], printMessageFlagValues[i], false);
+                }
             }
+
 
 
 
