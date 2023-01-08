@@ -48,8 +48,10 @@ namespace HCM3.Services.Trainer
             {
                 if (_isChecked && !value) { this.InternalServices.CallInternalFunction("DisableDisplayInfo", null); }
                 _isChecked = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
-                
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
+                });
+
             }
         }
 

@@ -131,9 +131,50 @@ namespace HCM3.Services
             
             byte[]? currentTickCount = this.HaloMemoryService.ReadWrite.ReadBytes((ReadWrite.Pointer?)requiredPointers["CurrentTickCount"], 4);
 
-            if (currentTickCount == null)
+            lock (this.HaloMemoryService.HaloState.modules)
             {
-                throw new Exception("couldn't read Tickcount");
+                if ((ReadWrite.Pointer?)requiredPointers["CurrentTickCount"] == null)
+                {
+                    Trace.WriteLine("PTR WAS NULL");
+                    ReadWrite.Pointer? mainModulePtr = this.HaloMemoryService.HaloState.modules["main"];
+                    string mainModuleInfo = mainModulePtr != null ? (mainModulePtr.Address != null ? mainModulePtr.Address.Value.ToString("X") : "mainModule  address is null!!") : "mainModulePtr was null!!";
+
+                    string gameDLL = Dictionaries.GameToDLLname[(int)loadedGame];
+                    Trace.WriteLine("gameDLL: " + gameDLL);
+                    ReadWrite.Pointer? gameDLLPtr = this.HaloMemoryService.HaloState.modules[gameDLL];
+                    IntPtr? gameDLLresolved = this.HaloMemoryService.ReadWrite.ResolvePointer(gameDLLPtr);
+                    string gameDLLInfo = gameDLLPtr != null ? (gameDLLresolved != null ? gameDLLresolved.Value.ToString("X") : "gameDLLresolved is null!!") : "gameDLLPtr was null!!";
+                    throw new Exception("CurrentTickCount pointer was null. Why tho? Game version: " + this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion + ", game type: " + this.HaloMemoryService.HaloState.MCCType + ", mainModule info: " + mainModuleInfo + ", gameDLL info: " + gameDLLInfo);
+
+                }
+
+                if (currentTickCount == null)
+                {
+                    Trace.WriteLine("BYTE WAS NULL");
+                    ReadWrite.Pointer? mainModulePtr = this.HaloMemoryService.HaloState.modules["main"];
+                    string mainModuleInfo = mainModulePtr != null ? (mainModulePtr.Address != null ? mainModulePtr.Address.Value.ToString("X") : "mainModule address is null!!") : "mainModulePtr was null!!";
+                    mainModuleInfo = mainModuleInfo + ", AHH: " + this.HaloMemoryService.HaloState.MainModuleBaseAddress;
+
+                    string gameDLL = Dictionaries.GameToDLLname[(int)loadedGame];
+                    Trace.WriteLine("gameDLL: " + gameDLL);
+                    ReadWrite.Pointer? gameDLLPtr = this.HaloMemoryService.HaloState.modules[gameDLL];
+                    IntPtr? gameDLLresolved = this.HaloMemoryService.ReadWrite.ResolvePointer(gameDLLPtr);
+                    string gameDLLInfo = gameDLLPtr != null ? (gameDLLresolved != null ? gameDLLresolved.Value.ToString("X") : "gameDLLresolved is null!!") : "gameDLLPtr was null!!";
+
+                    string errmessage = ("couldn't read tickcount.Why tho ? Game version: " + this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion + ", game type: " + this.HaloMemoryService.HaloState.MCCType + ", mainModule info: " + mainModuleInfo + ", gameDLL info: " + gameDLLInfo);
+
+                    ReadWrite.Pointer? currentTickCountptr = (ReadWrite.Pointer?)requiredPointers["CurrentTickCount"];
+                    string ah = "ctcptr modulename: " + currentTickCountptr.Modulename;
+                    ah = ah + ", ctcptr offset 0: " + currentTickCountptr.Offsets[0];
+                    ah = ah + ", resolved ctc location: " + this.HaloMemoryService.ReadWrite.ResolvePointer(currentTickCountptr).Value.ToString("X");
+
+                    errmessage = ah + ", " + errmessage;
+
+                    Trace.WriteLine(errmessage);
+                    throw new Exception(errmessage);
+
+
+                }
             }
 
             ReadWrite.Pointer[] printMessageFlagPointers = (ReadWrite.Pointer[])requiredPointers["PrintMessageFlags"];

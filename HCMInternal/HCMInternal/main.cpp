@@ -13,6 +13,7 @@
 
 
 typedef HRESULT(__stdcall* ResizeBuffers)(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
+//HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Present oPresent;
@@ -28,8 +29,8 @@ bool test = false;
 bool overlayForcefullyDisabled = true;
 
 
-int ScreenWidth;
-int ScreenHeight;
+int ScreenWidth = 10;
+int ScreenHeight = 10;
 bool DefaultFontInit;
 ImFont* DefaultFont;
 
@@ -259,11 +260,19 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 bool init = false;
 extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
-	
+
+
+	if (oPresent == NULL)
+	{
+		oPresent = (Present)kiero::getMethodsTable()[8];
+		std::cout << "\noPresent was null; restoring: " << oPresent;
+	}
+
 
 	if (!init)
 	{
 		std::cout << "\nAttempting to init d3d device - Love, hkPresent.";
+
 		if (SUCCEEDED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)& pDevice)))
 		{
 			std::cout << "\nSuccesfully got the id of the d3d11 device.";
@@ -271,6 +280,7 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 			DXGI_SWAP_CHAIN_DESC sd;
 			pSwapChain->GetDesc(&sd);
 			window = sd.OutputWindow;
+			
 			ID3D11Texture2D* pBackBuffer;
 			pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)& pBackBuffer);
 			pDevice->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
@@ -279,11 +289,11 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 			InitImGui();
 			std::cout << "\nSuccesfully initialised d3d hook.";
 			init = true;
-			RECT gameScreenRct;
+			/*RECT gameScreenRct;
 			GetWindowRect(window, &gameScreenRct);
 
 			ScreenWidth = gameScreenRct.right - gameScreenRct.left;
-			ScreenHeight = gameScreenRct.bottom - gameScreenRct.top;
+			ScreenHeight = gameScreenRct.bottom - gameScreenRct.top;*/
 		}
 
 		else
@@ -305,6 +315,8 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 		pBackBuffer->Release();
 	}
 
+
+	
 	overlayForcefullyDisabled = false;
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -322,7 +334,9 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 
 
 
-
+	//crashing on calling original present. Why?
+	//this function is failing? oPresent is null for Kidtrouble? But it's not null in the log.. weird
+	//
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
@@ -401,29 +415,40 @@ extern "C" __declspec(dllexport) int PrintTemporaryMessage(const TCHAR * pChars)
 
 }
 
-HRESULT hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
+extern "C" __declspec(dllexport) HRESULT __stdcall  hkResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
 {
-/*
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();*/
+
+	//ImGui_ImplDX11_Shutdown();
+	//ImGui_ImplWin32_Shutdown();
 	
 	std::cout << "\nhkResizeBuffers called";
 
-	if (mainRenderTargetView) {
+
+
+
+	if (mainRenderTargetView)
+	{
 		std::cout << "\nReleasing mainRenderTargetView";
 		pContext->OMSetRenderTargets(0, 0, 0);
+		//ID3D11RenderTargetView* nullViews[] = { nullptr };
+		//pContext->OMSetRenderTargets(1, nullViews, 0);
 		mainRenderTargetView->Release();
-		//mainRenderTargetView = nullptr;
+		//window = NULL;
+		//pContext->ClearState();
 	}
+
+
 	std::cout << "\ngetting original ResizeBuffers";
 	HRESULT hr = oResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+
+
 
 	std::cout << "\n";
 	std::cout << "\ngetting the new d3d device";
 	ID3D11Texture2D* pBuffer;
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
 	// Perform error handling here!
-
+	
 	pDevice->CreateRenderTargetView(pBuffer, NULL, &mainRenderTargetView);
 	// Perform error handling here!
 	pBuffer->Release();
@@ -458,28 +483,45 @@ extern "C" __declspec(dllexport) void WINAPI EnableHook()
 
 }
 
-extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr)
+extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr, UINT64* PtrToResizeBuffersPtr)
 {
-
+	return;
 	if (!init) { return; }
 
-	std::cout << "\n???: " << *PtrToPresentPtr;
+	std::cout << "\nPtrToPresentPtr: " << *PtrToPresentPtr;
 
-	UINT64 og = (UINT64) oPresent;
+	UINT64 ogPresent = (UINT64) oPresent;
 
 	UINT64* presentPtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr);
-	UINT64 currentPtr = *presentPtr;
+	UINT64 currentPresentPtr = *presentPtr;
 	std::cout << "\ngames present pointer: " << presentPtr;
-	std::cout << "\noriginal present pointer address: " << og;
+	std::cout << "\noriginal present pointer address: " << ogPresent;
 
-	if (currentPtr != og)
+	if (currentPresentPtr != ogPresent)
 	{
 		DWORD dwNewProtect, dwOldProtect;
 		VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
-		memcpy(presentPtr, &og, 8);
+		memcpy(presentPtr, &ogPresent, 8);
 		VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
-
 	}
+
+
+	std::cout << "\nPtrToResizeBuffersPtr: " << *PtrToResizeBuffersPtr;
+	UINT64 ogResizeBuffers = (UINT64)oResizeBuffers;
+	UINT64* resizeBuffersPtr = reinterpret_cast<UINT64*>(*PtrToResizeBuffersPtr);
+	UINT64 currentResizeBuffersPtr = *resizeBuffersPtr;
+
+	if (currentResizeBuffersPtr != ogResizeBuffers)
+	{
+		DWORD dwNewProtect, dwOldProtect;
+		VirtualProtect(resizeBuffersPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
+		memcpy(resizeBuffersPtr, &ogResizeBuffers, 8);
+		VirtualProtect(resizeBuffersPtr, 8, dwNewProtect, &dwOldProtect);
+	
+	}
+
+
+
 	textToPrint = "";
 	overlayForcefullyDisabled = true;
 
@@ -494,7 +536,16 @@ DWORD WINAPI MainThread(void* pHandle)
 
 	if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
 	{
+		oResizeBuffers = (ResizeBuffers)kiero::getMethodsTable()[13];
+		void* hkResizeBuffersPtr = (void*)hkResizeBuffers;
+		std::cout << "\nhkResizeBuffers " << hkResizeBuffersPtr;
+		std::cout << "\noResizeBuffers " << oResizeBuffers;
+
 		
+
+
+
+
 
 		oPresent = (Present)kiero::getMethodsTable()[8];
 		void* hkPresentPtr = (void*)hkPresent;
@@ -502,16 +553,12 @@ DWORD WINAPI MainThread(void* pHandle)
 		std::cout << "\nhkPresentPtr" << hkPresentPtr;
 		std::cout << "\noPresent" << oPresent;
 
-		
-		kiero::bind(13, (void**)&oResizeBuffers, hkResizeBuffers);
 
-
-		//while (!GetAsyncKeyState(VK_END));
 	}
 
 
 	kiero::shutdown();
-	//FreeLibrary((HMODULE)pHandle);
+
 	
 
 	return TRUE;
@@ -549,13 +596,13 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		if (processName.find("mcc") != std::string::npos)
 		{
 			//Old console debugging code
-			//AllocConsole();
-			// FILE* pCout;
-			//freopen_s(&pCout, "conout$", "w", stdout);
+			AllocConsole();
+			 FILE* pCout;
+			freopen_s(&pCout, "conout$", "w", stdout);
 
 			//New log to file code
 			
-			freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
+			//freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
 
 
 			std::cout << "\nHCMInternal.dll injected.";

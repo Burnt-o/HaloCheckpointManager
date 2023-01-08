@@ -43,6 +43,7 @@ namespace HCM3.Services.Trainer
             ListOfInternalFunction.Add("IsOverlayHooked");
             ListOfInternalFunction.Add("PrintTemporaryMessage");
             ListOfInternalFunction.Add("hkPresent");
+            ListOfInternalFunction.Add("hkResizeBuffers");
             ListOfInternalFunction.Add("RemoveHook");
             ListOfInternalFunction.Add("EnableDisplayInfo");
             ListOfInternalFunction.Add("DisableDisplayInfo");

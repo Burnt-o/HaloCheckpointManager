@@ -105,10 +105,12 @@ namespace HCM3.Services
 
             foreach (int supportedGame in supportedGames)
             {
+                Trace.WriteLine("attempting to load module pointer for game: " + supportedGame);
                 try
                 {
                     string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[supportedGame];
                     string gameDLLname = Dictionaries.GameToDLLname[supportedGame];
+                    Trace.WriteLine("gameAs2Letters: " + gameAs2Letters + ", gameDLLname: " + gameDLLname);
 
                     ReadWrite.Pointer? modulePointer = (ReadWrite.Pointer?)this.DataPointersService.GetPointer($"{gameAs2Letters}_Module{MCCType}", CurrentAttachedMCCVersion);
                     if (modulePointer == null)

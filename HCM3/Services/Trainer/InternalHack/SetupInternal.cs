@@ -19,7 +19,7 @@ namespace HCM3.Services.Trainer
                 Trace.WriteLine("INJECTING INTERNAL");
 
                 ReadWrite.Pointer presentPtr = (ReadWrite.Pointer)this.DataPointersService.GetPointer("PresentPointer_" + this.HaloMemoryService.HaloState.MCCType, this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
-              
+                ReadWrite.Pointer resizePtr = (ReadWrite.Pointer)this.DataPointersService.GetPointer("ResizeBuffersPointer_" + this.HaloMemoryService.HaloState.MCCType, this.HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
 
                 if (!internalFunctionNames.Any()) throw new ArgumentException("Wasn't passed a list of internal functions whose name we need to find");
 
@@ -134,7 +134,20 @@ namespace HCM3.Services.Trainer
                     IntPtr hookedPresent = InternalFunctions["hkPresent"];
                     Trace.WriteLine("Address of hkPresent (allegedly): " + NullableIntPtrToHexString(hookedPresent));
 
-                    if (valueOfOriginalPresent != null && valueOfOriginalPresent.Value == (ulong)hookedPresent.ToInt64())
+
+
+
+                    //also going to hook resizeBuffers
+                    IntPtr? resolvedResizePtr = this.HaloMemoryService.ReadWrite.ResolvePointer(resizePtr);
+                    Trace.WriteLine("Address of Resize pointer: " + NullableIntPtrToHexString(resolvedResizePtr));
+                    ulong? valueOfOriginalResize = this.HaloMemoryService.ReadWrite.ReadQword(resolvedResizePtr);
+                    Trace.WriteLine("Value of original Resize: " + (valueOfOriginalResize != null ? valueOfOriginalResize.Value.ToString("X") : "null"));
+                    IntPtr hookedResize = InternalFunctions["hkResizeBuffers"];
+                    Trace.WriteLine("Address of hkResizeBuffers (allegedly): " + NullableIntPtrToHexString(hookedResize));
+
+
+
+                    if ((valueOfOriginalPresent != null && valueOfOriginalPresent.Value == (ulong)hookedPresent.ToInt64()) && (valueOfOriginalResize != null && valueOfOriginalResize.Value == (ulong)hookedResize.ToInt64()))
                     {
                         Trace.WriteLine("Hook appears to already be applied,  no need to apply it again: bailing");
                         return;
@@ -184,12 +197,18 @@ namespace HCM3.Services.Trainer
                         }
                     }
 
+
+                    Trace.WriteLine("resizePtr: " + resizePtr);
+                    Trace.WriteLine("hookedResize: " + hookedResize);
+
                     PInvokes.DebugActiveProcess(pID);
 
 
 
                     
                     Trace.WriteLine("Pausing MCC process");
+                    this.HaloMemoryService.ReadWrite.WriteQword(resizePtr, (ulong)hookedResize.ToInt64(), true);
+
                     this.HaloMemoryService.ReadWrite.WriteQword(presentPtr, (ulong)hookedPresent.ToInt64(), true);
                     PInvokes.DebugActiveProcessStop(pID);
                     System.Threading.Thread.Sleep(50);

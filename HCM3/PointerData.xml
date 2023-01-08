@@ -135,6 +135,57 @@
 		</Version>
 
 	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>ResizeBuffersPointer_Steam</Name>
+		<Version Version="1.2448.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03A285C0</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3F48378</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03FCF6D8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+
+	</Entry>
+
+	<Entry Type="ReadWrite.Pointer">
+		<Name>ResizeBuffersPointer_WinStore</Name>
+		<Version Version="1.3073.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3E1EDC8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+
+	</Entry>
 	
 	<!--Halo 1-->
 
