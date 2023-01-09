@@ -9,7 +9,7 @@
         xmlns:commands="clr-namespace:HCM3.ViewModels.Commands"
         xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
-        Title="HaloCheckpointManager" Height="593" Width="870"
+        Title="HaloCheckpointManager" Height="593" Width="995"
         MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
       d:DataContext="{d:DesignInstance viewModels:MainViewModel}"

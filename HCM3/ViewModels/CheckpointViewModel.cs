@@ -185,6 +185,7 @@ namespace HCM3.ViewModels
                                 Trace.WriteLine("Resetting last selected folder to " + sf.SaveFolderPath);
                                 sf.IsSelected = true;
                                 ableToSetLastFolder = true;
+                            this.SelectedSaveFolder = sf;
                                 break;
                             }
                         }
@@ -193,6 +194,7 @@ namespace HCM3.ViewModels
                     {
                         // If we weren't able to reset it then default to root folder
                         this.RootSaveFolder.IsSelected = true;
+                    this.SelectedSaveFolder = this.RootSaveFolder;
                     }
 
                 }
@@ -236,16 +238,24 @@ namespace HCM3.ViewModels
 
         public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            Trace.WriteLine("FolderChanged");
+            Trace.WriteLine("FolderChanged. Sender: " + sender + ", currentgame?: " + this.SelectedGame);
             SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
             Trace.WriteLine("Selected Folder Path: " + saveFolder?.SaveFolderPath);
-
+            //System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
+            //Trace.WriteLine("stacktrace: " + t.ToString());
             if (saveFolder != null)
             {
+                Trace.WriteLine("not null, so changing.");
                 Properties.Settings.Default.LastSelectedFolder[this.SelectedGame] = saveFolder.SaveFolderPath;
+                this.SelectedSaveFolder = saveFolder;
+                this.RefreshCheckpointList();
+
             }
-            this.SelectedSaveFolder = saveFolder;
-            this.RefreshCheckpointList();
+            else 
+            {
+                //this.RefreshSaveFolderTree();
+            }
+
 
 
         }

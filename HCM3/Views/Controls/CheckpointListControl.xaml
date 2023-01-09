@@ -8,7 +8,7 @@
              xmlns:b="clr-namespace:HCM3.Views"
               xmlns:viewModels="clr-namespace:HCM3.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="593" d:DesignWidth="300"
+             d:DesignHeight="593" d:DesignWidth="425"
              xmlns:dd="urn:gong-wpf-dragdrop"
 
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel, IsDesignTimeCreatable=True}">
@@ -29,6 +29,8 @@
 
         <ListView  AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Background="{DynamicResource WhiteSmoke}">
             <ListView.Resources>
+
+
                 <ContextMenu x:Key="CheckpointContextMenu">
                     <MenuItem Header="Inject" 
                         Command="{Binding Path=Parent.DataContext.Inject, 
@@ -63,8 +65,11 @@
                         <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
                             <Setter Property="Background" Value="{DynamicResource LightGray}" />
                         </Trigger>
-
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" Value="{DynamicResource SelectedListViewItem}"/>
+                        </Trigger>
                     </Style.Triggers>
+                    
                 </Style>
             </ListView.ItemContainerStyle>
 
@@ -77,10 +82,10 @@
                     <GridViewColumn Header="Name" b:GridColumn.MinWidth="55" Width="90" DisplayMemberBinding="{Binding CheckpointName}">
 
                     </GridViewColumn>
-                    <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="30" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"/>
-                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}}" />
-                    <GridViewColumn Header="Version" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding GameVersion}"/>
-                    <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="50" DisplayMemberBinding="{Binding CreatedOn}"/>
+                    <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="40" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"/>
+                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="45" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}}" />
+                    <GridViewColumn Header="Version" b:GridColumn.MinWidth="35" Width="65" DisplayMemberBinding="{Binding GameVersion}"/>
+                    <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="145" DisplayMemberBinding="{Binding CreatedOn}"/>
                     
                 </GridView>
 

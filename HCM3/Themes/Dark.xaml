@@ -35,6 +35,7 @@
     <Color x:Key="PlaceholderGreen">LightGreen</Color>
 
 
+
     <SolidColorBrush x:Key="VeryLightGray" Color="{StaticResource Background1VeryDark}" />
     <SolidColorBrush x:Key="Gray" Color="{StaticResource HighlightSelected1Background}" />
     <SolidColorBrush x:Key="LightGray" Color="{StaticResource Background1Med}"/>
@@ -45,6 +46,7 @@
 
     <SolidColorBrush x:Key="TextColour" Color="{StaticResource Text2}" />
     <SolidColorBrush x:Key="TextColourHighlight" Color="{StaticResource Text3}" />
+    <SolidColorBrush x:Key="SelectedListViewItem" Color="{StaticResource Background2VeryLight}" />
 
 
     <Style TargetType="{x:Type TextBlock}">
@@ -340,4 +342,8 @@
     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{StaticResource PlaceholderGreen}" />
     <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" Color="{StaticResource PlaceholderGreen}" />
     <SolidColorBrush x:Key="{x:Static SystemColors.ActiveCaptionTextBrushKey}" Color="{StaticResource PlaceholderGreen}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource PlaceholderGreen}" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{StaticResource PlaceholderGreen}" />
 </ResourceDictionary>

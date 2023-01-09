@@ -11,6 +11,7 @@
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White" />
     <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="Red" />
 
-
+    <Color x:Key="SelectedListViewItemKey">#FFb4c1fe</Color>
+    <SolidColorBrush x:Key="SelectedListViewItem" Color="{StaticResource SelectedListViewItemKey}" />
 
 </ResourceDictionary>
