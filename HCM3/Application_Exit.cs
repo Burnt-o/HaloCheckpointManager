@@ -48,7 +48,7 @@ namespace HCM3
                 UInt64 PresentPointerRes = (UInt64)PresentPointerResPtr.Value.ToInt64();
                 Trace.WriteLine("DISABLING PRESENT HOOK: resolved present point: " + PresentPointerRes.ToString("X"));
                 var InternalServices = _serviceProvider.GetService<InternalServices>();
-                InternalServices.CallInternalFunction("RemoveHook", PresentPointerRes);
+                InternalServices.CallInternalFunction("RemovePresentHook", PresentPointerRes);
                 Trace.WriteLine("Succesfully exited application");
             }
             catch (Exception ex)

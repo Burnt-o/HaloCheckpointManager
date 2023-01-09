@@ -483,14 +483,14 @@ extern "C" __declspec(dllexport) void WINAPI EnableHook()
 
 }
 
-extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr, UINT64* PtrToResizeBuffersPtr)
+extern "C" __declspec(dllexport) void WINAPI RemovePresentHook(UINT64* PtrToPresentPtr)
 {
-	return;
+
 	if (!init) { return; }
 
 	std::cout << "\nPtrToPresentPtr: " << *PtrToPresentPtr;
 
-	UINT64 ogPresent = (UINT64) oPresent;
+	UINT64 ogPresent = (UINT64)oPresent;
 
 	UINT64* presentPtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr);
 	UINT64 currentPresentPtr = *presentPtr;
@@ -506,8 +506,21 @@ extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr,
 	}
 
 
+
+	textToPrint = "";
+	overlayForcefullyDisabled = true;
+
+}
+
+extern "C" __declspec(dllexport) void WINAPI RemoveResizeBuffersHook(UINT64* PtrToResizeBuffersPtr)
+{
+
+	if (!init) { return; }
+
+
 	std::cout << "\nPtrToResizeBuffersPtr: " << *PtrToResizeBuffersPtr;
 	UINT64 ogResizeBuffers = (UINT64)oResizeBuffers;
+
 	UINT64* resizeBuffersPtr = reinterpret_cast<UINT64*>(*PtrToResizeBuffersPtr);
 	UINT64 currentResizeBuffersPtr = *resizeBuffersPtr;
 
@@ -517,7 +530,7 @@ extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr,
 		VirtualProtect(resizeBuffersPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
 		memcpy(resizeBuffersPtr, &ogResizeBuffers, 8);
 		VirtualProtect(resizeBuffersPtr, 8, dwNewProtect, &dwOldProtect);
-	
+
 	}
 
 

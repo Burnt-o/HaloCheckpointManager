@@ -85,6 +85,11 @@ namespace HCM3.Services.Trainer
                             Trace.WriteLine("Size of DisplayInfoInfo byte array:" + size);
                             break;
 
+                        case byte[]:
+                            paramData = (byte[])param;
+                            Trace.WriteLine("Length of byte[] param" + paramData.Length);
+                            break;
+
                         default:
                             break;
                     }
