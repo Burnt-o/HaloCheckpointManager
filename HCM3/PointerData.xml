@@ -1215,20 +1215,6 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 						<Module>halo2.dll</Module>
 						<Offsets>
 							<Offset>0x166F9C8</Offset>
-							<Offset>0x80</Offset>
-						</Offsets>
-					</Element>
-					<Element>
-						<Module>halo2.dll</Module>
-						<Offsets>
-							<Offset>0x166F9C8</Offset>
-							<Offset>0x81</Offset>
-						</Offsets>
-					</Element>
-					<Element>
-						<Module>halo2.dll</Module>
-						<Offsets>
-							<Offset>0x166F9C8</Offset>
 							<Offset>0x82</Offset>
 						</Offsets>
 					</Element>
@@ -1239,24 +1225,24 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 							<Offset>0x83</Offset>
 						</Offsets>
 					</Element>
+					<Element>
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x166F9C8</Offset>
+							<Offset>0x84</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x166F9C8</Offset>
+							<Offset>0x85</Offset>
+						</Offsets>
+					</Element>
 				</Array>
 			</Version>
 			<Version Version="1.2645.0.0">
 			<Array>
-				<Element>
-					<Module>halo2.dll</Module>
-					<Offsets>
-						<Offset>0x0174a188</Offset>
-						<Offset>0x80</Offset>
-					</Offsets>
-				</Element>
-				<Element>
-					<Module>halo2.dll</Module>
-					<Offsets>
-						<Offset>0x0174a188</Offset>
-						<Offset>0x81</Offset>
-					</Offsets>
-				</Element>
 				<Element>
 					<Module>halo2.dll</Module>
 					<Offsets>
@@ -1271,24 +1257,24 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 						<Offset>0x83</Offset>
 					</Offsets>
 				</Element>
+				<Element>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x0174a188</Offset>
+						<Offset>0x84</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x0174a188</Offset>
+						<Offset>0x85</Offset>
+					</Offsets>
+				</Element>
 			</Array>
 			</Version>
 			<Version Version="1.3073.0.0">
 			<Array>
-				<Element>
-					<Module>halo2.dll</Module>
-					<Offsets>
-						<Offset>0x01879FD0</Offset>
-						<Offset>0x80</Offset>
-					</Offsets>
-				</Element>
-				<Element>
-					<Module>halo2.dll</Module>
-					<Offsets>
-						<Offset>0x01879FD0</Offset>
-						<Offset>0x81</Offset>
-					</Offsets>
-				</Element>
 				<Element>
 					<Module>halo2.dll</Module>
 					<Offsets>
@@ -1300,7 +1286,21 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Module>halo2.dll</Module>
 					<Offsets>
 						<Offset>0x01879FD0</Offset>
-						<Offset>0x83</Offset>s
+						<Offset>0x83</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x01879FD0</Offset>
+						<Offset>0x84</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo2.dll</Module>
+					<Offsets>
+						<Offset>0x01879FD0</Offset>
+						<Offset>0x85</Offset>s
 					</Offsets>
 				</Element>
 			</Array>

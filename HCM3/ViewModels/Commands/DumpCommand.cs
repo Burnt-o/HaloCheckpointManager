@@ -8,15 +8,17 @@ using HCM3.Models;
 using HCM3.ViewModels;
 using System.Diagnostics;
 using HCM3.Services;
+using HCM3.Services.Trainer;
 
 namespace HCM3.ViewModels.Commands
 {
     public class DumpCommand : ICommand
     {
-        internal DumpCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices)
+        internal DumpCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices, TrainerServices trainerServices)
         {
             this.CheckpointServices = checkpointServices;
             this.CheckpointViewModel = checkpointViewModel;
+            this.TrainerServices = trainerServices;
 
             //TODO: add this to checkpoint view model ?
             //CheckpointViewModel.PropertyChanged += (obj, args) =>
@@ -30,6 +32,7 @@ namespace HCM3.ViewModels.Commands
 
         private CheckpointServices CheckpointServices { get; init; }
         private CheckpointViewModel CheckpointViewModel { get; init; }
+        private TrainerServices TrainerServices { get; init; }
         public bool CanExecute(object? parameter)
         {
             return true;
@@ -42,7 +45,7 @@ namespace HCM3.ViewModels.Commands
             try
             {
                 Trace.WriteLine("Aligning tab to game");
-                //Align the game to tab (THIS SHIT IS FUCKIN BROKEN, some race condition shit with SelectedSaveFolder being null on tab change)
+
                 this.CheckpointServices.CommonServices.HaloMemoryService.HaloState.UpdateHaloState();
                 HaloState actualGame = this.CheckpointServices.CommonServices.HaloMemoryService.HaloState;
 
@@ -53,7 +56,21 @@ namespace HCM3.ViewModels.Commands
                     CheckpointViewModel.RefreshCheckpointList();
                 }
 
-                Trace.WriteLine("THIS AInNT NULL IS IT: " + CheckpointViewModel.SelectedSaveFolder);
+                Trace.WriteLine("CheckpointViewModel.SelectedSaveFolder after realigning tab to game: " + CheckpointViewModel.SelectedSaveFolder);
+
+                //Check if user wants automatic checkpoint when dumping
+                if (Properties.Settings.Default.AutoCheckpoint)
+                {
+                    if (Properties.Settings.Default.H1Cores && CheckpointViewModel.SelectedGame == 0)
+                    {
+                        TrainerServices.ForceCoreSave();
+                    }
+                    else
+                    {
+                        TrainerServices.ForceCheckpoint();
+                    }
+                    System.Threading.Thread.Sleep(50); //Give MCC enough time to actually make the checkpoint/coresave
+                }
 
                 CheckpointServices.TryDump(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedGame);
                 CheckpointViewModel.RefreshCheckpointList();

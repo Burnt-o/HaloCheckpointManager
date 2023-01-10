@@ -88,15 +88,20 @@ namespace HCM3.Services.Trainer
 
         private void CheatStateChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            try { UpdateInternalDisplayWithActiveCheats();
-                this.HaloMemoryService.HaloState.OverlayHooked = true;
-            }
-            catch (Exception ex) 
-            {
-                this.HaloMemoryService.HaloState.OverlayHooked = false;
-                Trace.WriteLine("Something went wrong trying to update the internal display when " + 
-                    sender?.ToString() + " changed state, ex: " + ex.ToString() + "\n" + ex.StackTrace); 
-            }
+            if (Properties.Settings.Default.DisableOverlay) return;
+
+                try
+                {
+                    UpdateInternalDisplayWithActiveCheats();
+                    this.HaloMemoryService.HaloState.OverlayHooked = true;
+                }
+                catch (Exception ex)
+                {
+                    this.HaloMemoryService.HaloState.OverlayHooked = false;
+                    Trace.WriteLine("Something went wrong trying to update the internal display when " +
+                        sender?.ToString() + " changed state, ex: " + ex.ToString() + "\n" + ex.StackTrace);
+                }
+
 
 
         }
@@ -135,7 +140,8 @@ namespace HCM3.Services.Trainer
 
         public void UpdateInternalDisplayWithActiveCheats()
         {
-            
+
+            if (Properties.Settings.Default.DisableOverlay) return;
 
             //Trace.WriteLine("Updating internal display with active cheats");
             if (this.InternalServices.CheckInternalLoaded() == false || this.InternalServices.InternalFunctionsLoaded == false || !this.HaloMemoryService.HaloState.OverlayHooked)

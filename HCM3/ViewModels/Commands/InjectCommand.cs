@@ -51,7 +51,7 @@ namespace HCM3.ViewModels.Commands
 
                 if (Properties.Settings.Default.AutoRevert)
                 {
-                    if (Properties.Settings.Default.AutoRevert && CheckpointViewModel.SelectedGame == 0)
+                    if (Properties.Settings.Default.H1Cores && CheckpointViewModel.SelectedGame == 0)
                     {
                         TrainerServices.ForceCoreLoad();
                     }

@@ -282,5 +282,17 @@ namespace HCM3.Properties {
                 this["DisableOverlay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoCheckpoint {
+            get {
+                return ((bool)(this["AutoCheckpoint"]));
+            }
+            set {
+                this["AutoCheckpoint"] = value;
+            }
+        }
     }
 }

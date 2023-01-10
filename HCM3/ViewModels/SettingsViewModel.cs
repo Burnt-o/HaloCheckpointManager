@@ -45,6 +45,12 @@ namespace HCM3.ViewModels
             set { Properties.Settings.Default.AutoRevert = value; }
         }
 
+        public bool AutoCheckpoint
+        {
+            get { return Properties.Settings.Default.AutoCheckpoint; }
+            set { Properties.Settings.Default.AutoCheckpoint = value; }
+        }
+
         public bool H1Cores
         {
             get { return Properties.Settings.Default.H1Cores; }
@@ -68,10 +74,15 @@ namespace HCM3.ViewModels
             get { return Properties.Settings.Default.DisableOverlay; }
             set { 
                 Properties.Settings.Default.DisableOverlay = value;
-                InternalServices.InjectInternal();
+                
                 if (value)
                 {
+                    InternalServices.RemoveHook();
                     PersistentCheatService.RemoveAllCheats();
+                }
+                else
+                {
+                    InternalServices.InjectInternal();
                 }
             
             }

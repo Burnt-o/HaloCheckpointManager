@@ -216,39 +216,7 @@ namespace HCM3.Services.Trainer
                 }
                 else
                 {
-                    try
-                    {
-                        Trace.WriteLine("Attempting to remove hook on user request");
-                        ReadWrite.Pointer? PresentPointer = (ReadWrite.Pointer)DataPointersService.GetPointer("PresentPointer_" + HaloMemoryService.HaloState.MCCType, HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
-                        if (PresentPointer == null) throw new Exception("Couldn't get PresentPointer");
-                        IntPtr? PresentPointerResPtr = HaloMemoryService.ReadWrite.ResolvePointer(PresentPointer);
-                        if (PresentPointerResPtr == null) throw new Exception("Couldn't resolve PresentPointer");
-                        UInt64 PresentPointerRes = (UInt64)PresentPointerResPtr.Value.ToInt64();
-                        Trace.WriteLine("DISABLING PRESENT HOOK: resolved present point: " + PresentPointerRes.ToString("X"));
-
-
-                        ReadWrite.Pointer? ResizeBuffersPointer = (ReadWrite.Pointer)DataPointersService.GetPointer("ResizeBuffersPointer_" + HaloMemoryService.HaloState.MCCType, HaloMemoryService.HaloState.CurrentAttachedMCCVersion);
-                        if (ResizeBuffersPointer == null) throw new Exception("Couldn't get ResizeBuffersPointer");
-                        IntPtr? ResizeBuffersPointerResPtr = HaloMemoryService.ReadWrite.ResolvePointer(ResizeBuffersPointer);
-                        if (ResizeBuffersPointerResPtr == null) throw new Exception("Couldn't resolve ResizeBuffersPointerResPtr");
-                        UInt64 ResizeBuffersPointerRes = (UInt64)ResizeBuffersPointerResPtr.Value.ToInt64();
-                        Trace.WriteLine("DISABLING RESIZEBUFFERS HOOK: resolved resizeBuffers point: " + ResizeBuffersPointerRes.ToString("X"));
-
-                        //Since CallInternalFunction can only take one param to pass on, but Remove hook needs two, we combine the bytes
-                    /*    byte[] PresentPtrBytes = BitConverter.GetBytes((ulong)PresentPointerRes);
-                        byte[] ResizeBufferPtrBytes = BitConverter.GetBytes((ulong)ResizeBuffersPointerRes);
-                        byte[] combinedParams = new byte[PresentPtrBytes.Length + ResizeBufferPtrBytes.Length];
-                        Buffer.BlockCopy(PresentPtrBytes, 0, combinedParams, 0, PresentPtrBytes.Length);
-                        Buffer.BlockCopy(ResizeBufferPtrBytes, 0, combinedParams, PresentPtrBytes.Length, ResizeBufferPtrBytes.Length);*/
-
-                        CallInternalFunction("RemovePresentHook", PresentPointerRes);
-                        //CallInternalFunction("RemoveResizeBuffersHook", ResizeBuffersPointerRes);
-                        // CallInternalFunction("RemoveHook", combinedParams);
-                    }
-                    catch (Exception ex)
-                    {
-                        Trace.WriteLine("Error removing hook: " + ex.ToString());
-                    }
+                   
 
                 }
 

@@ -59,25 +59,32 @@ namespace HCM3.Services.Trainer
 
         public bool InjectInternal()
         {
-            lock (InjectInternalLock)
+            if (!Properties.Settings.Default.DisableOverlay)
             {
-  
-                try
+
+                lock (InjectInternalLock)
                 {
-                    SetupInternal(ListOfInternalFunction);
+
+                    try
+                    {
+                        SetupInternal(ListOfInternalFunction);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.ToString());
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine("Failed setting up internal (and finding internalFunction pointers), ex: " + ex.ToString());
-                }
+
+                bool success = this.CheckInternalLoaded();
+
+                if (!success) return false;
+
+                Thread.Sleep(50);
+                return this.CheckOverlayHooked();
             }
+            else
+                return true;
 
-            bool success = this.CheckInternalLoaded();
-
-            if (!success) return false;
-
-            Thread.Sleep(50);
-            return this.CheckOverlayHooked();
         }
 
 

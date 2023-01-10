@@ -265,7 +265,7 @@ namespace HCM3.ViewModels
         private ICommand _dump;
         public ICommand Dump
         {
-            get { return _dump ?? (_dump = new DumpCommand(this, CheckpointServices)); }
+            get { return _dump ?? (_dump = new DumpCommand(this, CheckpointServices, TrainerServices)); }
             set { _dump = value; }
         }
         private ICommand _inject;
