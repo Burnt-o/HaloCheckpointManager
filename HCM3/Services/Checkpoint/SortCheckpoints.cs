@@ -61,6 +61,7 @@ namespace HCM3.Services
             Trace.WriteLine(DateTimesToAssign.Count + ", " + UnsortedCheckpoints.Count);
 
 
+
             for (int i = 0; i < UnsortedCheckpoints.Count; i++)
             {
                 string filePath = SelectedSaveFolder.SaveFolderPath + "\\" + UnsortedCheckpoints[i].CheckpointName + ".bin";
@@ -74,7 +75,7 @@ namespace HCM3.Services
 
             for (int i = 0; i < UnsortedCheckpoints.Count; i++)
             {
-                Trace.WriteLine(UnsortedCheckpoints[i].CheckpointName + ", " + UnsortedCheckpoints[i].GameTickCount);
+                Trace.WriteLine(UnsortedCheckpoints[i].CheckpointName + ", " + UnsortedCheckpoints[i].LevelName);
             }
 
 
@@ -128,8 +129,22 @@ namespace HCM3.Services
         //Here we're sorting by the actual level order in the campaign. SP missions have positive integer values, MP/unknown have value of -1
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
-            if (NullCompare(x, y, out int nullint)) return nullint;
-            if (NullCompare(x.LevelName, y.LevelName, out int nullint2)) return nullint2;
+            Trace.WriteLine("SortLevel was called");
+            if (NullCompare(x, y, out int nullint))
+            {
+                Trace.WriteLine("One of the actual checkpoints was null, x: " + x.ToString() + ", y: " + y.ToString());
+                return nullint;
+            }
+                
+            if (NullCompare(x.LevelName, y.LevelName, out int nullint2))
+            {
+                Trace.WriteLine("x.LevelName: " + x.LevelName);
+                Trace.WriteLine("y.LevelName: " + y.LevelName);
+                Trace.WriteLine("EEEEEEEEFEFEEE?");
+                return nullint2;
+
+            }
+                
 
             int game = HCM3.Properties.Settings.Default.LastSelectedTab;
             int? xOrder = null;
@@ -142,13 +157,27 @@ namespace HCM3.Services
                 {
                     xOrder = stringMapper[x.LevelName].LevelPosition;
                 }
+                else
+                {
+                    Trace.WriteLine("Couldn't find levelposition x: " + x.LevelName + ", game: " + game);
+                }
                 if (stringMapper.ContainsKey(y.LevelName))
                 {
-                    xOrder = stringMapper[y.LevelName].LevelPosition;
+                    yOrder = stringMapper[y.LevelName].LevelPosition;
+                }
+                else
+                {
+                    Trace.WriteLine("Couldn't find levelposition y: " + y.LevelName + ", game: " + game);
                 }
             }
 
-            if (NullCompare(xOrder, yOrder, out int nullint3)) return nullint3;
+
+            if (NullCompare(xOrder, yOrder, out int nullint3))
+            {
+                Trace.WriteLine("One of the orderings was null: x: " + xOrder + ", y: " + yOrder + ", x.LevelName: " + x.LevelName + ", y.Levelname: " + y.LevelName + ", x.LevelName.Length: " + x.LevelName.Length + ", y.LevelName.Length: " + y.LevelName.Length);
+                return nullint3;
+            }
+                
 
             return (xOrder.Value.CompareTo(yOrder.Value));
 

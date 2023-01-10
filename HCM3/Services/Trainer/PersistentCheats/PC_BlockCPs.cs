@@ -56,13 +56,9 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat() 
         {
-            if (Properties.Settings.Default.DisableOverlay)
-            {
-                RemoveCheat();
-                throw new Exception("This cheat requires the overlay to be enabled - see the Settings tab.");
-            }
 
-            if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+
+            if (!Properties.Settings.Default.DisableOverlay && !this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
             Trace.WriteLine("User commanded BlockCPs !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
@@ -118,6 +114,7 @@ namespace HCM3.Services.Trainer
 
             if (actualInstruction == 0)
             {
+                if (Properties.Settings.Default.DisableOverlay) this.CommonServices.PrintMessage("Natural Checkpoints re-enabled.");
                 this.HaloMemoryService.ReadWrite.WriteByte(codePointer, (byte)1, true);
             }
 
@@ -198,6 +195,7 @@ namespace HCM3.Services.Trainer
 
                 if (actualInstruction == 1)
                 {
+                    if (Properties.Settings.Default.DisableOverlay) this.CommonServices.PrintMessage("Natural Checkpoints disabled.");
                     this.HaloMemoryService.ReadWrite.WriteByte(codePointer, (byte)0, true);
                     return true;
                 }

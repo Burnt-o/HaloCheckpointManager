@@ -115,6 +115,8 @@ namespace HCM3.Services
             int loadedGame = GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
+
+
             List<string> requiredPointerNames = new();
             requiredPointerNames.Add($"{gameAs2Letters}_CurrentTickCount");
             requiredPointerNames.Add($"{gameAs2Letters}_PrintMessageText");

@@ -115,11 +115,7 @@ namespace HCM3.Services.Trainer
         public event PropertyChangedEventHandler? PropertyChanged;
         public void ToggleCheat()
         {
-            if (Properties.Settings.Default.DisableOverlay)
-            {
-                RemoveCheat();
-                throw new Exception("This cheat requires the overlay to be enabled - see the Settings tab.");
-            }
+            if (!Properties.Settings.Default.DisableOverlay && !this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
             Trace.WriteLine("User commanded ToggleSpeedhack !!!!!!!!!!!!!!!!!!!!");
             if (IsChecked)
@@ -178,7 +174,13 @@ namespace HCM3.Services.Trainer
 
         public void RemoveCheat()
         {
-            this.InternalServices.SetSpeedHackInternal((double)1);
+            if (Properties.Settings.Default.DisableOverlay && this.HaloMemoryService.HaloState.CurrentHaloState >= 0) this.CommonServices.PrintMessage("Speedhack disabled.");
+
+            if (this.InternalServices.InternalInjected())
+            {
+                this.InternalServices.SetSpeedHackInternal((double)1);
+            }
+       
             IsChecked = false;
         }
 
@@ -201,18 +203,35 @@ namespace HCM3.Services.Trainer
 
         public bool ApplyCheat()
         {
+
             double speed;
             try
             {
-                speed = Convert.ToDouble(SpeedString);
+                //We're not allowing user fine control of speedhack if overlay is disabled.
+                speed = Properties.Settings.Default.DisableOverlay ? 10 : Convert.ToDouble(SpeedString);
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Invalid input for speedhack! " + ex.ToString()); // I don't care about stacktrace being ruined lol
+                throw new Exception("Invalid input for speedhack! " + ex.ToString()); 
             }
-            
+
+
+            if (!this.InternalServices.InternalInjected()) // Just to make sure, in case overlay has been disabled the whole time and thus HCMInternal was not injected yet
+            {
+                this.InternalServices.InjectInternal();
+                int retrycount = 0;
+
+                //wait for internal to be fully injected, it can take some time
+                while (retrycount < 20 && !this.InternalServices.InternalInjected())
+                { 
+                retrycount++;
+                    System.Threading.Thread.Sleep(100);
+                }
+
+            }
             this.InternalServices.SetSpeedHackInternal(speed);
+            if (Properties.Settings.Default.DisableOverlay && this.HaloMemoryService.HaloState.CurrentHaloState >= 0) this.CommonServices.PrintMessage("Speedhack enabled.");
             return IsCheatApplied();
 
 

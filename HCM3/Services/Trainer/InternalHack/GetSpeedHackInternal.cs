@@ -10,6 +10,9 @@ namespace HCM3.Services.Trainer
     {
         public bool GetSpeedHackInternal()
         {
+
+            if (!this.InternalInjected()) return false;
+
             uint? returnCode = CallInternalFunction("GetSpeedHack", null);
             Trace.WriteLine("GetSpeedHackInternal returned: " + returnCode.Value);
             return returnCode == 0; // GetSpeedhack will return 0 if speedhack is not equal to 1.00, 1 if it is.

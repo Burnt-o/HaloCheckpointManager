@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-	<LatestHCMVersion>2.0.3</LatestHCMVersion>
+	<LatestHCMVersion>2.0.4</LatestHCMVersion>
 	<ObsoleteHCMVersions>
 		<Entry>1.9.9</Entry>
 	</ObsoleteHCMVersions>
@@ -548,7 +548,7 @@
 		<Version Version="1.3073.0.0">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xAED789</Offset>
+				<Offset>0xABA11B</Offset>
 			</Offsets>
 		</Version>
 	</Entry>

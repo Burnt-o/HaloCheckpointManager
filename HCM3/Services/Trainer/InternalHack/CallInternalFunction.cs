@@ -27,6 +27,8 @@ namespace HCM3.Services.Trainer
                 // Try-Finally so we can free the above resources if something goes wrong
                 try
                 {
+                    if (!this.InternalInjected()) throw new Exception("HCMInternal.dll wasn't injected");
+
                     IntPtr functionPointer;
 
                     if (functionName == "SetSpeedHack")

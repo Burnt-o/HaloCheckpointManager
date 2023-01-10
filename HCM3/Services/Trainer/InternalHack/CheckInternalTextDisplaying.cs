@@ -12,6 +12,9 @@ namespace HCM3.Services.Trainer
 
         public bool CheckInternalTextDisplaying()
         {
+            if (Properties.Settings.Default.DisableOverlay) return true;
+
+
             if (!CheckInternalLoaded()) return false;
 
             uint? exitCode = null;

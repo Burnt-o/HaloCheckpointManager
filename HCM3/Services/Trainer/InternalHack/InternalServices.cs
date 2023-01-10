@@ -55,12 +55,21 @@ namespace HCM3.Services.Trainer
         }
 
 
+        public bool InternalInjected()
+        {
+            //We'll get a ptr from internal functions. If this fails, internal not injected.
+            //Then we read a single byte at the pointer. For hkPresent (doesn't matter what we chose) the starting byte should be 0x4D. so if it matches then internal is indeed injected.
 
+            IntPtr functionPointer;
+            if (!InternalFunctions.TryGetValue("hkPresent", out functionPointer)) return false;
+
+            byte? testByte = this.HaloMemoryService.ReadWrite.ReadByte(functionPointer);
+            return testByte == 0x40;
+        }
 
         public bool InjectInternal()
         {
-            if (!Properties.Settings.Default.DisableOverlay)
-            {
+
 
                 lock (InjectInternalLock)
                 {
@@ -81,9 +90,7 @@ namespace HCM3.Services.Trainer
 
                 Thread.Sleep(50);
                 return this.CheckOverlayHooked();
-            }
-            else
-                return true;
+
 
         }
 

@@ -609,13 +609,13 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		if (processName.find("mcc") != std::string::npos)
 		{
 			//Old console debugging code
-			AllocConsole();
+			//AllocConsole();
 			 FILE* pCout;
-			freopen_s(&pCout, "conout$", "w", stdout);
+			//freopen_s(&pCout, "conout$", "w", stdout);
 
 			//New log to file code
 			
-			//freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
+			freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
 
 
 			std::cout << "\nHCMInternal.dll injected.";
