@@ -33,19 +33,23 @@ namespace HCM3.Services
 
             foreach (Tuple<ICompareCheckpoints, bool> comparer in comparers)
             {
-                Trace.WriteLine(comparer.Item1.Name);
+                Trace.WriteLine("COMPARING WITH COMPARER: " + comparer.Item1.Name);
                 if (comparer.Item1.GetType() == typeof(SortNothing)) continue;
-
+                Trace.WriteLine("execution here");
                 if (!comparer.Item2) //reverse flag == false
                 {
-                    UnsortedCheckpoints.Sort(comparer.Item1);
+                    //UnsortedCheckpoints.Sort(comparer.Item1);
+                    UnsortedCheckpoints = UnsortedCheckpoints.OrderBy(n => n, comparer.Item1).ToList();
                 }
                 else //reverse flag == true
                 {
                     UnsortedCheckpoints.Reverse();
-                    UnsortedCheckpoints.Sort(comparer.Item1);
+                    //UnsortedCheckpoints.Sort(comparer.Item1);
+                    UnsortedCheckpoints = UnsortedCheckpoints.OrderBy(n => n, comparer.Item1).ToList();
                     UnsortedCheckpoints.Reverse();
                 }
+
+
 
             }
 
