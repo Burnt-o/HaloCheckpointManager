@@ -79,13 +79,31 @@
 
 
                     </GridViewColumn>
-                    <GridViewColumn Header="Name" b:GridColumn.MinWidth="55" Width="90" DisplayMemberBinding="{Binding CheckpointName}">
-
+                    <GridViewColumn b:GridColumn.MinWidth="55" Width="90" DisplayMemberBinding="{Binding CheckpointName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Header="Diff" b:GridColumn.MinWidth="30" Width="40" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}"/>
-                    <GridViewColumn Header="IGT" b:GridColumn.MinWidth="35" Width="45" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}}" />
-                    <GridViewColumn Header="Version" b:GridColumn.MinWidth="35" Width="65" DisplayMemberBinding="{Binding GameVersion}"/>
-                    <GridViewColumn Header="Created" b:GridColumn.MinWidth="50" Width="145" DisplayMemberBinding="{Binding CreatedOn}"/>
+                    <GridViewColumn b:GridColumn.MinWidth="30" Width="40" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Diff</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn b:GridColumn.MinWidth="35" Width="45" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">IGT</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn b:GridColumn.MinWidth="35" Width="65" DisplayMemberBinding="{Binding GameVersion}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Version</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn b:GridColumn.MinWidth="50" Width="145" DisplayMemberBinding="{Binding CreatedOn}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Created</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                     
                 </GridView>
 
