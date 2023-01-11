@@ -76,6 +76,10 @@ namespace HCM3.Services
         private void GamepadUpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             this.HotkeyManager.gamepad.Update();
+            if (!this.HotkeyManager.gamepad.IsConnected)
+            {
+                this.HotkeyManager.gamepad.Device = XInputium.XInput.XInputDevice.GetFirstConnectedDevice();
+            }
         }
 
         // Timer that will periodically update CurrentHaloState
