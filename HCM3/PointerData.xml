@@ -36,6 +36,9 @@
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>H3_BRP</Name>
+		<Version Version="1.2448.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
 		</Version>
@@ -2636,6 +2639,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--Halo 3-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ModuleSteam</Name>
+		<Version Version="1.2448.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3A24FF8</Offset>
+				<Offset>0x48</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -2655,14 +2666,6 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ModuleWinStore</Name>
-		<Version Version="1.2645.0.0">
-			<Module>main</Module>
-			<Offsets>
-				<Offset>0x03A23830</Offset>
-				<Offset>0x48</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -2675,6 +2678,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--Print Message stuff-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_CurrentTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x2961E0C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2690,6 +2699,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_PrintMessageText</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x011B63E0</Offset>
+				<Offset>0x2250</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2707,6 +2723,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_CPMessageCall</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xD0E62</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2722,6 +2744,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CPMessageCallLength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>5</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>5</Offset>
 		</Version>
@@ -2731,6 +2756,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_PrintMessageTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x011B63E0</Offset>
+				<Offset>0x2318</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2748,6 +2780,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer[]">
 		<Name>H3_PrintMessageFlags</Name>
+		<Version Version="1.2448.0.0">
+			<Array>
+				<Element>
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x011B63E0</Offset>
+						<Offset>0x2311</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>
 				<Element>
@@ -2773,6 +2816,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="byte[]">
 		<Name>H3_PrintMessageFlagValues</Name>
+		<Version Version="1.2448.0.0">
+			<Array>1</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>1</Array>
 		</Version>
@@ -2784,6 +2830,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--Trainer stuff-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ForceCheckpoint</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1D3B93B</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2799,6 +2851,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ForceRevert</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1D3B93A</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2814,6 +2872,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_DoubleRevertFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1CB1668</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2829,6 +2893,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_NaturalCheckpointCode</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1DA995</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2848,9 +2918,48 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	or:
 	playerdatum sc nw "41 89 4a 04 41 89 12" check what it acc
 	playervehidatum sc nw "** ** ** ** ** ** 41 bb 01 00 00 00 4c 8b 14 c8" check what it acc
+	skipDamage approx 0x179 ahead, will be a xor esi esi with many jumps to it
 	-->
 	<Entry Type="DetourInfoObject">
 		<Name>H3_Invuln_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x360A5A</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x4C, 0x8D, 0x73, 0x08, 0x4C, 0x8B, 0x65, 0x98</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp r13d, eax; pop rax; je 23h; push rax; mov eax,[@playerDatum]; cmp r13d, eax; pop rax; je 13h;  test r12b, r12b; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $returnControl; lea r14,[rbx+08h]; mov r12,[rbp-68h]; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0xA159C4</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x774AD4</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x360BD3</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo3.dll</Module>
@@ -2933,6 +3042,20 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--scan nw "f3 41 0f 10 48 10 f3 41 0f 10 50 14"-->
 	<Entry Type="DetourInfoObject">
 		<Name>H3_OHK_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x36417B</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xF3, 0x41, 0x0F, 0x10, 0x48, 0x10, 0xF3, 0x41, 0x0F, 0x10, 0x50, 0x14</OriginalCodeBytes>
+			<SizeToAlloc>50</SizeToAlloc>
+			<DetourCodeASM>movss xmm1, [r8+10h]; movss xmm2, [r8+14h]; push rax; mov rax, [r8+14h]; test rax, rax; je 0Fh; mov eax, 47C35000h; movd xmm1, eax; movd xmm2, eax; pop rax; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo3.dll</Module>
@@ -2966,6 +3089,30 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="DetourInfoObject">
 		<Name>H3_PlayerData_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x355E5C</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x774AD4</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo3.dll</Module>
@@ -3018,6 +3165,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Xpos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x160</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x160</Offset>
 		</Version>
@@ -3027,6 +3177,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Ypos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x164</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x164</Offset>
 		</Version>
@@ -3036,6 +3189,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Zpos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x168</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x168</Offset>
 		</Version>
@@ -3045,6 +3201,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Xvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1E0</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E0</Offset>
 		</Version>
@@ -3054,6 +3213,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Yvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1E4</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E4</Offset>
 		</Version>
@@ -3063,6 +3225,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_PlayerData_Zvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1E8</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E8</Offset>
 		</Version>
@@ -3071,8 +3236,19 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		</Version>
 	</Entry>
 
+	
+	<!--load sierra, scan w float value 4.017626762
+	or scan nw "f3 0f 58 b4 3b d4 00 00 00" check what it accesses
+	or "0f 57 f6 45 0f 57 f6" first of two results, will be right above that same addss-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ViewHori</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00EBAD24</Offset>
+				<Offset>0x34C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3090,6 +3266,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_ViewVert</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00EBAD24</Offset>
+				<Offset>0x350</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3109,6 +3292,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 <!-- -0x7 from blind -->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_SkullAcrophobiaFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01CB15C8</Offset>
+				<Offset>0x10539</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3126,6 +3316,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_SkullAcrophobiaBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>5</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>5</Offset>
 		</Version>
@@ -3137,6 +3330,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!-- -0xA from blind-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_SkullBandanaFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01CB15C8</Offset>
+				<Offset>0x10536</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3154,6 +3354,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_SkullBandanaBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>7</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>7</Offset>
 		</Version>
@@ -3162,11 +3365,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		</Version>
 	</Entry>
 
-	<!--10 scoring skulls on sierra. scan nw "85 c0 8b d0 41 0f 48 d5". disassemble. check what it points to. 
+	<!--10 scoring skulls on sierra. scan nw "33 d2 4d 8b 04 00". disassemble. check what the mov eax, [r8 + junk] accesses. one of those should be blind.
 	or scan writeable "ff 05 00 00 00 00 00 00 ff 01 00 00 02 00 00 00 00 ** ** 00 0f 07". take the first 7ff4 result. blind is "02"
 	-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_SkullBlindFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01CB15C8</Offset>
+				<Offset>0x10540</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3184,6 +3394,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_SkullBlindBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>1</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>1</Offset>
 		</Version>
@@ -3197,6 +3410,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1D2C460</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1e0d358</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3210,6 +3435,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--scan nw "48 85 c9 0f b6 db", will be a "mov eax, 01" right after.-->
 	<Entry Type="PatchInfo">
 		<Name>H3_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0xC25EF</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo3.dll</Module>
@@ -3236,6 +3471,21 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>H3_InjectRequirements</Name>
+		<Version Version="1.2448.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>true</LoadedBSP1>
+			<LoadedBSP2>true</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
 		<Version Version="1.2645.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
@@ -3270,6 +3520,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<Entry Type="ReadWrite.Pointer">
 
 		<Name>H3_CheckpointLocation1</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01E637E0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3287,6 +3544,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_CheckpointLocation2</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01E637E0</Offset>
+				<Offset>0x7F0000</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3304,6 +3568,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_LoadedBSP1</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1CC1A58</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3319,6 +3589,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H3_LoadedBSP2</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1CD1E98</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3334,6 +3610,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LoadedBSPoffset</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x103E8</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10648</Offset>
 		</Version>
@@ -3343,6 +3622,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LoadedBSPlength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>44</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>44</Offset>
 		</Version>
@@ -3352,6 +3634,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_SHAoffset</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x10428</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10688</Offset>
 		</Version>
@@ -3361,6 +3646,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_SHAlength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>20</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>20</Offset>
 		</Version>
@@ -3370,6 +3658,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointLength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x7F0000</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x870000</Offset>
 		</Version>
@@ -3379,6 +3670,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>28</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>28</Offset>
 		</Version>
@@ -3388,6 +3682,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x3F0220</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x470220</Offset>
 		</Version>
@@ -3397,6 +3694,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H3_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x274</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x274</Offset>
 		</Version>
@@ -3406,6 +3706,26 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="PreserveLocation[]">
 		<Name>H3_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2448.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>8</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x400E38</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x405030</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x400E2C</Offset>
+					<Length>8</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>
 				<PreserveLocation>
