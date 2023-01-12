@@ -81,8 +81,23 @@ namespace HCM3.Services
                         if (entry.Value != null && entry.Value != "")
                         {
                             foreach (XElement ver in entry.Elements().Where(x => x.Name == "Entry"))
-                            { 
-                            this.ObsoleteHCMVersions.Add(ver.Value);
+                            {
+                                this.ObsoleteHCMVersions.Add(ver.Value);
+                            }
+                        }
+                    }
+                    else if (entry.Name == "DisableOverlayOptionEnabled")
+                    {
+                       
+                        if (entry.Value != null && entry.Value != "")
+                        {
+                            //If parsing fails, will default to false
+                            Boolean.TryParse(entry.Value, out bool val);
+                            Properties.Settings.Default.DisableOverlayOptionEnabled = val;
+
+                            if (!val)
+                            {
+                                Properties.Settings.Default.DisableOverlay = false;
                             }
                         }
                     }

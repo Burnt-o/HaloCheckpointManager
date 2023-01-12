@@ -4,6 +4,8 @@
 	<ObsoleteHCMVersions>
 		<Entry>1.9.9</Entry>
 	</ObsoleteHCMVersions>
+
+	<DisableOverlayOptionEnabled>true</DisableOverlayOptionEnabled>
 	
 	<HighestSupportedVersion>1.3073.0.0</HighestSupportedVersion>
 

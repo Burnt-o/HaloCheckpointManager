@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
@@ -36,7 +36,7 @@
                 <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
             <Label Content="HCM Settings" Grid.Column="1" Grid.Row="0" FontWeight="Bold"/>
-            <CheckBox Grid.Row="1" Grid.Column="1" Content="Disable Overlay (will break some functions)" IsChecked="{Binding Path=DisableOverlay, Mode=TwoWay}"/>
+            <CheckBox Grid.Row="1" Grid.Column="1" Content="Disable Overlay (will break some functions)" IsChecked="{Binding Path=DisableOverlay, Mode=TwoWay}" Visibility="{Binding Path=DisableOverlayOptionEnabled}"/>
             <Label Content="UI" Grid.Column="1" Grid.Row="2" FontWeight="Bold"/>
             <CheckBox Grid.Row="3" Grid.Column="1" Content="Dark Mode (not implemented yet)" IsChecked="{Binding Path=DarkMode, Mode=TwoWay}" IsEnabled="False" />
 

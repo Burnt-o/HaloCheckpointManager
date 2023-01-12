@@ -88,5 +88,13 @@ namespace HCM3.ViewModels
             }
         }
 
+        public Visibility DisableOverlayOptionEnabled
+        {
+            get 
+            { 
+                return Properties.Settings.Default.DisableOverlayOptionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
     }
 }
