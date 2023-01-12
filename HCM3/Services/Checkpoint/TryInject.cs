@@ -101,7 +101,7 @@ namespace HCM3.Services
                 }
 
 
-                if (levelString != null && levelString != this.HaloMemoryService.HaloState.CurrentLevelCode)
+                if (levelString != null && this.HaloMemoryService.HaloState.CurrentLevelCode != null && levelString.Substring(0,3) != this.HaloMemoryService.HaloState.CurrentLevelCode.Substring(0, 3))
                 {
                     string message = "It appears the checkpoint you're injecting is not on the same level as the current in-game level. This is very likely to cause the game to crash. Proceed anyway?\nCheckpoint level: " + levelString + "\nCurrent level: " + this.HaloMemoryService.HaloState.CurrentLevelCode;
                     Trace.WriteLine(message);
