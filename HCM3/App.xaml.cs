@@ -118,7 +118,7 @@ namespace HCM3
                 System.Windows.MessageBox.Show("Bad HCM version, shutting down", "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
             }
-            else if (this.CurrentHCMVersion != dataPointersService.LatestHCMVersion)
+            else if (HCM3.Properties.Settings.Default.CheckForUpdates && this.CurrentHCMVersion != dataPointersService.LatestHCMVersion)
             {
                 //Tell the user a new HCM version exists and ask them if they would like to download it (send them to github release page)
                 if (!(MessageBox.Show("A newer version of HCM exists, probably with bugfixes or new features.\nWould you like to go to the HCM releases page now?", "Download HCM update?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))
@@ -131,6 +131,23 @@ namespace HCM3
                     });
                 }
                 
+            }
+
+            if (HCM3.Properties.Settings.Default.HCMEverRunBefore == false)
+            {
+                HCM3.Properties.Settings.Default.HCMEverRunBefore = true;
+                if (HCM3.Properties.Settings.Default.DisableOverlayOptionEnabled)
+                {
+                    MessageBox.Show("Looks like this is your first time running HaloCheckpointManager! \n"
+                        + "HCM uses a DirectX overlay to display \nimportant information to the user. \n"
+                        + "For most users this works fine, but for some \npeople this can cause MCC to crash 100% of the time. \n"
+                        + "So while I'm working on a fix for that, \nyou should know there is a setting to disable the overlay. \n"
+                        + "Disabling the overlay will break some functionality of HCM though, so it is recommended you leave it enabled. \n"
+                        + "If you find MCC crashing constantly when using HCM, head to the Settings tab and try disabling the overlay!"
+                        , "HCM: DirectX Overlay Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+               
+
             }
 
             // Tell HaloMemory to try to attach to MCC, both steam and winstore versions

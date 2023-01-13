@@ -39,6 +39,12 @@ namespace HCM3.ViewModels
             set { Properties.Settings.Default.AutoName = value; }
         }
 
+        public bool CheckForUpdates
+        {
+            get { return Properties.Settings.Default.CheckForUpdates; }
+            set { Properties.Settings.Default.CheckForUpdates = value; }
+        }
+
         public bool AutoRevert
         {
             get { return Properties.Settings.Default.AutoRevert; }
