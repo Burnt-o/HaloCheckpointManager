@@ -61,6 +61,9 @@
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>HR_BRP</Name>
+		<Version Version="1.2448.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, BlindSkull</ListString>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, BlindSkull</ListString>
 		</Version>
@@ -4880,7 +4883,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_LevelCode</Name>
-
+		<Version Version="1.2448.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2868777</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2907107</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo1.dll</Module>
 			<Offsets>
@@ -4891,6 +4905,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ModuleSteam</Name>
+		<Version Version="1.2448.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3A24FF8</Offset>
+				<Offset>0xC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -4910,14 +4932,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ModuleWinStore</Name>
-		<Version Version="1.2645.0.0">
-			<Module>main</Module>
-			<Offsets>
-				<Offset>0x03A23830</Offset>
-				<Offset>0xC8</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
+
 		<Version Version="1.3073.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -4933,6 +4948,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_CurrentTickCount</Name>
+				<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01435DD8</Offset>
+				<Offset>-0x5824</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -4948,6 +4970,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_PrintMessageText</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01821E40</Offset>
+				<Offset>0x420</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -4965,6 +4994,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_CPMessageCall</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x35C58</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -4980,6 +5015,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CPMessageCallLength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>5</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>5</Offset>
 		</Version>
@@ -4989,6 +5027,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_PrintMessageTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01821E40</Offset>
+				<Offset>0x39C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5006,6 +5051,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer[]">
 		<Name>HR_PrintMessageFlags</Name>
+		<Version Version="1.2448.0.0">
+			<Array>
+				<Element>
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x01821E40</Offset>
+						<Offset>0x38C</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>
 				<Element>
@@ -5031,6 +5087,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="byte[]">
 		<Name>HR_PrintMessageFlagValues</Name>
+		<Version Version="1.2448.0.0">
+			<Array>1</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>1</Array>
 		</Version>
@@ -5042,6 +5101,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--Trainer stuff-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ForceCheckpoint</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x246D9EE</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5057,6 +5122,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ForceRevert</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x246D9EB</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5073,6 +5144,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--try scan nw "48 c1 e1 04 48 03 c8 40 88 71 08", movsxd above it-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_DoubleRevertFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x232A69C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5088,6 +5165,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_NaturalCheckpointCode</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x15A012</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5107,9 +5190,48 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	playerVehidatum: nf start scan E2F20083 take 1st result. accessed by 3, mov, mov, cmp
 	invuln: try scan nw "4d 8b c5 8b ce 48 89 44 24 20". it's the xor below.
 		or nw "c6 ** 85 00 00 00 02 8b", will be above.
+		skip damage 0x26E ahead (movss)
 	-->
 	<Entry Type="DetourInfoObject">
 		<Name>HR_Invuln_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x4D446F</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x45, 0x33, 0xDB, 0x44, 0x38, 0x5C, 0x24, 0x44</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp esi, eax; pop rax; je 1Fh; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 10h; xor r11d, r11d; cmp byte ptr [rsp+44h], r11b; jmp $returnControl; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0xA7C930</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x9D47DC</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x4D46DD</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>haloreach.dll</Module>
@@ -5193,6 +5315,30 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="DetourInfoObject">
 		<Name>HR_PlayerData_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x469731</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC7, 0x48, 0x8B, 0x6C, 0x24, 0x48 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp esi, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rdi; mov rbp, [rsp+48h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x9D47DC</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>haloreach.dll</Module>
@@ -5245,6 +5391,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Xpos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1C0</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1C0</Offset>
 		</Version>
@@ -5254,6 +5403,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Ypos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1C4</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1C4</Offset>
 		</Version>
@@ -5263,6 +5415,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Zpos</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1C8</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1C8</Offset>
 		</Version>
@@ -5272,6 +5427,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Xvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x230</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x230</Offset>
 		</Version>
@@ -5281,6 +5439,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Yvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x234</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x234</Offset>
 		</Version>
@@ -5290,6 +5451,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_PlayerData_Zvel</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x238</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x238</Offset>
 		</Version>
@@ -5301,6 +5465,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--nf start scan float 5.615067959, first 7ff3 result-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ViewHori</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01435DD8</Offset>
+				<Offset>0x294</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5318,6 +5489,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ViewVert</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01435DD8</Offset>
+				<Offset>0x298</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5341,6 +5519,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_SkullBlindFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025C0820</Offset>
+				<Offset>0x1F115</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5358,6 +5543,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_SkullBlindBit</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>2</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>2</Offset>
 		</Version>
@@ -5372,6 +5560,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<!--scan nw "48 85 c9 0f b6 db"-->
 	<Entry Type="PatchInfo">
 		<Name>HR_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x22A57</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>haloreach.dll</Module>
@@ -5397,6 +5595,21 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>HR_InjectRequirements</Name>
+		<Version Version="1.2448.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
 		<Version Version="1.2645.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
@@ -5431,6 +5644,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<Entry Type="ReadWrite.Pointer">
 
 		<Name>HR_CheckpointLocation1</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x0260CB40</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5448,6 +5668,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_CheckpointLocation2</Name>
+		<Version Version="1.2448.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x0260CB40</Offset>
+				<Offset>-0xA10000</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -5466,6 +5693,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="int">
 		<Name>HR_CheckpointData_SHAoffset</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1F320</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1F320</Offset>
 		</Version>
@@ -5475,6 +5705,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_SHAlength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>20</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>20</Offset>
 		</Version>
@@ -5484,6 +5717,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointLength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0xA10000</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0xA60000</Offset>
 		</Version>
@@ -5493,6 +5729,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1017B</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1017B</Offset>
 		</Version>
@@ -5502,6 +5741,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x10FD54</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10FD54</Offset>
 		</Version>
@@ -5511,6 +5753,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x10304</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x10304</Offset>
 		</Version>
@@ -5520,6 +5765,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="PreserveLocation[]">
 		<Name>HR_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2448.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x595284</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x58FD00</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>
 				<PreserveLocation>
