@@ -73,6 +73,9 @@
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
 		<Name>H4_BRP</Name>
+		<Version Version="1.2448.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Invulnerability, Speedhack, BlockNaturalCPs</ListString>
 		</Version>
@@ -5818,6 +5821,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ModuleSteam</Name>
+		<Version Version="1.2448.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3A24FF8</Offset>
+				<Offset>0x68</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -5857,6 +5868,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--Print Message stuff-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_CurrentTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xFB32E8</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -5872,6 +5889,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_PrintMessageText</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2D7B500</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -5887,6 +5910,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_CPMessageCall</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x66E73</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -5902,6 +5931,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CPMessageCallLength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>5</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>5</Offset>
 		</Version>
@@ -5911,6 +5943,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_PrintMessageTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2D7B4F8</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -5926,6 +5964,58 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer[]">
 		<Name>H4_PrintMessageFlags</Name>
+		<Version Version="1.2448.0.0">
+			<Array>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4E8</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4E9</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4EA</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4EB</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4EC</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4ED</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4EE</Offset>
+					</Offsets>
+				</Element>
+				<Element>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x2D7B4EF</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>
 				<Element>
@@ -6033,6 +6123,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="byte[]">
 		<Name>H4_PrintMessageFlagValues</Name>
+		<Version Version="1.2448.0.0">
+			<Array>0,0,0,0,0,0,0,0</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>0,0,0,0,0,0,0,0</Array>
 		</Version>
@@ -6044,6 +6137,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--Trainer stuff-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ForceCheckpoint</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x25BB67F</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6065,6 +6164,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_ForceRevert</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x25BB67B</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6086,6 +6191,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_DoubleRevertFlag</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2441C6c</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6107,6 +6218,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_NaturalCheckpointCode</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x1810B2</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6124,9 +6241,48 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--detour; scan nw "45 33 d2 44 38 54 24 48", xor cmp je
 	playerDatum: E2C20053 shutdown leg (using 4th result, accessed by mov [rdx+rax*4+00e27a5c], esi)
 	playerVehiDatum:  E2C20053, E3000077 when peli (accessed by 2 movs and a cmp)
+	skipDamage: 0x389 ahead (mov r14d, 01)
 	-->
 	<Entry Type="DetourInfoObject">
 		<Name>H4_Invuln_DetourInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x64725B</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x45, 0x33, 0xD2, 0x44, 0x38, 0x54, 0x24, 0x48</OriginalCodeBytes>
+			<SizeToAlloc>30</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerVehiDatum]; cmp esi, eax; pop rax; je 1Fh; push rax; mov eax,[@playerDatum]; cmp esi, eax; pop rax; je 10h; xor r10d, r10d; cmp byte ptr [rsp+048h], r10b; jmp $returnControl; xor r10d, r10d; jmp $skipDamage </DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0xE2698C</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>@playerVehiDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0xD37E24</Offset>
+					</Offsets>
+				</Pointer>
+				<Pointer>
+					<Symbol>$skipDamage</Symbol>
+					<Module>halo4.dll</Module>
+					<Offsets>
+						<Offset>0x6475E4</Offset>
+					</Offsets>
+				</Pointer>
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo4.dll</Module>
@@ -6211,6 +6367,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--RE: goto "bcrypt.BCryptDestroyHash", check what calls into this. Somewhere below this call will be a test that tests it-->
 	<Entry Type="PatchInfo">
 		<Name>H4_ChecksumFix_PatchInfo</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo4.dll</Module>
+				<Offsets>
+					<Offset>0x54E9B</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xED</PatchedCodeBytes>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<OriginalCodeLocation>
 				<Module>halo4.dll</Module>
@@ -6245,6 +6411,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	
 	<Entry Type="Dictionary&lt;string, bool&gt;">
 		<Name>H4_InjectRequirements</Name>
+		<Version Version="1.2448.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
@@ -6286,6 +6464,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<Entry Type="ReadWrite.Pointer">
 
 		<Name>H4_CheckpointLocation1</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x0275C0F0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6310,6 +6495,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H4_CheckpointLocation2</Name>
+		<Version Version="1.2448.0.0">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x0275C0F0</Offset>
+				<Offset>0x9D0000</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6334,6 +6526,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointLength</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x9CD000</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0xA33000</Offset>
 		</Version>
@@ -6346,6 +6541,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1CD77</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1CD77</Offset>
 		</Version>
@@ -6358,6 +6556,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x2E424</Offset>
 		</Version>
@@ -6370,6 +6571,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="int">
 		<Name>H4_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1CF08</Offset>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x1CF08</Offset>
 		</Version>
@@ -6382,6 +6586,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	</Entry>
 	<Entry Type="PreserveLocation[]">
 		<Name>H4_CheckpointData_PreserveLocations</Name>
+		<Version Version="1.2448.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x4F6EF8</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
 		<Version Version="1.2645.0.0">
 			<Array>
 				<PreserveLocation>
