@@ -34,88 +34,104 @@ namespace HCM3.Services.Trainer
 
         private bool errorShown = false;
 
+        private object lockApplyPatches = new object();
         public void ApplyPatches(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
         {
-
-            int loadedGame = e.NewHaloState;
-            string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
-
-            
-
-            foreach (KeyValuePair<string, PatchStateObject> kvp in listOfPatches)
+            lock (lockApplyPatches)
             {
-                try
+                int loadedGame = e.NewHaloState;
+                string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
+
+
+
+                foreach (KeyValuePair<string, PatchStateObject> kvp in listOfPatches)
                 {
-                    if (gameAs2Letters == kvp.Value.Game)
+                    try
                     {
-                        if (kvp.Value.IsDetour)
+                        if (gameAs2Letters == kvp.Value.Game)
                         {
-                            DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(kvp.Value.PointerName);
-                            bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
-
-
-                            if (!originalCodeIsOriginal)
+                            Trace.WriteLine("Found patch (" + kvp.Key + ") that we want to make sure is applied.");
+                            if (kvp.Value.IsDetour)
                             {
-                                this.PersistentCheatService.DetourRemove(detourInfoObject, null);
+                               
+                                DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(kvp.Value.PointerName);
+                                bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
+
+
+                                if (!originalCodeIsOriginal)
+                                {
+                                    IntPtr? handleToPreviousDetour = null;
+                                    if (kvp.Value.Applied)
+                                    {
+                                        handleToPreviousDetour = kvp.Value.PatchHandle;
+                                    }
+                                    this.PersistentCheatService.DetourRemove(detourInfoObject, handleToPreviousDetour);
+                                }
+
+
+                                IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
+                                kvp.Value.PatchHandle = detourHandle;
+                                kvp.Value.Applied = true;
+                            }
+                            else //simple patch
+                            {
+
+                                if (!IsPatchApplied(kvp.Key, false))
+                                {
+                                    Trace.WriteLine("Patch (" + kvp.Key + ") wasn't applied so applying now.");
+                                    ApplyPatch(kvp.Key, false);
+                                }
+                                kvp.Value.Applied = true;
                             }
 
-
-                            IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
-                            kvp.Value.PatchHandle = detourHandle;
-                            kvp.Value.Applied = true;
                         }
-                        else //simple patch
-                        {
-                          
-                            if (IsPatchApplied(kvp.Key, false)) RemovePatch(kvp.Key, false);
-
-                            ApplyPatch(kvp.Key, false);
-                            kvp.Value.Applied = true;
-                        }
-
                     }
-                }
-                catch (Exception ex)
-                { 
-                Trace.WriteLine("Error applying patch (" + kvp.Key + "): " + ex.ToString());
-                    if (!errorShown)
+                    catch (Exception ex)
                     {
-                        errorShown = true;
-                        System.Windows.MessageBox.Show("An error occured while applying a HCM patch (" + kvp.Key + "), this may cause some cheat functions to not work correctly. Error: \n\n" + ex.ToString());
+                        Trace.WriteLine("Error applying patch (" + kvp.Key + "): " + ex.ToString());
+                        if (!errorShown)
+                        {
+                            errorShown = true;
+                            System.Windows.MessageBox.Show("An error occured while applying a HCM patch (" + kvp.Key + "), this may cause some cheat functions to not work correctly. Error: \n\n" + ex.ToString());
+                        }
+
                     }
-                    
                 }
             }
+ 
         }
 
         public Dictionary<string, PatchStateObject> listOfPatches { get; set; }
 
 
+        private object lockApplyPatch = new object();
         public void ApplyPatch(string patchName, bool isDetour)
         {
-            PatchStateObject ourPatch = listOfPatches[patchName];
-            if (isDetour)
+            lock (lockApplyPatch)
             {
-                
-                DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
-                bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
-
-
-                if (!originalCodeIsOriginal)
+                PatchStateObject ourPatch = listOfPatches[patchName];
+                if (isDetour)
                 {
-                    this.PersistentCheatService.DetourRemove(detourInfoObject, null);
+
+                    DetourInfoObject detourInfoObject = (DetourInfoObject)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                    bool originalCodeIsOriginal = this.PersistentCheatService.DetourCheckOG(detourInfoObject);
+
+
+                    if (!originalCodeIsOriginal)
+                    {
+                        this.PersistentCheatService.DetourRemove(detourInfoObject, null);
+                    }
+
+                    IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
+                    ourPatch.PatchHandle = detourHandle;
+                    ourPatch.Applied = true;
                 }
-
-                IntPtr detourHandle = this.PersistentCheatService.DetourApply(detourInfoObject);
-                ourPatch.PatchHandle = detourHandle;
-                ourPatch.Applied = true;
+                else //simple patch
+                {
+                    PatchInfo patchInfo = (PatchInfo)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
+                    this.HaloMemoryService.ReadWrite.WriteBytes(patchInfo.OriginalCodeLocation, patchInfo.PatchedCodeBytes, true);
+                }
             }
-            else //simple patch
-            {
-                PatchInfo patchInfo = (PatchInfo)this.CommonServices.GetRequiredPointers(ourPatch.PointerName);
-                this.HaloMemoryService.ReadWrite.WriteBytes(patchInfo.OriginalCodeLocation, patchInfo.PatchedCodeBytes, true);
-            }
-
         }
 
         public bool IsPatchApplied(string patchName, bool isDetour)
