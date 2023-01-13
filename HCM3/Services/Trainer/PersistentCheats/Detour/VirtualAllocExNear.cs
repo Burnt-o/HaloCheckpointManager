@@ -14,15 +14,17 @@ namespace HCM3.Services.Trainer
         public IntPtr VirtualAllocExNear(IntPtr processHandle, int size, IntPtr location)
         {
             Int64 incrementor = 1000;
-            Trace.WriteLine("LOCATION:::::::: " + location.ToString("X"));
+            Trace.WriteLine("Location of original code: " + location.ToString("X"));
             //search within 2gb (2gb is actual max for 32bit jump)
 
             //Default to min/max values in case of overflow when adding +/- 2gb.
             IntPtr min = IntPtr.MinValue;
             IntPtr max = IntPtr.MaxValue;
+
             try
             {
                 min = IntPtr.Subtract(location, 0x7000000);
+                Trace.WriteLine("minimum bound for allocation: " + min.ToString("X"));
             }
             catch (Exception ex)
             {
@@ -32,6 +34,7 @@ namespace HCM3.Services.Trainer
             try
             {
                 max = IntPtr.Add(location, 0x7000000);
+                Trace.WriteLine("maximum bound for allocation: " + max.ToString("X"));
             }
             catch (Exception ex)
             {
@@ -86,14 +89,15 @@ namespace HCM3.Services.Trainer
             Trace.WriteLine("let's try going backward");
             incrementor = 1000;
             // now go backwards
-            for (IntPtr Addr = location; Addr.ToInt64() < max.ToInt64(); Addr = IntPtrSubtractLong(Addr, incrementor))
+            for (IntPtr Addr = location; Addr.ToInt64() > min.ToInt64(); Addr = IntPtrSubtractLong(Addr, incrementor))
             {
                 if (PInvokes.VirtualQueryEx(processHandle, Addr, out mbi, mbiLength) == 0)
                 {
                     //VirtualQuery failed
                     int lastError = Marshal.GetLastWin32Error();
-                    Trace.WriteLine("Virtual query failed: " + lastError);
-                    throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError);
+                    Trace.WriteLine("Virtual query failed going backwards: " + lastError);
+                    incrementor = (Int64)mbi.RegionSize + 1000;
+                    //throw new Exception("Virtual Alloc Ex Near failed; virtualQuery failed, er: " + lastError);
 
                 }
 
@@ -128,7 +132,7 @@ namespace HCM3.Services.Trainer
             }
 
 
-            throw new Exception("Failed to find free memory page near target location");
+            throw new Exception("Failed to find free memory page near target location. This problem might be at least temporarily fixed if you restart MCC.");
 
 
             // This function should fix an overflow error we used to have with IntPtr.Add

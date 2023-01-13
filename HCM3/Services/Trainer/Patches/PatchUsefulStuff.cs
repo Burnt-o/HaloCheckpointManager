@@ -32,6 +32,7 @@ namespace HCM3.Services.Trainer
 
         }
 
+        private bool errorShown = false;
 
         public void ApplyPatches(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
         {
@@ -76,7 +77,13 @@ namespace HCM3.Services.Trainer
                 }
                 catch (Exception ex)
                 { 
-                Trace.WriteLine("Error applying patch: " + ex.ToString());
+                Trace.WriteLine("Error applying patch (" + kvp.Key + "): " + ex.ToString());
+                    if (!errorShown)
+                    {
+                        errorShown = true;
+                        System.Windows.MessageBox.Show("An error occured while applying a HCM patch (" + kvp.Key + "), this may cause some cheat functions to not work correctly. Error: \n\n" + ex.ToString());
+                    }
+                    
                 }
             }
         }

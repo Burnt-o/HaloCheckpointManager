@@ -61,7 +61,7 @@ namespace HCM3.Services.Trainer
                 {
                     string resolvedLine = line;
                     resolvedLine = resolvedLine.Replace("ptr", null); //keystone needed "ptr" mnemonic, reloaded does not. 
-
+                    Trace.WriteLine("Assembling line (pre): " + resolvedLine);
                     // Resolve absolute symbols
                     foreach (KeyValuePair<string, IntPtr> entry in resolveSymbolsAbsolute)
                     {
@@ -82,7 +82,15 @@ namespace HCM3.Services.Trainer
                     {
                         if (line.Contains(entry.Key))
                         {
-                            string resolved = "0" + ((ulong)entry.Value.ToInt64() - rip).ToString("X") + "h";
+                            string signstring = "";
+                            long reljump = (entry.Value.ToInt64() - (long)rip);
+                            if (reljump < 0)
+                            {
+                                Trace.WriteLine("Relative jump was negative: " + reljump.ToString("X"));
+                                reljump = (long)rip - entry.Value.ToInt64();
+                                signstring = "-";
+                            } 
+                            string resolved = signstring + "0" + reljump.ToString("X") + "h";
                             resolvedLine = resolvedLine.Replace(entry.Key, resolved);
                             NeedToPadTo6Bytes = true;
                             break;
@@ -91,9 +99,19 @@ namespace HCM3.Services.Trainer
 
                     Trace.WriteLine("Assembling line: " + resolvedLine);
                     // Assemble using keystone into bytes
-                    
-                    byte[] resolvedBytes = asm.Assemble(new string[] { "use64", resolvedLine });
-                    int bytesAssembled = resolvedBytes.Length;
+                    byte[] resolvedBytes;
+
+                    try
+                    {
+                        resolvedBytes = asm.Assemble(new string[] { "use64", resolvedLine });
+                    }
+                    catch (Reloaded.Assembler.Definitions.FasmException ex)
+                    {
+                        string err = "Error in FASM. Assembler result: " + ex.Result + ", line sent to assembler: " + ex.Mnemonics[1]  + ", error itself: " + ex.ErrorCode;
+                        Trace.WriteLine(err);
+                        throw new Exception (err);
+                    }
+                        int bytesAssembled = resolvedBytes.Length;
 
                     //for (int i = 0; i < bytesAssembled; i++)
                     //{

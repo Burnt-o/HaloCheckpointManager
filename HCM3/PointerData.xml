@@ -1792,6 +1792,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<SizeToAlloc>500</SizeToAlloc>
 			<DetourCodeASM>mov rsi, [rsp+38h]; add rsp, 20h; push rax;push rcx;push rdi;push r10;push r11;mov r10, @detourHandle; add r10, 250h; mov rcx, @playerDatum; mov ecx, [rcx]; cmp esi, ecx; jne 1Ah;mov r11, [rbp + 14h];cmp r11d, 0FFFFFFFFh; push rax;cmovne eax, r11d;cmove eax, ecx;mov [r10 + 00B0h], eax;pop rax;push rax;mov eax, [r10 + 00B0h];test eax, eax;pop rax;je 70h;cmp dword [r10 + 00B0h], 00000000; je 6Eh;cmp [r10 + 00B0h], esi;jne 65h;mov rcx, @detourHandle; add rcx, 250h; mov edi, [rdx + 0h]; mov [rcx], edi; mov edi, [rdx + 4h]; mov [rcx + 4h], edi; mov edi, [rdx + 8h]; mov [rcx + 8h], edi; mov edi, [rdx + 50h]; mov [rcx + 0Ch], edi; mov edi, [rdx + 54h]; mov [rcx + 10h], edi; mov edi, [rdx + 58h]; mov [rcx + 14h], edi; mov edi, [rbp + 0ECh]; mov [rcx + 18h], edi; mov edi, [rbp + 0F0h]; mov [rcx + 1Ch], edi; mov rax, @viewX; mov edi, [rax];  mov [rcx + 20h], edi; mov rax, @viewY; mov edi, [rax]; mov [rcx + 24h], edi; pop r11; pop r10; pop rdi; pop rcx; pop rax; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+
 			<SymbolPointers>
 				<Pointer>
 					<Symbol>@playerDatum</Symbol>
@@ -1873,7 +1874,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</OriginalCodeLocation>
 				<OriginalCodeBytes>0xFF, 0xC0, 0x3B, 0x44, 0x24, 0x40</OriginalCodeBytes>
 				<SizeToAlloc>30</SizeToAlloc>
-				<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r11d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
+				<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r12d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
 				<HookCodeASM>jmp $detourHandle</HookCodeASM>
 				<SymbolPointers>
 					<Pointer>
@@ -1903,7 +1904,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0xFF, 0xC0, 0x3B, 0x44, 0x24, 0x40</OriginalCodeBytes>
 			<SizeToAlloc>30</SizeToAlloc>
-			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r11d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r12d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
 			<HookCodeASM>jmp $detourHandle</HookCodeASM>
 			<SymbolPointers>
 				<Pointer>
@@ -1933,7 +1934,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</OriginalCodeLocation>
 				<OriginalCodeBytes>0xFF, 0xC0, 0x3B, 0x44, 0x24, 0x40</OriginalCodeBytes>
 				<SizeToAlloc>30</SizeToAlloc>
-				<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r11d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
+				<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp r12d, eax; pop rax; jne 07h; jmp $skipDamage; inc eax; cmp eax,[rsp+40h]; jmp $returnControl</DetourCodeASM>
 				<HookCodeASM>jmp $detourHandle</HookCodeASM>
 				<SymbolPointers>
 					<Pointer>
