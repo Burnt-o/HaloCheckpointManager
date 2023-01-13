@@ -5,9 +5,11 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>HCM.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HCM.ico" />
     <None Remove="Images\05b_deltatowers_anni.png" />
     <None Remove="Images\arrow.png" />
     <None Remove="Images\arrows-switch.png" />
@@ -530,6 +532,14 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <NativeLibs Remove="HCM.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HCM.ico" />
   </ItemGroup>
 
 </Project>

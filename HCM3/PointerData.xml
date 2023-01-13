@@ -1380,7 +1380,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x2F4</Offset>
 			</Version>
 			<Version Version="1.3073.0.0">
-				<Offset>0x3DB0</Offset>
+				<Offset>0x3CD4</Offset>
 			</Version>
 		</Entry>
 		<Entry Type="int">
