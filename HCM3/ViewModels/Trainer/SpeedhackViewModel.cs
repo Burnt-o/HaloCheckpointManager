@@ -9,6 +9,7 @@ using HCM3.ViewModels.Commands;
 using HCM3.Services.Trainer;
 using HCM3.Services;
 using XInputium.XInput;
+using System.Windows;
 
 namespace HCM3.ViewModels
 {
@@ -24,6 +25,16 @@ namespace HCM3.ViewModels
         public ICommand? ApplyCommand { get; init; }
 
         public PC_Speedhack PC_Speedhack { get; init; }
+
+        public bool CanFineTune 
+        { 
+            get
+            {
+                //User can only fine tune the speedhack if overlay is ENABLED.
+                return !Properties.Settings.Default.DisableOverlay;
+            }
+        
+        }
 
         public SpeedhackViewModel()
         {
@@ -67,7 +78,23 @@ namespace HCM3.ViewModels
 
             SetHotkeyText();
 
+            //when any setting changes, we need to let the UI know via OnPropertyChanged that CanFineTune might have changed.
+            Properties.Settings.Default.PropertyChanged += Default_PropertyChanged;
 
+
+        }
+
+        private void Default_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Properties.Settings.Default.DisableOverlay))
+            {
+                OnPropertyChanged(nameof(CanFineTune));
+            }
+            
+        }
+
+        public void TextBox_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
 
         }
 
