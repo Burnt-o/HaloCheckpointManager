@@ -339,3 +339,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /WpfApp3/offsets/1.2580.0.0.json
+/ConsoleApp1/ConsoleApp1.csproj
+/ConsoleApp1/Program.cs

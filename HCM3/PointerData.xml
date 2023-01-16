@@ -6414,7 +6414,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2448.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
-			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
 			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
 			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
@@ -6426,7 +6426,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
-			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
 			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
 			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
@@ -6438,7 +6438,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2969.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
-			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
 			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
 			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
@@ -6450,7 +6450,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
-			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
 			<DoubleRevertFlag>true</DoubleRevertFlag>
 			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
 			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
