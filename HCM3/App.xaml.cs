@@ -95,6 +95,7 @@ namespace HCM3
                 // If a check fails, tell the user why, then shutdown the application.
                 System.Windows.MessageBox.Show(errorMessage, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
+                return;
             }
 
             var dataPointersService = _serviceProvider.GetService<DataPointersService>();
@@ -108,6 +109,7 @@ namespace HCM3
             {
                 System.Windows.MessageBox.Show(ex.ToString(), "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
+                return;
             }
             if (pointerErrors != "")
             { System.Windows.MessageBox.Show("Some pointers failed to load. Yell at Burnt for making typos." + pointerErrors, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK); }
@@ -117,6 +119,7 @@ namespace HCM3
                 //Tell the user this version of HCM is deprecated and the new version must be downloaded
                 System.Windows.MessageBox.Show("Bad HCM version, shutting down", "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                 System.Windows.Application.Current.Shutdown();
+                return;
             }
             else if (HCM3.Properties.Settings.Default.CheckForUpdates && this.CurrentHCMVersion != dataPointersService.LatestHCMVersion)
             {
