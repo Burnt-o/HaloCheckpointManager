@@ -24,7 +24,7 @@
         <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2" Width="Auto"/>
 
 
-        <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="261" VerticalAlignment="Top"/>
+        <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="281" VerticalAlignment="Top"/>
 
 
         <uc:FolderExplorer Height="Auto" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Margin="1"/>

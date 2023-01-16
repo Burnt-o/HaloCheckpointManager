@@ -143,6 +143,10 @@
     <Border Height="Auto" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="WhiteSmoke" >
     
     <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
         <Grid.Resources>
             
             <HierarchicalDataTemplate DataType="{x:Type CheckpointModel:SaveFolder}"
@@ -151,8 +155,8 @@
             </HierarchicalDataTemplate>
 
         </Grid.Resources>
-
-            <TreeView Height="Auto" Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged"  ItemContainerStyle="{StaticResource TreeViewItemContainerStyle1}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.SelectDroppedItems="True">
+            <Label Grid.Row="0" Height="20" HorizontalAlignment="Center" Margin="0,3,0,0" Padding="0">Folder Explorer:</Label>
+            <TreeView Height="Auto" Grid.Row="1" Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged"  ItemContainerStyle="{StaticResource TreeViewItemContainerStyle1}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.SelectDroppedItems="True">
 
 
         </TreeView>
