@@ -37,8 +37,32 @@ namespace HCM3.Services.Trainer
                 (byte)1,
                 false);
 
-        
 
+            // If game is Halo 1, we'll also want to reset the DeathFlag and DeathTimer, to prevent getting automatically reverted again if you coreload while dead.
+            if (gameAs2Letters == "H1")
+            {
+                try
+                {
+                    ReadWrite.Pointer? RevertFlagPtr = (ReadWrite.Pointer?)this.CommonServices.GetRequiredPointers("H1_ForceRevert");
+                    IntPtr? RevertFlag = this.HaloMemoryService.ReadWrite.ResolvePointer(RevertFlagPtr);
+
+                    int deathFlagOffset = (int)this.CommonServices.GetRequiredPointers("H1_DeathFlagOffset");
+                    int deathTimerOffset = (int)this.CommonServices.GetRequiredPointers("H1_DeathTimerOffset");
+
+                    IntPtr deathFlag = IntPtr.Add(RevertFlag.Value, deathFlagOffset);
+                    IntPtr deathTimer = IntPtr.Add(RevertFlag.Value, deathTimerOffset);
+
+                    // Set both to 0
+                    this.HaloMemoryService.ReadWrite.WriteByte(deathFlag, (byte)0, false);
+                    this.HaloMemoryService.ReadWrite.WriteByte(deathTimer, (byte)0, false);
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Failed clearing auto-revert flags when core-loading, ex: " + ex.Message);
+                }
+               
+
+            }
 
 
         }
