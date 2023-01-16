@@ -36,6 +36,8 @@ No installation necessary, just extract the zip file somewhere that you have rea
    * And more (specific games have different features)
  * Support for multiple downpatched versions of MCC - Season 7 (2448), Season 8 (2645), and of course current patch.
 
+![What HCM looks like](https://github.com/Burnt-o/HaloCheckpointManager/blob/HCM2/HCM3/HCMdemo.png?raw=true)
+
 ---**Building and Contribution**---  
 In 2023 I rewrote HCM from the ground up, both to add a lot of extra features (like the old "Checkpoint Trainer" features), as well as to clean up the code, and as a learning experience. I still have a lot of code that I'd like to go back through and clean up a bit, but it's a significant improvement over the original HCM. 
 
