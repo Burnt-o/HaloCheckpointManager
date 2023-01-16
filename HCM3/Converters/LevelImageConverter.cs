@@ -27,7 +27,7 @@ namespace HCM3.Converters
             // For now we'll used the saved setting which should always be accurate.
             int game = HCM3.Properties.Settings.Default.LastSelectedTab;
             string gameID = Dictionaries.GameTo2LetterGameCode[game];
-            string imageModeSuffix = HCM3.Properties.Settings.Default.ImageMode;
+            string imageModeSuffix = HCM3.Properties.Settings.Default.ImageMode ? "anni" : "clas";
             string URL = $"Images/{gameID}/{valueString}_{imageModeSuffix}.png";
 
             return URL;

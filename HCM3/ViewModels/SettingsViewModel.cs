@@ -102,5 +102,11 @@ namespace HCM3.ViewModels
             }
         }
 
+        public bool ImageMode
+        {
+            get { return Properties.Settings.Default.ImageMode; }
+            set { Properties.Settings.Default.ImageMode = value; }
+        }
+
     }
 }

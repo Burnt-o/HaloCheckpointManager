@@ -50,21 +50,22 @@
                 </ImageBrush>
             </Border.Background>
         </Border>
-        <Border Grid.Row="1"  CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6">
+        <Border Grid.Row="1"  CornerRadius="8,8,0,0" Grid.ColumnSpan="3" Margin="6"  ToolTip="Level loading image - can switch between Anniversary and Classic icons in settings">
             <Border.Background>
-                <ImageBrush Stretch="Fill" ImageSource="{Binding SelectedCheckpoint.LevelName, Converter={StaticResource LevelImageConverter}}">
+                
+                <ImageBrush Stretch="Fill" ImageSource="{Binding SelectedCheckpoint.LevelName, Converter={StaticResource LevelImageConverter}}" >
                 </ImageBrush>
             </Border.Background>
         </Border>
 
         <Border Grid.Row="3" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="2" Background="{DynamicResource LightGray}" Margin="-5,2,10,4" CornerRadius="7" />
 
-        <TextBox Grid.Row="2" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding SelectedCheckpoint.CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0"  />
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Time:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Level:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Version:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Created:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" />
+        <TextBox Grid.Row="2" Grid.ColumnSpan="3" Margin="5,0,5,0" Text="{Binding SelectedCheckpoint.CheckpointName}"  TextAlignment="Justify" VerticalContentAlignment="Top" Height="20" Padding="0" IsReadOnly="True" ToolTip="The name of this checkpoint file" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Difficulty:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0"  ToolTip="The difficulty the game was running at in this checkpoint"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Time:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" ToolTip="The in-game-time at the moment the checkpoint was made"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Level:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" ToolTip="The name of the level this checkpoint was made on"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Version:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" ToolTip="The version number of Halo: MCC that this checkpoint was made on" />
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Created:"  TextAlignment="Justify"  Height="20" Padding="8,0,0,0" ToolTip="The date and time that this checkpoint was dumped"/>
 
 
 
@@ -82,10 +83,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Delete" Padding="0,-2,0,0" Width="50"  Command="{Binding DeleteCheckpoint}"/>
-            <Button Grid.Column="1" Content="Explorer" Padding="0,-2,0,0" Width="50"   Command="{Binding OpenInExplorer}"/>
+            <Button Grid.Column="0" Content="Delete" Padding="0,-2,0,0" Width="50"  Command="{Binding DeleteCheckpoint}" ToolTip="Delete the selected checkpoint"/>
+            <Button Grid.Column="1" Content="Explorer" Padding="0,-2,0,0" Width="50"   Command="{Binding OpenInExplorer}" ToolTip="Open this checkpoints folder in Windows Explorer"/>
 
-            <Button Grid.Column="2" Content="Rename" Padding="0,-2,0,0" Width="50" Command="{Binding RenameCheckpoint}"/>
+            <Button Grid.Column="2" Content="Rename" Padding="0,-2,0,0" Width="50" Command="{Binding RenameCheckpoint}" ToolTip="Rename the selected checkpoint"/>
             
         </Grid>
     </Grid>

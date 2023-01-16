@@ -75,33 +75,36 @@
 
             <ListView.View >
                 <GridView >
-                    <GridViewColumn Header="Level" b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}"  >
-
+                    <GridViewColumn b:GridColumn.MinWidth="35" Width="35" DisplayMemberBinding="{Binding LevelName}" >
+                        <GridViewColumn.Header  >
+                            <GridViewColumnHeader ToolTip="The name of the level this checkpoint was made on" Command="{Binding Path=SortCheckpoint}">Level</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                        
 
                     </GridViewColumn>
                     <GridViewColumn b:GridColumn.MinWidth="55" Width="90" DisplayMemberBinding="{Binding CheckpointName}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Name</GridViewColumnHeader>
+                        <GridViewColumn.Header >
+                            <GridViewColumnHeader ToolTip="The name of the checkpoint" Command="{Binding Path=SortCheckpoint}">Name</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn b:GridColumn.MinWidth="30" Width="40" DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource DifficultyConverter}}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Diff</GridViewColumnHeader>
+                        <GridViewColumn.Header >
+                            <GridViewColumnHeader ToolTip="The difficulty the checkpoint was created on" Command="{Binding Path=SortCheckpoint}">Diff</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn b:GridColumn.MinWidth="35" Width="45" DisplayMemberBinding="{Binding GameTickCount, Converter={StaticResource IGTConverter}}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">IGT</GridViewColumnHeader>
+                        <GridViewColumn.Header >
+                            <GridViewColumnHeader ToolTip="The in-game-time at the moment the checkpoint was made" Command="{Binding Path=SortCheckpoint}">IGT</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn b:GridColumn.MinWidth="35" Width="65" DisplayMemberBinding="{Binding GameVersion}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Version</GridViewColumnHeader>
+                        <GridViewColumn.Header >
+                            <GridViewColumnHeader ToolTip="The version number of Halo: MCC that this checkpoint was made on" Command="{Binding Path=SortCheckpoint}">Version</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn b:GridColumn.MinWidth="50" Width="145" DisplayMemberBinding="{Binding CreatedOn}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Command="{Binding Path=SortCheckpoint}">Created</GridViewColumnHeader>
+                        <GridViewColumn.Header >
+                            <GridViewColumnHeader ToolTip="The date and time that this checkpoint was dumped" Command="{Binding Path=SortCheckpoint}">Created</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     

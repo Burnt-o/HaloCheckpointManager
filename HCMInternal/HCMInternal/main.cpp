@@ -265,7 +265,6 @@ extern "C" __declspec(dllexport) HRESULT __stdcall hkPresent(IDXGISwapChain* pSw
 	if (oPresent == NULL)
 	{
 		oPresent = (Present)kiero::getMethodsTable()[8];
-		std::cout << "\noPresent was null; restoring: " << oPresent;
 	}
 
 

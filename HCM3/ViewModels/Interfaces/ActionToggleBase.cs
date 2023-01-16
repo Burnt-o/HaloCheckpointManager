@@ -27,13 +27,20 @@ namespace HCM3.ViewModels.MVVM
             }
         }
 
-        private string _effectText;
+        private string _effectText = "";
         public string EffectText
         { 
         get => _effectText;
             set { _effectText = value; OnPropertyChanged(nameof(EffectText)); }
         }
 
+
+        private string? _toolTip = null;
+        public string? ToolTip
+        {
+            get => _toolTip;
+            set { _toolTip = value; OnPropertyChanged(nameof(ToolTip)); }
+        }
 
 
 

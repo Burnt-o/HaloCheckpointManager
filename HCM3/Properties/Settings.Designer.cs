@@ -37,10 +37,10 @@ namespace HCM3.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("clas")]
-        public string ImageMode {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ImageMode {
             get {
-                return ((string)(this["ImageMode"]));
+                return ((bool)(this["ImageMode"]));
             }
             set {
                 this["ImageMode"] = value;

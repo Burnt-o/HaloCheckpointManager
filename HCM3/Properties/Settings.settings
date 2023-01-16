@@ -5,8 +5,8 @@
     <Setting Name="LastSelectedTab" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="ImageMode" Type="System.String" Scope="User">
-      <Value Profile="(Default)">clas</Value>
+    <Setting Name="ImageMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="LastSelectedFolder" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
