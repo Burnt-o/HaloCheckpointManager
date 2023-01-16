@@ -310,6 +310,27 @@ namespace HCM3.ViewModels
             set { _openInExplorer = value; }
         }
 
+        private ICommand _renameFolder;
+        public ICommand RenameFolder
+        {
+            get { return _renameFolder ?? (_renameFolder = new RenameFolderCommand(this, CheckpointServices)); }
+            set { _renameFolder = value; }
+        }
+
+        private ICommand _deleteFolder;
+        public ICommand DeleteFolder
+        {
+            get { return _deleteFolder ?? (_deleteFolder = new DeleteFolderCommand(this, CheckpointServices)); }
+            set { _deleteFolder = value; }
+        }
+
+        private ICommand _newFolder;
+        public ICommand NewFolder
+        {
+            get { return _newFolder ?? (_newFolder = new NewFolderCommand(this, CheckpointServices)); }
+            set { _newFolder = value; }
+        }
+
 
 
 

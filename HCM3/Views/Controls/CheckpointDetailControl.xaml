@@ -82,10 +82,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Delete" Width="50"  Command="{Binding DeleteCheckpoint}"/>
-            <Button Grid.Column="1" Content="Explore" Width="50"   Command="{Binding OpenInExplorer}"/>
+            <Button Grid.Column="0" Content="Delete" Padding="0,-2,0,0" Width="50"  Command="{Binding DeleteCheckpoint}"/>
+            <Button Grid.Column="1" Content="Explorer" Padding="0,-2,0,0" Width="50"   Command="{Binding OpenInExplorer}"/>
 
-            <Button Grid.Column="2" Content="Rename" Width="50" Command="{Binding RenameCheckpoint}"/>
+            <Button Grid.Column="2" Content="Rename" Padding="0,-2,0,0" Width="50" Command="{Binding RenameCheckpoint}"/>
             
         </Grid>
     </Grid>
