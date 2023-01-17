@@ -75,6 +75,7 @@ namespace HCM3
             services.AddSingleton<PC_Medusa>();
             services.AddSingleton<PC_OneHitKill>();
             services.AddSingleton<PC_DisplayInfo>();
+            services.AddSingleton<PC_TheaterFriend>();
 
             services.AddSingleton<HotkeyManager>();
         }

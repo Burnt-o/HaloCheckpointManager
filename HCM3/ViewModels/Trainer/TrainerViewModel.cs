@@ -43,6 +43,7 @@ namespace HCM3.ViewModels
 
         public GenericToggleViewModel Button_ToggleSprintMeter { get; set; }
         public GenericToggleViewModel Button_ToggleOHK { get; set; }
+        public GenericToggleViewModel Button_ToggleTheaterFriend { get; set; }
 
         List<ActionToggleBase> listOfButtons { get; set; }
 
@@ -95,6 +96,7 @@ namespace HCM3.ViewModels
             this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);
             this.Button_ToggleSprintMeter = new GenericToggleViewModel("Sprint Meter", null, null);
             this.Button_ToggleOHK = new GenericToggleViewModel("One Hit Kill", null, null);
+            this.Button_ToggleTheaterFriend = new GenericToggleViewModel("Theater Friend", null, null);
         }
 
         private void HaloStateEvents_HALOSTATECHANGED_EVENT(object? sender, HaloStateEvents.HaloStateChangedEventArgs e)
@@ -254,6 +256,10 @@ new RelayCommand(o => { TrainerServices.FlipDoubleRevert(); TrainerServices.Forc
             this.Button_ToggleInfo = new DisplayInfoViewModel("Display Info", PersistentCheatManager.PC_DisplayInfo, hotkeyManager);
             this.Button_ToggleInfo.ToolTip = "Displays useful info about the current gamestate. Click the \"...\" to configure settings";
             listOfButtons.Add(this.Button_ToggleInfo);
+
+            this.Button_ToggleTheaterFriend = new GenericToggleViewModel("Theater Friend", PersistentCheatManager.PC_TheaterFriend, hotkeyManager);
+            this.Button_ToggleTheaterFriend.ToolTip = "Makes the camera more powerful in Theater, allowing it to travel out-of-bounds and through walls";
+            listOfButtons.Add(this.Button_ToggleTheaterFriend);
 
 
             this.Button_ToggleFlyHack = new GenericToggleViewModel("Fly Hack", null, null);

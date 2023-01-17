@@ -31,6 +31,7 @@ namespace HCM3.Services.Trainer
             Dictionary<string, object> requiredPointers = this.CommonServices.GetRequiredPointers(requiredPointerNames);
 
 
+
             //only bother printing the message if overlay is enabled
             if (!Properties.Settings.Default.DisableOverlay && !this.InternalServices.PrintTemporaryMessageInternal("Revert forced.")) throw new Exception("Error printing message");
 
@@ -38,6 +39,27 @@ namespace HCM3.Services.Trainer
             IntPtr? RevertFlag = this.HaloMemoryService.ReadWrite.ResolvePointer((ReadWrite.Pointer?)requiredPointers["ForceRevert"]).Value;
 
             if (RevertFlag == null) throw new Exception("Revert flag was null!");
+
+
+            //Next, a check for if the checkpoint data is null (happens in multiplayer - if a revert or inject is called when a checkpoint hasn't been made yet, the game will crash)
+            if (this.CommonServices.IsMultiplayer())
+            {
+                try
+                {
+                    ReadWrite.Pointer checkpointLocation = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointLocation1");
+                    if (this.CommonServices.CheckpointDataIsNull(checkpointLocation))
+                    {
+                        ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
+                        this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
+                        System.Threading.Thread.Sleep(50);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Failed un-nullifying the checkpoint data");
+                }
+            }
 
             // Set the make revert flag
             this.HaloMemoryService.ReadWrite.WriteByte(RevertFlag,

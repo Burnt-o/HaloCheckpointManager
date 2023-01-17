@@ -30,11 +30,14 @@
                 <RowDefinition  Height="Auto"/>
                 <RowDefinition  Height="Auto"/>
                 <RowDefinition  Height="Auto"/>
+                <RowDefinition  Height="Auto"/>
+                <RowDefinition  Height="Auto"/>
+                <RowDefinition  Height="Auto"/>
                 <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
             <Border Grid.RowSpan="100" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
-            <Border Grid.RowSpan="17" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
+            <Border Grid.RowSpan="18" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo 3" Grid.Row="0" />
         <local:TrainerColumnHeader Grid.Row="1" Grid.ColumnSpan="2" />
             <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_InjectCheckpoint}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
@@ -53,6 +56,7 @@
             <local:GenericToggleView Grid.Row="15" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
             <local:GenericToggleView Grid.Row="16" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_TogglePanCam}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
             <local:GenericToggleView Grid.Row="17" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleOHK}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleView Grid.Row="18" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleTheaterFriend}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
         </Grid>
     </ScrollViewer>
 </UserControl>

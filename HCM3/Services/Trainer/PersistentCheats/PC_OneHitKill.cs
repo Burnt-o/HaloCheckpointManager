@@ -58,13 +58,7 @@ namespace HCM3.Services.Trainer
         {
             lock (OneHitKillLock)
             {
-                if (Properties.Settings.Default.DisableOverlay)
-                {
-                    RemoveCheat();
-                    throw new Exception("This cheat requires the overlay to be enabled - see the Settings tab.");
-                }
-
-                if (!this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
+                if (!Properties.Settings.Default.DisableOverlay && !this.HaloMemoryService.HaloState.OverlayHooked) throw new Exception("Overlay wasn't hooked");
 
                 Trace.WriteLine("User commanded ToggleOHK !!!!!!!!!!!!!!!!!!!!");
                 if (IsChecked)

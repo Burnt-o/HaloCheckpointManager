@@ -18,6 +18,7 @@ namespace HCM3.Services.Trainer
         public PC_Medusa PC_Medusa { get; init; }
         public PC_OneHitKill PC_OneHitKill { get; init;  }
         public PC_DisplayInfo PC_DisplayInfo { get; init; }
+        public PC_TheaterFriend PC_TheaterFriend { get; init; }
 
 
         Dictionary<string, IPersistentCheat> listOfCheats { get; set; }
@@ -25,7 +26,7 @@ namespace HCM3.Services.Trainer
         public InternalServices InternalServices { get; init; }
         public HaloMemoryService HaloMemoryService { get; init; }
 
-        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_OneHitKill pC_OneHitKill, PC_DisplayInfo pC_DisplayInfo)
+        public PersistentCheatService(InternalServices internalServices, HaloMemoryService haloMemoryService, PC_Invulnerability pC_Invulnerability, PC_Speedhack pC_Speedhack, PC_BlockCPs pC_BlockCPs, PC_Medusa pC_medusa, PC_OneHitKill pC_OneHitKill, PC_DisplayInfo pC_DisplayInfo, PC_TheaterFriend pC_TheaterFriend)
         {
             this.PC_Invulnerability = pC_Invulnerability;
             this.PC_Speedhack = pC_Speedhack;
@@ -33,6 +34,7 @@ namespace HCM3.Services.Trainer
             this.PC_Medusa = pC_medusa;
             this.PC_OneHitKill = pC_OneHitKill;
             this.PC_DisplayInfo = pC_DisplayInfo;
+            this.PC_TheaterFriend = pC_TheaterFriend;
 
             this.InternalServices = internalServices;
             
@@ -50,6 +52,7 @@ namespace HCM3.Services.Trainer
             listOfCheats.Add("Block Checkpoints", PC_BlockCPs);
             listOfCheats.Add("Medusa", PC_Medusa);
             listOfCheats.Add("Display Player Data", PC_DisplayInfo);
+            listOfCheats.Add("Theater Friend", PC_TheaterFriend);
 
             foreach (IPersistentCheat cheat in listOfCheats.Values)
             { 

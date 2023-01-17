@@ -109,9 +109,42 @@ namespace HCM3.Services
             return requiredPointers;
         }
 
+        public bool CheckpointDataIsNull(ReadWrite.Pointer cplocation)
+        { 
+        
+            byte[]? firstFourBytes = this.HaloMemoryService.ReadWrite.ReadBytes(cplocation, 4);
+            return firstFourBytes != null && firstFourBytes.Length == 4 && firstFourBytes.SequenceEqual(new byte[] { 0, 0, 0, 0 });
+
+        }
+
+        public bool IsMultiplayer()
+        {
+            try
+            {
+                int loadedGame = GetLoadedGame();
+
+                Dictionary<string, Dictionaries.LevelInfo> levelInfoGrabber = Dictionaries.GameToLevelCodeDictionary[loadedGame];
+
+                string? currentLevel = this.HaloMemoryService.HaloState.CurrentLevelCode;
+                if (currentLevel == null) throw new Exception("Current level was null");
+                if (!levelInfoGrabber.TryGetValue(currentLevel, out Dictionaries.LevelInfo levelinfo)) throw new Exception("Failed to get levelinfo from currentLevel: " + currentLevel);
+                return levelinfo.LevelPosition == -1;
+
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+
+        }
 
         public bool PrintMessage(string message, bool needToDisableCheckpointText = false)
         {
+
+            //To help the trick jumpers make cool videos, we'll disable printing if the game is in multiplayer
+            if (IsMultiplayer()) return true;
+
             int loadedGame = GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 

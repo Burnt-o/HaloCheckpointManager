@@ -37,13 +37,16 @@
 	<Entry Type="List&lt;string&gt;">
 		<Name>H3_BRP</Name>
 		<Version Version="1.2448.0.0">
-			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull, TheaterFriend</ListString>
 		</Version>
 		<Version Version="1.2645.0.0">
-			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull, TheaterFriend</ListString>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Speedhack, BlockNaturalCPs, AcrophobiaSkull, BandanaSkull, BlindSkull, TheaterFriend</ListString>
 		</Version>
 		<Version Version="1.3073.0.0">
-			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceDoubleRevert, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, OneHitKill, AcrophobiaSkull, BandanaSkull, BlindSkull, TheaterFriend</ListString>
 		</Version>
 	</Entry>
 
@@ -120,6 +123,14 @@
 				<Offset>0x40</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03F23448</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2969.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -167,6 +178,14 @@
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03F23448</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x68</Offset>
 			</Offsets>
@@ -2665,6 +2684,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03F7BAD0</Offset>
+				<Offset>0x48</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>main</Module>
 			<Offsets>
@@ -2700,6 +2727,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x2a1f34c</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x29E194C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2720,6 +2753,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01215500</Offset>
+				<Offset>0x2258</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x11E5740</Offset>
 				<Offset>0x2258</Offset>
 			</Offsets>
 		</Version>
@@ -2745,6 +2785,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0xbb24a</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xB3486</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2758,6 +2804,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>5</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>5</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -2777,6 +2826,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01215500</Offset>
+				<Offset>0x2320</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x11E5740</Offset>
 				<Offset>0x2320</Offset>
 			</Offsets>
 		</Version>
@@ -2812,6 +2868,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</Element>
 			</Array>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Array>
+				<Element>
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x11E5740</Offset>
+						<Offset>0x2319</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Array>
 				<Element>
@@ -2832,6 +2899,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Array>1</Array>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Array>1</Array>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Array>1</Array>
 		</Version>
@@ -2850,6 +2920,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1e1d90b</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E1989B</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -2873,6 +2949,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x1E1D90A</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E1989A</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2894,6 +2976,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x1d91f08</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1D8DF98</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2913,6 +3001,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1c6411</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1BB445</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3147,6 +3241,30 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 			</SymbolPointers>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x33C960</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
+			<SizeToAlloc>100</SizeToAlloc>
+			<DetourCodeASM>push rax; mov eax,[@playerDatum]; cmp ebp, eax; mov rax, @detourHandle; jne 09h; add rax, 50h; mov [rax], rdx; pop rax; mov rax, rbx; mov rbx, [rsp+30h]; jmp $returnControl</DetourCodeASM>
+			<HookCodeASM>jmp $detourHandle</HookCodeASM>
+			<SymbolPointers>
+				<Pointer>
+					<Symbol>@playerDatum</Symbol>
+					<!--Stores the datum of the player entity, for comparison in detour-->
+					<Module>halo3.dll</Module>
+					<Offsets>
+						<Offset>0x747B98</Offset>
+					</Offsets>
+				</Pointer>
+
+
+			</SymbolPointers>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<OriginalCodeLocation>
 				<Module>halo3.dll</Module>
@@ -3181,6 +3299,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>0x160</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x160</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0x160</Offset>
 		</Version>
@@ -3191,6 +3312,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x164</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x164</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>0x164</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3205,6 +3329,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>0x168</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x168</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0x168</Offset>
 		</Version>
@@ -3215,6 +3342,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x1E0</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1E0</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>0x1E0</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3229,6 +3359,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>0x1E4</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x1E4</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0x1E4</Offset>
 		</Version>
@@ -3239,6 +3372,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x1E8</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x1E8</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>0x1E8</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3266,6 +3402,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x34C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00EEA004</Offset>
+				<Offset>0x34C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3287,6 +3430,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x00F19E44</Offset>
+				<Offset>0x350</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x00EEA004</Offset>
 				<Offset>0x350</Offset>
 			</Offsets>
 		</Version>
@@ -3316,6 +3466,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x10799</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D8DEF8</Offset>
+				<Offset>0x10759</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3330,6 +3487,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>5</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>5</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3354,6 +3514,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x10796</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D8DEF8</Offset>
+				<Offset>0x10756</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3368,6 +3535,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>7</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>7</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>7</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3394,6 +3564,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x107A0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D8DEF8</Offset>
+				<Offset>0x10760</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3410,12 +3587,155 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>1</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>1</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>1</Offset>
 		</Version>
 	</Entry>
 
 	<!--/end Trainer stuff-->
+	
+	<!--Theater Friend stuff-->
+	<!--camera radius: scan writ aob "CD CC 4C 3E 9A 99 99 3E", take first of two results
+	cameraOOB: scan nw "0f 28 ce 48 8b cb 48 8b 5c 24 58", call immediately above
+		alt; nw "83 4b 40 04 48 8b cb", call immediately below
+		OOBVisuals: scan nw "b9 10 00 00 00 ** ** ** ** ** ** ** ** 84 c0". the 10 is the byte that needs to change
+	-->
+	<Entry Type="PatchInfo">
+		<Name>H3_TheaterFriend_CameraRadius</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x2A968C0</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xCD, 0xCC, 0x4C, 0x3E</OriginalCodeBytes>
+			<PatchedCodeBytes>0x00, 0x00, 0x80, 0xBF</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x2B3FE90</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xCD, 0xCC, 0x4C, 0x3E</OriginalCodeBytes>
+			<PatchedCodeBytes>0x00, 0x00, 0x80, 0xBF</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x2B02300</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xCD, 0xCC, 0x4C, 0x3E</OriginalCodeBytes>
+			<PatchedCodeBytes>0x00, 0x00, 0x80, 0xBF</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x2eCD7B0</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xCD, 0xCC, 0x4C, 0x3E</OriginalCodeBytes>
+			<PatchedCodeBytes>0x00, 0x00, 0x80, 0xBF</PatchedCodeBytes>
+		</Version>
+	</Entry>
+	<Entry Type="PatchInfo">
+		<Name>H3_TheaterFriend_CameraOOB</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x20631A</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xE8, 0xF1, 0x07, 0x00, 0x00</OriginalCodeBytes>
+			<PatchedCodeBytes>0x90, 0x90, 0x90, 0x90, 0x90</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x1F1F16</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xE8, 0xF1, 0x07, 0x00, 0x00</OriginalCodeBytes>
+			<PatchedCodeBytes>0x90, 0x90, 0x90, 0x90, 0x90</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x205582</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xE8, 0xF1, 0x07, 0x00, 0x00</OriginalCodeBytes>
+			<PatchedCodeBytes>0x90, 0x90, 0x90, 0x90, 0x90</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x204EFA</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0xE8, 0xF1, 0x07, 0x00, 0x00</OriginalCodeBytes>
+			<PatchedCodeBytes>0x90, 0x90, 0x90, 0x90, 0x90</PatchedCodeBytes>
+		</Version>
+	</Entry>
+	<Entry Type="PatchInfo">
+		<Name>H3_TheaterFriend_OOBVisuals</Name>
+		<Version Version="1.2448.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x284CB9</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x10</OriginalCodeBytes>
+			<PatchedCodeBytes>0x11</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x27128D</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x10</OriginalCodeBytes>
+			<PatchedCodeBytes>0x11</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x269BC6</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x10</OriginalCodeBytes>
+			<PatchedCodeBytes>0x11</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0x26a8BA</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x10</OriginalCodeBytes>
+			<PatchedCodeBytes>0x11</PatchedCodeBytes>
+		</Version>
+	</Entry>
+	
+	
+	<!--/end Theater Friend stuff-->
+	
 	<!--Checkpoint management stuff-->
 
 	<Entry Type="ReadWrite.Pointer">
@@ -3430,6 +3750,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1e0d358</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1E092E8</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3460,6 +3786,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Module>halo3.dll</Module>
 				<Offsets>
 					<Offset>0xACB53</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<OriginalCodeLocation>
+				<Module>halo3.dll</Module>
+				<Offsets>
+					<Offset>0xA4D47</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
@@ -3511,6 +3847,21 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 
 		</Version>
+		<Version Version="1.2862.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>true</LoadedBSP1>
+			<LoadedBSP2>true</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
+
+
+
+		</Version>
 		<Version Version="1.3073.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
@@ -3544,6 +3895,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01F24140</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3565,6 +3923,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01F623A0</Offset>
+				<Offset>0x870000</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01F24140</Offset>
 				<Offset>0x870000</Offset>
 			</Offsets>
 		</Version>
@@ -3590,6 +3955,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x1DA2558</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1D9E5A8</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3611,6 +3982,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x1DB2BF8</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1DAEC08</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -3626,6 +4003,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>0x10648</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x10608</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0xFC98</Offset>
 		</Version>
@@ -3636,6 +4016,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>44</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>44</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>44</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3650,6 +4033,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>0x10688</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x10648</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0xFCD8</Offset>
 		</Version>
@@ -3660,6 +4046,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>20</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>20</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>20</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3674,6 +4063,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.2645.0.0">
 			<Offset>0x870000</Offset>
 		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x870000</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0x870000</Offset>
 		</Version>
@@ -3681,13 +4073,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LevelCode</Name>
 		<Version Version="1.2448.0.0">
-			<Offset>28</Offset>
+			<Offset>0x187</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
-			<Offset>28</Offset>
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x187</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
-			<Offset>28</Offset>
+			<Offset>0x187</Offset>
 		</Version>
 	</Entry>
 	<Entry Type="int">
@@ -3696,6 +4091,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x3F0220</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x470220</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
 			<Offset>0x470220</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -3709,6 +4107,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		</Version>
 		<Version Version="1.2645.0.0">
 			<Offset>0x274</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x294</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0x294</Offset>
@@ -3760,6 +4161,34 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</PreserveLocation>
 				<PreserveLocation>
 					<Offset>0x4852FE</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>8</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x481058</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x485250</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x48104C</Offset>
+					<Length>8</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x485254</Offset>
+					<Length>2</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x4852BE</Offset>
 					<Length>2</Length>
 				</PreserveLocation>
 			</Array>
@@ -6632,6 +7061,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.2862.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x03F7C410</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2969.0.0">
 				<Module>main</Module>
 				<Offsets>
@@ -6663,6 +7099,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x3b40d69</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.2862.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3F2FC49</Offset>
+				</Offsets>
+			</Version>
 			<Version Version="1.2969.0.0">
 				<Module>main</Module>
 				<Offsets>
@@ -6690,6 +7132,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Module>main</Module>
 				<Offsets>
 					<Offset>0x3A4A7C9</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.2862.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3E455A9</Offset>
 				</Offsets>
 			</Version>
 			<Version Version="1.2969.0.0">
