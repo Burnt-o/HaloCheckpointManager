@@ -53,7 +53,7 @@ namespace HCM3.Services.Trainer
                     catch { }
 
                     string whichLocation = "1";
-                    if (doubleRevertFlag != null && this.HaloMemoryService.ReadWrite.ReadByte(doubleRevertFlag) == 0) whichLocation = "2";
+                    if (doubleRevertFlag != null && this.HaloMemoryService.ReadWrite.ReadByte(doubleRevertFlag) == 1) whichLocation = "2";
 
                     ReadWrite.Pointer checkpointLocation = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointLocation" + whichLocation);
                     if (this.CommonServices.CheckpointDataIsNull(checkpointLocation))

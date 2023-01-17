@@ -175,7 +175,24 @@ namespace HCM3.Services
             }
 
 
-
+            //Next, a check for if the checkpoint data is null (happens in multiplayer - if a revert or inject is called when a checkpoint hasn't been made yet, the game will crash)
+            if (this.CommonServices.IsMultiplayer() && this.CommonServices.CheckpointDataIsNull(inGameCheckpointLocation))
+            {
+                try
+                {
+                    Trace.WriteLine("Forcing a checkpoint to un-nullify the checkpoint data");
+                    ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
+                    this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
+                    System.Threading.Thread.Sleep(50);
+                    this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
+                    System.Threading.Thread.Sleep(50);
+                    Trace.WriteLine("E");
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Failed un-nullifying the checkpoint data");
+                }
+            }
 
 
             // Modify the checkpointData to implement "Preserve Locations". These are sections of the checkpoint data where we want 
@@ -235,23 +252,7 @@ namespace HCM3.Services
 
             }
 
-            //Next, a check for if the checkpoint data is null (happens in multiplayer - if a revert or inject is called when a checkpoint hasn't been made yet, the game will crash)
-            if (this.CommonServices.IsMultiplayer() && this.CommonServices.CheckpointDataIsNull(inGameCheckpointLocation))
-            {
-                try
-                {
-                    Trace.WriteLine("Forcing a checkpoint to un-nullify the checkpoint data");
-                    ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
-                    this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
-                    System.Threading.Thread.Sleep(50);
-                    this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
-                    System.Threading.Thread.Sleep(50);
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine("Failed un-nullifying the checkpoint data");
-                }
-            }
+
 
             // Now, time to finally inject the checkpoint
             Trace.WriteLine("Length of injected checkpoint: " + checkpointData.Length.ToString("X"));
