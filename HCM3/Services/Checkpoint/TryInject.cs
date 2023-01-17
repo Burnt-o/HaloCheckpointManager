@@ -240,9 +240,12 @@ namespace HCM3.Services
             {
                 try
                 {
+                    Trace.WriteLine("Forcing a checkpoint to un-nullify the checkpoint data");
                     ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
                     this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(50);
+                    this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
+                    System.Threading.Thread.Sleep(50);
                 }
                 catch (Exception ex)
                 {

@@ -32,8 +32,7 @@ namespace HCM3.Services.Trainer
 
 
 
-            //only bother printing the message if overlay is enabled
-            if (!Properties.Settings.Default.DisableOverlay && !this.InternalServices.PrintTemporaryMessageInternal("Revert forced.")) throw new Exception("Error printing message");
+
 
 
             IntPtr? RevertFlag = this.HaloMemoryService.ReadWrite.ResolvePointer((ReadWrite.Pointer?)requiredPointers["ForceRevert"]).Value;
@@ -54,14 +53,13 @@ namespace HCM3.Services.Trainer
                     catch { }
 
                     string whichLocation = "1";
-                    if (doubleRevertFlag != null && this.HaloMemoryService.ReadWrite.ReadByte(doubleRevertFlag) == 1) whichLocation = "2";
+                    if (doubleRevertFlag != null && this.HaloMemoryService.ReadWrite.ReadByte(doubleRevertFlag) == 0) whichLocation = "2";
 
                     ReadWrite.Pointer checkpointLocation = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointLocation" + whichLocation);
                     if (this.CommonServices.CheckpointDataIsNull(checkpointLocation))
                     {
-                        ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
-                        this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
-                        System.Threading.Thread.Sleep(300);
+                        Trace.WriteLine("Bailing on revert as checkpoint data was null");
+                        return;
                     }
 
                 }
@@ -70,6 +68,9 @@ namespace HCM3.Services.Trainer
                     Trace.WriteLine("Failed un-nullifying the checkpoint data");
                 }
             }
+
+            //only bother printing the message if overlay is enabled
+            if (!Properties.Settings.Default.DisableOverlay && !this.InternalServices.PrintTemporaryMessageInternal("Revert forced.")) throw new Exception("Error printing message");
 
             // Set the make revert flag
             this.HaloMemoryService.ReadWrite.WriteByte(RevertFlag,
