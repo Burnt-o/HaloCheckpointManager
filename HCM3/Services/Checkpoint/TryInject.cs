@@ -242,7 +242,7 @@ namespace HCM3.Services
                 {
                     ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
                     this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
-                    System.Threading.Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(300);
                 }
                 catch (Exception ex)
                 {

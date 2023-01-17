@@ -46,12 +46,22 @@ namespace HCM3.Services.Trainer
             {
                 try
                 {
-                    ReadWrite.Pointer checkpointLocation = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointLocation1");
+                    ReadWrite.Pointer? doubleRevertFlag = null;
+                    try
+                    {
+                        doubleRevertFlag = (ReadWrite.Pointer?)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_DoubleRevertFlag");
+                    }
+                    catch { }
+
+                    string whichLocation = "1";
+                    if (doubleRevertFlag != null && this.HaloMemoryService.ReadWrite.ReadByte(doubleRevertFlag) == 1) whichLocation = "2";
+
+                    ReadWrite.Pointer checkpointLocation = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointLocation" + whichLocation);
                     if (this.CommonServices.CheckpointDataIsNull(checkpointLocation))
                     {
                         ReadWrite.Pointer checkpoint = (ReadWrite.Pointer)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_ForceCheckpoint");
                         this.HaloMemoryService.ReadWrite.WriteByte(checkpoint, 1);
-                        System.Threading.Thread.Sleep(50);
+                        System.Threading.Thread.Sleep(300);
                     }
 
                 }
