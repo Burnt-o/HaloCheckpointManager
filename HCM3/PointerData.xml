@@ -5651,7 +5651,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x0260CB40</Offset>
-				<Offset>0x0</Offset>
+				<Offset>-0xA10000</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0">
@@ -5675,7 +5675,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x0260CB40</Offset>
-				<Offset>-0xA10000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0">

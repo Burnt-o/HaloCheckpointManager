@@ -82,9 +82,13 @@ namespace HCM3.Services
                 try
                 {
                     byte[] levelBytes = new byte[64];
-                    int levelNameOffset = (int)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointData_LevelCode");
+                    int? levelNameOffset = (int?)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_CheckpointData_LevelCode");
 
-                Array.Copy(checkpointData, levelNameOffset, levelBytes, 0, 64);
+                    if (levelNameOffset == null) throw new Exception("levelNameOffset was null!");
+                    if (HaloMemoryService.HaloState.CurrentLevelCode == null) throw new Exception("CurrentLevelCode was null!");
+                Array.Copy(checkpointData, levelNameOffset.Value, levelBytes, 0, 64);
+
+
 
                     levelString = ASCIIEncoding.ASCII.GetString(levelBytes);
                     
@@ -217,11 +221,12 @@ namespace HCM3.Services
                     {
                     byte[] newHash = cryptoProvider.ComputeHash(checkpointData);
 
-                    Trace.WriteLine("newHash: \n");
+                    Trace.WriteLine("newHash: ");
                     foreach (byte b in newHash)
                     {
                         Trace.Write(b.ToString("X2"));
                     }
+                    Trace.Write("\n");
 
                     // Write the new hash 
                     newHash.CopyTo(checkpointData, (int)shaOffset);
@@ -236,7 +241,7 @@ namespace HCM3.Services
             bool success = this.HaloMemoryService.ReadWrite.WriteBytes(inGameCheckpointLocation, checkpointData, false);
 
             if (!success) throw new Exception("Failed to inject the checkpoint into game memory");
-
+             
             // Okay, checkpoint should be injected. But we still need to fix the in-game memories cached BSPs to match those of our checkpoint
             // This is only appliciable to some games. Currently just h2, h3, and ODST.
             if (injectRequirements["LoadedBSP1"] && injectRequirements["LoadedBSP2"] && injectRequirements["CheckpointData_LoadedBSPoffset"] && injectRequirements["CheckpointData_LoadedBSPlength"] && injectRequirements["DoubleRevertFlag"])
