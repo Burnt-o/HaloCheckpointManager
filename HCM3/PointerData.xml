@@ -5266,10 +5266,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</PreserveLocation>
 		
 				<!--search "68 61 6C 6F 33 6F 64 73 74 5C 6D 61 70 73 5C 73 63 31 30 30", on tayari. it's the big block before it up to the FF's-->
-				<PreserveLocation>
+				<!--<PreserveLocation>
 					<Offset>0x3F0210</Offset>
 					<Length>0x80</Length>
-				</PreserveLocation>
+				</PreserveLocation>-->
 
 			</Array>
 		</Version>
@@ -5292,10 +5292,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x48650E</Offset>
 					<Length>2</Length>
 				</PreserveLocation>
-				<PreserveLocation>
+				<!--<PreserveLocation>
 					<Offset>0x470210</Offset>
 					<Length>0x80</Length>
-				</PreserveLocation>
+				</PreserveLocation>-->
 			</Array>
 		</Version>
 		<Version Version="1.3073.0.0">
@@ -5317,10 +5317,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x48485E</Offset>
 					<Length>2</Length>
 				</PreserveLocation>
-				<PreserveLocation>
+				<!--<PreserveLocation>
 					<Offset>0x470210</Offset>
 					<Length>0x80</Length>
-				</PreserveLocation>
+				</PreserveLocation>-->
 			</Array>
 		</Version>
 	</Entry>
