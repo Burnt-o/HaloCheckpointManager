@@ -27,12 +27,14 @@ namespace HCM3.Services
         {
             PointerData = new();
             HighestSupportedMCCVersion = null;
+   
         }
 
 
 
         public string? HighestSupportedMCCVersion { get; set; }
         public string? LatestHCMVersion { get; set; }
+        public List<string> LatestHCMVersions = new();
         public List<string> ObsoleteHCMVersions = new();
 
 

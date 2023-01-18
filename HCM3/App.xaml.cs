@@ -41,7 +41,7 @@ namespace HCM3
 
         private TextWriterTraceListener Logger { get; set; }
 
-        public string CurrentHCMVersion = "2.0.6";
+        public string CurrentHCMVersion = "2.0.7";
 
         private void ConfigureServices(ServiceCollection services)
         {
@@ -129,7 +129,7 @@ namespace HCM3
                 System.Windows.Application.Current.Shutdown();
                 return;
             }
-            else if (HCM3.Properties.Settings.Default.CheckForUpdates && this.CurrentHCMVersion != dataPointersService.LatestHCMVersion)
+            else if (HCM3.Properties.Settings.Default.CheckForUpdates && dataPointersService.LatestHCMVersions.Count > 0 && !dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion))
             {
                 //Tell the user a new HCM version exists and ask them if they would like to download it (send them to github release page)
                 if (!(MessageBox.Show("A newer version of HCM exists, probably with bugfixes or new features.\nWould you like to go to the HCM releases page now?", "Download HCM update?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))

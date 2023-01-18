@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
+
+	 <!--We'll get rid of "LatestHCMVersion" in favour of "LatestHCMVersions" once 2.0.6 is deprecated-->
 	<LatestHCMVersion>2.0.6</LatestHCMVersion>
+	
+	<LatestHCMVersions>
+		<Entry>2.0.6</Entry>
+		<Entry>2.0.7</Entry>
+	</LatestHCMVersions>
+	
 	<ObsoleteHCMVersions>
 		<Entry>1.9.9</Entry>
 	</ObsoleteHCMVersions>
