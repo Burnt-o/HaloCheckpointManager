@@ -294,6 +294,10 @@ namespace HCM3.Services
                 Trace.WriteLine("menuInd: " + menuIndicator.Value.ToString("X"));
             }
 
+            lastgameIndicator = gameIndicator;
+            laststateIndicator = stateIndicator;
+            lastmenuIndicator = menuIndicator;
+
 
             if (menuIndicator == 00 && stateIndicator != 44)
             {

@@ -88,7 +88,20 @@ namespace HCM3.ViewModels
                 }
                 else
                 {
+                    InternalServices.HaloMemoryService.HaloState.OverlayHooked = false;
                     InternalServices.InjectInternal();
+                    try
+                    {
+                        if (InternalServices.InternalInjected())
+                        {
+                            PersistentCheatService.UpdateInternalDisplayWithActiveCheats();
+                            InternalServices.HaloMemoryService.HaloState.OverlayHooked = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    { 
+                    
+                    }
                 }
             
             }
