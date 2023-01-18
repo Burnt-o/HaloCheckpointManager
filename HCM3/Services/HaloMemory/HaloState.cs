@@ -253,12 +253,17 @@ namespace HCM3.Services
             
 
         }
+
+
+        private byte? lastgameIndicator;
+        private byte? laststateIndicator;
+        private byte? lastmenuIndicator;
+
         public void UpdateHaloState()
         {
             // If not attached.
             if (!this.Attached || MCCType == null)
             {
-                Trace.WriteLine("1");
                 CurrentHaloState = (int)Dictionaries.HaloStateEnum.Unattached;
                 CurrentLevelCode = null;
                 return;
@@ -281,9 +286,14 @@ namespace HCM3.Services
             byte? stateIndicator = this.HaloMemoryService.ReadWrite.ReadByte(stateIndicatorPointer);
             byte? menuIndicator = this.HaloMemoryService.ReadWrite.ReadByte(menuIndicatorPointer);
 
-            Trace.WriteLine("gameInd: " + gameIndicator.Value.ToString("X"));
-            Trace.WriteLine("statInd: " + stateIndicator.Value.ToString("X"));
-            Trace.WriteLine("menuInd: " + menuIndicator.Value.ToString("X"));
+
+            if (lastgameIndicator != gameIndicator || laststateIndicator != stateIndicator || lastmenuIndicator != menuIndicator)
+            {
+                Trace.WriteLine("gameInd: " + gameIndicator.Value.ToString("X"));
+                Trace.WriteLine("statInd: " + stateIndicator.Value.ToString("X"));
+                Trace.WriteLine("menuInd: " + menuIndicator.Value.ToString("X"));
+            }
+
 
             if (menuIndicator == 00 && stateIndicator != 44)
             {

@@ -77,7 +77,7 @@ namespace HCM3.Services.Trainer
 
         private void CheckCheats(object? sender, EventArgs? e)
         {
-            Trace.WriteLine("Checking Persistent Cheats");
+            //Trace.WriteLine("Checking Persistent Cheats");
             int currentHaloState = this.HaloMemoryService.HaloState.CurrentHaloState;
             if (currentHaloState == (int)Dictionaries.HaloStateEnum.Unattached) return;
 
@@ -90,7 +90,7 @@ namespace HCM3.Services.Trainer
 
             if (InternalServices.InternalInjected() == false)
             {
-
+                this.HaloMemoryService.HaloState.OverlayHooked = false;
                 InternalServices.InjectInternal();
             }
 

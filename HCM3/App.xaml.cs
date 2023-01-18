@@ -83,6 +83,13 @@ namespace HCM3
         //might have to remove sender parameter here
         private void OnStartup(object sender, StartupEventArgs e)
         {
+            // if file over 10 megs let's just delete it so it doesn't get out of control
+            System.IO.FileInfo filelog = new("file.log");
+            if (filelog.Exists && filelog.Length > 10000000)
+            {
+                System.IO.File.Delete(filelog.FullName);
+            }
+
             this.Logger = new("file.log");
             Trace.Listeners.Add(this.Logger);
 
