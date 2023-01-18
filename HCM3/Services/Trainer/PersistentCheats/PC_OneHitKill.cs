@@ -114,9 +114,10 @@ namespace HCM3.Services.Trainer
             int loadedGame = this.CommonServices.GetLoadedGame();
             string gameAs2Letters = Dictionaries.GameTo2LetterGameCode[(int)loadedGame];
 
-            DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_OHK_DetourInfo");
 
-                this.PersistentCheatService.DetourRemove(detourInfo, this.DetourHandle);
+            DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_OHK_DetourInfo");
+            if (Properties.Settings.Default.DisableOverlay) this.CommonServices.PrintMessage("OneHitKill mode disabled.");
+            this.PersistentCheatService.DetourRemove(detourInfo, this.DetourHandle);
             // If above method throws then detour handle won't be set to null (intentional)
             this.DetourHandle = null;
             IsChecked = false;
@@ -185,7 +186,7 @@ namespace HCM3.Services.Trainer
 
                 DetourInfoObject detourInfo = (DetourInfoObject)this.CommonServices.GetRequiredPointers($"{gameAs2Letters}_OHK_DetourInfo");
 
-
+                if (Properties.Settings.Default.DisableOverlay) this.CommonServices.PrintMessage("OneHitKill mode enabled.");
                 this.DetourHandle = this.PersistentCheatService.DetourApply(detourInfo);
                 return true;
 

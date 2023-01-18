@@ -125,6 +125,7 @@ namespace HCM3.Services.Trainer
                 byte[] currentCameraRadiusBytes = this.HaloMemoryService.ReadWrite.ReadBytes(patchInfoCameraRadius.OriginalCodeLocation, patchInfoCameraRadius.OriginalCodeBytes.Length);
                 if (currentCameraRadiusBytes != null && currentCameraRadiusBytes.Length == patchInfoCameraRadius.OriginalCodeBytes.Length && currentCameraRadiusBytes.SequenceEqual(patchInfoCameraRadius.PatchedCodeBytes))
                 {
+                    if (Properties.Settings.Default.DisableOverlay) this.CommonServices.PrintMessage("Unpatching Theater camera.");
                     this.HaloMemoryService.ReadWrite.WriteBytes(patchInfoCameraRadius.OriginalCodeLocation, patchInfoCameraRadius.OriginalCodeBytes, true);
                     this.HaloMemoryService.ReadWrite.WriteBytes(patchInfoCameraOOB.OriginalCodeLocation, patchInfoCameraOOB.OriginalCodeBytes, true);
                     this.HaloMemoryService.ReadWrite.WriteBytes(patchInfoOOBVisuals.OriginalCodeLocation, patchInfoOOBVisuals.OriginalCodeBytes, true);
@@ -216,6 +217,7 @@ namespace HCM3.Services.Trainer
                 if (currentCameraRadiusBytes != null && currentCameraRadiusBytes.Length == patchInfoCameraRadius.OriginalCodeBytes.Length && currentCameraRadiusBytes.SequenceEqual(patchInfoCameraRadius.OriginalCodeBytes))
                 {
                     Trace.WriteLine("Attempting to enable theater friend");
+                    if (Properties.Settings.Default.DisableOverlay) this.CommonServices.PrintMessage("Patching Theater camera.");
                     this.HaloMemoryService.ReadWrite.WriteBytes(patchInfoCameraRadius.OriginalCodeLocation, patchInfoCameraRadius.PatchedCodeBytes, true);
                     this.HaloMemoryService.ReadWrite.WriteBytes(patchInfoCameraOOB.OriginalCodeLocation, patchInfoCameraOOB.PatchedCodeBytes, true);
                     this.HaloMemoryService.ReadWrite.WriteBytes(patchInfoOOBVisuals.OriginalCodeLocation, patchInfoOOBVisuals.PatchedCodeBytes, true);
