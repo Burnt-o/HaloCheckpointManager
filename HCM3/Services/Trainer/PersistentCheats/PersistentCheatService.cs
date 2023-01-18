@@ -81,10 +81,31 @@ namespace HCM3.Services.Trainer
             int currentHaloState = this.HaloMemoryService.HaloState.CurrentHaloState;
             if (currentHaloState == (int)Dictionaries.HaloStateEnum.Unattached) return;
 
+
             foreach (KeyValuePair<string, IPersistentCheat> kv in listOfCheats)
             {
                     kv.Value.IsChecked = kv.Value.IsCheatApplied();
-                   
+            }
+
+
+            if (InternalServices.InternalInjected() == false)
+            {
+
+                InternalServices.InjectInternal();
+            }
+
+            if (this.HaloMemoryService.HaloState.OverlayHooked == false)
+            {
+                try
+                {
+                    UpdateInternalDisplayWithActiveCheats();
+                    this.HaloMemoryService.HaloState.OverlayHooked = true;
+                }
+                catch (Exception ex)
+                {
+                    this.HaloMemoryService.HaloState.OverlayHooked = false;
+                    Trace.WriteLine("Something went wrong trying to update the internal display via CheckCheats, ex: " + ex.ToString() + "\n" + ex.StackTrace);
+                }
             }
         }
 
@@ -95,6 +116,7 @@ namespace HCM3.Services.Trainer
 
                 try
                 {
+                Trace.WriteLine("Something wants to update the cheat display: " + sender.ToString() + ", event: " + e.PropertyName.ToString());
                     UpdateInternalDisplayWithActiveCheats();
                     this.HaloMemoryService.HaloState.OverlayHooked = true;
                 }

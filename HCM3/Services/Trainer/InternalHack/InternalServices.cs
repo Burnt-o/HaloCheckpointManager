@@ -70,7 +70,7 @@ namespace HCM3.Services.Trainer
         public bool InjectInternal()
         {
 
-
+            Trace.WriteLine("Attempting to inject internal");
                 lock (InjectInternalLock)
                 {
 

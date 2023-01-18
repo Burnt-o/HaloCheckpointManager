@@ -46,10 +46,13 @@ namespace HCM3.Services.Trainer
             }
             set
             {
-                _isChecked = value;
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
-                });
+                if (_isChecked != value)
+                {
+                    _isChecked = value;
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate {
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChecked)));
+                    });
+                }
             }
         }
 
