@@ -44,8 +44,8 @@ namespace HCM3.Services.Trainer
             ListOfInternalFunction.Add("PrintTemporaryMessage");
             ListOfInternalFunction.Add("hkPresent");
             ListOfInternalFunction.Add("hkResizeBuffers");
-            ListOfInternalFunction.Add("RemovePresentHook");
-            ListOfInternalFunction.Add("RemoveResizeBuffersHook");
+            ListOfInternalFunction.Add("RemoveHook");
+            ListOfInternalFunction.Add("EnableHook");
             ListOfInternalFunction.Add("EnableDisplayInfo");
             ListOfInternalFunction.Add("DisableDisplayInfo");
 

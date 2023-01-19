@@ -122,101 +122,51 @@ namespace HCM3.Services.Trainer
                 }
                 InternalFunctionsLoaded = true;
 
+                IntPtr? resolvedPresentPtr = this.HaloMemoryService.ReadWrite.ResolvePointer(presentPtr);
+                if (resolvedPresentPtr == null) throw new Exception("resolvedPresentPtr was null");
+
                 if (!Properties.Settings.Default.DisableOverlay)
                 {
-
-                    // Now need to "hook" d3dgxi Present
-                    Trace.WriteLine("HOOKING PRESENT POINTER - IF THIS GOES WRONG, MCC WILL CRASH");
-                    IntPtr? resolvedPresentPtr = this.HaloMemoryService.ReadWrite.ResolvePointer(presentPtr);
-                    Trace.WriteLine("Address of present pointer: " + NullableIntPtrToHexString(resolvedPresentPtr));
-                    ulong? valueOfOriginalPresent = this.HaloMemoryService.ReadWrite.ReadQword(resolvedPresentPtr);
-                    Trace.WriteLine("Value of original present: " + (valueOfOriginalPresent != null ? valueOfOriginalPresent.Value.ToString("X") : "null"));
-                    IntPtr hookedPresent = InternalFunctions["hkPresent"];
-                    Trace.WriteLine("Address of hkPresent (allegedly): " + NullableIntPtrToHexString(hookedPresent));
-
-
-
-
-                    //also going to hook resizeBuffers
-                    IntPtr? resolvedResizePtr = this.HaloMemoryService.ReadWrite.ResolvePointer(resizePtr);
-                    Trace.WriteLine("Address of Resize pointer: " + NullableIntPtrToHexString(resolvedResizePtr));
-                    ulong? valueOfOriginalResize = this.HaloMemoryService.ReadWrite.ReadQword(resolvedResizePtr);
-                    Trace.WriteLine("Value of original Resize: " + (valueOfOriginalResize != null ? valueOfOriginalResize.Value.ToString("X") : "null"));
-                    IntPtr hookedResize = InternalFunctions["hkResizeBuffers"];
-                    Trace.WriteLine("Address of hkResizeBuffers (allegedly): " + NullableIntPtrToHexString(hookedResize));
-
-
-
-                    if ((valueOfOriginalPresent != null && valueOfOriginalPresent.Value == (ulong)hookedPresent.ToInt64()) && (valueOfOriginalResize != null && valueOfOriginalResize.Value == (ulong)hookedResize.ToInt64()))
-                    {
-                        Trace.WriteLine("Hook appears to already be applied,  no need to apply it again: bailing");
-                        return;
-                    }
-
-
-                    IntPtr? hcmInternal = null;
-
+                    // Now need to "hook" d3dgxi Present - this will be handled by the internal DLL
+                    Trace.WriteLine("Enabling overlay");
                     try
                     {
-
-                        System.Diagnostics.ProcessModuleCollection modules = System.Diagnostics.Process.GetProcessById((int)this.HaloMemoryService.HaloState.ProcessID).Modules;
-                        foreach (System.Diagnostics.ProcessModule module in modules)
-                        {
-                            if (module.ModuleName != null && module.ModuleName.Contains("HCMInternal"))
-                            {
-                                hcmInternal = module.BaseAddress;
-                                break;
-                            }
-                        }
+                        //PInvokes.DebugActiveProcess(pID);
+                        PInvokes.NtSuspendProcess(MCCProcess.Handle);
+                        this.CallInternalFunction("EnableHook", (ulong)resolvedPresentPtr);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
+                        Trace.WriteLine("Error enabling overlay: ex " + ex.ToString());
                     }
-
-                    IntPtr? verifyHook = null;
-                    if (hcmInternal != null)
+                    finally
                     {
-                        verifyHook = IntPtr.Add(hcmInternal.Value, 0x2C3C0);
-                    }
-                    Trace.WriteLine("verifyHook: " + NullableIntPtrToHexString(verifyHook));
-                    byte? startofhook1 = this.HaloMemoryService.ReadWrite.ReadByte(hookedPresent);
-                    byte? startofhook2 = this.HaloMemoryService.ReadWrite.ReadByte(verifyHook);
-
-                    if (hookedPresent != verifyHook || startofhook1 != 0x40 || startofhook2 != 0x40)
-                    {
-                        Trace.WriteLine("We got a serious issue");
-
-                        Trace.WriteLine("startofhook1: " + startofhook1);
-                        Trace.WriteLine("startofhook2: " + startofhook2);
-
-                        //Attempt at a fix
-                        if (startofhook2 == 0x40)
-                        {
-                            Trace.WriteLine("Attempting fix, change hookPresent address");
-                            hookedPresent = verifyHook.Value;
-                        }
+                        PInvokes.NtResumeProcess(MCCProcess.Handle);
+                        //PInvokes.DebugActiveProcessStop(pID);
                     }
 
 
-                    Trace.WriteLine("resizePtr: " + resizePtr);
-                    Trace.WriteLine("hookedResize: " + hookedResize);
 
-                    PInvokes.DebugActiveProcess(pID);
-
-
-
-                    
-                    Trace.WriteLine("Pausing MCC process");
-                    this.HaloMemoryService.ReadWrite.WriteQword(resizePtr, (ulong)hookedResize.ToInt64(), true);
-
-                    this.HaloMemoryService.ReadWrite.WriteQword(presentPtr, (ulong)hookedPresent.ToInt64(), true);
-                    PInvokes.DebugActiveProcessStop(pID);
-                    System.Threading.Thread.Sleep(50);
-                    Trace.WriteLine("Unpausing MCC process");
                 }
                 else
                 {
-                   
+                    Trace.WriteLine("Disabling overlay");
+                    try
+                    {
+                        //PInvokes.DebugActiveProcess(pID);
+                        PInvokes.NtSuspendProcess(MCCProcess.Handle);
+                        this.CallInternalFunction("RemoveHook", (ulong)resolvedPresentPtr);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine("Error disabling overlay: ex " + ex.ToString());
+                    }
+                    finally
+                    {
+                        //PInvokes.DebugActiveProcessStop(pID);
+                        PInvokes.NtResumeProcess(MCCProcess.Handle);
+                        this.HaloMemoryService.HaloState.OverlayHooked = false;
+                    }
 
                 }
 

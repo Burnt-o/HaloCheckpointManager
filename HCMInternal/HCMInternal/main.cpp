@@ -476,68 +476,102 @@ extern "C" __declspec(dllexport) HRESULT __stdcall  hkResizeBuffers(IDXGISwapCha
 
 
 
-extern "C" __declspec(dllexport) void WINAPI EnableHook()
+extern "C" __declspec(dllexport) void WINAPI EnableHook(UINT64* PtrToPresentPtr)
 {
+	//Get current value of the games PresentPtr
+	UINT64* presentPtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr);
+	std::cout << "\nPresentPtr is at location: " << *presentPtr;
+	UINT64 currentPresentPtr = *presentPtr;
+	std::cout << "\nValue of currentPresentPtr is " << currentPresentPtr;
+
+	//As well as resizeBuffers (+0x28 from presentPtr, this offset will never change)
+	UINT64* ResizePtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr + 0x28);
+	std::cout << "\nResizePtr is at location" << *ResizePtr;
+	UINT64 currentResizePtr = *ResizePtr;
+	std::cout << "\nValue of currentResizePtr is " << currentResizePtr;
+
+	//Check if hook already applied (if the current value of the games PresentPtr is already hkPresent)
+	if (currentPresentPtr == (UINT64)hkPresent) 
+	{ 
+		std::cout << "\nHook already appears to be enabled, bailing";
+		return;  
+	}
+
+	//Store the current value as oPresent so hkPresent can passthrough to it (and so we can undo the hook later)
+	oPresent = (Present)currentPresentPtr;
+	std::cout << "\noPresent stored: " << (UINT64)oPresent;
+
+	//same with ResizeBuffers, but only if it's not equal to hkResizeBuffers already
+	if (currentResizePtr != (UINT64)hkResizeBuffers)
+	{
+		//store current value
+		oResizeBuffers = (ResizeBuffers)currentResizePtr;
+
+		// redirect currentResizePtr to hkResizeBuffers
+		std::cout << "\nSetting ResizePtr to hkResizeBuffers, newval: " << (UINT64)hkResizeBuffers;
+		UINT64 hkResizeBuffersPtr = (UINT64)hkResizeBuffers;
+		DWORD dwNewProtect, dwOldProtect;
+		VirtualProtect(ResizePtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
+		memcpy(ResizePtr, &hkResizeBuffersPtr, 8);
+		VirtualProtect(ResizePtr, 8, dwNewProtect, &dwOldProtect);
+	}
+	else
+	{
+		std::cout << "\nResizeBuffers was already hooked, so skipping that";
+	}
+
+	//finally, redirect currentPresentPtr to hkPresent
+	std::cout << "\nSetting presentPtr to hkPresent, newval: " << (UINT64)hkPresent;
+	UINT64 hkPresentPtr = (UINT64)hkPresent;
+	DWORD dwNewProtect, dwOldProtect;
+	VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
+	memcpy(presentPtr, &hkPresentPtr, 8);
+	VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
+
+	overlayForcefullyDisabled = false;
 
 
 }
 
-extern "C" __declspec(dllexport) void WINAPI RemovePresentHook(UINT64* PtrToPresentPtr)
+
+extern "C" __declspec(dllexport) void WINAPI RemoveHook(UINT64* PtrToPresentPtr)
 {
 
-	if (!init) { return; }
+	//if (!init) { return; }
+
+	//if oPresent is null then hook was never applied in the first place
+	if (oPresent == NULL) { return; }
+
 
 	std::cout << "\nPtrToPresentPtr: " << *PtrToPresentPtr;
 
+	//original value of Present which we stored when hook was enabled
 	UINT64 ogPresent = (UINT64)oPresent;
 
+	//Get the current value of the games presentPtr
 	UINT64* presentPtr = reinterpret_cast<UINT64*>(*PtrToPresentPtr);
 	UINT64 currentPresentPtr = *presentPtr;
 	std::cout << "\ngames present pointer: " << presentPtr;
 	std::cout << "\noriginal present pointer address: " << ogPresent;
 
-	if (currentPresentPtr != ogPresent)
-	{
-		DWORD dwNewProtect, dwOldProtect;
-		VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
-		memcpy(presentPtr, &ogPresent, 8);
-		VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
-	}
+	//Redirect the games presentPtr to again point to the original Present function
+	DWORD dwNewProtect, dwOldProtect;
+	VirtualProtect(presentPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
+	memcpy(presentPtr, &ogPresent, 8);
+	VirtualProtect(presentPtr, 8, dwNewProtect, &dwOldProtect);
 
 
+	//Now we won't bother to remove the ResizeBuffersHook - it has essentially no effect, and if we remove it a crash will occur since there's still some unreleased resources that I haven't identified
 
-	textToPrint = "";
-	overlayForcefullyDisabled = true;
-
-}
-
-extern "C" __declspec(dllexport) void WINAPI RemoveResizeBuffersHook(UINT64* PtrToResizeBuffersPtr)
-{
-
-	if (!init) { return; }
-
-
-	std::cout << "\nPtrToResizeBuffersPtr: " << *PtrToResizeBuffersPtr;
-	UINT64 ogResizeBuffers = (UINT64)oResizeBuffers;
-
-	UINT64* resizeBuffersPtr = reinterpret_cast<UINT64*>(*PtrToResizeBuffersPtr);
-	UINT64 currentResizeBuffersPtr = *resizeBuffersPtr;
-
-	if (currentResizeBuffersPtr != ogResizeBuffers)
-	{
-		DWORD dwNewProtect, dwOldProtect;
-		VirtualProtect(resizeBuffersPtr, 8, PAGE_EXECUTE_READWRITE, &dwNewProtect);
-		memcpy(resizeBuffersPtr, &ogResizeBuffers, 8);
-		VirtualProtect(resizeBuffersPtr, 8, dwNewProtect, &dwOldProtect);
-
-	}
-
-
+	//Nullify the oPresent so it's ready for enabling hook again
+	oPresent = NULL;
 
 	textToPrint = "";
 	overlayForcefullyDisabled = true;
 
 }
+
+
 
 DWORD WINAPI MainThread(void* pHandle)
 {
@@ -548,22 +582,22 @@ DWORD WINAPI MainThread(void* pHandle)
 
 	if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
 	{
-		oResizeBuffers = (ResizeBuffers)kiero::getMethodsTable()[13];
-		void* hkResizeBuffersPtr = (void*)hkResizeBuffers;
-		std::cout << "\nhkResizeBuffers " << hkResizeBuffersPtr;
-		std::cout << "\noResizeBuffers " << oResizeBuffers;
+		//oResizeBuffers = (ResizeBuffers)kiero::getMethodsTable()[13];
+		//void* hkResizeBuffersPtr = (void*)hkResizeBuffers;
+		//std::cout << "\nhkResizeBuffers " << hkResizeBuffersPtr;
+		//std::cout << "\noResizeBuffers " << oResizeBuffers;
 
-		
-
-
+		//
 
 
 
-		oPresent = (Present)kiero::getMethodsTable()[8];
-		void* hkPresentPtr = (void*)hkPresent;
 
-		std::cout << "\nhkPresentPtr" << hkPresentPtr;
-		std::cout << "\noPresent" << oPresent;
+
+		//oPresent = (Present)kiero::getMethodsTable()[8];
+		//void* hkPresentPtr = (void*)hkPresent;
+
+		//std::cout << "\nhkPresentPtr" << hkPresentPtr;
+		//std::cout << "\noPresent" << oPresent;
 
 
 	}
@@ -608,13 +642,12 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 		if (processName.find("mcc") != std::string::npos)
 		{
 			//Old console debugging code
-			//AllocConsole();
-			 FILE* pCout;
-			//freopen_s(&pCout, "conout$", "w", stdout);
+			AllocConsole();
+			freopen_s(&pCout, "conout$", "w", stdout);
 
 			//New log to file code
-			
-			freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
+			//FILE* pCout;
+			//freopen_s(&pCout, "HCMInternalLog.txt", "w", stdout);
 
 
 			std::cout << "\nHCMInternal.dll injected.";
