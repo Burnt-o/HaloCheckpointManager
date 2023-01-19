@@ -3249,11 +3249,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 
 			</SymbolPointers>
 		</Version>
+		<!--33C950 tj modded, 33C960 vanilla-->
 		<Version Version="1.2862.0.0">
 			<OriginalCodeLocation>
 				<Module>halo3.dll</Module>
 				<Offsets>
-					<Offset>0x33C960</Offset>
+					<Offset>0x33C950</Offset>
 				</Offsets>
 			</OriginalCodeLocation>
 			<OriginalCodeBytes>0x48, 0x8B, 0xC3, 0x48, 0x8B, 0x5C, 0x24, 0x30 </OriginalCodeBytes>
