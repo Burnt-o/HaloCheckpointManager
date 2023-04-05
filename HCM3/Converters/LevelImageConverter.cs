@@ -25,11 +25,11 @@ namespace HCM3.Converters
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.
             int game = HCM3.Properties.Settings.Default.LastSelectedTab;
-            string gameID = Dictionaries.GameTo2LetterGameCode[game];
+            string gameID = ((GameStateEnum)game).To2Letters();
 
             //check if level is a multiplayer level, if so we use the mp image
-            Dictionary<string, Dictionaries.LevelInfo> levelInfoGrabber = Dictionaries.GameToLevelCodeDictionary[game];
-            if (levelInfoGrabber.TryGetValue(valueString, out Dictionaries.LevelInfo levelinfo) && levelinfo.LevelPosition == -1)
+            Dictionary<string, LevelInfo> levelInfoGrabber = Dictionaries.GameToLevelInfoDictionary[game];
+            if (levelInfoGrabber.TryGetValue(valueString, out LevelInfo levelinfo) && levelinfo.LevelPosition == -1)
             {
                 return $"Images/mp.png";
             }

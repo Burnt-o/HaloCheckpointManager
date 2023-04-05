@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:HCM3.Views.Controls.Trainer"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance viewModels:GenericActionViewModel, IsDesignTimeCreatable=True}" x:ClassModifier="internal"
+             d:DataContext="{d:DesignInstance viewModels:CheatViewModel, IsDesignTimeCreatable=True}" x:ClassModifier="internal"
              >
     <Grid Height="40">
         <Grid.ColumnDefinitions>
@@ -23,7 +23,7 @@
         <Button Grid.Column="2" Margin="3,10,3,10" Content="Do" Padding="0,0,0,0" Command="{Binding Path=ExecuteCommand}"/>
         <Label Grid.Column="4" Content="{Binding Path=EffectText}" Padding="0,11,0,0"/>
 
-        <Button Grid.Column="3" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0" Command="{Binding OpenOptionsWindowCommand}"/>
+        <Button Grid.Column="3" Margin="7,12,7,12" Content="..." Padding="0,-2,0,0" Command="{Binding Path=OpenOptionsWindowCommand}"/>
 
     </Grid>
 </UserControl>

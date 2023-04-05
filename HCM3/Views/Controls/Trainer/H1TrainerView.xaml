@@ -35,32 +35,34 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*" MinHeight="5"/>
         </Grid.RowDefinitions>
 
-            <Border Grid.RowSpan="21" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
-            <Border Grid.RowSpan="18" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
+            <Border Grid.RowSpan="22" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{DynamicResource VeryLightGray}" Grid.ColumnSpan="2"/>
+            <Border Grid.RowSpan="19" Grid.Row="1"  Grid.Column="1"  CornerRadius="10" Background="{DynamicResource LightGray}" Grid.ColumnSpan="1" Margin="0,0,10,0"/>
         <Label Padding="30,10,0,0" Content="Game: Halo 1" Grid.Row="0" />
         <local:TrainerColumnHeader Grid.Row="1" Grid.ColumnSpan="2" />
-            <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_InjectCheckpoint}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_DumpCheckpoint}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCheckpoint}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceRevert}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreSave}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ForceCoreLoad}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="2" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[InjectCheckpoint]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="3" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[DumpCheckpoint]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="4" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[ForceCheckpoint]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="5" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[ForceRevert]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[ForceCoreSave]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="7" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[ForceCoreLoad]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
 
-            <local:GenericActionWithOptionView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Teleport}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionWithOptionView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_Launch}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericToggleView Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInvuln}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:SpeedhackView Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleSpeedhack}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericToggleView Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleMedusa}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericToggleView Grid.Row="13" Grid.ColumnSpan="2"  DataContext="{Binding Path=Button_ToggleBool}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_SkullAcrophobia}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="15" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_SkullBandana}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericActionView Grid.Row="16" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_SkullBlind}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericToggleView Grid.Row="17" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleNaturals}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-            <local:GenericToggleWithOptionView Grid.Row="18" Grid.ColumnSpan="2" DataContext="{Binding Path=Button_ToggleInfo}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
-    </Grid>
+            <local:GenericActionWithOptionView Grid.Row="8" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[ForceTeleport]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionWithOptionView Grid.Row="9" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[ForceLaunch]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleView Grid.Row="10" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[Invulnerability]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:SpeedhackView Grid.Row="11" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[Speedhack]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleView Grid.Row="12" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[CheatMedusa]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleView Grid.Row="13" Grid.ColumnSpan="2"  DataContext="{Binding Path=CheatViewModels[BOOLmode]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="14" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[Acrophobia]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="15" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[Bandana]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericActionView Grid.Row="16" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[Blind]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleView Grid.Row="17" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[BlockCPs]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleWithOptionView Grid.Row="18" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[DisplayInfo]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+            <local:GenericToggleView Grid.Row="19" Grid.ColumnSpan="2" DataContext="{Binding Path=CheatViewModels[TriggerOverlay]}" Visibility="{Binding Path=Visibility}" ToolTip="{Binding Path=ToolTip}"/>
+        </Grid>
     </ScrollViewer>
 
 </UserControl>

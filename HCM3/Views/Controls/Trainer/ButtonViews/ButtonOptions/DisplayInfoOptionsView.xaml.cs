@@ -24,29 +24,9 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             InitializeComponent();
         }
 
-        private void okButton_Click(object sender, RoutedEventArgs e)
+        private void CloseOptionsWindow(object sender, RoutedEventArgs e)
         {
-            try
-            {
-
-               BindingExpression fontsize = fontSize.GetBindingExpression(TextBox.TextProperty);
-               fontsize.UpdateSource();
-                BindingExpression screenx = screenX.GetBindingExpression(TextBox.TextProperty);
-                screenx.UpdateSource();
-                BindingExpression screeny = screenY.GetBindingExpression(TextBox.TextProperty);
-                screeny.UpdateSource();
-                BindingExpression sigdig = sigDig.GetBindingExpression(TextBox.TextProperty);
-                sigdig.UpdateSource();
-
-
-
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("One of your inputs was invalid! Error: " + ex.ToString());
-            }
-            
+            this.Close();
         }
     }
 }

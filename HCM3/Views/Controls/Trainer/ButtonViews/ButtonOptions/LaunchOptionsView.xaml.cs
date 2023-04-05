@@ -24,20 +24,9 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             InitializeComponent();
         }
 
-        private void okButton_Click(object sender, RoutedEventArgs e)
+        private void CloseOptionsWindow(object sender, RoutedEventArgs e)
         {
-            try
-            {
-
-                    BindingExpression beSpeed = launchSpeed.GetBindingExpression(TextBox.TextProperty);
-                beSpeed.UpdateSource();
-                    
                 this.Close();
-            }
-            catch
-            { 
-            }
-            
         }
     }
 }

@@ -21,12 +21,13 @@ using HCM3.ViewModels.Commands;
 using System.IO;
 using System.ComponentModel;
 using HCM3.Services;
-using HCM3.Services.Trainer;
+using HCM3.Services.Cheats;
+using HCM3.Services.HaloMemory;
 
 namespace HCM3.ViewModels
 {
 
-    internal partial class CheckpointViewModel : Presenter, IDropTarget
+    public partial class CheckpointViewModel : Presenter, IDropTarget
     {
 
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
@@ -109,14 +110,20 @@ namespace HCM3.ViewModels
 
 
         private CheckpointServices CheckpointServices { get; init; }
-        private TrainerServices TrainerServices { get; init; }
-        public CheckpointViewModel(CheckpointServices checkpointServices, TrainerServices trainerServices)
+        private CheatManagerService CheatManagerService { get; init; }
+        public CheckpointViewModel(CheckpointServices checkpointServices, CheatManagerService cheatManagerService)
         {
             this.CheckpointServices = checkpointServices;
-            this.TrainerServices = trainerServices;
+            this.CheatManagerService = cheatManagerService;
             this.CheckpointCollection = new();
             this.SaveFolderHierarchy = new();
             this.RootSaveFolder = null;
+
+
+            //need to provide a reference to self to cheat_dump and cheat_inject
+
+            ((InjectCheckpoint)this.CheatManagerService.ListOfCheats["InjectCheckpoint"]).CheckpointViewModel = this;
+            ((DumpCheckpoint)this.CheatManagerService.ListOfCheats["DumpCheckpoint"]).CheckpointViewModel = this;
 
             ListCollectionView view = (ListCollectionView)CollectionViewSource
                     .GetDefaultView(this.CheckpointCollection);
@@ -127,7 +134,7 @@ namespace HCM3.ViewModels
 
 
             //Subscribe to AttachEvent so we can tell CheckpointModel to refreshList
-            HaloStateEvents.ATTACH_EVENT += (obj, args) =>
+            BurntMemory.Events.ATTACH_EVENT += (obj, args) =>
             {
                 App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
                 {
@@ -137,7 +144,7 @@ namespace HCM3.ViewModels
 
             RefreshSaveFolderTree();
             RefreshCheckpointList();
-            TrainerServices = trainerServices;
+
         }
 
         // Move to services??
@@ -265,13 +272,13 @@ namespace HCM3.ViewModels
         private ICommand _dump;
         public ICommand Dump
         {
-            get { return _dump ?? (_dump = new DumpCommand(this, CheckpointServices, TrainerServices)); }
+            get { return _dump ?? (_dump = new DumpCommand(this, CheckpointServices, CheatManagerService)); }
             set { _dump = value; }
         }
         private ICommand _inject;
         public ICommand Inject
         {
-            get { return _inject ?? (_inject = new InjectCommand(this, CheckpointServices, TrainerServices)); }
+            get { return _inject ?? (_inject = new InjectCommand(this, CheckpointServices, CheatManagerService)); }
             set { _inject = value; }
         }
 

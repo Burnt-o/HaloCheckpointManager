@@ -21,6 +21,7 @@ namespace HCM3.Helpers
         }
         public static void SetIsChecked(DependencyObject obj, bool value)
         {
+            System.Diagnostics.Trace.WriteLine("ARGGGGGGGGGG" + value);
             obj.SetValue(IsCheckedProperty, value);
         }
 

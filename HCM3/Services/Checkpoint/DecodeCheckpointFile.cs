@@ -64,9 +64,9 @@ namespace HCM3.Services
                         {
                             checkpointVersion = checkpointVersionGuess;
                         }
-                        else if (HaloMemoryService.HaloState.CurrentAttachedMCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
+                        else if (HaloMemoryService.HaloMemoryManager.CurrentAttachedMCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
                         {
-                            checkpointVersionGuess = HaloMemoryService.HaloState.CurrentAttachedMCCVersion;
+                            checkpointVersionGuess = HaloMemoryService.HaloMemoryManager.CurrentAttachedMCCVersion;
                             Trace.WriteLine("setting ver string to current attached version: " + checkpointVersionGuess);
                         }
                         else if (this.DataPointersService.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git
@@ -83,7 +83,7 @@ namespace HCM3.Services
                         if (checkpointVersionGuess != null)
                         {
                             // Need this for accessing pointercollection
-                            string gameString = Dictionaries.GameTo2LetterGameCode[gameIndex];
+                            string gameString = ((GameStateEnum)gameIndex).To2Letters();
                             // Read LevelCode
                             try
                             {

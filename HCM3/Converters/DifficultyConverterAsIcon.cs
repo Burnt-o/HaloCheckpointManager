@@ -27,7 +27,7 @@ namespace HCM3.Converters
             // For now we'll used the saved setting which should always be accurate.
             int gameindex = HCM3.Properties.Settings.Default.LastSelectedTab;
 
-            string game = Dictionaries.GameTo2LetterGameCode[gameindex];
+            string game = ((GameStateEnum)gameindex).To2Letters();
 
             string sourceImagePath = $"Images/{game}/diff_{difficulty}.png";
 

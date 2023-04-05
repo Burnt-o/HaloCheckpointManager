@@ -10,11 +10,32 @@ using HCM3.ViewModels;
 using System.Windows.Input;
 using HCM3.ViewModels.Commands;
 using HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions;
+using System.Diagnostics;
 
 namespace HCM3.ViewModels.MVVM
 {
     public abstract class ActionToggleBase : Presenter
     {
+        private bool _isChecked = false;
+        public bool IsChecked
+        {
+            get
+            {
+                return _isChecked;
+            }
+            set
+            {
+                _isChecked = value;
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate {
+                    OnPropertyChanged(nameof(IsChecked));
+                });
+            }
+        }
+
+
+
+
+
         // defines hotkey stuff
         private string? _hotkeyText;
         public string? HotkeyText
@@ -46,7 +67,7 @@ namespace HCM3.ViewModels.MVVM
 
         public ICommand OpenHotkeyWindowCommand { get; init; }
         public ICommand? ExecuteCommand { get; init; }
-
+        public ICommand OpenOptionsWindowCommand { get; init; }
 
         public HotkeyManager HotkeyManager { get; init; }
 
@@ -60,7 +81,7 @@ namespace HCM3.ViewModels.MVVM
 
 
 
-        private bool _isEnabled = false;
+        private bool _isEnabled = true;
         public bool IsEnabled
         {
             get { return _isEnabled; }

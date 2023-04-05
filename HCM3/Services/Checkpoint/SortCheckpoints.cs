@@ -154,9 +154,9 @@ namespace HCM3.Services
             int? xOrder = null;
             int? yOrder = null;
 
-            if (game < Dictionaries.GameToLevelCodeDictionary.Length)
+            if (game < Dictionaries.GameToLevelInfoDictionary.Length)
             {
-                Dictionary<string, Dictionaries.LevelInfo> stringMapper = Dictionaries.GameToLevelCodeDictionary[game];
+                Dictionary<string, LevelInfo> stringMapper = Dictionaries.GameToLevelInfoDictionary[game];
                 if (stringMapper.ContainsKey(x.LevelName))
                 {
                     xOrder = stringMapper[x.LevelName].LevelPosition;

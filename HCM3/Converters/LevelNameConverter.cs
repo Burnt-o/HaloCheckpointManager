@@ -25,9 +25,9 @@ namespace HCM3.Converters
             int game = HCM3.Properties.Settings.Default.LastSelectedTab;
 
             // Must be within bounds of array
-            if (game < Dictionaries.GameToLevelCodeDictionary.Length)
+            if (game < Dictionaries.GameToLevelInfoDictionary.Length)
             {
-                Dictionary<string, Dictionaries.LevelInfo> stringMapper = Dictionaries.GameToLevelCodeDictionary[game];
+                Dictionary<string, LevelInfo> stringMapper = Dictionaries.GameToLevelInfoDictionary[game];
                 if (stringMapper.ContainsKey(valueString))
                 {
                     return stringMapper[valueString].FullName;

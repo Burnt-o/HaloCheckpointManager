@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using HCM3.Services;
 using NonInvasiveKeyboardHookLibrary;
+using HCM3.Services.HaloMemory;
 
 namespace HCM3.ViewModels
 {
@@ -62,7 +63,7 @@ namespace HCM3.ViewModels
 
 
             // Need to subscribe to HaloStateChanged of mainmodel, and tab changed of this mainViewModel,
-            HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { IsSelectedGameSameAsActualGame(); };
+            HaloStateEvents.HALOSTATECHANGED_EVENT += (obj, args) => { IsSelectedGameSameAsActualGame(args.NewHaloState); };
 
             // Load in selected tab to what it was when HCM closed last
             SelectedTabIndex = Properties.Settings.Default.LastSelectedTab;
@@ -107,10 +108,11 @@ namespace HCM3.ViewModels
         SelectedTabIndex = requestedTab;
         }
 
-        private void IsSelectedGameSameAsActualGame()
+        private void IsSelectedGameSameAsActualGame(HaloState? haloState = null)
         {
-            CheckpointViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == this.HaloMemoryService.HaloState.CurrentHaloState);
-            TrainerViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == this.HaloMemoryService.HaloState.CurrentHaloState);
+            if (haloState == null) haloState = this.HaloMemoryService.HaloMemoryManager.UpdateHaloState();
+            CheckpointViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == (int)haloState.GameState);
+            TrainerViewModel.SelectedGameSameAsActualGame = (this.SelectedGame == (int)haloState.GameState);
         }
 
 

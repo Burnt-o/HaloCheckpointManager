@@ -61,10 +61,10 @@
     <Setting Name="DIFontSize" Type="System.Single" Scope="User">
       <Value Profile="(Default)">14</Value>
     </Setting>
-    <Setting Name="DIScreenX" Type="System.Int32" Scope="User">
+    <Setting Name="DIScreenX" Type="System.Single" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
-    <Setting Name="DIScreenY" Type="System.Int32" Scope="User">
+    <Setting Name="DIScreenY" Type="System.Single" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
     <Setting Name="DISigDig" Type="System.Int32" Scope="User">
@@ -84,6 +84,9 @@
     </Setting>
     <Setting Name="HCMEverRunBefore" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SpeedHackValue" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>

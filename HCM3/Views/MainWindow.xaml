@@ -12,6 +12,7 @@
         Title="HaloCheckpointManager" Height="593" Width="995"
         MinHeight="593" MinWidth="725"
         Closed="Window_Closed"
+        
       d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
         >
     <Window.Resources>

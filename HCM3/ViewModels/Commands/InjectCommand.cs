@@ -8,17 +8,17 @@ using HCM3.Models;
 using HCM3.ViewModels;
 using System.Diagnostics;
 using HCM3.Services;
-using HCM3.Services.Trainer;
+using HCM3.Services.Cheats;
 
 namespace HCM3.ViewModels.Commands
 {
     internal class InjectCommand : ICommand
     {
-        internal InjectCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices, TrainerServices trainerServices)
+        internal InjectCommand(CheckpointViewModel checkpointViewModel, CheckpointServices checkpointServices, CheatManagerService cheatManagerService)
         {
             this.CheckpointViewModel = checkpointViewModel;
             this.CheckpointServices = checkpointServices;
-            this.TrainerServices = trainerServices;
+            this.CheatManagerService = cheatManagerService;
 
             CheckpointViewModel.PropertyChanged += (obj, args) =>
             {
@@ -35,7 +35,7 @@ namespace HCM3.ViewModels.Commands
 
         private CheckpointViewModel CheckpointViewModel { get; init; }
         private CheckpointServices CheckpointServices { get; init; }
-        private TrainerServices TrainerServices { get; init; }
+        private CheatManagerService CheatManagerService { get; init; }
         public bool CanExecute(object? parameter)
         {
             //return true;
@@ -47,17 +47,18 @@ namespace HCM3.ViewModels.Commands
         {
             try
             {
-                CheckpointServices.TryInject(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.SelectedCheckpoint, CheckpointViewModel.SelectedGame);
+                this.CheatManagerService.ListOfCheats["InjectCheckpoint"].DoCheat();
+
 
                 if (Properties.Settings.Default.AutoRevert)
                 {
                     if (Properties.Settings.Default.H1Cores && CheckpointViewModel.SelectedGame == 0)
                     {
-                        TrainerServices.ForceCoreLoad();
+                        CheatManagerService.ListOfCheats["ForceCoreLoad"].DoCheat();
                     }
                     else
                     {
-                        TrainerServices.ForceRevert();
+                        CheatManagerService.ListOfCheats["ForceRevert"].DoCheat();
                     }
                     
                 }

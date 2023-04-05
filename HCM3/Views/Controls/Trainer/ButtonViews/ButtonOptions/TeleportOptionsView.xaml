@@ -8,7 +8,7 @@
                      xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
         Title="Edit Teleport Options" Height="240" Width="280"
-                     d:DataContext="{d:DesignInstance viewModels:TeleportViewModel, IsDesignTimeCreatable=false}"  
+                     d:DataContext="{d:DesignInstance viewModels:CheatViewModel, IsDesignTimeCreatable=false}"  
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         
@@ -58,32 +58,33 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="5" Grid.ColumnSpan="4" Grid.Row="1">
-                <RadioButton x:Name="RadioTeleportForward" GroupName="myGroup" IsChecked="{Binding TeleportModeForward, UpdateSourceTrigger=Explicit}" >Teleport Forward</RadioButton>
-                <RadioButton x:Name="RadioTeleportPosition" GroupName="myGroup" IsChecked="{Binding TeleportModeForward, Mode=OneWay, Converter={StaticResource InverseBoolean}}" >Teleport To Position</RadioButton>
+                <CheckBox x:Name="CheckboxTeleportForward" Content="Teleport Forwards" Grid.Column="3" Grid.Row="3" Width="160"  IsChecked="{Binding Path=Settings[TeleportModeForward].BoundValue, Mode=TwoWay}"/>
+                <!--<RadioButton x:Name="RadioTeleportForward" GroupName="myGroup" IsChecked="{Binding Path=Settings[TeleportModeForward].BoundValue, Mode=TwoWay}" >Teleport Forward</RadioButton>
+                <RadioButton x:Name="RadioTeleportPosition" GroupName="myGroup" IsChecked="{Binding ElementName=RadioTeleportForward, Path=IsChecked, Mode=OneWay, Converter={StaticResource InverseBoolean}}" >Teleport To Position</RadioButton>-->
             </StackPanel>
 
             <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" HorizontalAlignment="Left"  >Edit Teleport Options:</Label>
             
             <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right"  >x:</Label>
-            <TextBox x:Name="teleportX" Grid.Column="1" Grid.Row="2" Width="80" IsEnabled="{Binding ElementName=RadioTeleportPosition, Path=IsChecked}" Text="{Binding TeleportX, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
+            <TextBox x:Name="teleportX" Grid.Column="1" Grid.Row="2" Width="80" IsEnabled="{Binding ElementName=CheckboxTeleportForward, Path=IsChecked, Converter={StaticResource InverseBoolean}}" Text="{Binding Path=Settings[TeleportX].BoundValue, Mode=TwoWay}"/>
 
             <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" >y:</Label>
-            <TextBox x:Name="teleportY" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding ElementName=RadioTeleportPosition, Path=IsChecked}" Text="{Binding TeleportY, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
+            <TextBox x:Name="teleportY" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding ElementName=CheckboxTeleportForward, Path=IsChecked, Converter={StaticResource InverseBoolean}}" Text="{Binding Path=Settings[TeleportY].BoundValue, Mode=TwoWay}"/>
 
             <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right">z:</Label>
-            <TextBox x:Name="teleportZ" Grid.Column="1" Grid.Row="4"  IsEnabled="{Binding ElementName=RadioTeleportPosition, Path=IsChecked}" Text="{Binding TeleportZ, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
+            <TextBox x:Name="teleportZ" Grid.Column="1" Grid.Row="4"  IsEnabled="{Binding ElementName=CheckboxTeleportForward, Path=IsChecked, Converter={StaticResource InverseBoolean}}" Text="{Binding Path=Settings[TeleportZ].BoundValue, Mode=TwoWay}"/>
 
 
             <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" >length:</Label>
-            <TextBox x:Name="teleportLength" Grid.Column="3" Grid.Row="2" Width="80" IsEnabled="{Binding ElementName=RadioTeleportForward, Path=IsChecked}" Text="{Binding TeleportLength, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
+            <TextBox x:Name="teleportLength" Grid.Column="3" Grid.Row="2" Width="80" IsEnabled="{Binding ElementName=CheckboxTeleportForward, Path=IsChecked}" Text="{Binding Path=Settings[TeleportLength].BoundValue, Mode=TwoWay}"/>
 
-            <CheckBox x:Name="teleportIgnoreZ" Content="Ignore Z" Grid.Column="3" Grid.Row="3" Width="80" IsEnabled="{Binding ElementName=RadioTeleportForward, Path=IsChecked}" IsChecked="{Binding TeleportIgnoreZ, UpdateSourceTrigger=Explicit}"/>
+            <CheckBox x:Name="teleportIgnoreZ" Content="Ignore Z" Grid.Column="3" Grid.Row="3" Width="80" IsEnabled="{Binding ElementName=CheckboxTeleportForward, Path=IsChecked}" IsChecked="{Binding Path=Settings[TeleportIgnoreZ].BoundValue, Mode=TwoWay}"/>
 
-            <Button Name="FillPosition" Command="{Binding FillPositionCommand}" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding ElementName=RadioTeleportPosition, Path=IsChecked}">Fill</Button>
+            <!--<Button Name="FillPosition" Command="{Binding Path=CustomCommands[FillPositionCommand]}" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding ElementName=RadioTeleportPosition, Path=IsChecked}">Fill</Button>-->
             <!-- Accept or Cancel -->
             <StackPanel Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Name="okButton" Click="okButton_Click" IsDefault="True">Apply</Button>
-                <Button Name="cancelButton" IsCancel="True">Cancel</Button>
+                <Button Name="okButton" Command="{Binding Path=ApplyExplicitSettings}" Click="CloseOptionsWindow">Apply</Button>
+                <Button Name="cancelButton" Command="{Binding Path=CancelSettingsChanges}" Click="CloseOptionsWindow" IsCancel="True">Cancel</Button>
             </StackPanel>
 
         </Grid>

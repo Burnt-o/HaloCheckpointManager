@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace HCM3.ViewModels
 {
-    internal partial class CheckpointViewModel : Presenter, IDropTarget
+    public partial class CheckpointViewModel : Presenter, IDropTarget
     {
 
         void IDropTarget.DragOver(IDropInfo dropInfo)

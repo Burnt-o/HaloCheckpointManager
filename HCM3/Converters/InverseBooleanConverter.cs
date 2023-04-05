@@ -23,14 +23,16 @@ namespace HCM3.Converters
             if (targetType == typeof(bool))
                 { return !(bool)value; }
 
-                    throw new InvalidOperationException("The target must be a boolean");
+            
+            //throw new InvalidOperationException("The target must be a boolean");
+            return false;
 
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
             System.Globalization.CultureInfo culture)
         {
-            throw new NotSupportedException();
+            return Convert(value, targetType, parameter, culture);
         }
     }
 }

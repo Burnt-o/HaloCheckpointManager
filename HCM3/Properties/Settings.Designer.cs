@@ -238,9 +238,9 @@ namespace HCM3.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public int DIScreenX {
+        public float DIScreenX {
             get {
-                return ((int)(this["DIScreenX"]));
+                return ((float)(this["DIScreenX"]));
             }
             set {
                 this["DIScreenX"] = value;
@@ -250,9 +250,9 @@ namespace HCM3.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public int DIScreenY {
+        public float DIScreenY {
             get {
-                return ((int)(this["DIScreenY"]));
+                return ((float)(this["DIScreenY"]));
             }
             set {
                 this["DIScreenY"] = value;
@@ -328,6 +328,18 @@ namespace HCM3.Properties {
             }
             set {
                 this["HCMEverRunBefore"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public double SpeedHackValue {
+            get {
+                return ((double)(this["SpeedHackValue"]));
+            }
+            set {
+                this["SpeedHackValue"] = value;
             }
         }
     }

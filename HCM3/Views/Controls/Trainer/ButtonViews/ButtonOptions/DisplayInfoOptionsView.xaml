@@ -8,7 +8,7 @@
                      xmlns:viewModels="clr-namespace:HCM3.ViewModels"
         mc:Ignorable="d"
         Title="Edit Display Info Options" Height="205" Width="280"
-                     d:DataContext="{d:DesignInstance viewModels:DisplayInfoViewModel, IsDesignTimeCreatable=false}"  
+                     d:DataContext="{d:DesignInstance viewModels:CheatViewModel, IsDesignTimeCreatable=false}"  
         ResizeMode="NoResize"
         ShowInTaskbar="False"
                 WindowStyle="None"
@@ -60,20 +60,20 @@
             <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Left"  >Edit Display Info Options:</Label>
 
             <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right"  >Font Size:</Label>
-            <TextBox x:Name="fontSize" Grid.Column="1" Grid.Row="1" Width="80" Text="{Binding FontSize, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToFloat}}"/>
+            <TextBox x:Name="fontSize" Grid.Column="1" Grid.Row="1" Width="80" Text="{Binding Path=Settings[DIFontSize].BoundValue, Mode=TwoWay}"/>
 
             <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right"  >Screen X:</Label>
-            <TextBox x:Name="screenX" Grid.Column="1" Grid.Row="2" Width="80" Text="{Binding ScreenX, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToPosInt}}"/>
+            <TextBox x:Name="screenX" Grid.Column="1" Grid.Row="2" Width="80" Text="{Binding Path=Settings[DIScreenX].BoundValue, Mode=TwoWay}"/>
 
             <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right"  >Screen Y:</Label>
-            <TextBox x:Name="screenY" Grid.Column="1" Grid.Row="3" Width="80" Text="{Binding ScreenY, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToPosInt}}"/>
+            <TextBox x:Name="screenY" Grid.Column="1" Grid.Row="3" Width="80" Text="{Binding Path=Settings[DIScreenY].BoundValue, Mode=TwoWay}"/>
 
             <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Right"  >Frac. Digits:</Label>
-            <TextBox x:Name="sigDig" Grid.Column="1" Grid.Row="4" Width="80" Text="{Binding SigDig, UpdateSourceTrigger=Explicit, Converter={StaticResource StringToPosInt}}"/>
+            <TextBox x:Name="sigDig" Grid.Column="1" Grid.Row="4" Width="80" Text="{Binding Path=Settings[DISigDig].BoundValue, Mode=TwoWay}"/>
             <!-- Accept or Cancel -->
             <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Name="okButton" Click="okButton_Click" IsDefault="True">Apply</Button>
-                <Button Name="cancelButton" IsCancel="True">Cancel</Button>
+                <Button Name="okButton" Command="{Binding Path=UpdateCheatCommand}" Click="CloseOptionsWindow" >Apply</Button>
+                <Button Name="cancelButton" Command="{Binding Path=CancelSettingsChanges}" Click="CloseOptionsWindow" IsCancel="True">Cancel</Button>
             </StackPanel>
 
         </Grid>

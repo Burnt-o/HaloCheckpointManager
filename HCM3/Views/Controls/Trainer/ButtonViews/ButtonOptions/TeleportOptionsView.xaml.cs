@@ -24,38 +24,45 @@ namespace HCM3.Views.Controls.Trainer.ButtonViews.ButtonOptions
             InitializeComponent();
         }
 
-        private void okButton_Click(object sender, RoutedEventArgs e)
+        //private void okButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        BindingExpression be0 = RadioTeleportForward.GetBindingExpression(RadioButton.IsCheckedProperty);
+        //        be0.UpdateSource();
+        //        if (RadioTeleportForward.IsChecked == true)
+        //        {
+        //            BindingExpression beLength = teleportLength.GetBindingExpression(TextBox.TextProperty);
+        //            beLength.UpdateSource();
+
+        //            BindingExpression beIgnoreZ = teleportIgnoreZ.GetBindingExpression(CheckBox.IsCheckedProperty);
+        //            beIgnoreZ.UpdateSource();
+        //        }
+        //        else
+        //        {
+        //            BindingExpression beX = teleportX.GetBindingExpression(TextBox.TextProperty);
+        //            beX.UpdateSource();
+
+
+        //            BindingExpression beY = teleportY.GetBindingExpression(TextBox.TextProperty);
+        //            beY.UpdateSource();
+
+        //            BindingExpression beZ = teleportZ.GetBindingExpression(TextBox.TextProperty);
+        //            beZ.UpdateSource();
+        //        }
+        //        this.Close();
+        //    }
+        //    catch
+        //    { 
+        //    }
+
+        //}
+
+        private void CloseOptionsWindow(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                BindingExpression be0 = RadioTeleportForward.GetBindingExpression(RadioButton.IsCheckedProperty);
-                be0.UpdateSource();
-                if (RadioTeleportForward.IsChecked == true)
-                {
-                    BindingExpression beLength = teleportLength.GetBindingExpression(TextBox.TextProperty);
-                    beLength.UpdateSource();
-
-                    BindingExpression beIgnoreZ = teleportIgnoreZ.GetBindingExpression(CheckBox.IsCheckedProperty);
-                    beIgnoreZ.UpdateSource();
-                }
-                else
-                {
-                    BindingExpression beX = teleportX.GetBindingExpression(TextBox.TextProperty);
-                    beX.UpdateSource();
-                    
-
-                    BindingExpression beY = teleportY.GetBindingExpression(TextBox.TextProperty);
-                    beY.UpdateSource();
-
-                    BindingExpression beZ = teleportZ.GetBindingExpression(TextBox.TextProperty);
-                    beZ.UpdateSource();
-                }
-                this.Close();
-            }
-            catch
-            { 
-            }
-            
+            this.Close();
         }
+
+
     }
 }

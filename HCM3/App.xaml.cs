@@ -13,9 +13,11 @@ using Microsoft.Extensions.DependencyInjection;
 using HCM3.Startup;
 using System.Diagnostics;
 using HCM3.Services;
-using HCM3.Services.Trainer;
+using HCM3.Services.Cheats;
+using HCM3.Services.HaloMemory;
 using HCM3.ViewModels.Commands;
 using NonInvasiveKeyboardHookLibrary;
+using HCM3.Services.Internal;
 
 
 namespace HCM3
@@ -31,6 +33,7 @@ namespace HCM3
 
         public App()
         {
+
             ServiceCollection services = new();
             ConfigureServices(services);
 
@@ -49,35 +52,27 @@ namespace HCM3
 
             services.AddSingleton<MainWindow>();
 
+
+            //General Services
+            services.AddSingleton<HotkeyManager>();
+            services.AddSingleton<DataPointersService>();
+            services.AddSingleton<HaloMemoryService>();
+
+
+            //ViewModel interaction Services
+            services.AddSingleton<CheatManagerService>();
+            services.AddSingleton<CheckpointServices>();
+            services.AddSingleton<InternalServices>();
+
             //ViewModels
             services.AddSingleton<CheckpointViewModel>();
             services.AddSingleton<TrainerViewModel>();
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<MainViewModel>();
 
-
-            //General Services
-            services.AddSingleton<CommonServices>();
-            services.AddSingleton<DataPointersService>();
-            services.AddSingleton<HaloMemoryService>();
-
-
-            //ViewModel interaction Services
-            services.AddSingleton<PersistentCheatService>();
-            services.AddSingleton<CheckpointServices>();
-            services.AddSingleton<TrainerServices>();
-            services.AddSingleton<InternalServices>();
-
             //Persistent Cheats (note to self, I might want to instead use member injection)
-            services.AddSingleton<PC_Invulnerability>();
-            services.AddSingleton<PC_Speedhack>();
-            services.AddSingleton<PC_BlockCPs>();
-            services.AddSingleton<PC_Medusa>();
-            services.AddSingleton<PC_OneHitKill>();
-            services.AddSingleton<PC_DisplayInfo>();
-            services.AddSingleton<PC_TheaterFriend>();
 
-            services.AddSingleton<HotkeyManager>();
+
         }
 
         //might have to remove sender parameter here
@@ -163,8 +158,8 @@ namespace HCM3
 
             // Tell HaloMemory to try to attach to MCC, both steam and winstore versions
             var haloMemoryService = _serviceProvider.GetService<HaloMemoryService>();
-            haloMemoryService.HaloState.ProcessesToAttach = new string[] { "MCC-Win64-Shipping", "MCCWinStore-Win64-Shipping" };
-            haloMemoryService.HaloState.TryToAttachTimer.Enabled = true;
+            haloMemoryService.HaloMemoryManager.ProcessesToAttach = new string[] { "MCC-Win64-Shipping", "MCCWinStore-Win64-Shipping" };
+            haloMemoryService.HaloMemoryManager.TryToAttachTimer.Enabled = true;
 
 
 
