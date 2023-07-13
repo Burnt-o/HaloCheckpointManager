@@ -1,0 +1,102 @@
+﻿<Window x:Class="HCMExternal.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HCMExternal.Views"
+             xmlns:cnv="clr-namespace:HCMExternal.Converters"
+        xmlns:commands="clr-namespace:HCMExternal.ViewModels.Commands"
+        xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
+           xmlns:helpers="clr-namespace:HCMExternal.Helpers.DictionariesNS"
+
+        mc:Ignorable="d"
+        Title="HaloCheckpointManager" Height="593" Width="760"
+        MinHeight="593" MinWidth="725"
+
+        
+      d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+        >
+    <Window.Resources>
+        <ResourceDictionary>
+            <cnv:EnumConverter x:Key="EnumConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+
+        <TabControl SelectedIndex="{Binding Path=CheckpointViewModel.SelectedGame, Converter={StaticResource EnumConverter}, 
+                              Mode=TwoWay}"  >
+
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}">Halo 1</TextBlock>
+                </TabItem.Header>
+                <Grid>
+
+                <local:CheckpointControl  DataContext="{Binding Path=CheckpointViewModel}"/>
+
+            </Grid>
+        </TabItem>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}">Halo 2</TextBlock>
+                </TabItem.Header>
+            <Grid>
+
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+               
+            </Grid>
+        </TabItem>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}">Halo 3</TextBlock>
+                </TabItem.Header>
+            <Grid>
+
+                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+
+            </Grid>
+        </TabItem>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Halo 3 ODST</TextBlock>
+                </TabItem.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
+        </TabItem>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Halo Reach</TextBlock>
+                </TabItem.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
+        </TabItem>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Halo 4</TextBlock>
+                </TabItem.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
+        </TabItem>
+
+
+
+    </TabControl>
+    </Grid>
+
+</Window>

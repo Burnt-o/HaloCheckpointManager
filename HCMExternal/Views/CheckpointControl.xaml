@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="HCMExternal.Views.CheckpointControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:uc="clr-namespace:HCMExternal.Views.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HCMExternal.Views"
+             xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="593" d:DesignWidth="720"
+             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}" x:ClassModifier="internal">
+    <Grid Width="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="*"/>
+            <ColumnDefinition Width="200" />
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <uc:CheckpointListControl Grid.Column="0" Grid.RowSpan="2" Width="Auto"/>
+
+
+        <uc:CheckpointDetailControl Grid.Column="1" Grid.Row="0" Margin="1" Height="281" VerticalAlignment="Top"/>
+
+
+        <uc:FolderExplorer Height="Auto" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Margin="1"/>
+
+        
+
+
+
+    </Grid>
+</UserControl>

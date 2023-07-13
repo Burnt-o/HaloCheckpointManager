@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="VeryLightGray" Color="#FFE5E5E5" />
+    <SolidColorBrush x:Key="Gray" Color="#FF808080" />
+    <SolidColorBrush x:Key="LightGray" Color="#FFD3D3D3" />
+    <SolidColorBrush x:Key="White" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="WhiteSmoke" Color="#FFF5F5F5" />
+
+    <SolidColorBrush x:Key="TextColour" Color="#FF0a0a0a" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White" />
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="Red" />
+
+    <Color x:Key="SelectedListViewItemKey">#FFb4c1fe</Color>
+    <SolidColorBrush x:Key="SelectedListViewItem" Color="{StaticResource SelectedListViewItemKey}" />
+
+</ResourceDictionary>

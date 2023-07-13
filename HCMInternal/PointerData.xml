@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+
+<!--#region GameStateHook-->
+	<VersionedEntry Name="globalLevelName" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3073.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FA79F8</Offset>
+				<Offset>0x24</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="gameIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3073.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x0401C1C0</Offset>
+				<Offset>0x024</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="gameLoadFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3073.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1D6966</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+<!--#endregion GameStateHook-->
+
+	<VersionedEntry Name="forceCheckpointFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3073.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2CA0787</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	
+	
+</root>

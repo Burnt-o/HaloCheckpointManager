@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Services">
+      <UniqueIdentifier>{33813428-34be-431d-a692-fde745b0c8b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{16bbe2af-9d7a-44b7-a05b-e67ab9d7b0a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{10649697-325c-415c-bd50-731289283de5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{8a884ef3-004e-4426-80e6-4f1e78b02180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\GUIElements">
+      <UniqueIdentifier>{3a262df6-8060-4d9a-a4f0-726961876f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\Cheats">
+      <UniqueIdentifier>{837d1078-0fa6-48f6-a483-88e1205c2f94}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="HCMExternalCommand.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalKill.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\safetyhook.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\Zydis.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlDefs.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomExceptions.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MidhookContextInterpreter.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsUtilities.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="RuntimeExceptionHandler.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="PointerManager.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsState.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionSerialisation.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHookManager.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleHook.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MultilevelPointer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCache.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagesGUI.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Logging.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Hook.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="HCMDirPath.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="HCMInternalGUI.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateHook.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="HaloEnums.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElementBase.h">
+      <Filter>Services\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIForceCheckpoint.h">
+      <Filter>Services\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCheckpoint.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatManager.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatBase.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointInjectDump.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="InjectRequirements.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticHookWrapper.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\safetyhook.cpp">
+      <Filter>Includes</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\Zydis.c">
+      <Filter>Includes</Filter>
+    </ClCompile>
+    <ClCompile Include="MidhookContextInterpreter.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsUtilities.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeExceptionHandler.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="PointerManager.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionsState.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionSerialisation.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHookManager.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHook.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="MultilevelPointer.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCache.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagesGUI.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Logging.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiManager.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Hook.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="HCMDirPath.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="HCMInternalGUI.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateHook.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="HaloEnums.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatManager.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckpointInjectDump.cpp">
+      <Filter>Services\Cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticHookWrapper.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="PointerData.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

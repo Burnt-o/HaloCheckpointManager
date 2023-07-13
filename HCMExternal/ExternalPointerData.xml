@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Root>
+	<!--If current HCM version isn't one of these, the user will be prompted that an update is available-->
+<LatestHCMVersions>
+	<Entry>2.0.6</Entry>
+	<Entry>2.0.7</Entry>
+</LatestHCMVersions>
+
+	<!--If the current HCM is one of these, HCM will refuse to start and the user will be prompted to update-->
+	<ObsoleteHCMVersions>
+		<Entry>1.9.9</Entry>
+	</ObsoleteHCMVersions>
+
+	<!--Data for decoding useful information from checkpoint files-->
+	<!-- #region Halo 1-->
+	<Entry Type="int">
+		<Name>H1_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>11</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>11</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>11</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x2F4</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x2F4</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x3CD4</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H1_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x126</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x126</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x126</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Halo 1-->
+	<!-- #region Halo 2-->
+	<Entry Type="int">
+		<Name>H2_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>23</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x13</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x13</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>13992</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>13920</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x36A0</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H2_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>974</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x3CE</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x3EE</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Halo 2-->
+
+	<!-- #region Halo 3-->
+	<Entry Type="int">
+		<Name>H3_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x3F0220</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x470220</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x470220</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x470220</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H3_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x274</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x274</Offset>
+		</Version>
+		<Version Version="1.2862.0.0">
+			<Offset>0x294</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x294</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Halo 3-->
+
+	<!-- #region Halo 3: ODST-->
+	<Entry Type="int">
+		<Name>OD_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x15</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x15</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x15</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x00400AF0</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x480D50</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x7b3bc8</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>OD_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x26C</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x26C</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x28C</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Halo 3: ODST-->
+
+	<!-- #region Halo Reach-->
+	<Entry Type="int">
+		<Name>HR_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1017B</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1017B</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x183</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x10FD54</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10FD54</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0xC6770</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>HR_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x10304</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x10304</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x304</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Halo Reach-->
+
+	<!-- #region Halo 4-->
+	<Entry Type="int">
+		<Name>H4_CheckpointData_LevelCode</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1CD77</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1CD77</Offset>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Offset>0x1CD77</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1CD97</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x2E424</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>H4_CheckpointData_Difficulty</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x1CF08</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x1CF08</Offset>
+		</Version>
+		<Version Version="1.2969.0.0">
+			<Offset>0x1CF08</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x1CF28</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Halo 4-->
+
+
+</Root>
