@@ -12,7 +12,7 @@ std::string getInjectPath()
 
 std::string getDumpFolder()
 {
-
+	throw HCMRuntimeException("Not implemented");
 }
 
 
@@ -59,47 +59,47 @@ public:
 
 	AllImpl(GameState game)
 	{
-		mInjectRequirements = PointerManager::getData<std::shared_ptr<InjectRequirements>>("injectionRequirements", game);
-		mCheckpointInfo = PointerManager::getData< std::shared_ptr<CheckpointInfo>>("checkpointInfo", game);
-		mCheckpointLocation1 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation1", game);
+		//mInjectRequirements = PointerManager::getData<std::shared_ptr<InjectRequirements>>("injectionRequirements", game);
+		//mCheckpointInfo = PointerManager::getData< std::shared_ptr<CheckpointInfo>>("checkpointInfo", game);
+		//mCheckpointLocation1 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation1", game);
 
-		if (!mInjectRequirements.get()->singleCheckpoint)
-		{
-			mCheckpointLocation2 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation2", game);
-		}
+		//if (!mInjectRequirements.get()->singleCheckpoint)
+		//{
+		//	mCheckpointLocation2 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation2", game);
+		//}
 
-		if (mInjectRequirements.get()->preserveLocations)
-		{
-			mPreserveLocations = PointerManager::getData< std::shared_ptr<PreserveLocations>>("preserveLocations", game);
-		}
+		//if (mInjectRequirements.get()->preserveLocations)
+		//{
+		//	mPreserveLocations = PointerManager::getData< std::shared_ptr<PreserveLocations>>("preserveLocations", game);
+		//}
 
-		if (mInjectRequirements.get()->SHA)
-		{
-			mSHAdata = PointerManager::getData< std::shared_ptr<SHAdata>>("SHAdata", game);
-		}
+		//if (mInjectRequirements.get()->SHA)
+		//{
+		//	mSHAdata = PointerManager::getData< std::shared_ptr<SHAdata>>("SHAdata", game);
+		//}
 
-		if (mInjectRequirements.get()->BSP)
-		{
-			mBSPdata = PointerManager::getData< std::shared_ptr<BSPdata>>("BSPdata", game);
-		}
+		//if (mInjectRequirements.get()->BSP)
+		//{
+		//	mBSPdata = PointerManager::getData< std::shared_ptr<BSPdata>>("BSPdata", game);
+		//}
 
-		if (mInjectRequirements.get()->integrityCheck)
-		{
-			mIntegrityCheckFunction = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("integrityCheckFunction", game);
-			mIntegrityCheckFunctionContext = PointerManager::getData< std::shared_ptr<MidhookContextInterpreter>>("integrityCheckFunctionContext", game);
-			switch (game)
-			{
-			case GameState::Halo1:
-				mIntegrityCheckHookFunction = [this](SafetyHookContext ctx) { return; };
-			default:
-				throw HCMInitException("Unsupported game");
-			}
+		//if (mInjectRequirements.get()->integrityCheck)
+		//{
+		//	mIntegrityCheckFunction = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("integrityCheckFunction", game);
+		//	mIntegrityCheckFunctionContext = PointerManager::getData< std::shared_ptr<MidhookContextInterpreter>>("integrityCheckFunctionContext", game);
+		//	switch (game)
+		//	{
+		//	case GameState::Halo1:
+		//		mIntegrityCheckHookFunction = [this](SafetyHookContext ctx) { return; };
+		//	default:
+		//		throw HCMInitException("Unsupported game");
+		//	}
 
-			mIntegrityCheckHook = ModuleMidHook::make(str_to_wstr(GameStateToString.at(game)), mIntegrityCheckFunction, mIntegrityCheckHookFunction, true);
+		//	mIntegrityCheckHook = ModuleMidHook::make(str_to_wstr(GameStateToString.at(game)), mIntegrityCheckFunction, mIntegrityCheckHookFunction, true);
 
-			// need to setup static hook
+		//	// need to setup static hook
 
-		}
+		//}
 	}
 };
 
@@ -117,9 +117,4 @@ void CheckpointInjectDump::initialize()
 	setUsability(true);
 }
 
-
-CheckpointInjectDump::CheckpointInjectDump(GameState game) : CheatBase(game)
-{
-
-}
 

@@ -170,3 +170,19 @@ VersionInfo getFileVersion(const char* filename)
 
 
 }
+
+
+
+
+bool fileExists(std::string path)
+{
+	FILE* pfile = nullptr;
+	fopen_s(&pfile, path.c_str(), "r");
+	if (pfile != NULL) {
+		fclose(pfile);
+		return true;
+	}
+	else {
+		return false;
+	}
+}

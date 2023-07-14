@@ -42,13 +42,4 @@ struct VersionInfo
 
 VersionInfo getFileVersion(const char* filename);
 
-bool fileExists(std::string path)
-{
-	if (FILE* file = fopen(path.c_str(), "r")) {
-		fclose(file);
-		return true;
-	}
-	else {
-		return false;
-	}
-}
+bool fileExists(std::string path);
