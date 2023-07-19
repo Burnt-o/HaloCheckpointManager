@@ -15,7 +15,7 @@
 
 	<DisableOverlayOptionEnabled>true</DisableOverlayOptionEnabled>
 	
-	<HighestSupportedVersion>1.3073.0.0</HighestSupportedVersion>
+	<HighestSupportedVersion>1.3232.0.0</HighestSupportedVersion>
 
 	<!--ButtonRequiredPointers-->
 	<Entry Type="List&lt;string&gt;">
@@ -28,6 +28,9 @@
 		</Version>
 		<Version Version="1.3073.0.0">
 			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Teleport, Launch, Invulnerability, Speedhack, BlockNaturalCPs, CheatMedusa, AcrophobiaSkull, BandanaSkull, BlindSkull, DisplayInfo</ListString>
+		</Version>
+		<Version Version="1.3232.0.0">
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Speedhack</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
@@ -156,15 +159,24 @@
 				<Offset>0x40</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3232.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03FB0D38</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
 		
 	</Entry>
 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>PresentPointer_WinStore</Name>
-		<Version Version="1.3073.0.0">
+		<Version Version="1.3232.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3E1EDC8</Offset>
+				<Offset>0x03DFF338</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x40</Offset>
 			</Offsets>
@@ -216,14 +228,23 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3232.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x03FB0D38</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+
 	</Entry>
 
 	<Entry Type="ReadWrite.Pointer">
 		<Name>ResizeBuffersPointer_WinStore</Name>
-		<Version Version="1.3073.0.0">
+		<Version Version="1.3232.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3E1EDC8</Offset>
+				<Offset>0x03DFF338</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x68</Offset>
 			</Offsets>
@@ -259,13 +280,21 @@
 					<Offset>0x0</Offset>
 				</Offsets>
 			</Version>
+		<Version Version="1.3232.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3FFD608</Offset>
+				<Offset>0x8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ModuleWinStore</Name>
-			<Version Version="1.3073.0.0">
+			<Version Version="1.3232.0.0">
 				<Module>main</Module>
 				<Offsets>
-					<Offset>0x3E6B858</Offset>
+					<Offset>0x3E4BAB0</Offset>
 					<Offset>0x8</Offset>
 					<Offset>0x0</Offset>
 				</Offsets>
@@ -292,6 +321,12 @@
 				<Offset>0x2CA07CC</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3232.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B2374C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 
 	<!--Print Message stuff-->
@@ -313,6 +348,12 @@
 				<Module>halo1.dll</Module>
 				<Offsets>
 					<Offset>0x2CEBD34</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2EA31D4</Offset>
 				</Offsets>
 			</Version>
 		</Entry>
@@ -339,6 +380,13 @@
 					<Offset>0x4</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x02D91638</Offset>
+					<Offset>0x4</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CPMessageCall</Name>
@@ -360,6 +408,12 @@
 					<Offset>0xAD4739</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0xAC4F73</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CPMessageCallLength</Name>
@@ -370,6 +424,9 @@
 				<Offset>5</Offset>
 			</Version>
 			<Version Version="1.3073.0.0">
+				<Offset>5</Offset>
+			</Version>
+			<Version Version="1.3232.0.0">
 				<Offset>5</Offset>
 			</Version>
 		</Entry>
@@ -393,6 +450,13 @@
 				<Module>halo1.dll</Module>
 				<Offsets>
 					<Offset>0x02EF62C8</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x02D91638</Offset>
 					<Offset>0</Offset>
 				</Offsets>
 			</Version>
@@ -581,6 +645,66 @@
 					</Element>
 				</Array>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Array>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x80</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x81</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D916388</Offset>
+							<Offset>0x82</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x83</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x84</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x85</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x86</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo1.dll</Module>
+						<Offsets>
+							<Offset>0x02D91638</Offset>
+							<Offset>0x87</Offset>
+						</Offsets>
+					</Element>
+				</Array>
+			</Version>
 		</Entry>
 		<Entry Type="byte[]">
 			<Name>H1_PrintMessageFlagValues</Name>
@@ -591,6 +715,9 @@
 				<Array>0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF</Array>
 			</Version>
 			<Version Version="1.3073.0.0">
+				<Array>0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF</Array>
+			</Version>
+			<Version Version="1.3232.0.0">
 				<Array>0, 0, 1, 0, 0xFF, 0xFF, 0xFF, 0xFF</Array>
 			</Version>
 		</Entry>
@@ -616,6 +743,12 @@
 					<Offset>0x2CA0787</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2B23707</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceRevert</Name>
@@ -637,6 +770,12 @@
 					<Offset>0x2CA0782</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2B23702</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 
 	
@@ -652,6 +791,9 @@
 		<Version Version="1.3073.0.0">
 				<Offset>0x15</Offset>
 		</Version>
+		<Version Version="1.3232.0.0">
+			<Offset>0x15</Offset>
+		</Version>
 	</Entry>
 
 	<Entry Type="int">
@@ -663,6 +805,9 @@
 			<Offset>0x3A</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
+			<Offset>0x3A</Offset>
+		</Version>
+		<Version Version="1.3232.0.0">
 			<Offset>0x3A</Offset>
 		</Version>
 	</Entry>
@@ -687,6 +832,12 @@
 					<Offset>0x2CA0799</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2B23719</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_ForceCoreLoad</Name>
@@ -706,6 +857,12 @@
 				<Module>halo1.dll</Module>
 				<Offsets>
 					<Offset>0x2CA079A</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x2B2371A</Offset>
 				</Offsets>
 			</Version>
 		</Entry>
@@ -1346,6 +1503,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
 			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
 		</Version>
+		<Version Version="1.3232.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>false</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>false</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>false</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
 	</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H1_CheckpointLocation1</Name>
@@ -1373,6 +1542,14 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x14</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>halo1.dll</Module>
+				<Offsets>
+					<Offset>0x02E3B990</Offset>
+					<Offset>0x28</Offset>
+					<Offset>0x14</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CheckpointLength</Name>
@@ -1383,6 +1560,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x4BA000</Offset>
 			</Version>
 			<Version Version="1.3073.0.0">
+				<Offset>0x5C0000</Offset>
+			</Version>
+			<Version Version="1.3232.0.0">
 				<Offset>0x5C0000</Offset>
 			</Version>
 		</Entry>
@@ -1397,6 +1577,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Version Version="1.3073.0.0">
 				<Offset>11</Offset>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Offset>11</Offset>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CheckpointData_GameTickCount</Name>
@@ -1409,6 +1592,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Version Version="1.3073.0.0">
 				<Offset>0x3CD4</Offset>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Offset>0x3FD4</Offset>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H1_CheckpointData_Difficulty</Name>
@@ -1419,6 +1605,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x126</Offset>
 			</Version>
 			<Version Version="1.3073.0.0">
+				<Offset>0x126</Offset>
+			</Version>
+			<Version Version="1.3232.0.0">
 				<Offset>0x126</Offset>
 			</Version>
 		</Entry>
@@ -7106,6 +7295,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3FFD548</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 	
 	
@@ -7139,6 +7335,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Module>main</Module>
 				<Offsets>
 					<Offset>0x3FD8E99</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3FBA369</Offset>
 				</Offsets>
 			</Version>
 		</Entry>
@@ -7176,6 +7378,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x3EE3FA9</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3232.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3EC6A29</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 	
 		<!--/end MCC Steam-->
@@ -7183,29 +7391,29 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<!--MCC WinStore (note: only supports current patch since you can't downpatch with WinStore anyway)-->
 	<Entry Type="ReadWrite.Pointer">
 		<Name>MCC_GameIndicator_WinStore</Name>
-		<Version Version="1.3073.0.0">
+		<Version Version="1.3232.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3E6B810</Offset>
+				<Offset>0x3E4B9E8</Offset>
 				<Offset>0</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>MCC_StateIndicator_WinStore</Name>
-		<Version Version="1.3073.0.0">
+		<Version Version="1.3232.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3E28465</Offset>
+				<Offset>0x3E08969</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>MCC_MenuIndicator_WinStore</Name>
-		<Version Version="1.3073.0.0">
+		<Version Version="1.3232.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3D33AA9</Offset>
+				<Offset>0x3D154A9</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
