@@ -397,6 +397,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ExternalPointerData.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

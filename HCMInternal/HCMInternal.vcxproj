@@ -135,6 +135,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +162,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -215,11 +217,14 @@
     <ClCompile Include="CheckpointInjectDump.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <Xml Include="PointerData.xml" />
     <ClCompile Include="GameStateHook.cpp" />
     <ClCompile Include="HaloEnums.cpp" />
     <ClCompile Include="HCMInternalGUI.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
+    <CopyFileToFolders Include="InternalPointerData.xml">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </CopyFileToFolders>
     <ClCompile Include="includes\safetyhook\safetyhook.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

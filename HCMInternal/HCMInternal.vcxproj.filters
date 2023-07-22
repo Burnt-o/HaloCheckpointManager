@@ -209,8 +209,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="PointerData.xml">
+    <CopyFileToFolders Include="InternalPointerData.xml">
       <Filter>Resource Files</Filter>
-    </Xml>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

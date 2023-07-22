@@ -73,20 +73,19 @@ namespace HCMExternal.Services.DataPointersServiceNS
             public void LoadPointerDataFromSource(out string failedReads)
             {
                 string? xml = null;
-                string localPointerDataPath = Directory.GetCurrentDirectory() + "\\PointerData.xml";
+                string localPointerDataPath = Directory.GetCurrentDirectory() + "\\ExternalPointerData.xml";
                 failedReads = "";
 
             // Debug mode to use local data file 
 #if HCM_DEBUG 
-            Debug.Assert(localPointerDataPath.Contains(@"mauri\source\repos") && File.Exists(@"C:\Users\mauri\source\repos\HaloCheckpointManager4\HCMExternal\ExternalPointerData.xml"));
-
+            Debug.Assert(File.Exists(localPointerDataPath));
             Log.Information("Grabbing xml data from local dev machine");
-            xml = File.ReadAllText(@"C:\Users\mauri\source\repos\HaloCheckpointManager4\HCMExternal\ExternalPointerData.xml");
+            xml = File.ReadAllText(localPointerDataPath);
 
 #else
             try
             {
-                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/PointerData.xml";
+                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/ExternalPointerData.xml";
                 System.Net.WebClient client = new System.Net.WebClient();
                 xml = client.DownloadString(url);
 

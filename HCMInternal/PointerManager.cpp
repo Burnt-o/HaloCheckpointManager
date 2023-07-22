@@ -17,8 +17,8 @@ enum class MCCProcessType
     WinStore
 };
 
-constexpr std::string_view xmlFileName = "PointerData.xml";
-constexpr std::string_view githubPath = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM3/HCMInternal/PointerData.xml";
+constexpr std::string_view xmlFileName = "InternalPointerData.xml";
+constexpr std::string_view githubPath = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM3/HCMInternal/InternalPointerData.xml";
 
 class PointerManager::PointerManagerImpl {
 
@@ -82,6 +82,7 @@ PointerManager::PointerManagerImpl::PointerManagerImpl()
     pointerDataLocation = HCMDirPath::GetHCMDirPath();
     pointerDataLocation += xmlFileName;
 
+#ifndef HCM_DEBUG
     try
     {
         PLOG_INFO << "downloading pointerData.xml";
@@ -91,7 +92,7 @@ PointerManager::PointerManagerImpl::PointerManagerImpl()
     {
         PLOG_ERROR << "Failed to download HCM PointerData xml, trying local backup";
     }
-
+#endif
 
     std::string pointerData = readLocalXML();
     std::stringstream buf; buf << getCurrentMCCVersion();
@@ -146,11 +147,8 @@ std::shared_ptr<MultilevelPointer> PointerManager::getData(std::string dataName,
 std::string PointerManager::PointerManagerImpl::readLocalXML()
 {
     std::string pathToFile;
-#if HCM_DEBUG
-    pathToFile = "C:\\Users\\mauri\\source\\repos\\HaloCheckpointManager4\\HCMInternal\\PointerData.xml";
-#else
+
     pathToFile = pointerDataLocation;
-#endif
 
     std::ifstream inFile(pathToFile.c_str());
     if (inFile.is_open())
