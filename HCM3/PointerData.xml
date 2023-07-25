@@ -682,7 +682,7 @@
 					<Element>
 						<Module>halo1.dll</Module>
 						<Offsets>
-							<Offset>0x02D916388</Offset>
+							<Offset>0x02D91638</Offset>
 							<Offset>0x82</Offset>
 						</Offsets>
 					</Element>
