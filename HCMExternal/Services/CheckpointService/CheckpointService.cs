@@ -15,12 +15,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
     /// </summary>
     public partial class CheckpointService
     {
-        public MCCStateService MCCStateService { get; init; }
         public DataPointersService DataPointersService { get; init; }
         //public InternalServices InternalServices { get; init; }
-        public CheckpointService(MCCStateService mps, DataPointersService dps) // TODO: Will need internalService for inject/dump
+        public CheckpointService(DataPointersService dps) // TODO: Will need internalService for inject/dump
         {
-            MCCStateService = mps;
             DataPointersService = dps;
         }
 

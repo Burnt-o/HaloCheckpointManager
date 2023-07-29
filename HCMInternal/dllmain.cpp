@@ -16,7 +16,8 @@
 #include "MessagesGUI.h"
 #include "GameStateHook.h"
 #include "CheatManager.h"
-
+#include "RPCClient.h"
+#include "HeartbeatTimer.h"
 //both plog and rpc define these
 #ifdef LOG_INFO 
 #define LOG_INFO LOG_INFO_P
@@ -30,45 +31,27 @@
 
 
 
-#include <rpc\client.h>
-#include <rpc\rpc_error.h>
+
 
 
 
 // Main Execution Loop
 void RealMain(HMODULE dllHandle)
 {
-    {
-        rpc::client client("127.0.0.1", 8069);
-        client.set_timeout(1000);
-        std::string result = "none";
-        try
-        {
-            result = client.call("requestHCMDirectory").as<std::string>();
-        }
-        catch (rpc::rpc_error& e)
-        {
-            Logging::initLogging();
-            Logging::SetConsoleLoggingLevel(plog::verbose);
-            PLOG_FATAL << "HCMInternal encounted an error starting up: " << e.what();
-            std::cin.ignore();
-            return;
-        }
-
-        HCMDirPath::SetHCMDirPath(result);
-    }
-
     acquire_global_unhandled_exception_handler();
-    Logging::initLogging();
-    Logging::SetConsoleLoggingLevel(plog::verbose);
-    Logging::SetFileLoggingLevel(plog::verbose);
+    try
+    {
+
+        // rpc also inits logging
+       auto rpc = std::make_shared<RPCClient>();
+
+
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     PLOG_INFO << "HCMInternal initializing";
     PLOG_DEBUG << "HCM path: " << HCMDirPath::GetHCMDirPath();
 
-    try
-    {
+
         ModuleCache::initialize();
         auto mhm = std::make_unique<ModuleHookManager>();
         auto ptr = std::make_unique<PointerManager>(); // must be after moduleCache but before anything that uses it in it's constructor
@@ -80,15 +63,14 @@ void RealMain(HMODULE dllHandle)
         auto d3d = std::make_unique<D3D11Hook>();
         auto imm = std::make_unique<ImGuiManager>(d3d.get()->presentHookEvent);
 
+        auto HCMGUI = std::make_unique<HCMInternalGUI>(imm.get()->ImGuiRenderCallback, d3d.get()->resizeBuffersHookEvent, gsh.get()->gameLoadEvent); // needs to be after cheatManager
+        
         auto mesGUI = std::make_unique<MessagesGUI>(imm.get()->ImGuiRenderCallback);
+        auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
         auto cm = std::make_unique<CheatManager>(); // needs to be after MessagesGUI and PointerManager
 
-        auto HCMGUI = std::make_unique<HCMInternalGUI>(imm.get()->ImGuiRenderCallback, d3d.get()->resizeBuffersHookEvent, gsh.get()->gameLoadEvent); // needs to be after cheatManager
 
-
-
-
-        auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
+        auto hb = std::make_unique<HeartbeatTimer>(rpc);
 
 
 
@@ -109,6 +91,14 @@ void RealMain(HMODULE dllHandle)
 
         // We live in this loop 99% of the time
         while (!GlobalKill::isKillSet()) {
+#ifdef HCM_DEBUG
+            if (GetKeyState(VK_END) & 0x8000)
+            {
+                PLOG_INFO << "HCMInternal manually killed";
+                GlobalKill::killMe();
+            }
+#endif
+
 
             Sleep(10);
 

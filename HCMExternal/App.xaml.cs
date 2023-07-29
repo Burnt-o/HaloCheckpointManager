@@ -35,7 +35,7 @@ namespace HCMExternal
 #if HCM_DEBUG
                 .MinimumLevel.Verbose().WriteTo.Debug()
 #endif
-                .MinimumLevel.Verbose().WriteTo.File("HCMExternal.log", 
+                .MinimumLevel.Verbose().WriteTo.File("HCMExternal_Logging.txt", 
                 rollOnFileSizeLimit: true, 
                 fileSizeLimitBytes: 1024 * 1024 * 10, 
                 flushToDiskInterval: TimeSpan.FromSeconds(3))
@@ -149,6 +149,10 @@ namespace HCMExternal
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
             mainWindow.Title = "HaloCheckpointManager " + this.CurrentHCMVersion;
             mainWindow.Show();
+
+            // Tell MCCStateService to begin trying to attach to MCC
+            var mccstate = _serviceProvider.GetService<MCCStateService>();
+            mccstate.beginAttaching();
         }
 
 
@@ -189,7 +193,8 @@ namespace HCMExternal
         //Required files that HCM needs to be able to run.
         private static readonly string[] _requiredFiles =
         {
-                       // @"HCMInternal.dll",
+                       @"HCMInternal.dll",
+                       @"HCMInterproc.dll"
         };
 
 

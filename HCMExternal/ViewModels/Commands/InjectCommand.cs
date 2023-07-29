@@ -8,16 +8,15 @@ using HCMExternal.Models;
 using HCMExternal.ViewModels;
 using System.Diagnostics;
 using HCMExternal.Services;
-using HCMExternal.Services.InterprocServiceNS;
+using Serilog;
 
 
 namespace HCMExternal.ViewModels.Commands
 {
     internal class InjectCommand : ICommand
     {
-        internal InjectCommand(InterprocService ips)
+        internal InjectCommand()
         {
-            this.InterprocService = ips;
 
             //TODO
             //CheckpointViewModel.PropertyChanged += (obj, args) =>
@@ -33,7 +32,7 @@ namespace HCMExternal.ViewModels.Commands
             //};
         }
 
-        private InterprocService InterprocService { get; init; }
+        public static event Action InjectEvent = delegate { Log.Information("Firing dump event"); };
 
         public bool CanExecute(object? parameter)
         {
@@ -45,7 +44,7 @@ namespace HCMExternal.ViewModels.Commands
         {
             try
             {
-                InterprocService.SendInjectCommand();
+                InjectEvent();
             }
             catch (Exception ex)
             {

@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)HCMExternal\bin\$(Configuration)\net7.0-windows</OutDir>
+    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)HCMExternal\bin\$(Configuration)\net7.0-windows</OutDir>
+    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,17 +151,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CheckpointInjectPath.h" />
-    <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Events.h" />
+    <ClInclude Include="CheckpointInfo.h" />
     <ClInclude Include="Inject.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RPCServer.h" />
+    <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CheckpointInjectPath.cpp" />
-    <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Inject.cpp" />
@@ -172,6 +170,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RPCServer.cpp" />
+    <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,10 +2,8 @@
 #include "RPCServer.h"
 
 #include "Events.h"
-#include "CheckpointInjectPath.h"
-#include "CommandQueue.h"
 #include <filesystem>
-
+#include "WindowsUtilities.h"
 bool RPCServer::connectionEstablised = false;
 
 std::string requestHCMDirectory()
@@ -17,15 +15,59 @@ std::string requestHCMDirectory()
     return std::filesystem::current_path().generic_string();
 }
 
-std::string requestCheckpointToInject()
+checkpointInjectInfoInternal requestInjectInfo(int game)
 {
-    return GetCheckpointInjectPath();
+    // need to fire event to external, convert and return result.
+    PLOG_DEBUG << "RPCServer::requestInjectInfo";
+    auto e = InternalRequestsInjectInfoInvoke(game);
+    PLOG_DEBUG << "received external injectInfo";
+
+
+    checkpointInjectInfoInternal working;
+    if (e.requestFailed)
+    {
+        PLOG_ERROR << "request failed!";
+        return working;
+    }
+
+    working.requestFailed = e.requestFailed;
+    working.difficulty = e.difficulty;
+    strcpy_s(working.checkpointFilePath, e.checkpointFilePath);
+    strcpy_s(working.levelCode, e.levelCode);
+    strcpy_s(working.version, e.version);
+
+    return working;
+    // do we need to free the external mem?
 }
 
 
-int heartBeat()
+checkpointDumpInfoInternal requestDumpInfo(int game)
 {
-    return (int)GetCommand();
+    // need to fire event to external, convert and return result.
+    PLOG_DEBUG << "RPCServer::requestDumpInfo";
+    auto e = InternalRequestsDumpInfoInvoke(game);
+    PLOG_DEBUG << "received external dumpInfo";
+
+
+    checkpointDumpInfoInternal working;
+    if (e.requestFailed)
+    {
+        PLOG_ERROR << "request failed!";
+        return working;
+    }
+
+    working.requestFailed = e.requestFailed;
+    strcpy_s(working.dumpFolderPath, e.dumpFolderPath);
+    PLOG_VERBOSE << "constructed working dumpinfointernal";
+    return working;
+    // do we need to free the external mem?
+}
+
+
+int64_t heartbeat()
+{
+    PLOG_VERBOSE << "interproc recieved heartbeat message, invoking event to external";
+    return HeartbeatEventInvoke();
 }
 
 
@@ -41,9 +83,11 @@ RPCServer::RPCServer()
         ErrorEventInvoke(err.c_str());
         });
 
-    srv.bind("requestCheckpointToInject", &requestCheckpointToInject);
+    srv.bind("requestInjectInfo", &requestInjectInfo);
 
-    srv.bind("heartBeat", &heartBeat);
+    srv.bind("requestDumpInfo", &requestDumpInfo);
+
+    srv.bind("heartbeat", &heartbeat);
     PLOG_DEBUG << "Bindings done";
     // Run the server loop.
     srv.async_run();

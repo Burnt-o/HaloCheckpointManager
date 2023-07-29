@@ -6,6 +6,7 @@
 #include "PointerManager.h"
 #include "MessagesGUI.h"
 #include "CheatBase.h"
+#include "GameStateHook.h"
 class ForceCheckpoint : public CheatBase
 {
 private:
@@ -14,6 +15,8 @@ private:
 
 	void onForceCheckpoint()
 	{
+		if (GameStateHook::getCurrentGameState() != mGame) return;
+
 		PLOG_DEBUG << "Force checkpoint called";
 		try
 		{
@@ -48,7 +51,7 @@ public:
 	void initialize() override
 	{
 		// exceptions thrown up to creator
-		forceCheckpointFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("forceCheckpointFlag", mGameImpl);
+		forceCheckpointFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("forceCheckpointFlag", mGame);
 
 		// subscribe to forcecheckpoint event
 		mForceCheckpointCallbackHandle = OptionsState::forceCheckpointEvent.append([this]() { this->onForceCheckpoint(); });
@@ -57,7 +60,7 @@ public:
 	}
 
 	std::string_view getName() override { return "Force Checkpoint"; }
-	std::set<GameState> getSupportedGames() override { return std::set<GameState>{GameState::Halo1}; }
+	std::set<GameState> getSupportedGames() override { return std::set<GameState>{GameState::Halo1, GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4}; }
 
 
 };

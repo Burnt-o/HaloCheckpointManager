@@ -27,6 +27,18 @@ enum AppenderID {
      logFileDestination = HCMDirPath::GetHCMDirPath();
      logFileDestination += logFileName;
 
+     // test that the path is good
+     std::fstream testPath(logFileDestination, std::ios::out | std::ios::in | std::ios::app);
+     testPath << "test";
+     if (testPath.bad())
+     {
+         // change logfiledest to MCC directory. Better than nothing.
+         wchar_t buffer[MAX_PATH];
+         GetModuleFileName(NULL, buffer, MAX_PATH);
+         logFileDestination = wstr_to_str(buffer);
+     }
+     testPath.close();
+
      // Delete the file if it already exists
      remove(logFileDestination.c_str());
 

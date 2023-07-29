@@ -2,8 +2,9 @@
 #include "HaloEnums.h"
 #include "CheatBase.h"
 #include "ForceCheckpoint.h"
-
-
+#include "ForceRevert.h"
+#include "ForceDoubleRevert.h"
+#include "CheckpointInjectDump.h"
 
 class CheatManager
 {
@@ -28,7 +29,7 @@ private:
 			}
 			catch(HCMInitException ex)
 			{
-				ex.prepend(std::format("Could not create cheat service: {}::{}, Service will be unavailable.\n", GameStateToString.at(game), "ah"));
+				ex.prepend(std::format("Could not create cheat service: {}::{}, dependent cheats will be unavailable.\n", GameStateToString.at(game), cheat.get()->getName()));
 				RuntimeExceptionHandler::handleMessage(ex);
 			}
 		}
@@ -37,6 +38,9 @@ private:
 public:
 
 	std::map<GameState, std::shared_ptr<ForceCheckpoint>> forceCheckpointCollection;
+	std::map<GameState, std::shared_ptr<ForceRevert>> forceRevertCollection;
+	std::map<GameState, std::shared_ptr<ForceDoubleRevert>> forceDoubleRevertCollection;
+	std::map<GameState, std::shared_ptr<CheckpointInjectDump>> checkpointInjectDumpCollection;
 
 
 	CheatManager()
@@ -46,6 +50,9 @@ public:
 
 		// Construct cheats
 		constructCheatCollection(forceCheckpointCollection);
+		constructCheatCollection(forceRevertCollection);
+		constructCheatCollection(forceDoubleRevertCollection);
+		constructCheatCollection(checkpointInjectDumpCollection);
 
 	}
 	~CheatManager()

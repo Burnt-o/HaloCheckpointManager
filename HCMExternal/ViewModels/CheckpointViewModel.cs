@@ -26,6 +26,7 @@ using Serilog;
 using HCMExternal.Services.MCCStateServiceNS;
 using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Services.InterprocServiceNS;
+using System.Threading;
 
 namespace HCMExternal.ViewModels
 {
@@ -104,16 +105,13 @@ namespace HCMExternal.ViewModels
         //RequestTabChange?.Invoke(this, requestedTab);
         //}
 
-
+        private readonly SynchronizationContext _syncContext;
         private CheckpointService CheckpointServices { get; init; }
-        private MCCStateService MCCStateService { get; init; }
-        private InterprocService InterprocService { get; init; }
-        public CheckpointViewModel(CheckpointService cs, MCCStateService mss, InterprocService ips)
+        public CheckpointViewModel(CheckpointService cs)
         {
+            _syncContext = SynchronizationContext.Current;
             Log.Verbose("CheckpointViewModel constructing");
             this.CheckpointServices = cs;
-            this.MCCStateService = mss;
-            this.InterprocService = ips;
             this.CheckpointCollection = new();
             this.SaveFolderHierarchy = new();
             this.RootSaveFolder = null;
@@ -285,17 +283,24 @@ namespace HCMExternal.ViewModels
         }
 
 
+        public void RequestTabChange(HaloTabEnum game)
+        {
+            // send is syncronhys so this will block
+            _syncContext.Send(o => { SelectedGame = game; }, null) ;
+            //Application.Current.Dispatcher.Invoke(new Action(() => { SelectedGame = game; }));
+        }
+
 
         private ICommand _dump;
         public ICommand Dump
         {
-            get { return _dump ?? (_dump = new DumpCommand(InterprocService)); }
+            get { return _dump ?? (_dump = new DumpCommand()); }
             set { _dump = value; }
         }
         private ICommand _inject;
         public ICommand Inject
         {
-            get { return _inject ?? (_inject = new InjectCommand(InterprocService)); }
+            get { return _inject ?? (_inject = new InjectCommand()); }
             set { _inject = value; }
         }
 

@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)HCMExternal\bin\$(Configuration)\net7.0-windows</OutDir>
+    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows</OutDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)HCMExternal\bin\$(Configuration)\net7.0-windows</OutDir>
+    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows</OutDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -147,6 +147,11 @@
       </IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
+    <PreBuildEvent>
+      <Command>IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
+	"C:\Program Files\LockHunter\LockHunter.exe" -u -sm $(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -175,8 +180,14 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
+    <PreBuildEvent>
+      <Command>IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
+	"C:\Program Files\LockHunter\LockHunter.exe" -u -sm $(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb
+)</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CheckpointInfo.h" />
     <ClInclude Include="CheatBase.h" />
     <ClInclude Include="CheatManager.h" />
     <ClInclude Include="CheckpointInjectDump.h" />
@@ -184,13 +195,16 @@
     <ClInclude Include="CustomExceptions.h" />
     <ClInclude Include="D3D11Hook.h" />
     <ClInclude Include="ForceCheckpoint.h" />
+    <ClInclude Include="ForceDoubleRevert.h" />
+    <ClInclude Include="ForceRevert.h" />
     <ClInclude Include="GameStateHook.h" />
     <ClInclude Include="GlobalKill.h" />
     <ClInclude Include="GUIElementBase.h" />
-    <ClInclude Include="GUIForceCheckpoint.h" />
+    <ClInclude Include="GUISimpleButton.h" />
     <ClInclude Include="HaloEnums.h" />
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
+    <ClInclude Include="HeartbeatTimer.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="includes\safetyhook\Zydis.h" />
@@ -208,6 +222,7 @@
     <ClInclude Include="OptionsState.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PointerManager.h" />
+    <ClInclude Include="RPCClient.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
     <ClInclude Include="StaticHookWrapper.h" />
     <ClInclude Include="WindowsUtilities.h" />
@@ -220,6 +235,7 @@
     <ClCompile Include="GameStateHook.cpp" />
     <ClCompile Include="HaloEnums.cpp" />
     <ClCompile Include="HCMInternalGUI.cpp" />
+    <ClCompile Include="HeartbeatTimer.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <CopyFileToFolders Include="InternalPointerData.xml">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
@@ -248,6 +264,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PointerManager.cpp" />
+    <ClCompile Include="RPCClient.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
     <ClCompile Include="HCMDirPath.cpp" />
     <ClCompile Include="StaticHookWrapper.cpp" />

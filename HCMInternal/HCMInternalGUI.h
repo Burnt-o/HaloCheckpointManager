@@ -71,7 +71,13 @@ public:
 
 	static void addPopupError(HCMExceptionBase error) { if (instance->errorsToDisplay.size() < 5) instance->errorsToDisplay.push_back(error); }
 	static bool isWindowOpen() { return m_WindowOpen; };
-	static float getHCMInternalWindowHeight() { return instance->mWindowSize.y; };
+	static float getHCMInternalWindowHeight() { 
+		if (!instance)
+		{
+			PLOG_ERROR << "getHCMInternalWindowHeight when HCMInternalGUI not initiailized";
+			return 0;
+		}
+		return instance->mWindowSize.y; };
 };
 
 // Todo: properly split the concepts of "desired window height" and "allocated window height". maybe call the former one "content height"

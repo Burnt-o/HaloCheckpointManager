@@ -30,10 +30,10 @@
     <ClInclude Include="RPCServer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CheckpointInjectPath.h">
+    <ClInclude Include="CheckpointInfo.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommandQueue.h">
+    <ClInclude Include="WindowsUtilities.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +53,7 @@
     <ClCompile Include="RPCServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CheckpointInjectPath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandQueue.cpp">
+    <ClCompile Include="WindowsUtilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

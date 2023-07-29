@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Diagnostics;
 using HCMExternal.Services.InterprocServiceNS;
+using System.Windows;
+
 namespace HCMExternal.Services.MCCStateServiceNS
 {
 
@@ -15,15 +17,16 @@ namespace HCMExternal.Services.MCCStateServiceNS
     // On attach, stores the ProductVersion of MCC
     public class MCCStateService
     {
-        private Process? _MCCProcess = null;
-        public Process? MCCProcess
+        // I made the following two properties static to remove a circular dependency (specifically so CheckpointService didn't need instance of MCCStateService)
+        private static Process? _MCCProcess = null;
+        public static Process? MCCProcess
         {
             get { return _MCCProcess; }
             private set { _MCCProcess = value; }
         }
 
-        private FileVersionInfo? _MCCVersion = null;
-        public FileVersionInfo? MCCVersion
+        private static FileVersionInfo? _MCCVersion = null;
+        public static FileVersionInfo? MCCVersion
         {
             get { return _MCCVersion; }
             private set { _MCCVersion = value; }
@@ -37,9 +40,14 @@ namespace HCMExternal.Services.MCCStateServiceNS
             checkMCCStatusLoop.Elapsed += new ElapsedEventHandler(CheckMCCStatusLoop);
         }
 
-        public event Action AttachEvent = delegate { Log.Information("Firing AttachEvent"); };
-        public event Action DetachEvent = delegate { Log.Information("Firing DetachEvent"); };
+        public static event Action AttachEvent = delegate { Log.Information("Firing AttachEvent"); };
+        public static event Action DetachEvent = delegate { Log.Information("Firing DetachEvent"); };
 
+        public void beginAttaching()
+        {
+            checkMCCStatusLoop.Enabled = true;
+            checkMCCStatusLoop.Start();
+        }
 
 
         // Check every process; if it's MCC, try to attach to it
@@ -72,7 +80,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
         private static readonly System.Timers.Timer checkMCCStatusLoop = new System.Timers.Timer()
         {
             Interval = 1000,
-            Enabled = true,
+            Enabled = false,
         };
 
         private void CheckMCCStatusLoop(object? source, EventArgs e)
@@ -97,7 +105,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             Log.Verbose("Found MCC, trying attach");
                             Log.Verbose("MCC age: " + (DateTime.Now - process.StartTime));
                             if (DateTime.Now - process.StartTime < TimeSpan.FromSeconds(3)) continue; 
-                            if (InterprocService.SetupInternal())
+                            if (InterprocService.Setup())
                             {
                                 MCCProcess = process;
                                 MCCProcess.Exited += MCCProcess_Exited;
@@ -109,6 +117,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             {
 
                                 // TODO: tell user something went wrong
+                                MessageBox.Show("Something went wrong injecting internal.. not sure what");
                                 return false;
                             }
 

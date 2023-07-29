@@ -106,9 +106,6 @@
     <ClInclude Include="GUIElementBase.h">
       <Filter>Services\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="GUIForceCheckpoint.h">
-      <Filter>Services\GUIElements</Filter>
-    </ClInclude>
     <ClInclude Include="ForceCheckpoint.h">
       <Filter>Services\Cheats</Filter>
     </ClInclude>
@@ -126,6 +123,24 @@
     </ClInclude>
     <ClInclude Include="StaticHookWrapper.h">
       <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="RPCClient.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointInfo.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceRevert.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceDoubleRevert.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISimpleButton.h">
+      <Filter>Services\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="HeartbeatTimer.h">
+      <Filter>Services</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +221,12 @@
     </ClCompile>
     <ClCompile Include="StaticHookWrapper.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCClient.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="HeartbeatTimer.cpp">
+      <Filter>Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

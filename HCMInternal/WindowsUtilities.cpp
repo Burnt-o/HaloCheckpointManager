@@ -172,7 +172,10 @@ VersionInfo getFileVersion(const char* filename)
 }
 
 
-
+bool fileExists(std::wstring path)
+{
+	return fileExists(wstr_to_str(path));
+}
 
 bool fileExists(std::string path)
 {

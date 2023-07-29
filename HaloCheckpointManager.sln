@@ -13,6 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HCMExternal", "HCMExternal\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMInterproc", "HCMInterproc\HCMInterproc.vcxproj", "{9D798DF1-8077-405E-A9F8-615105425E87}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2765793-1120-4992-8EB2-153F970F7E45}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,14 +42,14 @@ Global
 		{6041871F-23AE-4C0E-811E-496F959A6C1F}.Release|x86.Build.0 = Release|Win32
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|x64.Build.0 = Debug|Any CPU
+		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|x64.ActiveCfg = Debug|x64
+		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|x64.Build.0 = Debug|x64
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Debug|x86.Build.0 = Debug|Any CPU
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|x64.ActiveCfg = Release|Any CPU
-		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|x64.Build.0 = Release|Any CPU
+		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|x64.ActiveCfg = Release|x64
+		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|x64.Build.0 = Release|x64
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|x86.ActiveCfg = Release|Any CPU
 		{3C3194F3-2290-4D62-8E3D-660F0E707311}.Release|x86.Build.0 = Release|Any CPU
 		{9D798DF1-8077-405E-A9F8-615105425E87}.Debug|Any CPU.ActiveCfg = Debug|x64

@@ -5,6 +5,7 @@
 #include <pugixml.hpp>
 #include "HCMDirPath.h"
 #include "HaloEnums.h"
+#include "InjectRequirements.h"
 #define useDevPointerData 1
 #define debugPointerManager 1
 
@@ -41,6 +42,10 @@ class PointerManager::PointerManagerImpl {
         template <typename T>
         void instantiateVectorInteger(pugi::xml_node entry, DataKey dKey);
         void instantiateVectorString(pugi::xml_node entry, DataKey dKey);
+        void instantiateInjectRequirements(pugi::xml_node entry, DataKey dKey);
+        void instantiatePreserveLocations(pugi::xml_node entry, DataKey dKey);
+        void instantiateOffsetLengthPair(pugi::xml_node entry, DataKey dKey);
+        void instantiateInt64_t(pugi::xml_node entry, DataKey dKey);
 
 
         std::string currentGameVersion;
@@ -141,8 +146,14 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
 // explicit template instantiations of PointerManager::getData
 template
 std::shared_ptr<MultilevelPointer> PointerManager::getData(std::string dataName, std::optional<GameState> game);
-
-
+template
+std::shared_ptr<InjectRequirements> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+template
+std::shared_ptr<PreserveLocations> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+template
+std::shared_ptr<offsetLengthPair> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+template
+std::shared_ptr<int64_t> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 
 std::string PointerManager::PointerManagerImpl::readLocalXML()
 {
@@ -418,6 +429,22 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
                 throw HCMInitException(std::format("Unsupported typename passed to instantiateVector {}: {}", entryName, typeName));
 
         }
+        else if (entryType.starts_with("injectRequirements"))
+        {
+            instantiateInjectRequirements(versionEntry, dKey);
+        }
+        else if (entryType.starts_with("preserveLocations"))
+        {
+            instantiatePreserveLocations(versionEntry, dKey);
+        }
+        else if (entryType.starts_with("offsetLengthPair"))
+        {
+            instantiateOffsetLengthPair(versionEntry, dKey);
+        }
+        else if (entryType.starts_with("int64_t"))
+        {
+            instantiateInt64_t(versionEntry, dKey);
+        }
     }
 }
 
@@ -565,17 +592,8 @@ void PointerManager::PointerManagerImpl::instantiateVectorInteger(pugi::xml_node
 
     while (std::getline(ss, tmp, ','))
     {
-        // Hexadecimal conversion
-        auto number = tmp.contains("0x") ? stoll(tmp, 0, 16) : stoll(tmp);
-        try
-        {
-            out.get()->push_back((T)number);
-
-        }
-        catch (const std::bad_cast& e)
-        {
-            throw HCMInitException(std::format("Could not convert number to typename for entry {}: {}", dKey._Myfirst._Val, e.what()));
-        }
+        auto number = stringToInt(tmp);
+        out.get()->push_back((T)number);
     }
 
     
@@ -634,10 +652,90 @@ void PointerManager::PointerManagerImpl::instantiateVectorString(pugi::xml_node 
     }
 
     mAllData.try_emplace(dKey, out);
+}
 
+void PointerManager::PointerManagerImpl::instantiateInjectRequirements(pugi::xml_node versionEntry, DataKey dKey)
+{
+    InjectRequirements working;
 
+    enum string_to_enum {
+        singleCheckpoint, preserveLocations, SHA, BSP
+    };
+
+    const static std::unordered_map<std::string, int> string_to_case{
+        {"singleCheckpoint", singleCheckpoint},
+        { "preserveLocations", preserveLocations },
+        { "SHA", SHA },
+        { "BSP", BSP },
+    };
+
+    for (pugi::xml_node boolEntry = versionEntry.first_child(); boolEntry; boolEntry = boolEntry.next_sibling())
+    {
+        std::string s = boolEntry.name();
+        
+        if (!string_to_case.contains(s)) throw HCMInitException(std::format("InjectionRequirements had a bad string: {}", s));
+
+        switch (string_to_case.at(s))
+        {
+        case singleCheckpoint:
+            working.singleCheckpoint = boolEntry.text().as_bool();
+        case preserveLocations:
+            working.preserveLocations = boolEntry.text().as_bool();
+        case SHA:
+            working.SHA = boolEntry.text().as_bool();
+        case BSP:
+            working.BSP = boolEntry.text().as_bool();
+        }
+    }
+
+    mAllData.emplace(dKey, std::make_shared<InjectRequirements>(working));
 
 }
 
+void PointerManager::PointerManagerImpl::instantiateInt64_t(pugi::xml_node versionEntry, DataKey dKey)
+{
+    std::string text = versionEntry.first_child().text().as_string();
+    auto working = stringToInt(text);
+
+    mAllData.emplace(dKey, std::make_shared<int64_t>(working));
+}
+
+void PointerManager::PointerManagerImpl::instantiateOffsetLengthPair(pugi::xml_node versionEntry, DataKey dKey)
+{
+    std::string offsetText = versionEntry.child("offset").text().as_string();
+    std::string lengthText = versionEntry.child("length").text().as_string();
+    auto offset = stringToInt(offsetText);
+    auto length = stringToInt(lengthText);
+
+    if (length <= 0) throw HCMInitException("Cannot have non-positive offsetLengthPair length");
+
+    offsetLengthPair working{ offset, length };
+
+    mAllData.emplace(dKey, std::make_shared<offsetLengthPair>(working));
+}
+
+void PointerManager::PointerManagerImpl::instantiatePreserveLocations(pugi::xml_node versionEntry, DataKey dKey)
+{
+
+    std::shared_ptr<PreserveLocations> result = std::make_shared<PreserveLocations>();
+    auto& plmap = result.get()->locations; // ref to PreserveLocation map that we will insert into
+
+    for (pugi::xml_node locationEntry = versionEntry.first_child(); locationEntry; locationEntry = locationEntry.next_sibling())
+    {
+        std::string offsetText = locationEntry.child("Offset").text().as_string(); //capitalised strings since I can't be bothered undoing from HCM2 pointerdata
+        std::string lengthText = locationEntry.child("Length").text().as_string();
+        auto offset = stringToInt(offsetText);
+        auto length = stringToInt(lengthText);
+
+        if (length <= 0) throw HCMInitException("Cannot have non-positive preserveLocation length");
+
+        // construct a (empty) vector of length's length and emplace into map with offset as key
+        std::vector<byte> vec;
+        vec.resize(length, 0); // fill with zeroes
+        plmap.emplace(offset, length);
+    }
+
+    mAllData.emplace(dKey, result);
+}
 
 

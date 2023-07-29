@@ -9,12 +9,12 @@ private:
 	bool isUsable = false;
 
 protected:
-	GameState mGameImpl;
+	GameState mGame;
 	static std::string_view getClassNameMain1() { return "CheatBase"; }
 
 	void setUsability(bool newVal) { isUsable = newVal; }
 public:
-	CheatBase(GameState gameImpl) : mGameImpl(gameImpl) {}
+	CheatBase(GameState gameImpl) : mGame(gameImpl) {}
 	virtual ~CheatBase() = default;
 
 	virtual void initialize() = 0;

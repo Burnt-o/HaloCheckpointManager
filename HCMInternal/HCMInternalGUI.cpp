@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "HCMInternalGUI.h"
 #include "GlobalKill.h"
-#include "GUIForceCheckpoint.h"
+#include "GUISimpleButton.h"
 #include "GameStateHook.h"
 #define addTooltip(x) if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) ImGui::SetTooltip(x)
 
@@ -151,8 +151,17 @@ void HCMInternalGUI::renderErrorDialog()
 
 }
 
+const std::set<GameState> AllGames{GameState::Halo1, GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4};
 
-std::vector<std::shared_ptr<GUIElementBase>> HCMInternalGUI::allGUIElements{ std::make_shared<GUIForceCheckpoint>() };
+std::vector<std::shared_ptr<GUIElementBase>> HCMInternalGUI::allGUIElements
+{
+	std::make_shared<GUISimpleButton>(AllGames, "Force Checkpoint", OptionsState::forceCheckpointEvent),
+		std::make_shared<GUISimpleButton>(AllGames, "Force Revert", OptionsState::forceRevertEvent),
+		std::make_shared<GUISimpleButton>(std::set<GameState>{GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4}, "Force Double Revert", OptionsState::forceDoubleRevertEvent),
+		std::make_shared<GUISimpleButton>(AllGames, "Inject Checkpoint", OptionsState::injectCheckpointEvent), // won't be simple buttons later
+		std::make_shared<GUISimpleButton>(AllGames, "Dump Checkpoint", OptionsState::dumpCheckpointEvent), // won't be simple buttons later
+
+};
 
 
 void HCMInternalGUI::onGameStateChange(GameState newGameState, std::string newLevel)

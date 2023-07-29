@@ -76,6 +76,14 @@ void MessagesGUI::drawMessage(const temporaryMessage& message, const ImVec2& pos
 	ImColor textColor(1.f, 0.2f, 0.0f, opacity); // todo: mess with colours. maybe increase font size?
 	ImColor outlineColor(0.3f, 0.f, 0.3f, opacity);
 
+#ifdef HCM_DEBUG // these checks are probably bad for performance
+	if (position.x < 0) PLOG_FATAL << "position.x < 0: " << position.x;
+	if (position.y < 0) PLOG_FATAL << "position.y < 0: " << position.y;
+	if (message.message.size() == 0) PLOG_FATAL << "message size == 0";
+
+#endif
+
+
 	// outline
 	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x, position.y - outlineWidth), outlineColor, message.message.c_str());
 	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x, position.y + outlineWidth), outlineColor, message.message.c_str());

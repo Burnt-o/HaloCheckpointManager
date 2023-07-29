@@ -44,24 +44,35 @@ namespace HCMExternal.Services.DataPointersServiceNS
         /// <returns></returns>
         public object? GetPointer(string? pointerName, string? pointerVersion)
         {
+            // validate args
             if (pointerName == null || pointerVersion == null)
             {
                 return null;
             }
 
+            // find pointer name in data
             bool success = PointerData.TryGetValue(pointerName, out Dictionary<string, object>? pointerVersionDictionary);
-            if (!success || pointerVersionDictionary == null)
+            if (success && pointerVersionDictionary != null)
             {
-                return null;
+                // test "All" version first
+                success = pointerVersionDictionary.TryGetValue("All", out object? allPointer);
+                if (success && allPointer != null)
+                {
+                    return (object)allPointer;
+                }
+                else
+                {
+                    // test specific requested version
+                    success = pointerVersionDictionary.TryGetValue(pointerVersion, out object? pointer);
+                    if (success && pointer != null)
+                    {
+                        return (object)pointer;
+                    }
+                }
             }
 
-            success = pointerVersionDictionary.TryGetValue(pointerVersion, out object? pointer);
-            if (!success || pointer == null)
-            {
-                return null;
-            }
-
-            return (object)pointer;
+            // failure
+            return null;
         }
 
 
