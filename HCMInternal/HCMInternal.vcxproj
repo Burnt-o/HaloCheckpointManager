@@ -187,13 +187,13 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CheckpointInfo.h" />
     <ClInclude Include="CheatBase.h" />
     <ClInclude Include="CheatManager.h" />
     <ClInclude Include="CheckpointInjectDump.h" />
     <ClInclude Include="ControlDefs.h" />
     <ClInclude Include="CustomExceptions.h" />
     <ClInclude Include="D3D11Hook.h" />
+    <ClInclude Include="ExternalInfo.h" />
     <ClInclude Include="ForceCheckpoint.h" />
     <ClInclude Include="ForceDoubleRevert.h" />
     <ClInclude Include="ForceRevert.h" />
@@ -222,7 +222,7 @@
     <ClInclude Include="OptionsState.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PointerManager.h" />
-    <ClInclude Include="RPCClient.h" />
+    <ClInclude Include="RPCClientInternal.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
     <ClInclude Include="StaticHookWrapper.h" />
     <ClInclude Include="WindowsUtilities.h" />
@@ -264,7 +264,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PointerManager.cpp" />
-    <ClCompile Include="RPCClient.cpp" />
+    <ClCompile Include="RPCClientInternal.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
     <ClCompile Include="HCMDirPath.cpp" />
     <ClCompile Include="StaticHookWrapper.cpp" />

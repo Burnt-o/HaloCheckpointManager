@@ -11,37 +11,17 @@ using HCMExternal.ViewModels.Commands;
 using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Services.MCCStateServiceNS;
 using System.Windows;
+using System.Runtime.CompilerServices;
+using System.Data.Common;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace HCMExternal.Services.InterprocServiceNS
 {
-    public class InterprocService
+    public partial class InterprocService
     {
 
         private CheckpointViewModel CheckpointViewModel;
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        private struct checkpointInjectInfoExternal
-        {
-            public checkpointInjectInfoExternal() { }
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)] public string checkpointFilePath = "";
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)] public string levelCode = "";
-            [MarshalAs(UnmanagedType.I8)] public Int64 difficulty = 0;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)] public string version = "";
-            [MarshalAs(UnmanagedType.U1)] public  bool requestFailed = true;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct checkpointDumpInfoExternal
-        {
-            public checkpointDumpInfoExternal() { }
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)] public string dumpFolderPath = "";
-            [MarshalAs(UnmanagedType.U1)] public bool requestFailed = true;
-        }
-
-        private delegate Int64 PFN_HEARTBEATCALLBACK();
-        [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void HeartbeatEventSubscribe(PFN_HEARTBEATCALLBACK callback);
-        private PFN_HEARTBEATCALLBACK DEL_HEARTBEATCALLBACK;
 
         private delegate void PFN_ERRORCALLBACK(string str);
         [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
@@ -53,17 +33,13 @@ namespace HCMExternal.Services.InterprocServiceNS
         private static extern void LogEventSubscribe(PFN_LOGCALLBACK callback);
         private PFN_LOGCALLBACK DEL_LOGCALLBACK;
 
-        private delegate checkpointInjectInfoExternal PFN_InternalRequestsInjectInfoCALLBACK(int game);
-        [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void InternalRequestsInjectInfoEventSubscribe(PFN_InternalRequestsInjectInfoCALLBACK callback);
-        private PFN_InternalRequestsInjectInfoCALLBACK DEL_InternalRequestsInjectInfoCALLBACK;
+        [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
+        private static partial void updateSelectedCheckpoint([MarshalAs(UnmanagedType.Bool)]bool nullData, int game = 0, string name = "", string path = "", string levelcode = "", string gameVersion = "", int difficulty = 0);
 
-        private delegate checkpointDumpInfoExternal PFN_InternalRequestsDumpInfoCALLBACK(int game);
-        [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void InternalRequestsDumpInfoEventSubscribe(PFN_InternalRequestsDumpInfoCALLBACK callback);
-        private PFN_InternalRequestsDumpInfoCALLBACK DEL_InternalRequestsDumpInfoCALLBACK;
+        [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
+        private static partial void updateSelectedFolder([MarshalAs(UnmanagedType.Bool)] bool nullData, int game = 0, string name = "", string path = "");
 
-        //todo: sendinject/senddump stuff;
+
 
 
         [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal();
@@ -71,6 +47,8 @@ namespace HCMExternal.Services.InterprocServiceNS
         public InterprocService(CheckpointViewModel checkpointViewModel)
         {
             CheckpointViewModel = checkpointViewModel;
+
+            CheckpointViewModel.PropertyChanged += CheckpointViewModel_PropertyChanged;
 
             // NOTE: do NOT put temporaries into the subscribes. They will eventually get garbage collected, then Interproc will eventually call them leading to KABOOM. I learned the hard way.
 
@@ -81,19 +59,47 @@ namespace HCMExternal.Services.InterprocServiceNS
             DEL_LOGCALLBACK = new PFN_LOGCALLBACK(LOGCALLBACK);
             LogEventSubscribe(DEL_LOGCALLBACK);
 
-            DEL_HEARTBEATCALLBACK = new PFN_HEARTBEATCALLBACK(HEARTBEATCALLBACK);
-            HeartbeatEventSubscribe(DEL_HEARTBEATCALLBACK);
+            //DumpCommand.DumpEvent += () => 
+            //{
+            //    Log.Information("Sending dump command to internal");
+            //    sendDumpCommand();
+            //};
+            //InjectCommand.InjectEvent += () =>
+            //{
+            //    Log.Information("Sending inject command to internal");
+            //    sendInjectCommand();
+            //};
 
-            // internal will fire these when it needs info for inject/dump
-            DEL_InternalRequestsInjectInfoCALLBACK = new PFN_InternalRequestsInjectInfoCALLBACK(getInjectInfo);
-            InternalRequestsInjectInfoEventSubscribe(DEL_InternalRequestsInjectInfoCALLBACK);
 
-            DEL_InternalRequestsDumpInfoCALLBACK = new PFN_InternalRequestsDumpInfoCALLBACK(getDumpInfo);
-            InternalRequestsDumpInfoEventSubscribe(DEL_InternalRequestsDumpInfoCALLBACK);
 
-            DumpCommand.DumpEvent += SendDumpCommand;
-            InjectCommand.InjectEvent += SendInjectCommand;
+        }
 
+        private void CheckpointViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Task.Run(() => {
+                if (e.PropertyName == nameof(CheckpointViewModel.SelectedCheckpoint))
+                {
+                    Log.Verbose("sending new cp info");
+                    var cp = CheckpointViewModel.SelectedCheckpoint;
+                    var sf = CheckpointViewModel.SelectedSaveFolder;
+                    Log.Verbose(string.Format("Sending new checkpoint info to internal, null cp: {0}, null sf: {1}", cp == null ? "true" : "false", ", null sf:" + sf == null ? "true" : "false"));
+                    if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null)
+                        updateSelectedCheckpoint(true);
+                    else
+                        updateSelectedCheckpoint(false, (int)CheckpointViewModel.SelectedGame, cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "");
+                }
+                else if (e.PropertyName == nameof(CheckpointViewModel.SelectedSaveFolder))
+                {
+                    Log.Verbose("sending new sf info");
+                    var sf = CheckpointViewModel.SelectedSaveFolder;
+                    Log.Verbose(string.Format("Sending new saveFolder info to internal: {0}", sf == null ? "null!" : sf.SaveFolderPath));
+                    if (sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null)
+                        updateSelectedFolder(true);
+                    else
+                        updateSelectedFolder(false, (int)CheckpointViewModel.SelectedGame, sf.SaveFolderName, sf.SaveFolderPath);
+                }
+            });
+           
 
         }
 
@@ -103,136 +109,22 @@ namespace HCMExternal.Services.InterprocServiceNS
             return SetupInternal();
         }
 
-        private enum HCMCommand
-        {
-            None = 0,
-            Inject = 1,
-            Dump = 2
-        }
 
-        private static HCMCommand currentCommand = HCMCommand.None;
 
         private void ERRORCALLBACK(string message)
         {
             Log.Error("A HCMInterproc error occured: " + message);
+            MessageBox.Show("An internal error occured: \n\n" + message + "\nLet Burnt know on discord. If the error keeps occuring, try disabling advanced cheats in settings.");
         }
 
         private void LOGCALLBACK(string message)
         {
-            Log.Verbose("Marco");
             Log.Verbose("HCMInterproc: " + message);
-            Log.Verbose("Polo");
         }
 
-        private Int64 HEARTBEATCALLBACK()
-        {
-            Log.Verbose("Recieved heartbeat command from internal! Gonna send it: " + currentCommand.ToString());
-            if (currentCommand == HCMCommand.Dump)
-            {
-                currentCommand = HCMCommand.None;
-                return (Int64)HCMCommand.Dump;
-            }
-            if (currentCommand == HCMCommand.Inject)
-            {
-                currentCommand = HCMCommand.None;
-                return (Int64)HCMCommand.Inject;
-            }
-
-            return (Int64)currentCommand; // none
-        }
+    
 
 
-        private void SendInjectCommand()
-        {
-            Log.Information("Sending inject command to internal");
-            currentCommand = HCMCommand.Inject;
-        }
-
-        private void SendDumpCommand()
-        {
-            Log.Information("Sending dump command to internal");
-            currentCommand = HCMCommand.Dump;
-        }
-
-        private checkpointInjectInfoExternal getInjectInfo(int game)
-        {
-            Log.Information("getInjectInfo");
-            checkpointInjectInfoExternal working = new(); // requestFailed is initialized to true for if we early return on error
-
-            // Set checkpointviewmodel tab to match game
-            if (!Enum.IsDefined(typeof(HaloTabEnum), game))
-            {
-                Log.Error("HaloTabEnum was not defined for game: " + game);
-                return working;
-            }
-            CheckpointViewModel.RequestTabChange((HaloTabEnum)game);
-
-            if (CheckpointViewModel.SelectedSaveFolder?.SaveFolderPath == null || CheckpointViewModel.SelectedCheckpoint == null)
-            {
-                Log.Error("SaveFolderPath or SelectedCheckpoint was null. Game: " + game + ", SelectedSaveFolder == null: " + (CheckpointViewModel.SelectedSaveFolder == null) + ", SelectedCheckpoint == null" + (CheckpointViewModel.SelectedCheckpoint == null));
-                return working;
-            }
-            working.checkpointFilePath = CheckpointViewModel.SelectedSaveFolder.SaveFolderPath + CheckpointViewModel.SelectedCheckpoint.CheckpointName;
-            Log.Debug("Set checkpointFilePath to " + working.checkpointFilePath);
-
-            if (CheckpointViewModel.SelectedCheckpoint.LevelName == null)
-            {
-                Log.Error("LevelName was null!");
-                return working;
-            }
-            working.levelCode = CheckpointViewModel.SelectedCheckpoint.LevelName;
-
-            if (CheckpointViewModel.SelectedCheckpoint.Difficulty == null)
-            {
-                Log.Error("Difficulty was null!");
-                return working;
-            }
-            working.difficulty = (int)CheckpointViewModel.SelectedCheckpoint.Difficulty;
-
-            if (CheckpointViewModel.SelectedCheckpoint.GameVersion == null)
-            {
-                // This is fine
-                Log.Debug("Game version was null but that can happen");
-                working.version = "null";
-            }
-            else
-            {
-                working.version = CheckpointViewModel.SelectedCheckpoint.GameVersion;
-            }
-
-            // Finally, set requestFailed to false and return.
-            working.requestFailed = false;
-            return working;
-
-
-        }
-
-
-        private checkpointDumpInfoExternal getDumpInfo(int game)
-        {
-            Log.Information("getDumpInfo");
-            checkpointDumpInfoExternal working = new(); // requestFailed is initialized to true for if we early return on error
-
-            // Set checkpointviewmodel tab to match game
-            if (!Enum.IsDefined(typeof(HaloTabEnum), game))
-            {
-                Log.Error("HaloTabEnum was not defined for game: " + game);
-                return working;
-            }
-            CheckpointViewModel.RequestTabChange((HaloTabEnum)game);
-
-            if (CheckpointViewModel.SelectedSaveFolder == null || CheckpointViewModel.SelectedSaveFolder.SaveFolderPath == null)
-            {
-                Log.Error("SelectedSaveFolder was null!");
-                return working;
-            }
-            working.dumpFolderPath = CheckpointViewModel.SelectedSaveFolder.SaveFolderPath;
-            Log.Debug("Setting dumpInfo savefolderpath to : " + CheckpointViewModel.SelectedSaveFolder.SaveFolderPath);
-
-            // Finally, set requestFailed to false and return.
-            working.requestFailed = false;
-            return working;
-        }
 
     }
 }

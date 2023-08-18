@@ -5,16 +5,15 @@
 #include "HCMDirPath.h"
 #include "HaloEnums.h"
 #include "InjectRequirements.h"
-#include "CheckpointInfo.h"
-
-class RPCClient
+#include "ExternalInfo.h"
+class RPCClientInternal
 {
 private:
-    static RPCClient* instance;
+    static RPCClientInternal* instance;
     rpc::client client{"127.0.0.1", 8069};
 
 public:
-    RPCClient()
+    RPCClientInternal()
     {
         if (instance != nullptr) throw HCMInitException("Cannot have more than one RPCClient");
         instance = this;
@@ -40,9 +39,16 @@ public:
 
 
     }
+    static void sendFatalInternalError(std::string err)
+    {
+            rpc::client temp_client{"127.0.0.1", 8545};
+            temp_client.async_call("fatalInternalError", err);
+    }
 
-    static checkpointInjectInfoInternal requestInjectInfo(GameState game);
-    static checkpointDumpInfoInternal requestDumpInfo(GameState game); // called by checkpoint dump. External will use this to align tab also.
-    static int sendHeartbeat();
+    static bool sendHeartbeat();
+
+    static SelectedCheckpointData getInjectInfo();
+    static SelectedFolderData getDumpInfo();
+
 };
 

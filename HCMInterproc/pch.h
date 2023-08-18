@@ -13,6 +13,7 @@
 #include <winternl.h>
 #include <Dbghelp.h>
 
+#include <map>
 #include <string>
 #include <format>
 #include <fstream>
@@ -27,6 +28,6 @@
 #include <plog\Formatters\TxtFormatter.h>
 #include <plog/Formatters/FuncMessageFormatter.h>
 
-
+//boost
 
 #endif //PCH_H

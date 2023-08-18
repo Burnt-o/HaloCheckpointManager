@@ -1,6 +1,4 @@
 #pragma once
-
-
 // Copy of MCC's gameindicator enum, with addition of "Menu"
 enum class GameState
 {
@@ -21,3 +19,23 @@ extern std::map<std::string, GameState> StringToGameState;
 extern std::map<GameState, std::string> GameStateToString;
 
 extern std::vector<GameState> AllSupportedGames;
+
+
+struct SelectedCheckpointData {
+	bool selectedCheckpointNull = true;
+	int selectedCheckpointGame = 0;
+	std::string selectedCheckpointName = "";
+	std::string selectedCheckpointFilePath = "";
+	std::string selectedCheckpointLevelCode = "";
+	std::string selectedCheckpointGameVersion = "";
+	int selectedCheckpointDifficulty = 0;
+
+};
+
+struct SelectedFolderData {
+	bool selectedFolderNull = true;
+	int selectedFolderGame = 0;
+	std::string selectedFolderName = "";
+	std::string selectedFolderPath = "";
+};
+

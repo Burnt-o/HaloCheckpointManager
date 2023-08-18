@@ -2,9 +2,9 @@
 #include "Inject.h"
 #include "Events.h"
 #include "WinHandle.h"
-#include "RPCServer.h"
+#include "RPCServerExternal.h"
 
-std::unique_ptr<RPCServer> server;
+std::unique_ptr<RPCServerExternal> server;
 
 class MissingPermissionException : public std::exception {
 private:
@@ -59,7 +59,7 @@ bool SetupInternal()
 
 		// Init rpc server
 		server.reset();
-		server = std::make_unique<RPCServer>();
+		server = std::make_unique<RPCServerExternal>();
 
 
 		InjectModule(mccPID, dllFilePath);

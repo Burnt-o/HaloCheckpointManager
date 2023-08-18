@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "WindowsUtilities.h"
 #include "HCMDirPath.h"
-
+#include "RPCClientInternal.h"
 
 std::wstring str_to_wstr(const std::string str)
 {
@@ -85,6 +85,7 @@ void make_minidump(EXCEPTION_POINTERS* e)
 		e ? &exceptionInfo : nullptr,
 		nullptr,
 		nullptr);
+	RPCClientInternal::sendFatalInternalError(std::format("An unhandled exception occured! Dumped crash information to {}", dumpFilePath));
 	PLOG_FATAL << "Dumped crash information to " << dumpFilePath;
 	CloseHandle(hFile);
 

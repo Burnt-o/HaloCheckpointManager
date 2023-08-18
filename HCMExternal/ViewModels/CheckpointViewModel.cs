@@ -53,7 +53,7 @@ namespace HCMExternal.ViewModels
 
 
 
-        private Checkpoint? _selectedCheckpoint;
+        private Checkpoint? _selectedCheckpoint = null;
         public Checkpoint? SelectedCheckpoint
         {
             get { return _selectedCheckpoint; }
@@ -64,7 +64,7 @@ namespace HCMExternal.ViewModels
             }
         }
 
-        private SaveFolder? _selectedSaveFolder;
+        private SaveFolder? _selectedSaveFolder = null;
         public SaveFolder? SelectedSaveFolder
         { get { return _selectedSaveFolder; }
             set
@@ -77,7 +77,7 @@ namespace HCMExternal.ViewModels
                     }
                     else
                     {
-                        Log.Verbose("Setting saveFolderPath to {}", value.SaveFolderPath);
+                        Log.Verbose(string.Format("Setting saveFolderPath to {0}", value.SaveFolderPath));
                     }
 
                 }

@@ -124,11 +124,8 @@
     <ClInclude Include="StaticHookWrapper.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="RPCClient.h">
+    <ClInclude Include="RPCClientInternal.h">
       <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="CheckpointInfo.h">
-      <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="ForceRevert.h">
       <Filter>Services\Cheats</Filter>
@@ -141,6 +138,9 @@
     </ClInclude>
     <ClInclude Include="HeartbeatTimer.h">
       <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ExternalInfo.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -222,7 +222,7 @@
     <ClCompile Include="StaticHookWrapper.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="RPCClient.cpp">
+    <ClCompile Include="RPCClientInternal.cpp">
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="HeartbeatTimer.cpp">

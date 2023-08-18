@@ -3,11 +3,10 @@
 #include "MultilevelPointer.h"
 #include "InjectRequirements.h"
 #include "PointerManager.h"
-#include "RPCClient.h"
+#include "RPCClientInternal.h"
 #include "GameStateHook.h"
 #include "boost\iostreams\device\mapped_file.hpp"
 #include "openssl\sha.h"
-#include "CheckpointInfo.h"
 
 
 void injectCoreSave(std::string sourceSavePath)
@@ -43,22 +42,25 @@ public:
 		if (GameStateHook::getCurrentGameState() != mImplGame) return;
 		try
 		{
+			auto currentCheckpoint = RPCClientInternal::getInjectInfo();
+			PLOG_DEBUG << "Attempting inject";
+			if (currentCheckpoint.selectedCheckpointNull) throw HCMRuntimeException("Can't inject - no checkpoint selected!");
+			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't inject - checkpoint from wrong game! Expected: {}, Actual: {}", GameStateToString.at(this->mImplGame), GameStateToString.at((GameState)currentCheckpoint.selectedCheckpointGame)));
+			// TODO: add version, difficulty, and levelcode checks (if user wants them)
+
+			PLOG_DEBUG << "injectPath: " << currentCheckpoint.selectedCheckpointFilePath;
+
 			// get checkpoint length (useful later)
 			auto checkpointLength = *mCheckpointLength.get();
 
 			// get the path to the checkpoint file to inject
-			auto injectInfo = RPCClient::requestInjectInfo(mImplGame);
-
-			if (injectInfo.requestFailed) throw HCMRuntimeException("injectInfo request not fully completed");
-			PLOG_DEBUG << "requestInjectInfo succeeded! Path received: " << injectInfo.checkpointFilePath;
 
 
 			// check that the file actually exists
-			std::string checkpointFilePath = injectInfo.checkpointFilePath;
-			if (!fileExists(checkpointFilePath)) throw HCMRuntimeException(std::format("Checkpoint didn't exist at path: {}", checkpointFilePath));;
+			if (!fileExists(currentCheckpoint.selectedCheckpointFilePath)) throw HCMRuntimeException(std::format("Checkpoint didn't exist at path: {}", currentCheckpoint.selectedCheckpointFilePath));;
 
 			// check that the file is the correct length
-			std::ifstream fileTestLength(checkpointFilePath, std::ios::binary);
+			std::ifstream fileTestLength(currentCheckpoint.selectedCheckpointFilePath, std::ios::binary);
 			fileTestLength.seekg(0, std::ios::end);
 			uint64_t actualLength = fileTestLength.tellg();
 			fileTestLength.close();
@@ -71,7 +73,7 @@ public:
 			// core saves have different implementation
 			if (GameStateHook::getCurrentGameState() == GameState::Halo1 && OptionsState::injectDumpCores.GetValue())
 			{
-				injectCoreSave(checkpointFilePath);
+				injectCoreSave(currentCheckpoint.selectedCheckpointFilePath);
 				return;
 			}
 
@@ -96,6 +98,7 @@ public:
 			// store preserveLocations of original checkpoint
 			if (mInjectRequirements.get()->preserveLocations)
 			{
+				PLOG_VERBOSE << "storing preserveLocations";
 				for (auto& [offset, vec] : mPreserveLocations.get()->locations)
 				{
 					auto err = memcpy_s(vec.data(), vec.size(), (void*)(checkpointLoc + offset), vec.size());
@@ -105,7 +108,7 @@ public:
 
 			// store checkpoint data in a vector buffer
 			// uses memory-mapped file + memcpy
-			boost::iostreams::mapped_file_source checkpointFile (checkpointFilePath);
+			boost::iostreams::mapped_file_source checkpointFile (currentCheckpoint.selectedCheckpointFilePath);
 			if (!checkpointFile.is_open()) throw HCMRuntimeException(std::format("Failed to open checkpoint file for reading"));
 			if (checkpointFile.size() != checkpointLength)
 			{
@@ -113,30 +116,34 @@ public:
 				throw HCMRuntimeException(std::format("Checkpoint file was incorrect length! expected: {:x}, actual: {:x}", checkpointLength, checkpointFile.size()));
 			}
 			std::vector<byte> checkpointData;
-			checkpointData.reserve(checkpointLength);
+			checkpointData.resize(checkpointLength);
 			auto err = memcpy_s(checkpointData.data(), checkpointLength, checkpointFile.data(), checkpointLength);
 			checkpointFile.close();
 			if (err) throw HCMRuntimeException(std::format("error loading checkpointdata from file! code: {}", err));
+			if (checkpointData.size() != checkpointLength) 	throw HCMRuntimeException(std::format("Checkpoint data was incorrect length! expected: {:x}, actual: {:x}", checkpointLength, checkpointData.size()));
 
-			// load preserveLocations (and zero last 10 bytes)
+			// load preserveLocations
 			if (mInjectRequirements.get()->preserveLocations)
 			{
+				PLOG_VERBOSE << "loading preserveLocations";
 				for (auto& [offset, vec] : mPreserveLocations.get()->locations)
 				{
 					auto err = memcpy_s((void*)(checkpointData.data() + offset), vec.size(), vec.data(), vec.size());
 					if (err) throw HCMRuntimeException(std::format("error loading preserveLocation data! code: {}", err));
 				}
+			}
 
-				for (auto it = checkpointData.rbegin(); it != checkpointData.rbegin() + 10; ++it)
-				{
-					PLOG_VERBOSE << "this should only print 10 times.. right?";
-					*it = 0;
-				}
+			// zero out last 10 bytes
+			for (auto it = checkpointData.rbegin(); it != checkpointData.rbegin() + 10; ++it)
+			{
+				*it = 0;
 			}
 
 
 			// calculate and set SHA
+			if (mInjectRequirements.get()->SHA)
 			{
+				PLOG_VERBOSE << "setting SHA data";
 				// zero out SHA bytes in checkpoint Data
 				for (auto it = checkpointData.begin() + mSHAdata.get()->offset; it <= checkpointData.begin() + mSHAdata.get()->offset + mSHAdata.get()->length; ++it)
 				{
@@ -156,9 +163,12 @@ public:
 			err = memcpy_s((void*)checkpointLoc, checkpointLength, checkpointData.data(), checkpointData.size());
 			if (err) throw HCMRuntimeException(std::format("error writing checkpointdata to game! code: {}", err));
 
+			PLOG_VERBOSE << "wrote checkpoint data to location: " << std::hex << (uint64_t)checkpointLoc;
+
 			// set BSP data
 			if (mInjectRequirements.get()->BSP)
 			{
+				PLOG_VERBOSE << "setting BSP data";
 				std::vector<byte> currentBSPData;
 				auto err = memcpy_s(currentBSPData.data(), mBSPdata.get()->length, (void*)(checkpointLoc + mBSPdata.get()->offset), mBSPdata.get()->length);
 				if (err) throw HCMRuntimeException(std::format("error copying bsp data! code: {}", err));
@@ -178,7 +188,7 @@ public:
 			// TODO: force revert if setting set
 
 
-			PLOG_INFO << "succesfully injected checkpoint from path: " << injectInfo.checkpointFilePath;
+			PLOG_INFO << "succesfully injected checkpoint from path: " << currentCheckpoint.selectedCheckpointFilePath;
 
 		}
 		catch (HCMRuntimeException ex)
@@ -193,18 +203,18 @@ public:
 
 		try
 		{
-			// TODO: force checkpoint if setting set
+			auto currentSaveFolder = RPCClientInternal::getDumpInfo();
+			PLOG_DEBUG << "Attempting dump";
+			if (currentSaveFolder.selectedFolderNull) throw HCMRuntimeException("No savefolder selected, somehow?!");
+			if ((GameState)currentSaveFolder.selectedFolderGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't dump - savefolder from wrong game! Expected: {}, Actual: {}", GameStateToString.at(this->mImplGame), GameStateToString.at((GameState)currentSaveFolder.selectedFolderGame)));
 
+			// TODO: force checkpoint if setting se
 			// get the folder to dump the checkpoint file to
-			auto dumpInfo = RPCClient::requestDumpInfo(mImplGame);
-			if (dumpInfo.requestFailed) throw HCMRuntimeException("dumpInfo call not fully completed");
-			PLOG_DEBUG << "requestDumpInfo succeeded! Path received: " << dumpInfo.dumpFolderPath;
-			std::string dumpFolder = dumpInfo.dumpFolderPath;
 			// ask the user what they want to call it
 			// TODO (need to implement dialogbox stuff, and make sure we're on a seperate thread)
-			auto dumpPath = dumpFolder + "\\someCheckpointName.bin";
-
-			// core saves have different implementation
+			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\someCheckpointName.bin";
+			PLOG_DEBUG << "dump path: " << dumpPath;
+;			// core saves have different implementation
 			if (GameStateHook::getCurrentGameState() == GameState::Halo1 && OptionsState::injectDumpCores.GetValue())
 			{
 				dumpCoreSave(dumpPath);
@@ -279,8 +289,12 @@ void CheckpointInjectDump::initialize()
 	impl = std::make_unique<AllImpl>(mGame);
 
 	// subscribe to events (this won't happen if impl construction failed cause of missing pointer data or w/e)
-	mInjectCallbackHandle = OptionsState::injectCheckpointEvent.append([this]() { impl->onInject(); });
-	mDumpCallbackHandle = OptionsState::dumpCheckpointEvent.append([this]() { impl->onDump(); });
+	mInjectCallbackHandle = OptionsState::injectCheckpointEvent.append([this]() { 
+			impl->onInject();
+		 });
+	mDumpCallbackHandle = OptionsState::dumpCheckpointEvent.append([this]() { 
+			impl->onDump();
+		 });
 
 	setUsability(true);
 }

@@ -16,7 +16,7 @@
 #include "MessagesGUI.h"
 #include "GameStateHook.h"
 #include "CheatManager.h"
-#include "RPCClient.h"
+#include "RPCClientInternal.h"
 #include "HeartbeatTimer.h"
 //both plog and rpc define these
 #ifdef LOG_INFO 
@@ -42,8 +42,9 @@ void RealMain(HMODULE dllHandle)
     try
     {
 
-        // rpc also inits logging
-       auto rpc = std::make_shared<RPCClient>();
+        // rpcClient also inits logging
+
+       auto rpcClient = std::make_shared<RPCClientInternal>();
 
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -69,9 +70,7 @@ void RealMain(HMODULE dllHandle)
         auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
         auto cm = std::make_unique<CheatManager>(); // needs to be after MessagesGUI and PointerManager
 
-
-        auto hb = std::make_unique<HeartbeatTimer>(rpc);
-
+        auto hb = std::make_unique<HeartbeatTimer>(rpcClient);
 
 
 
@@ -107,8 +106,11 @@ void RealMain(HMODULE dllHandle)
     }
     catch (HCMInitException& ex)
     {
-        PLOG_FATAL << "Failed initializing: " << ex.what();
-        PLOG_FATAL << "Please send Burnt the log file located at: " << std::endl << Logging::GetLogFileDestination();
+        std::ostringstream oss;
+        oss << "Failed initializing: " << ex.what() << std::endl
+            << "Please send Burnt the log file located at: " << std::endl << Logging::GetLogFileDestination();
+        PLOG_FATAL << oss.str();
+        RPCClientInternal::sendFatalInternalError(ex.what());
         std::cout << "Press Enter to shutdown HCMInternal";
         GlobalKill::killMe();
         std::cin.ignore();

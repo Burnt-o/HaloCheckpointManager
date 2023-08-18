@@ -68,7 +68,6 @@
 #include "boost\algorithm\string\predicate.hpp"
 
 
-
 // Custom utilities
 #include "CustomExceptions.h"
 #include "ControlDefs.h"

@@ -152,16 +152,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Events.h" />
-    <ClInclude Include="CheckpointInfo.h" />
+    <ClInclude Include="ExportedFuncs.h" />
+    <ClInclude Include="ExternalInfo.h" />
+    <ClInclude Include="HaloEnums.h" />
     <ClInclude Include="Inject.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="RPCServer.h" />
+    <ClInclude Include="RPCServerExternal.h" />
     <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Events.cpp" />
+    <ClCompile Include="HaloEnums.cpp" />
     <ClCompile Include="Inject.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -169,7 +172,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RPCServer.cpp" />
+    <ClCompile Include="RPCServerExternal.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

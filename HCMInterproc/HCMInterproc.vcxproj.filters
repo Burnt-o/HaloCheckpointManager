@@ -27,13 +27,19 @@
     <ClInclude Include="WinHandle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RPCServer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CheckpointInfo.h">
+    <ClInclude Include="RPCServerExternal.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowsUtilities.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HaloEnums.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportedFuncs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExternalInfo.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,10 +56,13 @@
     <ClCompile Include="Events.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RPCServer.cpp">
+    <ClCompile Include="RPCServerExternal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowsUtilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HaloEnums.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
