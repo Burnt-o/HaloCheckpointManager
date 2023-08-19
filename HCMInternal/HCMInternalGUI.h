@@ -47,8 +47,8 @@ private:
 	ImVec2 mWindowPos{ 10, 25 };
 
 
-	static std::vector<std::shared_ptr<GUIElementBase>> allGUIElements;
-	std::vector<std::shared_ptr<GUIElementBase>> currentlyRenderingGUIElements;
+	static std::set<std::shared_ptr<GUIElementBase>> currentGameGUIElements;
+
 
 
 public:

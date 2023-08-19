@@ -9,56 +9,33 @@
 class CheatManager
 {
 private:
-	static CheatManager* instance;
 
 	template <CheatBaseTemplate T>
-	void constructCheatCollection(std::map<GameState, std::shared_ptr<T>>& collection)
+	static void constructUninitializedCheat(std::map<GameState, std::shared_ptr<CheatBase>>& collection)
 	{
-
-		// try actually constructing
 		for (auto game : AllSupportedGames)
 		{
 			std::shared_ptr<T> cheat = std::make_shared<T>(game);
 			collection.emplace(game, cheat);
-
-			if (!cheat.get()->getSupportedGames().contains(game)) continue;
-
-			try
-			{
-				cheat.get()->initialize();
-			}
-			catch(HCMInitException ex)
-			{
-				ex.prepend(std::format("Could not create cheat service: {}::{}, dependent cheats will be unavailable.\n", GameStateToString.at(game), cheat.get()->getName()));
-				RuntimeExceptionHandler::handleMessage(ex);
-			}
 		}
 	}
 
 public:
 
-	std::map<GameState, std::shared_ptr<ForceCheckpoint>> forceCheckpointCollection;
-	std::map<GameState, std::shared_ptr<ForceRevert>> forceRevertCollection;
-	std::map<GameState, std::shared_ptr<ForceDoubleRevert>> forceDoubleRevertCollection;
-	std::map<GameState, std::shared_ptr<CheckpointInjectDump>> checkpointInjectDumpCollection;
+	static std::map<GameState, std::shared_ptr<CheatBase>> forceCheckpointCollection;
+	static std::map<GameState, std::shared_ptr<CheatBase>> forceRevertCollection;
+	static std::map<GameState, std::shared_ptr<CheatBase>> forceDoubleRevertCollection;
+	static std::map<GameState, std::shared_ptr<CheatBase>> checkpointInjectDumpCollection;
 
 
-	CheatManager()
+	static void ConstructAllCheatsUninitialized()
 	{
-		if (instance) throw HCMInitException("Cannot have more than one CheatManager");
-		instance = this;
-
-		// Construct cheats
-		constructCheatCollection(forceCheckpointCollection);
-		constructCheatCollection(forceRevertCollection);
-		constructCheatCollection(forceDoubleRevertCollection);
-		constructCheatCollection(checkpointInjectDumpCollection);
-
+		constructUninitializedCheat<ForceCheckpoint>(forceCheckpointCollection);
+		constructUninitializedCheat<ForceRevert>(forceRevertCollection);
+		constructUninitializedCheat<ForceDoubleRevert>(forceDoubleRevertCollection);
+		constructUninitializedCheat<CheckpointInjectDump>(checkpointInjectDumpCollection);
 	}
-	~CheatManager()
-	{
-		instance = nullptr;
-	}
+
 
 
 };

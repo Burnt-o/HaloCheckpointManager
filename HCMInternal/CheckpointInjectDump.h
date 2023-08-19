@@ -49,7 +49,6 @@ public:
 
 
 	std::string_view getName() override { return "Inject/Dump Checkpoint"; }
-	std::set<GameState> getSupportedGames() override { return std::set<GameState>{GameState::Halo1}; }
 
 
 };

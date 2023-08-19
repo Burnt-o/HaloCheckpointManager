@@ -55,12 +55,9 @@ public:
 
 		// subscribe to forcecheckpoint event
 		mForceCheckpointCallbackHandle = OptionsState::forceCheckpointEvent.append([this]() { this->onForceCheckpoint(); });
-
-		setUsability(true);
 	}
 
 	std::string_view getName() override { return "Force Checkpoint"; }
-	std::set<GameState> getSupportedGames() override { return std::set<GameState>{GameState::Halo1, GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4}; }
-
+	
 
 };

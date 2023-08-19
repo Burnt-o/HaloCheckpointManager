@@ -1,26 +1,42 @@
 #pragma once
 #include "HaloEnums.h"
-
-
+#include "MessagesGUI.h"
+#include "FailedServiceInfo.h"
 
 class CheatBase
 {
 private:
-	bool isUsable = false;
+
 
 protected:
 	GameState mGame;
 	static std::string_view getClassNameMain1() { return "CheatBase"; }
+	virtual void initialize() = 0;
 
-	void setUsability(bool newVal) { isUsable = newVal; }
 public:
 	CheatBase(GameState gameImpl) : mGame(gameImpl) {}
 	virtual ~CheatBase() = default;
 
-	virtual void initialize() = 0;
+	void initializeBase()
+	{
+		attemptedInitialization = true;
+		try
+		{
+			initialize();
+			successfullyInitialized = true;
+		}
+		catch (HCMInitException ex)
+		{
+			std::string cheatName(getName()); // need to copy var
+			FailedServiceInfo::addFailure(cheatName, ex);
+		}
+		
+	}
+
+
 	virtual std::string_view getName() = 0;
-	virtual std::set<GameState> getSupportedGames() = 0;
-	bool getUsability() { return isUsable; }
+	bool successfullyInitialized = false;
+	bool attemptedInitialization = false;
 
 };
 

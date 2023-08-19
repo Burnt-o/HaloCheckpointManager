@@ -56,11 +56,8 @@ public:
 		// subscribe to forceRevert event
 		mForceRevertCallbackHandle = OptionsState::forceRevertEvent.append([this]() { this->onForceRevert(); });
 
-		setUsability(true);
 	}
 
 	std::string_view getName() override { return "Force Revert"; }
-	std::set<GameState> getSupportedGames() override { return std::set<GameState>{GameState::Halo1, GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4}; }
-
 
 };

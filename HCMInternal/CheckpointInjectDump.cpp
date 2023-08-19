@@ -296,7 +296,6 @@ void CheckpointInjectDump::initialize()
 			impl->onDump();
 		 });
 
-	setUsability(true);
 }
 
 

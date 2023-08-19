@@ -12,16 +12,10 @@ public:
 	// TODO: how to check for failed services and uninclude that supported game?
 
 
-	GUISimpleButton(std::set<GameState> supGames, std::string buttonText, eventpp::CallbackList<void()>& eventToFire)
-		: mButtonText(buttonText), mEventToFire(eventToFire)
+	GUISimpleButton(GameState implGame, std::map<GameState, std::shared_ptr<CheatBase>>& requiredService, std::string buttonText, eventpp::CallbackList<void()>& eventToFire)
+		: GUIElementBase(implGame, requiredService), mButtonText(buttonText), mEventToFire(eventToFire)
 	{
 		this->currentHeight = 20;
-		this->supportedGames = supGames;
-	}
-
-	std::set<GameState>& getSupportedGames()
-	{
-		return this->supportedGames;
 	}
 
 	void render() override

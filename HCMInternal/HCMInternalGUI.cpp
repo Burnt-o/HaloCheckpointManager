@@ -3,6 +3,7 @@
 #include "GlobalKill.h"
 #include "GUISimpleButton.h"
 #include "GameStateHook.h"
+#include "GUIElementManager.h"
 #define addTooltip(x) if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) ImGui::SetTooltip(x)
 
 bool HCMInternalGUI::m_WindowOpen = true;
@@ -153,34 +154,33 @@ void HCMInternalGUI::renderErrorDialog()
 
 const std::set<GameState> AllGames{GameState::Halo1, GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4};
 
-std::vector<std::shared_ptr<GUIElementBase>> HCMInternalGUI::allGUIElements
-{
-	std::make_shared<GUISimpleButton>(AllGames, "Force Checkpoint", OptionsState::forceCheckpointEvent),
-		std::make_shared<GUISimpleButton>(AllGames, "Force Revert", OptionsState::forceRevertEvent),
-		std::make_shared<GUISimpleButton>(std::set<GameState>{GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4}, "Force Double Revert", OptionsState::forceDoubleRevertEvent),
-		std::make_shared<GUISimpleButton>(AllGames, "Inject Checkpoint", OptionsState::injectCheckpointEvent), // won't be simple buttons later
-		std::make_shared<GUISimpleButton>(AllGames, "Dump Checkpoint", OptionsState::dumpCheckpointEvent), // won't be simple buttons later
+std::set<std::shared_ptr<GUIElementBase>> HCMInternalGUI::currentGameGUIElements{};
 
-};
 
 
 void HCMInternalGUI::onGameStateChange(GameState newGameState, std::string newLevel)
 {
-	instance->currentlyRenderingGUIElements.clear();
-	for (auto element : allGUIElements)
+	instance->currentGameGUIElements.clear();
+	for (auto& elementCollection : GUIElementManager::getAllGUIElements())
 	{
-		if (element.get()->getSupportedGames().contains(newGameState))
+		if (elementCollection->contains(newGameState))
 		{
-			instance->currentlyRenderingGUIElements.emplace_back(element);
+			auto& element = elementCollection->at(newGameState);
+			if (element.get()->areRequiredServicesReady());
+			{
+				instance->currentGameGUIElements.insert(element);
+			}
+
 		}
 	}
+
 }
 
 void HCMInternalGUI::primaryRender()
 {
 	// Calculate height of everything
 	int totalContentHeight = 0;
-	for (auto& element : currentlyRenderingGUIElements)
+	for (auto& element : currentGameGUIElements)
 	{
 		totalContentHeight += element->getCurrentHeight();
 	}
@@ -206,7 +206,7 @@ void HCMInternalGUI::primaryRender()
 
 	if (m_WindowOpen)  //only bother rendering children if it's not collapsed
 	{
-		for (auto& element : currentlyRenderingGUIElements)
+		for (auto& element : currentGameGUIElements)
 		{
 			element.get()->render();
 		}

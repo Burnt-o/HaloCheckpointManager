@@ -18,6 +18,8 @@
 #include "CheatManager.h"
 #include "RPCClientInternal.h"
 #include "HeartbeatTimer.h"
+#include "GUIElementManager.h"
+#include "FailedServiceInfo.h"
 //both plog and rpc define these
 #ifdef LOG_INFO 
 #define LOG_INFO LOG_INFO_P
@@ -63,12 +65,19 @@ void RealMain(HMODULE dllHandle)
 
         auto d3d = std::make_unique<D3D11Hook>();
         auto imm = std::make_unique<ImGuiManager>(d3d.get()->presentHookEvent);
+        CheatManager::ConstructAllCheatsUninitialized(); // does not throw
+        auto Fail = std::make_unique<FailedServiceInfo>();
 
+        // not only does this construct gui elements, it also initializes any cheats those elements require. Initialization failures are passed to FailedServiceInfo
+        auto GUIMan = std::make_unique<GUIElementManager>(); // really ought to be passed ref of FailedServiceInfo instead of singletonising
+
+        // really ought to be passed ref of GUIElementManager instead of singletonising
         auto HCMGUI = std::make_unique<HCMInternalGUI>(imm.get()->ImGuiRenderCallback, d3d.get()->resizeBuffersHookEvent, gsh.get()->gameLoadEvent); // needs to be after cheatManager
-        
+
         auto mesGUI = std::make_unique<MessagesGUI>(imm.get()->ImGuiRenderCallback);
+        Fail.get()->printFailures(); // print list of cheats that failed to initialize
         auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
-        auto cm = std::make_unique<CheatManager>(); // needs to be after MessagesGUI and PointerManager
+
 
         auto hb = std::make_unique<HeartbeatTimer>(rpcClient);
 

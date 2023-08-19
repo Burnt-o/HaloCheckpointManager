@@ -194,12 +194,14 @@
     <ClInclude Include="CustomExceptions.h" />
     <ClInclude Include="D3D11Hook.h" />
     <ClInclude Include="ExternalInfo.h" />
+    <ClInclude Include="FailedServiceInfo.h" />
     <ClInclude Include="ForceCheckpoint.h" />
     <ClInclude Include="ForceDoubleRevert.h" />
     <ClInclude Include="ForceRevert.h" />
     <ClInclude Include="GameStateHook.h" />
     <ClInclude Include="GlobalKill.h" />
     <ClInclude Include="GUIElementBase.h" />
+    <ClInclude Include="GUIElementManager.h" />
     <ClInclude Include="GUISimpleButton.h" />
     <ClInclude Include="HaloEnums.h" />
     <ClInclude Include="HCMExternalCommand.h" />
@@ -232,7 +234,9 @@
     <ClCompile Include="CheckpointInjectDump.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="FailedServiceInfo.cpp" />
     <ClCompile Include="GameStateHook.cpp" />
+    <ClCompile Include="GUIElementManager.cpp" />
     <ClCompile Include="HaloEnums.cpp" />
     <ClCompile Include="HCMInternalGUI.cpp" />
     <ClCompile Include="HeartbeatTimer.cpp" />
