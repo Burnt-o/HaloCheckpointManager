@@ -170,9 +170,6 @@
     <ClCompile Include="PointerManager.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="OptionsState.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
     <ClCompile Include="OptionSerialisation.cpp">
       <Filter>Services</Filter>
     </ClCompile>

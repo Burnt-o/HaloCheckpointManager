@@ -12,22 +12,23 @@ private:
 	static GUIElementManager* instance;
 
 	template <GUIElementBaseTemplate T, typename... Args>
-	void constructGUIElementCollection(std::vector<GameState> supportedGames, GUIElementCollection& GUICollection, Args... constructorArgs)
+	void constructGUIElementCollection(std::vector<GameState> supportedGames, std::shared_ptr<GUIElementCollection> GUICollection, Args... constructorArgs)
 	{
 		for (auto game : supportedGames)
 		{
-			GUICollection.emplace(game, std::make_shared<T>(game, constructorArgs...));
+			GUICollection.get()->emplace(game, std::make_shared<T>(game, constructorArgs...));
 		}
 	}
 
-	GUIElementCollection forceCheckpointGUI; // can't decide if this should be private or not. will anything else need to grab these things specifically instead of iterating over all elements?
+	std::shared_ptr<GUIElementCollection> forceCheckpointGUI = std::make_shared<GUIElementCollection>();
+	//GUIElementCollection forceCheckpointGUI; // can't decide if this should be private or not. will anything else need to grab these things specifically instead of iterating over all elements?
 
 
-	std::set< GUIElementCollection*> allGUIElements {&forceCheckpointGUI}; // deffo public, this is what HCMInternalGUI iterates over
+	std::set< std::shared_ptr<GUIElementCollection>> allGUIElements {forceCheckpointGUI}; // deffo public, this is what HCMInternalGUI iterates over
 
 public:
 
-	static std::set< GUIElementCollection*>& getAllGUIElements() { return instance->allGUIElements; }
+	static std::set< std::shared_ptr<GUIElementCollection>>& getAllGUIElements() { return instance->allGUIElements; }
 
 
 	GUIElementManager()
@@ -35,9 +36,8 @@ public:
 		if (instance) throw HCMInitException("Cannot have more than one GUIElementManager");
 		instance = this;
 
-		PLOG_DEBUG << "&OptionsState::forceCheckpointEvent: " << std::hex << &OptionsState::forceCheckpointEvent;
 		// how to make sure the event is passed by ref and not value? 
-		constructGUIElementCollection<GUISimpleButton>(AllSupportedGames, forceCheckpointGUI, CheatManager::forceCheckpointCollection, "Force Checkpoint", &OptionsState::forceCheckpointEvent);
+		constructGUIElementCollection<GUISimpleButton>(AllSupportedGames, forceCheckpointGUI, CheatManager::forceCheckpointCollection, "Force Checkpoint", OptionsState::forceCheckpointEvent);
 	}
 
 

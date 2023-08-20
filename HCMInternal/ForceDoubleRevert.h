@@ -33,7 +33,7 @@ private:
 			MessagesGUI::addMessage("Checkpoint double reverted.");
 
 			// fire revert event. Not our problem if it fails.
-			OptionsState::forceRevertEvent();
+			OptionsState::forceRevertEvent.get()->operator()();
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -56,7 +56,7 @@ public:
 	{
 		// unsubscribe 
 		if (mForceDoubleRevertCallbackHandle)
-			OptionsState::forceDoubleRevertEvent.remove(mForceDoubleRevertCallbackHandle);
+			OptionsState::forceDoubleRevertEvent.get()->remove(mForceDoubleRevertCallbackHandle);
 	}
 
 	void initialize() override
@@ -65,7 +65,7 @@ public:
 		doubleRevertFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("doubleRevertFlag", mGame);
 
 		// subscribe to forceDoubleRevert event
-		mForceDoubleRevertCallbackHandle = OptionsState::forceDoubleRevertEvent.append([this]() { this->onForceDoubleRevert(); });
+		mForceDoubleRevertCallbackHandle = OptionsState::forceDoubleRevertEvent.get()->append([this]() { this->onForceDoubleRevert(); });
 
 	}
 

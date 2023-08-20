@@ -260,7 +260,6 @@
     <ClCompile Include="MultilevelPointer.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="OptionSerialisation.cpp" />
-    <ClCompile Include="OptionsState.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

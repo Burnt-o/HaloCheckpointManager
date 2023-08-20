@@ -45,7 +45,7 @@ public:
 	{
 		// unsubscribe 
 		if (mForceCheckpointCallbackHandle)
-			OptionsState::forceCheckpointEvent.remove(mForceCheckpointCallbackHandle);
+			OptionsState::forceCheckpointEvent.get()->remove(mForceCheckpointCallbackHandle);
 	}
 
 	void initialize() override
@@ -54,7 +54,7 @@ public:
 		forceCheckpointFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("forceCheckpointFlag", mGame);
 
 		// subscribe to forcecheckpoint event
-		mForceCheckpointCallbackHandle = OptionsState::forceCheckpointEvent.append([this]() { this->onForceCheckpoint(); });
+		mForceCheckpointCallbackHandle = OptionsState::forceCheckpointEvent.get()->append([this]() { this->onForceCheckpoint(); });
 	}
 
 	std::string_view getName() override { return "Force Checkpoint"; }

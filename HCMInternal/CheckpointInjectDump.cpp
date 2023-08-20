@@ -70,13 +70,6 @@ public:
 
 			//TODO: safety checks if the user enables them (wrong level? wrong difficulty? wrong game?)
 
-			// core saves have different implementation
-			if (GameStateHook::getCurrentGameState() == GameState::Halo1 && OptionsState::injectDumpCores.GetValue())
-			{
-				injectCoreSave(currentCheckpoint.selectedCheckpointFilePath);
-				return;
-			}
-
 			
 			// get pointer to checkpoint in memory
 			uintptr_t checkpointLoc = 0;
@@ -214,12 +207,6 @@ public:
 			// TODO (need to implement dialogbox stuff, and make sure we're on a seperate thread)
 			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\someCheckpointName.bin";
 			PLOG_DEBUG << "dump path: " << dumpPath;
-;			// core saves have different implementation
-			if (GameStateHook::getCurrentGameState() == GameState::Halo1 && OptionsState::injectDumpCores.GetValue())
-			{
-				dumpCoreSave(dumpPath);
-				return;
-			}
 
 			// get pointer to checkpoint in memory
 			uintptr_t checkpointLoc = 0;
@@ -289,10 +276,10 @@ void CheckpointInjectDump::initialize()
 	impl = std::make_unique<AllImpl>(mGame);
 
 	// subscribe to events (this won't happen if impl construction failed cause of missing pointer data or w/e)
-	mInjectCallbackHandle = OptionsState::injectCheckpointEvent.append([this]() { 
+	mInjectCallbackHandle = OptionsState::injectCheckpointEvent.get()->append([this]() {
 			impl->onInject();
 		 });
-	mDumpCallbackHandle = OptionsState::dumpCheckpointEvent.append([this]() { 
+	mDumpCallbackHandle = OptionsState::dumpCheckpointEvent.get()->append([this]() {
 			impl->onDump();
 		 });
 

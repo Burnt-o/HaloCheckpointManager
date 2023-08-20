@@ -45,7 +45,7 @@ public:
 	{
 		// unsubscribe 
 		if (mForceRevertCallbackHandle)
-			OptionsState::forceRevertEvent.remove(mForceRevertCallbackHandle);
+			OptionsState::forceRevertEvent.get()->remove(mForceRevertCallbackHandle);
 	}
 
 	void initialize() override
@@ -54,7 +54,7 @@ public:
 		forceRevertFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("forceRevertFlag", mGame);
 
 		// subscribe to forceRevert event
-		mForceRevertCallbackHandle = OptionsState::forceRevertEvent.append([this]() { this->onForceRevert(); });
+		mForceRevertCallbackHandle = OptionsState::forceRevertEvent.get()->append([this]() { this->onForceRevert(); });
 
 	}
 

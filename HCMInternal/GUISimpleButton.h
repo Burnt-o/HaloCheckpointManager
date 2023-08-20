@@ -5,14 +5,14 @@ class GUISimpleButton : public GUIElementBase {
 
 private:
 	std::string mButtonText;
-	eventpp::CallbackList<void()>* mEventToFire;
+	std::shared_ptr<ActionEvent> mEventToFire;
 
 public:
 
 	// TODO: how to check for failed services and uninclude that supported game?
 
 
-	GUISimpleButton(GameState implGame, std::map<GameState, std::shared_ptr<CheatBase>>& requiredService, std::string buttonText, eventpp::CallbackList<void()>* eventToFire)
+	GUISimpleButton(GameState implGame, std::map<GameState, std::shared_ptr<CheatBase>>& requiredService, std::string buttonText, std::shared_ptr<ActionEvent> eventToFire)
 		: GUIElementBase(implGame, requiredService), mButtonText(buttonText), mEventToFire(eventToFire)
 	{
 		PLOG_VERBOSE << "Constructing GUISimplebutton, name: " << this->mButtonText;
@@ -26,7 +26,7 @@ public:
 		{
 			PLOG_VERBOSE << "GUISimplebutton (" << this->mButtonText << ") firing event";
 			PLOG_DEBUG << "&mEventToFire: " << std::hex << &mEventToFire;
-			mEventToFire->operator()();
+			mEventToFire.get()->operator()();
 		}
 	}
 };

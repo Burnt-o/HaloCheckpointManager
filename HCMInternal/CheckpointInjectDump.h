@@ -35,10 +35,10 @@ public:
 	{
 		// unsubscribe 
 		if (mInjectCallbackHandle)
-			OptionsState::injectCheckpointEvent.remove(mInjectCallbackHandle);
+			OptionsState::injectCheckpointEvent.get()->remove(mInjectCallbackHandle);
 
 		if (mDumpCallbackHandle)
-			OptionsState::dumpCheckpointEvent.remove(mDumpCallbackHandle);
+			OptionsState::dumpCheckpointEvent.get()->remove(mDumpCallbackHandle);
 
 		// kill impl
 		impl.reset();
