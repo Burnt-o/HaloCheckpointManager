@@ -26,8 +26,12 @@ public:
 		}
 		catch (HCMInitException ex)
 		{
-
+			
 			FailedServiceInfo::addServiceFailure(std::string{GameStateToString.at(mGame) + "::" + std::string{getName()}}, ex);
+			PLOG_ERROR << "detailed service failure info: " << std::endl
+				<< "ex.what(): " << ex.what() << std::endl
+				<< "ex.source(): " << ex.source() << std::endl
+				<< "ex.trace():" << ex.trace();
 		}
 		
 	}

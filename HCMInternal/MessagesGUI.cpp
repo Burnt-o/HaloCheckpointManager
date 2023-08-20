@@ -167,7 +167,8 @@ void MessagesGUI::addMessage(std::string message)
 	message = insertNewLines(message, 150, lineCount);
 	PLOG_DEBUG << "Message added with linecount: " << lineCount;
 	PLOG_INFO << "MessagesGUI added message: " << message;
-	instance->messages.emplace_back(temporaryMessage{message, std::chrono::high_resolution_clock::now(), lineCount});
+	//instance->messages.emplace_back(temporaryMessage{message, std::chrono::high_resolution_clock::now(), lineCount});
+	instance->messages.insert(instance->messages.begin(), temporaryMessage{ message, std::chrono::high_resolution_clock::now(), lineCount }); // new messages now go at the top instead of the bottom
 
 }
 
