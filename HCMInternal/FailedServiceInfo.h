@@ -27,6 +27,6 @@ public:
 	instance->allFailures.emplace_back(fail);
 	}
 
-	void printFailures();
+	static void printFailures();
 };
 

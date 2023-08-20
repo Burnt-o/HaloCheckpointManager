@@ -13,7 +13,7 @@ public:
             {
                 while (!GlobalKill::isKillSet())
                 {
-                    PLOG_VERBOSE << "sending heartbeat";
+                    //PLOG_VERBOSE << "sending heartbeat";
                     auto heartIsBeating = rpcref.get()->sendHeartbeat();
                     
                     if (!heartIsBeating)

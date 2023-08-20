@@ -12,7 +12,7 @@ private:
 	static GUIElementManager* instance;
 
 	template <GUIElementBaseTemplate T, typename... Args>
-	void constructGUIElementCollection(std::set<GameState> supportedGames, GUIElementCollection& GUICollection, Args... constructorArgs)
+	void constructGUIElementCollection(std::vector<GameState> supportedGames, GUIElementCollection& GUICollection, Args... constructorArgs)
 	{
 		for (auto game : supportedGames)
 		{
@@ -35,7 +35,9 @@ public:
 		if (instance) throw HCMInitException("Cannot have more than one GUIElementManager");
 		instance = this;
 
-		constructGUIElementCollection<GUISimpleButton>({ GameState::Halo1 }, forceCheckpointGUI, CheatManager::forceCheckpointCollection, "Force Checkpoint", OptionsState::forceCheckpointEvent);
+		PLOG_DEBUG << "&OptionsState::forceCheckpointEvent: " << std::hex << &OptionsState::forceCheckpointEvent;
+		// how to make sure the event is passed by ref and not value? 
+		constructGUIElementCollection<GUISimpleButton>(AllSupportedGames, forceCheckpointGUI, CheatManager::forceCheckpointCollection, "Force Checkpoint", &OptionsState::forceCheckpointEvent);
 	}
 
 
