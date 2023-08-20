@@ -142,8 +142,12 @@
     <ClInclude Include="ExternalInfo.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="GUIElementManager.h" />
-    <ClInclude Include="FailedServiceInfo.h" />
+    <ClInclude Include="FailedServiceInfo.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElementManager.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -227,8 +231,12 @@
     <ClCompile Include="HeartbeatTimer.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="GUIElementManager.cpp" />
-    <ClCompile Include="FailedServiceInfo.cpp" />
+    <ClCompile Include="FailedServiceInfo.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIElementManager.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="InternalPointerData.xml">

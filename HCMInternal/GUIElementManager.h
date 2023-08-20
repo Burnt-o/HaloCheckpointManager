@@ -20,8 +20,7 @@ private:
 		}
 	}
 
-	std::shared_ptr<GUIElementCollection> forceCheckpointGUI = std::make_shared<GUIElementCollection>();
-	//GUIElementCollection forceCheckpointGUI; // can't decide if this should be private or not. will anything else need to grab these things specifically instead of iterating over all elements?
+	std::shared_ptr<GUIElementCollection> forceCheckpointGUI = std::make_shared<GUIElementCollection>(); // starts empty
 
 
 	std::set< std::shared_ptr<GUIElementCollection>> allGUIElements {forceCheckpointGUI}; // deffo public, this is what HCMInternalGUI iterates over
@@ -37,7 +36,7 @@ public:
 		instance = this;
 
 		// how to make sure the event is passed by ref and not value? 
-		constructGUIElementCollection<GUISimpleButton>(AllSupportedGames, forceCheckpointGUI, CheatManager::forceCheckpointCollection, "Force Checkpoint", OptionsState::forceCheckpointEvent);
+		constructGUIElementCollection<GUISimpleButton>(AllSupportedGames, forceCheckpointGUI, std::vector{CheatManager::forceCheckpointCollection}, "Force Checkpoint", OptionsState::forceCheckpointEvent );
 	}
 
 

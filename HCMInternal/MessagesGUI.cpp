@@ -166,6 +166,7 @@ void MessagesGUI::addMessage(std::string message)
 	int lineCount;
 	message = insertNewLines(message, 150, lineCount);
 	PLOG_DEBUG << "Message added with linecount: " << lineCount;
+	PLOG_INFO << "MessagesGUI added message: " << message;
 	instance->messages.emplace_back(temporaryMessage{message, std::chrono::high_resolution_clock::now(), lineCount});
 
 }

@@ -10,7 +10,6 @@ private:
 
 protected:
 	GameState mGame;
-	static std::string_view getClassNameMain1() { return "CheatBase"; }
 	virtual void initialize() = 0;
 
 public:
@@ -27,8 +26,8 @@ public:
 		}
 		catch (HCMInitException ex)
 		{
-			std::string cheatName(getName()); // need to copy var
-			FailedServiceInfo::addFailure(cheatName, ex);
+
+			FailedServiceInfo::addServiceFailure(std::string{GameStateToString.at(mGame) + "::" + std::string{getName()}}, ex);
 		}
 		
 	}
