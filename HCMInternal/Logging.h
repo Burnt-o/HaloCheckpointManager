@@ -1,7 +1,7 @@
 #pragma once
 
 
-
+// Sets up console and/or file logging 
 class Logging
 {
 private:

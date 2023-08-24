@@ -1,8 +1,8 @@
 #pragma once
 class HCMDirPath {
 private:
-	static std::string dirPath;
-	static bool dirPathSet;
+	static inline std::string dirPath = "";
+	static inline bool dirPathSet = false;
 
 public:
 	static void SetHCMDirPath(std::string in)

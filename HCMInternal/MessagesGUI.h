@@ -1,6 +1,8 @@
 #pragma once
 #include "ImGuiManager.h"
 
+// Displays temporary messages to the user, below the main GUI. Messages fade over time then disappear.
+
 struct temporaryMessage
 {
 	std::string message;
@@ -8,6 +10,7 @@ struct temporaryMessage
 	long long lineCount;
 	float messageAge;
 };
+
 
 class MessagesGUI
 {

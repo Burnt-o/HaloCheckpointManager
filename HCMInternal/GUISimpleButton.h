@@ -24,7 +24,7 @@ public:
 	{
 		if (ImGui::Button(mButtonText.c_str()))
 		{
-			PLOG_VERBOSE << "GUISimplebutton (" << this->mButtonText << ") firing event";
+			PLOG_VERBOSE << "GUISimplebutton (" << getName() << ") firing event";
 			PLOG_DEBUG << "&mEventToFire: " << std::hex << &mEventToFire;
 			mEventToFire.get()->operator()();
 		}

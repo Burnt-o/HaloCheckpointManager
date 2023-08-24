@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "OptionsState.h"
 #include "MultilevelPointer.h"
 #include "PointerManager.h"

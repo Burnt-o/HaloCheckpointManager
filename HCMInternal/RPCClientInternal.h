@@ -3,7 +3,7 @@
 #include <rpc\rpc_error.h>
 #include "Logging.h"
 #include "HCMDirPath.h"
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "InjectRequirements.h"
 #include "ExternalInfo.h"
 class RPCClientInternal

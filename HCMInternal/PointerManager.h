@@ -1,5 +1,5 @@
 #pragma once
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "MultilevelPointer.h"
 #include "MidhookContextInterpreter.h"
 
@@ -34,7 +34,7 @@ public:
 	template <typename T>
 	static T getData(std::string dataName, std::optional<GameState> game = std::nullopt);
 
-
+	static std::string getCurrentGameVersion();
 
 
 	//template <typename T>

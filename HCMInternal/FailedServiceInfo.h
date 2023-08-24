@@ -1,5 +1,5 @@
 #pragma once
-#include "HaloEnums.h"
+#include "GameState.h"
 
 class FailedServiceInfo
 {

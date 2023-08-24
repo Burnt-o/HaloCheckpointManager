@@ -19,7 +19,7 @@ void FailedServiceInfo::printFailures()
 
 	for (auto GUIFail : instance->allGUIFailures)
 	{
-		std::string nameOfFailedGUIElement = GameStateToString.at(GUIFail.game) + "::" + std::string{GUIFail.pGetName()};
+		std::string nameOfFailedGUIElement = GUIFail.game.toString() + "::" + std::string{GUIFail.pGetName()};
 		std::string myFailedServices;
 		for (auto ser : GUIFail.namesOfFailedRequiredServices)
 		{

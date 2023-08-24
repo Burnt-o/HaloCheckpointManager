@@ -1,7 +1,7 @@
 #pragma once
 #include "ModuleHookManager.h"
 #include "MultilevelPointer.h"
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "PointerManager.h"
 
 // Evaluates which game MCC is currently running + which level is loaded
@@ -12,7 +12,7 @@ private:
 	static GameStateHook* instance; // Private Singleton instance so static hooks/callbacks can access
 	std::mutex mDestructionGuard; // Protects against Singleton destruction while callbacks are executing
 
-	GameState currentGameState = GameState::Halo1;
+	GameState currentGameState = GameState::Value::Halo1;
 	std::string currentHaloLevel = "Unknown";
 
 	//pointers + hooks

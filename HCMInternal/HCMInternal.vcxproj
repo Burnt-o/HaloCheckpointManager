@@ -189,13 +189,16 @@
   <ItemGroup>
     <ClInclude Include="CheatBase.h" />
     <ClInclude Include="CheatManager.h" />
-    <ClInclude Include="CheckpointInjectDump.h" />
     <ClInclude Include="ControlDefs.h" />
     <ClInclude Include="CustomExceptions.h" />
     <ClInclude Include="D3D11Hook.h" />
+    <ClInclude Include="DumpCheckpoint.h" />
+    <ClInclude Include="DumpCore.h" />
     <ClInclude Include="ExternalInfo.h" />
     <ClInclude Include="FailedServiceInfo.h" />
     <ClInclude Include="ForceCheckpoint.h" />
+    <ClInclude Include="ForceCoreLoad.h" />
+    <ClInclude Include="ForceCoreSave.h" />
     <ClInclude Include="ForceDoubleRevert.h" />
     <ClInclude Include="ForceRevert.h" />
     <ClInclude Include="GameStateHook.h" />
@@ -203,7 +206,7 @@
     <ClInclude Include="GUIElementBase.h" />
     <ClInclude Include="GUIElementManager.h" />
     <ClInclude Include="GUISimpleButton.h" />
-    <ClInclude Include="HaloEnums.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
     <ClInclude Include="HeartbeatTimer.h" />
@@ -211,6 +214,8 @@
     <ClInclude Include="includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="includes\safetyhook\Zydis.h" />
     <ClInclude Include="HCMDirPath.h" />
+    <ClInclude Include="InjectCheckpoint.h" />
+    <ClInclude Include="InjectCore.h" />
     <ClInclude Include="InjectRequirements.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MessagesGUI.h" />
@@ -230,14 +235,12 @@
     <ClInclude Include="WindowsUtilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CheatManager.cpp" />
-    <ClCompile Include="CheckpointInjectDump.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="DumpCheckpoint.cpp" />
+    <ClCompile Include="DumpCore.cpp" />
     <ClCompile Include="FailedServiceInfo.cpp" />
     <ClCompile Include="GameStateHook.cpp" />
-    <ClCompile Include="GUIElementManager.cpp" />
-    <ClCompile Include="HaloEnums.cpp" />
     <ClCompile Include="HCMInternalGUI.cpp" />
     <ClCompile Include="HeartbeatTimer.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
@@ -251,6 +254,8 @@
     <ClCompile Include="includes\safetyhook\Zydis.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="InjectCheckpoint.cpp" />
+    <ClCompile Include="InjectCore.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MessagesGUI.cpp" />
     <ClCompile Include="MidhookContextInterpreter.cpp" />
@@ -269,7 +274,6 @@
     <ClCompile Include="PointerManager.cpp" />
     <ClCompile Include="RPCClientInternal.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
-    <ClCompile Include="HCMDirPath.cpp" />
     <ClCompile Include="StaticHookWrapper.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>

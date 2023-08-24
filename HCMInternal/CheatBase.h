@@ -1,5 +1,5 @@
 #pragma once
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "MessagesGUI.h"
 #include "FailedServiceInfo.h"
 
@@ -21,13 +21,14 @@ public:
 		attemptedInitialization = true;
 		try
 		{
+			PLOG_VERBOSE << "initializing cheat service: " << mGame.toString() << "::" << getName();
 			initialize();
 			successfullyInitialized = true;
 		}
 		catch (HCMInitException ex)
 		{
 			
-			FailedServiceInfo::addServiceFailure(std::string{GameStateToString.at(mGame) + "::" + std::string{getName()}}, ex);
+			FailedServiceInfo::addServiceFailure(std::string{mGame.toString() + "::" + std::string{getName()}}, ex);
 			PLOG_ERROR << "detailed service failure info: " << std::endl
 				<< "ex.what(): " << ex.what() << std::endl
 				<< "ex.source(): " << ex.source() << std::endl

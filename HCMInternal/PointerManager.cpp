@@ -4,7 +4,7 @@
 #include <winver.h> // to get version string of MCC
 #include <pugixml.hpp>
 #include "HCMDirPath.h"
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "InjectRequirements.h"
 #define useDevPointerData 1
 #define debugPointerManager 1
@@ -56,6 +56,7 @@ class PointerManager::PointerManagerImpl {
         PointerManagerImpl();
         ~PointerManagerImpl() = default;
 
+        std::string getCurrentGameVersion() { return currentGameVersion; }
         // data mapped by strings
         static std::map<DataKey,std::any> mAllData;
 };
@@ -63,6 +64,7 @@ class PointerManager::PointerManagerImpl {
 std::map<DataKey, std::any> PointerManager::PointerManagerImpl::mAllData{};
 
 
+std::string PointerManager::getCurrentGameVersion() { return instance->impl.get()->getCurrentGameVersion(); }
 
 PointerManager::PointerManager() : impl(new PointerManagerImpl) 
 {
@@ -381,7 +383,7 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
         if (!versionEntry.attribute("Game").empty())
         {
             std::string gameString = versionEntry.attribute("Game").value();
-            entryGame = StringToGameState.at(gameString);
+            entryGame = GameState::fromString(gameString);
         }
 
         // Construct dataKey

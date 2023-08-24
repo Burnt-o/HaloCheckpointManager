@@ -76,7 +76,7 @@
 			</Offsets>
 		</Version>
 	</VersionedEntry>
-
+	
 
 	<VersionedEntry Name="forceCheckpointFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
@@ -139,7 +139,7 @@
 		</Version>
 	</VersionedEntry>
 	<!-- #endregion forceCheckpointFlag-->
-
+	
 	<!-- #region forceRevertFlag-->
 	<VersionedEntry Name="forceRevertFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo1">
@@ -224,6 +224,64 @@
 		</Version>
 	</VersionedEntry>
 	<!-- #endregion doubleRevertFlag-->
+
+	<!-- #region forceCoreSaveFlag-->
+	<VersionedEntry Name="forceCoreSaveFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF10E9</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF8259</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2CA0799</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3251.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B23719</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	<!--#endregion forceCoreSaveFlag-->
+
+	<!-- #region forceCoreLoadFlag-->
+	<VersionedEntry Name="forceCoreLoadFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF10EA</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF10EA</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2CA079A</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3251.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B2371A</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	<!--#endregion forceCoreLoadFlag-->
 
 	<VersionedEntry Name="injectRequirements" Type="injectRequirements">
 		<Version Version="All" Game="Halo1">

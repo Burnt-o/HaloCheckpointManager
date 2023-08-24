@@ -1,6 +1,6 @@
 #pragma once
 #include "ImGuiManager.h"
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "GUIElementBase.h"
 // Singleton: on construction we subscribe to the ImGuiRenderEvent.
 // In onImGuiRenderEvent we draw our options GUI.
@@ -47,7 +47,7 @@ private:
 	ImVec2 mWindowPos{ 10, 25 };
 
 
-	static std::set<std::shared_ptr<GUIElementBase>> currentGameGUIElements;
+	static std::vector<std::shared_ptr<GUIElementBase>> currentGameGUIElements;
 
 
 

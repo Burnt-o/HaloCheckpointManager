@@ -100,7 +100,7 @@
     <ClInclude Include="GameStateHook.h">
       <Filter>Services</Filter>
     </ClInclude>
-    <ClInclude Include="HaloEnums.h">
+    <ClInclude Include="GameState.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="GUIElementBase.h">
@@ -113,9 +113,6 @@
       <Filter>Services</Filter>
     </ClInclude>
     <ClInclude Include="CheatBase.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="CheckpointInjectDump.h">
       <Filter>Services\Cheats</Filter>
     </ClInclude>
     <ClInclude Include="InjectRequirements.h">
@@ -147,6 +144,24 @@
     </ClInclude>
     <ClInclude Include="GUIElementManager.h">
       <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="InjectCheckpoint.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="DumpCheckpoint.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="InjectCore.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="DumpCore.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCoreSave.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCoreLoad.h">
+      <Filter>Services\Cheats</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -204,23 +219,11 @@
     <ClCompile Include="D3D11Hook.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="HCMDirPath.cpp">
-      <Filter>Global</Filter>
-    </ClCompile>
     <ClCompile Include="HCMInternalGUI.cpp">
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="GameStateHook.cpp">
       <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="HaloEnums.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="CheatManager.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="CheckpointInjectDump.cpp">
-      <Filter>Services\Cheats</Filter>
     </ClCompile>
     <ClCompile Include="StaticHookWrapper.cpp">
       <Filter>Classes</Filter>
@@ -234,8 +237,17 @@
     <ClCompile Include="FailedServiceInfo.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="GUIElementManager.cpp">
-      <Filter>Services</Filter>
+    <ClCompile Include="InjectCheckpoint.cpp">
+      <Filter>Services\Cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="DumpCheckpoint.cpp">
+      <Filter>Services\Cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="InjectCore.cpp">
+      <Filter>Services\Cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="DumpCore.cpp">
+      <Filter>Services\Cheats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

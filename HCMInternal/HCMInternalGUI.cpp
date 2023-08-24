@@ -152,23 +152,26 @@ void HCMInternalGUI::renderErrorDialog()
 
 }
 
-const std::set<GameState> AllGames{GameState::Halo1, GameState::Halo2, GameState::Halo3, GameState::Halo3ODST, GameState::HaloReach, GameState::Halo4};
 
-std::set<std::shared_ptr<GUIElementBase>> HCMInternalGUI::currentGameGUIElements{};
+std::vector<std::shared_ptr<GUIElementBase>> HCMInternalGUI::currentGameGUIElements{};
 
 
 
 void HCMInternalGUI::onGameStateChange(GameState newGameState, std::string newLevel)
 {
 	instance->currentGameGUIElements.clear();
-	for (auto& elementCollection : GUIElementManager::getAllGUIElements())
+	for (auto& elementCollection : GUIElementManager::getAllGUICollections())
 	{
 		if (elementCollection->contains(newGameState))
 		{
 			auto& element = elementCollection->at(newGameState);
-			if (element.get()->areRequiredServicesReady());
+			if (element.get()->areRequiredServicesReady())
 			{
-				instance->currentGameGUIElements.insert(element);
+				instance->currentGameGUIElements.emplace_back(element);
+			}
+			else
+			{
+				PLOG_INFO << "didn't add GUIElement to render list because it's services weren't ready: " << element.get()->getName();
 			}
 
 		}

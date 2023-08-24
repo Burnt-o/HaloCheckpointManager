@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "HaloEnums.h"
+#include "GameState.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -34,7 +34,7 @@ public:
 
 			if (!cheat->successfullyInitialized)
 			{
-				namesOfFailedRequiredServices.emplace_back(GameStateToString.at(implGame) + "::" + std::string{cheat->getName()});
+				namesOfFailedRequiredServices.emplace_back(implGame.toString() + "::" + std::string{cheat->getName()});
 			}
 
 			requiredServicesReady = requiredServicesReady && cheat->successfullyInitialized;
