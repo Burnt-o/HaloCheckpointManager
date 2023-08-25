@@ -27,6 +27,7 @@ using HCMExternal.Services.MCCStateServiceNS;
 using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Services.InterprocServiceNS;
 using System.Threading;
+using System.Printing;
 
 namespace HCMExternal.ViewModels
 {
@@ -61,6 +62,12 @@ namespace HCMExternal.ViewModels
             {
                 _selectedCheckpoint = value;
                 OnPropertyChanged(nameof(SelectedCheckpoint));
+
+                if (value == null)
+                {
+                    Log.Verbose("SelectedCheckpoint set to null! Stacktrace:\n" + Environment.StackTrace);
+                }    
+
             }
         }
 
@@ -139,10 +146,36 @@ namespace HCMExternal.ViewModels
             };
 
 
+
             RefreshSaveFolderTree();
             RefreshCheckpointList();
 
             this.PropertyChanged += CheckpointViewModel_PropertyChanged;
+
+            // deserialise last selected checkpoint
+            Log.Verbose("Deserialising last selected checkpoint: Properties.Settings.Default.LastSelectedCheckpoint != null = " + (Properties.Settings.Default.LastSelectedCheckpoint != null) + ", this.SelectedSaveFolder != null = " + (this.SelectedSaveFolder != null));
+            if (Properties.Settings.Default.LastSelectedCheckpoint != null && this.SelectedSaveFolder != null)
+            {
+                Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint: " + Properties.Settings.Default.LastSelectedCheckpoint);
+                string lastSelectedCheckpointPath = (this.SelectedSaveFolder.SaveFolderPath + Properties.Settings.Default.LastSelectedCheckpoint);
+                Log.Verbose("lastSelectedCheckpointPath: " + lastSelectedCheckpointPath);
+                Log.Verbose("exists? " + File.Exists(lastSelectedCheckpointPath));
+                if (File.Exists(lastSelectedCheckpointPath))
+                {
+                    // iterate thru checkpoints in current savefolder and select the one that matches the name
+                    foreach (var cp in this.CheckpointCollection)
+                    {
+                        if (cp.CheckpointName == Properties.Settings.Default.LastSelectedCheckpoint)
+                        {
+                            Log.Verbose("Found lastSelectedCheckpoint in current collection, selecting.");
+                            this.SelectedCheckpoint = cp;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
 
         }
 
@@ -155,6 +188,22 @@ namespace HCMExternal.ViewModels
                     RefreshCheckpointList();
                     break;
 
+                case nameof(SelectedCheckpoint):
+                    // serialise 
+                    if (SelectedCheckpoint != null)
+                    {
+                        Properties.Settings.Default.LastSelectedCheckpoint = SelectedCheckpoint.CheckpointName;
+                        Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint set to " + SelectedCheckpoint.CheckpointName);
+                    }
+                    else
+                    {
+                        Properties.Settings.Default.LastSelectedCheckpoint = null;
+                        Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint set to null");
+                    }
+
+                    break;
+
+
                 default:
                     break;
             }
@@ -164,13 +213,32 @@ namespace HCMExternal.ViewModels
         public void RefreshCheckpointList()
         {
 
+            // store old selected checkpoint
+            var oldCP = this.SelectedCheckpoint?.CheckpointName;
+
             this.CheckpointCollection.Clear();
             ObservableCollection<Checkpoint> newCollection = this.CheckpointServices.PopulateCheckpointList(this.SelectedSaveFolder, this.SelectedGame);
             foreach (Checkpoint c in newCollection)
             {
                 this.CheckpointCollection.Add(c);
             }
-            Trace.WriteLine("refreshed ccollection count: " + CheckpointCollection.Count);
+            Log.Debug("refreshed CheckpointCollection, count: " + CheckpointCollection.Count);
+
+            // try to reselect checkpoint
+            if (oldCP != null)
+            {
+                foreach (var cp in this.CheckpointCollection)
+                {
+                    if (cp.CheckpointName == oldCP)
+                    {
+                        Log.Verbose("Succesfully reselected old checkpoint, name: " + oldCP);
+                        this.SelectedCheckpoint = cp;
+                        break;
+                    }
+                }
+            }
+           
+
         }
 
         public void RefreshSaveFolderTree()
@@ -271,6 +339,12 @@ namespace HCMExternal.ViewModels
                 Properties.Settings.Default.LastSelectedFolder.Insert((int)SelectedGame, saveFolder.SaveFolderPath);
                 this.SelectedSaveFolder = saveFolder;
                 this.RefreshCheckpointList();
+
+                // set selected checkpoint to top of the list
+                if (this.CheckpointCollection.Count > 0) 
+                {
+                    this.SelectedCheckpoint = this.CheckpointCollection.ElementAt(0);
+                }
 
             }
             else 

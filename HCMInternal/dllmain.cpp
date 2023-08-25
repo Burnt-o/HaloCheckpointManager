@@ -90,6 +90,13 @@ void RealMain(HMODULE dllHandle)
         // If an initialization error occurs before this point, console will be left up so user can look at it.
         MessagesGUI::addMessage("HCM successfully initialised!");
 
+#ifdef HCM_DEBUG
+        auto cp = rpcClient.get()->getInjectInfo();
+        auto sf = rpcClient.get()->getDumpInfo();
+        MessagesGUI::addMessage(std::format("Selected Checkpoint: {}", cp.selectedCheckpointNull ? "null" : cp.selectedCheckpointName));
+        MessagesGUI::addMessage(std::format("Selected SaveFolder: {}", sf.selectedFolderNull ? "null" : sf.selectedFolderName));
+#endif
+
 
 #ifndef HCM_DEBUG
         PLOG_DEBUG << "Closing console";

@@ -50,6 +50,8 @@ namespace HCMExternal.Services.InterprocServiceNS
 
             CheckpointViewModel.PropertyChanged += CheckpointViewModel_PropertyChanged;
 
+
+
             // NOTE: do NOT put temporaries into the subscribes. They will eventually get garbage collected, then Interproc will eventually call them leading to KABOOM. I learned the hard way.
 
             // Subscribe to interproc events
@@ -70,7 +72,9 @@ namespace HCMExternal.Services.InterprocServiceNS
             //    sendInjectCommand();
             //};
 
-
+            // Since InterprocService is created after CheckpointViewModel, the deserialised first selected checkpoint & savefolder events will be missed. So we need to manually fire them here.
+            CheckpointViewModel.SelectedCheckpoint = CheckpointViewModel.SelectedCheckpoint;
+            CheckpointViewModel.SelectedSaveFolder = CheckpointViewModel.SelectedSaveFolder;
 
         }
 
