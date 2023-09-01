@@ -9,12 +9,11 @@ private:
 
 public:
 
-	// TODO: how to check for failed services and uninclude that supported game?
-
 
 	GUISimpleButton(GameState implGame, std::vector<std::map<GameState, std::shared_ptr<CheatBase>>> requiredServices, std::string buttonText, std::shared_ptr<ActionEvent> eventToFire)
 		: GUIElementBase(implGame, requiredServices), mButtonText(buttonText), mEventToFire(eventToFire)
 	{
+		if (mButtonText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUISimplebutton, name: " << getName();
 		PLOG_DEBUG << "&mEventToFire: " << std::hex << &mEventToFire;
 		this->currentHeight = 20;

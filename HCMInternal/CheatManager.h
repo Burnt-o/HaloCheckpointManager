@@ -11,6 +11,7 @@
 #include "DumpCore.h"
 #include "ForceCoreSave.h"
 #include "ForceCoreLoad.h"
+#include "Speedhack.h"
 
 class CheatManager
 {
@@ -40,6 +41,8 @@ public:
 	static inline std::map<GameState, std::shared_ptr<CheatBase>> injectCoreCollection{};
 	static inline std::map<GameState, std::shared_ptr<CheatBase>> dumpCoreCollection{};
 
+	static inline std::map<GameState, std::shared_ptr<CheatBase>> speedhackCollection{};
+
 
 
 	static void ConstructAllCheatsUninitialized()
@@ -55,6 +58,8 @@ public:
 		constructUninitializedCheat<DumpCheckpoint>(dumpCheckpointCollection);
 		constructUninitializedCheat<InjectCore>(injectCoreCollection);
 		constructUninitializedCheat<DumpCore>(dumpCoreCollection);
+
+		constructUninitializedCheat<Speedhack>(speedhackCollection);
 	}
 
 

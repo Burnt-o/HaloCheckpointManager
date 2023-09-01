@@ -9,8 +9,7 @@ public:
 	virtual void serialise(pugi::xml_node parent) = 0;
 	virtual void deserialise(pugi::xml_node input) = 0;
 	virtual std::string getOptionName() = 0;
-	explicit SerialisableOption(bool iisIncludedInClipboard) : mIsIncludedInClipboard(iisIncludedInClipboard){}
-	bool isIncludedInClipboard() { return mIsIncludedInClipboard; };
+	explicit SerialisableOption() {}
 };
 
 template <typename T>
@@ -31,8 +30,8 @@ public:
 	//	: isInputValid(inputValidator), value(defaultValue), valueDisplay(defaultValue), mOptionName(optionName)
 	//{}
 
-	explicit Option(T defaultValue, std::function<bool(T)> inputValidator, std::string optionName, bool isIncludedInClipboard = true)
-		: SerialisableOption(isIncludedInClipboard), isInputValid(inputValidator), value(defaultValue), valueDisplay(defaultValue), mOptionName(optionName)
+	explicit Option(T defaultValue, std::function<bool(T)> inputValidator, std::string optionName)
+		: isInputValid(inputValidator), value(defaultValue), valueDisplay(defaultValue), mOptionName(optionName)
 	{}
 
 

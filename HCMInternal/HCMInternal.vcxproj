@@ -207,9 +207,11 @@
     <ClInclude Include="GUIElementManager.h" />
     <ClInclude Include="GUISimpleButton.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GUISpeedhack.h" />
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
     <ClInclude Include="HeartbeatTimer.h" />
+    <ClInclude Include="HotkeyManager.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="includes\safetyhook\Zydis.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="PointerManager.h" />
     <ClInclude Include="RPCClientInternal.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
+    <ClInclude Include="Speedhack.h" />
     <ClInclude Include="StaticHookWrapper.h" />
     <ClInclude Include="WindowsUtilities.h" />
   </ItemGroup>
@@ -243,6 +246,7 @@
     <ClCompile Include="GameStateHook.cpp" />
     <ClCompile Include="HCMInternalGUI.cpp" />
     <ClCompile Include="HeartbeatTimer.cpp" />
+    <ClCompile Include="HotkeyManager.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <CopyFileToFolders Include="InternalPointerData.xml">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
@@ -276,6 +280,7 @@
     <ClCompile Include="PointerManager.cpp" />
     <ClCompile Include="RPCClientInternal.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
+    <ClCompile Include="Speedhack.cpp" />
     <ClCompile Include="StaticHookWrapper.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>

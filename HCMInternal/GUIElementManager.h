@@ -2,6 +2,7 @@
 #include "GUIElementBase.h"
 #include "CheatManager.h"
 #include "GUISimpleButton.h"
+#include "GUISpeedhack.h"
 #include "OptionsState.h"
 
 class GUIElementManager
@@ -34,6 +35,7 @@ private:
 	std::shared_ptr<GUIElementCollection> dumpCheckpointGUI = std::make_shared<GUIElementCollection>(); 
 	std::shared_ptr<GUIElementCollection> injectCoreGUI = std::make_shared<GUIElementCollection>(); 
 	std::shared_ptr<GUIElementCollection> dumpCoreGUI = std::make_shared<GUIElementCollection>(); 
+	std::shared_ptr<GUIElementCollection> speedhackGUI = std::make_shared<GUIElementCollection>();
 
 
 	std::vector< std::shared_ptr<GUIElementCollection>> allGUICollections {}; // deffo public, this is what HCMInternalGUI iterates over
@@ -61,6 +63,7 @@ public:
 		constructGUIElementCollection<GUISimpleButton>({ GameState::Value::Halo1 }, forceCoreSaveGUI, std::vector{CheatManager::forceCoreSaveCollection}, "Force Core Save", OptionsState::forceCoreSaveEvent);
 		constructGUIElementCollection<GUISimpleButton>({ GameState::Value::Halo1 }, forceCoreLoadGUI, std::vector{CheatManager::forceCoreLoadCollection}, "Force Core Load", OptionsState::forceCoreLoadEvent);
 
+		constructGUIElementCollection<GUISpeedhack>(AllSupportedGames, speedhackGUI, std::vector{CheatManager::speedhackCollection});
 
 	}
 

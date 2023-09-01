@@ -163,6 +163,15 @@
     <ClInclude Include="ForceCoreLoad.h">
       <Filter>Services\Cheats</Filter>
     </ClInclude>
+    <ClInclude Include="HotkeyManager.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeedhack.h">
+      <Filter>Services\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Speedhack.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -247,6 +256,12 @@
       <Filter>Services\Cheats</Filter>
     </ClCompile>
     <ClCompile Include="DumpCore.cpp">
+      <Filter>Services\Cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="HotkeyManager.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Speedhack.cpp">
       <Filter>Services\Cheats</Filter>
     </ClCompile>
   </ItemGroup>
