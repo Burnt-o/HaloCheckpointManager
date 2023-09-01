@@ -20,6 +20,7 @@
 #include "HeartbeatTimer.h"
 #include "GUIElementManager.h"
 #include "FailedServiceInfo.h"
+#include "HotkeyManager.h"
 //both plog and rpc define these
 #ifdef LOG_INFO 
 #define LOG_INFO LOG_INFO_P
@@ -76,8 +77,11 @@ void RealMain(HMODULE dllHandle)
 
         auto mesGUI = std::make_unique<MessagesGUI>(imm.get()->ImGuiRenderCallback);
         Fail.get()->printFailures(); // print list of cheats that failed to initialize
-        auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
+        
+        auto hkm = std::make_unique<HotkeyManager>(imm.get()->ImGuiRenderCallback);
 
+        auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
+        
 
         auto hb = std::make_unique<HeartbeatTimer>(rpcClient);
 
