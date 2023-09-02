@@ -136,6 +136,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BuildStlModules>false</BuildStlModules>
+      <DisableSpecificWarnings>4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,6 +169,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BuildStlModules>false</BuildStlModules>
+      <DisableSpecificWarnings>4005</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -211,7 +213,9 @@
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
     <ClInclude Include="HeartbeatTimer.h" />
+    <ClInclude Include="Hotkey.h" />
     <ClInclude Include="HotkeyManager.h" />
+    <ClInclude Include="Hotkeys.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="includes\safetyhook\Zydis.h" />
@@ -247,6 +251,7 @@
     <ClCompile Include="HCMInternalGUI.cpp" />
     <ClCompile Include="HeartbeatTimer.cpp" />
     <ClCompile Include="HotkeyManager.cpp" />
+    <ClCompile Include="Hotkeys.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <CopyFileToFolders Include="InternalPointerData.xml">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>

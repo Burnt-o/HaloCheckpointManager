@@ -73,14 +73,16 @@ void RealMain(HMODULE dllHandle)
         auto GUIMan = std::make_unique<GUIElementManager>(); // really ought to be passed ref of FailedServiceInfo instead of singletonising
 
         // really ought to be passed ref of GUIElementManager instead of singletonising
-        auto HCMGUI = std::make_unique<HCMInternalGUI>(imm.get()->ImGuiRenderCallback, d3d.get()->resizeBuffersHookEvent, gsh.get()->gameLoadEvent); // needs to be after cheatManager
+        auto HCMGUI = std::make_unique<HCMInternalGUI>(imm.get()->MidgroundRenderEvent, d3d.get()->resizeBuffersHookEvent, gsh.get()->gameLoadEvent); // needs to be after cheatManager
 
-        auto mesGUI = std::make_unique<MessagesGUI>(imm.get()->ImGuiRenderCallback);
+        auto mesGUI = std::make_unique<MessagesGUI>(imm.get()->MidgroundRenderEvent);
         Fail.get()->printFailures(); // print list of cheats that failed to initialize
         
-        auto hkm = std::make_unique<HotkeyManager>(imm.get()->ImGuiRenderCallback);
+        auto exp = std::make_unique<RuntimeExceptionHandler>();
 
-        auto exp = std::make_unique<RuntimeExceptionHandler>(imm.get()->ImGuiRenderCallback);
+        auto hkm = std::make_unique<HotkeyManager>(imm.get()->MidgroundRenderEvent);
+
+
         
 
         auto hb = std::make_unique<HeartbeatTimer>(rpcClient);

@@ -172,6 +172,12 @@
     <ClInclude Include="Speedhack.h">
       <Filter>Services\Cheats</Filter>
     </ClInclude>
+    <ClInclude Include="Hotkey.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Hotkeys.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -263,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="Speedhack.cpp">
       <Filter>Services\Cheats</Filter>
+    </ClCompile>
+    <ClCompile Include="Hotkeys.cpp">
+      <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

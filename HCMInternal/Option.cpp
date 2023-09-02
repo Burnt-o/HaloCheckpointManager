@@ -32,3 +32,11 @@ void Option<int>::deserialise(pugi::xml_node input)
 	UpdateValueWithInput();
 }
 
+
+void Option<Hotkey>::deserialise(pugi::xml_node input)
+{
+	//valueDisplay = (ImGuiKey)(input.text().as_int());
+	//UpdateValueWithInput();
+}
+
+

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Hotkey.h"
 #include <pugixml.hpp>
 class SerialisableOption
 {
@@ -70,7 +70,7 @@ public:
 
 	std::string getOptionName() override { return mOptionName; } // used in serialisation and user facing error messages
 
-	// Should work for any type T
+	// Should work for any type T that implements stringstream << 
 	void serialise(pugi::xml_node parent) override
 	{
 		auto node = parent.append_child(getShortName(getOptionName()).c_str());

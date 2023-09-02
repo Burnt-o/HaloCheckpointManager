@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Hotkey.h"
 
 
 
@@ -10,6 +10,8 @@ private:
 	class HotkeyManagerImpl;
 	std::unique_ptr< HotkeyManagerImpl> pimpl;
 	static inline HotkeyManager* instance = nullptr;
+
+	std::string mHotkeyConfigPath;
 
 public:
 	// Hotkey manager doesn't render, but it does want to poll for inputs every frame

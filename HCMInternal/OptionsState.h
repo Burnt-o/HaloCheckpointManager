@@ -1,7 +1,7 @@
 #pragma once
 #include "Option.h"
 
-typedef eventpp::CallbackList<void()> ActionEvent;
+
 
 // really ought to turn this into a static class instead of namespace.. rn the shared_ptrs might not be cleared
 namespace OptionsState
@@ -37,6 +37,11 @@ namespace OptionsState
 	inline std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
 
 	//inline std::shared_ptr<ActionEvent> speedhackApply = std::make_shared<ActionEvent>();
+
+
+
+
+
 
 	inline std::vector<std::shared_ptr<SerialisableOption>> allSerialisableOptions{};
 };

@@ -182,7 +182,9 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 	pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, NULL);
 
 	// invoke callback of anything that wants to render with ImGui
-	instance->ImGuiRenderCallback();
+	instance->BackgroundRenderEvent();
+	instance->MidgroundRenderEvent();
+	instance->ForegroundRenderEvent();
 
 	// Finish ImGui frame
 	ImGui::EndFrame();

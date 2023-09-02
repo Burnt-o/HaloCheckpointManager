@@ -52,9 +52,12 @@ public:
 	}
 	~ImGuiManager(); // Destructor releases imgui resources and unsubscribes from PresentHookEvent
 
-	// Our own event we will invoke in onPresentHookEvent
+	// Our own events we will invoke in onPresentHookEvent
 	// Things that want to render w/ ImGui will listen to this
-	eventpp::CallbackList<void()> ImGuiRenderCallback; 
+	ActionEvent BackgroundRenderEvent; // for overlays
+	ActionEvent MidgroundRenderEvent; // for main gui / messages
+	ActionEvent ForegroundRenderEvent; // for modal dialogues / popups
+
 
 
 	// Banned operations for singleton
