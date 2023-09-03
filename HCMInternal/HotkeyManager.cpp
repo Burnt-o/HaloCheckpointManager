@@ -37,7 +37,7 @@ private:
 	{
 			for (auto& hotkey: Hotkeys::allHotkeys)
 			{
-				for (auto& bindingSet : hotkey.get()->mBindings)
+				for (auto& bindingSet : hotkey.get()->getBindings())
 				{
 					if (shouldHotkeyActivate(bindingSet))
 					{
@@ -80,7 +80,7 @@ void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent
 {
 	auto mainNode = parent.append_child(hotkey.get()->getName().data());
 
-	for (auto& binding : hotkey.get()->mBindings)
+	for (auto& binding : hotkey.get()->getBindings())
 	{
 		auto bindingNode = mainNode.append_child("BindingSet");
 		for (auto key : binding)
@@ -99,7 +99,7 @@ void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
 		PLOG_ERROR << "could not deserialise hotkey " << hotkey.get()->getName() << ", no config data found";
 	}
 
-	hotkey.get()->mBindings.clear();
+	std::vector<std::vector<ImGuiKey>> newBindings;
 	for (pugi::xml_node bindingSetNode = input.first_child(); bindingSetNode; bindingSetNode = input.next_sibling())
 	{
 		std::vector<ImGuiKey> thisBindingSet;
@@ -120,9 +120,11 @@ void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
 			thisBindingSet.push_back((ImGuiKey)key);
 		}
 		PLOG_VERBOSE << "adding binding set with " << thisBindingSet.size() << " keys to mBindings";
-		hotkey.get()->mBindings.push_back(thisBindingSet);
+		newBindings.push_back(thisBindingSet);
 	}
-	PLOG_VERBOSE << "hotkey loaded with " << hotkey.get()->mBindings.size() << " binding sets";
+	hotkey.get()->setBindings(newBindings);
+
+	PLOG_VERBOSE << "hotkey loaded with " << newBindings.size() << " binding sets";
 
 }
 
