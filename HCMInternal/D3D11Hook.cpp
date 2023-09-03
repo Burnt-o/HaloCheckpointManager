@@ -7,7 +7,7 @@
 
 D3D11Hook* D3D11Hook::instance = nullptr;
 ImVec2 D3D11Hook::mScreenSize;
-
+ImVec2 D3D11Hook::mScreenCenter;
 
 struct rgba {
     float r, g, b, a;
@@ -302,6 +302,7 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 	pBackBuffer->GetDesc(&desc);
 	PLOG_INFO << "Initializing screen size: " << desc.Width << ", " << desc.Height;
 	mScreenSize = { ((float)desc.Width), ((float)desc.Height) };
+	mScreenCenter = mScreenSize / 2;
 
 
 
@@ -421,6 +422,7 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 
 	// Grab the new windows size
 	mScreenSize = { (float)Width, (float)Height };
+	mScreenCenter = mScreenSize / 2;
 	
 	// fire screen resize event
 	d3d->resizeBuffersHookEvent(mScreenSize);

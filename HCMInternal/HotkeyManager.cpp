@@ -27,7 +27,8 @@ private:
 			if (!ImGui::IsKeyDown(key)) return false;		// check if all keys are held down
 
 			// also check for a key being newly pressed. We need at least one key to be newly pressed to prevent continous firing.
-			if (ImGui::IsKeyPressed(key)) newPress = true;
+			if (ImGui::IsKeyPressed(key, false)) newPress = true;
+
 		}
 
 		return newPress;
@@ -35,6 +36,8 @@ private:
 
 	static void pollInput()// we poll every frame. Really we could've chosen any time interval but this is convienent
 	{
+		if (disableHotkeysForRebinding) return;
+
 			for (auto& hotkey: Hotkeys::allHotkeys)
 			{
 				for (auto& bindingSet : hotkey.get()->getBindings())
@@ -53,6 +56,7 @@ private:
 
 
 public:
+	static inline bool disableHotkeysForRebinding = false;
 
 	HotkeyManagerImpl(eventpp::CallbackList<void()>& pRenderEvent) : pImGuiRenderEvent(pRenderEvent)
 	{
@@ -74,6 +78,8 @@ public:
 			pImGuiRenderEvent.remove(mImGuiRenderCallbackHandle);
 	}
 };
+
+void HotkeyManager::setDisableHotkeysForRebinding(bool val) { HotkeyManagerImpl::disableHotkeysForRebinding = val; }
 
 
 void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent)
@@ -103,21 +109,25 @@ void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
 	for (pugi::xml_node bindingSetNode = input.first_child(); bindingSetNode; bindingSetNode = input.next_sibling())
 	{
 		std::vector<ImGuiKey> thisBindingSet;
-		for (pugi::xml_node keyNode = bindingSetNode.first_child(); keyNode; keyNode = bindingSetNode.next_sibling())
+
+		// TODO: fix infinite loop if this gets fed an empty binding set "<BindingSet/>"
+		for (pugi::xml_node keyNode = bindingSetNode.first_child(); keyNode; keyNode = bindingSetNode.next_sibling()) 
 		{
 			// convert text to int (ImGuiKey)
-			int key;
-			try
-			{
-				key = std::stoi(keyNode.text().as_string());
-			}
-			catch (...)
-			{
-				PLOG_ERROR << "could not convert hotkey text: " << keyNode.text().as_string() << " to an integer";
-				continue;
-			}
-			PLOG_VERBOSE << "adding key " << key << " to binding set";
-			thisBindingSet.push_back((ImGuiKey)key);
+				int key = keyNode.text().as_int(-1);
+				if (key == -1)
+				{
+					PLOG_ERROR << "could not convert hotkey text: " << keyNode.text().as_string() << " to an integer. E";
+				}
+				else
+				{
+					// does GetKeyName throw if fed a bad int?
+					PLOG_VERBOSE << "adding key " << ImGui::GetKeyName((ImGuiKey)key) << " to binding set";
+					thisBindingSet.push_back((ImGuiKey)key);
+				}
+
+
+
 		}
 		PLOG_VERBOSE << "adding binding set with " << thisBindingSet.size() << " keys to mBindings";
 		newBindings.push_back(thisBindingSet);

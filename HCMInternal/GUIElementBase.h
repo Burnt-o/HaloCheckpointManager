@@ -8,7 +8,7 @@
 #include "CheatBase.h"
 #include "FailedServiceInfo.h"
 #include "Hotkey.h"
-
+#include "HotkeyRebinder.h"
 class GUIElementBase
 {
 private:
@@ -42,8 +42,7 @@ protected:
 			if (ImGui::Button("..")) // todo: may need to adjust button size
 			{
 				ImGui::PopID(); // pop id before calling modal dialog
-				PLOG_VERBOSE << "this is where I would spawn the hotkey rebinding dialog, IF I HAD ONE";
-				// TODO: spawn the hotkey rebinding dialog
+				HotkeyRebinder::beginHotkeyRebindDialog(mHotkey.value());
 			}
 			else
 			{

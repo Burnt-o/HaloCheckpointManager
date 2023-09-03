@@ -226,6 +226,7 @@
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MessagesGUI.h" />
     <ClInclude Include="MidhookContextInterpreter.h" />
+    <ClInclude Include="HotkeyRebinder.h" />
     <ClInclude Include="ModuleCache.h" />
     <ClInclude Include="ModuleHook.h" />
     <ClInclude Include="ModuleHookManager.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MessagesGUI.cpp" />
     <ClCompile Include="MidhookContextInterpreter.cpp" />
+    <ClCompile Include="HotkeyRebinder.cpp" />
     <ClCompile Include="ModuleCache.cpp" />
     <ClCompile Include="ModuleHook.cpp" />
     <ClCompile Include="ModuleHookManager.cpp" />

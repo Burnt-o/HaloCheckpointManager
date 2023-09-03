@@ -178,6 +178,7 @@
     <ClInclude Include="Hotkeys.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="HotkeyRebinder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -272,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="Hotkeys.cpp">
       <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="HotkeyRebinder.cpp">
+      <Filter>Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

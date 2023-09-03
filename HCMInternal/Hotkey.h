@@ -41,23 +41,48 @@ public:
 		mEvent.get()->operator()();
 	}
 	
-	friend std::ostream& operator<< (std::ostream& out, const Hotkey& g) // to string stream, for serialisation
-	{
-		for (auto binding : g.mBindings)
-		{
-			for (auto key : binding)
-			{
-				out << (int)key << ", ";
-			}
-			out << " - ";
-		}
+	//friend std::ostream& operator<< (std::ostream& out, const Hotkey& g) // to string stream, for serialisation
+	//{
+	//	for (auto binding : g.mBindings)
+	//	{
+	//		for (auto key : binding)
+	//		{
+	//			out << (int)key << ", ";
+	//		}
+	//		out << " - ";
+	//	}
 
-		return out;
-	}
+	//	return out;
+	//}
 
 	static std::string generateBindingText(const std::vector<std::vector<ImGuiKey>>& bindings)
 	{
-		return "ashouafhoauhfasufasf";
+		if (bindings.empty()) return "Unbound";
+
+		std::ostringstream out;
+
+		for (auto& binding : bindings)
+		{
+			std::ostringstream tempss;
+			if (binding.empty())
+			{
+				PLOG_ERROR << "a binding was empty. this shouldn't happen.";
+				return "Unbound?";
+			}
+			for (auto key : binding)
+			{
+				tempss << ImGui::GetKeyName(key) << " + ";
+			}
+			// remove last " + "
+			std::string temp1 = tempss.str();
+			temp1.resize(temp1.size() - 3);
+			out << temp1 << ", ";
+		}
+		// remove last ", "
+		std::string temp2 = out.str();
+		temp2.resize(temp2.size() - 2);
+
+		return temp2;
 	}
 
 	static std::string generateBindingTextShort(const std::string_view longStringView)
@@ -70,6 +95,24 @@ public:
 			shortString.replace(shortString.size() - 2, 2, "..");
 		}
 		return shortString;
+	}
+
+	static std::string generateBindingTextSingle(const std::vector<ImGuiKey>& binding)
+	{
+		std::ostringstream out;
+		if (binding.empty())
+		{
+			return "Unbound";
+		}
+		for (auto key : binding)
+		{
+			out << ImGui::GetKeyName(key) << " + ";
+		}
+		// remove last " + "
+		std::string temp = out.str();
+		temp.resize(temp.size() - 3);
+		return temp;
+
 	}
 
 	// functions for serialising and deserialising are defined in HotkeyManager

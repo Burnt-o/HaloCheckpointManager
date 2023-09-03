@@ -73,6 +73,7 @@ private:
 	bool isD3DdeviceInitialized = false;
 
 	static ImVec2 mScreenSize;
+	static ImVec2 mScreenCenter;
 
 public:
 
@@ -93,6 +94,7 @@ public:
 	D3D11Hook& operator=(const D3D11Hook&& arg) = delete; // Move operator
 
 	static ImVec2 getScreenSize() { return mScreenSize; }
+	static ImVec2 getScreenCenter() { return mScreenCenter; }
 
 
 };

@@ -13,11 +13,13 @@ private:
 
 	std::string mHotkeyConfigPath;
 
+
 public:
 	// Hotkey manager doesn't render, but it does want to poll for inputs every frame
 	HotkeyManager(eventpp::CallbackList<void()>& pRenderEvent);
 	~HotkeyManager();
 
+	static void setDisableHotkeysForRebinding(bool val);
 
 };
 
