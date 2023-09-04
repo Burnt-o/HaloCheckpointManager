@@ -109,10 +109,10 @@ bool PointerTypes::ModuleOffset::resolve(uintptr_t* resolvedOut) const
 		*SetLastErrorByRef() << "ModuleOffset resolution failed, module not found with name: " << wstr_to_str(this->mModuleName) << std::endl;
 		return false;
 	}
-	PLOG_VERBOSE << "moduleAddress: " << moduleAddress.value();
+	//PLOG_VERBOSE << "moduleAddress: " << moduleAddress.value();
 	for (int64_t offset : this->mOffsets)
 	{
-		PLOG_VERBOSE << "offset: " << offset;
+		//PLOG_VERBOSE << "offset: " << offset;
 	}
 
 	return dereferencePointer(moduleAddress.value(), this->mOffsets, resolvedOut);

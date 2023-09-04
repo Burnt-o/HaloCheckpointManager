@@ -23,6 +23,9 @@
     <Filter Include="Services\Cheats">
       <UniqueIdentifier>{837d1078-0fa6-48f6-a483-88e1205c2f94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\Cheats\Invulnerability">
+      <UniqueIdentifier>{414cd60f-35d9-46f9-9de2-2b62f03a1345}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -182,8 +185,17 @@
     <ClInclude Include="GUISimpleToggle.h">
       <Filter>Services\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="Datum.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Halo1InvulnerabilityImpl.h">
+      <Filter>Services\Cheats\Invulnerability</Filter>
+    </ClInclude>
+    <ClInclude Include="InvulnerabilityImplBase.h">
+      <Filter>Services\Cheats\Invulnerability</Filter>
+    </ClInclude>
     <ClInclude Include="Invulnerability.h">
-      <Filter>Services\Cheats</Filter>
+      <Filter>Services\Cheats\Invulnerability</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,7 +296,7 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="Invulnerability.cpp">
-      <Filter>Services\Cheats</Filter>
+      <Filter>Services\Cheats\Invulnerability</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

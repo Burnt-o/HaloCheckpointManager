@@ -44,8 +44,14 @@ namespace OptionsState
 			nameof(invulnerabilityToggle)
 		);
 
+	inline std::shared_ptr<Option<bool>> invulnerabilityNPCToggle = std::make_shared<Option<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(invulnerabilityNPCToggle)
+		);
 
 
-	inline std::vector<std::shared_ptr<SerialisableOption>> allSerialisableOptions{};
+	inline std::vector<std::shared_ptr<SerialisableOption>> allSerialisableOptions{invulnerabilityNPCToggle, speedhackSetting};
 };
 

@@ -211,8 +211,10 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUISimpleToggle.h" />
     <ClInclude Include="GUISpeedhack.h" />
+    <ClInclude Include="Halo1InvulnerabilityImpl.h" />
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
+    <ClInclude Include="Datum.h" />
     <ClInclude Include="HeartbeatTimer.h" />
     <ClInclude Include="Hotkey.h" />
     <ClInclude Include="HotkeyManager.h" />
@@ -225,6 +227,7 @@
     <ClInclude Include="InjectCore.h" />
     <ClInclude Include="InjectRequirements.h" />
     <ClInclude Include="Invulnerability.h" />
+    <ClInclude Include="InvulnerabilityImplBase.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MessagesGUI.h" />
     <ClInclude Include="MidhookContextInterpreter.h" />
