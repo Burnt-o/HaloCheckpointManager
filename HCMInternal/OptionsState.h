@@ -36,10 +36,13 @@ namespace OptionsState
 
 	inline std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
 
-	//inline std::shared_ptr<ActionEvent> speedhackApply = std::make_shared<ActionEvent>();
 
-
-
+	inline std::shared_ptr<Option<bool>> invulnerabilityToggle = std::make_shared<Option<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(invulnerabilityToggle)
+		);
 
 
 

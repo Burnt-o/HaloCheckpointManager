@@ -209,6 +209,7 @@
     <ClInclude Include="GUIElementManager.h" />
     <ClInclude Include="GUISimpleButton.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GUISimpleToggle.h" />
     <ClInclude Include="GUISpeedhack.h" />
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="InjectCheckpoint.h" />
     <ClInclude Include="InjectCore.h" />
     <ClInclude Include="InjectRequirements.h" />
+    <ClInclude Include="Invulnerability.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MessagesGUI.h" />
     <ClInclude Include="MidhookContextInterpreter.h" />
@@ -268,6 +270,7 @@
     </ClCompile>
     <ClCompile Include="InjectCheckpoint.cpp" />
     <ClCompile Include="InjectCore.cpp" />
+    <ClCompile Include="Invulnerability.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MessagesGUI.cpp" />
     <ClCompile Include="MidhookContextInterpreter.cpp" />

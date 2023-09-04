@@ -156,6 +156,8 @@ template
 std::shared_ptr<offsetLengthPair> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 template
 std::shared_ptr<int64_t> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+template
+std::shared_ptr<MidhookContextInterpreter> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 
 std::string PointerManager::PointerManagerImpl::readLocalXML()
 {

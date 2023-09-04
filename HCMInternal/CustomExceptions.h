@@ -13,6 +13,7 @@ private:
 	void MandatoryLogging()
 	{
 		PLOG_ERROR << "Exception thrown at " << this->sourceLocation << ", I sure hope someone handles that.";
+		PLOG_ERROR << "But just in case it doesn't, here's the error info: " << this->message;
 		//PLOG_ERROR << this->sourceLocation << std::endl << this->message << std::endl << this->stackTrace;
 	}
 

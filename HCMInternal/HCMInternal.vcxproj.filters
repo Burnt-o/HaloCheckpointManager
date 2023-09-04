@@ -179,6 +179,12 @@
       <Filter>Global</Filter>
     </ClInclude>
     <ClInclude Include="HotkeyRebinder.h" />
+    <ClInclude Include="GUISimpleToggle.h">
+      <Filter>Services\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Invulnerability.h">
+      <Filter>Services\Cheats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -276,6 +282,9 @@
     </ClCompile>
     <ClCompile Include="HotkeyRebinder.cpp">
       <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Invulnerability.cpp">
+      <Filter>Services\Cheats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

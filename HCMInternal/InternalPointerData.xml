@@ -1456,6 +1456,28 @@
 		</Version>
 	</VersionedEntry>
 	<!-- #endregion preserveLocations-->
+	
+	<!-- #region invulnerability-->
+	<VersionedEntry Name="invulnerabilityFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3251.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<!--<Offset>0xB9F0FB</Offset>-->
+				<Offset>0xB9F16F</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="invulnerabilityFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="1.3251.0.0" Game="Halo1">
+			<Parameters>
+				<unitDatum>rcx</unitDatum>
+				<unitAddress>rbx</unitAddress>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+	<!-- #endregion invulnerability-->
 
 	<!-- #endregion SaveManagement-->
 	
