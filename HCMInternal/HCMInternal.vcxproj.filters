@@ -197,6 +197,9 @@
     <ClInclude Include="Invulnerability.h">
       <Filter>Services\Cheats\Invulnerability</Filter>
     </ClInclude>
+    <ClInclude Include="SpeedhackCommunicator.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

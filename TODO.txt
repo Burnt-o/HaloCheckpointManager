@@ -15,4 +15,7 @@ I'm not sure if safety-hook can do perma hooks like that. Can we just make them 
 	Is there a way to check for that? Wouldn't work well with dev hot-loading anyway.
 Would the simplest solution be to inject a seperate dll that lives in mcc forever? Maybe.. How does HCMInternal com with that? A second RPCClient? 
 	Can it import funcs from it if it's a static dll? I think that might be possible actually
-
+Instead of having interproc::inject inject twice, just have internal call loadlibrary? but how comm..
+	loadlibrary then getProcAddress lol 
+	https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya
+	"If lpFileName does not include a path and there is more than one loaded module with the same base name and extension, the function returns a handle to the module that was loaded first."

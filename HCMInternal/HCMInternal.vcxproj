@@ -244,6 +244,7 @@
     <ClInclude Include="RPCClientInternal.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
     <ClInclude Include="Speedhack.h" />
+    <ClInclude Include="SpeedhackCommunicator.h" />
     <ClInclude Include="StaticHookWrapper.h" />
     <ClInclude Include="WindowsUtilities.h" />
   </ItemGroup>

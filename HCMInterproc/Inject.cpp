@@ -92,7 +92,7 @@ bool SetupInternal()
 	{
 		PLOG_FATAL << "An unknown error occured.";
 		PLOG_INFO << "Press Enter to shutdown CEER";
-		
+
 	}
 	return false;
 }
