@@ -1873,21 +1873,21 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x0</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Module>main</Module>
+				<Offsets>
+					<Offset>0x3FFE598</Offset>
+					<Offset>0x28</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_ModuleWinStore</Name>
-			<Version Version="1.2645.0.0">
-			<Module>main</Module>
-			<Offsets>
-				<Offset>0x03A23830</Offset>
-				<Offset>0x28</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-			</Version>
-			<Version Version="1.3251.0.0">
+			<Version Version="1.3272.0.0">
 				<Module>main</Module>
 				<Offsets>
-					<Offset>0x3E4BAB0</Offset>
+					<Offset>0x3E4CB38</Offset>
 					<Offset>0x28</Offset>
 					<Offset>0x0</Offset>
 				</Offsets>
@@ -1915,6 +1915,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</Offsets>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x18A1254</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Module>halo2.dll</Module>
 				<Offsets>
 					<Offset>0x18A1254</Offset>
@@ -1951,6 +1957,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x4</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x187B5E0</Offset>
+					<Offset>0x4</Offset>
+				</Offsets>
+			</Version>
 
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
@@ -1979,6 +1992,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x679EBB</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x679EBB</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CPMessageCallLength</Name>
@@ -1992,6 +2011,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>5</Offset>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Offset>5</Offset>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Offset>5</Offset>
 			</Version>
 		</Entry>
@@ -2019,6 +2041,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</Offsets>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x187B5E0</Offset>
+					<Offset>0</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Module>halo2.dll</Module>
 				<Offsets>
 					<Offset>0x187B5E0</Offset>
@@ -2156,6 +2185,38 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					</Element>
 				</Array>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Array>
+					<Element>
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x187B5E0</Offset>
+							<Offset>0x82</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x187B5E0</Offset>
+							<Offset>0x83</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x187B5E0</Offset>
+							<Offset>0x84</Offset>
+						</Offsets>
+					</Element>
+					<Element>
+						<Module>halo2.dll</Module>
+						<Offsets>
+							<Offset>0x187B5E0</Offset>
+							<Offset>0x85</Offset>s
+						</Offsets>
+					</Element>
+				</Array>
+			</Version>
 		</Entry>
 		<Entry Type="byte[]">
 			<Name>H2_PrintMessageFlagValues</Name>
@@ -2169,6 +2230,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Array>0, 0, 1, 0</Array>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Array>0, 0, 1, 0</Array>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Array>0, 0, 1, 0</Array>
 			</Version>
 		</Entry>
@@ -2195,6 +2259,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</Offsets>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xE6FD7E</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Module>halo2.dll</Module>
 				<Offsets>
 					<Offset>0xE6FD7E</Offset>
@@ -2227,6 +2297,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0xE6FD7D</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0xE6FD7D</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
 			<Name>H2_DoubleRevertFlag</Name>
@@ -2254,6 +2330,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x159FB04</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x159FB04</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_NaturalCheckpointCode</Name>
@@ -2275,7 +2357,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x679898</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.3251.0.0">
+		<Version Version="1.3272.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x67A998</Offset>
@@ -2928,9 +3010,6 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<LoadedBSP2>true</LoadedBSP2>
 				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
 				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
-
-
-
 			</Version>
 			<Version Version="1.2645.0.0">
 				<CheckpointLocation1>true</CheckpointLocation1>
@@ -2942,10 +3021,7 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<LoadedBSP1>true</LoadedBSP1>
 				<LoadedBSP2>true</LoadedBSP2>
 				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
-					<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
-			
-		
-		
+				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
 		</Version>
 			<Version Version="1.3073.0.0">
 				<CheckpointLocation1>true</CheckpointLocation1>
@@ -2958,9 +3034,6 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<LoadedBSP2>true</LoadedBSP2>
 				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
 				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
-
-
-
 			</Version>
 			<Version Version="1.3251.0.0">
 				<CheckpointLocation1>true</CheckpointLocation1>
@@ -2973,9 +3046,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<LoadedBSP2>true</LoadedBSP2>
 				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
 				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
-
-
-
+			</Version>
+			<Version Version="1.3272.0.0">
+				<CheckpointLocation1>true</CheckpointLocation1>
+				<CheckpointLocation2>true</CheckpointLocation2>
+				<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+				<DoubleRevertFlag>true</DoubleRevertFlag>
+				<CheckpointData_SHAoffset>false</CheckpointData_SHAoffset>
+				<CheckpointData_SHAlength>false</CheckpointData_SHAlength>
+				<LoadedBSP1>true</LoadedBSP1>
+				<LoadedBSP2>true</LoadedBSP2>
+				<CheckpointData_LoadedBSPoffset>true</CheckpointData_LoadedBSPoffset>
+				<CheckpointData_LoadedBSPlength>true</CheckpointData_LoadedBSPlength>
 			</Version>
 		</Entry>
 		<Entry Type="ReadWrite.Pointer">
@@ -3003,6 +3085,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</Offsets>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x01651CF0</Offset>
+					<Offset>0x0</Offset>
+				</Offsets>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Module>halo2.dll</Module>
 				<Offsets>
 					<Offset>0x01651CF0</Offset>
@@ -3040,6 +3129,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 					<Offset>0x400000</Offset>
 				</Offsets>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x01651CF0</Offset>
+					<Offset>0x400000</Offset>
+				</Offsets>
+			</Version>
 		</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>H2_LoadedBSP1</Name>
@@ -3062,6 +3158,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			</Offsets>
 		</Version>
 		<Version Version="1.3251.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x159FC30</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x159FC30</Offset>
@@ -3094,6 +3196,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x15A1560</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15A1560</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>H2_CheckpointData_LoadedBSPoffset</Name>
@@ -3107,6 +3215,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Offset>0x1d9a</Offset>
 		</Version>
 		<Version Version="1.3251.0.0">
+			<Offset>0x1d9a</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>0x1d9a</Offset>
 		</Version>
 	</Entry>
@@ -3124,6 +3235,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3251.0.0">
 			<Offset>1</Offset>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<Offset>1</Offset>
+		</Version>
 	</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointLength</Name>
@@ -3137,6 +3251,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x3FE000</Offset>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Offset>0x3FE000</Offset>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Offset>0x3FE000</Offset>
 			</Version>
 		</Entry>
@@ -3154,6 +3271,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Version Version="1.3251.0.0">
 				<Offset>0x13</Offset>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Offset>0x13</Offset>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointData_GameTickCount</Name>
@@ -3169,6 +3289,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Version Version="1.3251.0.0">
 				<Offset>0x36A0</Offset>
 			</Version>
+			<Version Version="1.3272.0.0">
+				<Offset>0x36A0</Offset>
+			</Version>
 		</Entry>
 		<Entry Type="int">
 			<Name>H2_CheckpointData_Difficulty</Name>
@@ -3182,6 +3305,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x3EE</Offset>
 			</Version>
 			<Version Version="1.3251.0.0">
+				<Offset>0x3EE</Offset>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Offset>0x3EE</Offset>
 			</Version>
 		</Entry>
@@ -3241,6 +3367,26 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			</Version>
 			<!--untested-->
 			<Version Version="1.3251.0.0">
+				<Array>
+					<PreserveLocation>
+						<Offset>0x5A34</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x5ABD</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x3814</Offset>
+						<Length>8</Length>
+					</PreserveLocation>
+					<PreserveLocation>
+						<Offset>0x3808</Offset>
+						<Length>4</Length>
+					</PreserveLocation>
+				</Array>
+			</Version>
+			<Version Version="1.3272.0.0">
 				<Array>
 					<PreserveLocation>
 						<Offset>0x5A34</Offset>
