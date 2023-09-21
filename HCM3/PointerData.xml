@@ -6786,10 +6786,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x275DE3C</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2A1F597</Offset> <!--not sure this is correct-->
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2A1F587</Offset>
+				<!--not sure this is correct-->
 			</Offsets>
 		</Version>
 	</Entry>
@@ -6820,10 +6827,18 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>main</Module>
 			<Offsets>
 				<Offset>0x3FFD608</Offset>
+				<Offset>0xC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>main</Module>
+			<Offsets>
+				<Offset>0x3FFE598</Offset>
 				<Offset>0xC8</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -6832,10 +6847,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_ModuleWinStore</Name>
 
-		<Version Version="1.3251.0.0">
+		<Version Version="1.3272.0.0">
 			<Module>main</Module>
 			<Offsets>
-				<Offset>0x3E4BAB0</Offset>
+				<Offset>0x3E4CB38</Offset>
 				<Offset>0xC8</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -6872,6 +6887,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x2C8E230</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2C8E220</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_PrintMessageText</Name>
@@ -6896,10 +6917,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x420</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019A6310</Offset>
+				<Offset>0x490</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
 				<Offset>0x490</Offset>
 			</Offsets>
 		</Version>
@@ -6924,7 +6952,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x33D4C</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x33D0C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x33D0C</Offset>
@@ -6942,7 +6976,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Offset>5</Offset>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Offset>5</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>5</Offset>
 		</Version>
 	</Entry>
@@ -6969,10 +7006,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x39C</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019A6310</Offset>
+				<Offset>0x40C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
 				<Offset>0x40C</Offset>
 			</Offsets>
 		</Version>
@@ -7012,12 +7056,23 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</Element>
 			</Array>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Array>
 				<Element>
 					<Module>haloreach.dll</Module>
 					<Offsets>
 						<Offset>0x019A6310</Offset>
+						<Offset>0x3FC</Offset>
+					</Offsets>
+				</Element>
+			</Array>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Array>
+				<Element>
+					<Module>haloreach.dll</Module>
+					<Offsets>
+						<Offset>0x019D2230</Offset>
 						<Offset>0x3FC</Offset>
 					</Offsets>
 				</Element>
@@ -7035,7 +7090,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Array>1</Array>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Array>1</Array>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Array>1</Array>
 		</Version>
 	</Entry>
@@ -7061,10 +7119,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x264EC4E</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x263eb3e</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263eb2e</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -7088,10 +7152,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x264EC4B</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x263EB3B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263EB2B</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
@@ -7122,6 +7192,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x24FB77C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x24FB76C</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 	<Entry Type="ReadWrite.Pointer">
 		<Name>HR_NaturalCheckpointCode</Name>
@@ -7144,6 +7220,12 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			</Offsets>
 		</Version>
 			<Version Version="1.3251.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x166292</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x166292</Offset>
@@ -7566,6 +7648,16 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
 			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<OriginalCodeLocation>
+				<Module>haloreach.dll</Module>
+				<Offsets>
+					<Offset>0x204B3</Offset>
+				</Offsets>
+			</OriginalCodeLocation>
+			<OriginalCodeBytes>0x48, 0x85, 0xC9</OriginalCodeBytes>
+			<PatchedCodeBytes>0x4D, 0x85, 0xE4</PatchedCodeBytes>
+		</Version>
 
 	</Entry>
 	
@@ -7607,7 +7699,19 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
 			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<CheckpointLocation1>true</CheckpointLocation1>
+			<CheckpointLocation2>true</CheckpointLocation2>
+			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
+			<DoubleRevertFlag>true</DoubleRevertFlag>
+			<CheckpointData_SHAoffset>true</CheckpointData_SHAoffset>
+			<CheckpointData_SHAlength>true</CheckpointData_SHAlength>
+			<LoadedBSP1>false</LoadedBSP1>
+			<LoadedBSP2>false</LoadedBSP2>
+			<CheckpointData_LoadedBSPoffset>false</CheckpointData_LoadedBSPoffset>
+			<CheckpointData_LoadedBSPlength>false</CheckpointData_LoadedBSPlength>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<CheckpointLocation1>true</CheckpointLocation1>
 			<CheckpointLocation2>true</CheckpointLocation2>
 			<CheckpointData_PreserveLocations>true</CheckpointData_PreserveLocations>
@@ -7644,10 +7748,17 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x027BF2C0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x027BF2A0</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -7682,6 +7793,13 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				<Offset>0xA60000</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x027BF2A0</Offset>
+				<Offset>0xA60000</Offset>
+			</Offsets>
+		</Version>
 	</Entry>
 
 	<Entry Type="int">
@@ -7698,6 +7816,9 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 			<Version Version="1.3251.0.0">
 			<Offset>0x1EC10</Offset>
 		</Version>
+		<Version Version="1.3272.0.0">
+			<Offset>0x1EC10</Offset>
+		</Version>
 	</Entry>
 	<Entry Type="int">
 		<Name>HR_CheckpointData_SHAlength</Name>
@@ -7710,7 +7831,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Offset>20</Offset>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Offset>20</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>20</Offset>
 		</Version>
 	</Entry>
@@ -7725,7 +7849,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Offset>0xA60000</Offset>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Offset>0xA60000</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>0xA60000</Offset>
 		</Version>
 	</Entry>
@@ -7740,7 +7867,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Offset>0x183</Offset>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Offset>0x183</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>0x183</Offset>
 		</Version>
 	</Entry>
@@ -7755,7 +7885,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Offset>0xC6770</Offset>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Offset>0xC8830</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>0xC8830</Offset>
 		</Version>
 	</Entry>
@@ -7770,7 +7903,10 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 		<Version Version="1.3073.0.0">
 			<Offset>0x304</Offset>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Offset>0x304</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Offset>0x304</Offset>
 		</Version>
 	</Entry>
@@ -7812,7 +7948,19 @@ should be 3rd of 4 results. accessed by mov [r14], ebx.
 				</PreserveLocation>
 			</Array>
 		</Version>
-			<Version Version="1.3251.0.0">
+		<Version Version="1.3251.0.0">
+			<Array>
+				<PreserveLocation>
+					<Offset>0x5E3E74</Offset>
+					<Length>4</Length>
+				</PreserveLocation>
+				<PreserveLocation>
+					<Offset>0x5DF5F0</Offset>
+					<Length>16</Length>
+				</PreserveLocation>
+			</Array>
+		</Version>
+		<Version Version="1.3272.0.0">
 			<Array>
 				<PreserveLocation>
 					<Offset>0x5E3E74</Offset>
