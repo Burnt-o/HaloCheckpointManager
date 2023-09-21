@@ -33,7 +33,7 @@
 			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Speedhack</ListString>
 		</Version>
 		<Version Version="1.3272.0.0">
-			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Speedhack</ListString>
+			<ListString>Inject, Dump, ForceCheckpoint, ForceRevert, ForceCoresave, ForceCoreload, Speedhack, CheatMedusa</ListString>
 		</Version>
 	</Entry>
 	<Entry Type="List&lt;string&gt;">
@@ -1098,6 +1098,12 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x1DBE5AE</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1C421AE</Offset>
 			</Offsets>
 		</Version>
 	</Entry>
