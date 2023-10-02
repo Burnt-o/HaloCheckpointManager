@@ -1,25 +1,32 @@
 #pragma once
 #include "Hotkey.h"
+#include "HotkeyDefinitions.h"
+#include "MessagesGUI.h"
 
 
-
-// pimpl
 class HotkeyManager
 {
 private:
-	class HotkeyManagerImpl;
-	std::unique_ptr< HotkeyManagerImpl> pimpl;
-	static inline HotkeyManager* instance = nullptr;
+	// callbacks
+	ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
 
+	// services
+	std::shared_ptr<HotkeyDefinitions> mHotkeyDefinitions;
+
+
+	// data 
 	std::string mHotkeyConfigPath;
+	bool mDisableHotkeysForRebinding = false;
+
+	void pollInput();
 
 
 public:
 	// Hotkey manager doesn't render, but it does want to poll for inputs every frame
-	HotkeyManager(eventpp::CallbackList<void()>& pRenderEvent);
+	HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<MessagesGUI> messagesGUI, std::string dirPath);
 	~HotkeyManager();
 
-	static void setDisableHotkeysForRebinding(bool val);
+	void setDisableHotkeysForRebinding(bool val) { mDisableHotkeysForRebinding = val; };
 
 };
 

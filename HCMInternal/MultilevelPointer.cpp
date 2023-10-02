@@ -91,7 +91,11 @@ bool PointerTypes::ExeOffset::resolve(uintptr_t* resolvedOut) const
 	if (!PointerTypes::ExeOffset::mEXEAddress)
 	{
 		PointerTypes::ExeOffset::mEXEAddress = GetModuleHandleA(NULL);// null means get the handle for the currently running process
-		if (!PointerTypes::ExeOffset::mEXEAddress) { PLOG_ERROR << "Couldn't get exe process handle"; throw("Couldn't get exe process handle"); }
+		if (!PointerTypes::ExeOffset::mEXEAddress) 
+		{ 
+			*SetLastErrorByRef() << "Couldn't get MCC exe process handle" << std::endl;
+			return false;
+		}
 	}
 	return dereferencePointer(ExeOffset::mEXEAddress, this->mOffsets, resolvedOut);
 }
@@ -120,7 +124,7 @@ bool PointerTypes::ModuleOffset::resolve(uintptr_t* resolvedOut) const
 
 bool PointerTypes::Resolved::resolve(uintptr_t* resolvedOut) const
 {
-	if (IsBadReadPtr(this->mBaseAddress, 1))
+	if (IsBadReadPtr(this->mBaseAddress, 8))
 	{
 		*SetLastErrorByRef() << "Resolved resolution failed, bad read pointer: " << this->mBaseAddress << std::endl;
 		return false;

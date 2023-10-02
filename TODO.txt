@@ -1,8 +1,18 @@
 
 
+dependency injection EVERYTHING. i've now figured out I don't need to make hooks static with juicey use of std::bind.
+	-> make modulemidhook/inline factory things FORCE use of std::function (inline hook will need template shennanigans for func signature)
+
+
+Make a dynamic struct layout class thingy
+
 Create an objectLookup service. this will be used by playerInfo, invulnerability, triggerOverlay etc
 	maybe cache results of player lookup
 	can just do a playerLookup service to start with? ehhh would be better performance but shite extensibility, so no.
+
+Make a pointerGenerator project to strongly type pointerdata instead of using strings for everything
+
+make a set of tests for cheatManager/cheats to check if we have pointerData (and thus successful cheat init) for all game versions
 
 There's like a 5% chance the game crashes when dll injected. Probably render hook installing at same time as a render. Can we thread freeze like safety-hook?
 
@@ -10,12 +20,10 @@ HCMExternal still not re-injecting on re-attach
 
 HCMExternal SaveFolder view needs scrollbar
 
-Speedhack crashes if HCMInternal shutdown ie if hooks disappear. The hooks need to be permanent. Shutdown should just set speed to 1.
-I'm not sure if safety-hook can do perma hooks like that. Can we just make them a static var? How do we deal with case of them already existing?
-	Is there a way to check for that? Wouldn't work well with dev hot-loading anyway.
-Would the simplest solution be to inject a seperate dll that lives in mcc forever? Maybe.. How does HCMInternal com with that? A second RPCClient? 
-	Can it import funcs from it if it's a static dll? I think that might be possible actually
-Instead of having interproc::inject inject twice, just have internal call loadlibrary? but how comm..
-	loadlibrary then getProcAddress lol 
-	https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya
-	"If lpFileName does not include a path and there is more than one loaded module with the same base name and extension, the function returns a handle to the module that was loaded first."
+
+
+
+
+
+The new di system / unsingletonization is coming along well.
+just need to unsingletonize MessagesGUI and OptionsState. And maybe ModuleHookManager? I mean, I DO want to mock it later to get rid of side effects.

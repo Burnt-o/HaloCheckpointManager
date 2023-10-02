@@ -12,7 +12,7 @@ std::string requestHCMDirectory()
 {
     RPCServerExternal::connectionEstablised = true;
 
-    return std::filesystem::current_path().generic_string();
+    return std::string(std::filesystem::current_path().generic_string() + "/");
 }
 
 SelectedCheckpointDataExternal getInjectInfo()

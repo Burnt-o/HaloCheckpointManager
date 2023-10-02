@@ -1,29 +1,20 @@
 #pragma once
-
-#include "Option.h"
-
+#include "MessagesGUI.h"
 
 class RuntimeExceptionHandler
 {
 private:
-	// private singleton
-	static RuntimeExceptionHandler* instance;
-
-
+	std::shared_ptr<MessagesGUI> mMessagesGUI;
 public:
 
 	// Shows error message to user, and disables related toggle options if any were passed to it (optional)
-	static void handleSilent(HCMExceptionBase& ex, std::vector<Option<bool>*> optionsToDisable = {});
-	static void handleMessage(HCMExceptionBase& ex, std::vector<Option<bool>*> optionsToDisable = {});
-	static void handlePopup(HCMExceptionBase& ex, std::vector<Option<bool>*> optionsToDisable = {});
+	// TODO: get rid of these and find a better way to handle runtime exceptions in toggle hooks
+	 void handleSilent(HCMExceptionBase& ex);
+	 void handleMessage(HCMExceptionBase& ex);
+	 void handlePopup(HCMExceptionBase& ex);
 	
-	explicit RuntimeExceptionHandler()
-	{
-		if (instance) throw HCMInitException("Cannot have more than one RuntimeExceptionHandler");
-		instance = this;
-	}
+	 explicit RuntimeExceptionHandler(std::shared_ptr<MessagesGUI> mes) : mMessagesGUI(mes) {}
 
-	~RuntimeExceptionHandler() { instance = nullptr; }
 
 
 };

@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMSpeedhack", "HCMSpeedhack\HCMSpeedhack.vcxproj", "{BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMInternalTests", "HCMInternalTests\HCMInternalTests.vcxproj", "{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,18 @@ Global
 		{BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}.Release|x64.Build.0 = Release|x64
 		{BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}.Release|x86.ActiveCfg = Release|Win32
 		{BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}.Release|x86.Build.0 = Release|Win32
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Debug|Any CPU.Build.0 = Debug|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Debug|x64.ActiveCfg = Debug|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Debug|x64.Build.0 = Debug|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Debug|x86.ActiveCfg = Debug|Win32
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Debug|x86.Build.0 = Debug|Win32
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Release|Any CPU.ActiveCfg = Release|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Release|Any CPU.Build.0 = Release|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Release|x64.ActiveCfg = Release|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Release|x64.Build.0 = Release|x64
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Release|x86.ActiveCfg = Release|Win32
+		{F75200BC-1AB7-4807-A753-EC6E4D3BA77D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

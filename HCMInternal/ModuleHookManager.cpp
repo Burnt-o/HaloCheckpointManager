@@ -5,16 +5,10 @@
 #include "ModuleCache.h"
 
 
-ModuleHookManager* ModuleHookManager::instance = nullptr;
 
 
 ModuleHookManager::ModuleHookManager()
 {
-	if (instance != nullptr)
-	{ 
-		throw HCMInitException("Cannot have more than one ModuleHookManager");
-	}
-	instance = this;
 
 	// We'll make global hooks here that track dll loading/unloading
 	PLOG_INFO << "Hooking module load/unload";
@@ -37,13 +31,12 @@ ModuleHookManager::~ModuleHookManager()
 	// otherwise we could have a stale reference issue
 	detachAllHooks();
 
-	instance->mHook_LoadLibraryA.reset();
-	instance->mHook_LoadLibraryW.reset();
-	instance->mHook_LoadLibraryExA.reset();
-	instance->mHook_LoadLibraryExW.reset();
-	instance->mHook_FreeLibrary.reset();
+	mHook_LoadLibraryA.reset();
+	mHook_LoadLibraryW.reset();
+	mHook_LoadLibraryExA.reset();
+	mHook_LoadLibraryExW.reset();
+	mHook_FreeLibrary.reset();
 
-	instance = nullptr;
 }
 
 
@@ -68,7 +61,7 @@ void ModuleHookManager::detachAllHooks() {
 void ModuleHookManager::preModuleUnload_UpdateHooks(std::wstring_view libFilename) 
 {
 	// Get a ref to the module-hooks map
-	const auto& moduleHooksMap = instance->mModuleHooksMap;
+	const auto& moduleHooksMap = mModuleHooksMap;
 
 	// Is the currently unloading library in our map?
 	auto it = moduleHooksMap.find(libFilename.data());
@@ -91,7 +84,7 @@ void ModuleHookManager::postModuleLoad_UpdateHooks(std::wstring_view libPath)
 	auto libFilename = path.filename().generic_wstring();
 
 	// Get a ref to the module-hooks map
-	const auto& moduleHooksMap = instance->mModuleHooksMap;
+	const auto& moduleHooksMap = mModuleHooksMap;
 
 	// Is the currently loading module in our map?
 	auto it = moduleHooksMap.find(libFilename.data());
@@ -131,7 +124,7 @@ std::set<std::wstring> gameDLLNames{ L"halo1.dll", L"halo2.dll", L"halo3.dll", L
 
 // the hook-redirected functions
 HMODULE ModuleHookManager::newLoadLibraryA(LPCSTR lpLibFileName) {
-	auto result = instance->mHook_LoadLibraryA.call< HMODULE, LPCSTR > (lpLibFileName);
+	auto result =mHook_LoadLibraryA.call< HMODULE, LPCSTR > (lpLibFileName);
 
 	auto wLibFileName = str_to_wstr(lpLibFileName);
 
@@ -146,7 +139,7 @@ HMODULE ModuleHookManager::newLoadLibraryA(LPCSTR lpLibFileName) {
 }
 
 HMODULE ModuleHookManager::newLoadLibraryW(LPCWSTR lpLibFileName) {
-	auto result = instance->mHook_LoadLibraryW.call<HMODULE, LPCWSTR>(lpLibFileName);
+	auto result = mHook_LoadLibraryW.call<HMODULE, LPCWSTR>(lpLibFileName);
 
 #ifdef HCM_DEBUG
 	printGameDLL(lpLibFileName)
@@ -159,7 +152,7 @@ HMODULE ModuleHookManager::newLoadLibraryW(LPCWSTR lpLibFileName) {
 }
 
 HMODULE ModuleHookManager::newLoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags) {
-	auto result = instance->mHook_LoadLibraryExA.call<HMODULE, LPCSTR, HANDLE, DWORD>(lpLibFileName, hFile, dwFlags);
+	auto result = mHook_LoadLibraryExA.call<HMODULE, LPCSTR, HANDLE, DWORD>(lpLibFileName, hFile, dwFlags);
 
 	auto wLibFileName = str_to_wstr(lpLibFileName);
 
@@ -174,7 +167,7 @@ HMODULE ModuleHookManager::newLoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile,
 }
 
 HMODULE ModuleHookManager::newLoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags) {
-	auto result = instance->mHook_LoadLibraryExW.call<HMODULE, LPCWSTR, HANDLE, DWORD>(lpLibFileName, hFile, dwFlags);
+	auto result = mHook_LoadLibraryExW.call<HMODULE, LPCWSTR, HANDLE, DWORD>(lpLibFileName, hFile, dwFlags);
 
 #ifdef HCM_DEBUG
 	printGameDLL(lpLibFileName)
@@ -201,6 +194,6 @@ BOOL ModuleHookManager::newFreeLibrary(HMODULE hLibModule) {
 
 	preModuleUnload_UpdateHooks(filename);
 	ModuleCache::removeModuleFromCache(filename);
-	return instance->mHook_FreeLibrary.call<BOOL, HMODULE>(hLibModule);
+	return mHook_FreeLibrary.call<BOOL, HMODULE>(hLibModule);
 }
 

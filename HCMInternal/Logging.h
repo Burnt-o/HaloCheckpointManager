@@ -5,20 +5,21 @@
 class Logging
 {
 private:
-	static std::string logFileDestination;
+	std::string logFileDestination = "";
 
-	static bool consoleOpen;
+	bool consoleOpen = false;
 
 public:
-	static void initLogging();
+	void initConsoleLogging();
+	void initFileLogging(std::string dirPath);
 
-	static void closeConsole();
-	static void openConsole();
+	void closeConsole();
+	void openConsole();
 
-	static void SetConsoleLoggingLevel(plog::Severity newLevel);
-	static void SetFileLoggingLevel(plog::Severity newLevel);
+	void SetConsoleLoggingLevel(plog::Severity newLevel);
+	void SetFileLoggingLevel(plog::Severity newLevel);
 
-	static std::string GetLogFileDestination()
+	std::string GetLogFileDestination()
 	{
 		return logFileDestination;
 	}

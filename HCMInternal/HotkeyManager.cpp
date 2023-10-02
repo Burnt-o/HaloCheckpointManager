@@ -1,92 +1,117 @@
 #include "pch.h"
 #include "HotkeyManager.h"
-#include "OptionsState.h"
-#include "imgui.h"
-
-#include "Hotkeys.h"
-#include "HCMDirPath.h"
+#include "SettingsStateAndEvents.h"
 #include "MessagesGUI.h"
+#include "pugixml.hpp"
 
-class HotkeyManager::HotkeyManagerImpl
+//bool shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet);
+//void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent);
+//void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input);
+
+
+
+class HotkeyManagerImpl {
+public:
+	static bool shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet);
+	static void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent);
+	static void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input);
+};
+
+
+
+HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<MessagesGUI> messagesGUI, std::string dirPath)
+	: mHotkeyDefinitions(pHotkeyDefinitions),
+	mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2) { pollInput(); }) 	// setup render callback to poll hotkeys every frame
 {
-private:
+	// set hotkey config file path
+	mHotkeyConfigPath = dirPath + "HCMHotkeyConfig.xml";
 
-
-	// ImGuiManager Event reference and our handle to the append so we can remove it in destructor
-	eventpp::CallbackList<void()>& pImGuiRenderEvent;
-	eventpp::CallbackList<void()>::Handle mImGuiRenderCallbackHandle = {};
-
-
-
-	static bool inline shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet)
+	if (!fileExists(mHotkeyConfigPath)) // use default bindings
 	{
-
-		bool newPress = false;
-		for (auto key : bindingSet)
+		messagesGUI->addMessage(std::format("Could not load hotkeys, HCMHotkeyConfig.xml not found. \nUsing default bindings."));
+		PLOG_ERROR << "Could not deserialise hotkeys: Hotkey config file didn't exist at " << mHotkeyConfigPath;
+	}
+	else // deseralise saved bindings
+	{
+		pugi::xml_document hotkeyConfig;
+		pugi::xml_parse_result result = hotkeyConfig.load_file(mHotkeyConfigPath.c_str());
+		if (!result)
 		{
-			if (!ImGui::IsKeyDown(key)) return false;		// check if all keys are held down
+			messagesGUI->addMessage(std::format("Error parsing hotkey file: {}. \nUsing default bindings.", result.description()));
+			PLOG_ERROR << "Error parsing hotkeyConfig file at " << mHotkeyConfigPath << ": " << result.description();
+		}
+		else
+		{
+			for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->allHotkeys)
+			{
+				HotkeyManagerImpl::deserialiseHotkey(hotkey, hotkeyConfig.child(hotkey->getName().data()));
+			}
+		}
+	}
 
-			// also check for a key being newly pressed. We need at least one key to be newly pressed to prevent continous firing.
-			if (ImGui::IsKeyPressed(key, false)) newPress = true;
 
+
+}
+
+HotkeyManager::~HotkeyManager()
+{
+	PLOG_VERBOSE << "~HotkeyManager() serialising hotkeys";
+	// serialise hotkeys
+	pugi::xml_document hotkeyConfig;
+	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getHotkeys())
+	{
+		HotkeyManagerImpl::serialiseHotkey(hotkey, hotkeyConfig);
+	}
+
+	if (!hotkeyConfig.save_file(mHotkeyConfigPath.c_str()))
+	{
+		PLOG_ERROR << "Error saving hotkeyConfig to " << mHotkeyConfigPath;
+	}
+}
+
+void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen any time interval but this is convienent
+{
+	if (mDisableHotkeysForRebinding) return;
+
+	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getHotkeys())
+	{
+		for (auto& bindingSet : hotkey->getBindings())
+		{
+			if (HotkeyManagerImpl::shouldHotkeyActivate(bindingSet))
+			{
+				hotkey->invokeEvent();
+				break; // continue to next hotkey, we don't need to check the rest of the bindingSets for this hotkey
+			}
 		}
 
-		return newPress;
 	}
+}
 
-	static void pollInput()// we poll every frame. Really we could've chosen any time interval but this is convienent
+
+bool inline HotkeyManagerImpl::shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet)
+{
+
+	bool newPress = false;
+	for (auto key : bindingSet)
 	{
-		if (disableHotkeysForRebinding) return;
+		if (!ImGui::IsKeyDown(key)) return false;		// check if all keys are held down
 
-			for (auto& hotkey: Hotkeys::allHotkeys)
-			{
-				for (auto& bindingSet : hotkey.get()->getBindings())
-				{
-					if (shouldHotkeyActivate(bindingSet))
-					{
-						hotkey.get()->invokeEvent();
-						break; // continue to next hotkey, we don't need to check the rest of the bindingSets for this hotkey
-					}
-				}
+		// also check for a key being newly pressed. We need at least one key to be newly pressed to prevent continous firing.
+		if (ImGui::IsKeyPressed(key, false)) newPress = true;
 
-			}
 	}
+
+	return newPress;
+}
 
 	
 
 
-public:
-	static inline bool disableHotkeysForRebinding = false;
-
-	HotkeyManagerImpl(eventpp::CallbackList<void()>& pRenderEvent) : pImGuiRenderEvent(pRenderEvent)
-	{
-		// so we can poll inputs every frame
-		mImGuiRenderCallbackHandle = pImGuiRenderEvent.append(pollInput);
-
-
-		// adding test hotkey for forceCheckpoint, where you have to simultaneous hold F1 on keyboard, D-pad left on gamepad, and mouse left click. Yes, this actually works (if you have 3 hands).
-
-		
-
-
-
-	}
-
-	~HotkeyManagerImpl()
-	{
-		if (mImGuiRenderCallbackHandle)
-			pImGuiRenderEvent.remove(mImGuiRenderCallbackHandle);
-	}
-};
-
-void HotkeyManager::setDisableHotkeysForRebinding(bool val) { HotkeyManagerImpl::disableHotkeysForRebinding = val; }
-
-
-void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent)
+void HotkeyManagerImpl::serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent)
 {
-	auto mainNode = parent.append_child(hotkey.get()->getName().data());
+	auto mainNode = parent.append_child(hotkey->getName().data());
 
-	for (auto& binding : hotkey.get()->getBindings())
+	for (auto& binding : hotkey->getBindings())
 	{
 		auto bindingNode = mainNode.append_child("BindingSet");
 		for (auto key : binding)
@@ -98,12 +123,15 @@ void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent
 
 }
 
-void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
+void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
 {
 	if (!input)
 	{
-		PLOG_ERROR << "could not deserialise hotkey " << hotkey.get()->getName() << ", no config data found";
+		PLOG_ERROR << "could not deserialise hotkey " << hotkey->getName() << ", no config data found";
+		return;
 	}
+
+	PLOG_VERBOSE << "Deserialising hotkey: " << magic_enum::enum_name(hotkey->mHotkeyEnum);
 
 	std::vector<std::vector<ImGuiKey>> newBindings;
 	for (pugi::xml_node bindingSetNode = input.first_child(); bindingSetNode; bindingSetNode = input.next_sibling())
@@ -129,68 +157,24 @@ void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
 
 
 		}
+		if (thisBindingSet.empty())
+		{
+			PLOG_VERBOSE << "empty deserialised binding set";
+			continue;
+		}
 		PLOG_VERBOSE << "adding binding set with " << thisBindingSet.size() << " keys to mBindings";
 		newBindings.push_back(thisBindingSet);
 	}
-	hotkey.get()->setBindings(newBindings);
+	if (newBindings.empty())
+	{
+		PLOG_VERBOSE << "empty newBindings";
+		//hotkey->setBindings(hotkey->getBindings());
+		return;
+	}
+	hotkey->setBindings(newBindings);
 
 	PLOG_VERBOSE << "hotkey loaded with " << newBindings.size() << " binding sets";
 
 }
 
 
-
-
-HotkeyManager::HotkeyManager(eventpp::CallbackList<void()>& pRenderEvent) : pimpl(std::make_unique<HotkeyManagerImpl>(pRenderEvent))
-{
-	if (instance) throw HCMInitException("Cannot have more than one HotkeyManager");
-	instance = this;
-
-	std::string filePath(HCMDirPath::GetHCMDirPath());
-	mHotkeyConfigPath = filePath + "HCMHotkeyConfig.xml";
-	// deserialise hotkeys
-	if (!fileExists(mHotkeyConfigPath))
-	{
-		MessagesGUI::addMessage(std::format("Could not load hotkeys, HCMHotkeyConfig.xml not found. \nUsing default bindings."));
-		PLOG_ERROR << "Could not deserialise hotkeys: Hotkey config file didn't exist at " << mHotkeyConfigPath;
-	}
-	else
-	{
-		pugi::xml_document hotkeyConfig;
-		pugi::xml_parse_result result = hotkeyConfig.load_file(mHotkeyConfigPath.c_str());
-		if (!result)
-		{
-			MessagesGUI::addMessage(std::format("Error parsing hotkey file: {}. \nUsing default bindings.", result.description()));
-			PLOG_ERROR << "Error parsing hotkeyConfig file at " << mHotkeyConfigPath << ": " << result.description();
-		}
-		else
-		{
-			for (auto& hotkey : Hotkeys::allHotkeys)
-			{
-				deserialiseHotkey(hotkey, hotkeyConfig.child(hotkey.get()->getName().data()));
-			}
-		}
-
-	}
-
-
-}
-
-HotkeyManager::~HotkeyManager()
-{
-	// serialise hotkeys
-
-	pugi::xml_document hotkeyConfig;
-	for (auto& hotkey : Hotkeys::allHotkeys)
-	{
-		serialiseHotkey(hotkey, hotkeyConfig);
-	}
-
-	if (!hotkeyConfig.save_file(mHotkeyConfigPath.c_str()))
-	{
-		PLOG_ERROR << "Error saving hotkeyConfig to " << mHotkeyConfigPath;
-	}
-
-	pimpl.reset();
-	instance = nullptr;
-}

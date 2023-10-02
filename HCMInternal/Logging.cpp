@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "Logging.h"
-#include "HCMDirPath.h"
 
 
-std::string Logging::logFileDestination = "";
-bool Logging::consoleOpen = false;
+
+
 
 constexpr std::string_view logFileName = "HCMInternal_Logging.txt";
 
@@ -13,18 +12,26 @@ enum AppenderID {
     FileAppender = 2
 };
 
- void Logging::initLogging()
+void Logging::initConsoleLogging()
 {
 
-     Logging::openConsole();
+    Logging::openConsole();
 
-     // Setup console appender
-     static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-     plog::init<ConsoleAppender>(plog::verbose, &consoleAppender);
+    // Setup console appender
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+    plog::init<ConsoleAppender>(plog::verbose, &consoleAppender);
 
+
+    // log using both appenders
+     // Always set this to verbose, the appenders will filter according to their own severity
+    plog::init(plog::verbose).addAppender(plog::get<ConsoleAppender>());
+}
+
+ void Logging::initFileLogging(std::string dirPath)
+{
      // Setup file appender
      // Get log file path
-     logFileDestination = HCMDirPath::GetHCMDirPath();
+     logFileDestination = dirPath;
      logFileDestination += logFileName;
 
      // test that the path is good
@@ -48,7 +55,7 @@ enum AppenderID {
 
     // log using both appenders
      // Always set this to verbose, the appenders will filter according to their own severity
-    plog::init(plog::verbose).addAppender(plog::get<ConsoleAppender>()).addAppender(plog::get<FileAppender>());
+    plog::init(plog::verbose).addAppender(plog::get<FileAppender>());
 }
 
 

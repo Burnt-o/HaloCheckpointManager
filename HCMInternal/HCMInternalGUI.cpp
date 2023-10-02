@@ -2,39 +2,15 @@
 #include "HCMInternalGUI.h"
 #include "GlobalKill.h"
 #include "GUISimpleButton.h"
-#include "GameStateHook.h"
-#include "GUIElementManager.h"
+#include "MCCStateHook.h"
+#include "imgui.h"
 #define addTooltip(x) if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) ImGui::SetTooltip(x)
 
-bool HCMInternalGUI::m_WindowOpen = true;
-HCMInternalGUI* HCMInternalGUI::instance = nullptr;
 
 
 ImVec2 minimumWindowSize{ 500, 500 };
 
-HCMInternalGUI::~HCMInternalGUI()
-{
-	std::scoped_lock<std::mutex> lock(mDestructionGuard); // onPresentHookCallback also locks this
-	if (mImGuiRenderCallbackHandle && pImGuiRenderEvent)
-	{
-		pImGuiRenderEvent.remove(mImGuiRenderCallbackHandle);
-		mImGuiRenderCallbackHandle = {};
-	}
 
-	if (mWindowResizeCallbackHandle && pWindowResizeEvent)
-	{
-		pWindowResizeEvent.remove(mWindowResizeCallbackHandle);
-		mWindowResizeCallbackHandle = {};
-	}
-
-	if (mGameStateChangeCallbackHandle && pGameStateChangeEvent)
-	{
-		pGameStateChangeEvent.remove(mGameStateChangeCallbackHandle);
-		mGameStateChangeCallbackHandle = {};
-	}
-
-	instance = nullptr;
-}
 
 
 void HCMInternalGUI::initializeHCMInternalGUI()
@@ -42,43 +18,43 @@ void HCMInternalGUI::initializeHCMInternalGUI()
 	ImGui::SetNextWindowCollapsed(false);
 	windowFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
-	auto fullScreenSize = D3D11Hook::getScreenSize();
-	PLOG_VERBOSE << "actual screen size: " << fullScreenSize.x << ", " << fullScreenSize.y;
-	if (fullScreenSize.x > minimumWindowSize.x && fullScreenSize.y > minimumWindowSize.y) // check for really small screens or getScreenSize returning a junk value, then we just use default 500, 500
+	PLOG_VERBOSE << "actual screen size: " << mFullScreenSize.x << ", " << mFullScreenSize.y;
+	if (mFullScreenSize.x > minimumWindowSize.x && mFullScreenSize.y > minimumWindowSize.y) // check for really small screens or getScreenSize returning a junk value, then we just use default 500, 500
 	{
 		// adjust vertical window height to be 2/3rds of screen
-		minimumWindowSize.y = fullScreenSize.y / 3 * 2;
+		minimumWindowSize.y = mFullScreenSize.y / 3 * 2;
 	}
 
-	std::string currentHaloLevel = GameStateHook::getCurrentHaloLevel().data();
-	onGameStateChange(GameStateHook::getCurrentGameState(), currentHaloLevel);
+	//std::string currentHaloLevel = MCCStateHook::getCurrentHaloLevel().data();
+	//onGameStateChange(MCCStateHook::getCurrentGameState(), currentHaloLevel);
 
 }
 
 
-void HCMInternalGUI::onWindowResizeEvent(ImVec2 newScreenSize)
-{
 
-	PLOG_VERBOSE << "new actual screen size: " << newScreenSize.x << ", " << newScreenSize.y;
-	if (newScreenSize.x > minimumWindowSize.x && newScreenSize.y > minimumWindowSize.y) // check for really small screens or getScreenSize returning a junk value, then we just use default 500, 500
+void HCMInternalGUI::onImGuiRenderEvent(Vec2 screenSize)
+{
+	//auto guard = shared_from_this();
+	if (mFullScreenSize != screenSize) // recalculate our gui canvas size
 	{
-		// adjust vertical window height to be 2/3rds of screen
-		minimumWindowSize.y = newScreenSize.y / 3 * 2;
+		mFullScreenSize = screenSize;
+		if (screenSize.x > minimumWindowSize.x && screenSize.y > minimumWindowSize.y) // check for really small screens or getScreenSize returning a junk value, then we just use default 500, 500
+		{
+			// adjust vertical window height to be 2/3rds of screen
+			minimumWindowSize.y = screenSize.y / 3 * 2;
+		}
 	}
-}
 
-void HCMInternalGUI::onImGuiRenderEvent()
-{
-	std::scoped_lock<std::mutex> lock(instance->mDestructionGuard);
 
-	//PLOG_VERBOSE << "CEERGUI::onImGuiRenderCallback()";
-	if (!instance->m_HCMInternalGUIinitialized)
+	if (!m_HCMInternalGUIinitialized)
 	{
+		onGameStateChange(mccStateHook->getCurrentMCCState());
+
 		PLOG_INFO << "Initializing HCMInternalGUI";
 		try
 		{
-			instance->initializeHCMInternalGUI();
-			instance->m_HCMInternalGUIinitialized = true;
+			initializeHCMInternalGUI();
+			m_HCMInternalGUIinitialized = true;
 		}
 		catch (HCMInitException& ex)
 		{
@@ -91,8 +67,8 @@ void HCMInternalGUI::onImGuiRenderEvent()
 	}
 
 
-	instance->renderErrorDialog();
-	instance->primaryRender();
+	renderErrorDialog();
+	primaryRender();
 
 }
 
@@ -112,7 +88,7 @@ void HCMInternalGUI::renderErrorDialog()
 	}
 
 	ImVec2 size = ImVec2(300, 0);
-	ImVec2 pos = ImVec2(ImGuiManager::getScreenSize() / 2.f) - (size / 2.f);
+	ImVec2 pos = ImVec2(mFullScreenSize / 2.f) - (size / 2.f);
 
 	ImGui::SetNextWindowSize(size);
 	ImGui::SetNextWindowPos(pos);
@@ -153,42 +129,25 @@ void HCMInternalGUI::renderErrorDialog()
 }
 
 
-std::vector<std::shared_ptr<GUIElementBase>> HCMInternalGUI::currentGameGUIElements{};
-
-
-
-void HCMInternalGUI::onGameStateChange(GameState newGameState, std::string newLevel)
+void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 {
-	instance->currentGameGUIElements.clear();
-	for (auto& elementCollection : GUIElementManager::getAllGUICollections())
-	{
-		if (elementCollection->contains(newGameState))
-		{
-			auto& element = elementCollection->at(newGameState);
-			if (element.get()->areRequiredServicesReady())
-			{
-				instance->currentGameGUIElements.emplace_back(element);
-			}
-			else
-			{
-				PLOG_INFO << "didn't add GUIElement to render list because it's services weren't ready: " << element.get()->getName();
-			}
-
-		}
-	}
-
+	//auto guard = shared_from_this();
+	std::scoped_lock<std::mutex> lock(currentGameGUIElementsMutex);
+	p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(newState.currentGameState);
 }
 
 void HCMInternalGUI::primaryRender()
 {
+	std::scoped_lock<std::mutex> lock(currentGameGUIElementsMutex);
 	// Calculate height of everything
 	int totalContentHeight = 0;
-	for (auto& element : currentGameGUIElements)
+	for (auto& element : *p_currentGameGUIElements)
 	{
 		totalContentHeight += element->getCurrentHeight();
 	}
 
 	totalContentHeight += 40; // some padding for debug
+	totalContentHeight += 20; // for header
 
 	mWindowSize.y = (minimumWindowSize.y > totalContentHeight ? totalContentHeight : minimumWindowSize.y);
 
@@ -209,9 +168,11 @@ void HCMInternalGUI::primaryRender()
 
 	if (m_WindowOpen)  //only bother rendering children if it's not collapsed
 	{
-		for (auto& element : currentGameGUIElements)
+		mGUIHeader.render(); // render header
+
+		for (auto& element : *p_currentGameGUIElements)
 		{
-			element.get()->render();
+			element->render(*mHotkeyRenderer.get());
 		}
 	}
 

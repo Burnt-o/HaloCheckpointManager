@@ -1,75 +1,78 @@
 #pragma once
-#include "pch.h"
+#include "IOptionalCheat.h"
 #include "GameState.h"
-#include "OptionsState.h"
-#include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "DIContainer.h"
+#include "MCCStateHook.h"
 #include "MessagesGUI.h"
-#include "CheatBase.h"
-#include "GameStateHook.h"
+#include "SettingsStateAndEvents.h"
+#include "RuntimeExceptionHandler.h"
 
-class ForceDoubleRevert : public CheatBase
+class ForceDoubleRevert : public IOptionalCheat
 {
 private:
+	// which game is this implementation for
+	GameState mGame;
 
-	eventpp::CallbackList<void()>::Handle mForceDoubleRevertCallbackHandle = {};
+	// event callbacks
+	ScopedCallback<ActionEvent> mForceDoubleRevertCallbackHandle;
 
+	// injected services
+	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
+	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
+	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
+
+	//data
+	std::shared_ptr<MultilevelPointer> doubleRevertFlag;
+
+	// primary event callback
 	void onForceDoubleRevert()
 	{
-		if (GameStateHook::getCurrentGameState() != mGame) return;
+		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 
 		PLOG_DEBUG << "Force DoubleRevert called";
 		try
 		{
 			// read the flag
 			byte currentFlag = 1;
-			if (!doubleRevertFlag.get()->readData(&currentFlag)) throw HCMRuntimeException(std::format("Failed to read doubleRevertFlag {}", MultilevelPointer::GetLastError()));
+			if (!doubleRevertFlag->readData(&currentFlag)) throw HCMRuntimeException(std::format("Failed to read doubleRevertFlag {}", MultilevelPointer::GetLastError()));
 
 			// flip the value;
 			currentFlag == 1 ? currentFlag = 0 : currentFlag = 1;
 			
 			// write the flag
-			if (!doubleRevertFlag.get()->writeData(&currentFlag)) throw HCMRuntimeException(std::format("Failed to write DoubleRevert flag {}", MultilevelPointer::GetLastError()));
-			MessagesGUI::addMessage("Checkpoint double reverted.");
+			if (!doubleRevertFlag->writeData(&currentFlag)) throw HCMRuntimeException(std::format("Failed to write DoubleRevert flag {}", MultilevelPointer::GetLastError()));
+			messagesGUI->addMessage("Checkpoint double reverted.");
 
 			// fire revert event. Not our problem if it fails.
-			OptionsState::forceRevertEvent.get()->operator()();
+			settings->forceRevertEvent->operator()();
 		}
 		catch (HCMRuntimeException ex)
 		{
-			RuntimeExceptionHandler::handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
 
-	//data
-	std::shared_ptr<MultilevelPointer> doubleRevertFlag;
+
+
 
 public:
-
-	ForceDoubleRevert(GameState gameImpl) : CheatBase(gameImpl)
+	ForceDoubleRevert(GameState gameImpl, IDIContainer& dicon)
+		: mGame(gameImpl), 
+		mForceDoubleRevertCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->forceDoubleRevertEvent, [this]() { onForceDoubleRevert(); }),
+		settings(dicon.Resolve<SettingsStateAndEvents>()),
+		mccStateHook(dicon.Resolve<MCCStateHook>()),
+		messagesGUI(dicon.Resolve<MessagesGUI>()), 
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-
+		auto ptr = dicon.Resolve<PointerManager>();
+		doubleRevertFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("doubleRevertFlag", mGame);
 	}
 
-	~ForceDoubleRevert()
-	{
-		// unsubscribe 
-		if (mForceDoubleRevertCallbackHandle)
-			OptionsState::forceDoubleRevertEvent.get()->remove(mForceDoubleRevertCallbackHandle);
-	}
 
-	void initialize() override
-	{
-		// exceptions thrown up to creator
-		doubleRevertFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("doubleRevertFlag", mGame);
 
-		// subscribe to forceDoubleRevert event
-		mForceDoubleRevertCallbackHandle = OptionsState::forceDoubleRevertEvent.get()->append([this]() { this->onForceDoubleRevert(); });
-
-	}
-
-	std::string_view getName() override { return "Force DoubleRevert"; }
+	std::string_view getName() override { return nameof(ForceDoubleRevert); }
 
 
 };

@@ -1,13 +1,20 @@
 #include "pch.h"
-#include "InjectCore.h"
+#include "IOptionalCheat.h"
+#include "GameState.h"
+#include "DIContainer.h"
 #include "RPCClientInternal.h"
 #include "GameStateHook.h"
 #include "boost\iostreams\device\mapped_file.hpp"
-#include <filesystem>
+#include "PointerManager.h"
+#include "OptionsState.h"
+#include "MultilevelPointer.h"
+#include "PointerManager.h"
+#include "MessagesGUI.h"
+#include "RuntimeExceptionHandler.h"
 
 void InjectCore::onInject()
 {
-	if (GameStateHook::getCurrentGameState() != mGame) return;
+	if (gameStateHook->getCurrentGameState() != mGame) return;
 	try
 	{
 		constexpr int minimumFileLength = 10000;

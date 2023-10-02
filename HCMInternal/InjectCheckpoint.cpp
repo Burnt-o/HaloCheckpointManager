@@ -28,7 +28,7 @@ private:
 
 public:
 	void onInject() {
-		if (GameStateHook::getCurrentGameState() != mImplGame) return;
+		if (gameStateHook->getCurrentGameState() != mImplGame) return;
 		try
 		{
 			auto currentCheckpoint = RPCClientInternal::getInjectInfo();
@@ -62,16 +62,16 @@ public:
 
 			// get pointer to checkpoint in memory
 			uintptr_t checkpointLoc = 0;
-			if (mInjectRequirements.get()->singleCheckpoint)
+			if (mInjectRequirements->singleCheckpoint)
 			{
-				mCheckpointLocation1.get()->resolve(&checkpointLoc);
+				mCheckpointLocation1->resolve(&checkpointLoc);
 				PLOG_DEBUG << "using checkpoint location @0x" << std::hex << (uint64_t)checkpointLoc;
 			}
 			else
 			{
 				bool firstCheckpoint;
-				mDoubleRevertFlag.get()->readData(&firstCheckpoint);
-				firstCheckpoint ? mCheckpointLocation1.get()->resolve(&checkpointLoc) : mCheckpointLocation2.get()->resolve(&checkpointLoc);
+				mDoubleRevertFlag->readData(&firstCheckpoint);
+				firstCheckpoint ? mCheckpointLocation1->resolve(&checkpointLoc) : mCheckpointLocation2->resolve(&checkpointLoc);
 				PLOG_DEBUG << "using checkpoint location " << (firstCheckpoint ? "A" : "B") << " @0x" << std::hex << (uint64_t)checkpointLoc;
 			}
 
@@ -80,10 +80,10 @@ public:
 
 
 			// store preserveLocations of original checkpoint
-			if (mInjectRequirements.get()->preserveLocations)
+			if (mInjectRequirements->preserveLocations)
 			{
 				PLOG_VERBOSE << "storing preserveLocations";
-				for (auto& [offset, vec] : mPreserveLocations.get()->locations)
+				for (auto& [offset, vec] : mPreserveLocations->locations)
 				{
 					auto err = memcpy_s(vec.data(), vec.size(), (void*)(checkpointLoc + offset), vec.size());
 					if (err) throw HCMRuntimeException(std::format("error storing preserveLocation data! code: {}", err));
@@ -107,10 +107,10 @@ public:
 			if (checkpointData.size() != checkpointLength) 	throw HCMRuntimeException(std::format("Checkpoint data was incorrect length! expected: 0x{:X}, actual: 0x{:X}", checkpointLength, checkpointData.size()));
 
 			// load preserveLocations
-			if (mInjectRequirements.get()->preserveLocations)
+			if (mInjectRequirements->preserveLocations)
 			{
 				PLOG_VERBOSE << "loading preserveLocations";
-				for (auto& [offset, vec] : mPreserveLocations.get()->locations)
+				for (auto& [offset, vec] : mPreserveLocations->locations)
 				{
 					auto err = memcpy_s((void*)(checkpointData.data() + offset), vec.size(), vec.data(), vec.size());
 					if (err) throw HCMRuntimeException(std::format("error loading preserveLocation data! code: {}", err));
@@ -125,21 +125,21 @@ public:
 
 
 			// calculate and set SHA
-			if (mInjectRequirements.get()->SHA)
+			if (mInjectRequirements->SHA)
 			{
 				PLOG_VERBOSE << "setting SHA data";
 				// zero out SHA bytes in checkpoint Data
-				for (auto it = checkpointData.begin() + mSHAdata.get()->offset; it <= checkpointData.begin() + mSHAdata.get()->offset + mSHAdata.get()->length; ++it)
+				for (auto it = checkpointData.begin() + mSHAdata->offset; it <= checkpointData.begin() + mSHAdata->offset + mSHAdata->length; ++it)
 				{
 					*it = 0;
 				}
 				std::vector<byte> SHAout;
-				SHAout.reserve(mSHAdata.get()->length);
+				SHAout.reserve(mSHAdata->length);
 
 				SHA1(checkpointData.data(), checkpointLength, SHAout.data());		// compute sha
 
 				// paste it back into checkpoint data
-				auto err = memcpy_s(checkpointData.data() + mSHAdata.get()->offset, mSHAdata.get()->length, SHAout.data(), SHAout.size());
+				auto err = memcpy_s(checkpointData.data() + mSHAdata->offset, mSHAdata->length, SHAout.data(), SHAout.size());
 				if (err) throw HCMRuntimeException(std::format("error loading checkpointdata from file! code: {}", err));
 			}
 
@@ -150,21 +150,21 @@ public:
 			PLOG_VERBOSE << "wrote checkpoint data to location: " << std::hex << (uint64_t)checkpointLoc;
 
 			// set BSP data
-			if (mInjectRequirements.get()->BSP)
+			if (mInjectRequirements->BSP)
 			{
 				PLOG_VERBOSE << "setting BSP data";
 				std::vector<byte> currentBSPData;
-				auto err = memcpy_s(currentBSPData.data(), mBSPdata.get()->length, (void*)(checkpointLoc + mBSPdata.get()->offset), mBSPdata.get()->length);
+				auto err = memcpy_s(currentBSPData.data(), mBSPdata->length, (void*)(checkpointLoc + mBSPdata->offset), mBSPdata->length);
 				if (err) throw HCMRuntimeException(std::format("error copying bsp data! code: {}", err));
-				if (mInjectRequirements.get()->singleCheckpoint)
+				if (mInjectRequirements->singleCheckpoint)
 				{
-					mLoadedBSP1.get()->writeArrayData(currentBSPData.data(), currentBSPData.size());
+					mLoadedBSP1->writeArrayData(currentBSPData.data(), currentBSPData.size());
 				}
 				else
 				{
 					bool firstCheckpoint;
-					mDoubleRevertFlag.get()->readData(&firstCheckpoint);
-					firstCheckpoint ? mLoadedBSP1.get()->writeArrayData(currentBSPData.data(), currentBSPData.size()) : mLoadedBSP2.get()->writeArrayData(currentBSPData.data(), currentBSPData.size());
+					mDoubleRevertFlag->readData(&firstCheckpoint);
+					firstCheckpoint ? mLoadedBSP1->writeArrayData(currentBSPData.data(), currentBSPData.size()) : mLoadedBSP2->writeArrayData(currentBSPData.data(), currentBSPData.size());
 				}
 			}
 
@@ -189,27 +189,27 @@ public:
 		mCheckpointLength = PointerManager::getData< std::shared_ptr<int64_t>>("checkpointLength", game);
 		mCheckpointLocation1 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation1", game);
 
-		if (!mInjectRequirements.get()->singleCheckpoint)
+		if (!mInjectRequirements->singleCheckpoint)
 		{
 			mCheckpointLocation2 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation2", game);
 			mDoubleRevertFlag = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("doubleRevertFlag", game);
 		}
 
-		if (mInjectRequirements.get()->preserveLocations)
+		if (mInjectRequirements->preserveLocations)
 		{
 			mPreserveLocations = PointerManager::getData< std::shared_ptr<PreserveLocations>>("preserveLocations", game);
 		}
 
-		if (mInjectRequirements.get()->SHA)
+		if (mInjectRequirements->SHA)
 		{
 			mSHAdata = PointerManager::getData< std::shared_ptr<offsetLengthPair>>("SHAdata", game);
 		}
 
-		if (mInjectRequirements.get()->BSP)
+		if (mInjectRequirements->BSP)
 		{
 			mBSPdata = PointerManager::getData< std::shared_ptr<offsetLengthPair>>("BSPdata", game);
 			mLoadedBSP1 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("loadedBSP1", game);
-			if (!mInjectRequirements.get()->singleCheckpoint) 	mLoadedBSP2 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("loadedBSP2", game);
+			if (!mInjectRequirements->singleCheckpoint) 	mLoadedBSP2 = PointerManager::getData< std::shared_ptr<MultilevelPointer>>("loadedBSP2", game);
 		}
 	}
 };
@@ -222,8 +222,8 @@ void InjectCheckpoint::initialize()
 	impl = std::make_unique<InjectCheckpointImpl>(mGame);
 
 	// subscribe to events (this won't happen if impl construction failed cause of missing pointer data or w/e)
-	mInjectCallbackHandle = OptionsState::injectCheckpointEvent.get()->append([this]() {
-		impl.get()->onInject();
+	mInjectCallbackHandle = OptionsState::injectCheckpointEvent->append([this]() {
+		impl->onInject();
 		});
 
 }

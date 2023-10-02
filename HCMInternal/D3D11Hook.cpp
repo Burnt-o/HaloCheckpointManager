@@ -6,8 +6,8 @@
 #pragma comment(lib, "dxgi")
 
 D3D11Hook* D3D11Hook::instance = nullptr;
-ImVec2 D3D11Hook::mScreenSize;
-ImVec2 D3D11Hook::mScreenCenter;
+Vec2 D3D11Hook::mScreenSize{1920, 1080};
+Vec2 D3D11Hook::mScreenCenter{960, 540};
 
 struct rgba {
     float r, g, b, a;
@@ -319,13 +319,16 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 // static 
 HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
+	LOG_ONCE(PLOG_DEBUG << "D3D11Hook::newDX11Present");
 	auto d3d = instance;
-	if (!instance)
+	if (!d3d)
 	{
 		PLOG_FATAL << "d3d instance was null at newDX11Present";
 	}
 
-	std::scoped_lock<std::mutex> lock(d3d->mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
+	auto guard = d3d->shared_from_this();
+
+	//std::scoped_lock<std::mutex> lock(d3d->mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 
 
 	if (!d3d->isD3DdeviceInitialized)
@@ -336,6 +339,8 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 			d3d->initializeD3Ddevice(pSwapChain);
 			d3d->isD3DdeviceInitialized = true;
 			PLOG_DEBUG << "D3D device initialized";
+			// fire a resizeborders event
+			d3d->resizeBuffersHookEvent->operator()(mScreenSize);
 		}
 		catch (HCMInitException& ex)
 		{
@@ -353,7 +358,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	}
    
 	// Invoke the callback
-	d3d->presentHookEvent(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
+	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
 
 	// Call original present
 	return d3d->m_pOriginalPresent(pSwapChain, SyncInterval, Flags);
@@ -366,13 +371,13 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
 {
 	auto d3d = instance;
-	if (!instance)
+	if (!d3d)
 	{
 		PLOG_FATAL << "d3d instance was null at newDX11ResizeBuffers";
 	}
 
-
-	std::scoped_lock<std::mutex> lock(d3d->mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
+	auto guard = d3d->shared_from_this();
+	//std::scoped_lock<std::mutex> lock(d3d->mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 
 	if (!d3d->isD3DdeviceInitialized)
 	{
@@ -425,7 +430,7 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 	mScreenCenter = mScreenSize / 2;
 	
 	// fire screen resize event
-	d3d->resizeBuffersHookEvent(mScreenSize);
+	d3d->resizeBuffersHookEvent->operator()(mScreenSize);
 
 	return hr;
 }
@@ -438,10 +443,11 @@ D3D11Hook::~D3D11Hook()
 // as the hook functions will try to access class members
 // and also the d3d resources need to be manually released
 
-	std::scoped_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this
+	//std::scoped_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this
 
 	// Destroy the hooks
 	// rewrite the pointers to go back to the original value
+	PLOG_VERBOSE << "~D3D11Hook() unpatching present pointer";
 	patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
 	// resizeBuffers too
 	patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);

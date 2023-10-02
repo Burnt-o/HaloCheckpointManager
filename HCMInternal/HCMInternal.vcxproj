@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows</OutDir>
+    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\</OutDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows</OutDir>
+    <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\</OutDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -129,7 +129,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -137,6 +137,9 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BuildStlModules>false</BuildStlModules>
       <DisableSpecificWarnings>4005</DisableSpecificWarnings>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,9 +153,19 @@
     </Link>
     <PreBuildEvent>
       <Command>IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
-	"C:\Program Files\LockHunter\LockHunter.exe" -u -sm $(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb
-)</Command>
+	"C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb"
+                   "C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMSpeedhack.pdb"
+)
+</Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -164,12 +177,16 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BuildStlModules>false</BuildStlModules>
       <DisableSpecificWarnings>4005</DisableSpecificWarnings>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
+      <PreprocessToFile>false</PreprocessToFile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -184,29 +201,55 @@
     </Link>
     <PreBuildEvent>
       <Command>IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
-	"C:\Program Files\LockHunter\LockHunter.exe" -u -sm $(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb
-)</Command>
+	"C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb"
+                   "C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMSpeedhack.pdb"
+)
+</Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CheatBase.h" />
-    <ClInclude Include="CheatManager.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="DirPathContainer.h" />
+    <ClInclude Include="GUIHeader.h" />
+    <ClInclude Include="HCM_imconfig.h" />
+    <ClInclude Include="HotkeyEnum.h" />
+    <ClInclude Include="HotkeyRenderer.h" />
+    <ClInclude Include="HotkeyRendererImpl.h" />
+    <ClInclude Include="MCCState.h" />
+    <ClInclude Include="ScopedCallback.h" />
+    <ClInclude Include="Vec2.h" />
+    <ClInclude Include="IOptionalCheat.h" />
     <ClInclude Include="ControlDefs.h" />
     <ClInclude Include="CustomExceptions.h" />
     <ClInclude Include="D3D11Hook.h" />
+    <ClInclude Include="DIContainer.h" />
     <ClInclude Include="DumpCheckpoint.h" />
     <ClInclude Include="DumpCore.h" />
     <ClInclude Include="ExternalInfo.h" />
-    <ClInclude Include="FailedServiceInfo.h" />
+    <ClInclude Include="GUIServiceInfo.h" />
     <ClInclude Include="ForceCheckpoint.h" />
     <ClInclude Include="ForceCoreLoad.h" />
     <ClInclude Include="ForceCoreSave.h" />
     <ClInclude Include="ForceDoubleRevert.h" />
     <ClInclude Include="ForceRevert.h" />
-    <ClInclude Include="GameStateHook.h" />
+    <ClInclude Include="MCCStateHook.h" />
+    <ClInclude Include="GetMCCVersion.h" />
     <ClInclude Include="GlobalKill.h" />
-    <ClInclude Include="GUIElementBase.h" />
-    <ClInclude Include="GUIElementManager.h" />
+    <ClInclude Include="GUIElementStore.h" />
+    <ClInclude Include="GUIInvulnerability.h" />
+    <ClInclude Include="IAnchorPoint.h" />
+    <ClInclude Include="IGUIElement.h" />
+    <ClInclude Include="GUIElementConstructor.h" />
+    <ClInclude Include="GuiElementEnum.h" />
+    <ClInclude Include="GUIRequiredServices.h" />
     <ClInclude Include="GUISimpleButton.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUISimpleToggle.h" />
@@ -218,47 +261,52 @@
     <ClInclude Include="HeartbeatTimer.h" />
     <ClInclude Include="Hotkey.h" />
     <ClInclude Include="HotkeyManager.h" />
-    <ClInclude Include="Hotkeys.h" />
+    <ClInclude Include="HotkeyDefinitions.h" />
+    <ClInclude Include="IGetMCCVersion.h" />
+    <ClInclude Include="IGUIRequiredServices.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="includes\safetyhook\Zydis.h" />
-    <ClInclude Include="HCMDirPath.h" />
+    <ClInclude Include="includes\utki\shared_ref.hpp" />
     <ClInclude Include="InjectCheckpoint.h" />
     <ClInclude Include="InjectCore.h" />
     <ClInclude Include="InjectRequirements.h" />
     <ClInclude Include="Invulnerability.h" />
-    <ClInclude Include="InvulnerabilityImplBase.h" />
     <ClInclude Include="Logging.h" />
+    <ClInclude Include="map.h" />
     <ClInclude Include="MessagesGUI.h" />
     <ClInclude Include="MidhookContextInterpreter.h" />
-    <ClInclude Include="HotkeyRebinder.h" />
     <ClInclude Include="ModuleCache.h" />
     <ClInclude Include="ModuleHook.h" />
     <ClInclude Include="ModuleHookManager.h" />
     <ClInclude Include="MultilevelPointer.h" />
-    <ClInclude Include="Option.h" />
-    <ClInclude Include="OptionSerialisation.h" />
-    <ClInclude Include="OptionsState.h" />
+    <ClInclude Include="Setting.h" />
+    <ClInclude Include="OptionalCheatInfo.h" />
+    <ClInclude Include="OptionalCheatManager.h" />
+    <ClInclude Include="OptionalCheatEnum.h" />
+    <ClInclude Include="SettingsSerialiser.h" />
+    <ClInclude Include="SettingsStateAndEvents.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PointerManager.h" />
     <ClInclude Include="RPCClientInternal.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
     <ClInclude Include="Speedhack.h" />
-    <ClInclude Include="SpeedhackCommunicator.h" />
-    <ClInclude Include="StaticHookWrapper.h" />
+    <ClInclude Include="UnhandledExceptionHandler.h" />
+    <ClInclude Include="VersionInfo.h" />
     <ClInclude Include="WindowsUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="DumpCheckpoint.cpp" />
-    <ClCompile Include="DumpCore.cpp" />
-    <ClCompile Include="FailedServiceInfo.cpp" />
-    <ClCompile Include="GameStateHook.cpp" />
+    <ClCompile Include="GUIServiceInfo.cpp" />
+    <ClCompile Include="MCCStateHook.cpp" />
+    <ClCompile Include="GetMCCVersion.cpp" />
+    <ClCompile Include="GUIElementConstructor.cpp" />
+    <ClCompile Include="GUIRequiredServices.cpp" />
     <ClCompile Include="HCMInternalGUI.cpp" />
     <ClCompile Include="HeartbeatTimer.cpp" />
     <ClCompile Include="HotkeyManager.cpp" />
-    <ClCompile Include="Hotkeys.cpp" />
+    <ClCompile Include="HotkeyRendererImpl.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <CopyFileToFolders Include="InternalPointerData.xml">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
@@ -272,19 +320,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="InjectCheckpoint.cpp" />
-    <ClCompile Include="InjectCore.cpp" />
     <ClCompile Include="Invulnerability.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MessagesGUI.cpp" />
     <ClCompile Include="MidhookContextInterpreter.cpp" />
-    <ClCompile Include="HotkeyRebinder.cpp" />
     <ClCompile Include="ModuleCache.cpp" />
     <ClCompile Include="ModuleHook.cpp" />
     <ClCompile Include="ModuleHookManager.cpp" />
     <ClCompile Include="MultilevelPointer.cpp" />
-    <ClCompile Include="Option.cpp" />
-    <ClCompile Include="OptionSerialisation.cpp" />
+    <ClCompile Include="Setting.cpp" />
+    <ClCompile Include="OptionalCheatManager.cpp" />
+    <ClCompile Include="SettingsSerialiser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -295,7 +341,7 @@
     <ClCompile Include="RPCClientInternal.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
     <ClCompile Include="Speedhack.cpp" />
-    <ClCompile Include="StaticHookWrapper.cpp" />
+    <ClCompile Include="UnhandledExceptionHandler.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,23 +7,14 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_stdlib.h"
+// directx 11
+#include <d3d11.h>
+
+// TODO: move shit to impl so we can hind all the headers
 
 // Define the DX functions we're going to hook
  extern "C" typedef HRESULT __stdcall DX11Present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
  extern "C" typedef HRESULT __stdcall DX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
-
- //SCALAR TO ImVec2 OPERATIONS
- inline ImVec2 operator + (const ImVec2& v1, float s) { return ImVec2(v1.x + s, v1.y + s); }
- inline ImVec2 operator - (const ImVec2& v1, float s) { return ImVec2(v1.x - s, v1.y - s); }
- inline ImVec2 operator * (const ImVec2& v1, float s) { return ImVec2(v1.x * s, v1.y * s); }
- inline ImVec2 operator / (const ImVec2& v1, float s) { return ImVec2(v1.x / s, v1.y / s); }
-
-
- //ImVec2 TO ImVec2 OPERATIONS
- inline ImVec2 operator + (const ImVec2& v1, const ImVec2& v2) { return ImVec2(v1.x + v2.x, v1.y + v2.y); }
- inline ImVec2 operator - (const ImVec2& v1, const ImVec2& v2) { return ImVec2(v1.x - v2.x, v1.y - v2.y); }
- inline ImVec2 operator * (const ImVec2& v1, const ImVec2& v2) { return ImVec2(v1.x * v2.x, v1.y * v2.y); }
- inline ImVec2 operator / (const ImVec2& v1, const ImVec2& v2) { return ImVec2(v1.x / v2.x, v1.y / v2.y); }
 
  //SCALAR TO ImVec4 OPERATIONS
  inline ImVec4 operator + (const ImVec4& v1, float s) { return ImVec4(v1.x + s, v1.y + s, v1.z + s, v1.w + s); }
@@ -44,11 +35,11 @@
  // On destruction, hooks will be unattached.
 
  
- class D3D11Hook
+ class D3D11Hook : public std::enable_shared_from_this<D3D11Hook>
 {
 private:
 	 static D3D11Hook* instance; 	// Private Singleton instance so static hooks/callbacks can access
-	 std::mutex mDestructionGuard; // Protects against Singleton destruction while hooks are executing
+	 //std::mutex mDestructionGuard; // Protects against Singleton destruction while hooks are executing
 
 	 // Our hook functions
 	 static DX11Present newDX11Present;
@@ -72,8 +63,8 @@ private:
 	void initializeD3Ddevice(IDXGISwapChain*);
 	bool isD3DdeviceInitialized = false;
 
-	static ImVec2 mScreenSize;
-	static ImVec2 mScreenCenter;
+	static Vec2 mScreenSize;
+	static Vec2 mScreenCenter;
 
 public:
 
@@ -82,10 +73,10 @@ public:
 
 
 	// Callback for present rendering
-	eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)> presentHookEvent;
+	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
 
 	// Callback for window resize
-	eventpp::CallbackList<void(ImVec2 newScreenSize)> resizeBuffersHookEvent;
+	std::shared_ptr<eventpp::CallbackList<void(Vec2 newScreenSize)>> resizeBuffersHookEvent = std::make_shared<eventpp::CallbackList<void(Vec2 newScreenSize)>>();
 
 	// Banned operations for singleton
 	D3D11Hook(const D3D11Hook& arg) = delete; // Copy constructor
@@ -93,8 +84,8 @@ public:
 	D3D11Hook& operator=(const D3D11Hook& arg) = delete; // Assignment operator
 	D3D11Hook& operator=(const D3D11Hook&& arg) = delete; // Move operator
 
-	static ImVec2 getScreenSize() { return mScreenSize; }
-	static ImVec2 getScreenCenter() { return mScreenCenter; }
+	Vec2 getScreenSize() { return mScreenSize; }
+	Vec2 getScreenCenter() { return mScreenCenter; }
 
 
 };

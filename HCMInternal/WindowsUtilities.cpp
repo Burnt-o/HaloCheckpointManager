@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "WindowsUtilities.h"
-#include "HCMDirPath.h"
 #include "RPCClientInternal.h"
 
 std::wstring str_to_wstr(const std::string str)
@@ -47,70 +46,14 @@ void patch_memory(void* dest_address, void* src_address, size_t size)
 }
 
 
-void make_minidump(EXCEPTION_POINTERS* e)
+std::string GetMCCExePath() 
 {
-	auto hDbgHelp = LoadLibraryA("dbghelp");
-	if (hDbgHelp == nullptr)
-		return;
-	auto pMiniDumpWriteDump = (decltype(&MiniDumpWriteDump))GetProcAddress(hDbgHelp, "MiniDumpWriteDump");
-	if (pMiniDumpWriteDump == nullptr)
-		return;
-
-	SYSTEMTIME t;
-	GetSystemTime(&t);
-	std::string dumpFilePath = std::format(
-			"{}\\HCMInternal_CRASHDUMP_{:04}{:02}{:02}_{:02}{:02}{:02}.dmp",
-			HCMDirPath::GetHCMDirPath(),
-			t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
-	
-
-	auto hFile = CreateFileA(dumpFilePath.c_str(), GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		PLOG_FATAL << "Failed to create crash dump file at " << dumpFilePath;
-		return;
-	}
-
-
-	MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
-	exceptionInfo.ThreadId = GetCurrentThreadId();
-	exceptionInfo.ExceptionPointers = e;
-	exceptionInfo.ClientPointers = FALSE;
-
-	pMiniDumpWriteDump(
-		GetCurrentProcess(),
-		GetCurrentProcessId(),
-		hFile,
-		MINIDUMP_TYPE(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory),
-		e ? &exceptionInfo : nullptr,
-		nullptr,
-		nullptr);
-	RPCClientInternal::sendFatalInternalError(std::format("An unhandled exception occured! Dumped crash information to {}", dumpFilePath));
-	PLOG_FATAL << "Dumped crash information to " << dumpFilePath;
-	CloseHandle(hFile);
-
-	return;
+	CHAR buffer[MAX_PATH] = { 0 };
+	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+	std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+	return std::string(std::string(buffer).substr(0, pos) + "\\");
 }
 
-static LPTOP_LEVEL_EXCEPTION_FILTER OriginalUnhandledExceptionFilter;
-LONG CALLBACK unhandled_handler(EXCEPTION_POINTERS* e)
-{
-	PLOG_FATAL << "Unhandled exception, creating minidump!";
-	make_minidump(e);
-	return EXCEPTION_CONTINUE_SEARCH;
-}
-
-void acquire_global_unhandled_exception_handler()
-{
-	OriginalUnhandledExceptionFilter = SetUnhandledExceptionFilter(unhandled_handler);
-}
-
-void release_global_unhandled_exception_handler()
-{
-	if (OriginalUnhandledExceptionFilter) {
-		SetUnhandledExceptionFilter(OriginalUnhandledExceptionFilter);
-	}
-}
 
 
 std::string ResurrectException()

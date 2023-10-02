@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MidhookContextInterpreter.h"
-#include "OptionsState.h"
+#include "SettingsStateAndEvents.h"
 // return ref to the ctx register we want
 
 
@@ -9,10 +9,7 @@ uintptr_t* MidhookContextInterpreter::getParameterRef(SafetyHookContext& ctx, in
 
 	if (parameterIndex > mParameterRegisterIndices.size())
 	{
-		HCMRuntimeException exception(std::format("MidhookContextInterpreter had invalid access of parameter! paramArray.size(): {}, accessed parameter index: {}", mParameterRegisterIndices.size(), parameterIndex));
-		RuntimeExceptionHandler::handleMessage(exception); 
-		return nullptr; // this will cause an imminent game crash. But at least we logged why. This error only happens when Burnt makes a typo. 
-		// (I should figure a way out to make typos not possible hm)
+		throw HCMRuntimeException(std::format("MidhookContextInterpreter had invalid access of parameter! paramArray.size(): {}, accessed parameter index: {}", mParameterRegisterIndices.size(), parameterIndex));
 	}
 
 	ParameterLocation& thisParameter = mParameterRegisterIndices.at(parameterIndex);
@@ -35,9 +32,7 @@ uintptr_t* MidhookContextInterpreter::getParameterRef(SafetyHookContext& ctx, in
 			uintptr_t follow = (uintptr_t)(ptr + offset);
 			if (IsBadReadPtr((void*)follow, 8))
 			{
-				HCMRuntimeException ex(std::format("bad read in midhookcontextinterpreter! next: {}, ptr: {}, offset: {}", follow, ptr, offset));
-				RuntimeExceptionHandler::handleMessage(ex);
-				return nullptr;
+				throw HCMRuntimeException(std::format("bad read in midhookcontextinterpreter! next: {}, ptr: {}, offset: {}", follow, ptr, offset));
 			}
 
 			if (i == 0)

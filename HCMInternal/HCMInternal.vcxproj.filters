@@ -17,14 +17,35 @@
     <Filter Include="Includes">
       <UniqueIdentifier>{8a884ef3-004e-4426-80e6-4f1e78b02180}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Services\GUIElements">
-      <UniqueIdentifier>{3a262df6-8060-4d9a-a4f0-726961876f0f}</UniqueIdentifier>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{e2b4f4de-ecde-4fd0-b550-cd9418577881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Services\Cheats">
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{3e929823-9bb9-423f-b811-bbee94da77be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\OptionalCheats">
       <UniqueIdentifier>{837d1078-0fa6-48f6-a483-88e1205c2f94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Services\Cheats\Invulnerability">
-      <UniqueIdentifier>{414cd60f-35d9-46f9-9de2-2b62f03a1345}</UniqueIdentifier>
+    <Filter Include="Services\OptionalCheats\Implementations">
+      <UniqueIdentifier>{928d8ca6-9603-4a95-b642-2a1f38fbcc92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\Rendering">
+      <UniqueIdentifier>{afbd61dc-d4f9-423a-879e-ffd24607ed77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\GUI">
+      <UniqueIdentifier>{3a262df6-8060-4d9a-a4f0-726961876f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\GUI\GUIElements">
+      <UniqueIdentifier>{cb48ce07-b284-4f20-94d3-b2a89baa1b6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\Hotkeys">
+      <UniqueIdentifier>{539c47bb-619e-4e7a-a44f-8533b9eef1f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\OptionalCheats\Management">
+      <UniqueIdentifier>{6d4f6412-347f-451e-9d8f-544db3eb9fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\SettingsStateAndEvents">
+      <UniqueIdentifier>{cd89c4a0-0b05-4ad8-9368-f35b4356b3e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,19 +82,13 @@
     <ClInclude Include="PointerManager.h">
       <Filter>Services</Filter>
     </ClInclude>
-    <ClInclude Include="OptionsState.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionSerialisation.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleHookManager.h">
       <Filter>Services</Filter>
     </ClInclude>
     <ClInclude Include="ModuleHook.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Option.h">
+    <ClInclude Include="Setting.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="MultilevelPointer.h">
@@ -82,59 +97,20 @@
     <ClInclude Include="ModuleCache.h">
       <Filter>Services</Filter>
     </ClInclude>
-    <ClInclude Include="MessagesGUI.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="Logging.h">
       <Filter>Services</Filter>
     </ClInclude>
-    <ClInclude Include="D3D11Hook.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiManager.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="HCMDirPath.h">
-      <Filter>Global</Filter>
-    </ClInclude>
-    <ClInclude Include="HCMInternalGUI.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateHook.h">
+    <ClInclude Include="MCCStateHook.h">
       <Filter>Services</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="GUIElementBase.h">
-      <Filter>Services\GUIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="ForceCheckpoint.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="CheatManager.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="CheatBase.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
     <ClInclude Include="InjectRequirements.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticHookWrapper.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="RPCClientInternal.h">
       <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="ForceRevert.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="ForceDoubleRevert.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="GUISimpleButton.h">
-      <Filter>Services\GUIElements</Filter>
     </ClInclude>
     <ClInclude Include="HeartbeatTimer.h">
       <Filter>Services</Filter>
@@ -142,63 +118,170 @@
     <ClInclude Include="ExternalInfo.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="FailedServiceInfo.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIElementManager.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="InjectCheckpoint.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="DumpCheckpoint.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="InjectCore.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="DumpCore.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="ForceCoreSave.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="ForceCoreLoad.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="HotkeyManager.h">
-      <Filter>Services</Filter>
-    </ClInclude>
-    <ClInclude Include="GUISpeedhack.h">
-      <Filter>Services\GUIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="Speedhack.h">
-      <Filter>Services\Cheats</Filter>
-    </ClInclude>
-    <ClInclude Include="Hotkey.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Hotkeys.h">
-      <Filter>Global</Filter>
-    </ClInclude>
-    <ClInclude Include="HotkeyRebinder.h" />
-    <ClInclude Include="GUISimpleToggle.h">
-      <Filter>Services\GUIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Datum.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Halo1InvulnerabilityImpl.h">
-      <Filter>Services\Cheats\Invulnerability</Filter>
+    <ClInclude Include="App.h">
+      <Filter>Global</Filter>
     </ClInclude>
-    <ClInclude Include="InvulnerabilityImplBase.h">
-      <Filter>Services\Cheats\Invulnerability</Filter>
+    <ClInclude Include="includes\utki\shared_ref.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="IGetMCCVersion.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GetMCCVersion.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionInfo.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="DIContainer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="DumpCheckpoint.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="DumpCore.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCheckpoint.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCoreLoad.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCoreSave.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceDoubleRevert.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceRevert.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="InjectCheckpoint.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="InjectCore.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="Speedhack.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
     <ClInclude Include="Invulnerability.h">
-      <Filter>Services\Cheats\Invulnerability</Filter>
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="SpeedhackCommunicator.h">
+    <ClInclude Include="Halo1InvulnerabilityImpl.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiElementEnum.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HotkeyDefinitions.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="HotkeyManager.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="Hotkey.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRequiredServices.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IGUIRequiredServices.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IAnchorPoint.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElementStore.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIServiceInfo.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Hook.h">
+      <Filter>Services\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.h">
+      <Filter>Services\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElementConstructor.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsStateAndEvents.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsSerialiser.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagesGUI.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISimpleButton.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISimpleToggle.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISpeedhack.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="IGUIElement.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIInvulnerability.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="HCMInternalGUI.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="HCM_imconfig.h">
       <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="HotkeyEnum.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="HotkeyRenderer.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="UnhandledExceptionHandler.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="HotkeyRendererImpl.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionalCheatInfo.h">
+      <Filter>Services\OptionalCheats\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionalCheatManager.h">
+      <Filter>Services\OptionalCheats\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionalCheatEnum.h">
+      <Filter>Services\OptionalCheats\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="IOptionalCheat.h">
+      <Filter>Services\OptionalCheats</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopedCallback.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MCCState.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="DirPathContainer.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIHeader.h">
+      <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -226,16 +309,13 @@
     <ClCompile Include="PointerManager.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="OptionSerialisation.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleHookManager.cpp">
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="ModuleHook.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Option.cpp">
+    <ClCompile Include="Setting.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="MultilevelPointer.cpp">
@@ -244,26 +324,11 @@
     <ClCompile Include="ModuleCache.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="MessagesGUI.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
     <ClCompile Include="Logging.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
+    <ClCompile Include="MCCStateHook.cpp">
       <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="D3D11Hook.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="HCMInternalGUI.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStateHook.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="StaticHookWrapper.cpp">
-      <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="RPCClientInternal.cpp">
       <Filter>Services</Filter>
@@ -271,35 +336,50 @@
     <ClCompile Include="HeartbeatTimer.cpp">
       <Filter>Services</Filter>
     </ClCompile>
-    <ClCompile Include="FailedServiceInfo.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="InjectCheckpoint.cpp">
-      <Filter>Services\Cheats</Filter>
-    </ClCompile>
-    <ClCompile Include="DumpCheckpoint.cpp">
-      <Filter>Services\Cheats</Filter>
-    </ClCompile>
-    <ClCompile Include="InjectCore.cpp">
-      <Filter>Services\Cheats</Filter>
-    </ClCompile>
-    <ClCompile Include="DumpCore.cpp">
-      <Filter>Services\Cheats</Filter>
-    </ClCompile>
-    <ClCompile Include="HotkeyManager.cpp">
+    <ClCompile Include="GetMCCVersion.cpp">
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="Speedhack.cpp">
-      <Filter>Services\Cheats</Filter>
-    </ClCompile>
-    <ClCompile Include="Hotkeys.cpp">
-      <Filter>Global</Filter>
-    </ClCompile>
-    <ClCompile Include="HotkeyRebinder.cpp">
-      <Filter>Services</Filter>
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="Invulnerability.cpp">
-      <Filter>Services\Cheats\Invulnerability</Filter>
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="HotkeyManager.cpp">
+      <Filter>Services\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIRequiredServices.cpp">
+      <Filter>Services\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIServiceInfo.cpp">
+      <Filter>Services\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Hook.cpp">
+      <Filter>Services\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiManager.cpp">
+      <Filter>Services\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIElementConstructor.cpp">
+      <Filter>Services\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsSerialiser.cpp">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagesGUI.cpp">
+      <Filter>Services\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HCMInternalGUI.cpp">
+      <Filter>Services\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UnhandledExceptionHandler.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="HotkeyRendererImpl.cpp">
+      <Filter>Services\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionalCheatManager.cpp">
+      <Filter>Services\OptionalCheats\Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

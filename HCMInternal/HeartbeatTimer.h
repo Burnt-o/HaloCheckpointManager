@@ -2,7 +2,7 @@
 #include "RPCClientInternal.h"
 #include "HCMExternalCommand.h"
 #include "GlobalKill.h"
-#include "OptionsState.h"
+#include "SettingsStateAndEvents.h"
 class HeartbeatTimer
 {
 public:
@@ -14,10 +14,11 @@ public:
                 while (!GlobalKill::isKillSet())
                 {
                     //PLOG_VERBOSE << "sending heartbeat";
-                    auto heartIsBeating = rpcref.get()->sendHeartbeat();
+                    auto heartIsBeating = rpcref->sendHeartbeat();
                     
                     if (!heartIsBeating)
                     {
+                        // https://youtu.be/APc8QCGOdUE
                         GlobalKill::killMe();
                     }
                    

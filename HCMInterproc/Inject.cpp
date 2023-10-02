@@ -3,7 +3,6 @@
 #include "Events.h"
 #include "WinHandle.h"
 #include "RPCServerExternal.h"
-
 std::unique_ptr<RPCServerExternal> server;
 
 class MissingPermissionException : public std::exception {
@@ -60,7 +59,6 @@ bool SetupInternal()
 		// Init rpc server
 		server.reset();
 		server = std::make_unique<RPCServerExternal>();
-
 
 		InjectModule(mccPID, dllFilePath);
 

@@ -48,20 +48,23 @@
 
 
 // External Libraries
+#include "gsl\gsl" //https://github.com/microsoft/GSL
 // hooking
 #include "safetyhook.hpp"
 // logging
+#define PLOG_OMIT_LOG_DEFINES //both plog and rpc define these
 #include <plog/Log.h>
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Initializers/ConsoleInitializer.h>
 
+#include "magic_enum_all.hpp" // enum reflection https://github.com/Neargye/magic_enum
 
 
-// directx 11
-#include <d3d11.h>
 
 #include <eventpp/eventdispatcher.h>
 #include "eventpp/callbacklist.h"
+#include "eventpp/utilities/scopedremover.h"
+#include "ScopedCallback.h"
 
 // boost
 #include "boost\stacktrace.hpp"
@@ -74,6 +77,21 @@
 #include "CustomExceptions.h"
 #include "ControlDefs.h"
 #include "WindowsUtilities.h"
-#include "RuntimeExceptionHandler.h"
+
+template <typename T, typename F>
+void once(T t, F f) {
+    static bool first = true;
+    if (first) {
+        f();
+        first = false;
+    }
+}
+#define LOG_ONCE(x)   once([](){},[](){ x; });
+#define LOG_ONCE_THIS(x)   once([this](){},[this](){ x; });
+
+//#include "HCM_imconfig.h"
+
+
+
 
 #endif //PCH_H

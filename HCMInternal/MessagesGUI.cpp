@@ -1,25 +1,12 @@
 #include "pch.h"
 #include "MessagesGUI.h"
-#include "HCMInternalGUI.h"
+#include "imgui.h"
+ 
 
-MessagesGUI* MessagesGUI::instance = nullptr;
-
-MessagesGUI::~MessagesGUI()
+void MessagesGUI::onImGuiRenderEvent(Vec2 screenSize)
 {
-	std::scoped_lock<std::mutex> lock(mDestructionGuard); 
-	if (mCallbackHandle && pImGuiRenderEvent)
-	{
-		pImGuiRenderEvent.remove(mCallbackHandle);
-		mCallbackHandle = {};
-	}
-
-	instance = nullptr;
-}
-
-void MessagesGUI::onImGuiRenderEvent()
-{
-	std::scoped_lock<std::mutex> lock(instance->mDestructionGuard);
-	instance->iterateMessages();
+	auto guard = shared_from_this();
+	iterateMessages();
 }
 
 
@@ -28,20 +15,21 @@ void MessagesGUI::onImGuiRenderEvent()
 constexpr float messageExpiryTimeout = 12000.f;
 constexpr float messageFullOpacityTime = 8000.f;
 constexpr float messageFadeTime = messageExpiryTimeout - messageFullOpacityTime;
+
 void MessagesGUI::iterateMessages()
 {
-	if (messages.empty()) return;
+	if (mMessages.empty()) return;
 
 	// Calculate age of each message
 	auto currentTime = std::chrono::high_resolution_clock::now();
-	for (auto& message : messages)
+	for (auto& message : mMessages)
 	{
 		message.messageAge = std::chrono::duration<float, std::milli>(currentTime - message.timeStamp).count();
 	}
 
 	// remove old messages from the list
 
-	std::erase_if(messages, [&currentTime](const auto& message)
+	std::erase_if(mMessages, [&currentTime](const auto& message)
 		{
 			bool erase = message.messageAge > messageExpiryTimeout;
 			if (erase) PLOG_VERBOSE << "erasing expired message";
@@ -49,20 +37,18 @@ void MessagesGUI::iterateMessages()
 		});
 
 	// draw remaining messages
-	ImVec2 mesPosWhenOptionsOpen(10, HCMInternalGUI::getHCMInternalWindowHeight() + 15.f + 15.f);
-	constexpr ImVec2 mesPosWhenOptionsClosed(10.f, 35.f + 15.f);
-
-	ImVec2 messagePosition = HCMInternalGUI::isWindowOpen() ? mesPosWhenOptionsOpen : mesPosWhenOptionsClosed;
-	for (auto& message : messages)
+	LOG_ONCE_THIS(PLOG_DEBUG << "mAnchorPoint exists? " << mAnchorPoint.operator bool());
+	Vec2 messagePosition = mAnchorPoint ? (mAnchorPoint->getAnchorPoint() + mAnchorOffset) : mAnchorOffset;
+	for (auto& message : mMessages)
 	{
 		drawMessage(message, messagePosition);
 		// update messagePosition based on previous messages linecount
-		messagePosition = ImVec2(messagePosition.x, messagePosition.y + (message.lineCount * 17.f) + 5.f);
+		messagePosition = Vec2(messagePosition.x, messagePosition.y + (message.lineCount * 17.f) + 5.f);
 	}
 }
 
 // returns vertical pixel height of message
-void MessagesGUI::drawMessage(const temporaryMessage& message, const ImVec2& position)
+void MessagesGUI::drawMessage(const temporaryMessage& message, const Vec2& position)
 {
 	// Calculate opacity using message age
 	float opacity = 1.f; 
@@ -97,7 +83,7 @@ void MessagesGUI::drawMessage(const temporaryMessage& message, const ImVec2& pos
 
 //https://stackoverflow.com/a/27757111
 // Prefers inserting new lines at spaces instead of splitting words
-std::string insertNewLines(const std::string& in, const size_t every_n, int& outLineCount)
+std::string insertNewLines(const std::string& in, const size_t every_n, __int64& outLineCount)
 {
 	PLOG_VERBOSE << "insertNewLines";
 
@@ -163,12 +149,12 @@ void MessagesGUI::addMessage(std::string message)
 {
 	std::scoped_lock<std::mutex> lock(addMessageMutex);
 	// split message to multiple lines if necessary
-	int lineCount;
+	__int64 lineCount;
 	message = insertNewLines(message, 150, lineCount);
 	PLOG_DEBUG << "Message added with linecount: " << lineCount;
 	PLOG_INFO << "MessagesGUI added message: " << message;
 	//instance->messages.emplace_back(temporaryMessage{message, std::chrono::high_resolution_clock::now(), lineCount});
-	instance->messages.insert(instance->messages.begin(), temporaryMessage{ message, std::chrono::high_resolution_clock::now(), lineCount }); // new messages now go at the top instead of the bottom
+	mMessages.insert(mMessages.begin(), temporaryMessage{ message, std::chrono::high_resolution_clock::now(), lineCount }); // new messages now go at the top instead of the bottom
 
 }
 

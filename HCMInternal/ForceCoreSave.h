@@ -1,66 +1,61 @@
 #pragma once
-#include "pch.h"
+#include "IOptionalCheat.h"
 #include "GameState.h"
-#include "OptionsState.h"
-#include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "DIContainer.h"
+#include "MCCStateHook.h"
 #include "MessagesGUI.h"
-#include "CheatBase.h"
-#include "GameStateHook.h"
-
-class ForceCoreSave : public CheatBase
+#include "SettingsStateAndEvents.h"
+#include "RuntimeExceptionHandler.h"
+class ForceCoreSave : public IOptionalCheat
 {
 private:
+	// which game is this implementation for
+	GameState mGame;
 
-	eventpp::CallbackList<void()>::Handle mForceCoreSaveCallbackHandle = {};
+	// event callbacks
+	ScopedCallback<ActionEvent> mForceCoreSaveCallbackHandle;
+
+	// injected services
+	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
+	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 
 	//data
 	std::shared_ptr<MultilevelPointer> forceCoreSaveFlag;
 
+	// primary event callback
 	void onForceCoreSave()
 	{
-		if (GameStateHook::getCurrentGameState() != mGame) return;
+		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 
-		PLOG_DEBUG << "Force core save called";
+		PLOG_DEBUG << "Force CoreSave called";
 		try
 		{
 			byte enableFlag = 1;
-			if (!forceCoreSaveFlag.get()->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write core save flag {}", MultilevelPointer::GetLastError()));
-			MessagesGUI::addMessage("Core Save forced.");
+			if (!forceCoreSaveFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write CoreSave flag {}", MultilevelPointer::GetLastError()));
+			messagesGUI->addMessage("CoreSave forced.");
 		}
 		catch (HCMRuntimeException ex)
 		{
-			RuntimeExceptionHandler::handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
-
 
 
 public:
 
-	ForceCoreSave(GameState gameImpl) : CheatBase(gameImpl)
+	ForceCoreSave(GameState gameImpl, IDIContainer& dicon)
+		: mGame(gameImpl), 
+		mForceCoreSaveCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->forceCoreSaveEvent, [this]() {onForceCoreSave(); }),
+		mccStateHook(dicon.Resolve<MCCStateHook>()),
+		messagesGUI(dicon.Resolve<MessagesGUI>()), 
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-
+		auto ptr = dicon.Resolve<PointerManager>();
+		forceCoreSaveFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceCoreSaveFlag", mGame);
 	}
 
-	~ForceCoreSave()
-	{
-		// unsubscribe 
-		if (mForceCoreSaveCallbackHandle)
-			OptionsState::forceCoreSaveEvent.get()->remove(mForceCoreSaveCallbackHandle);
-	}
-
-	void initialize() override
-	{
-		// exceptions thrown up to creator
-		forceCoreSaveFlag = PointerManager::getData<std::shared_ptr<MultilevelPointer>>("forceCoreSaveFlag", mGame);
-
-		// subscribe to forceCoreSave event
-		mForceCoreSaveCallbackHandle = OptionsState::forceCoreSaveEvent.get()->append([this]() { this->onForceCoreSave(); });
-	}
-
-	std::string_view getName() override { return "Force Core Save"; }
-
+	virtual std::string_view getName() override { return nameof(ForceCoreSave); }
 
 };

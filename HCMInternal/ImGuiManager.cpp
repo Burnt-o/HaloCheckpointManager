@@ -113,8 +113,6 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 
 ImGuiManager::~ImGuiManager()
 {
-
-	std::scoped_lock<std::mutex> lock(mDestructionGuard); // onPresentHookCallback also locks this
 		// restore the original wndProc
 	if (mOldWndProc)
 	{
@@ -123,27 +121,22 @@ ImGuiManager::~ImGuiManager()
 	}
 
 	// Cleanup
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-
-	// Don't need to listen to D3D present callback anymore
-	if (mCallbackHandle && pPresentHookEvent)
+	if (m_isImguiInitialized)
 	{
-		pPresentHookEvent.remove(mCallbackHandle);
-		mCallbackHandle = {};
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+
+		m_isImguiInitialized = false;
 	}
-
-	m_isImguiInitialized = false;
-
 }
 
 void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, IDXGISwapChain* pSwapChain, ID3D11RenderTargetView* pMainRenderTargetView)
 {
-
-	std::scoped_lock<std::mutex> lock(instance->mDestructionGuard); // ImGuiManager::destroy also locks this
-
+	auto guard = shared_from_this();
 #pragma region init
+	LOG_ONCE(PLOG_DEBUG << "ImGuiManager::onPresentHookEvent running");
+
 	if (!instance->m_isImguiInitialized)
 	{
 		PLOG_INFO << "Initializing ImGuiManager";
@@ -180,11 +173,13 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 
 	// I don't 100% understand what this does, but it must be done before we try to render
 	pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, NULL);
-
+	auto screenSize = getScreenSize();
 	// invoke callback of anything that wants to render with ImGui
-	instance->BackgroundRenderEvent();
-	instance->MidgroundRenderEvent();
-	instance->ForegroundRenderEvent();
+	auto x = *BackgroundRenderEvent.get();
+	x(screenSize);
+	BackgroundRenderEvent->operator()(screenSize);
+	MidgroundRenderEvent->operator()(screenSize);
+	ForegroundRenderEvent->operator()(screenSize);
 
 	// Finish ImGui frame
 	ImGui::EndFrame();

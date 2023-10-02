@@ -2,38 +2,9 @@
 #include "pch.h"
 #include <fstream>
 #include <string>
+#include "WindowsUtilities.h"
 
-#include "Logging.h"
-#include "HCMDirPath.h"
-#include "curl\curl.h"
-#include "GlobalKill.h"
-#include "ModuleCache.h"
-#include "ModuleHookManager.h"
-#include "D3D11Hook.h"
-#include "ImGuiManager.h"
-#include "PointerManager.h"
-#include "HCMInternalGUI.h"
-#include "MessagesGUI.h"
-#include "GameStateHook.h"
-#include "CheatManager.h"
-#include "RPCClientInternal.h"
-#include "HeartbeatTimer.h"
-#include "GUIElementManager.h"
-#include "FailedServiceInfo.h"
-#include "HotkeyManager.h"
-#include "HotkeyRebinder.h"
-//both plog and rpc define these
-#ifdef LOG_INFO 
-#define LOG_INFO LOG_INFO_P
-#endif
-#ifdef LOG_ERROR 
-#define LOG_ERROR LOG_ERROR_P
-#endif
-#ifdef LOG_DEBUG 
-#define LOG_DEBUG LOG_DEBUG_P
-#endif
-
-
+#include "App.h"
 
 
 
@@ -42,115 +13,44 @@
 // Main Execution Loop
 void RealMain(HMODULE dllHandle)
 {
-    acquire_global_unhandled_exception_handler();
-    try
-    {
+    std::string dirPath;
+    bool badDirPath = false;
 
-        // rpcClient also inits logging
+    //char* buf = nullptr;
+    //size_t sz = 0;
+    //if (_dupenv_s(&buf, &sz, "HCM_DIRECTORY_PATH") == 0 && buf != nullptr)
+    //{
+    //    dirPath = buf;
+    //    free(buf);
+    //}
 
-       auto rpcClient = std::make_shared<RPCClientInternal>();
+    //DWORD bufferSize = 65535; //Limit according to http://msdn.microsoft.com/en-us/library/ms683188.aspx
+    //std::string buff;
+    //buff.resize(bufferSize);
+    //bufferSize = GetEnvironmentVariableA("HCM_DIRECTORY_PATH", &buff[0], bufferSize);
+    //if (bufferSize)
+    //{
+    //    dirPath = std::string(buff);
+    //}
 
-
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-
-    PLOG_INFO << "HCMInternal initializing";
-    PLOG_DEBUG << "HCM path: " << HCMDirPath::GetHCMDirPath();
-
-
-        ModuleCache::initialize();
-        auto mhm = std::make_unique<ModuleHookManager>();
-        auto ptr = std::make_unique<PointerManager>(); // must be after moduleCache but before anything that uses it in it's constructor
-        auto gsh = std::make_unique<GameStateHook>(); // needs pointer manager
-
-
-
-
-        auto d3d = std::make_unique<D3D11Hook>();
-        auto imm = std::make_unique<ImGuiManager>(d3d.get()->presentHookEvent);
-        CheatManager::ConstructAllCheatsUninitialized(); // does not throw
-        auto Fail = std::make_unique<FailedServiceInfo>();
-
-        // not only does this construct gui elements, it also initializes any cheats those elements require. Initialization failures are passed to FailedServiceInfo
-        auto GUIMan = std::make_unique<GUIElementManager>(); // really ought to be passed ref of FailedServiceInfo instead of singletonising
-
-        // really ought to be passed ref of GUIElementManager instead of singletonising
-        auto HCMGUI = std::make_unique<HCMInternalGUI>(imm.get()->MidgroundRenderEvent, d3d.get()->resizeBuffersHookEvent, gsh.get()->gameLoadEvent); // needs to be after cheatManager
-
-        auto mesGUI = std::make_unique<MessagesGUI>(imm.get()->MidgroundRenderEvent);
-        Fail.get()->printFailures(); // print list of cheats that failed to initialize
-        
-        auto exp = std::make_unique<RuntimeExceptionHandler>();
-
-        auto mdm = std::make_unique<HotkeyRebinder>(imm.get()->ForegroundRenderEvent);
-
-        auto hkm = std::make_unique<HotkeyManager>(imm.get()->MidgroundRenderEvent);
-
-
-        
-
-        auto hb = std::make_unique<HeartbeatTimer>(rpcClient);
-
-
-
-
-        PLOG_INFO << "All services succesfully initialized! Entering main loop";
-        Sleep(100);
-        // Shutdown the console on successful init, at least in release mode.
-        // If an initialization error occurs before this point, console will be left up so user can look at it.
-        MessagesGUI::addMessage("HCM successfully initialised!");
-
-#ifdef HCM_DEBUG
-        auto cp = rpcClient.get()->getInjectInfo();
-        auto sf = rpcClient.get()->getDumpInfo();
-        MessagesGUI::addMessage(std::format("Selected Checkpoint: {}", cp.selectedCheckpointNull ? "null" : cp.selectedCheckpointName));
-        MessagesGUI::addMessage(std::format("Selected SaveFolder: {}", sf.selectedFolderNull ? "null" : sf.selectedFolderName));
-#endif
-
-
-#ifndef HCM_DEBUG
-        PLOG_DEBUG << "Closing console";
-        Logging::closeConsole();
-#endif 
-
-
-        // We live in this loop 99% of the time
-        while (!GlobalKill::isKillSet()) {
-#ifdef HCM_DEBUG
-            if (GetKeyState(VK_END) & 0x8000)
-            {
-                PLOG_INFO << "HCMInternal manually killed";
-                GlobalKill::killMe();
-            }
-#endif
-
-
-            Sleep(10);
-
+ 
+        rpc::client client{"127.0.0.1", 8069};
+        client.set_timeout(1000);
+        std::string result = "none";
+        try
+        {
+            dirPath = client.call("requestHCMDirectory").as<std::string>();
+        }
+        catch (rpc::rpc_error& e)
+        {
+            badDirPath = true;
+            dirPath = GetMCCExePath();
         }
 
-    }
-    catch (HCMInitException& ex)
-    {
-        std::ostringstream oss;
-        oss << "Failed initializing: " << ex.what() << std::endl
-            << "Please send Burnt the log file located at: " << std::endl << Logging::GetLogFileDestination();
-        PLOG_FATAL << oss.str();
-        RPCClientInternal::sendFatalInternalError(ex.what());
-        std::cout << "Press Enter to shutdown HCMInternal";
-        GlobalKill::killMe();
-        std::cin.ignore();
-    }
+    
 
-    // Auto managed resources have fallen out of scope
-    PLOG_INFO << "HCMInternal singletons successfully shut down";
 
-    curl_global_cleanup(); PLOG_INFO << "Curl cleaned up";
-    release_global_unhandled_exception_handler(); PLOG_INFO << "Released exception handler";
-
-#ifdef HCM_DEBUG
-    PLOG_DEBUG << "Closing console";
-    Logging::closeConsole();
-#endif 
+    App app{ dirPath, badDirPath, client }; // app blocks at the end of it's constructor until it's kill condition is met
 
 }
 

@@ -146,21 +146,21 @@ void ModulePatch::attach()
 	if (mOriginalBytes.empty())
 	{
 		mOriginalBytes.resize(mPatchedBytes.size());
-		logErrorReturn(mOriginalFunction.get()->readArrayData(mOriginalBytes.data(), mPatchedBytes.size()) == false, "Could not resolve original function");
+		logErrorReturn(mOriginalFunction->readArrayData(mOriginalBytes.data(), mPatchedBytes.size()) == false, "Could not resolve original function");
 	}
 
 	std::vector<byte> currentBytes;
 	currentBytes.resize(mPatchedBytes.size());
-	logErrorReturn(mOriginalFunction.get()->readArrayData(currentBytes.data(), mPatchedBytes.size()) == false, "Could not resolve original function");
+	logErrorReturn(mOriginalFunction->readArrayData(currentBytes.data(), mPatchedBytes.size()) == false, "Could not resolve original function");
 
 	logErrorReturn(currentBytes != mOriginalBytes, "Current bytes did not match original bytes");
 
 	uintptr_t addy;
-	mOriginalFunction.get()->resolve(&addy);
+	mOriginalFunction->resolve(&addy);
 	PLOG_DEBUG << "mOriginalFunction loc: " << std::hex << (uint64_t)addy;
 		PLOG_DEBUG << "mPatchedBytes size: " << mPatchedBytes.size();
 
-	logErrorReturn(mOriginalFunction.get()->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false, "Failed to patch new bytes");
+	logErrorReturn(mOriginalFunction->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false, "Failed to patch new bytes");
 }
 
 void ModulePatch::detach()
@@ -174,11 +174,11 @@ void ModulePatch::detach()
 
 	std::vector<byte> currentBytes;
 	currentBytes.resize(mPatchedBytes.size());
-	logErrorReturn(mOriginalFunction.get()->readArrayData(currentBytes.data(), mPatchedBytes.size()) == false, "Failed to read current bytes");
+	logErrorReturn(mOriginalFunction->readArrayData(currentBytes.data(), mPatchedBytes.size()) == false, "Failed to read current bytes");
 
 	logErrorReturn(currentBytes != mPatchedBytes, "Current bytes did not match patched bytes")
 
-	logErrorReturn(mOriginalFunction.get()->writeArrayData(mOriginalBytes.data(), mOriginalBytes.size(), true) == false, "Failed to restore original bytes");
+	logErrorReturn(mOriginalFunction->writeArrayData(mOriginalBytes.data(), mOriginalBytes.size(), true) == false, "Failed to restore original bytes");
 
 }
 
@@ -236,6 +236,6 @@ bool ModuleMidHook::isHookInstalled() const
 bool ModulePatch::isHookInstalled() const
 {
 	std::vector<byte> currentBytes;
-	if (!mOriginalFunction.get()->readArrayData(&currentBytes, mOriginalBytes.size())) return false;
+	if (!mOriginalFunction->readArrayData(&currentBytes, mOriginalBytes.size())) return false;
 	return currentBytes == mPatchedBytes;
 }

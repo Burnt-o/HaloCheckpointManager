@@ -1,46 +1,27 @@
 #pragma once
 #include "pch.h"
 #include "GameState.h"
-#include "OptionsState.h"
-#include "MultilevelPointer.h"
-#include "PointerManager.h"
-#include "MessagesGUI.h"
-#include "CheatBase.h"
+#include "IOptionalCheat.h"
+#include "DIContainer.h"
 
+class ISpeedhackImpl {};
 
-class SpeedhackImplBase {
-public:
-	virtual void onToggle(bool& newValue) = 0;
-	virtual void updateSetting(double& newValue) = 0;
-};
-
-class Speedhack : public CheatBase
+class Speedhack : public IOptionalCheat
 {
-
-
 private:
-
-
-
 	//impl. static, shared between all games
-	static inline std::unique_ptr<SpeedhackImplBase> impl{};
-
-
+	static inline std::unique_ptr<ISpeedhackImpl> impl;
 
 public:
-
-	Speedhack(GameState game) : CheatBase(game) {}
+	// is this the best way to do this.. why can't we send speedhack only the dependencies it needs?
+	// also should cheats be templated instead of taking a game parameter?
+	Speedhack(GameState game, IDIContainer& dicon);
 	~Speedhack()
 	{
+		PLOG_DEBUG << "~Speedhack() killing impl";
 		// kill impl
 		impl.reset();
 	}
 
-	void initialize() override;
-
-
-
-	std::string_view getName() override { return "Speedhack"; }
-
-
+	virtual std::string_view getName() override { return nameof(Speedhack); }
 };

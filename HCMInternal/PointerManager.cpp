@@ -1,22 +1,16 @@
 #include "pch.h"
 #include "PointerManager.h"
 #include "curl/curl.h" // to get PointerData.xml from github
-#include <winver.h> // to get version string of MCC
-#include <pugixml.hpp>
-#include "HCMDirPath.h"
-#include "GameState.h"
+#include <pugixml.hpp> // parsing xml
 #include "InjectRequirements.h"
+#include "MultilevelPointer.h"
+#include "MidhookContextInterpreter.h"
 #define useDevPointerData 1
 #define debugPointerManager 1
 
-PointerManager* PointerManager::instance = nullptr;
 typedef std::tuple<std::string, std::optional<GameState>> DataKey;
 
-enum class MCCProcessType
-{
-    Steam,
-    WinStore
-};
+
 
 constexpr std::string_view xmlFileName = "InternalPointerData.xml";
 constexpr std::string_view githubPath = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM3/HCMInternal/InternalPointerData.xml";
@@ -25,13 +19,14 @@ class PointerManager::PointerManagerImpl {
 
 
     private:
+        std::shared_ptr<IGetMCCVersion> m_getMCCver;
+        std::string m_dirPath;
+
         std::string pointerDataLocation;
 
         // Functions run by constructor, in order of execution
         void downloadXML(std::string_view url);
         std::string readLocalXML();
-        VersionInfo getCurrentMCCVersion();
-        MCCProcessType getCurrentMCCType();
         void parseXML(std::string& xml);
 
         void processVersionedEntry(pugi::xml_node entry);
@@ -48,15 +43,11 @@ class PointerManager::PointerManagerImpl {
         void instantiateInt64_t(pugi::xml_node entry, DataKey dKey);
 
 
-        std::string currentGameVersion;
-        MCCProcessType currentProcessType;
-
 
     public:
-        PointerManagerImpl();
+        PointerManagerImpl(std::shared_ptr<IGetMCCVersion> ver, std::string dirPath);
         ~PointerManagerImpl() = default;
 
-        std::string getCurrentGameVersion() { return currentGameVersion; }
         // data mapped by strings
         static std::map<DataKey,std::any> mAllData;
 };
@@ -64,19 +55,12 @@ class PointerManager::PointerManagerImpl {
 std::map<DataKey, std::any> PointerManager::PointerManagerImpl::mAllData{};
 
 
-std::string PointerManager::getCurrentGameVersion() { return instance->impl.get()->getCurrentGameVersion(); }
 
-PointerManager::PointerManager() : impl(new PointerManagerImpl) 
-{
-    if (instance != nullptr)
-    {
-        throw HCMInitException("Cannot have more than one PointerManager");
-    }
-    instance = this;
-}
+
+PointerManager::PointerManager(std::shared_ptr<IGetMCCVersion> ver, std::string dirPath) : impl(new PointerManagerImpl(ver, dirPath)) {};
 PointerManager::~PointerManager() = default; // https://www.fluentcpp.com/2017/09/22/make-pimpl-using-unique_ptr/
 
-PointerManager::PointerManagerImpl::PointerManagerImpl()
+PointerManager::PointerManagerImpl::PointerManagerImpl(std::shared_ptr<IGetMCCVersion> ver, std::string dirPath) : m_getMCCver(ver), m_dirPath(dirPath)
 {
 
 #if debugPointerManager == 0
@@ -86,7 +70,7 @@ PointerManager::PointerManagerImpl::PointerManagerImpl()
 #endif
 
     // Set pointerDataLocation 
-    pointerDataLocation = HCMDirPath::GetHCMDirPath();
+    pointerDataLocation = m_dirPath;
     pointerDataLocation += xmlFileName;
 
 #ifndef HCM_DEBUG
@@ -102,10 +86,6 @@ PointerManager::PointerManagerImpl::PointerManagerImpl()
 #endif
 
     std::string pointerData = readLocalXML();
-    std::stringstream buf; buf << getCurrentMCCVersion();
-    this->currentGameVersion = buf.str();
-    this->currentProcessType = getCurrentMCCType();
-    PLOG_INFO << "MCC Version: " << currentGameVersion;
 
     parseXML(pointerData);
     PLOG_DEBUG << "pointer parsing complete";
@@ -128,21 +108,21 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
 
     auto key = DataKey(dataName, game);
     // Check data exists
-    if (!instance->impl.get()->mAllData.contains(key))
+    if (!impl->mAllData.contains(key))
     {
         PLOG_ERROR << "no valid pointer data for " << dataName;
         throw HCMInitException(std::format("pointerData was null for {}", dataName));
     }
 
     // Check correct type
-    auto& type = instance->impl.get()->mAllData.at(key).type();
+    auto& type = impl->mAllData.at(key).type();
     if (!(typeid(T) == type))
     {
         throw HCMInitException(std::format("Invalid type access for {}\nType was {} but {} was requested", dataName, type.name(), typeid(T).name()));
     }
     
-    //    return std::any_cast<T>(instance->impl.get()->mAllData.at(key));
-    return std::any_cast<T>(instance->impl.get()->mAllData.at(key));
+    //    return std::any_cast<T>(instance->impl->mAllData.at(key));
+    return std::any_cast<T>(impl->mAllData.at(key));
 }
 
 // explicit template instantiations of PointerManager::getData
@@ -249,57 +229,7 @@ void PointerManager::PointerManagerImpl::downloadXML(std::string_view url)
 
 
 
-VersionInfo PointerManager::PointerManagerImpl::getCurrentMCCVersion()
-{
-    VersionInfo outCurrentMCCVersion;
-    HMODULE mccProcess = GetModuleHandle(NULL);
-    char mccProcessPath[MAX_PATH];
-    GetModuleFileNameA(mccProcess, mccProcessPath, sizeof(mccProcessPath));
 
-    PLOG_DEBUG << "Getting file version info of mcc at: " << mccProcessPath;
-    outCurrentMCCVersion = getFileVersion(mccProcessPath);
-
-    PLOG_DEBUG << "mccVersionInfo: " << outCurrentMCCVersion;
-
-    if (outCurrentMCCVersion.major != 1)
-    {
-        std::stringstream buf;
-        buf << outCurrentMCCVersion;
-        throw HCMInitException(std::format("mccVersionInfo did not start with \"1.\"! Actual read version: {}", buf.str()).c_str());
-    }
-
-    return outCurrentMCCVersion;
-
-}
-
-
-MCCProcessType PointerManager::PointerManagerImpl::getCurrentMCCType()
-{
-    std::string outCurrentMCCType;
-    HMODULE mccProcess = GetModuleHandle(NULL);
-    char mccProcessPath[MAX_PATH];
-    GetModuleFileNameA(mccProcess, mccProcessPath, sizeof(mccProcessPath));
-
-    std::string mccName = mccProcessPath;
-    mccName = mccName.substr(mccName.find_last_of("\\") + 1, mccName.size() - mccName.find_last_of("\\") - 1);
-
-    // checks need to ignore letter case
-    if (boost::iequals(mccName, "MCCWinStore-Win64-Shipping.exe")) 
-    {
-        PLOG_DEBUG << "setting process type to WinStore";
-        return MCCProcessType::WinStore;
-    }
-    else if (boost::iequals(mccName, "MCC-Win64-Shipping.exe"))
-    {
-        PLOG_DEBUG << "setting process type to Steam";
-        return MCCProcessType::Steam;
-    }
-    else
-    {
-        throw HCMInitException(std::format("MCC process had the wrong name!: {}", mccName));
-    }
-
-}
 
 
 
@@ -352,7 +282,7 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
     {
 
 
-        if (strcmp(versionEntry.attribute("Version").value(), currentGameVersion.c_str()) != 0 &&(strcmp(versionEntry.attribute("Version").value(), "All") != 0)) // We only want the versionEntries of the current MCC version
+        if (strcmp(versionEntry.attribute("Version").value(), m_getMCCver->getMCCVersionAsString().data()) != 0 && (strcmp(versionEntry.attribute("Version").value(), "All") != 0)) // We only want the versionEntries of the current MCC version
         {
                 PLOG_VERBOSE << "No version match";
                 continue;
@@ -371,11 +301,11 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
 
             PLOG_DEBUG << "Checking process type";
             if (
-                (currentProcessType == MCCProcessType::Steam && strcmp(processTypeString.c_str(), steamString.data()) != 0)
-                || (currentProcessType == MCCProcessType::WinStore && strcmp(processTypeString.c_str(), winString.data()) != 0)
+                (m_getMCCver->getMCCProcessType() == MCCProcessType::Steam && strcmp(processTypeString.c_str(), steamString.data()) != 0)
+                || (m_getMCCver->getMCCProcessType() == MCCProcessType::WinStore && strcmp(processTypeString.c_str(), winString.data()) != 0)
                 )
             {
-                PLOG_VERBOSE << "currentProcessType: " << (int)currentProcessType;
+                PLOG_VERBOSE << "currentProcessType: " << magic_enum::enum_name(m_getMCCver->getMCCProcessType());
                 PLOG_DEBUG << "wrong process type, value read: " << versionEntry.attribute("ProcessType").value();
                 continue;
             }
@@ -597,7 +527,7 @@ void PointerManager::PointerManagerImpl::instantiateVectorInteger(pugi::xml_node
     while (std::getline(ss, tmp, ','))
     {
         auto number = stringToInt(tmp);
-        out.get()->push_back((T)number);
+        out->push_back((T)number);
     }
 
     
@@ -626,7 +556,7 @@ void PointerManager::PointerManagerImpl::instantiateVectorFloat(pugi::xml_node v
         try
         {
 
-            out.get()->push_back((T)number);
+            out->push_back((T)number);
         
         }
         catch (const std::bad_cast& e)
@@ -652,7 +582,7 @@ void PointerManager::PointerManagerImpl::instantiateVectorString(pugi::xml_node 
     for (pugi::xml_node stringEntry = versionEntry.first_child(); stringEntry; stringEntry = stringEntry.next_sibling())
     {
         std::string s = stringEntry.text().as_string();
-        out.get()->push_back(s);
+        out->push_back(s);
     }
 
     mAllData.try_emplace(dKey, out);
@@ -722,7 +652,7 @@ void PointerManager::PointerManagerImpl::instantiatePreserveLocations(pugi::xml_
 {
 
     std::shared_ptr<PreserveLocations> result = std::make_shared<PreserveLocations>();
-    auto& plmap = result.get()->locations; // ref to PreserveLocation map that we will insert into
+    auto& plmap = result->locations; // ref to PreserveLocation map that we will insert into
 
     for (pugi::xml_node locationEntry = versionEntry.first_child(); locationEntry; locationEntry = locationEntry.next_sibling())
     {

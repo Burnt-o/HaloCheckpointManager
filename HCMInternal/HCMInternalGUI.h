@@ -1,33 +1,28 @@
 #pragma once
-#include "ImGuiManager.h"
 #include "GameState.h"
-#include "GUIElementBase.h"
-// Singleton: on construction we subscribe to the ImGuiRenderEvent.
-// In onImGuiRenderEvent we draw our options GUI.
-// destructor just unsubscribes from ImGuiRenderEvent.
+#include "IGUIElement.h"
+#include "IAnchorPoint.h"
+#include "GUIElementStore.h"
+#include "MCCStateHook.h"
+#include "Vec2.h"
+#include "HotkeyRenderer.h"
+#include "GUIHeader.h"
 
-class HCMInternalGUI
+class HCMInternalGUI : public IAnchorPoint, public std::enable_shared_from_this<HCMInternalGUI>
 {
 private:
-	static HCMInternalGUI* instance; // Private Singleton instance so static hooks/callbacks can access
-	std::mutex mDestructionGuard; // Protects against Singleton destruction while callbacks are executing
+	// callbacks
+	ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
+	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> mMCCStateChangedCallbackHandle;
 
-	// ImGuiManager Event reference and our handle to the append so we can remove it in destructor
-	eventpp::CallbackList<void()>& pImGuiRenderEvent;
-	eventpp::CallbackList<void()>::Handle mImGuiRenderCallbackHandle = {};
-
-	// resize Window event and handle
-	eventpp::CallbackList<void(ImVec2)>& pWindowResizeEvent;
-	eventpp::CallbackList<void(ImVec2)>::Handle mWindowResizeCallbackHandle = {};
-
-	// GameStateChanged event and handle
-	eventpp::CallbackList<void(GameState, std::string)>& pGameStateChangeEvent;
-	eventpp::CallbackList<void(GameState, std::string)>::Handle mGameStateChangeCallbackHandle = {};
+	//injected services
+	std::shared_ptr<MCCStateHook> mccStateHook;
+	std::shared_ptr<GUIElementStore> mGUIStore;
+	std::shared_ptr<HotkeyRenderer> mHotkeyRenderer;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
-	static void onImGuiRenderEvent();
-	static void onWindowResizeEvent(ImVec2 newScreenSize);
-	static void onGameStateChange(GameState, std::string);
+	void onImGuiRenderEvent(Vec2 ss);
+	void onGameStateChange(const MCCState&);
 
 	// initialize resources in the first onImGuiRenderEvent
 	void initializeHCMInternalGUI();
@@ -42,42 +37,35 @@ private:
 
 	// GUI data
 	ImGuiWindowFlags windowFlags;
-	static bool m_WindowOpen;
-	ImVec2 mWindowSize{ 500, 500 };
-	ImVec2 mWindowPos{ 10, 25 };
+	bool m_WindowOpen;
+	Vec2 mWindowSize{ 500, 500 };
+	Vec2 mWindowPos{ 10, 25 };
 
+	Vec2 mFullScreenSize;
+	GUIHeader mGUIHeader;
 
-	static std::vector<std::shared_ptr<GUIElementBase>> currentGameGUIElements;
+	
+	std::mutex currentGameGUIElementsMutex{};
+	const std::vector<std::shared_ptr<IGUIElement>>* p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(GameState::Value::Halo1);
 
 
 
 public:
 
 	// Gets passed ImGuiManager ImGuiRenderEvent reference so we can subscribe and unsubscribe
-	explicit HCMInternalGUI(eventpp::CallbackList<void()>& pRenderEvent, eventpp::CallbackList<void(ImVec2)>& pResizeEvent, eventpp::CallbackList<void(GameState, std::string)>& gamestatechanged) : pImGuiRenderEvent(pRenderEvent), pWindowResizeEvent(pResizeEvent), pGameStateChangeEvent(gamestatechanged)
-	{
-		if (instance != nullptr)
-		{
-			throw HCMInitException("Cannot have more than one HCMInternalGUI");
-		}
-		instance = this;
+	explicit HCMInternalGUI(std::shared_ptr<MCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent)
+		: mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
+		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
+		mGUIStore(guistore),
+		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIHeader(MCCStateHook)
+	{}
 
-		mImGuiRenderCallbackHandle = pImGuiRenderEvent.append(onImGuiRenderEvent);
-		mWindowResizeCallbackHandle = pWindowResizeEvent.append(onWindowResizeEvent);
-		mGameStateChangeCallbackHandle = pGameStateChangeEvent.append(onGameStateChange);
-	}
 
-	~HCMInternalGUI(); // release resources
 
-	static void addPopupError(HCMExceptionBase error) { if (instance->errorsToDisplay.size() < 5) instance->errorsToDisplay.push_back(error); }
-	static bool isWindowOpen() { return m_WindowOpen; };
-	static float getHCMInternalWindowHeight() { 
-		if (!instance)
-		{
-			PLOG_ERROR << "getHCMInternalWindowHeight when HCMInternalGUI not initiailized";
-			return 0;
-		}
-		return instance->mWindowSize.y; };
+
+	void addPopupError(HCMExceptionBase error) { if (errorsToDisplay.size() < 5) errorsToDisplay.push_back(error); }
+	bool isWindowOpen() { return m_WindowOpen; };
+	virtual Vec2 getAnchorPoint() override { return { 10, m_WindowOpen ? (mWindowSize.y + 10) : 30 }; } // anchors bottom left of window
 };
 
 // Todo: properly split the concepts of "desired window height" and "allocated window height". maybe call the former one "content height"

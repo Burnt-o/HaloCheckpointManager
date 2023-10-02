@@ -7,8 +7,7 @@ class GameState
 public: 
 	enum class Value 
 	{
-		// values are equal to MCC's gameIndicator, with addition of Menu at -1
-		Menu = -1,
+		// values are equal to MCC's gameIndicator
 		Halo1 = 0,
 		Halo2 = 1,
 		Halo3 = 2,

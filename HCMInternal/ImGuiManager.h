@@ -7,27 +7,29 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_stdlib.h"
 
+// todo move stuff to impl
+
 // Singleton: on construction, just subscribes to D3D11Hook's presentHookEvent. 
 // The callback function will initialize ImGui resources (and WndPrc hook) and invoke an ImGuiRenderEvent for other classes to listen to.
 // Destruction releases ImGui resources and unsubscribes to presentHookEvent.
-class ImGuiManager
+class ImGuiManager : public std::enable_shared_from_this<ImGuiManager>
 {
 private:
+	std::weak_ptr<D3D11Hook> m_d3d;
+
 	static ImGuiManager* instance; 	// Private Singleton instance so static hooks/callbacks can access
-	std::mutex mDestructionGuard; // Protects against Singleton destruction while callbacks are executing
+	//std::mutex destructionGuard;
 
 	// WndProc hook, we use SetWindowLongPtr to set it up
 	static LRESULT __stdcall mNewWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);  // Handles ImGui input
 	static WNDPROC mOldWndProc; // original wndProc for input we don't care about
 	HWND m_windowHandle = nullptr; // Needed for creating wndProc hook, will get from SwapChain description
 
-	// D3D11Hook Event reference and our handle to the append so we can remove it in destructor
-	eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>& pPresentHookEvent;
-	eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>::Handle mCallbackHandle;
-
-
-	// What we run when D3D11Hook PresentHookEvent is invoked
-	static void onPresentHookEvent(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*);
+	// D3D11Hook->presentHookEvent handle
+	ScopedCallback<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentEventCallback;
+	eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>::Handle presentEventCallbackTest;
+	// What we run when presentHookEvent is invoked
+	void onPresentHookEvent(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*);
 
 	// initialise resources in the first onPresentHookEvent
 	void initializeImGuiResources(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*);
@@ -36,27 +38,36 @@ private:
 	// Actual ImGui resources
 	ImFont* mDefaultFont = nullptr; // unused for now. In case we wanted to change the default font (or it's size)
 
-
+	eventpp::ScopedRemover<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> testPresentCallback;
 
 
 public:
-	// Gets passed D3D11Hook PresentHookEvent reference so we can subscribe and unsubscribe
-	explicit ImGuiManager(eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>& pEvent) : pPresentHookEvent(pEvent)
+
+	explicit ImGuiManager(std::shared_ptr<D3D11Hook> d3d, std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentEvent) 
+		: m_d3d(d3d),
+		presentEventCallback(presentEvent, [this](ID3D11Device* a, ID3D11DeviceContext* b, IDXGISwapChain* c, ID3D11RenderTargetView* d) { onPresentHookEvent(a, b, c, d); })
 	{
 		if (instance != nullptr)
 		{
 			throw HCMInitException("Cannot have more than one ImGuiManager");
 		}
 		instance = this;
-		mCallbackHandle = pPresentHookEvent.append(onPresentHookEvent);
+
+
+	
 	}
+
+
+
 	~ImGuiManager(); // Destructor releases imgui resources and unsubscribes from PresentHookEvent
+
+
 
 	// Our own events we will invoke in onPresentHookEvent
 	// Things that want to render w/ ImGui will listen to this
-	ActionEvent BackgroundRenderEvent; // for overlays
-	ActionEvent MidgroundRenderEvent; // for main gui / messages
-	ActionEvent ForegroundRenderEvent; // for modal dialogues / popups
+	std::shared_ptr<RenderEvent> BackgroundRenderEvent = std::make_shared<RenderEvent>(); // for overlays
+	std::shared_ptr<RenderEvent> MidgroundRenderEvent = std::make_shared<RenderEvent>(); // for main gui / messages
+	std::shared_ptr<RenderEvent> ForegroundRenderEvent = std::make_shared<RenderEvent>(); // for modal dialogues / popups
 
 
 
@@ -66,9 +77,13 @@ public:
 	ImGuiManager& operator=(const ImGuiManager& arg) = delete; // Assignment operator
 	ImGuiManager& operator=(const ImGuiManager&& arg) = delete; // Move operator
 
-	static ImVec2 getScreenSize() { return D3D11Hook::getScreenSize(); }
-	static ImVec2 getScreenCenter() { return D3D11Hook::getScreenCenter(); }
-	static void debugInput();
+	 Vec2 getScreenSize() { 
+		 if (m_d3d.expired()) return { 0, 0 };
+		 return m_d3d.lock()->getScreenSize(); }
+	 Vec2 getScreenCenter() { 
+		 if (m_d3d.expired()) return { 0, 0 };
+		 return m_d3d.lock()->getScreenCenter();
+	 }
 
 };
 

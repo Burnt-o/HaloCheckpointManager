@@ -2,7 +2,7 @@
   "profiles": {
     "HCMExternal": {
       "commandName": "Project",
-      "nativeDebugging": true
+      "nativeDebugging": false
     }
   }
 }

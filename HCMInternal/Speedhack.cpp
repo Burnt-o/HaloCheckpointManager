@@ -1,48 +1,64 @@
 #include "pch.h"
 #include "Speedhack.h"
-#include "HCMDirPath.h"
-
+#include "SettingsStateAndEvents.h"
+#include "MessagesGUI.h"
+#include "DirPathContainer.h"
 // see HCMSpeedhack.dll
 
 
-class SpeedhackImpl : public SpeedhackImplBase 
+class SpeedhackImpl : public ISpeedhackImpl
 {
 private:
+	// event callbacks
+	ScopedCallback<eventpp::CallbackList<void(bool&)>> mSpeedhackToggleCallbackHandle;
+	ScopedCallback<eventpp::CallbackList<void(double&)>> mSpeedhackSettingCallbackHandle;
+	ScopedCallback<ActionEvent> mSpeedhackHotkeyCallbackHandle;
 
-	eventpp::CallbackList<void(bool&)>::Handle mSpeedhackToggleCallbackHandle = {};
-	eventpp::CallbackList<void(double&)>::Handle mSpeedhackSettingCallbackHandle = {};
+	// injected services
+	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<Setting<double>>> speedhackSetting;
 
+	// data
 	std::function<void(double)> setSpeed;
 public:
 
 
-	virtual void onToggle(bool& newValue) override
+	void onToggle(bool& newToggleValue)
 	{
-		PLOG_DEBUG << "SpeedhackImpl recevied onToggle event, value: " << newValue;
-		PLOG_DEBUG << "(the speedhack value is: " << OptionsState::speedhackSetting.get()->GetValue() << ")";
-		if (newValue)
+		auto currentSpeedSetting = speedhackSetting->GetValue();
+		PLOG_DEBUG << "SpeedhackImpl recevied onToggle event, value: " << newToggleValue;
+		PLOG_DEBUG << "(the speedhack value is: " << currentSpeedSetting << ")";
+		if (newToggleValue)
 		{
-			setSpeed(OptionsState::speedhackSetting.get()->GetValue());
+			setSpeed(currentSpeedSetting);
+			messagesGUI->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
 		}
 		else
 		{
 			setSpeed(1.00);
+			messagesGUI->addMessage(std::format("Disabling Speedhack."));
 		}
 	}
-	virtual void updateSetting(double& newValue) override
+	void updateSetting(double& newSpeedValue)
 	{
-		PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newValue;
-		setSpeed(newValue);
+		PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
+		setSpeed(newSpeedValue);
+		messagesGUI->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
 	}
 
-	SpeedhackImpl()
+	SpeedhackImpl(GameState game, IDIContainer& dicon)
+		: speedhackSetting(dicon.Resolve<SettingsStateAndEvents>()->speedhackSetting),
+		mSpeedhackToggleCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackToggle->valueChangedEvent, [this](bool& i) {onToggle(i); }),
+		mSpeedhackSettingCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackSetting->valueChangedEvent, [this](double& i) {updateSetting(i); }),
+		mSpeedhackHotkeyCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackHotkeyEvent, [speedhackToggle = dicon.Resolve<SettingsStateAndEvents>()->speedhackToggle]()
+			{
+				speedhackToggle->flipBoolSetting();
+			}),
+		messagesGUI(dicon.Resolve<MessagesGUI>())
 	{
-		// subscribe to gui events
-		mSpeedhackToggleCallbackHandle = OptionsState::speedhackToggle.get()->valueChangedEvent.append([this](bool& i) {onToggle(i); });
-		mSpeedhackSettingCallbackHandle = OptionsState::speedhackSetting.get()->valueChangedEvent.append([this](double& i) {updateSetting(i); });
-
 		// load HCMSpeedhack.dll
-		std::string speedhackPath = HCMDirPath::GetHCMDirPath().data();
+		auto dirPathCont = dicon.Resolve<DirPathContainer>();
+		std::string speedhackPath = dirPathCont->dirPath;
 		speedhackPath += "\\HCMSpeedhack.dll";
 
 		if (!fileExists(speedhackPath)) throw HCMInitException(std::format("Speedhack dll missing at {}", speedhackPath));
@@ -55,28 +71,25 @@ public:
 
 		if (!pSetSpeed) throw HCMInitException("Could not find speedhack function \"setSpeed\"");
 
-		setSpeed = std::function<void(double)>(reinterpret_cast<void (__stdcall *)(double)>(pSetSpeed));
+		setSpeed = std::function<void(double)>(reinterpret_cast<void(__stdcall*)(double)>(pSetSpeed));
+
 
 	}
 	~SpeedhackImpl()
 	{
-		// unsubscribe to gui events
-		if (mSpeedhackToggleCallbackHandle)
-			OptionsState::speedhackToggle.get()->valueChangedEvent.remove(mSpeedhackToggleCallbackHandle);
-
-		if (mSpeedhackSettingCallbackHandle)
-			OptionsState::speedhackSetting.get()->valueChangedEvent.remove(mSpeedhackSettingCallbackHandle);
-
 		setSpeed(1.00);
+		PLOG_DEBUG << "~SpeedhackImpl()";
 	}
 };
 
-// we only need one implementation that covers all games
-void Speedhack::initialize()
+
+Speedhack::Speedhack(GameState game, IDIContainer& dicon) 
 {
-	if
-		(impl.get()) return;
-	else
-		impl = std::make_unique<SpeedhackImpl>();
+	// on implemntation covers all games, so only construct it the first time
+	if (!impl)
+	{
+		PLOG_DEBUG << "constructing static speedhack impl";
+		impl = std::make_unique<SpeedhackImpl>(game, dicon);
+	}
 
 }

@@ -19,6 +19,7 @@ The role of HCMExternal will be exclusively to view and manage your checkpoint l
     boost-iostreams:x64-windows-static
     boost-assign:x64-windows-static
     boost-bimap:x64-windows-static
+    magic-enum:x64-windows-static
 
 
 This project also makes heavy use of the amazing SafetyHook by cursey. You can think of it as like "Microsoft Detours but if it didn't suck". I've included the release I'm using in the solution files. You'll also need the Windows 10 SDK.

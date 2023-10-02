@@ -1,6 +1,6 @@
 #pragma once
-#include "ImGuiManager.h"
-
+#include "pch.h"
+#include "IAnchorPoint.h"
 // Displays temporary messages to the user, below the main GUI. Messages fade over time then disappear.
 
 struct temporaryMessage
@@ -12,38 +12,44 @@ struct temporaryMessage
 };
 
 
-class MessagesGUI
+class MessagesGUI : public std::enable_shared_from_this<MessagesGUI>
 {
 private:
-	static MessagesGUI* instance; // Private Singleton instance so static hooks/callbacks can access
-	std::mutex mDestructionGuard; // Protects against Singleton destruction while callbacks are executing
 
-	// ImGuiManager Event reference and our handle to the append so we can remove it in destructor
-	eventpp::CallbackList<void()>& pImGuiRenderEvent;
-	eventpp::CallbackList<void()>::Handle mCallbackHandle = {};
+	// render event
+	ScopedCallback<RenderEvent> mRenderEventCallback;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
-	static void onImGuiRenderEvent();
+	void onImGuiRenderEvent(Vec2 screenSize);
 
 	// data
-	std::vector <temporaryMessage> messages;
-
+	std::vector <temporaryMessage> mMessages;
+	std::shared_ptr<IAnchorPoint> mAnchorPoint;
+	Vec2 mAnchorOffset;
 	// funcs
 	void iterateMessages();
-	void drawMessage(const temporaryMessage& message, const ImVec2& position);
+	void drawMessage(const temporaryMessage& message, const Vec2& position);
 public:
 
-	static void addMessage(std::string message);
+	void addMessage(std::string message);
 
-	explicit MessagesGUI(eventpp::CallbackList<void()>& pEvent) : pImGuiRenderEvent(pEvent)
+	explicit MessagesGUI( Vec2 anchorOffset, std::shared_ptr<RenderEvent> renderEvent)
+		:  mAnchorOffset(anchorOffset), mRenderEventCallback(renderEvent, [this](Vec2 a) {onImGuiRenderEvent(a); })
 	{
-		if (instance != nullptr)
-		{
-			throw HCMInitException("Cannot have more than one MessagesGUI");
-		}
-		instance = this;
-		mCallbackHandle = pImGuiRenderEvent.append(onImGuiRenderEvent);
 	}
-	~MessagesGUI(); // release resources
+
+	//explicit MessagesGUI(Vec2 anchorOffset)
+	//	: mAnchorOffset(anchorOffset)
+	//{
+	//}
+
+	//void setRenderEvent(std::shared_ptr<RenderEvent> renderEvent)
+	//{
+	//	auto sharedThis = shared_from_this();
+	//	mRenderEventCallback.make( renderEvent, [this, sharedThis](Vec2 a) {onImGuiRenderEvent(a); } );
+	//	
+	//}
+
+	void setAnchorPoint(std::shared_ptr<IAnchorPoint> anchorPoint) { mAnchorPoint = anchorPoint; }
 };
 

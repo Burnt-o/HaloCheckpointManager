@@ -1,8 +1,6 @@
 #pragma once
 
-#define nameof(x) #x
-
-#define safe_release(p) if (p) { p->Release(); p = nullptr; } 
+#include "VersionInfo.h"
 
 
 
@@ -23,21 +21,7 @@ std::string getShortName(std::string in);
 
 #define acronymOf(x) getShortName(#x).c_str()
 
-struct VersionInfo
-{
-	DWORD major, minor, build, revision;
-	friend std::ostream& operator << (std::ostream& o, VersionInfo const& a)
-	{
-		o << std::format("{}.{}.{}.{}", a.major, a.minor, a.build, a.revision);
-		return o;
-	}
-
-	bool operator == (const VersionInfo& other)
-	{
-		return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
-	}
-};
-
+std::string GetMCCExePath();
 
 
 VersionInfo getFileVersion(const char* filename);

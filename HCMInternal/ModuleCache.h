@@ -14,7 +14,7 @@ private:
 
 
 
-	// static class
+	// non-instanced static class
 	ModuleCache() = delete;
 	~ModuleCache() = delete;
 
