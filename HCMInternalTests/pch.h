@@ -92,5 +92,8 @@ void once(T t, F f) {
 
 
 
+// test specific
+#include "CppUnitTest.h"
+#include "TestLogging.h"
 
 #endif //PCH_H

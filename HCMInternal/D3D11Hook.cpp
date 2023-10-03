@@ -306,10 +306,11 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 
 
 
-
-	m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pMainRenderTargetView);
+	PLOG_INFO << "Creating render target view";
+	auto CreateRenderTargetViewResult = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pMainRenderTargetView);
+	PLOG_DEBUG << "CreateRenderTargetViewResult: " << CreateRenderTargetViewResult;
 	pBackBuffer->Release();
-	if (!m_pMainRenderTargetView) throw HCMInitException("Failed to get MainRenderTargetView");
+	if (CreateRenderTargetViewResult || !m_pMainRenderTargetView) throw HCMInitException(std::format("Failed to get MainRenderTargetView, error code: {}", CreateRenderTargetViewResult));
 
 	
 	
@@ -319,6 +320,7 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 // static 
 HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
+	std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 	LOG_ONCE(PLOG_DEBUG << "D3D11Hook::newDX11Present");
 	auto d3d = instance;
 	if (!d3d)
@@ -328,7 +330,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 
 	auto guard = d3d->shared_from_this();
 
-	//std::scoped_lock<std::mutex> lock(d3d->mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
+	
 
 
 	if (!d3d->isD3DdeviceInitialized)
@@ -370,6 +372,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 // static
 HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
 {
+	std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 	auto d3d = instance;
 	if (!d3d)
 	{
@@ -377,7 +380,6 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 	}
 
 	auto guard = d3d->shared_from_this();
-	//std::scoped_lock<std::mutex> lock(d3d->mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 
 	if (!d3d->isD3DdeviceInitialized)
 	{
@@ -443,7 +445,7 @@ D3D11Hook::~D3D11Hook()
 // as the hook functions will try to access class members
 // and also the d3d resources need to be manually released
 
-	//std::scoped_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this
+	std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this
 
 	// Destroy the hooks
 	// rewrite the pointers to go back to the original value

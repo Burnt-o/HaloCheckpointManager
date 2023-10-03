@@ -11,6 +11,8 @@
 class HCMInternalGUI : public IAnchorPoint, public std::enable_shared_from_this<HCMInternalGUI>
 {
 private:
+	std::mutex mDestructionGuard{};
+
 	// callbacks
 	ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> mMCCStateChangedCallbackHandle;
@@ -58,9 +60,13 @@ public:
 		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
 		mGUIStore(guistore),
 		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIHeader(MCCStateHook)
-	{}
+	{
+	}
 
-
+	~HCMInternalGUI()
+	{
+		std::unique_lock<std::mutex> lock(mDestructionGuard);
+	}
 
 
 	void addPopupError(HCMExceptionBase error) { if (errorsToDisplay.size() < 5) errorsToDisplay.push_back(error); }

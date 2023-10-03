@@ -18,7 +18,7 @@ private:
 	std::weak_ptr<D3D11Hook> m_d3d;
 
 	static ImGuiManager* instance; 	// Private Singleton instance so static hooks/callbacks can access
-	//std::mutex destructionGuard;
+	static inline std::mutex mDestructionGuard{};
 
 	// WndProc hook, we use SetWindowLongPtr to set it up
 	static LRESULT __stdcall mNewWndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);  // Handles ImGui input

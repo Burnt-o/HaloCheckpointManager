@@ -13,6 +13,7 @@ private:
 	{GameState::Value::Halo3ODST, {}},
 	{GameState::Value::HaloReach, {}},
 	{GameState::Value::Halo4, {}},
+	{GameState::Value::NoGame, {}},
 	};
 
 	friend class GUIElementConstructor;

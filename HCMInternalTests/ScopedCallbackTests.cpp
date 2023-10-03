@@ -1,7 +1,6 @@
 #include "pch.h"
-#include "CppUnitTest.h"
-#include "ScopedCallback2.h"
-#include "TestLogging.h"
+#include "ScopedCallback.h"
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -50,7 +49,7 @@ namespace HCMInternalTests
 				mHitCounter->incrementHitCount();
 				PLOG_VERBOSE << "AHHHHH!"; 
 			}
-			ScopedCallback2<ActionEvent> mMissleCallback;
+			ScopedCallback<ActionEvent> mMissleCallback;
 			std::shared_ptr< HitCounter> mHitCounter;
 		public:
 			Listener(std::shared_ptr<ActionEvent> missileEvent, std::shared_ptr<HitCounter> hitCounter, bool throws = false)

@@ -24,13 +24,13 @@
     <ClCompile Include="ScopedCallbackTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CallbackGuardTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ScopedCallback2.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="TestLogging.h">
       <Filter>Header Files</Filter>

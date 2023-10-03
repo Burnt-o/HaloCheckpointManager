@@ -34,7 +34,8 @@ void HCMInternalGUI::initializeHCMInternalGUI()
 
 void HCMInternalGUI::onImGuiRenderEvent(Vec2 screenSize)
 {
-	//auto guard = shared_from_this();
+	std::unique_lock<std::mutex> lock(mDestructionGuard);
+
 	if (mFullScreenSize != screenSize) // recalculate our gui canvas size
 	{
 		mFullScreenSize = screenSize;
@@ -131,14 +132,16 @@ void HCMInternalGUI::renderErrorDialog()
 
 void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 {
-	//auto guard = shared_from_this();
-	std::scoped_lock<std::mutex> lock(currentGameGUIElementsMutex);
+	//PLOG_VERBOSE << "locking currentGameGUIElementsMutex";
+	std::unique_lock<std::mutex> lock(currentGameGUIElementsMutex);
+
 	p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(newState.currentGameState);
 }
 
 void HCMInternalGUI::primaryRender()
 {
-	std::scoped_lock<std::mutex> lock(currentGameGUIElementsMutex);
+	//PLOG_VERBOSE << "locking currentGameGUIElementsMutex";
+	std::unique_lock<std::mutex> lock(currentGameGUIElementsMutex);
 	// Calculate height of everything
 	int totalContentHeight = 0;
 	for (auto& element : *p_currentGameGUIElements)
@@ -177,5 +180,5 @@ void HCMInternalGUI::primaryRender()
 	}
 
 	ImGui::End(); // end main window
-
+	//PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex";
 }

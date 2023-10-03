@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "CppUnitTest.h"
 #include "DIContainer.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -8,6 +7,10 @@ namespace HCMInternalTests
 {
 	TEST_CLASS(DIContainerTests)
 	{
+		TEST_METHOD_INITIALIZE(init)
+		{
+			TestLogging log;
+		}
 	public:
 
 		// insert a service into a dicontainer and resolve it

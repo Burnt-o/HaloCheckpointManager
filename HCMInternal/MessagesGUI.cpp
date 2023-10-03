@@ -5,7 +5,7 @@
 
 void MessagesGUI::onImGuiRenderEvent(Vec2 screenSize)
 {
-	auto guard = shared_from_this();
+	std::unique_lock<std::mutex> lock(mDestructionGuard);
 	iterateMessages();
 }
 
@@ -147,7 +147,7 @@ std::string insertNewLines(const std::string& in, const size_t every_n, __int64&
 std::mutex addMessageMutex;
 void MessagesGUI::addMessage(std::string message)
 {
-	std::scoped_lock<std::mutex> lock(addMessageMutex);
+	std::unique_lock<std::mutex> lock(addMessageMutex);
 	// split message to multiple lines if necessary
 	__int64 lineCount;
 	message = insertNewLines(message, 150, lineCount);

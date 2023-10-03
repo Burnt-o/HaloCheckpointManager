@@ -15,6 +15,7 @@ public:
 		Halo2MP = 4,
 		Halo3ODST = 5,
 		HaloReach = 6,
+		NoGame = 255,
 	};
 	GameState() = delete; // no default construction
 	constexpr  GameState(const Value val) : value(val) {}
@@ -52,7 +53,8 @@ private:
 		(Value::Halo4, "Halo4")
 		(Value::Halo2MP, "Halo2MP")
 		(Value::Halo3ODST, "Halo3ODST")
-		(Value::HaloReach, "HaloReach");
+		(Value::HaloReach, "HaloReach")
+		(Value::NoGame, "NoGame");
 
 };
 

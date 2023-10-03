@@ -105,7 +105,7 @@ public:
 
 #ifndef HCM_DEBUG
             PLOG_DEBUG << "Closing console";
-            Logging::closeConsole();
+            logging->closeConsole();
 #endif
 
             // We live in this loop 99% of the time

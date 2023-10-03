@@ -39,7 +39,7 @@
 {
 private:
 	 static D3D11Hook* instance; 	// Private Singleton instance so static hooks/callbacks can access
-	 //std::mutex mDestructionGuard; // Protects against Singleton destruction while hooks are executing
+	 static inline std::mutex mDestructionGuard{}; // Protects against Singleton destruction while hooks are executing
 
 	 // Our hook functions
 	 static DX11Present newDX11Present;

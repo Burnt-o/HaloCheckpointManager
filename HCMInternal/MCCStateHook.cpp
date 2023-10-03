@@ -7,14 +7,14 @@ void MCCStateHook::updateMCCState()
 	PLOG_DEBUG << "updating MCC State";
 	try
 	{
-		byte currentGameUnparsed = -2;
+		byte currentGameUnparsed = -1;
 		if (!instance->gameIndicator->readData(&currentGameUnparsed))
 		{
 			throw  HCMRuntimeException(std::format("Failed to read gameIndicator: {}", MultilevelPointer::GetLastError()));
 		}
 		PLOG_DEBUG << "read current game: " << currentGameUnparsed;
 
-		if (!magic_enum::enum_contains<GameState::Value>(currentGameUnparsed)) throw HCMRuntimeException("Invalid currentGame value!");
+		if (!magic_enum::enum_contains<GameState::Value>(currentGameUnparsed)) throw HCMRuntimeException(std::format("Invalid currentGame value!: {}", currentGameUnparsed));
 
 		GameState currentGame{ currentGameUnparsed };
 		PLOG_DEBUG << "read current game (parsed): " << currentGame.toString();
@@ -43,7 +43,7 @@ void MCCStateHook::updateMCCState()
 			throw  HCMRuntimeException(std::format("Failed to read levelIndicator: {}", MultilevelPointer::GetLastError()));
 		}
 		PLOG_DEBUG << "read level ID: " << currentLevelIDUnparsed;
-		if (!magic_enum::enum_contains<LevelID>(currentLevelIDUnparsed)) throw HCMRuntimeException("Invalid currentLevelID value!");
+		if (!magic_enum::enum_contains<LevelID>(currentLevelIDUnparsed)) throw HCMRuntimeException(std::format("Invalid currentLevelID value!: {}", currentLevelIDUnparsed));
 
 		LevelID currentLevelID{ currentLevelIDUnparsed };
 		PLOG_DEBUG << "read level ID (parsed): " << magic_enum::enum_name(currentLevelID);

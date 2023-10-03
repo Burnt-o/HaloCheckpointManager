@@ -15,7 +15,7 @@ struct temporaryMessage
 class MessagesGUI : public std::enable_shared_from_this<MessagesGUI>
 {
 private:
-
+	std::mutex mDestructionGuard{};
 	// render event
 	ScopedCallback<RenderEvent> mRenderEventCallback;
 
@@ -36,6 +36,11 @@ public:
 	explicit MessagesGUI( Vec2 anchorOffset, std::shared_ptr<RenderEvent> renderEvent)
 		:  mAnchorOffset(anchorOffset), mRenderEventCallback(renderEvent, [this](Vec2 a) {onImGuiRenderEvent(a); })
 	{
+	}
+
+	~MessagesGUI()
+	{
+		std::unique_lock<std::mutex> lock(mDestructionGuard);
 	}
 
 	//explicit MessagesGUI(Vec2 anchorOffset)
