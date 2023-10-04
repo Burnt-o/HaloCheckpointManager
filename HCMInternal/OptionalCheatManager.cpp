@@ -43,12 +43,12 @@ public:
 	// needs to be split away from constructor so we can use shared_from_this
 	void createCheats(std::shared_ptr<IGUIRequiredServices> reqSer, std::shared_ptr<OptionalCheatInfo> info,
 		/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
-		std::shared_ptr<SettingsStateAndEvents> settings, std::shared_ptr<PointerManager> ptr, std::shared_ptr<IGetMCCVersion> ver, std::shared_ptr<MCCStateHook> mccStateHook, std::shared_ptr<RPCClientInternal> rpc, std::shared_ptr<MessagesGUI> mes, std::shared_ptr<RuntimeExceptionHandler> exp, std::string dirPath)
+		std::shared_ptr<SettingsStateAndEvents> settings, std::shared_ptr<PointerManager> ptr, std::shared_ptr<IGetMCCVersion> ver, std::shared_ptr<MCCStateHook> mccStateHook, std::shared_ptr<SharedMemoryInternal> sharedMem, std::shared_ptr<MessagesGUI> mes, std::shared_ptr<RuntimeExceptionHandler> exp, std::string dirPath)
 	{
 		// create a di container with the dependencies that the cheats will need
 		// remember: you need to register types as the base interface the optionalCheats will want to resolve
-		DIContainer<OptionalCheatManagerImpl, SettingsStateAndEvents, PointerManager, IGetMCCVersion, MCCStateHook, RPCClientInternal, MessagesGUI, RuntimeExceptionHandler, DirPathContainer> dicon
-		{shared_from_this(), settings, ptr, ver, mccStateHook, rpc, mes, exp,std::make_shared<DirPathContainer>(dirPath)};
+		DIContainer<OptionalCheatManagerImpl, SettingsStateAndEvents, PointerManager, IGetMCCVersion, MCCStateHook, SharedMemoryInternal, MessagesGUI, RuntimeExceptionHandler, DirPathContainer> dicon
+		{shared_from_this(), settings, ptr, ver, mccStateHook, sharedMem, mes, exp,std::make_shared<DirPathContainer>(dirPath)};
 
 		// loop over each cheat-game combo in requiredServices, pushing them into our cheatCollection as we make them (or telling info about it if failed construction)
 		for (const std::pair<GameState, OptionalCheatEnum>& gameCheatPair : reqSer->getAllRequiredServices())
@@ -78,11 +78,11 @@ public:
 
 OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices> reqSer, std::shared_ptr<OptionalCheatInfo> info,
 	/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
-	std::shared_ptr<SettingsStateAndEvents> settings, std::shared_ptr<PointerManager> ptr, std::shared_ptr<IGetMCCVersion> ver, std::shared_ptr<MCCStateHook> mccStateHook, std::shared_ptr<RPCClientInternal> rpc, std::shared_ptr<MessagesGUI> mes, std::shared_ptr<RuntimeExceptionHandler> exp, std::string dirPath)
+	std::shared_ptr<SettingsStateAndEvents> settings, std::shared_ptr<PointerManager> ptr, std::shared_ptr<IGetMCCVersion> ver, std::shared_ptr<MCCStateHook> mccStateHook, std::shared_ptr<SharedMemoryInternal> sharedMem, std::shared_ptr<MessagesGUI> mes, std::shared_ptr<RuntimeExceptionHandler> exp, std::string dirPath)
 	: pimpl(std::make_shared<OptionalCheatManagerImpl>()) 
 
 {
-	pimpl->createCheats(reqSer, info, settings, ptr, ver, mccStateHook, rpc, mes, exp, dirPath);
+	pimpl->createCheats(reqSer, info, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath);
 }
 
 

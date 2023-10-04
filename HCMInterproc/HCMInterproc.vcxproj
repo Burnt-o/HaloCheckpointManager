@@ -157,7 +157,7 @@
     <ClInclude Include="HaloEnums.h" />
     <ClInclude Include="Inject.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="RPCServerExternal.h" />
+    <ClInclude Include="SharedMemoryExternal.h" />
     <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
@@ -172,7 +172,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RPCServerExternal.cpp" />
+    <ClCompile Include="SharedMemoryExternal.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

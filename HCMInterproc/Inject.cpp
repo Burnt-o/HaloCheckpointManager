@@ -2,8 +2,7 @@
 #include "Inject.h"
 #include "Events.h"
 #include "WinHandle.h"
-#include "RPCServerExternal.h"
-std::unique_ptr<RPCServerExternal> server;
+#include "SharedMemoryExternal.h"
 
 class MissingPermissionException : public std::exception {
 private:
@@ -23,10 +22,15 @@ void InjectModule(DWORD pid, std::string dllFilePath);
 constexpr auto dllName = "HCMInternal";
 constexpr WCHAR wdllChars[] = L"HCMInternal.DLL";
 
-
-
 bool SetupInternal()
 {
+
+	if (!g_SharedMemoryExternal.get())
+	{
+		PLOG_ERROR << "g_SharedMemoryExternal not initialised!";
+		return false;
+	}
+
 	PLOG_DEBUG << "SetupInternal running";
 	try
 	{
@@ -56,21 +60,8 @@ bool SetupInternal()
 
 		PLOG_INFO << "Found MCC process! ID: 0x" << std::hex << mccPID;
 
-		// Init rpc server
-		server.reset();
-		server = std::make_unique<RPCServerExternal>();
-
 		InjectModule(mccPID, dllFilePath);
-
-		// wait up to 5s to confirm connection establised
-		int timeout = 0;
-		while (!(server.get()->connectionEstablised))
-		{
-			Sleep(10);
-			timeout++;
-			if (timeout * 10 > 5000) throw std::exception("HCMInternal timed out on startup");
-		}
-		PLOG_DEBUG << "time spent to connect to internal: " << (timeout * 10) << " milliseconds";
+		// todo ; 
 		return true;
 
 	}

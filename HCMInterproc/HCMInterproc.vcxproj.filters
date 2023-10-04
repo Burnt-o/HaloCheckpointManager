@@ -27,9 +27,6 @@
     <ClInclude Include="WinHandle.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RPCServerExternal.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="WindowsUtilities.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -40,6 +37,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ExternalInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedMemoryExternal.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,13 +56,13 @@
     <ClCompile Include="Events.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RPCServerExternal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WindowsUtilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HaloEnums.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedMemoryExternal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

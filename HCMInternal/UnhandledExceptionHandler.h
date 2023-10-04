@@ -1,10 +1,8 @@
 #pragma once
-#include "RPCClientInternal.h"
 
 class UnhandledExceptionHandler
 {
 private:
-	std::shared_ptr<RPCClientInternal> mRPCclient;
 	std::string mDirPath;
 	static inline UnhandledExceptionHandler* instance = nullptr;
 	void make_minidump(EXCEPTION_POINTERS* e);
@@ -20,7 +18,6 @@ public:
 		acquire_global_unhandled_exception_handler();
 	}
 
-	void setRPCClient(std::shared_ptr<RPCClientInternal> rpcclient) { mRPCclient = rpcclient; }
 
 	~UnhandledExceptionHandler()
 	{

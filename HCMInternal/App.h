@@ -10,7 +10,6 @@
 #include "HCMInternalGUI.h"
 #include "MessagesGUI.h"
 #include "MCCStateHook.h"
-#include "RPCClientInternal.h"
 #include "HeartbeatTimer.h"
 #include "GUIServiceInfo.h"
 #include "HotkeyManager.h"
@@ -25,32 +24,42 @@
 #include "GUIElementConstructor.h"
 #include "UnhandledExceptionHandler.h"
 #include "SettingsSerialiser.h"
+#include "SharedMemoryInternal.h"
 
 class App {
 
 
 public:
-	App(std::string dirPath, bool badDirPath, rpc::client& client)
+	App()
 	{
         // these are needed in the init exception catch block, so declared here
         auto logging = std::make_shared<Logging>();
         logging->initConsoleLogging();
         logging->SetConsoleLoggingLevel(plog::verbose);
+
+        std::shared_ptr<SharedMemoryInternal> sharedMem;
+        
+        try
+        {
+            sharedMem = std::make_shared<SharedMemoryInternal>();
+        }
+        catch(HCMInitException ex)
+        {
+            PLOG_FATAL << "shared memory internal failed initialising, ex: " << ex.what();
+            return;
+        }
+
+        std::string dirPath = sharedMem->HCMDirPath;
+       
+
         logging->initFileLogging(dirPath);
         logging->SetFileLoggingLevel(plog::verbose);
         PLOG_INFO << "HCMInternal initializing. DirPath: " << dirPath;
-        if (badDirPath) { PLOG_ERROR << "Could not resolve HCM directory path! Files will go to MCC binary location instead of HCM directory: \n" << dirPath; }
         auto unhandled = std::make_shared<UnhandledExceptionHandler>(dirPath); PLOGV << "unhandled init";
-        auto rpcClient = std::make_shared<RPCClientInternal>(client); PLOGV << "rpcClient init";
-        unhandled->setRPCClient(rpcClient);
         curl_global_init(CURL_GLOBAL_DEFAULT);
         try
         {
-            PLOG_DEBUG << "HCM path: " << dirPath;
-
             // some very important services
-
-
             ModuleCache::initialize(); PLOGV << "moduleCache init"; // static singleton still.. blah
             auto mhm = std::make_unique<ModuleHookManager>(); PLOGV << "mhm init"; // is a static singleton still.. blah 
             auto ver = std::make_shared<GetMCCVersion>(); PLOGV << "ver init";// gets the version of MCC that we're currently injected into
@@ -79,7 +88,7 @@ public:
             // set up optional cheats and optional gui elements
             auto guireq = std::make_shared<GUIRequiredServices>(); PLOGV << "guireq init"; // defines the gui elements we want to build and which optional cheats they will require
             auto cheatfail = std::make_shared<OptionalCheatInfo>(); PLOGV << "cheatfail init"; // stores info about failed optionalCheat construction (starts empty, obviously)
-            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, rpcClient, mes, exp, dirPath); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
+            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty
             auto guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore
@@ -94,6 +103,12 @@ public:
             
             auto hb = std::make_shared<HeartbeatTimer>(); PLOGV << "hb init";
 
+            {
+                // testing shared memory
+                PLOG_DEBUG << "creating shm";
+                SharedMemoryInternal shm;
+                PLOG_DEBUG << "shm done";
+            }
 
 
             PLOG_INFO << "All services succesfully initialized! Entering main loop";
@@ -101,7 +116,6 @@ public:
             // Shutdown the console on successful init, at least in release mode.
             // If an initialization error occurs before this point, console will be left up so user can look at it.
             mes->addMessage("HCM successfully initialised!");
-            if (badDirPath) { std::format("Could not resolve HCM directory path! Files will go to MCC binary location instead of HCM directory: \n{}", dirPath); }
 
 #ifndef HCM_DEBUG
             PLOG_DEBUG << "Closing console";
@@ -120,7 +134,6 @@ public:
             std::ostringstream oss;
             oss << "\n\nHCMInternal failed initializing: " << ex.what() << std::endl
                 << "Please send Burnt the log file located at: " << std::endl << logging->GetLogFileDestination();
-            rpcClient->sendFatalInternalError(oss.str());
             PLOG_FATAL << oss.str();
             std::cout << "Press Enter to shutdown HCMInternal\n\n";
 

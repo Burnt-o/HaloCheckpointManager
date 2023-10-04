@@ -6,7 +6,7 @@
 #include "IOptionalCheat.h"
 #include "IGetMCCVersion.h"
 #include "MCCStateHook.h"
-#include "RPCClientInternal.h"
+#include "SharedMemoryInternal.h"
 #include "RuntimeExceptionHandler.h"
 #include "DIContainer.h"
 #include "boost\iostreams\device\mapped_file.hpp"
@@ -26,7 +26,7 @@ private:
 	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
 	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	gsl::not_null<std::shared_ptr<RPCClientInternal>> rpcClient;
+	gsl::not_null<std::shared_ptr<SharedMemoryInternal>> sharedMem;
 
 
 	void onInject()
@@ -35,7 +35,7 @@ private:
 		try
 		{
 			constexpr int minimumFileLength = 10000;
-			auto currentCheckpoint = rpcClient->getInjectInfo();
+			auto currentCheckpoint = sharedMem->getInjectInfo();
 			PLOG_DEBUG << "Attempting core inject for game: " << mGame.toString();
 			if (currentCheckpoint.selectedCheckpointNull) throw HCMRuntimeException("Can't inject - no core save selected!");
 			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mGame) throw HCMRuntimeException(std::format("Can't inject - core save from wrong game! Expected: {}, Actual: {}", this->mGame.toString(), ((GameState)currentCheckpoint.selectedCheckpointGame).toString()));
@@ -121,7 +121,7 @@ public:
 		mInjectCoreEventCallback(dicon.Resolve<SettingsStateAndEvents>()->injectCoreEvent, [this]() { onInject(); }),
 		messagesGUI(dicon.Resolve<MessagesGUI>()),
 		mccStateHook(dicon.Resolve<MCCStateHook>()),
-		rpcClient(dicon.Resolve<RPCClientInternal>()), 
+		sharedMem(dicon.Resolve<SharedMemoryInternal>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 	}

@@ -39,6 +39,13 @@ namespace HCMExternal.Services.InterprocServiceNS
         [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
         private static partial void updateSelectedFolder([MarshalAs(UnmanagedType.Bool)] bool nullData, int game = 0, string name = "", string path = "");
 
+        [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
+        private static partial UInt16 initSharedMemory(
+            [MarshalAs(UnmanagedType.Bool)] bool CPnullData, 
+            [MarshalAs(UnmanagedType.Bool)] bool SFnullData, 
+            int CPgame = 0, string CPname = "", string CPpath = "", string CPlevelcode = "", string CPgameVersion = "",
+            int SFgame = 0, string SFname = "", string SFpath = ""
+            );
 
 
 
@@ -75,6 +82,34 @@ namespace HCMExternal.Services.InterprocServiceNS
             // Since InterprocService is created after CheckpointViewModel, the deserialised first selected checkpoint & savefolder events will be missed. So we need to manually fire them here.
             CheckpointViewModel.SelectedCheckpoint = CheckpointViewModel.SelectedCheckpoint;
             CheckpointViewModel.SelectedSaveFolder = CheckpointViewModel.SelectedSaveFolder;
+
+            // get info on init cp and sf
+            var cp = CheckpointViewModel.SelectedCheckpoint;
+            var sf = CheckpointViewModel.SelectedSaveFolder;
+
+            UInt16 sharedMemoryInit;
+            // is data good
+            if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null) 
+            {
+                sharedMemoryInit = initSharedMemory(true, true); // null data
+            }
+            else 
+            {
+                sharedMemoryInit = initSharedMemory(false, false, 
+                    (int)CheckpointViewModel.SelectedGame, cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "",
+                    (int)CheckpointViewModel.SelectedGame, sf.SaveFolderName, sf.SaveFolderPath
+                    );
+            }
+
+            if (sharedMemoryInit == 0)
+            {
+                Log.Error("Failed to init shared memory!");
+            }
+            else 
+            {
+                Log.Information("Shared memory initialised");
+            }
+
 
         }
 

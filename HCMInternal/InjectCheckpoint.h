@@ -10,7 +10,7 @@
 #include "RuntimeExceptionHandler.h"
 #include "MultilevelPointer.h"
 #include "InjectRequirements.h"
-#include "RPCClientInternal.h"
+#include "SharedMemoryInternal.h"
 #include "MCCStateHook.h"
 #include "boost\iostreams\device\mapped_file.hpp"
 #include "openssl\sha.h"
@@ -42,14 +42,14 @@ private:
 	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
 	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	gsl::not_null<std::shared_ptr<RPCClientInternal>> rpcclient;
+	gsl::not_null<std::shared_ptr<SharedMemoryInternal>> sharedMem;
 
 
 	void onInject() {
 		if (!mccStateHook->isGameCurrentlyPlaying(mImplGame)) return;
 		try
 		{
-			auto currentCheckpoint = rpcclient->getInjectInfo();
+			auto currentCheckpoint = sharedMem->getInjectInfo();
 			PLOG_DEBUG << "Attempting checkpoint inject for game: " << mImplGame.toString();
 			if (currentCheckpoint.selectedCheckpointNull) throw HCMRuntimeException("Can't inject - no checkpoint selected!");
 			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't inject - checkpoint from wrong game! Expected: {}, Actual: {}", mImplGame.toString(), ((GameState)currentCheckpoint.selectedCheckpointGame).toString()));
@@ -207,7 +207,7 @@ private:
 			mccStateHook(dicon.Resolve<MCCStateHook>()),
 			messagesGUI(dicon.Resolve<MessagesGUI>()), 
 			runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()), 
-			rpcclient(dicon.Resolve<RPCClientInternal>())
+			sharedMem(dicon.Resolve<SharedMemoryInternal>())
 		{
 		auto ptr = dicon.Resolve<PointerManager>().get();
 

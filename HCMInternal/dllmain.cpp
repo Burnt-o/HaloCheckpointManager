@@ -8,68 +8,10 @@
 
 
 
-void WinstoreMCCWriteConfigTest()
-{
-    std::string dirPath = GetMCCExePath();
-    std::string testFilePath = dirPath + "testFile.log";
-
-    std::ofstream testFile(testFilePath);
-
-    if (!testFile.is_open() || !testFile.good())
-    {
-        PLOG_ERROR << "errorrrrr";
-        return;
-    }
-
-    testFile << "blah blah";
-
-    testFile.close();
-}
-
 // Main Execution Loop
 void RealMain(HMODULE dllHandle)
 {
-    WinstoreMCCWriteConfigTest();
-
-    std::string dirPath;
-    bool badDirPath = false;
-
-    //char* buf = nullptr;
-    //size_t sz = 0;
-    //if (_dupenv_s(&buf, &sz, "HCM_DIRECTORY_PATH") == 0 && buf != nullptr)
-    //{
-    //    dirPath = buf;
-    //    free(buf);
-    //}
-
-    //DWORD bufferSize = 65535; //Limit according to http://msdn.microsoft.com/en-us/library/ms683188.aspx
-    //std::string buff;
-    //buff.resize(bufferSize);
-    //bufferSize = GetEnvironmentVariableA("HCM_DIRECTORY_PATH", &buff[0], bufferSize);
-    //if (bufferSize)
-    //{
-    //    dirPath = std::string(buff);
-    //}
-
- 
-        rpc::client client{"127.0.0.1", 8069};
-        client.set_timeout(1000);
-        std::string result = "none";
-        try
-        {
-            dirPath = client.call("requestHCMDirectory").as<std::string>();
-        }
-        catch (rpc::rpc_error& e)
-        {
-            badDirPath = true;
-            dirPath = GetMCCExePath();
-        }
-
-    
-
-
-    App app{ dirPath, badDirPath, client }; // app blocks at the end of it's constructor until it's kill condition is met
-
+    App app; // app blocks at the end of it's constructor until it's kill condition is met
 }
 
 // This thread is created by the dll when loaded into the process, see RealMain() for the actual event loop.

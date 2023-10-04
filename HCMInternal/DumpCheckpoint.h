@@ -5,7 +5,7 @@
 #include "MultilevelPointer.h"
 #include "InjectRequirements.h"
 #include "PointerManager.h"
-#include "RPCClientInternal.h"
+#include "SharedMemoryInternal.h"
 #include "MCCStateHook.h"
 #include "GetMCCVersion.h"
 #include "MessagesGUI.h"
@@ -30,7 +30,7 @@ private:
 	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
-	gsl::not_null<std::shared_ptr<RPCClientInternal>> rpcClient;
+	gsl::not_null<std::shared_ptr<SharedMemoryInternal>> sharedMem;
 
 
 	// data
@@ -48,7 +48,7 @@ private:
 		{
 			std::string checkpointName = "someCheckpointName";
 			int64_t checkpointLength = *mCheckpointLength.get();
-			auto currentSaveFolder = rpcClient->getDumpInfo();
+			auto currentSaveFolder = sharedMem->getDumpInfo();
 			PLOG_DEBUG << "Attempting checkpoint dump for game: " << mImplGame.toString();;
 			if (currentSaveFolder.selectedFolderNull) throw HCMRuntimeException("No savefolder selected, somehow?!");
 			if ((GameState)currentSaveFolder.selectedFolderGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't dump - savefolder from wrong game! Expected: {}, Actual: {}", this->mImplGame.toString(), ((GameState)currentSaveFolder.selectedFolderGame).toString()));
@@ -125,7 +125,7 @@ public:
 			}),
 		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
 		mccStateHook(dicon.Resolve<MCCStateHook>()),
-		rpcClient(dicon.Resolve<RPCClientInternal>()), 
+		sharedMem(dicon.Resolve<SharedMemoryInternal>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUI(dicon.Resolve<MessagesGUI>())
 	{

@@ -3,7 +3,7 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "RPCClientInternal.h"
+#include "SharedMemoryInternal.h"
 #include "MCCStateHook.h"
 #include "boost\iostreams\device\mapped_file.hpp"
 #include "PointerManager.h"
@@ -27,7 +27,7 @@ private:
 	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
-	gsl::not_null<std::shared_ptr<RPCClientInternal>> rpcClient;
+	gsl::not_null<std::shared_ptr<SharedMemoryInternal>> sharedMem;
 
 
 	// primary event callback
@@ -38,7 +38,7 @@ private:
 		{
 			std::string coreSaveName = "somecoresavename";
 			constexpr int minimumFileLength = 10000;
-			auto currentSaveFolder = rpcClient->getDumpInfo();
+			auto currentSaveFolder = sharedMem->getDumpInfo();
 			PLOG_DEBUG << "Attempting core dump for game: " << mGame;
 			if (currentSaveFolder.selectedFolderNull) throw HCMRuntimeException("No savefolder selected, somehow?!");
 			if ((GameState)currentSaveFolder.selectedFolderGame != this->mGame) throw HCMRuntimeException(std::format("Can't dump - savefolder from wrong game! Expected: {}, Actual: {}", mGame.toString(), ((GameState)currentSaveFolder.selectedFolderGame).toString()));
@@ -115,7 +115,7 @@ public:
 		mDumpCoreEventCallback(dicon.Resolve<SettingsStateAndEvents>()->dumpCoreEvent, [this]() { onDump(); }),
 		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
 		mccStateHook(dicon.Resolve<MCCStateHook>()),
-		rpcClient(dicon.Resolve<RPCClientInternal>()), 
+		sharedMem(dicon.Resolve<SharedMemoryInternal>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUI(dicon.Resolve<MessagesGUI>())
 

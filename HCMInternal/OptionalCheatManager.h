@@ -3,9 +3,9 @@
 #include "GetMCCVersion.h"
 #include "OptionalCheatInfo.h"
 #include "MCCStateHook.h"
-#include "RPCClientInternal.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
+#include "SharedMemoryInternal.h"
 // constructs and stores optionalcheats, updating OptionalCheatInfoManager as it constructs
 
 
@@ -18,7 +18,7 @@ private:
 public:
 	OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>, std::shared_ptr<OptionalCheatInfo>,  
 		/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
-		std::shared_ptr<SettingsStateAndEvents>, std::shared_ptr<PointerManager>, std::shared_ptr<IGetMCCVersion>, std::shared_ptr<MCCStateHook>, std::shared_ptr<RPCClientInternal>, std::shared_ptr<MessagesGUI>, std::shared_ptr<RuntimeExceptionHandler>, std::string dirPath);
+		std::shared_ptr<SettingsStateAndEvents>, std::shared_ptr<PointerManager>, std::shared_ptr<IGetMCCVersion>, std::shared_ptr<MCCStateHook>, std::shared_ptr<SharedMemoryInternal>, std::shared_ptr<MessagesGUI>, std::shared_ptr<RuntimeExceptionHandler>, std::string dirPath);
 	~OptionalCheatManager();
 };
 

@@ -40,11 +40,7 @@ void UnhandledExceptionHandler::make_minidump(EXCEPTION_POINTERS* e)
 		nullptr,
 		nullptr);
 
-	if (mRPCclient)
-	{
-		mRPCclient->sendFatalInternalError(std::format("An unhandled exception occured! Dumped crash information to {}", dumpFilePath));
-	}
-	
+
 	PLOG_FATAL << "Dumped crash information to " << dumpFilePath;
 	CloseHandle(hFile);
 

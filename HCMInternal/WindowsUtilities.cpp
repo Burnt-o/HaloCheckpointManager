@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "WindowsUtilities.h"
-#include "RPCClientInternal.h"
 
 std::wstring str_to_wstr(const std::string str)
 {

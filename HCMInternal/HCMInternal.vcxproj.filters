@@ -109,9 +109,6 @@
     <ClInclude Include="InjectRequirements.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="RPCClientInternal.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="HeartbeatTimer.h">
       <Filter>Services</Filter>
     </ClInclude>
@@ -286,6 +283,7 @@
     <ClInclude Include="WinHandle.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="SharedMemoryInternal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -331,9 +329,6 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="MCCStateHook.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
-    <ClCompile Include="RPCClientInternal.cpp">
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="HeartbeatTimer.cpp">
@@ -384,6 +379,7 @@
     <ClCompile Include="OptionalCheatManager.cpp">
       <Filter>Services\OptionalCheats\Management</Filter>
     </ClCompile>
+    <ClCompile Include="SharedMemoryInternal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="InternalPointerData.xml">
