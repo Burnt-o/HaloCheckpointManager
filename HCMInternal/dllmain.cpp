@@ -8,11 +8,29 @@
 
 
 
+void WinstoreMCCWriteConfigTest()
+{
+    std::string dirPath = GetMCCExePath();
+    std::string testFilePath = dirPath + "testFile.log";
 
+    std::ofstream testFile(testFilePath);
+
+    if (!testFile.is_open() || !testFile.good())
+    {
+        PLOG_ERROR << "errorrrrr";
+        return;
+    }
+
+    testFile << "blah blah";
+
+    testFile.close();
+}
 
 // Main Execution Loop
 void RealMain(HMODULE dllHandle)
 {
+    WinstoreMCCWriteConfigTest();
+
     std::string dirPath;
     bool badDirPath = false;
 

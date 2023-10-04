@@ -294,6 +294,7 @@
     <ClInclude Include="UnhandledExceptionHandler.h" />
     <ClInclude Include="VersionInfo.h" />
     <ClInclude Include="WindowsUtilities.h" />
+    <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D11Hook.cpp" />

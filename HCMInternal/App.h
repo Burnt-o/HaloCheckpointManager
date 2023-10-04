@@ -92,7 +92,7 @@ public:
 
 
             
-            auto hb = std::make_shared<HeartbeatTimer>(rpcClient); PLOGV << "hb init";
+            auto hb = std::make_shared<HeartbeatTimer>(); PLOGV << "hb init";
 
 
 

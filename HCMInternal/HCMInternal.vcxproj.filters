@@ -283,6 +283,9 @@
     <ClInclude Include="GUIHeader.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="WinHandle.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
