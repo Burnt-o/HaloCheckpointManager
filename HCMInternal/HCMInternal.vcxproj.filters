@@ -8,9 +8,6 @@
     <Filter Include="Services">
       <UniqueIdentifier>{33813428-34be-431d-a692-fde745b0c8b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Global">
-      <UniqueIdentifier>{16bbe2af-9d7a-44b7-a05b-e67ab9d7b0a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Classes">
       <UniqueIdentifier>{10649697-325c-415c-bd50-731289283de5}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,15 @@
     </Filter>
     <Filter Include="Services\SettingsStateAndEvents">
       <UniqueIdentifier>{cd89c4a0-0b05-4ad8-9368-f35b4356b3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{16bbe2af-9d7a-44b7-a05b-e67ab9d7b0a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DynamicStructs">
+      <UniqueIdentifier>{b77a04b7-7f4a-426e-a98a-1078088ea099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\Services">
+      <UniqueIdentifier>{07345286-baf4-4a5b-9e05-e5dbd51bfd1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,9 +129,6 @@
     </ClInclude>
     <ClInclude Include="includes\utki\shared_ref.hpp">
       <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="IGetMCCVersion.h">
-      <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="GetMCCVersion.h">
       <Filter>Services</Filter>
@@ -283,7 +286,30 @@
     <ClInclude Include="WinHandle.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="SharedMemoryInternal.h" />
+    <ClInclude Include="SharedMemoryInternal.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="IMakeOrGetCheat.h">
+      <Filter>Services\OptionalCheats\Management</Filter>
+    </ClInclude>
+    <ClInclude Include="IGetMCCVersion.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicStructFactory.h">
+      <Filter>DynamicStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicStruct.h">
+      <Filter>DynamicStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="H1PlayerStruct.h">
+      <Filter>DynamicStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="GetPlayerDatum.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetObjectAddress.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -379,7 +405,21 @@
     <ClCompile Include="OptionalCheatManager.cpp">
       <Filter>Services\OptionalCheats\Management</Filter>
     </ClCompile>
-    <ClCompile Include="SharedMemoryInternal.cpp" />
+    <ClCompile Include="SharedMemoryInternal.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicStruct.cpp">
+      <Filter>DynamicStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicStructFactory.cpp">
+      <Filter>DynamicStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="GetPlayerDatum.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetObjectAddress.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="InternalPointerData.xml">

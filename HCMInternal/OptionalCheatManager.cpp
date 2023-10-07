@@ -15,18 +15,20 @@
 #include "ForceCoreLoad.h"
 #include "Speedhack.h"
 #include "Invulnerability.h"
+#include "GetPlayerDatum.h"
+#include "GetObjectAddress.h"
 
 #include "DIContainer.h"
 #include "map.h"
 #include <boost\preprocessor.hpp>
 #include "DirPathContainer.h"
+#include "IMakeOrGetCheat.h"
 
 
 
 
 
-
-class OptionalCheatManager::OptionalCheatManagerImpl : public std::enable_shared_from_this<OptionalCheatManagerImpl>
+class OptionalCheatManager::OptionalCheatManagerImpl : public std::enable_shared_from_this<OptionalCheatManagerImpl>, public IMakeOrGetCheat
 {
 private:
 
@@ -47,7 +49,7 @@ public:
 	{
 		// create a di container with the dependencies that the cheats will need
 		// remember: you need to register types as the base interface the optionalCheats will want to resolve
-		DIContainer<OptionalCheatManagerImpl, SettingsStateAndEvents, PointerManager, IGetMCCVersion, MCCStateHook, SharedMemoryInternal, MessagesGUI, RuntimeExceptionHandler, DirPathContainer> dicon
+		DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, MCCStateHook, SharedMemoryInternal, MessagesGUI, RuntimeExceptionHandler, DirPathContainer> dicon
 		{shared_from_this(), settings, ptr, ver, mccStateHook, sharedMem, mes, exp,std::make_shared<DirPathContainer>(dirPath)};
 
 		// loop over each cheat-game combo in requiredServices, pushing them into our cheatCollection as we make them (or telling info about it if failed construction)

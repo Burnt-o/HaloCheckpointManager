@@ -44,6 +44,11 @@ public:
 		return out << g.toString();
 	}
 
+	std::wstring toModuleName() const { // to string
+		if (!GameStateModuleNameMap.contains(value)) throw HCMRuntimeException("bad value passed to toModuleName");
+		return GameStateModuleNameMap.at(value);
+	}
+
 private:
 	Value value;
 	static inline const boost::bimap<Value, std::string> GameStateStringBiMap = boost::assign::list_of<boost::bimap<Value, std::string>::relation> // used in toString/fromString
@@ -56,7 +61,18 @@ private:
 		(Value::HaloReach, "HaloReach")
 		(Value::NoGame, "NoGame");
 
+	static inline const std::map<Value, std::wstring> GameStateModuleNameMap =  // used in toModuleName
+		boost::assign::map_list_of 
+		(Value::Halo1, L"halo1.dll")
+		(Value::Halo2, L"halo2.dll")
+		(Value::Halo3, L"halo3.dll")
+		(Value::Halo4, L"halo4.dll")
+		(Value::Halo2MP, L"groundhog.dll")
+		(Value::Halo3ODST, L"halo3odst.dll")
+		(Value::HaloReach, L"haloreach.dll");
 };
+
+
 
 
 static inline const std::vector<GameState> AllSupportedGames

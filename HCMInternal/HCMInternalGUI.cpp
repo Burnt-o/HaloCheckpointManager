@@ -132,7 +132,7 @@ void HCMInternalGUI::renderErrorDialog()
 
 void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 {
-	//PLOG_VERBOSE << "locking currentGameGUIElementsMutex";
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "onGameStateChange locking currentGameGUIElementsMutex @ 0x" << std::hex << pMutex, pMutex = &currentGameGUIElementsMutex);
 	std::unique_lock<std::mutex> lock(currentGameGUIElementsMutex);
 
 	p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(newState.currentGameState);
@@ -140,7 +140,7 @@ void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 
 void HCMInternalGUI::primaryRender()
 {
-	//PLOG_VERBOSE << "locking currentGameGUIElementsMutex";
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "onGameStateChange locking currentGameGUIElementsMutex @ 0x" << std::hex << pMutex, pMutex = &currentGameGUIElementsMutex);
 	std::unique_lock<std::mutex> lock(currentGameGUIElementsMutex);
 	// Calculate height of everything
 	int totalContentHeight = 0;

@@ -340,9 +340,10 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 		{
 			d3d->initializeD3Ddevice(pSwapChain);
 			d3d->isD3DdeviceInitialized = true;
-			PLOG_DEBUG << "D3D device initialized";
+			PLOG_DEBUG << "D3D device initialized t. newDX11Present";
 			// fire a resizeborders event
 			d3d->resizeBuffersHookEvent->operator()(mScreenSize);
+			PLOG_DEBUG << "resizeBuffersHookEvent fired";
 		}
 		catch (HCMInitException& ex)
 		{
@@ -358,10 +359,11 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 		}
 		
 	}
-   
+	LOG_ONCE(PLOG_VERBOSE << "invoking presentHookEvent callback");
 	// Invoke the callback
 	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
 
+	LOG_ONCE(PLOG_VERBOSE << "calling original present function");
 	// Call original present
 	return d3d->m_pOriginalPresent(pSwapChain, SyncInterval, Flags);
 
@@ -388,7 +390,7 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 		{
 			d3d->initializeD3Ddevice(pSwapChain);
 			d3d->isD3DdeviceInitialized = true;
-			PLOG_DEBUG << "D3D device initialized";
+			PLOG_DEBUG << "D3D device initialized t. newDX11ResizeBuffers";
 		}
 		catch (HCMInitException& ex)
 		{

@@ -41,6 +41,7 @@ class PointerManager::PointerManagerImpl {
         void instantiatePreserveLocations(pugi::xml_node entry, DataKey dKey);
         void instantiateOffsetLengthPair(pugi::xml_node entry, DataKey dKey);
         void instantiateInt64_t(pugi::xml_node entry, DataKey dKey);
+        void instantiateDynStructOffsetInfo(pugi::xml_node entry, DataKey dKey);
 
 
 
@@ -138,6 +139,8 @@ template
 std::shared_ptr<int64_t> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 template
 std::shared_ptr<MidhookContextInterpreter> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+template
+std::shared_ptr<DynStructOffsetInfo> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 
 std::string PointerManager::PointerManagerImpl::readLocalXML()
 {
@@ -378,6 +381,10 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
         else if (entryType.starts_with("int64_t"))
         {
             instantiateInt64_t(versionEntry, dKey);
+        }
+        else if (entryType.starts_with("DynStructOffsetInfo"))
+        {
+            instantiateDynStructOffsetInfo(versionEntry, dKey);
         }
     }
 }
@@ -673,3 +680,25 @@ void PointerManager::PointerManagerImpl::instantiatePreserveLocations(pugi::xml_
 }
 
 
+void PointerManager::PointerManagerImpl::instantiateDynStructOffsetInfo(pugi::xml_node versionEntry, DataKey dKey)
+{
+
+
+    std::shared_ptr<DynStructOffsetInfo> result = std::make_shared<DynStructOffsetInfo>();
+
+    for (pugi::xml_node locationEntry = versionEntry.first_child(); locationEntry; locationEntry = locationEntry.next_sibling())
+    {
+        std::string fieldName = locationEntry.name();
+        std::string offsetText = locationEntry.text().as_string(); //capitalised strings since I can't be bothered undoing from HCM2 pointerdata
+        int offset = stringToInt(offsetText);
+
+        PLOG_VERBOSE << "fieldName: " << fieldName;
+        PLOG_VERBOSE << "offset: " << offset;
+        if (result->contains(fieldName)) throw HCMInitException(std::format("Duplicate fieldname: {}", fieldName));
+        result->operator[](fieldName) = offset;
+
+    }
+
+    PLOG_DEBUG << "DynStructOffsetInfo added to map: " << dKey._Myfirst._Val;
+    mAllData.try_emplace(dKey, result);
+}

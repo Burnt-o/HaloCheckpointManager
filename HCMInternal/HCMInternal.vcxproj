@@ -218,12 +218,18 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="DirPathContainer.h" />
+    <ClInclude Include="DynamicStruct.h" />
+    <ClInclude Include="DynamicStructFactory.h" />
+    <ClInclude Include="GetObjectAddress.h" />
     <ClInclude Include="GUIHeader.h" />
+    <ClInclude Include="H1PlayerStruct.h" />
     <ClInclude Include="HCM_imconfig.h" />
     <ClInclude Include="HotkeyEnum.h" />
     <ClInclude Include="HotkeyRenderer.h" />
     <ClInclude Include="HotkeyRendererImpl.h" />
+    <ClInclude Include="IMakeOrGetCheat.h" />
     <ClInclude Include="MCCState.h" />
+    <ClInclude Include="GetPlayerDatum.h" />
     <ClInclude Include="ScopedCallback.h" />
     <ClInclude Include="SharedMemoryInternal.h" />
     <ClInclude Include="Vec2.h" />
@@ -299,6 +305,9 @@
   <ItemGroup>
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="DynamicStruct.cpp" />
+    <ClCompile Include="DynamicStructFactory.cpp" />
+    <ClCompile Include="GetObjectAddress.cpp" />
     <ClCompile Include="GUIServiceInfo.cpp" />
     <ClCompile Include="MCCStateHook.cpp" />
     <ClCompile Include="GetMCCVersion.cpp" />
@@ -329,6 +338,7 @@
     <ClCompile Include="ModuleHook.cpp" />
     <ClCompile Include="ModuleHookManager.cpp" />
     <ClCompile Include="MultilevelPointer.cpp" />
+    <ClCompile Include="GetPlayerDatum.cpp" />
     <ClCompile Include="Setting.cpp" />
     <ClCompile Include="OptionalCheatManager.cpp" />
     <ClCompile Include="SettingsSerialiser.cpp" />

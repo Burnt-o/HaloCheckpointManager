@@ -25,7 +25,7 @@
 #include "UnhandledExceptionHandler.h"
 #include "SettingsSerialiser.h"
 #include "SharedMemoryInternal.h"
-
+#include "DynamicStructFactory.h"
 class App {
 
 
@@ -75,7 +75,7 @@ public:
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
             auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
 
-            auto mccStateHook = std::make_shared<MCCStateHook>(ptr, exp); PLOGV << "gsh init";// fires event when game or level changes.
+            auto mccStateHook = std::make_shared<MCCStateHook>(ptr, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
 
             // hotkeys
             auto hkd = std::make_shared<HotkeyDefinitions>(settings); PLOGV << "hkd init";
@@ -103,12 +103,29 @@ public:
             
             auto hb = std::make_shared<HeartbeatTimer>(); PLOGV << "hb init";
 
-            {
-                // testing shared memory
-                PLOG_DEBUG << "creating shm";
-                SharedMemoryInternal shm;
-                PLOG_DEBUG << "shm done";
-            }
+            //// testing dynamic struct
+            //{
+            //    try
+            //    {
+            //      PLOG_INFO << "testing dynamic structs";
+            //    enum class Halo1PlayerData { Health, Shields };
+
+            //    auto test = DynamicStructFactory::make<Halo1PlayerData>(ptr, GameState::Value::Halo1);
+
+            //    test->currentBaseAddress = 20;
+            //    auto healthOffset = test->field<float>(Halo1PlayerData::Health);
+            //    PLOG_DEBUG << "address of healthOffset: " << (uintptr_t)healthOffset;
+            //    }
+            //    catch (HCMRuntimeException ex)
+            //    {
+            //        PLOG_ERROR << "dynstruct rt error: " << ex.what();
+            //    }
+            //    catch (HCMInitException ex)
+            //    {
+            //        PLOG_ERROR << "dynstruct init error: " << ex.what();
+            //    }
+            //}
+
 
 
             PLOG_INFO << "All services succesfully initialized! Entering main loop";

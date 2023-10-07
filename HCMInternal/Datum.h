@@ -10,7 +10,7 @@ struct Datum
 	auto operator<=>(const Datum&) const = default;
 	constexpr Datum(uint16_t i, uint16_t s) : index(i), salt(s) {}
 
-	constexpr Datum() : index(0xFFFF), salt(0xFFFF) {}
+	constexpr Datum() : index(0xFFFF), salt(0xFFFF) {} // default initialised is nullDatum
 	operator uint32_t() const { return (((uint32_t)salt << 16) + index); } // swap endianness
 
 	friend std::ostream& operator<<(std::ostream& os, const Datum& dt)
@@ -26,5 +26,6 @@ struct Datum
 	}
 
 };
+static_assert(sizeof(Datum) == sizeof(int32_t));
 
 constexpr Datum nullDatum{};

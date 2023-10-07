@@ -12,7 +12,9 @@ DumpCheckpoint,\
 InjectCore,\
 DumpCore,\
 Speedhack,\
-Invulnerability\
+Invulnerability,\
+GetPlayerDatum,\
+GetObjectAddress\
 
 
 enum class OptionalCheatEnum {

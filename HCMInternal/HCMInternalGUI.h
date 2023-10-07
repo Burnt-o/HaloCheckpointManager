@@ -61,6 +61,7 @@ public:
 		mGUIStore(guistore),
 		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIHeader(MCCStateHook)
 	{
+		PLOG_VERBOSE << "HCMInternalGUI finished construction";
 	}
 
 	~HCMInternalGUI()

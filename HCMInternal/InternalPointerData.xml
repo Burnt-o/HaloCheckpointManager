@@ -1485,18 +1485,9 @@
 		</Version>
 	</VersionedEntry>
 	<!-- #endregion preserveLocations-->
+	<!-- #endregion SaveManagement-->
 	
-	<!-- #region playerInfo -->
-	<VersionedEntry Name="playerDatum" Type="MultilevelPointer::ModuleOffset">
-		<Version Version="1.3272.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0x29AE480</Offset>
-			</Offsets>
-		</Version>
-	</VersionedEntry>
 
-	<!-- #endregion playerInfo-->
 	
 	<!-- #region invulnerability-->
 	<VersionedEntry Name="invulnerabilityFunction" Type="MultilevelPointer::ModuleOffset">
@@ -1512,13 +1503,73 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Parameters>
 				<unitDatum>r14</unitDatum>
-				<playersVehicleDatum>rbx+0xD8</playersVehicleDatum>
 			</Parameters>
 		</Version>
 	</VersionedEntry>
 
 	<!-- #endregion invulnerability-->
+	
+	<!-- #region getObjectAddress-->
+	<VersionedEntry Name="getObjectAddressFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB389A4</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	<!-- #endregion getObjectAddress-->
 
-	<!-- #endregion SaveManagement-->
+	<!-- #region playerDatum-->
+	<VersionedEntry Name="playerDatum" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1C563F0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	<!-- #endregion playerDatum-->
+
+	<!--#region DynamicStructs-->
+	
+	<VersionedEntry Name="entityMetadataHeaderFields" Type="DynStructOffsetInfo">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<tableStartOffset>0x34</tableStartOffset>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="entityMetadataFields" Type="DynStructOffsetInfo">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<StrideSize>0xC</StrideSize>
+			<datum>0x0</datum>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="bipedDataFields" Type="DynStructOffsetInfo">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<position>0x18</position>
+			<velocity>0x24</velocity>
+			<modelRotation>0x30</modelRotation>
+			<triggerHitVertex>0x5C</triggerHitVertex>
+			<hideModelFlag>0x6F</hideModelFlag>
+			<teamIndex>0x74</teamIndex>
+			<angryAtPlayerFlag>0x75</angryAtPlayerFlag>
+			<currentHealth>0x9C</currentHealth>
+			<currentShields>0xA0</currentShields>
+			<currentOutWeaponDatum>0xD4</currentOutWeaponDatum>
+			<currentVehicleDatum>0xD8</currentVehicleDatum>
+			<deathTimer>0x26B</deathTimer>
+			<dropWeaponFlag>0x26C</dropWeaponFlag>
+			<throwGrenadeFlag>0x26D</throwGrenadeFlag>
+			<fragGrenadeCount>0x2F2</fragGrenadeCount>
+			<plasGrenadeCount>0x2F3</plasGrenadeCount>
+			<flashLightBattery>0x328</flashLightBattery>
+			<isAirborneFlag>0x4D8</isAirborneFlag>
+		</Version>
+	</VersionedEntry>
+
+	<!--#endregion DynamicStructs-->
 	
 </root>

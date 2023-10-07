@@ -4,6 +4,7 @@
 // Uses libcurl to download PointerData.xml from the github page,
 // instantiating all the MultilevelPointers (and other data) specific to the current MCC version we were injected into
 
+typedef std::map<std::string, int> DynStructOffsetInfo;
 
 
 class PointerManager
