@@ -431,6 +431,8 @@ std::vector<int64_t> getOffsetsFromXML(pugi::xml_node versionEntry)
 
 void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_node versionEntry, std::string entryType, DataKey dKey)
 {
+    
+
     std::shared_ptr<MultilevelPointer> result;
     if (entryType == "MultilevelPointer::ExeOffset")
     {
@@ -444,6 +446,13 @@ void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_
         std::string moduleString = versionEntry.child("Module").text().get();
         auto offsets = getOffsetsFromXML(versionEntry);
         result = MultilevelPointer::make(str_to_wstr(moduleString), offsets);
+
+        if (dKey._Get_rest()._Myfirst._Val.has_value() && dKey._Get_rest()._Myfirst._Val.value().toModuleName() != str_to_wstr(moduleString))
+        {
+            PLOG_ERROR << "Module name did not match version entry game type! This is probably a typo on Burnts part: observed: " 
+                << moduleString << ", expected: " << dKey._Get_rest()._Myfirst._Val.value().toModuleName() << ", entryName: " << dKey._Myfirst._Val;
+        }
+
     }
     else
     {

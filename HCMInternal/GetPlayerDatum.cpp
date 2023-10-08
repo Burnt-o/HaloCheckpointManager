@@ -32,8 +32,12 @@ GetPlayerDatum::GetPlayerDatum(GameState game, IDIContainer& dicon)
 		pimpl = std::make_unique<SimpleGetPlayerDatum>(game, dicon);
 		return;
 
+	case GameState::Value::Halo2:
+		pimpl = std::make_unique<SimpleGetPlayerDatum>(game, dicon);
+		return;
+
 	default:
-		throw HCMInitException("not impl yet");
+		throw HCMInitException("GetPlayerDatum not impl for this game yet");
 	}
 }
 

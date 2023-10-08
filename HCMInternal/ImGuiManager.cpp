@@ -131,6 +131,8 @@ ImGuiManager::~ImGuiManager()
 
 		m_isImguiInitialized = false;
 	}
+
+	instance = nullptr;
 }
 
 void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, IDXGISwapChain* pSwapChain, ID3D11RenderTargetView* pMainRenderTargetView)

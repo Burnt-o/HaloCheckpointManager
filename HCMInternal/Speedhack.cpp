@@ -12,7 +12,6 @@ private:
 	// event callbacks
 	ScopedCallback<eventpp::CallbackList<void(bool&)>> mSpeedhackToggleCallbackHandle;
 	ScopedCallback<eventpp::CallbackList<void(double&)>> mSpeedhackSettingCallbackHandle;
-	ScopedCallback<ActionEvent> mSpeedhackHotkeyCallbackHandle;
 
 	// injected services
 	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
@@ -50,10 +49,6 @@ public:
 		: speedhackSetting(dicon.Resolve<SettingsStateAndEvents>()->speedhackSetting),
 		mSpeedhackToggleCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackToggle->valueChangedEvent, [this](bool& i) {onToggle(i); }),
 		mSpeedhackSettingCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackSetting->valueChangedEvent, [this](double& i) {updateSetting(i); }),
-		mSpeedhackHotkeyCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackHotkeyEvent, [speedhackToggle = dicon.Resolve<SettingsStateAndEvents>()->speedhackToggle]()
-			{
-				speedhackToggle->flipBoolSetting();
-			}),
 		messagesGUI(dicon.Resolve<IMessagesGUI>())
 	{
 		// load HCMSpeedhack.dll

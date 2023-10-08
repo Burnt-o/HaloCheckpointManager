@@ -322,6 +322,9 @@
     <ClInclude Include="IMCCStateHook.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="HotkeyEventsLambdas.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

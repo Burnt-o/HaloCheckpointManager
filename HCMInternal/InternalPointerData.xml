@@ -1789,22 +1789,39 @@
 				<Offset>0xB9F16F</Offset>
 			</Offsets>
 		</Version>
+
+		<!--may need to move these old ones back by 0x334-->
+		<!--<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBFD3A4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xC02FB4</Offset>
+			</Offsets>
+		</Version>-->
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x90E9C8</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="invulnerabilityFunctionContext" Type="MidhookContextInterpreter">
-		<Version Version="1.2448.0.0" Game="Halo1">
+		<Version Version="All" Game="Halo1">
 			<Parameters>
 				<unitDatum>r14</unitDatum>
 			</Parameters>
 		</Version>
-		<Version Version="1.2645.0.0" Game="Halo1">
+
+
+		<Version Version="1.3272.0.0" Game="Halo2">
 			<Parameters>
-				<unitDatum>r14</unitDatum>
-			</Parameters>
-		</Version>
-		<Version Version="1.3272.0.0" Game="Halo1">
-			<Parameters>
-				<unitDatum>r14</unitDatum>
+				<unitDatum>r12</unitDatum>
 			</Parameters>
 		</Version>
 	</VersionedEntry>
@@ -1829,6 +1846,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0xB389A4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x8DBAC0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -1860,6 +1884,28 @@
 				<Offset>0x1C563F0</Offset>
 			</Offsets>
 		</Version>
+
+		<!--scan nw "4c 8d 43 14 89 4b 04 ", the mov[rbx+04], ecx will access only the playerDatum.-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xDA5CD4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xD523A4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE7F5E4</Offset>
+			</Offsets>
+		</Version>
+		
+		
 	</VersionedEntry>
 	<!-- #endregion playerDatum-->
 
@@ -1899,6 +1945,13 @@
 			<plasGrenadeCount>0x2F3</plasGrenadeCount>
 			<flashLightBattery>0x328</flashLightBattery>
 			<isAirborneFlag>0x4D8</isAirborneFlag>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<currentVehicleDatum>0x14</currentVehicleDatum>
+			<position>0x64</position>
+			<velocity>0x88</velocity>
+
 		</Version>
 	</VersionedEntry>
 

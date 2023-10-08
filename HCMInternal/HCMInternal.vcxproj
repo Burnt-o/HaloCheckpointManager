@@ -229,6 +229,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="H1PlayerStruct.h" />
     <ClInclude Include="HCM_imconfig.h" />
     <ClInclude Include="HotkeyEnum.h" />
+    <ClInclude Include="HotkeyEventsLambdas.h" />
     <ClInclude Include="HotkeyRenderer.h" />
     <ClInclude Include="HotkeyRendererImpl.h" />
     <ClInclude Include="IMakeOrGetCheat.h" />

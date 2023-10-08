@@ -5,9 +5,10 @@ class SettingsStateAndEvents
 {
 private:
 	std::shared_ptr<ISettingsSerialiser> mSerialiser;
+
 public:
 	SettingsStateAndEvents(std::shared_ptr<ISettingsSerialiser> serialiser)
-		: mSerialiser(serialiser) 
+		: mSerialiser(serialiser)
 	{ 
 		mSerialiser->deserialise(allSerialisableOptions); 
 	
@@ -16,6 +17,12 @@ public:
 		PLOG_DEBUG << "~SettingsStateAndEvents()";
 		mSerialiser->serialise(allSerialisableOptions); 
 	};
+
+	//	hotkeys
+	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
+
+
 
 	// events
 	std::shared_ptr<ActionEvent> forceCheckpointEvent = std::make_shared<ActionEvent>();
@@ -27,8 +34,7 @@ public:
 	std::shared_ptr<ActionEvent> dumpCheckpointEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> injectCoreEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> dumpCoreEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
+
 
 	// settings
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
