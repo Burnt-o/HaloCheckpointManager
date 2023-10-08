@@ -83,9 +83,10 @@ TEST_CLASS(MCCVer##MCC_VERSION)\
 
 
 	// where the magic happens (hope you don't throw a compiler out of heap space warning)
-	TEST_MCC_VERSION(2448);
-	TEST_MCC_VERSION(2645);
-	TEST_MCC_VERSION(3272);
+	TEST_MCC_VERSION(2448); // Season 7
+	TEST_MCC_VERSION(2645); // Season 8
+	//TEST_MCC_VERSION(3073); // I don't think anyone actually runs on 3073 so ceebs
+	TEST_MCC_VERSION(3272); // Current patch
 
 
 
