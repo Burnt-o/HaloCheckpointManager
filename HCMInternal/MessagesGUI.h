@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "IAnchorPoint.h"
+#include "IMessagesGUI.h"
 // Displays temporary messages to the user, below the main GUI. Messages fade over time then disappear.
 
 struct temporaryMessage
@@ -12,7 +13,7 @@ struct temporaryMessage
 };
 
 
-class MessagesGUI : public std::enable_shared_from_this<MessagesGUI>
+class MessagesGUI : public std::enable_shared_from_this<MessagesGUI>, public IMessagesGUI
 {
 private:
 	std::mutex mDestructionGuard{};
@@ -31,7 +32,7 @@ private:
 	void drawMessage(const temporaryMessage& message, const Vec2& position);
 public:
 
-	void addMessage(std::string message);
+	virtual void addMessage(std::string message) override;
 
 	explicit MessagesGUI( Vec2 anchorOffset, std::shared_ptr<RenderEvent> renderEvent)
 		:  mAnchorOffset(anchorOffset), mRenderEventCallback(renderEvent, [this](Vec2 a) {onImGuiRenderEvent(a); })
@@ -55,6 +56,6 @@ public:
 	//	
 	//}
 
-	void setAnchorPoint(std::shared_ptr<IAnchorPoint> anchorPoint) { mAnchorPoint = anchorPoint; }
+	virtual void setAnchorPoint(std::shared_ptr<IAnchorPoint> anchorPoint) override { mAnchorPoint = anchorPoint; }
 };
 

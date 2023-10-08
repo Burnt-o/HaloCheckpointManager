@@ -3,7 +3,7 @@
 #include "IGUIElement.h"
 #include "IAnchorPoint.h"
 #include "GUIElementStore.h"
-#include "MCCStateHook.h"
+#include "IMCCStateHook.h"
 #include "Vec2.h"
 #include "HotkeyRenderer.h"
 #include "GUIHeader.h"
@@ -18,7 +18,7 @@ private:
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> mMCCStateChangedCallbackHandle;
 
 	//injected services
-	std::shared_ptr<MCCStateHook> mccStateHook;
+	std::shared_ptr<IMCCStateHook> mccStateHook;
 	std::shared_ptr<GUIElementStore> mGUIStore;
 	std::shared_ptr<HotkeyRenderer> mHotkeyRenderer;
 
@@ -55,7 +55,7 @@ private:
 public:
 
 	// Gets passed ImGuiManager ImGuiRenderEvent reference so we can subscribe and unsubscribe
-	explicit HCMInternalGUI(std::shared_ptr<MCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent)
+	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent)
 		: mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
 		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
 		mGUIStore(guistore),

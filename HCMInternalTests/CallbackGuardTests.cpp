@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "ScopedCallback.h"
 
-std::wstring str_to_wstr(const std::string str)
-{
-	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
-	wchar_t* wStr = new wchar_t[wchars_num];
-	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wStr, wchars_num);
-	return std::wstring(wStr);
-}
+//std::wstring str_to_wstr(const std::string str)
+//{
+//	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+//	wchar_t* wStr = new wchar_t[wchars_num];
+//	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wStr, wchars_num);
+//	return std::wstring(wStr);
+//}
 
 // https://cplusplus.com/reference/condition_variable/condition_variable/
 

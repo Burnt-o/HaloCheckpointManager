@@ -22,9 +22,17 @@ namespace plog
 class TestLogging
 {
 public:
+    static inline bool alreadyInit = false;
 	TestLogging()
 	{
-		static plog::UnitTestAppender<plog::TxtFormatter> consoleAppender;
-		plog::init(plog::verbose, &consoleAppender);
+        if (!alreadyInit)
+        {
+            alreadyInit = true;
+            static plog::UnitTestAppender<plog::TxtFormatter> unitTestAppender;
+            plog::init(plog::verbose, &unitTestAppender);
+        }
+
 	}
+
+
 };

@@ -109,25 +109,25 @@
 
 	<VersionedEntry Name="forceCheckpointFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD7E0CE</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD42D7E</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xE6EC8F</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xE6FD7E</Offset>
 			</Offsets>
@@ -137,31 +137,31 @@
 
 	<VersionedEntry Name="forceCheckpointFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo3">
-			<Module>halo1.dll</Module>
+			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1D3B93B</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo3">
-			<Module>halo1.dll</Module>
+			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1e1d90b</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2862.0.0" Game="Halo3">
-			<Module>halo1.dll</Module>
+			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1E1989B</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo3">
-			<Module>halo1.dll</Module>
+			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1EA306B</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo3">
-			<Module>halo1.dll</Module>
+			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x20B86AC</Offset>
 			</Offsets>
@@ -199,25 +199,25 @@
 
 	<VersionedEntry Name="forceRevertFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD7E0CD</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xD42D7D</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xE6EC8E</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xE6FD7D</Offset>
 			</Offsets>
@@ -228,25 +228,25 @@
 	<!-- #region doubleRevertFlag-->
 	<VersionedEntry Name="doubleRevertFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0xE1E204</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x14728B4</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x159E814</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
-			<Module>halo1.dll</Module>
+			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x159FB04</Offset>
 			</Offsets>

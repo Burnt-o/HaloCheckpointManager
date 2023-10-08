@@ -125,7 +125,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;HCM_DEBUG;_DEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;HCM_OUTPUT_PATH=R"($(OutputPath))";HCM_DEBUG;_DEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -152,7 +152,9 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
+      <Command>set /P "_VSdmy=$(OutputPath.Replace('"','').trim().Replace('\','\\').trim().trimEnd('\'))" &lt;nul&gt;; "$(SolutionDir)OutputPath.vsmacro" ||(call,)
+
+IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
 	"C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb"
                    "C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMSpeedhack.pdb"
 )
@@ -173,7 +175,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;NDEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;HCM_OUTPUT_PATH=R"($(OutputPath))";NDEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -200,7 +202,9 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
+      <Command>set /P "_VSdmy=$(OutputPath.Replace('"','').trim().Replace('\','\\').trim().trimEnd('\'))" &lt;nul&gt;; "$(SolutionDir)OutputPath.vsmacro" ||(call,)
+
+IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
 	"C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMInternal.pdb"
                    "C:\Program Files\LockHunter\LockHunter.exe" /silent /unlock  "$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\HCMSpeedhack.pdb"
 )
@@ -228,6 +232,10 @@
     <ClInclude Include="HotkeyRenderer.h" />
     <ClInclude Include="HotkeyRendererImpl.h" />
     <ClInclude Include="IMakeOrGetCheat.h" />
+    <ClInclude Include="IMCCStateHook.h" />
+    <ClInclude Include="IMessagesGUI.h" />
+    <ClInclude Include="ISettingsSerialiser.h" />
+    <ClInclude Include="ISharedMemory.h" />
     <ClInclude Include="MCCState.h" />
     <ClInclude Include="GetPlayerDatum.h" />
     <ClInclude Include="ScopedCallback.h" />

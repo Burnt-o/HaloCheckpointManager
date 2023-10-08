@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "HotkeyManager.h"
 #include "SettingsStateAndEvents.h"
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 #include "pugixml.hpp"
 
 //bool shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet);
@@ -19,7 +19,7 @@ public:
 
 
 
-HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<MessagesGUI> messagesGUI, std::string dirPath)
+HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath)
 	: mHotkeyDefinitions(pHotkeyDefinitions),
 	mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2) { pollInput(); }) 	// setup render callback to poll hotkeys every frame
 {

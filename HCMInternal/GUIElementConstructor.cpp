@@ -121,21 +121,15 @@ public:
 		// problem.. how do we deal with toplevelness? rn all gui elements would be in the guireq thing.. even nested ones.
 		// do we need a seperate definition of which are top level?
 
-		auto& guiElementGamesAndTopnessMap = guireq->getGUIElementGamesAndTopness();
-		for (auto& [element, gamesTopnessPair] : guiElementGamesAndTopnessMap)
+
+		for (auto& [element, game] : guireq->getToplevelGUIElements())
 		{
-			if (!gamesTopnessPair.second) continue; // non-top-level construction will be done recursively later
-
-			for (auto game : gamesTopnessPair.first)
+			auto x = createGUIElement(element, game, guireq, fail, info, settings);
+			if (x.has_value())
 			{
-				auto x = createGUIElement(element, game, guireq, fail, info, settings);
-				if (x.has_value())
-				{
-					store->getTopLevelGUIElementsMutable().at(game).push_back(x.value());
-				}
-
+				store->getTopLevelGUIElementsMutable().at(game).push_back(x.value());
+				store->mapOfSuccessfullyConstructedGUIElements.at(game).insert(element);
 			}
-
 		}
 
 	}

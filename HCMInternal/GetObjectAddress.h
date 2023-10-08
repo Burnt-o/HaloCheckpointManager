@@ -21,11 +21,18 @@ enum class CommonObjectType
 enum class Halo1ObjectType
 {
 	Null = -1,
-	Scenery = 6,
-	Biped = 0,
-	Vehicle = 1,
-	Weapon = 2,
-	Equipment = 3,
+	Biped,
+	Vehicle,
+	Weapon,
+	Equipment,
+	Garbage,
+	Projectile,
+	Scenery,
+	Machine,
+	Control,
+	LightFixture,
+	Placeholder,
+	SoundScenery
 };
 
 enum class Halo2ObjectType

@@ -3,14 +3,14 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "SharedMemoryInternal.h"
-#include "MCCStateHook.h"
+#include "ISharedMemory.h"
+#include "IMCCStateHook.h"
 #include "boost\iostreams\device\mapped_file.hpp"
 #include "PointerManager.h"
 #include "SettingsStateAndEvents.h"
 #include "MultilevelPointer.h"
 #include "PointerManager.h"
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 #include "RuntimeExceptionHandler.h"
 
 class DumpCore : public IOptionalCheat
@@ -23,11 +23,11 @@ private:
 	ScopedCallback<ActionEvent> mDumpCoreEventCallback;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
+	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
-	gsl::not_null<std::shared_ptr<SharedMemoryInternal>> sharedMem;
+	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
 
 
 	// primary event callback
@@ -114,10 +114,10 @@ public:
 		: mGame(game),
 		mDumpCoreEventCallback(dicon.Resolve<SettingsStateAndEvents>()->dumpCoreEvent, [this]() { onDump(); }),
 		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
-		mccStateHook(dicon.Resolve<MCCStateHook>()),
-		sharedMem(dicon.Resolve<SharedMemoryInternal>()),
+		mccStateHook(dicon.Resolve<IMCCStateHook>()),
+		sharedMem(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		messagesGUI(dicon.Resolve<MessagesGUI>())
+		messagesGUI(dicon.Resolve<IMessagesGUI>())
 
 	{
 	}

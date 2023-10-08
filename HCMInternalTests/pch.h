@@ -87,7 +87,8 @@ void once(T t, F f) {
     }
 }
 #define LOG_ONCE(x)   once([](){},[](){ x; });
-
+#define LOG_ONCE_THIS(x)   once([this](){},[this](){ x; });
+#define LOG_ONCE_CAPTURE(x, y)   once([y](){},[y](){ x; });
 //#include "HCM_imconfig.h"
 
 

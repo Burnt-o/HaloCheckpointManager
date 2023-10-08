@@ -1,6 +1,6 @@
 #pragma once
 #include "imgui.h"
-#include "MCCStateHook.h"
+#include "IMCCStateHook.h"
 #include "ScopedCallback.h"
 class GUIHeader
 {
@@ -23,8 +23,8 @@ private:
 public:
 
 
-	GUIHeader(std::shared_ptr<MCCStateHook> mccStateHook) :
-		MCCStateChangeCallback(mccStateHook->MCCStateChangedEvent, [this](const MCCState& n) {OnStateChange(n); })
+	GUIHeader(std::shared_ptr<IMCCStateHook> mccStateHook) :
+		MCCStateChangeCallback(mccStateHook->getMCCStateChangedEvent(), [this](const MCCState& n) {OnStateChange(n); })
 	{
 		// init strings
 		OnStateChange(mccStateHook->getCurrentMCCState());

@@ -1,7 +1,7 @@
 #pragma once
 #include "Hotkey.h"
 #include "HotkeyDefinitions.h"
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 
 
 class HotkeyManager
@@ -23,7 +23,7 @@ private:
 
 public:
 	// Hotkey manager doesn't render, but it does want to poll for inputs every frame
-	HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<MessagesGUI> messagesGUI, std::string dirPath);
+	HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath);
 	~HotkeyManager();
 
 	void setDisableHotkeysForRebinding(bool val) { mDisableHotkeysForRebinding = val; };

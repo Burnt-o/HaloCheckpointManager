@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Speedhack.h"
 #include "SettingsStateAndEvents.h"
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 #include "DirPathContainer.h"
 // see HCMSpeedhack.dll
 
@@ -15,7 +15,7 @@ private:
 	ScopedCallback<ActionEvent> mSpeedhackHotkeyCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<Setting<double>>> speedhackSetting;
 
 	// data
@@ -54,7 +54,7 @@ public:
 			{
 				speedhackToggle->flipBoolSetting();
 			}),
-		messagesGUI(dicon.Resolve<MessagesGUI>())
+		messagesGUI(dicon.Resolve<IMessagesGUI>())
 	{
 		// load HCMSpeedhack.dll
 		auto dirPathCont = dicon.Resolve<DirPathContainer>();

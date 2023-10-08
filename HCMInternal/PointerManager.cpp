@@ -50,16 +50,13 @@ class PointerManager::PointerManagerImpl {
         ~PointerManagerImpl() = default;
 
         // data mapped by strings
-        static std::map<DataKey,std::any> mAllData;
+        std::map<DataKey, std::any> mAllData{};
 };
 
-std::map<DataKey, std::any> PointerManager::PointerManagerImpl::mAllData{};
 
 
-
-
-PointerManager::PointerManager(std::shared_ptr<IGetMCCVersion> ver, std::string dirPath) : impl(new PointerManagerImpl(ver, dirPath)) {};
-PointerManager::~PointerManager() = default; // https://www.fluentcpp.com/2017/09/22/make-pimpl-using-unique_ptr/
+PointerManager::PointerManager(std::shared_ptr<IGetMCCVersion> ver, std::string dirPath) : impl(new PointerManagerImpl(ver, dirPath)) { PLOG_DEBUG << "PointerManager con"; };
+PointerManager::~PointerManager() { PLOG_DEBUG << "~PointerManager"; }; // https://www.fluentcpp.com/2017/09/22/make-pimpl-using-unique_ptr/
 
 PointerManager::PointerManagerImpl::PointerManagerImpl(std::shared_ptr<IGetMCCVersion> ver, std::string dirPath) : m_getMCCver(ver), m_dirPath(dirPath)
 {
@@ -327,7 +324,7 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
                 // check for duplicates
         if (mAllData.contains(dKey))
         {
-            throw HCMInitException(std::format("Entry already exists in pointerData, entryName {}\n", entryName));
+            throw HCMInitException(std::format("Entry already exists in pointerData, entryName: {}, entryGame: {}\n", entryName, entryGame.has_value() ? entryGame.value().toString() : "AllVersions"));
         }
 
         std::string entryType = entry.attribute("Type").value(); // Convert to std::string

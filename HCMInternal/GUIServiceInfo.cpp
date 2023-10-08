@@ -5,11 +5,24 @@
 
 void GUIServiceInfo::addFailure(GUIElementEnum guielementenum, GameState game, std::vector<HCMInitException> serviceFailures)
 {
-	// TODO
-	PLOG_ERROR << "not implemented";
+	std::string errorMessage;
+	for (auto& ex : serviceFailures)
+	{
+		errorMessage.append(ex.what());
+	}
+
+	failureMessagesMap.emplace(std::pair<GameState, GUIElementEnum>{game, guielementenum}, std::format("{0}::{1} failed: {2}", game.toString(), magic_enum::enum_name(guielementenum), errorMessage));
 }
 void GUIServiceInfo::addFailure(GUIElementEnum guielementenum, GameState game, HCMInitException miscFailure)
 {
-	// TODO
-	PLOG_ERROR << "not implemented";
+	failureMessagesMap.emplace(std::pair<GameState, GUIElementEnum>{game, guielementenum}, miscFailure.what());
 }
+
+void GUIServiceInfo::printAllFailures()
+{
+	for (auto& [gameElementPair, errorMessage] : failureMessagesMap)
+	{
+		messagesGUI->addMessage(errorMessage);
+	}
+}
+

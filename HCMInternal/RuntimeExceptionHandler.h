@@ -1,10 +1,10 @@
 #pragma once
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 
 class RuntimeExceptionHandler
 {
 private:
-	std::shared_ptr<MessagesGUI> mMessagesGUI;
+	std::shared_ptr<IMessagesGUI> mMessagesGUI;
 public:
 
 	// Shows error message to user, and disables related toggle options if any were passed to it (optional)
@@ -13,7 +13,7 @@ public:
 	 void handleMessage(HCMExceptionBase& ex);
 	 void handlePopup(HCMExceptionBase& ex);
 	
-	 explicit RuntimeExceptionHandler(std::shared_ptr<MessagesGUI> mes) : mMessagesGUI(mes) {}
+	 explicit RuntimeExceptionHandler(std::shared_ptr<IMessagesGUI> mes) : mMessagesGUI(mes) {}
 
 
 

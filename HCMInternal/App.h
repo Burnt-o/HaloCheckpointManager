@@ -26,6 +26,10 @@
 #include "SettingsSerialiser.h"
 #include "SharedMemoryInternal.h"
 #include "DynamicStructFactory.h"
+#include "IMessagesGUI.h"
+
+
+
 class App {
 
 
@@ -92,10 +96,10 @@ public:
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty
             auto guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore
-            guifail->printFailures();
+            guifail->printAllFailures();
  
             // set up main gui
-            auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, mccStateHook->MCCStateChangedEvent); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
+            auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, mccStateHook->getMCCStateChangedEvent()); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
             mes->setAnchorPoint(HCMGUI);
 
 

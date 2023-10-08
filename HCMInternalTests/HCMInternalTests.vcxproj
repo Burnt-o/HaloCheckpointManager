@@ -103,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)HCMInternal;$(SolutionDir)HCMInternal\includes\safetyhook;$(SolutionDir)HCMInternal\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HCMINTERNAL_OUTPUT_PATH=$(OutputPath_Global);_DEBUG;HCM_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -115,7 +115,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(VcpkgRoot)\installed\x64-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;libcurl.lib;version.lib;Ws2_32.lib;Wldap32.Lib;Crypt32.Lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -160,7 +161,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)HCMInternal;$(SolutionDir)HCMInternal\includes\safetyhook;$(SolutionDir)HCMInternal\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HCMINTERNAL_OUTPUT_PATH=$(OutputPath_Global);NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -172,10 +173,52 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(VcpkgRoot)\installed\x64-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;libcurl.lib;version.lib;Ws2_32.lib;Wldap32.Lib;Crypt32.Lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
+    <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
+    <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
+    <ClCompile Include="..\HCMInternal\GetMCCVersion.cpp" />
+    <ClCompile Include="..\HCMInternal\GetObjectAddress.cpp" />
+    <ClCompile Include="..\HCMInternal\GetPlayerDatum.cpp" />
+    <ClCompile Include="..\HCMInternal\GUIElementConstructor.cpp" />
+    <ClCompile Include="..\HCMInternal\GUIRequiredServices.cpp" />
+    <ClCompile Include="..\HCMInternal\GUIServiceInfo.cpp" />
+    <ClCompile Include="..\HCMInternal\HCMInternalGUI.cpp" />
+    <ClCompile Include="..\HCMInternal\HeartbeatTimer.cpp" />
+    <ClCompile Include="..\HCMInternal\HotkeyManager.cpp" />
+    <ClCompile Include="..\HCMInternal\HotkeyRendererImpl.cpp" />
+    <ClCompile Include="..\HCMInternal\ImGuiManager.cpp" />
+    <ClCompile Include="..\HCMInternal\includes\safetyhook\safetyhook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\includes\safetyhook\Zydis.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Invulnerability.cpp" />
+    <ClCompile Include="..\HCMInternal\Logging.cpp" />
+    <ClCompile Include="..\HCMInternal\MCCStateHook.cpp" />
+    <ClCompile Include="..\HCMInternal\MessagesGUI.cpp" />
+    <ClCompile Include="..\HCMInternal\MidhookContextInterpreter.cpp" />
+    <ClCompile Include="..\HCMInternal\ModuleCache.cpp" />
+    <ClCompile Include="..\HCMInternal\ModuleHook.cpp" />
+    <ClCompile Include="..\HCMInternal\ModuleHookManager.cpp" />
+    <ClCompile Include="..\HCMInternal\MultilevelPointer.cpp" />
+    <ClCompile Include="..\HCMInternal\OptionalCheatManager.cpp" />
+    <ClCompile Include="..\HCMInternal\PointerManager.cpp" />
+    <ClCompile Include="..\HCMInternal\RuntimeExceptionHandler.cpp" />
+    <ClCompile Include="..\HCMInternal\Setting.cpp" />
+    <ClCompile Include="..\HCMInternal\SettingsSerialiser.cpp" />
+    <ClCompile Include="..\HCMInternal\SharedMemoryInternal.cpp" />
+    <ClCompile Include="..\HCMInternal\Speedhack.cpp" />
+    <ClCompile Include="..\HCMInternal\StaticHookWrapper.cpp" />
+    <ClCompile Include="..\HCMInternal\UnhandledExceptionHandler.cpp" />
+    <ClCompile Include="..\HCMInternal\WindowsUtilities.cpp" />
     <ClCompile Include="CallbackGuardTests.cpp" />
     <ClCompile Include="DIContainerTests.cpp" />
     <ClCompile Include="pch.cpp">
@@ -185,8 +228,102 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ScopedCallbackTests.cpp" />
+    <ClCompile Include="CheatConstructionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\HCMInternal\App.h" />
+    <ClInclude Include="..\HCMInternal\ControlDefs.h" />
+    <ClInclude Include="..\HCMInternal\CustomExceptions.h" />
+    <ClInclude Include="..\HCMInternal\D3D11Hook.h" />
+    <ClInclude Include="..\HCMInternal\Datum.h" />
+    <ClInclude Include="..\HCMInternal\DIContainer.h" />
+    <ClInclude Include="..\HCMInternal\DirPathContainer.h" />
+    <ClInclude Include="..\HCMInternal\DumpCheckpoint.h" />
+    <ClInclude Include="..\HCMInternal\DumpCore.h" />
+    <ClInclude Include="..\HCMInternal\DynamicStruct.h" />
+    <ClInclude Include="..\HCMInternal\DynamicStructFactory.h" />
+    <ClInclude Include="..\HCMInternal\ExternalInfo.h" />
+    <ClInclude Include="..\HCMInternal\ForceCheckpoint.h" />
+    <ClInclude Include="..\HCMInternal\ForceCoreLoad.h" />
+    <ClInclude Include="..\HCMInternal\ForceCoreSave.h" />
+    <ClInclude Include="..\HCMInternal\ForceDoubleRevert.h" />
+    <ClInclude Include="..\HCMInternal\ForceRevert.h" />
+    <ClInclude Include="..\HCMInternal\GameState.h" />
+    <ClInclude Include="..\HCMInternal\GetMCCVersion.h" />
+    <ClInclude Include="..\HCMInternal\GetObjectAddress.h" />
+    <ClInclude Include="..\HCMInternal\GetPlayerDatum.h" />
+    <ClInclude Include="..\HCMInternal\GlobalKill.h" />
+    <ClInclude Include="..\HCMInternal\GUIElementConstructor.h" />
+    <ClInclude Include="..\HCMInternal\GuiElementEnum.h" />
+    <ClInclude Include="..\HCMInternal\GUIElementStore.h" />
+    <ClInclude Include="..\HCMInternal\GUIHeader.h" />
+    <ClInclude Include="..\HCMInternal\GUIInvulnerability.h" />
+    <ClInclude Include="..\HCMInternal\GUIRequiredServices.h" />
+    <ClInclude Include="..\HCMInternal\GUIServiceInfo.h" />
+    <ClInclude Include="..\HCMInternal\GUISimpleButton.h" />
+    <ClInclude Include="..\HCMInternal\GUISimpleToggle.h" />
+    <ClInclude Include="..\HCMInternal\GUISpeedhack.h" />
+    <ClInclude Include="..\HCMInternal\H1PlayerStruct.h" />
+    <ClInclude Include="..\HCMInternal\Halo1InvulnerabilityImpl.h" />
+    <ClInclude Include="..\HCMInternal\HCMExternalCommand.h" />
+    <ClInclude Include="..\HCMInternal\HCMInternalGUI.h" />
+    <ClInclude Include="..\HCMInternal\HCM_imconfig.h" />
+    <ClInclude Include="..\HCMInternal\HeartbeatTimer.h" />
+    <ClInclude Include="..\HCMInternal\Hotkey.h" />
+    <ClInclude Include="..\HCMInternal\HotkeyDefinitions.h" />
+    <ClInclude Include="..\HCMInternal\HotkeyEnum.h" />
+    <ClInclude Include="..\HCMInternal\HotkeyManager.h" />
+    <ClInclude Include="..\HCMInternal\HotkeyRenderer.h" />
+    <ClInclude Include="..\HCMInternal\HotkeyRendererImpl.h" />
+    <ClInclude Include="..\HCMInternal\IAnchorPoint.h" />
+    <ClInclude Include="..\HCMInternal\IGetMCCVersion.h" />
+    <ClInclude Include="..\HCMInternal\IGUIElement.h" />
+    <ClInclude Include="..\HCMInternal\IGUIRequiredServices.h" />
+    <ClInclude Include="..\HCMInternal\IMakeOrGetCheat.h" />
+    <ClInclude Include="..\HCMInternal\IMessagesGUI.h" />
+    <ClInclude Include="..\HCMInternal\ImGuiManager.h" />
+    <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp" />
+    <ClInclude Include="..\HCMInternal\includes\safetyhook\Zydis.h" />
+    <ClInclude Include="..\HCMInternal\InjectCheckpoint.h" />
+    <ClInclude Include="..\HCMInternal\InjectCore.h" />
+    <ClInclude Include="..\HCMInternal\InjectRequirements.h" />
+    <ClInclude Include="..\HCMInternal\Invulnerability.h" />
+    <ClInclude Include="..\HCMInternal\InvulnerabilityImplBase.h" />
+    <ClInclude Include="..\HCMInternal\IOptionalCheat.h" />
+    <ClInclude Include="..\HCMInternal\ISharedMemory.h" />
+    <ClInclude Include="..\HCMInternal\Logging.h" />
+    <ClInclude Include="..\HCMInternal\map.h" />
+    <ClInclude Include="..\HCMInternal\MCCState.h" />
+    <ClInclude Include="..\HCMInternal\MCCStateHook.h" />
+    <ClInclude Include="..\HCMInternal\MessagesGUI.h" />
+    <ClInclude Include="..\HCMInternal\MidhookContextInterpreter.h" />
+    <ClInclude Include="..\HCMInternal\ModuleCache.h" />
+    <ClInclude Include="..\HCMInternal\ModuleHook.h" />
+    <ClInclude Include="..\HCMInternal\ModuleHookManager.h" />
+    <ClInclude Include="..\HCMInternal\MultilevelPointer.h" />
+    <ClInclude Include="..\HCMInternal\OptionalCheatEnum.h" />
+    <ClInclude Include="..\HCMInternal\OptionalCheatInfo.h" />
+    <ClInclude Include="..\HCMInternal\OptionalCheatManager.h" />
+    <ClInclude Include="..\HCMInternal\PointerManager.h" />
+    <ClInclude Include="..\HCMInternal\RuntimeExceptionHandler.h" />
+    <ClInclude Include="..\HCMInternal\ScopedCallback.h" />
+    <ClInclude Include="..\HCMInternal\Setting.h" />
+    <ClInclude Include="..\HCMInternal\SettingsSerialiser.h" />
+    <ClInclude Include="..\HCMInternal\SettingsStateAndEvents.h" />
+    <ClInclude Include="..\HCMInternal\SharedMemoryInternal.h" />
+    <ClInclude Include="..\HCMInternal\Speedhack.h" />
+    <ClInclude Include="..\HCMInternal\StaticHookWrapper.h" />
+    <ClInclude Include="..\HCMInternal\UnhandledExceptionHandler.h" />
+    <ClInclude Include="..\HCMInternal\Vec2.h" />
+    <ClInclude Include="..\HCMInternal\VersionInfo.h" />
+    <ClInclude Include="..\HCMInternal\WindowsUtilities.h" />
+    <ClInclude Include="..\HCMInternal\WinHandle.h" />
+    <ClInclude Include="CheatConstructionTests.h" />
+    <ClInclude Include="MockGetMCCVersion.h" />
+    <ClInclude Include="MockMCCStateHook.h" />
+    <ClInclude Include="MockMessagesGUI.h" />
+    <ClInclude Include="MockSettingsSerialiser.h" />
+    <ClInclude Include="MockSharedMemory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="TestLogging.h" />
   </ItemGroup>

@@ -5,9 +5,10 @@
 #include "PointerManager.h"
 #include "RuntimeExceptionHandler.h"
 #include "MCCState.h"
+#include "IMCCStateHook.h"
 // Evaluates which game MCC is currently running + which level is loaded
 // and fires event when either changes
-class MCCStateHook : public std::enable_shared_from_this<MCCStateHook>
+class MCCStateHook : public std::enable_shared_from_this<MCCStateHook>, public IMCCStateHook
 {
 private:
 	static inline MCCStateHook* instance = nullptr; // Private Singleton instance so static hooks/callbacks can access
@@ -37,8 +38,7 @@ private:
 		instance->updateMCCState();
 	}
 
-	// Function we run when hook hit
-
+	std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedEvent = std::make_shared<eventpp::CallbackList<void(const MCCState&)>>();
 public:
 
 	explicit MCCStateHook(std::shared_ptr<PointerManager> ptrMan, std::shared_ptr<RuntimeExceptionHandler> exp)
@@ -91,16 +91,18 @@ public:
 	}
 
 
-	const MCCState& getCurrentMCCState() { return currentMCCState; }
-	bool isGameCurrentlyPlaying(GameState gameToCheck) 
+	virtual const MCCState& getCurrentMCCState() override { return currentMCCState; }
+	virtual bool isGameCurrentlyPlaying(GameState gameToCheck) override
 	{
 		PLOG_VERBOSE << "checking if game is currently playing: " << gameToCheck.toString();
 		PLOG_VERBOSE << "actual game currently playing: " << currentMCCState.currentGameState.toString();
 		return (currentMCCState.currentGameState == gameToCheck) && (currentMCCState.currentPlayState == PlayState::Ingame); 
 	}
 
+
 	// main event we fire when a new game/level loads
-	std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedEvent = std::make_shared<eventpp::CallbackList<void(const MCCState&)>>();
+	virtual std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> getMCCStateChangedEvent() override { return MCCStateChangedEvent; }
+
 
 	~MCCStateHook()
 	{

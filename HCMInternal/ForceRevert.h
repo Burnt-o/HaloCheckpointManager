@@ -3,8 +3,8 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "MCCStateHook.h"
-#include "MessagesGUI.h"
+#include "IMCCStateHook.h"
+#include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 
@@ -19,8 +19,8 @@ private:
 	ScopedCallback <ActionEvent>mForceRevertCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
+	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 
 	//data
@@ -51,8 +51,8 @@ public:
 	ForceRevert(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl), 
 		mForceRevertCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->forceRevertEvent, [this]() { onForceRevert(); }),
-		mccStateHook(dicon.Resolve<MCCStateHook>()),
-		messagesGUI(dicon.Resolve<MessagesGUI>()), 
+		mccStateHook(dicon.Resolve<IMCCStateHook>()),
+		messagesGUI(dicon.Resolve<IMessagesGUI>()), 
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>();

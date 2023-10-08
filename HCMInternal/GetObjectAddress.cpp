@@ -4,7 +4,7 @@
 #include "PointerManager.h"
 #include "DynamicStructFactory.h"
 #include "ModuleHook.h"
-#include "MCCStateHook.h"
+
 
 typedef int32_t enumBitmask;
 
@@ -15,8 +15,6 @@ class GetObjectAddress::GetObjectAddressImpl
 {
 	GameState mGame;
 
-	// injected services
-	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
 
 	// data
 	std::shared_ptr<MultilevelPointer> getObjectAddressFunction;
@@ -58,8 +56,7 @@ public:
 	}
 
 	GetObjectAddressImpl(GameState game, IDIContainer& dicon) 
-		: mGame(game),
-		mccStateHook(dicon.Resolve<MCCStateHook>())
+		: mGame(game)
 	{
 		getObjectAddressFunction = dicon.Resolve<PointerManager>()->getData<std::shared_ptr<MultilevelPointer>>(nameof(getObjectAddressFunction), game);
 	}
@@ -73,21 +70,23 @@ uintptr_t GetObjectAddress::getObjectAddress(Datum d, std::set < CommonObjectTyp
 template <typename TemplatedObjectType>
 uintptr_t GetObjectAddress::getObjectAddress(Datum d, std::set < TemplatedObjectType> o) { return pimpl->getObjectAddress<TemplatedObjectType>(d, o); }
 
-template <>
-uintptr_t GetObjectAddress::GetObjectAddressImpl::getObjectAddress<Halo1ObjectType>(Datum d, std::set<Halo1ObjectType> o);
 
 template <>
-uintptr_t GetObjectAddress::GetObjectAddressImpl::getObjectAddress<Halo2ObjectType>(Datum d, std::set < Halo2ObjectType> o);
+uintptr_t GetObjectAddress::getObjectAddress<Halo1ObjectType>(Datum d, std::set<Halo1ObjectType> o) { return pimpl->getObjectAddress< Halo1ObjectType>(d, o); }
 
 template <>
-uintptr_t GetObjectAddress::GetObjectAddressImpl::getObjectAddress<Halo3ObjectType>(Datum d, std::set < Halo3ObjectType> o);
+uintptr_t GetObjectAddress::getObjectAddress<Halo2ObjectType>(Datum d, std::set < Halo2ObjectType> o) { return pimpl->getObjectAddress< Halo2ObjectType>(d, o); }
 
 template <>
-uintptr_t GetObjectAddress::GetObjectAddressImpl::getObjectAddress<Halo3ODSTObjectType>(Datum d, std::set < Halo3ODSTObjectType> o);
+uintptr_t GetObjectAddress::getObjectAddress<Halo3ObjectType>(Datum d, std::set < Halo3ObjectType> o) { return pimpl->getObjectAddress< Halo3ObjectType>(d, o); }
 
 template <>
-uintptr_t GetObjectAddress::GetObjectAddressImpl::getObjectAddress<HaloReachObjectType>(Datum d, std::set < HaloReachObjectType> o);
+uintptr_t GetObjectAddress::getObjectAddress<Halo3ODSTObjectType>(Datum d, std::set < Halo3ODSTObjectType> o) { return pimpl->getObjectAddress< Halo3ODSTObjectType>(d, o); }
 
 template <>
-uintptr_t GetObjectAddress::GetObjectAddressImpl::getObjectAddress<Halo4ObjectType>(Datum d, std::set < Halo4ObjectType> o);
+uintptr_t GetObjectAddress::getObjectAddress<HaloReachObjectType>(Datum d, std::set < HaloReachObjectType> o) { return pimpl->getObjectAddress< HaloReachObjectType>(d, o); }
+
+template <>
+uintptr_t GetObjectAddress::getObjectAddress<Halo4ObjectType>(Datum d, std::set < Halo4ObjectType> o) { return pimpl->getObjectAddress< Halo4ObjectType>(d, o); }
+
 

@@ -4,6 +4,7 @@
 #include <boost/interprocess/managed_mapped_file.hpp>
 #include <boost/interprocess/containers/string.hpp>
 #include "ExternalInfo.h"
+#include "ISharedMemory.h"
 namespace bip = boost::interprocess;
 
 template <typename T>
@@ -12,7 +13,7 @@ using shm_string = bip::basic_string<char, std::char_traits<char>, Alloc<char>>;
 
 
 
-class SharedMemoryInternal
+class SharedMemoryInternal : public ISharedMemory
 {
 private:
 	bip::managed_shared_memory segment;
@@ -27,8 +28,8 @@ public:
 		HCMDirPath = *pdirPath;
 	}
 
-	SelectedCheckpointData getInjectInfo();
-	SelectedFolderData getDumpInfo();
+	virtual SelectedCheckpointData getInjectInfo() override;
+	virtual SelectedFolderData getDumpInfo() override;
 
 	std::string HCMDirPath;
 };

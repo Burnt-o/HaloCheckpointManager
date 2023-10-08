@@ -5,10 +5,10 @@
 #include "MultilevelPointer.h"
 #include "InjectRequirements.h"
 #include "PointerManager.h"
-#include "SharedMemoryInternal.h"
-#include "MCCStateHook.h"
+#include "ISharedMemory.h"
+#include "IMCCStateHook.h"
 #include "GetMCCVersion.h"
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 #include "PointerManager.h"
 #include "MultilevelPointer.h"
 #include "SettingsStateAndEvents.h"
@@ -26,11 +26,11 @@ private:
 	ScopedCallback<ActionEvent> mDumpCheckpointEventCallback;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<MCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
+	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
+	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
-	gsl::not_null<std::shared_ptr<SharedMemoryInternal>> sharedMem;
+	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
 
 
 	// data
@@ -124,10 +124,10 @@ public:
 		onDump();
 			}),
 		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
-		mccStateHook(dicon.Resolve<MCCStateHook>()),
-		sharedMem(dicon.Resolve<SharedMemoryInternal>()),
+		mccStateHook(dicon.Resolve<IMCCStateHook>()),
+		sharedMem(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		messagesGUI(dicon.Resolve<MessagesGUI>())
+		messagesGUI(dicon.Resolve<IMessagesGUI>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>();
 		mInjectRequirements = ptr->getData<std::shared_ptr<InjectRequirements>>("injectRequirements", game);

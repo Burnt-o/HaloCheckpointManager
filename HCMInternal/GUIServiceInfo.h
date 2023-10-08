@@ -1,22 +1,22 @@
 #pragma once
-#include "MessagesGUI.h"
+#include "IMessagesGUI.h"
 #include "GuiElementEnum.h"
 #include "GameState.h"
 class GUIServiceInfo
 {
 private:
-	std::shared_ptr<MessagesGUI> messagesGUI;
-	std::vector<std::string> failureMessages;
+	std::shared_ptr<IMessagesGUI> messagesGUI;
+	std::map<std::pair<GameState, GUIElementEnum>, std::string> failureMessagesMap; 
 public:
-	GUIServiceInfo(std::shared_ptr<MessagesGUI> mes) : messagesGUI(mes) {}
+	GUIServiceInfo(std::shared_ptr<IMessagesGUI> mes) : messagesGUI(mes) {}
 	void addFailure(GUIElementEnum guielementenum, GameState game, std::vector<HCMInitException> serviceFailures);
 	void addFailure(GUIElementEnum guielementenum, GameState game, HCMInitException miscFailure);
-	void printFailures()
+	void printAllFailures();
+	std::string getFailure(GUIElementEnum guielementenum, GameState game)
 	{
-		for (auto& message : failureMessages)
-		{
-			messagesGUI->addMessage(message);
-		}
+		std::pair<GameState, GUIElementEnum> gameElePair(game, guielementenum);
+		if (!failureMessagesMap.contains(gameElePair)) return "No failure message stored!";
+		return failureMessagesMap.at(gameElePair);
 	}
 };
 

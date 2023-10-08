@@ -13,24 +13,423 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{4be9251b-d712-44dd-a57b-08137a7dad0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HCMInternalFiles">
+      <UniqueIdentifier>{b77521f7-ee34-45a5-a373-e42e7d7c8c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks">
+      <UniqueIdentifier>{6fb33ff1-1dc2-4d1c-83bd-9550ccd8f712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{62b3ee33-0e28-4e79-a8e1-d1bc6c6fbbdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DIContainerTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScopedCallbackTests.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\HCMInternal\includes\safetyhook\safetyhook.cpp">
+      <Filter>Includes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\includes\safetyhook\Zydis.c">
+      <Filter>Includes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\D3D11Hook.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\DynamicStruct.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetMCCVersion.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetObjectAddress.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetPlayerDatum.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GUIElementConstructor.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GUIRequiredServices.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GUIServiceInfo.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\HCMInternalGUI.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\HeartbeatTimer.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\HotkeyManager.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\HotkeyRendererImpl.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ImGuiManager.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Invulnerability.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Logging.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\MCCStateHook.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\MessagesGUI.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\MidhookContextInterpreter.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ModuleCache.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ModuleHook.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ModuleHookManager.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\MultilevelPointer.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\OptionalCheatManager.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\PointerManager.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\RuntimeExceptionHandler.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Setting.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\SettingsSerialiser.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\SharedMemoryInternal.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Speedhack.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\StaticHookWrapper.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\UnhandledExceptionHandler.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\WindowsUtilities.cpp">
+      <Filter>HCMInternalFiles</Filter>
     </ClCompile>
     <ClCompile Include="CallbackGuardTests.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatConstructionTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="DIContainerTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="ScopedCallbackTests.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\includes\safetyhook\Zydis.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\map.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ExternalInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\App.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ControlDefs.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\CustomExceptions.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\D3D11Hook.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Datum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DIContainer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DirPathContainer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DumpCheckpoint.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DumpCore.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DynamicStruct.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DynamicStructFactory.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ForceCheckpoint.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ForceCoreLoad.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ForceCoreSave.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ForceDoubleRevert.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ForceRevert.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GameState.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetMCCVersion.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetObjectAddress.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetPlayerDatum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GlobalKill.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIElementConstructor.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GuiElementEnum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIElementStore.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIHeader.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIInvulnerability.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIRequiredServices.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIServiceInfo.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUISimpleButton.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUISimpleToggle.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUISpeedhack.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\H1PlayerStruct.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Halo1InvulnerabilityImpl.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HCM_imconfig.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HCMExternalCommand.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HCMInternalGUI.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HeartbeatTimer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Hotkey.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeyDefinitions.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeyEnum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeyManager.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeyRenderer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeyRendererImpl.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IAnchorPoint.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IGetMCCVersion.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IGUIElement.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IGUIRequiredServices.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IMakeOrGetCheat.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IMessagesGUI.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ImGuiManager.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\InjectCheckpoint.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\InjectCore.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\InjectRequirements.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Invulnerability.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\InvulnerabilityImplBase.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IOptionalCheat.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ISharedMemory.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Logging.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\MCCState.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\MCCStateHook.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\MessagesGUI.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\MidhookContextInterpreter.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ModuleCache.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ModuleHook.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ModuleHookManager.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\MultilevelPointer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\OptionalCheatEnum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\OptionalCheatInfo.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\OptionalCheatManager.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\PointerManager.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\RuntimeExceptionHandler.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ScopedCallback.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Setting.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\SettingsSerialiser.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\SettingsStateAndEvents.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\SharedMemoryInternal.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Speedhack.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\StaticHookWrapper.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\UnhandledExceptionHandler.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Vec2.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\VersionInfo.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\WindowsUtilities.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\WinHandle.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="MockSharedMemory.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockGetMCCVersion.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockMessagesGUI.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockSettingsSerialiser.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockMCCStateHook.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatConstructionTests.h">
+      <Filter>Tests</Filter>
     </ClInclude>
     <ClInclude Include="TestLogging.h">
       <Filter>Header Files</Filter>

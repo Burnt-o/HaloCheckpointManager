@@ -1,12 +1,12 @@
 #pragma once
 #include "Setting.h"
-#include "SettingsSerialiser.h"
+#include "ISettingsSerialiser.h"
 class SettingsStateAndEvents
 {
 private:
-	std::shared_ptr<SettingsSerialiser> mSerialiser;
+	std::shared_ptr<ISettingsSerialiser> mSerialiser;
 public:
-	SettingsStateAndEvents(std::shared_ptr<SettingsSerialiser> serialiser) 
+	SettingsStateAndEvents(std::shared_ptr<ISettingsSerialiser> serialiser)
 		: mSerialiser(serialiser) 
 	{ 
 		mSerialiser->deserialise(allSerialisableOptions); 

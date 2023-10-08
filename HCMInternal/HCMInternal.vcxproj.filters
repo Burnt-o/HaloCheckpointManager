@@ -310,6 +310,18 @@
     <ClInclude Include="GetObjectAddress.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
+    <ClInclude Include="IMessagesGUI.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ISharedMemory.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ISettingsSerialiser.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="IMCCStateHook.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
