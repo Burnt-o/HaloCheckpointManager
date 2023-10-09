@@ -74,21 +74,36 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--crosscheck against enum-->
+	<!--gameIndicator +0x68-->
 	<VersionedEntry Name="levelIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x39B75B8</Offset>
+				<Offset>0x3A253A0</Offset>
+				<Offset>0x68</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x3B1C8C8</Offset>
+				<Offset>0x3B81270</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x0401C1C0</Offset>
+				<Offset>0x68</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x3F992E8</Offset>
+				<Offset>0x3FFE4D8</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x3E4CA78</Offset>
+				<Offset>0x68</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -1789,20 +1804,19 @@
 				<Offset>0xB9F16F</Offset>
 			</Offsets>
 		</Version>
-
-		<!--may need to move these old ones back by 0x334-->
-		<!--<Version Version="1.2448.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
+		
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0xBFD3A4</Offset>
+				<Offset>0x916278</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.2645.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0xC02FB4</Offset>
-			</Offsets>
-		</Version>-->
+			<Version Version="1.2645.0.0" Game="Halo2">
+				<Module>halo2.dll</Module>
+				<Offsets>
+					<Offset>0x916338</Offset>
+				</Offsets>
+			</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -1819,14 +1833,29 @@
 		</Version>
 
 
-		<Version Version="1.3272.0.0" Game="Halo2">
+		<Version Version="All" Game="Halo2">
 			<Parameters>
 				<unitDatum>r12</unitDatum>
 			</Parameters>
 		</Version>
 	</VersionedEntry>
 
+	
 	<VersionedEntry Name="boardingText" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x166F9C8</Offset>
+				<Offset>0x228</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x0174a188</Offset>
+				<Offset>0x228</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -1837,6 +1866,20 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="boardingTextFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x166F9C8</Offset>
+				<Offset>0x46C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x0174a188</Offset>
+				<Offset>0x46C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -1868,6 +1911,19 @@
 			</Offsets>
 		</Version>
 
+	<!--scan nw "40 53 48 83 ec 20 8b da 8b d1"-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x8E3620</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x8E3660</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -1946,6 +2002,7 @@
 
 	<VersionedEntry Name="bipedDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo1">
+			<!--need to double check this is accurate for old patches-->
 			<position>0x18</position>
 			<velocity>0x24</velocity>
 			<modelRotation>0x30</modelRotation>
@@ -1966,7 +2023,7 @@
 			<isAirborneFlag>0x4D8</isAirborneFlag>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo2">
+		<Version Version="All" Game="Halo2"> <!--confirmed 2448, 2645, 3272-->
 			<currentVehicleDatum>0x14</currentVehicleDatum>
 			<position>0x64</position>
 			<velocity>0x88</velocity>
