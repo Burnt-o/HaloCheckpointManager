@@ -1826,6 +1826,25 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="boardingText" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x0187B5E0</Offset>
+				<Offset>0x238</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="boardingTextFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x0187B5E0</Offset>
+				<Offset>0x434</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
 	<!-- #endregion invulnerability-->
 	
 	<!-- #region getObjectAddress-->

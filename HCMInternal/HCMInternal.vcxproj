@@ -270,7 +270,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GUISimpleToggle.h" />
     <ClInclude Include="GUISpeedhack.h" />
-    <ClInclude Include="Halo1InvulnerabilityImpl.h" />
+    <ClInclude Include="SimpleInvulnerabilityImpl.h" />
     <ClInclude Include="HCMExternalCommand.h" />
     <ClInclude Include="HCMInternalGUI.h" />
     <ClInclude Include="Datum.h" />

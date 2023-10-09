@@ -175,7 +175,7 @@
     <ClInclude Include="Invulnerability.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="Halo1InvulnerabilityImpl.h">
+    <ClInclude Include="SimpleInvulnerabilityImpl.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
     <ClInclude Include="GuiElementEnum.h">
