@@ -40,7 +40,13 @@ public:
 		m_pEvent->remove(mHandle);
 	}
 
-	
+	void removeCallback() // used in class destructors with destruction guards, prevents any new calls of functor
+	{
+		if (!m_pEvent || !mHandle) { PLOG_ERROR << "ScopedCallback::removeCallback() null callback"; return; }
+
+		PLOG_VERBOSE << "removing ScopedCallback";
+		m_pEvent->remove(mHandle);
+	}
 
 
 	ScopedCallback(const ScopedCallback& that) = delete;

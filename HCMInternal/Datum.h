@@ -25,7 +25,9 @@ struct Datum
 		this->salt = (uint16_t)(in >> 16);
 	}
 
+	bool isNull() const { return this->operator unsigned int() == 0xFFFFFFFF || this->operator unsigned int() == 0; }
+	//operator bool() const { return this->operator unsigned int() == 0xFFFFFFFF || this->operator unsigned int() == 0; } // null datum check
+
 };
 static_assert(sizeof(Datum) == sizeof(int32_t));
 
-constexpr Datum nullDatum{};

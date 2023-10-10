@@ -230,37 +230,7 @@ D3D11Hook::D3D11Hook()
 	}
 	instance = this;
 
-	ID3D11Device* pDummyDevice = nullptr;
-	IDXGISwapChain* pDummySwapchain = nullptr;
 
-	// Create a dummy device
-	CreateDummySwapchain(pDummySwapchain, pDummyDevice);
-
-	// Get swapchain vmt
-	void** pVMT = *(void***)pDummySwapchain;
-
-	// Get Present's address out of vmt
-	m_pOriginalPresent = (DX11Present*)pVMT[(UINT)IDXGISwapChainVMT::Present];
-	m_ppPresent = (DX11Present**)&pVMT[(UINT)IDXGISwapChainVMT::Present];
-	PLOG_INFO << "PRESENT: " << m_pOriginalPresent;
-	PLOG_INFO << "PRESENT pointer: " << m_ppPresent;
-
-	// Get resizeBuffers too
-	m_pOriginalResizeBuffers = (DX11ResizeBuffers*)pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
-	m_ppResizeBuffers = (DX11ResizeBuffers**)&pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
-	PLOG_INFO << "RESIZEBUFFERS: " << m_pOriginalResizeBuffers;
-	PLOG_INFO << "RESIZEBUFFERS pointer: " << m_ppResizeBuffers;
-
-	// Don't need the dummy device anymore
-	safe_release(pDummySwapchain);
-	safe_release(pDummyDevice);
-
-	PLOG_DEBUG << "rewriting present pointer";
-	// Rewrite the present pointer to instead point to our newPresent
-	// Need access tho!
-	patch_pointer(m_ppPresent, (uintptr_t)& newDX11Present);
-	// resizeBuffers too
-	patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
 
 
 
@@ -320,7 +290,13 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 // static 
 HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
-	std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
+	constexpr int skipEveryXthFrame = 10;
+	static int frameSkipper = 0;
+	frameSkipper++;
+	if (frameSkipper == skipEveryXthFrame) { frameSkipper = 0; 	return instance->m_pOriginalPresent(pSwapChain, SyncInterval, Flags); }
+
+	ScopedAtomicBool lock(presentHookRunning);
+	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 	LOG_ONCE(PLOG_DEBUG << "D3D11Hook::newDX11Present");
 	auto d3d = instance;
 	if (!d3d)
@@ -328,7 +304,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 		PLOG_FATAL << "d3d instance was null at newDX11Present";
 	}
 
-	auto guard = d3d->shared_from_this();
+	//auto guard = d3d->shared_from_this();
 
 	
 
@@ -374,14 +350,15 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 // static
 HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
 {
-	std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
+	ScopedAtomicBool lock(presentHookRunning);
+	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
 	auto d3d = instance;
 	if (!d3d)
 	{
 		PLOG_FATAL << "d3d instance was null at newDX11ResizeBuffers";
 	}
 
-	auto guard = d3d->shared_from_this();
+	//auto guard = d3d->shared_from_this();
 
 	if (!d3d->isD3DdeviceInitialized)
 	{
@@ -443,21 +420,17 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 // Releases D3D resources, if we acquired them
 D3D11Hook::~D3D11Hook()
 {
-// It's important that hooks are destroyed BEFORE the rest of the class is
-// as the hook functions will try to access class members
-// and also the d3d resources need to be manually released
 
-	std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this
-
-	 // I think I need to think about wrapping the mutex around m_pOriginalPresent perhaps. newPresent returns that if mutex locked? argh idk
-
-
-	// Destroy the hooks
-	// rewrite the pointers to go back to the original value
 	PLOG_VERBOSE << "~D3D11Hook() unpatching present pointer";
+	if (presentHookRunning) presentHookRunning.wait(true);
+	safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
+
+	// rewrite the pointers to go back to the original value
 	patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
 	// resizeBuffers too
 	patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
+
+	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
 
 	// D3D resource releasing:
 	// need to call release on the device https://learn.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3dswapchain9-getdevice
@@ -467,4 +440,43 @@ D3D11Hook::~D3D11Hook()
 	safe_release(m_pMainRenderTargetView);
 	instance = nullptr;
 	
+}
+
+
+void D3D11Hook::beginHook()
+{
+	PLOG_DEBUG << "beginning vmt hook";
+	safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
+
+	ID3D11Device* pDummyDevice = nullptr;
+	IDXGISwapChain* pDummySwapchain = nullptr;
+
+	// Create a dummy device
+	CreateDummySwapchain(pDummySwapchain, pDummyDevice);
+
+	// Get swapchain vmt
+	void** pVMT = *(void***)pDummySwapchain;
+
+	// Get Present's address out of vmt
+	m_pOriginalPresent = (DX11Present*)pVMT[(UINT)IDXGISwapChainVMT::Present];
+	m_ppPresent = (DX11Present**)&pVMT[(UINT)IDXGISwapChainVMT::Present];
+	PLOG_INFO << "PRESENT: " << m_pOriginalPresent;
+	PLOG_INFO << "PRESENT pointer: " << m_ppPresent;
+
+	// Get resizeBuffers too
+	m_pOriginalResizeBuffers = (DX11ResizeBuffers*)pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
+	m_ppResizeBuffers = (DX11ResizeBuffers**)&pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
+	PLOG_INFO << "RESIZEBUFFERS: " << m_pOriginalResizeBuffers;
+	PLOG_INFO << "RESIZEBUFFERS pointer: " << m_ppResizeBuffers;
+
+	// Don't need the dummy device anymore
+	safe_release(pDummySwapchain);
+	safe_release(pDummyDevice);
+
+	PLOG_DEBUG << "rewriting present pointer";
+	// Rewrite the present pointer to instead point to our newPresent
+	// Need access tho!
+	patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
+	// resizeBuffers too
+	patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
 }

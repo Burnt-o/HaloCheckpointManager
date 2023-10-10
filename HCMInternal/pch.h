@@ -65,6 +65,7 @@
 #include "eventpp/callbacklist.h"
 #include "eventpp/utilities/scopedremover.h"
 #include "ScopedCallback.h"
+#include "ScopedAtomicBool.h"
 
 // boost
 #include "boost\stacktrace.hpp"

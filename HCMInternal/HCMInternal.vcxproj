@@ -239,6 +239,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ISharedMemory.h" />
     <ClInclude Include="MCCState.h" />
     <ClInclude Include="GetPlayerDatum.h" />
+    <ClInclude Include="ScopedAtomicBool.h" />
     <ClInclude Include="ScopedCallback.h" />
     <ClInclude Include="SharedMemoryInternal.h" />
     <ClInclude Include="Vec2.h" />

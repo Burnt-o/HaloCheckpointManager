@@ -31,7 +31,6 @@ class GetObjectAddress::GetObjectAddressImpl
 			if ((int32_t)expectedObjectType == -1) return -1; // null means catch all
 			out = out | ((int32_t)1 << (int32_t)expectedObjectType); // set bit at nth position where n = expectedObjectType
 		}
-		
 		return out;
 	}
 
@@ -51,7 +50,7 @@ public:
 		LOG_ONCE(PLOG_DEBUG << "calling games getObjectAddressFunc");
 		
 		auto result = ((getObjectAddressFunc*)p_getObjectAddressFunc)(datum, expectedObjectTypeToBitmask<TemplatedObjectType>(expectedObjectTypes));
-		if (!result) throw HCMRuntimeException("null object address");
+		if (!result) throw HCMRuntimeException(std::format("null object address for datum: {:X}, with bitmask {}", datum.operator unsigned int(), expectedObjectTypeToBitmask<TemplatedObjectType>(expectedObjectTypes)));
 		return result;
 	}
 

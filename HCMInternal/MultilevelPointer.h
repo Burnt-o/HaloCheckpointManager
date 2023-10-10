@@ -14,6 +14,7 @@ private:
 	// Common to all multilevel_pointers
 	static std::stringstream mLastError;
 	bool readString(std::string& resolvedOut) const; 
+	bool readWString(std::wstring& resolvedOut) const;
 
 
 protected:
@@ -53,6 +54,10 @@ public:
 		if (typeid(T) == typeid(std::string))
 		{
 			return readString(*(std::string*)resolvedOut);
+		}
+		if (typeid(T) == typeid(std::wstring))
+		{
+			return readWString(*(std::wstring*)resolvedOut);
 		}
 
 		uintptr_t address;

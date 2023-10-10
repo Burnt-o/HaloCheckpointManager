@@ -69,7 +69,10 @@ public:
 
 	~HCMInternalGUI()
 	{
-		std::unique_lock<std::mutex> lock(mDestructionGuard);
+		// no new callback invocations
+		mImGuiRenderCallbackHandle.~ScopedCallback();
+		mMCCStateChangedCallbackHandle.~ScopedCallback();
+		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
 	}
 
 

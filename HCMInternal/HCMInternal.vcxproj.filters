@@ -325,6 +325,9 @@
     <ClInclude Include="HotkeyEventsLambdas.h">
       <Filter>Services\Hotkeys</Filter>
     </ClInclude>
+    <ClInclude Include="ScopedAtomicBool.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

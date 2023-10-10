@@ -151,13 +151,13 @@ bool MultilevelPointer::readMCCString(std::string& resolvedOut) const
 	uintptr_t pString;
 	if (!this->resolve(&pString)) return false;
 
-	PLOG_VERBOSE << "readString parsing @" << pString;
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "readMCCString parsing @" << std::hex << p, p = pString);
 
 	uint64_t strLength = *(uint64_t*)(((uintptr_t)pString) + 0x10); // int value of string length is stored at +0x10 from string start
 	uint64_t strCapacity = *(uint64_t*)(((uintptr_t)pString) + 0x18); // int value of string length is stored at +0x10 from string start
 
-	PLOG_VERBOSE << "readString parsing strLength @" << std::hex << (((uintptr_t)pString) + 0x10);
-	PLOG_VERBOSE << "readString parsing strCapacity @" << std::hex << (((uintptr_t)pString) + 0x18);
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "readString parsing strLength @" << std::hex << (((uintptr_t)p) + 0x10), p = pString);
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "readString parsing strCapacity @" << std::hex << (((uintptr_t)p) + 0x18), p = pString);
 
 	// Validity checks
 	if (strLength == 0) // empty string or invalid pointer
@@ -185,14 +185,14 @@ bool MultilevelPointer::readMCCString(std::string& resolvedOut) const
 	// Handle shortstring vs longstring
 	if (strLength <= 0x10)
 	{
-		PLOG_VERBOSE << "short string case";
+		LOG_ONCE(PLOG_VERBOSE << "short string case");
 		//short string case - the string is stored in the buffer
 		std::memcpy(potentialChars.get(), (void*)pString, strLength); // our void* is actually the char*, so we can copy that
 
 	}
 	else
 	{
-		PLOG_VERBOSE << "long string case";
+		LOG_ONCE(PLOG_VERBOSE << "long string case");
 		//long string case. follow the pointer in the buffer to the real char* (ie we're dealing with a char**)
 		std::memcpy(potentialChars.get(), *(void**)pString, strLength);
 	}
@@ -231,17 +231,13 @@ bool MultilevelPointer::readMCCString(std::string& resolvedOut) const
 
 }
 
-// special readData variation for strings, to handle MCC's short-string-optimization
+// special readData variation for strings
 bool MultilevelPointer::readString(std::string& resolvedOut) const
 {
-
-
 	uintptr_t pString;
 	if (!this->resolve(&pString)) return false;
 
-	PLOG_VERBOSE << "readString parsing @" << pString;
-
-
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "readString parsing @" << std::hex << p, p = pString);
 
 	// copy chars to a string
 	char* pChars = (char*)pString;
@@ -254,19 +250,30 @@ bool MultilevelPointer::readString(std::string& resolvedOut) const
 		if (buffer[i] == '\n') break;
 	}
 
-	std::string newString = buffer;
+	resolvedOut = buffer;
+	return resolvedOut.size() != 255;
 
-	if (newString.size() == 255)
+}
+
+// special readData variation for wstrings
+bool MultilevelPointer::readWString(std::wstring& resolvedOut) const
+{
+	uintptr_t pString;
+	if (!this->resolve(&pString)) return false;
+
+	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "readWString parsing @" << std::hex << p, p = pString);
+
+	// copy chars to a string
+	WCHAR* pChars = (WCHAR*)pString;
+	WCHAR buffer[255];
+
+	for (int i = 0; i < 255; i++)
 	{
-		*SetLastErrorByRef() << "readString failed, reached end of buffer without seeing null terminator" << std::endl << newString << std::endl;
-		
-		return false;
+		buffer[i] = *pChars;
+		pChars++;
+		if (buffer[i] == L'\n') break;
 	}
 
-	resolvedOut = newString;
-
-	return true;
-
-
-
+	resolvedOut = buffer;
+	return resolvedOut.size() != 255;
 }

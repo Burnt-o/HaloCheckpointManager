@@ -114,7 +114,8 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 ImGuiManager::~ImGuiManager()
 {
 	PLOG_DEBUG << "~ImGuiManager()";
-	presentEventCallback.~ScopedCallback(); // no new callback invokes
+	//presentEventCallback.~ScopedCallback();
+	presentEventCallback.removeCallback(); // no new callback invokes
 	if (mOldWndProc) 		// restore the original wndProc
 	{
 		SetWindowLongPtrW(m_windowHandle, GWLP_WNDPROC, (LONG_PTR)mOldWndProc);

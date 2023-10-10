@@ -18,8 +18,8 @@ public:
 
 	virtual Datum getPlayerDatum() override
 	{
-		Datum playerDatum;
-		if (!playerDatumPointer->readData(&playerDatum)) throw HCMRuntimeException(std::format("Failed to read playerDatum {}", MultilevelPointer::GetLastError()));
+		Datum playerDatum; // inits to null datum
+		if (!playerDatumPointer->readData(&playerDatum)) PLOG_ERROR << "Failed to read playerDatum: " << MultilevelPointer::GetLastError(); 
 		return playerDatum;
 	}
 };
@@ -29,12 +29,15 @@ GetPlayerDatum::GetPlayerDatum(GameState game, IDIContainer& dicon)
 	switch (game)
 	{
 	case GameState::Value::Halo1:
+	case GameState::Value::Halo2:
+	case GameState::Value::Halo3:
+	case GameState::Value::Halo3ODST:
+	case GameState::Value::HaloReach:
+	case GameState::Value::Halo4:
 		pimpl = std::make_unique<SimpleGetPlayerDatum>(game, dicon);
 		return;
 
-	case GameState::Value::Halo2:
-		pimpl = std::make_unique<SimpleGetPlayerDatum>(game, dicon);
-		return;
+
 
 	default:
 		throw HCMInitException("GetPlayerDatum not impl for this game yet");

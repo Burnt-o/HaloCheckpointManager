@@ -37,6 +37,8 @@ class App {
 public:
 	App()
 	{
+        std::shared_ptr<UnhandledExceptionHandler> unhandled; // init later, but we need it to be the last thing to go out of scope
+
         // these are needed in the init exception catch block, so declared here
         auto logging = std::make_shared<Logging>();
         logging->initConsoleLogging();
@@ -60,7 +62,7 @@ public:
         logging->initFileLogging(dirPath);
         logging->SetFileLoggingLevel(plog::verbose);
         PLOG_INFO << "HCMInternal initializing. DirPath: " << dirPath;
-        auto unhandled = std::make_shared<UnhandledExceptionHandler>(dirPath); PLOGV << "unhandled init";
+        unhandled = std::make_shared<UnhandledExceptionHandler>(dirPath); PLOGV << "unhandled init";
         curl_global_init(CURL_GLOBAL_DEFAULT);
         try
         {
@@ -108,30 +110,7 @@ public:
             
             auto hb = std::make_shared<HeartbeatTimer>(); PLOGV << "hb init";
 
-            //// testing dynamic struct
-            //{
-            //    try
-            //    {
-            //      PLOG_INFO << "testing dynamic structs";
-            //    enum class Halo1PlayerData { Health, Shields };
-
-            //    auto test = DynamicStructFactory::make<Halo1PlayerData>(ptr, GameState::Value::Halo1);
-
-            //    test->currentBaseAddress = 20;
-            //    auto healthOffset = test->field<float>(Halo1PlayerData::Health);
-            //    PLOG_DEBUG << "address of healthOffset: " << (uintptr_t)healthOffset;
-            //    }
-            //    catch (HCMRuntimeException ex)
-            //    {
-            //        PLOG_ERROR << "dynstruct rt error: " << ex.what();
-            //    }
-            //    catch (HCMInitException ex)
-            //    {
-            //        PLOG_ERROR << "dynstruct init error: " << ex.what();
-            //    }
-            //}
-
-
+            d3d->beginHook();
 
             PLOG_INFO << "All services succesfully initialized! Entering main loop";
             Sleep(100);
