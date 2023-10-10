@@ -11,7 +11,8 @@
 class HCMInternalGUI : public IAnchorPoint, public std::enable_shared_from_this<HCMInternalGUI>
 {
 private:
-	std::mutex mDestructionGuard{};
+	std::mutex mDestructionGuard;
+	std::mutex currentGameGUIElementsMutex;
 
 	// callbacks
 	ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
@@ -47,7 +48,7 @@ private:
 	GUIHeader mGUIHeader;
 
 	
-	std::mutex currentGameGUIElementsMutex{};
+
 	const std::vector<std::shared_ptr<IGUIElement>>* p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(GameState::Value::Halo1);
 
 
@@ -56,7 +57,9 @@ public:
 
 	// Gets passed ImGuiManager ImGuiRenderEvent reference so we can subscribe and unsubscribe
 	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent)
-		: mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
+		: mDestructionGuard(),
+		currentGameGUIElementsMutex(),
+		mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
 		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
 		mGUIStore(guistore),
 		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIHeader(MCCStateHook)

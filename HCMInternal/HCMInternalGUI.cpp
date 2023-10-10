@@ -129,13 +129,17 @@ void HCMInternalGUI::renderErrorDialog()
 
 }
 
+//https://www.modernescpp.com/index.php/dealing-with-mutation-locking/
+
 
 void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 {
+
 	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "onGameStateChange locking currentGameGUIElementsMutex @ 0x" << std::hex << pMutex, pMutex = &currentGameGUIElementsMutex);
 	std::unique_lock<std::mutex> lock(currentGameGUIElementsMutex);
 
 	p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(newState.currentGameState);
+	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
 }
 
 void HCMInternalGUI::primaryRender()
@@ -180,5 +184,6 @@ void HCMInternalGUI::primaryRender()
 	}
 
 	ImGui::End(); // end main window
-	//PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex";
+	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
+
 }

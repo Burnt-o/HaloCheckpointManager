@@ -449,6 +449,9 @@ D3D11Hook::~D3D11Hook()
 
 	std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this
 
+	 // I think I need to think about wrapping the mutex around m_pOriginalPresent perhaps. newPresent returns that if mutex locked? argh idk
+
+
 	// Destroy the hooks
 	// rewrite the pointers to go back to the original value
 	PLOG_VERBOSE << "~D3D11Hook() unpatching present pointer";

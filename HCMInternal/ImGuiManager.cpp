@@ -114,13 +114,16 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 ImGuiManager::~ImGuiManager()
 {
 	PLOG_DEBUG << "~ImGuiManager()";
-	std::unique_lock<std::mutex> lock(mDestructionGuard);
-		// restore the original wndProc
-	if (mOldWndProc)
+	presentEventCallback.~ScopedCallback(); // no new callback invokes
+	if (mOldWndProc) 		// restore the original wndProc
 	{
 		SetWindowLongPtrW(m_windowHandle, GWLP_WNDPROC, (LONG_PTR)mOldWndProc);
 		mOldWndProc = nullptr;
 	}
+
+	std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
+
+
 
 	// Cleanup
 	if (m_isImguiInitialized)

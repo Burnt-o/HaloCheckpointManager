@@ -41,7 +41,8 @@ public:
 
 	~MessagesGUI()
 	{
-		std::unique_lock<std::mutex> lock(mDestructionGuard);
+		mRenderEventCallback.~ScopedCallback(); // no new callback invocation
+		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
 	}
 
 	//explicit MessagesGUI(Vec2 anchorOffset)
