@@ -2165,6 +2165,13 @@
 				<Offset>0xBCC8B2</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x610EFC</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 	<!--#endregion ai freeze-->
 	

@@ -27,16 +27,20 @@ private:
 	std::shared_ptr<ModuleMidHook> aiFreezeHook;
 
 	enum class flagToModifyToWhat {
-		zeroFlagToFalse
+		zeroFlagToFalse,
+		zeroFlagToTrue
 	};
 
+
+	// hm.. could make some midhookcontextinterpreter style thing that can get this kinda flagToModifyToWhat from pointer data for different versions etc and we eval once here instead of every func call.
 	template <flagToModifyToWhat flagModication>
-	static void aiFreezeHookFunction(SafetyHookContext& ctx)
-	{
-		// set zero flag to false
-		ctx.rflags &= ~(1UL << 6);
-		//ctx.rflags |= (1 << 6); // set zero flag to true
-	}
+	static void aiFreezeHookFunction(SafetyHookContext& ctx);
+
+	template<>
+	static void aiFreezeHookFunction<flagToModifyToWhat::zeroFlagToFalse>(SafetyHookContext& ctx) { ctx.rflags &= ~(1UL << 6); }
+
+	template<>
+	static void aiFreezeHookFunction<flagToModifyToWhat::zeroFlagToTrue>(SafetyHookContext& ctx) { ctx.rflags |= (1 << 6); }
 
 	// primary event callback
 	void onToggleChange(bool& newValue)
@@ -64,8 +68,12 @@ public:
 		switch (mGame)
 		{
 		case GameState::Value::Halo1:
-			// hm.. could make some midhookcontextinterpreter style thing that can get this kinda flagToModifyToWhat from pointer data for different versions etc and we eval once here instead of every func call.
+			
 			aiFreezeHook = ModuleMidHook::make(gameImpl.toModuleName(), aiFreezeFunction, aiFreezeHookFunction<flagToModifyToWhat::zeroFlagToFalse>);
+			break;
+
+		case GameState::Value::Halo2:
+			aiFreezeHook = ModuleMidHook::make(gameImpl.toModuleName(), aiFreezeFunction, aiFreezeHookFunction<flagToModifyToWhat::zeroFlagToTrue>);
 			break;
 
 		default:
