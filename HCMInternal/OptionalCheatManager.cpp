@@ -17,6 +17,7 @@
 #include "Invulnerability.h"
 #include "GetPlayerDatum.h"
 #include "GetObjectAddress.h"
+#include "AIFreeze.h"
 
 #include "DIContainer.h"
 #include "map.h"

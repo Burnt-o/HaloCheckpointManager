@@ -290,10 +290,7 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 // static 
 HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
-	constexpr int skipEveryXthFrame = 10;
-	static int frameSkipper = 0;
-	frameSkipper++;
-	if (frameSkipper == skipEveryXthFrame) { frameSkipper = 0; 	return instance->m_pOriginalPresent(pSwapChain, SyncInterval, Flags); }
+
 
 	ScopedAtomicBool lock(presentHookRunning);
 	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing

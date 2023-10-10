@@ -29,11 +29,15 @@ private:
 		HotkeysEnum::enumName,\
 		defaultBinding) }
 
-	static constexpr inline int hotkeyEnumCount = 11;// magic_enum::enum_count<HotkeysEnum>();
+	static constexpr inline int hotkeyEnumCount = 12;// magic_enum::enum_count<HotkeysEnum>();
 	static constexpr inline int magicEnumCount = magic_enum::enum_count<HotkeysEnum>();
 
 	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>::value_type allHotkeysData[hotkeyEnumCount]
 	{
+		// TODO: make a macro that automates this
+		// TODO: bind the lambda for toggle events here instead of HotkeyEventsLambdas
+		// TODO: figure out how to get the array count automagically (prob can do in the macro)
+
 		initHotkey(forceCheckpoint,
 		mSettings->forceCheckpointEvent,
 		vvk{{ ImGuiKey_F1 }}),
@@ -76,7 +80,11 @@ private:
 
 		initHotkey(invuln,
 		mSettings->invulnerabilityHotkeyEvent,
-		vvk{{ ImGuiKey_F5 }})
+		vvk{{ ImGuiKey_F5 }}),
+
+		initHotkey(aiFreeze,
+		mSettings->aiFreezeHotkeyEvent,
+		vvk{})
 
 	};
 

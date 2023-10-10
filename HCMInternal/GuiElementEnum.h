@@ -12,7 +12,8 @@ injectCoreGUI,\
 dumpCoreGUI,\
 speedhackGUI,\
 invulnGUI,\
-invulnNPCGUI\
+invulnNPCGUI,\
+aiFreezeGUI
 
 enum class GUIElementEnum {
 	ALLGUIELEMENTS

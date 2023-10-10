@@ -2,6 +2,7 @@
 #include "Vec2.h"
 typedef eventpp::CallbackList<void()> ActionEvent;
 typedef eventpp::CallbackList<void(Vec2)> RenderEvent;
+typedef eventpp::CallbackList<void(bool&)> ToggleEvent;
 #define addTooltip(x) if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) ImGui::SetTooltip(x)
 
 #define nameof(x) #x

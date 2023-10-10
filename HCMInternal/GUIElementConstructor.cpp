@@ -98,6 +98,10 @@ private:
 			case GUIElementEnum::invulnNPCGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle>
 					(game, std::nullopt, "NPC Invulnerability", settings->invulnerabilityNPCToggle));
+
+			case GUIElementEnum::aiFreezeGUI:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle>
+					(game, HotkeysEnum::aiFreeze, "Freeze AI", settings->aiFreezeToggle));
 			default:
 				throw HCMInitException(std::format("You forgot to add a creation case label for GUIElement: {} in {}::{}", magic_enum::enum_name(guielementenum), nameof(GUIElementConstructor), nameof(createGUIElement)));
 			}

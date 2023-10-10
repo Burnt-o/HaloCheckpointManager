@@ -14,7 +14,8 @@ DumpCore,\
 Speedhack,\
 Invulnerability,\
 GetPlayerDatum,\
-GetObjectAddress\
+GetObjectAddress,\
+AIFreeze\
 
 
 enum class OptionalCheatEnum {

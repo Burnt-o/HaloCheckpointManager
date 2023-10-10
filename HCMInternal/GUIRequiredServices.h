@@ -14,7 +14,8 @@
 ((injectCoreGUI)(Halo1))\
 ((dumpCoreGUI)(Halo1))\
 ((speedhackGUI)ALL_SUPPORTED_GAMES)\
-((invulnGUI)ALL_SUPPORTED_GAMES)
+((invulnGUI)ALL_SUPPORTED_GAMES)\
+((aiFreezeGUI)ALL_SUPPORTED_GAMES)
 
 class GUIRequiredServices : public IGUIRequiredServices {
 private:

@@ -21,7 +21,7 @@ public:
 	//	hotkeys
 	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
-
+	std::shared_ptr<ActionEvent> aiFreezeHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -66,6 +66,12 @@ public:
 		nameof(invulnerabilityNPCToggle)
 	);
 
+	std::shared_ptr<Setting<bool>> aiFreezeToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(aiFreezeToggle)
+		);
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions{invulnerabilityNPCToggle, speedhackSetting};

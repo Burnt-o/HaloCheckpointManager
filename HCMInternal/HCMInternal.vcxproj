@@ -220,6 +220,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AIFreeze.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="DirPathContainer.h" />
     <ClInclude Include="DynamicStruct.h" />
@@ -364,6 +365,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Speedhack.cpp" />
     <ClCompile Include="UnhandledExceptionHandler.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

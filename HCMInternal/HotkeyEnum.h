@@ -11,7 +11,8 @@ dumpCheckpoint,\
 injectCore,\
 dumpCore,\
 speedhack,\
-invuln\
+invuln,\
+aiFreeze
 
 
 enum class HotkeysEnum : int {

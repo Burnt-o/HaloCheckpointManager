@@ -10,7 +10,7 @@ class SpeedhackImpl : public ISpeedhackImpl
 {
 private:
 	// event callbacks
-	ScopedCallback<eventpp::CallbackList<void(bool&)>> mSpeedhackToggleCallbackHandle;
+	ScopedCallback<ToggleEvent> mSpeedhackToggleCallbackHandle;
 	ScopedCallback<eventpp::CallbackList<void(double&)>> mSpeedhackSettingCallbackHandle;
 
 	// injected services
