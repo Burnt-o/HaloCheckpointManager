@@ -12,6 +12,18 @@ LRESULT __stdcall ImGuiManager::mNewWndProc(const HWND hWnd, UINT uMsg, WPARAM w
 	ImGuiIO& io = ImGui::GetIO();
 	LRESULT res = ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
+
+
+	switch (uMsg)
+	{
+	//case WM_CLOSE:
+	case WM_DESTROY:
+	case WM_NCDESTROY:
+		GlobalKill::killMe();
+	default:
+		break;
+	}
+
 	if (io.WantCaptureMouse == false)
 	{
 		// ImGui didn't handle the click so let MCC do it

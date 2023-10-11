@@ -1863,6 +1863,26 @@
 				<Offset>0x3B6A59</Offset>
 			</Offsets>
 		</Version>
+
+		<!--scan nw "44 89 57 04 4D 85". goes on je after test r15, r15. alt: "08 01 00 00 ** ** A4", will be up a bit -->
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4D4151</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4D4BE9</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4DD0DD</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="invulnerabilityFunctionContext" Type="MidhookContextInterpreter">
@@ -1887,6 +1907,12 @@
 		<Version Version="All" Game="Halo3ODST">
 			<Parameters>
 				<unitDatum>r13</unitDatum>
+			</Parameters>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<Parameters>
+				<unitDatum>rsi</unitDatum>
 			</Parameters>
 		</Version>
 	</VersionedEntry>
@@ -1958,6 +1984,28 @@
 				<Offset>0x38F8</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01821E40</Offset>
+				<Offset>0x940</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x018712c0</Offset>
+				<Offset>0x940</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
+				<Offset>0x9B0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="boardingTextFlag" Type="MultilevelPointer::ModuleOffset">
@@ -2024,6 +2072,28 @@
 			<Offsets>
 				<Offset>0x0133B400</Offset>
 				<Offset>0x39C8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01821E40</Offset>
+				<Offset>0x810</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x018712c0</Offset>
+				<Offset>0x810</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
+				<Offset>0x880</Offset>
 			</Offsets>
 		</Version>
 
@@ -2111,6 +2181,27 @@
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x381E44</Offset>
+			</Offsets>
+		</Version>
+
+		<!--scan nw "25 58 00 00 00 44 8b da 8b d1 41 b8" or "48 83 ec 28 ** ** ** ** ** ** ** ** ** ** 8b da 8b d1"-->
+		<!--IDA says the func taks one int but it lies-->
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x46B248</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x46BCA8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="HaloReach"> 
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4739C4</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -2208,6 +2299,29 @@
 				<Offset>0x28</Offset>
 			</Offsets>
 		</Version>
+
+		<!--sc nw "44 89 44 2e 28" check what it acc on restart level-->
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01435DD0</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x01485250</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015E26A0</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
 		
 	</VersionedEntry>
 	<!-- #endregion playerDatum-->
@@ -2270,6 +2384,13 @@
 			<currentVehicleDatum>0x10</currentVehicleDatum>
 			<position>0x50</position>
 			<velocity>0x74</velocity>
+		</Version>
+		
+		<Version Version="All" Game="HaloReach">
+			<!--confirmed 3272-->
+			<currentVehicleDatum>0x14</currentVehicleDatum>
+			<position>0x44</position>
+			<velocity>0x68</velocity>
 		</Version>
 	</VersionedEntry>
 

@@ -1,29 +1,20 @@
 
-
-dependency injection EVERYTHING. i've now figured out I don't need to make hooks static with juicey use of std::bind.
-	-> make modulemidhook/inline factory things FORCE use of std::function (inline hook will need template shennanigans for func signature)
-
-
-Make a dynamic struct layout class thingy
-
-Create an objectLookup service. this will be used by playerInfo, invulnerability, triggerOverlay etc
-	maybe cache results of player lookup
-	can just do a playerLookup service to start with? ehhh would be better performance but shite extensibility, so no.
-
-Make a pointerGenerator project to strongly type pointerdata instead of using strings for everything
-
-make a set of tests for cheatManager/cheats to check if we have pointerData (and thus successful cheat init) for all game versions
-
-There's like a 5% chance the game crashes when dll injected. Probably render hook installing at same time as a render. Can we thread freeze like safety-hook?
+Make a pointerGenerator project to strongly type pointerdata instead of using strings for everything // may not bother with this
 
 HCMExternal still not re-injecting on re-attach
 
 HCMExternal SaveFolder view needs scrollbar
 
+HCMExternal filterSearch thingy
+
+Need to listen for MCC close event and call global kill cause otherwise it crashes
 
 
 
 
 
-The new di system / unsingletonization is coming along well.
-just need to unsingletonize MessagesGUI and OptionsState. And maybe ModuleHookManager? I mean, I DO want to mock it later to get rid of side effects.
+
+GUICheats:
+* Pause
+	* Advance x ticks
+* Freeze AI all games
