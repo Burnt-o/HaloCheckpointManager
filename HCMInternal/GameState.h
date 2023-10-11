@@ -5,7 +5,7 @@ class GameState
 {
 
 public: 
-	enum class Value 
+	enum class Value : uint8_t
 	{
 		// values are equal to MCC's gameIndicator
 		Halo1 = 0,

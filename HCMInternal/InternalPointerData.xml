@@ -74,36 +74,36 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--gameIndicator +0x68-->
+	<!--gameIndicator +0x78-->
 	<VersionedEntry Name="levelIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3A253A0</Offset>
-				<Offset>0x68</Offset>
+				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3B81270</Offset>
-				<Offset>0x68</Offset>
+				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x0401C1C0</Offset>
-				<Offset>0x68</Offset>
+				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FFE4D8</Offset>
-				<Offset>0x68</Offset>
+				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x3E4CA78</Offset>
-				<Offset>0x68</Offset>
+				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -1843,6 +1843,26 @@
 				<Offset>0x36FC41</Offset>
 			</Offsets>
 		</Version>
+
+		<!--scan nw "96 00 00 00 ** ** ** ** ** ** 03 20 00 00 ** ** ** ** ** 7001" take second result put right on je after test r12, r12 -->
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x39828E</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x371BCE</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x3B6A59</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="invulnerabilityFunctionContext" Type="MidhookContextInterpreter">
@@ -1859,6 +1879,12 @@
 		</Version>
 
 		<Version Version="All" Game="Halo3">
+			<Parameters>
+				<unitDatum>r13</unitDatum>
+			</Parameters>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
 			<Parameters>
 				<unitDatum>r13</unitDatum>
 			</Parameters>
@@ -1910,6 +1936,28 @@
 				<Offset>0x2664</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x011B2080</Offset>
+				<Offset>0x38B0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0125d080</Offset>
+				<Offset>0x38B8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0133B400</Offset>
+				<Offset>0x38F8</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="boardingTextFlag" Type="MultilevelPointer::ModuleOffset">
@@ -1954,6 +2002,28 @@
 			<Offsets>
 				<Offset>0x012BF2C0</Offset>
 				<Offset>0x272C</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x011B2080</Offset>
+				<Offset>0x3980</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0125d080</Offset>
+				<Offset>0x3988</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0133B400</Offset>
+				<Offset>0x39C8</Offset>
 			</Offsets>
 		</Version>
 
@@ -2021,6 +2091,26 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x3462CC</Offset>
+			</Offsets>
+		</Version>
+
+		<!--scan nw "40 53 48 83 ec 20 ** ** ** ** ** ** ** ** ** 8b da 8b d1"-->
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x35F744</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x368544</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x381E44</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -2095,6 +2185,29 @@
 				<Offset>0x28</Offset>
 			</Offsets>
 		</Version>
+
+		<!--sc nw "44 89 6E 28 45 33 e4" check what it acc on restart level-->
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00E8520C</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00F3020C</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x0100CB3C</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
 		
 	</VersionedEntry>
 	<!-- #endregion playerDatum-->
@@ -2143,15 +2256,20 @@
 			<!--these pos/vel don't seem to be directly writeable-->
 			<position>0x64</position>
 			<velocity>0x88</velocity>
-
 		</Version>
 
 		<Version Version="All" Game="Halo3">
 			<!--confirmed 3272, 2645-->
-			<currentVehicleDatum>0x10</currentVehicleDatum> <!--might be 0x8-->
+			<currentVehicleDatum>0x10</currentVehicleDatum> 
 			<position>0x50</position>
 			<velocity>0x74</velocity>
+		</Version>
 
+		<Version Version="All" Game="Halo3ODST">
+			<!--confirmed 3272-->
+			<currentVehicleDatum>0x10</currentVehicleDatum>
+			<position>0x50</position>
+			<velocity>0x74</velocity>
 		</Version>
 	</VersionedEntry>
 

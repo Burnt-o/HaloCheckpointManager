@@ -5,10 +5,9 @@
 
 
 
-enum class LevelID
+enum class LevelID : byte
 {
-	no_map_loaded = -1,
- _map_id_halo1_pillar_of_autumn,
+ _map_id_halo1_pillar_of_autumn = 0,
  _map_id_halo1_halo,
  _map_id_halo1_truth_and_reconciliation,
  _map_id_halo1_silent_cartographer,
@@ -236,7 +235,7 @@ enum class LevelID
 	 _map_id_halo3_s3d_avalanche,
 	 _map_id_halo3_s3d_lockout,
 	 _map_id_halo3_s3d_sky_bridgenew,
-
+	 no_map_loaded = 255
 
 };
 
