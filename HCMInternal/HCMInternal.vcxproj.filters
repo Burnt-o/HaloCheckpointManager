@@ -175,9 +175,6 @@
     <ClInclude Include="Invulnerability.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleInvulnerabilityImpl.h">
-      <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClInclude>
     <ClInclude Include="GuiElementEnum.h">
       <Filter>Services\GUI</Filter>
     </ClInclude>

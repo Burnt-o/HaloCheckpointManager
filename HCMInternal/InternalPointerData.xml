@@ -1883,6 +1883,26 @@
 				<Offset>0x4DD0DD</Offset>
 			</Offsets>
 		</Version>
+
+		<!--scan nw "45 8d 43 01 48 85 c0 ** ** 8b 00" put it on je after test r13 r13-->
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x646EC4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x647448</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x6475C0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="invulnerabilityFunctionContext" Type="MidhookContextInterpreter">
@@ -1915,9 +1935,15 @@
 				<unitDatum>rsi</unitDatum>
 			</Parameters>
 		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<Parameters>
+				<unitDatum>rsi</unitDatum>
+			</Parameters>
+		</Version>
 	</VersionedEntry>
 
-	
+	<!--very close to print message stuff-->
 	<VersionedEntry Name="boardingText" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
@@ -2006,8 +2032,28 @@
 				<Offset>0x9B0</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2D7B1A0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E46AB0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x30FA620</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
+	<!--very close to print message stuff-->
 	<VersionedEntry Name="boardingTextFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
@@ -2094,6 +2140,25 @@
 			<Offsets>
 				<Offset>0x019D2230</Offset>
 				<Offset>0x880</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2D7B268</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E46B78</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x30FA6E8</Offset>
 			</Offsets>
 		</Version>
 
@@ -2202,6 +2267,26 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x4739C4</Offset>
+			</Offsets>
+		</Version>
+
+		<!--scan nw "65 48 8b 04 25 58 00 00 00 8b d1 41 b9 18 00"-->
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x5D8E7C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x5D93FC</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x5DA428</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -2322,6 +2407,30 @@
 				<Offset>0x28</Offset>
 			</Offsets>
 		</Version>
+
+		<!--a few options for pointers here-->
+		<!--scan nw "70 89 b3 a4 00 00 00" check what acc on restart-->
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x01035BEC</Offset>
+				<Offset>0xA4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x010370EC</Offset>
+				<Offset>0xA4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x01187F4C</Offset>
+				<Offset>0xA4</Offset>
+			</Offsets>
+		</Version>
 		
 	</VersionedEntry>
 	<!-- #endregion playerDatum-->
@@ -2373,24 +2482,31 @@
 		</Version>
 
 		<Version Version="All" Game="Halo3">
-			<!--confirmed 3272, 2645-->
+			<!--confirmed 2448, 2645, 3272-->
 			<currentVehicleDatum>0x10</currentVehicleDatum> 
 			<position>0x50</position>
 			<velocity>0x74</velocity>
 		</Version>
 
 		<Version Version="All" Game="Halo3ODST">
-			<!--confirmed 3272-->
+			<!--confirmed 2448, 2645, 3272-->
 			<currentVehicleDatum>0x10</currentVehicleDatum>
 			<position>0x50</position>
 			<velocity>0x74</velocity>
 		</Version>
 		
 		<Version Version="All" Game="HaloReach">
-			<!--confirmed 3272-->
+			<!--confirmed 2448, 2645, 3272-->
 			<currentVehicleDatum>0x14</currentVehicleDatum>
 			<position>0x44</position>
 			<velocity>0x68</velocity>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<!--confirmed 3272-->
+			<currentVehicleDatum>0x24</currentVehicleDatum>
+			<position>0x64</position>
+			<velocity>0x88</velocity>
 		</Version>
 	</VersionedEntry>
 
