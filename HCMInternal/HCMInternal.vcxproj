@@ -240,6 +240,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ISharedMemory.h" />
     <ClInclude Include="MCCState.h" />
     <ClInclude Include="GetPlayerDatum.h" />
+    <ClInclude Include="MidhookFlagInterpreter.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
     <ClInclude Include="ScopedCallback.h" />
     <ClInclude Include="SharedMemoryInternal.h" />
@@ -313,6 +314,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AIFreeze.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DynamicStruct.cpp" />

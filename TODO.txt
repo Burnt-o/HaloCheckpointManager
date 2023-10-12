@@ -9,7 +9,7 @@ HCMExternal filterSearch thingy
 
 Need to listen for MCC close event and call global kill cause otherwise it crashes
 
-
+Replace console logging in release w/ dialogbox on init failure
 
 
 
@@ -17,4 +17,34 @@ Need to listen for MCC close event and call global kill cause otherwise it crash
 GUICheats:
 * Pause
 	* Advance x ticks
-* Freeze AI all games
+	* free cursor
+	* bring up gui ? 
+* Freeze AI -> remaining game implementations
+* Force Teleport
+* Force Launch
+* One hit kill
+* Infinite ammo/nades
+* Skulls
+* Natural Checkpoint Disable
+* DisplayInfo
+	* PlayerData
+		* Health
+		* Shields
+		* Position
+		* Velocity
+		* ViewAngle
+	* GameData
+		* GameTick (and as seconds/minutes)
+		* Aggro mechanics (ce at least)
+* CheatMedusa
+* Trigger Overlay
+* Force level loads - on inject (and for random practice mode)
+* Console commands
+* 3D waypoint marker
+
+maybe:
+* Freecam - at least debug camera for ce
+* Theater friend
+* Random practice mode
+* Waypoint timing / minisplitter
+

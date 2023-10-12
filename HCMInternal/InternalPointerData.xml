@@ -1943,6 +1943,38 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="invulnerabilityFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo1">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+		
+		<Version Version="All" Game="Halo3ODST">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+		
+		<Version Version="All" Game="HaloReach">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+		
+		<Version Version="All" Game="Halo4">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+	</VersionedEntry>
+
 	<!--very close to print message stuff-->
 	<VersionedEntry Name="boardingText" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">
@@ -2528,6 +2560,20 @@
 			</Offsets>
 		</Version>
 	</VersionedEntry>
+
+	<VersionedEntry Name="aiFreezeFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo1">
+				<rflag>zero</rflag>
+				<value>false</value>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>
+	</VersionedEntry>
+
+
 	<!--#endregion ai freeze-->
 	
 </root>

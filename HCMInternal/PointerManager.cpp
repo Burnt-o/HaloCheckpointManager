@@ -5,6 +5,7 @@
 #include "InjectRequirements.h"
 #include "MultilevelPointer.h"
 #include "MidhookContextInterpreter.h"
+#include "MidhookFlagInterpreter.h"
 #define useDevPointerData 1
 #define debugPointerManager 1
 
@@ -42,6 +43,7 @@ class PointerManager::PointerManagerImpl {
         void instantiateOffsetLengthPair(pugi::xml_node entry, DataKey dKey);
         void instantiateInt64_t(pugi::xml_node entry, DataKey dKey);
         void instantiateDynStructOffsetInfo(pugi::xml_node entry, DataKey dKey);
+        void instantiateMidhookFlagInterpreter(pugi::xml_node entry, DataKey dKey);
 
 
 
@@ -136,6 +138,8 @@ template
 std::shared_ptr<int64_t> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 template
 std::shared_ptr<MidhookContextInterpreter> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+template
+std::shared_ptr<MidhookFlagInterpreter> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 template
 std::shared_ptr<DynStructOffsetInfo> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 
@@ -340,6 +344,11 @@ void PointerManager::PointerManagerImpl::processVersionedEntry(pugi::xml_node en
             PLOG_DEBUG << "instantiating MidhookContextInterpreter";
             instantiateMidhookContextInterpreter(versionEntry, dKey);
         }
+        else if (entryType.starts_with("MidhookFlagInterpreter"))
+        {
+            PLOG_DEBUG << "instantiating MidhookFlagInterpreter";
+            instantiateMidhookFlagInterpreter(versionEntry, dKey);
+        }
         else if (entryType.starts_with("Vector"))
         {
             PLOG_DEBUG << "instantiating Vector";
@@ -525,6 +534,30 @@ void PointerManager::PointerManagerImpl::instantiateMidhookContextInterpreter(pu
    
 }
 
+
+
+void PointerManager::PointerManagerImpl::instantiateMidhookFlagInterpreter(pugi::xml_node versionEntry, DataKey dKey)
+{
+    std::shared_ptr<MidhookFlagInterpreter> result;
+
+    using namespace pugi;
+
+    std::string rflagText = versionEntry.child("rflag").text().as_string();
+    bool boolValueToSet = versionEntry.child("value").text().as_bool();
+
+    if (rflagText.empty()) throw HCMInitException(std::format("bad value for midhookFlagInterpreter, {}::{}", dKey._Get_rest()._Myfirst._Val.value().toString(), dKey._Myfirst._Val.c_str()));
+
+    auto rflagParsed = magic_enum::enum_cast<MidhookFlagInterpreter::RFlag>(rflagText);
+    if (!rflagParsed.has_value()) throw HCMInitException(std::format("bad value ({}) for midhookFlagInterpreter, {}::{}", rflagText, dKey._Get_rest()._Myfirst._Val.value().toString(), dKey._Myfirst._Val.c_str()));
+
+
+    result = std::make_shared<MidhookFlagInterpreter>(rflagParsed.value(), boolValueToSet);
+
+
+    PLOG_DEBUG << "MidhookFlagInterpreter added to map: " << dKey._Myfirst._Val;
+    mAllData.try_emplace(dKey, result);
+
+}
 
 template <typename T>
 void PointerManager::PointerManagerImpl::instantiateVectorInteger(pugi::xml_node versionEntry, DataKey dKey)
