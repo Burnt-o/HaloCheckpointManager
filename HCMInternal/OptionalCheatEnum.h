@@ -15,7 +15,8 @@ Speedhack,\
 Invulnerability,\
 GetPlayerDatum,\
 GetObjectAddress,\
-AIFreeze\
+AIFreeze,\
+ConsoleCommand\
 
 
 enum class OptionalCheatEnum {

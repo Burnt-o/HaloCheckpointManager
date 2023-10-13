@@ -9,6 +9,7 @@
 #include "GUISimpleToggle.h"
 #include "GUISpeedhack.h"
 #include "GUIInvulnerability.h"
+#include "GUIConsoleCommand.h"
 
 
 
@@ -102,6 +103,11 @@ private:
 			case GUIElementEnum::aiFreezeGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle>
 					(game, HotkeysEnum::aiFreeze, "Freeze AI", settings->aiFreezeToggle));
+
+			case GUIElementEnum::consoleCommandGUI:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIConsoleCommand>
+					(game, std::nullopt, settings));
+
 			default:
 				throw HCMInitException(std::format("You forgot to add a creation case label for GUIElement: {} in {}::{}", magic_enum::enum_name(guielementenum), nameof(GUIElementConstructor), nameof(createGUIElement)));
 			}

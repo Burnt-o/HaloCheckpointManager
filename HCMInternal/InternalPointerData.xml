@@ -2559,6 +2559,13 @@
 				<Offset>0x610EFC</Offset>
 			</Offsets>
 		</Version>
+
+		<!--<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x56147F</Offset>
+			</Offsets>
+		</Version>-->
 	</VersionedEntry>
 
 	<VersionedEntry Name="aiFreezeFunctionFlagSetter" Type="MidhookFlagInterpreter">
@@ -2571,9 +2578,34 @@
 			<rflag>zero</rflag>
 			<value>true</value>
 		</Version>
+
+		<!--<Version Version="All" Game="Halo3">
+			<rflag>zero</rflag>
+			<value>true</value>
+		</Version>-->
 	</VersionedEntry>
 
 
 	<!--#endregion ai freeze-->
-	
+
+
+	<!--#region consoleCommand-->
+	<VersionedEntry Name="sendCommandPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x955C0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="gameEnginePointer" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FFDAB8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	<!--#endregion consoleCommand-->
 </root>

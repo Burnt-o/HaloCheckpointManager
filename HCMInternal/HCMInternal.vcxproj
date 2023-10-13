@@ -222,10 +222,12 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClInclude Include="AIFreeze.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="ConsoleCommand.h" />
     <ClInclude Include="DirPathContainer.h" />
     <ClInclude Include="DynamicStruct.h" />
     <ClInclude Include="DynamicStructFactory.h" />
     <ClInclude Include="GetObjectAddress.h" />
+    <ClInclude Include="GUIConsoleCommand.h" />
     <ClInclude Include="GUIHeader.h" />
     <ClInclude Include="H1PlayerStruct.h" />
     <ClInclude Include="HCM_imconfig.h" />

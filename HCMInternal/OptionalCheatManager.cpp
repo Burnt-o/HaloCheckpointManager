@@ -18,6 +18,7 @@
 #include "GetPlayerDatum.h"
 #include "GetObjectAddress.h"
 #include "AIFreeze.h"
+#include "ConsoleCommand.h"
 
 #include "DIContainer.h"
 #include "map.h"

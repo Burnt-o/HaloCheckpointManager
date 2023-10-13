@@ -3,6 +3,23 @@
 
 #define ALL_SUPPORTED_GAMES (Halo1)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4)
 
+#ifdef HCM_DEBUG // add console command
+#define TOP_GUI_ELEMENTS \
+((forceCheckpointGUI)ALL_SUPPORTED_GAMES)\
+((forceRevertGUI)ALL_SUPPORTED_GAMES)\
+((forceDoubleRevertGUI)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4))\
+((forceCoreSaveGUI)(Halo1))\
+((forceCoreLoadGUI)(Halo1))\
+((injectCheckpointGUI)ALL_SUPPORTED_GAMES)\
+((dumpCheckpointGUI)ALL_SUPPORTED_GAMES)\
+((injectCoreGUI)(Halo1))\
+((dumpCoreGUI)(Halo1))\
+((speedhackGUI)ALL_SUPPORTED_GAMES)\
+((invulnGUI)ALL_SUPPORTED_GAMES)\
+((aiFreezeGUI)ALL_SUPPORTED_GAMES)\
+((consoleCommandGUI)(Halo1))
+
+#else
 #define TOP_GUI_ELEMENTS \
 ((forceCheckpointGUI)ALL_SUPPORTED_GAMES)\
 ((forceRevertGUI)ALL_SUPPORTED_GAMES)\
@@ -16,6 +33,7 @@
 ((speedhackGUI)ALL_SUPPORTED_GAMES)\
 ((invulnGUI)ALL_SUPPORTED_GAMES)\
 ((aiFreezeGUI)ALL_SUPPORTED_GAMES)
+#endif
 
 class GUIRequiredServices : public IGUIRequiredServices {
 private:

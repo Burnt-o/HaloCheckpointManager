@@ -331,6 +331,12 @@
     <ClInclude Include="MidhookFlagInterpreter.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="GUIConsoleCommand.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCommand.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

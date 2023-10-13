@@ -13,7 +13,8 @@ dumpCoreGUI,\
 speedhackGUI,\
 invulnGUI,\
 invulnNPCGUI,\
-aiFreezeGUI
+aiFreezeGUI, \
+consoleCommandGUI
 
 enum class GUIElementEnum {
 	ALLGUIELEMENTS

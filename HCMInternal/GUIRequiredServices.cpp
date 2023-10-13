@@ -38,10 +38,12 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::invulnGUI,
 			{OptionalCheatEnum::Invulnerability} 
 	},
-		{GUIElementEnum::aiFreezeGUI,
+	{GUIElementEnum::aiFreezeGUI,
 			{OptionalCheatEnum::AIFreeze}
 	},
-
+	{GUIElementEnum::consoleCommandGUI,
+			{OptionalCheatEnum::ConsoleCommand}
+	},
 };
 
 

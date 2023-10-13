@@ -34,6 +34,7 @@ public:
 	std::shared_ptr<ActionEvent> dumpCheckpointEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> injectCoreEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> dumpCoreEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> consoleCommandEvent = std::make_shared<ActionEvent>();
 
 
 	// settings
@@ -71,6 +72,13 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(aiFreezeToggle)
+		);
+
+	std::shared_ptr<Setting<std::string>> consoleCommandString = std::make_shared<Setting<std::string>>
+		(
+			"game_revert",
+			[](std::string in) { return true; },
+			nameof(consoleCommandString)
 		);
 
 	// settings that ought to be serialised/deserialised between HCM runs

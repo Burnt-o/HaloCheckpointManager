@@ -22,7 +22,7 @@ public:
 		: m_pEvent(pEvent), mFunctor(functor)
 	{
 		PLOG_DEBUG << "ScopedCallback constructor called";
-		if (m_pEvent)
+		if (m_pEvent.get())
 		{
 			mHandle = m_pEvent->append(mFunctor);
 		}
