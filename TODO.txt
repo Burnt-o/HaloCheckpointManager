@@ -1,15 +1,9 @@
 
-Make a pointerGenerator project to strongly type pointerdata instead of using strings for everything // may not bother with this
-
 HCMExternal still not re-injecting on re-attach
 
 HCMExternal SaveFolder view needs scrollbar
 
 HCMExternal filterSearch thingy
-
-Need to listen for MCC close event and call global kill cause otherwise it crashes
-
-Replace console logging in release w/ dialogbox on init failure
 
 
 

@@ -417,24 +417,26 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 // Releases D3D resources, if we acquired them
 D3D11Hook::~D3D11Hook()
 {
+	if (m_pOriginalPresent)
+	{
+		PLOG_VERBOSE << "~D3D11Hook() unpatching present pointer";
+		if (presentHookRunning) presentHookRunning.wait(true);
+		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
 
-	PLOG_VERBOSE << "~D3D11Hook() unpatching present pointer";
-	if (presentHookRunning) presentHookRunning.wait(true);
-	safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
+		// rewrite the pointers to go back to the original value
+		patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
+		// resizeBuffers too
+		patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
 
-	// rewrite the pointers to go back to the original value
-	patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
-	// resizeBuffers too
-	patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
+		//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
+	}
+		// D3D resource releasing:
+		// need to call release on the device https://learn.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3dswapchain9-getdevice
 
-	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
-
-	// D3D resource releasing:
-	// need to call release on the device https://learn.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3dswapchain9-getdevice
+		safe_release(m_pDevice);
+		safe_release(m_pDeviceContext);
+		safe_release(m_pMainRenderTargetView);
 	
-	safe_release(m_pDevice);
-	safe_release(m_pDeviceContext);
-	safe_release(m_pMainRenderTargetView);
 	instance = nullptr;
 	
 }

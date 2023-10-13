@@ -44,6 +44,13 @@ void UnhandledExceptionHandler::make_minidump(EXCEPTION_POINTERS* e)
 	PLOG_FATAL << "Dumped crash information to " << dumpFilePath;
 	CloseHandle(hFile);
 
+	int msgboxID = MessageBoxA(
+		NULL,
+		std::format("HCM Internal experienced an unhandled crash, please send Burnt the log file and crash dump file located at: \n{}\n\nThe game will shutdown when you press OK.", mDirPath).c_str(),
+		"Halo Checkpoint Manager crash",
+		MB_OK
+	);
+
 	return;
 }
 

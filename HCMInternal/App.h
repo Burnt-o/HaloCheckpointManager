@@ -41,9 +41,11 @@ public:
 
         // these are needed in the init exception catch block, so declared here
         auto logging = std::make_shared<Logging>();
+
+#ifdef HCM_DEBUG
         logging->initConsoleLogging();
         logging->SetConsoleLoggingLevel(plog::verbose);
-
+#endif
         std::shared_ptr<SharedMemoryInternal> sharedMem;
         
         try
@@ -52,7 +54,12 @@ public:
         }
         catch(HCMInitException ex)
         {
-            PLOG_FATAL << "shared memory internal failed initialising, ex: " << ex.what();
+            int msgboxID = MessageBoxA(
+                NULL,
+                std::format("HCM internal failed to create shared memory, error:\n{}", ex.what()).c_str(),
+                "Halo checkpoint manager error",
+                MB_OK
+            );
             return;
         }
 
@@ -105,20 +112,19 @@ public:
             auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, mccStateHook->getMCCStateChangedEvent()); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
             mes->setAnchorPoint(HCMGUI);
             
+            throw HCMInitException("Test");
+
             auto hb = std::make_shared<HeartbeatTimer>(); PLOGV << "hb init";
 
             d3d->beginHook();
 
             PLOG_INFO << "All services succesfully initialized! Entering main loop";
             Sleep(100);
-            // Shutdown the console on successful init, at least in release mode.
-            // If an initialization error occurs before this point, console will be left up so user can look at it.
+
             mes->addMessage("HCM successfully initialised!");
 
-#ifndef HCM_DEBUG
-            PLOG_DEBUG << "Closing console";
-            logging->closeConsole();
-#endif
+
+
 
             // We live in this loop 99% of the time
             while (!GlobalKill::isKillSet()) {
@@ -128,14 +134,20 @@ public:
         }
         catch (HCMInitException& ex) // mandatory services that fail to init will be caught here
         {
-            GlobalKill::killMe();
+
             std::ostringstream oss;
             oss << "\n\nHCMInternal failed initializing: " << ex.what() << std::endl
                 << "Please send Burnt the log file located at: " << std::endl << logging->GetLogFileDestination();
             PLOG_FATAL << oss.str();
-            std::cout << "Press Enter to shutdown HCMInternal\n\n";
 
-            std::cin.ignore();
+            int msgboxID = MessageBoxA(
+                NULL,
+                oss.str().c_str(),
+                "Halo Checkpoint Manager error",
+                MB_OK
+            );
+
+            GlobalKill::killMe();
         }
         curl_global_cleanup(); PLOG_INFO << "Curl cleaned up";
         // Auto managed resources have fallen out of scope
