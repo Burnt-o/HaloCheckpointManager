@@ -102,7 +102,7 @@
                             <GridViewColumnHeader ToolTip="The version number of Halo: MCC that this checkpoint was made on" Command="{Binding Path=SortCheckpoint}">Version</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn b:GridColumn.MinWidth="50" Width="145" DisplayMemberBinding="{Binding CreatedOn}">
+                    <GridViewColumn b:GridColumn.MinWidth="50" Width="Auto" DisplayMemberBinding="{Binding CreatedOn}">
                         <GridViewColumn.Header >
                             <GridViewColumnHeader ToolTip="The date and time that this checkpoint was dumped" Command="{Binding Path=SortCheckpoint}">Created</GridViewColumnHeader>
                         </GridViewColumn.Header>
