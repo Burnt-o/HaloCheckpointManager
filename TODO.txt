@@ -1,6 +1,6 @@
+Auto expansion of last column in checkpointViewModel
 
-
-HCMExternal SaveFolder view needs scrollbar
+Option to expand save folder tree width
 
 HCMExternal filterSearch thingy
 
