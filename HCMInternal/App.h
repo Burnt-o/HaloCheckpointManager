@@ -111,8 +111,6 @@ public:
             // set up main gui
             auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, mccStateHook->getMCCStateChangedEvent()); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
             mes->setAnchorPoint(HCMGUI);
-            
-            throw HCMInitException("Test");
 
             auto hb = std::make_shared<HeartbeatTimer>(); PLOGV << "hb init";
 

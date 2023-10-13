@@ -1,5 +1,4 @@
 
-HCMExternal still not re-injecting on re-attach
 
 HCMExternal SaveFolder view needs scrollbar
 

@@ -69,6 +69,13 @@ namespace HCMExternal.Services.MCCStateServiceNS
             }
             else
             {
+                if (MCCProcess.HasExited)
+                {
+                    Log.Information("MCC process exited!");
+                    MCCProcess = null;
+                    MCCVersion = null;
+                    DetachEvent();
+                }
                 return MCCProcess;
             }
 
@@ -108,6 +115,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             if (InterprocService.Setup())
                             {
                                 MCCProcess = process;
+                                MCCProcess.Disposed += MCCProcess_Exited;
                                 MCCProcess.Exited += MCCProcess_Exited;
                                 MCCVersion = process.MainModule?.FileVersionInfo; 
                                 AttachEvent();
@@ -136,6 +144,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
 
         private void MCCProcess_Exited(object? sender, EventArgs e)
         {
+            Log.Information("MCCProcess_Exited");
             MCCVersion = null;
             MCCProcess = null;
             DetachEvent();
