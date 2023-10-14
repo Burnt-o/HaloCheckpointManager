@@ -27,7 +27,7 @@
 
         </Grid.Resources>
 
-        <ListView  AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Background="{DynamicResource WhiteSmoke}">
+        <ListView  AlternationCount="2" SelectedItem="{Binding SelectedCheckpoint}" ItemsSource="{Binding CheckpointCollection}" ScrollViewer.HorizontalScrollBarVisibility="Auto" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Background="{DynamicResource WhiteSmoke}" SizeChanged="ListView_SizeChanged" Loaded="ListView_Loaded" x:Name="listView">
             <ListView.Resources>
 
 
@@ -102,7 +102,7 @@
                             <GridViewColumnHeader ToolTip="The version number of Halo: MCC that this checkpoint was made on" Command="{Binding Path=SortCheckpoint}">Version</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn b:GridColumn.MinWidth="50" Width="Auto" DisplayMemberBinding="{Binding CreatedOn}">
+                    <GridViewColumn b:GridColumn.MinWidth="50" Width="145" DisplayMemberBinding="{Binding CreatedOn}">
                         <GridViewColumn.Header >
                             <GridViewColumnHeader ToolTip="The date and time that this checkpoint was dumped" Command="{Binding Path=SortCheckpoint}">Created</GridViewColumnHeader>
                         </GridViewColumn.Header>
