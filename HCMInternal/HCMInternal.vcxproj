@@ -228,7 +228,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DynamicStructFactory.h" />
     <ClInclude Include="GetObjectAddress.h" />
     <ClInclude Include="GUIConsoleCommand.h" />
-    <ClInclude Include="GUIHeader.h" />
+    <ClInclude Include="GUIHeading.h" />
+    <ClInclude Include="GUIMCCState.h" />
+    <ClInclude Include="GUISubHeading.h" />
     <ClInclude Include="H1PlayerStruct.h" />
     <ClInclude Include="HCM_imconfig.h" />
     <ClInclude Include="HotkeyEnum.h" />

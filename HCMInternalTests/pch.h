@@ -65,12 +65,14 @@
 #include "eventpp/callbacklist.h"
 #include "eventpp/utilities/scopedremover.h"
 #include "ScopedCallback.h"
+#include "ScopedAtomicBool.h"
 
 // boost
 #include "boost\stacktrace.hpp"
 #include "boost\algorithm\string\predicate.hpp"
 #include "boost\bimap.hpp"
 #include "boost\assign.hpp"
+#include <boost\preprocessor.hpp>
 
 
 // Custom utilities

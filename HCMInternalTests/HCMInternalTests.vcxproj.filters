@@ -147,6 +147,9 @@
     <ClCompile Include="ScopedCallbackTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\AIFreeze.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -433,6 +436,21 @@
     </ClInclude>
     <ClInclude Include="TestLogging.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUISubHeading.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIHeading.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ConsoleCommand.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIConsoleCommand.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\MidhookFlagInterpreter.h">
+      <Filter>HCMInternalFiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -143,6 +143,10 @@ public:
 
 	}
 
+	~DumpCheckpoint()
+	{
+		PLOG_VERBOSE << "~" << getName();
+	}
 
 
 	std::string_view getName() override { return nameof(DumpCheckpoint); }

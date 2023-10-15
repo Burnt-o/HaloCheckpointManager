@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GUIRequiredServices.h"
-#include <boost\preprocessor.hpp>
+
 
 // ALL GUI ELEMENTS, nested or not, are allowed to go in here - but if they have no required services, you don't have to
 const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServices::requiredServicesPerGUIElement =
@@ -49,15 +49,28 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 
 
 
-#define MAKE_MAP_PAIR(r, element, i, game) {GUIElementEnum::element, GameState::Value::game},
-#define MAKE_PAIRWISE_SET(r, d, seq) 	BOOST_PP_SEQ_FOR_EACH_I(MAKE_MAP_PAIR, BOOST_PP_SEQ_HEAD(seq), BOOST_PP_SEQ_TAIL(seq))
+#define MAKE_MAPPAIR(r, element, i, game) {GUIElementEnum::element, GameState::Value::game},
+#define MAKE_PAIRWISE_SET(r, d, seq) 	BOOST_PP_SEQ_FOR_EACH_I(MAKE_MAPPAIR, BOOST_PP_TUPLE_ELEM(0, seq), BOOST_PP_TUPLE_TO_SEQ(BOOST_PP_TUPLE_ELEM(1, seq)))
 #define MAKE_ALL_PAIRWISE(seq) BOOST_PP_SEQ_FOR_EACH(MAKE_PAIRWISE_SET, _, seq)
 
 
-//https://valelab4.ucsf.edu/svn/3rdpartypublic/boost/libs/preprocessor/doc/ref/seq_head.html
+
 const std::vector<std::pair< GUIElementEnum, GameState>> GUIRequiredServices::toplevelGUIElements =
 {
-	MAKE_ALL_PAIRWISE(TOP_GUI_ELEMENTS)
+	MAKE_ALL_PAIRWISE(TOPGUIELEMENTS_ANDSUPPORTEDGAMES)
+};
+
+
+
+
+#define MAKE_GAMESTATE(s, data, game) GameState::Value::game
+#define MAKE_MAPSET(element, games) {GUIElementEnum::element, {BOOST_PP_SEQ_ENUM(BOOST_PP_SEQ_TRANSFORM(MAKE_GAMESTATE, _, games))} },
+#define MAKE_MAPSET_SET(r, d, i, seq) 	MAKE_MAPSET(BOOST_PP_TUPLE_ELEM(0, seq), BOOST_PP_TUPLE_TO_SEQ(BOOST_PP_TUPLE_ELEM(1, seq))) 
+#define MAKE_ALL_MAPSET(seq) BOOST_PP_SEQ_FOR_EACH_I(MAKE_MAPSET_SET, _, seq) 
+
+const std::map<GUIElementEnum, std::set<GameState>> GUIRequiredServices::supportedGamesPerGUIElement =
+{
+	MAKE_ALL_MAPSET(ALLGUIELEMENTS_ANDSUPPORTEDGAMES)
 };
 
 
@@ -69,17 +82,38 @@ const std::vector<std::pair<GameState, OptionalCheatEnum>>& GUIRequiredServices:
 {
 	if (initRequiredServices) return outRequiredServices;
 
-	for (auto& [element, game] : toplevelGUIElements)
+	for (auto& [element, cheat] : requiredServicesPerGUIElement)
 	{
+		if (!supportedGamesPerGUIElement.contains(element)) throw HCMInitException("Somehow supportedGames was missing an element");
+		for (auto& game : supportedGamesPerGUIElement.at(element))
+		{
 			if (!requiredServicesPerGUIElement.contains(element)) continue; // element has no required services
-
 			auto reqServs = requiredServicesPerGUIElement.at(element);
 
 			for (auto req : reqServs)
 			{
 				outRequiredServices.push_back({ game, req });
 			}
+		}
 	}
+
+
 	initRequiredServices = true;
 	return outRequiredServices;
+
+	//if (initRequiredServices) return outRequiredServices;
+
+	//for (auto& [element, game] : toplevelGUIElements)
+	//{
+	//		if (!requiredServicesPerGUIElement.contains(element)) continue; // element has no required services
+
+	//		auto reqServs = requiredServicesPerGUIElement.at(element);
+
+	//		for (auto req : reqServs)
+	//		{
+	//			outRequiredServices.push_back({ game, req });
+	//		}
+	//}
+	//initRequiredServices = true;
+	//return outRequiredServices;
 };

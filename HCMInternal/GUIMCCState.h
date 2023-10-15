@@ -2,7 +2,7 @@
 #include "imgui.h"
 #include "IMCCStateHook.h"
 #include "ScopedCallback.h"
-class GUIHeader
+class GUIMCCState
 {
 private:
 
@@ -23,7 +23,7 @@ private:
 public:
 
 
-	GUIHeader(std::shared_ptr<IMCCStateHook> mccStateHook) :
+	GUIMCCState(std::shared_ptr<IMCCStateHook> mccStateHook) :
 		MCCStateChangeCallback(mccStateHook->getMCCStateChangedEvent(), [this](const MCCState& n) {OnStateChange(n); })
 	{
 		// init strings

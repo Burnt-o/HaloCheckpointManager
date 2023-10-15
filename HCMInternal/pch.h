@@ -75,7 +75,7 @@
 #include "boost\algorithm\string\predicate.hpp"
 #include "boost\bimap.hpp"
 #include "boost\assign.hpp"
-
+#include <boost\preprocessor.hpp>
 
 // Custom utilities
 #include "CustomExceptions.h"

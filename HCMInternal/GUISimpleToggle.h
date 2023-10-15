@@ -1,6 +1,8 @@
 #pragma once
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
+
+template< bool shouldRenderHotkey>
 class GUISimpleToggle : public IGUIElement {
 
 private:
@@ -20,8 +22,12 @@ public:
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
-		hotkeyRenderer.renderHotkey(mHotkey);
-		ImGui::SameLine();
+		if constexpr (shouldRenderHotkey)
+		{
+			hotkeyRenderer.renderHotkey(mHotkey);
+			ImGui::SameLine();
+		}
+
 		if (ImGui::Checkbox(mToggleText.c_str(), &mOptionToggle->GetValueDisplay()))
 		{
 			PLOG_VERBOSE << "GUIToggleButton (" << getName() << ") firing toggle event, new value: " << mOptionToggle->GetValueDisplay();

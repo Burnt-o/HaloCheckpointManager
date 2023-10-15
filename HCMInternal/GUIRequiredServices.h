@@ -1,44 +1,23 @@
 #pragma once
 #include "IGUIRequiredServices.h"
 
-#define ALL_SUPPORTED_GAMES (Halo1)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4)
+// A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that GUIElementEnum
+#define TOPGUIELEMENTS_ANDSUPPORTEDGAMES \
+((controlHeadingGUI,(ALL_SUPPORTED_GAMES)))\
+((saveManagementHeadingGUI,(ALL_SUPPORTED_GAMES)))\
+((cheatsHeadingGUI,(ALL_SUPPORTED_GAMES)))\
+((overlaysHeadingGUI,(ALL_SUPPORTED_GAMES)))\
+((cameraHeadingGUI,(ALL_SUPPORTED_GAMES)))\
+((theaterHeadingGUI,(Halo3,Halo3ODST,HaloReach,Halo4)))
 
-#ifdef HCM_DEBUG // add console command
-#define TOP_GUI_ELEMENTS \
-((forceCheckpointGUI)ALL_SUPPORTED_GAMES)\
-((forceRevertGUI)ALL_SUPPORTED_GAMES)\
-((forceDoubleRevertGUI)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4))\
-((forceCoreSaveGUI)(Halo1))\
-((forceCoreLoadGUI)(Halo1))\
-((injectCheckpointGUI)ALL_SUPPORTED_GAMES)\
-((dumpCheckpointGUI)ALL_SUPPORTED_GAMES)\
-((injectCoreGUI)(Halo1))\
-((dumpCoreGUI)(Halo1))\
-((speedhackGUI)ALL_SUPPORTED_GAMES)\
-((invulnGUI)ALL_SUPPORTED_GAMES)\
-((aiFreezeGUI)ALL_SUPPORTED_GAMES)\
-((consoleCommandGUI)(Halo1))
 
-#else
-#define TOP_GUI_ELEMENTS \
-((forceCheckpointGUI)ALL_SUPPORTED_GAMES)\
-((forceRevertGUI)ALL_SUPPORTED_GAMES)\
-((forceDoubleRevertGUI)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4))\
-((forceCoreSaveGUI)(Halo1))\
-((forceCoreLoadGUI)(Halo1))\
-((injectCheckpointGUI)ALL_SUPPORTED_GAMES)\
-((dumpCheckpointGUI)ALL_SUPPORTED_GAMES)\
-((injectCoreGUI)(Halo1))\
-((dumpCoreGUI)(Halo1))\
-((speedhackGUI)ALL_SUPPORTED_GAMES)\
-((invulnGUI)ALL_SUPPORTED_GAMES)\
-((aiFreezeGUI)ALL_SUPPORTED_GAMES)
-#endif
+
 
 class GUIRequiredServices : public IGUIRequiredServices {
 private:
 	static const std::vector<std::pair< GUIElementEnum, GameState>> toplevelGUIElements;
 	static const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> requiredServicesPerGUIElement;
+	static const std::map<GUIElementEnum, std::set<GameState>> supportedGamesPerGUIElement;
 
 public:
 	virtual const std::vector<std::pair< GUIElementEnum, GameState>>& getToplevelGUIElements() override
@@ -48,6 +27,11 @@ public:
 	virtual const std::map < GUIElementEnum, std::vector<OptionalCheatEnum>>& getRequiredServicesPerGUIElement() override
 	{
 		return requiredServicesPerGUIElement;
+	}
+
+	virtual const std::map < GUIElementEnum, std::set<GameState>>& getSupportedGamesPerGUIElement() override
+	{
+		return supportedGamesPerGUIElement;
 	}
 
 	virtual const std::vector<std::pair<GameState, OptionalCheatEnum>>& getAllRequiredServices() override;

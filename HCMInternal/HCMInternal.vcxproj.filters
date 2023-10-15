@@ -277,7 +277,7 @@
     <ClInclude Include="DirPathContainer.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="GUIHeader.h">
+    <ClInclude Include="GUIMCCState.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
     <ClInclude Include="WinHandle.h">
@@ -336,6 +336,12 @@
     </ClInclude>
     <ClInclude Include="ConsoleCommand.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIHeading.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUISubHeading.h">
+      <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

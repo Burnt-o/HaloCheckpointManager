@@ -240,6 +240,12 @@ private:
 
 	}
 
+		~InjectCheckpoint()
+		{
+			PLOG_VERBOSE << "~" << getName();
+		}
+
+
 		virtual std::string_view getName() override { return nameof(InjectCheckpoint); }
 };
 

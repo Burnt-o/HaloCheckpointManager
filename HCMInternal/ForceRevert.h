@@ -59,6 +59,11 @@ public:
 		forceRevertFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceRevertFlag", mGame);
 	}
 
+	~ForceRevert()
+	{
+		PLOG_VERBOSE << "~" << getName();
+	}
+
 	std::string_view getName() override { return "Force Revert"; }
 
 };

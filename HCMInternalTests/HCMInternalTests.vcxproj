@@ -178,6 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\HCMInternal\AIFreeze.cpp" />
     <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
@@ -232,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HCMInternal\App.h" />
+    <ClInclude Include="..\HCMInternal\ConsoleCommand.h" />
     <ClInclude Include="..\HCMInternal\ControlDefs.h" />
     <ClInclude Include="..\HCMInternal\CustomExceptions.h" />
     <ClInclude Include="..\HCMInternal\D3D11Hook.h" />
@@ -253,16 +255,19 @@
     <ClInclude Include="..\HCMInternal\GetObjectAddress.h" />
     <ClInclude Include="..\HCMInternal\GetPlayerDatum.h" />
     <ClInclude Include="..\HCMInternal\GlobalKill.h" />
+    <ClInclude Include="..\HCMInternal\GUIConsoleCommand.h" />
     <ClInclude Include="..\HCMInternal\GUIElementConstructor.h" />
     <ClInclude Include="..\HCMInternal\GuiElementEnum.h" />
     <ClInclude Include="..\HCMInternal\GUIElementStore.h" />
     <ClInclude Include="..\HCMInternal\GUIHeader.h" />
+    <ClInclude Include="..\HCMInternal\GUIHeading.h" />
     <ClInclude Include="..\HCMInternal\GUIInvulnerability.h" />
     <ClInclude Include="..\HCMInternal\GUIRequiredServices.h" />
     <ClInclude Include="..\HCMInternal\GUIServiceInfo.h" />
     <ClInclude Include="..\HCMInternal\GUISimpleButton.h" />
     <ClInclude Include="..\HCMInternal\GUISimpleToggle.h" />
     <ClInclude Include="..\HCMInternal\GUISpeedhack.h" />
+    <ClInclude Include="..\HCMInternal\GUISubHeading.h" />
     <ClInclude Include="..\HCMInternal\H1PlayerStruct.h" />
     <ClInclude Include="..\HCMInternal\Halo1InvulnerabilityImpl.h" />
     <ClInclude Include="..\HCMInternal\HCMExternalCommand.h" />
@@ -297,6 +302,7 @@
     <ClInclude Include="..\HCMInternal\MCCStateHook.h" />
     <ClInclude Include="..\HCMInternal\MessagesGUI.h" />
     <ClInclude Include="..\HCMInternal\MidhookContextInterpreter.h" />
+    <ClInclude Include="..\HCMInternal\MidhookFlagInterpreter.h" />
     <ClInclude Include="..\HCMInternal\ModuleCache.h" />
     <ClInclude Include="..\HCMInternal\ModuleHook.h" />
     <ClInclude Include="..\HCMInternal\ModuleHookManager.h" />

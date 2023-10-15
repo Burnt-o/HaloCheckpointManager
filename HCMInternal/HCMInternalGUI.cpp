@@ -175,7 +175,7 @@ void HCMInternalGUI::primaryRender()
 
 	if (m_WindowOpen)  //only bother rendering children if it's not collapsed
 	{
-		mGUIHeader.render(); // render header
+		mGUIMCCState.render(); // render header
 
 		for (auto& element : *p_currentGameGUIElements)
 		{

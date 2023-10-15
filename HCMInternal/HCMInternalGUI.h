@@ -6,7 +6,7 @@
 #include "IMCCStateHook.h"
 #include "Vec2.h"
 #include "HotkeyRenderer.h"
-#include "GUIHeader.h"
+#include "GUIMCCState.h"
 
 class HCMInternalGUI : public IAnchorPoint, public std::enable_shared_from_this<HCMInternalGUI>
 {
@@ -45,7 +45,7 @@ private:
 	Vec2 mWindowPos{ 10, 25 };
 
 	Vec2 mFullScreenSize;
-	GUIHeader mGUIHeader;
+	GUIMCCState mGUIMCCState;
 
 	
 
@@ -62,7 +62,7 @@ public:
 		mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
 		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
 		mGUIStore(guistore),
-		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIHeader(MCCStateHook)
+		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIMCCState(MCCStateHook)
 	{
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";
 	}

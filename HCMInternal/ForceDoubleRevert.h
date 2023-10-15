@@ -70,7 +70,10 @@ public:
 		doubleRevertFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("doubleRevertFlag", mGame);
 	}
 
-
+	~ForceDoubleRevert()
+	{
+		PLOG_VERBOSE << "~" << getName();
+	}
 
 	std::string_view getName() override { return nameof(ForceDoubleRevert); }
 

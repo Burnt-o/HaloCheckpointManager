@@ -93,7 +93,7 @@ public:
 
 	~ConsoleCommand()
 	{
-		PLOG_VERBOSE << "~ConsoleCommand";
+			PLOG_VERBOSE << "~" << getName();
 	}
 
 };

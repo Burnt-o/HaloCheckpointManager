@@ -1,6 +1,9 @@
 #pragma once
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
+
+
+template< bool shouldRenderHotkey>
 class GUISimpleButton : public IGUIElement {
 
 private:
@@ -20,8 +23,12 @@ public:
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
-		hotkeyRenderer.renderHotkey(mHotkey);
-		ImGui::SameLine();
+		if constexpr (shouldRenderHotkey)
+		{
+			hotkeyRenderer.renderHotkey(mHotkey);
+			ImGui::SameLine();
+		}
+
 		if (ImGui::Button(mButtonText.c_str()))
 		{
 			PLOG_VERBOSE << "GUISimplebutton (" << getName() << ") firing event";

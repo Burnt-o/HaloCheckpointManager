@@ -56,6 +56,11 @@ public:
 		forceCoreLoadFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceCoreLoadFlag", mGame);
 	}
 
+	~ForceCoreLoad()
+	{
+		PLOG_VERBOSE << "~" << getName();
+	}
+
 	virtual std::string_view getName() override { return nameof(ForceCoreLoad); }
 
 };

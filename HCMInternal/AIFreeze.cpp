@@ -87,4 +87,7 @@ AIFreeze::AIFreeze(GameState gameImpl, IDIContainer& dicon)
 		throw HCMInitException("not impl yet");
 	}
 }
-AIFreeze::~AIFreeze() = default;
+AIFreeze::~AIFreeze()
+{
+		PLOG_VERBOSE << "~" << getName();
+}

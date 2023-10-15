@@ -54,6 +54,7 @@ public:
 		DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer> dicon
 		{shared_from_this(), settings, ptr, ver, mccStateHook, sharedMem, mes, exp,std::make_shared<DirPathContainer>(dirPath)};
 
+		PLOG_DEBUG << "Looping over required services";
 		// loop over each cheat-game combo in requiredServices, pushing them into our cheatCollection as we make them (or telling info about it if failed construction)
 		for (const std::pair<GameState, OptionalCheatEnum>& gameCheatPair : reqSer->getAllRequiredServices())
 		{

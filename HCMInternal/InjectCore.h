@@ -126,6 +126,11 @@ public:
 	{
 	}
 
+	~InjectCore()
+	{
+		PLOG_VERBOSE << "~" << getName();
+	}
+
 	virtual std::string_view getName() override { return nameof(DumpCore); }
 
 
