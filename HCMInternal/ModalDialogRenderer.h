@@ -19,7 +19,7 @@ private:
 
 
 public:
-	ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr< FreeMCCCursor> freeCursor);
+	ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::optional<std::shared_ptr< FreeMCCCursor>> freeCursorService);
 	~ModalDialogRenderer();
 	virtual std::tuple<bool, std::string> showCheckpointDumpNameDialog(std::string defaultName) override;
 	virtual bool showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel) override;

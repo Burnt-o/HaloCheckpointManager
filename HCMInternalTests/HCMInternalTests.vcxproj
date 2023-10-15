@@ -182,6 +182,7 @@
     <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
+    <ClCompile Include="..\HCMInternal\FreeMCCCursor.cpp" />
     <ClCompile Include="..\HCMInternal\GetMCCVersion.cpp" />
     <ClCompile Include="..\HCMInternal\GetObjectAddress.cpp" />
     <ClCompile Include="..\HCMInternal\GetPlayerDatum.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\HCMInternal\MCCStateHook.cpp" />
     <ClCompile Include="..\HCMInternal\MessagesGUI.cpp" />
     <ClCompile Include="..\HCMInternal\MidhookContextInterpreter.cpp" />
+    <ClCompile Include="..\HCMInternal\ModalDialogRenderer.cpp" />
     <ClCompile Include="..\HCMInternal\ModuleCache.cpp" />
     <ClCompile Include="..\HCMInternal\ModuleHook.cpp" />
     <ClCompile Include="..\HCMInternal\ModuleHookManager.cpp" />
@@ -250,6 +252,7 @@
     <ClInclude Include="..\HCMInternal\ForceCoreSave.h" />
     <ClInclude Include="..\HCMInternal\ForceDoubleRevert.h" />
     <ClInclude Include="..\HCMInternal\ForceRevert.h" />
+    <ClInclude Include="..\HCMInternal\FreeMCCCursor.h" />
     <ClInclude Include="..\HCMInternal\GameState.h" />
     <ClInclude Include="..\HCMInternal\GetMCCVersion.h" />
     <ClInclude Include="..\HCMInternal\GetObjectAddress.h" />
@@ -303,6 +306,7 @@
     <ClInclude Include="..\HCMInternal\MessagesGUI.h" />
     <ClInclude Include="..\HCMInternal\MidhookContextInterpreter.h" />
     <ClInclude Include="..\HCMInternal\MidhookFlagInterpreter.h" />
+    <ClInclude Include="..\HCMInternal\ModalDialogRenderer.h" />
     <ClInclude Include="..\HCMInternal\ModuleCache.h" />
     <ClInclude Include="..\HCMInternal\ModuleHook.h" />
     <ClInclude Include="..\HCMInternal\ModuleHookManager.h" />
@@ -313,6 +317,7 @@
     <ClInclude Include="..\HCMInternal\PointerManager.h" />
     <ClInclude Include="..\HCMInternal\RuntimeExceptionHandler.h" />
     <ClInclude Include="..\HCMInternal\ScopedCallback.h" />
+    <ClInclude Include="..\HCMInternal\ScopedServiceRequest.h" />
     <ClInclude Include="..\HCMInternal\Setting.h" />
     <ClInclude Include="..\HCMInternal\SettingsSerialiser.h" />
     <ClInclude Include="..\HCMInternal\SettingsStateAndEvents.h" />
@@ -328,6 +333,7 @@
     <ClInclude Include="MockGetMCCVersion.h" />
     <ClInclude Include="MockMCCStateHook.h" />
     <ClInclude Include="MockMessagesGUI.h" />
+    <ClInclude Include="MockModalDialogRenderer.h" />
     <ClInclude Include="MockSettingsSerialiser.h" />
     <ClInclude Include="MockSharedMemory.h" />
     <ClInclude Include="pch.h" />

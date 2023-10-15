@@ -150,6 +150,12 @@
     <ClCompile Include="..\HCMInternal\AIFreeze.cpp">
       <Filter>HCMInternalFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\FreeMCCCursor.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ModalDialogRenderer.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -451,6 +457,18 @@
     </ClInclude>
     <ClInclude Include="..\HCMInternal\MidhookFlagInterpreter.h">
       <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ScopedServiceRequest.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\FreeMCCCursor.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ModalDialogRenderer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="MockModalDialogRenderer.h">
+      <Filter>Mocks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

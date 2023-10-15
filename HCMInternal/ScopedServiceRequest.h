@@ -12,11 +12,14 @@ public:
 class ScopedServiceRequest
 {
 private:
-	gsl::not_null<std::shared_ptr<IProvideScopedRequests>> mService;
+	std::shared_ptr<IProvideScopedRequests> mService;
 	std::string mCallerID;
+	bool init = false;
 public:
+	ScopedServiceRequest() = default; // default constructible, but init flag will be left to false
+
 	ScopedServiceRequest(std::shared_ptr<IProvideScopedRequests> service, std::string callerID)
-		: mService(service), mCallerID(callerID)
+		: mService(service), mCallerID(callerID), init(true)
 	{
 		PLOG_DEBUG << "creating ScopedServiceRequest";
 		mService->requestService(mCallerID);;
@@ -24,7 +27,11 @@ public:
 
 	~ScopedServiceRequest()
 	{
+		if (init)
+		{
 		PLOG_DEBUG << "destroying ScopedServiceRequest";
 		mService->unrequestService(mCallerID);
+		}
+
 	}
 };

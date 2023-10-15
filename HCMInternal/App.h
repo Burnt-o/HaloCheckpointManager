@@ -81,16 +81,27 @@ public:
             auto ver = std::make_shared<GetMCCVersion>(); PLOGV << "ver init";// gets the version of MCC that we're currently injected into
             auto ptr = std::make_shared<PointerManager>(ver, dirPath); PLOGV << "ptr init"; // retrieves data from github page for MultilevelPointers and other game-version-specific data
 
-               auto freeCursor = std::make_shared<FreeMCCCursor>
-                   (ptr->getData<std::shared_ptr<MultilevelPointer>>("shouldCursorBeFreeFunction"), 
-                       ptr->getData <std::shared_ptr<MidhookFlagInterpreter>>("shouldCursorBeFreeFunctionFlagSetter"));
+            // setup some optional services mainly related to controls, eg freeing the cursor, pausing the game, etc
+            std::optional<std::shared_ptr<FreeMCCCursor>> freeCursorService;
+            std::optional<HCMInitException> freeCursorServiceFail;
+            try
+            {
+                freeCursorService = std::make_optional< std::shared_ptr<FreeMCCCursor>>(std::make_shared<FreeMCCCursor>
+                    (ptr->getData<std::shared_ptr<MultilevelPointer>>("shouldCursorBeFreeFunction"),
+                        ptr->getData <std::shared_ptr<MidhookFlagInterpreter>>("shouldCursorBeFreeFunctionFlagSetter")));
+            }
+            catch (HCMInitException ex)
+            {
+                freeCursorServiceFail = std::make_optional< HCMInitException>(ex);
+            }
+
 
 
             // set up rendering
             auto d3d = std::make_shared<D3D11Hook>(); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
             auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
 
-            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, freeCursor); // renders modal dialogs that can be called from optionalCheats
+            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, freeCursorService); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
             auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
@@ -129,6 +140,7 @@ public:
 
             mes->addMessage("HCM successfully initialised!");
 
+            if (freeCursorServiceFail.has_value()) mes->addMessage(std::format("Failed to setup freeCursor service, error: {}", freeCursorServiceFail.value().what()));
 
 
 

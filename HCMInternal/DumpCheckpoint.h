@@ -168,7 +168,8 @@ public:
 	~DumpCheckpoint()
 	{
 		PLOG_VERBOSE << "~" << getName();
-		dontBlockRendering.join();
+		if (dontBlockRendering.joinable())
+			dontBlockRendering.join();
 	}
 
 
