@@ -349,6 +349,9 @@
     <ClInclude Include="FreeMCCCursor.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="ScopedServiceRequest.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

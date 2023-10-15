@@ -6,7 +6,7 @@
 
 
 
-class FreeMCCCursor::FreeMCCCursorImpl : public IFreeMCCCursorImpl
+class FreeMCCCursor::FreeMCCCursorImpl : public IProvideScopedRequests
 {
 private:
 	static inline FreeMCCCursorImpl* instance = nullptr;
@@ -34,7 +34,7 @@ public:
 		PLOG_DEBUG << "~" << nameof(FreeMCCCursorImpl); 
 		instance = nullptr;
 	}
-	void requestFreedCursor(std::string callerID)
+	void requestService(std::string callerID)
 	{
 		callersRequestingFreedCursor.insert(callerID);
 		if (callersRequestingFreedCursor.empty() == false)
@@ -43,7 +43,7 @@ public:
 		}
 	}
 
-	void unrequestFreedCursor(std::string callerID)
+	void unrequestService(std::string callerID)
 	{
 		callersRequestingFreedCursor.erase(callerID);
 		if (callersRequestingFreedCursor.empty() == true)
@@ -66,4 +66,4 @@ FreeMCCCursor::FreeMCCCursor(std::shared_ptr<MultilevelPointer> freeCursorFunc, 
 
 FreeMCCCursor::~FreeMCCCursor() = default;
 
-ScopedFreeCursorRequest FreeMCCCursor::scopedRequest(std::string callerID) { return ScopedFreeCursorRequest(pimpl, callerID); }
+ScopedServiceRequest FreeMCCCursor::scopedRequest(std::string callerID) { return ScopedServiceRequest(pimpl, callerID); }

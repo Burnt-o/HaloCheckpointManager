@@ -249,6 +249,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ModalDialogRenderer.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
     <ClInclude Include="ScopedCallback.h" />
+    <ClInclude Include="ScopedServiceRequest.h" />
     <ClInclude Include="SharedMemoryInternal.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="IOptionalCheat.h" />
