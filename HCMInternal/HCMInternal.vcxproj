@@ -226,6 +226,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DirPathContainer.h" />
     <ClInclude Include="DynamicStruct.h" />
     <ClInclude Include="DynamicStructFactory.h" />
+    <ClInclude Include="FreeMCCCursor.h" />
     <ClInclude Include="GetObjectAddress.h" />
     <ClInclude Include="GUIConsoleCommand.h" />
     <ClInclude Include="GUIHeading.h" />
@@ -324,6 +325,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DynamicStruct.cpp" />
     <ClCompile Include="DynamicStructFactory.cpp" />
+    <ClCompile Include="FreeMCCCursor.cpp" />
     <ClCompile Include="GetObjectAddress.cpp" />
     <ClCompile Include="GUIServiceInfo.cpp" />
     <ClCompile Include="MCCStateHook.cpp" />

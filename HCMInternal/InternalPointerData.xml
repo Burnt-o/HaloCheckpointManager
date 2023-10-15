@@ -170,6 +170,31 @@
 <!--#endregion MCCStateHook-->
 
 
+	<!-- #region control-->
+	<!--scan wr "00 00 00 00 00 00 01 01 01" while unpaused, then "01 ** ** ** ** ** ** ** **" while paused. check what accesses, one of these funcs that cmps to register is it.-->
+	<VersionedEntry Name="shouldCursorBeFreeFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1E7249</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1F4BF9</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--probably always zero & false, but juuuust in case -->
+	<VersionedEntry Name="shouldCursorBeFreeFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" ProcessType="Steam">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+	</VersionedEntry>
+	<!-- #endregion control-->
+	
+	
 	<!-- #region SaveManagement-->
 	<!-- #region forceCheckpointFlag-->
 	<VersionedEntry Name="forceCheckpointFlag" Type="MultilevelPointer::ModuleOffset">

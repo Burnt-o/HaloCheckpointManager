@@ -346,6 +346,9 @@
     <ClInclude Include="ModalDialogRenderer.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="FreeMCCCursor.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -460,6 +463,9 @@
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="ModalDialogRenderer.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeMCCCursor.cpp">
       <Filter>Services</Filter>
     </ClCompile>
   </ItemGroup>

@@ -77,9 +77,13 @@ private:
 			checkpointDumpNameDialog.render();
 		}
 
+
+		gsl::not_null<std::shared_ptr< FreeMCCCursor>> mFreeMCCCursor;
+
 public:
 	std::tuple<bool, std::string> showCheckpointDumpNameDialog(std::string defaultName)
 	{
+		auto scopedFreeCursor = mFreeMCCCursor->scopedRequest(nameof(showCheckpointDumpNameDialog));
 		checkpointDumpNameDialog.beginDialog();
 		while (!GlobalKill::isKillSet() && checkpointDumpNameDialog.isDialogOpen()) { Sleep(10); }
 		PLOG_DEBUG << "showCheckpointDumpNameDialog returning " << std::get<bool>(checkpointDumpNameDialog.currentReturnValue) << ", " << std::get<std::string>(checkpointDumpNameDialog.currentReturnValue);
@@ -90,15 +94,16 @@ public:
 		throw HCMRuntimeException("not impl yet");
 	}
 
-	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent)
-		: mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2 screenSize) {onImGuiRenderEvent(screenSize); })
+	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr< FreeMCCCursor> freeCursor)
+		: mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2 screenSize) {onImGuiRenderEvent(screenSize); }),
+		mFreeMCCCursor(freeCursor)
 	{
 	}
 };
 
 
-ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent) 
-	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent)) {}
+ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr< FreeMCCCursor> freeCursor)
+	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, freeCursor)) {}
 
 ModalDialogRenderer::~ModalDialogRenderer() = default;
 
