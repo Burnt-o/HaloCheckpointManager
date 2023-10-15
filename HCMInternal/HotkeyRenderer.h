@@ -6,6 +6,7 @@
 class IHotkeyRendererImpl {
 public:
 	virtual void renderHotkey(std::optional<HotkeysEnum>) = 0;
+	virtual ~IHotkeyRendererImpl() = default;
 };
 
 

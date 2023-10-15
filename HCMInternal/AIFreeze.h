@@ -11,7 +11,7 @@
 #include "MidhookFlagInterpreter.h"
 
 
-class AIFreezeImplUntemplated {};
+class AIFreezeImplUntemplated { public: virtual ~AIFreezeImplUntemplated() = default; };
 class AIFreeze : public IOptionalCheat
 {
 private:
