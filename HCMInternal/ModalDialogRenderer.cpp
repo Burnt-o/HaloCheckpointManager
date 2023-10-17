@@ -79,6 +79,7 @@ private:
 
 
 		std::optional<std::shared_ptr< FreeMCCCursor>> mFreeMCCCursorService;
+		std::optional<std::shared_ptr< BlockGameInput>> mBlockGameInputService;
 
 public:
 	std::tuple<bool, std::string> showCheckpointDumpNameDialog(std::string defaultName)
@@ -88,6 +89,13 @@ public:
 		{
 			PLOG_DEBUG << "ModalDialogRenderer requesting freeMCCCursor";
 			scopedFreeCursorRequest = mFreeMCCCursorService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
+		}
+
+		std::unique_ptr<ScopedServiceRequest> scopedBlockInputRequest;
+		if (mBlockGameInputService.has_value())
+		{
+			PLOG_DEBUG << "ModalDialogRenderer requesting blockGameInput";
+			scopedBlockInputRequest = mBlockGameInputService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
 		}
 		
 		checkpointDumpNameDialog.beginDialog();
@@ -102,7 +110,8 @@ public:
 
 	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
 		: mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2 screenSize) {onImGuiRenderEvent(screenSize); }),
-		mFreeMCCCursorService(controlServiceContainer->freeMCCSCursorService)
+		mFreeMCCCursorService(controlServiceContainer->freeMCCSCursorService),
+		mBlockGameInputService(controlServiceContainer->blockGameInputService)
 	{
 	}
 };

@@ -15,7 +15,7 @@ private:
 	std::shared_ptr<ModuleMidHook> shouldCursorBeFreeHook;
 	std::shared_ptr< MidhookFlagInterpreter> shouldCursorBeFreeFunctionFlagSetter;
 	
-	static void aiFreezeHookFunction(SafetyHookContext& ctx)
+	static void shouldCursorBeFreeHookFunction(SafetyHookContext& ctx)
 	{
 		instance->shouldCursorBeFreeFunctionFlagSetter->setFlag(ctx);
 	}
@@ -23,11 +23,11 @@ private:
 public:
 	FreeMCCCursorImpl(std::shared_ptr<PointerManager> ptr)
 	{
-		if (instance) throw HCMInitException("Cannot have more than one FreeMCCCursor");
+		if (instance) throw HCMInitException("Cannot have more than one FreeMCCCursorImpl");
 
 		auto shouldCursorBeFreeFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(shouldCursorBeFreeFunction));
 		shouldCursorBeFreeFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(shouldCursorBeFreeFunctionFlagSetter));
-		shouldCursorBeFreeHook = ModuleMidHook::make(L"", shouldCursorBeFreeFunction, aiFreezeHookFunction, false);
+		shouldCursorBeFreeHook = ModuleMidHook::make(L"", shouldCursorBeFreeFunction, shouldCursorBeFreeHookFunction, false);
 
 		instance = this;
 	}

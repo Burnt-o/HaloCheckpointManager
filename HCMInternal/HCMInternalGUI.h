@@ -22,6 +22,11 @@ private:
 
 	void onGUIShowingFreesMCCCursorChanged(bool& newval);
 	ScopedCallback<ToggleEvent> mGUIShowingFreesMCCCursorCallbackHandle;
+	std::unique_ptr<ScopedServiceRequest> freeCursorRequest;
+
+	void onGUIShowingBlocksGameInputChanged(bool& newval);
+	ScopedCallback<ToggleEvent> mGUIShowingBlocksGameInputCallbackHandle;
+	std::unique_ptr<ScopedServiceRequest> blockGameInputRequest;
 
 	//injected services
 	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
@@ -33,6 +38,9 @@ private:
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
 	void onImGuiRenderEvent(Vec2 ss);
 	void onGameStateChange(const MCCState&);
+
+	void onWindowJustOpened();
+	void onWindowJustClosed();
 
 	// initialize resources in the first onImGuiRenderEvent
 	void initializeHCMInternalGUI();
@@ -74,6 +82,7 @@ public:
 		mControlServices(control),
 		mSettings(settings),
 		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); }),
+		mGUIShowingBlocksGameInputCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingBlocksGameInputChanged(n); }),
 		m_WindowOpen(settings->GUIWindowOpen->GetValue())
 	{
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";

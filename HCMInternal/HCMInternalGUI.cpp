@@ -144,7 +144,8 @@ void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 
 
 
-std::unique_ptr<ScopedServiceRequest> freeCursorRequest;
+
+
 void HCMInternalGUI::primaryRender()
 {
 	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "onGameStateChange locking currentGameGUIElementsMutex @ 0x" << std::hex << pMutex, pMutex = &currentGameGUIElementsMutex);
@@ -181,6 +182,7 @@ void HCMInternalGUI::primaryRender()
 	{
 		mGUIMCCState.render(); // render header
 
+		// Tell all the current-games GUI elements to render themselves
 		for (auto& element : *p_currentGameGUIElements)
 		{
 			element->render(*mHotkeyRenderer.get());
@@ -193,20 +195,12 @@ void HCMInternalGUI::primaryRender()
 	// do stuff if window just opened
 	if (m_WindowOpen && !m_windowOpenLastFrame)
 	{
-		mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
-		mSettings->GUIWindowOpen->UpdateValueWithInput();
-
-		if (mSettings->GUIShowingFreesCursor->GetValue() && mControlServices->freeMCCSCursorService.has_value())
-			freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
+		onWindowJustOpened();
 	}
 	// do stuff if window just closed
 	else if (!m_WindowOpen && m_windowOpenLastFrame)
 	{
-		mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
-		mSettings->GUIWindowOpen->UpdateValueWithInput();
-
-		if (freeCursorRequest)
-			freeCursorRequest.reset();
+		onWindowJustClosed();
 	}
 
 	m_windowOpenLastFrame = m_WindowOpen;
@@ -226,3 +220,41 @@ void HCMInternalGUI::onGUIShowingFreesMCCCursorChanged(bool& newval)
 		freeCursorRequest.reset();
 	}
 }
+
+
+void HCMInternalGUI::onGUIShowingBlocksGameInputChanged(bool& newval)
+{
+	if (newval && m_WindowOpen && mControlServices->blockGameInputService.has_value() && !blockGameInputRequest)
+	{
+		blockGameInputRequest = mControlServices->blockGameInputService.value()->scopedRequest(nameof(HCMInternalGUI));
+	}
+	else if (!newval && m_WindowOpen && blockGameInputRequest)
+	{
+		blockGameInputRequest.reset();
+	}
+}
+
+void HCMInternalGUI::onWindowJustOpened()
+{
+	mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
+	mSettings->GUIWindowOpen->UpdateValueWithInput();
+
+	if (mSettings->GUIShowingFreesCursor->GetValue() && mControlServices->freeMCCSCursorService.has_value())
+		freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
+
+	if (mSettings->GUIShowingBlocksInput->GetValue() && mControlServices->blockGameInputService.has_value())
+		blockGameInputRequest = mControlServices->blockGameInputService.value()->scopedRequest(nameof(HCMInternalGUI));
+}
+
+void HCMInternalGUI::onWindowJustClosed()
+{
+	mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
+	mSettings->GUIWindowOpen->UpdateValueWithInput();
+
+	if (freeCursorRequest)
+		freeCursorRequest.reset();
+
+	if (blockGameInputRequest)
+		blockGameInputRequest.reset();
+}
+

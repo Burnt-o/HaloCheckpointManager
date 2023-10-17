@@ -361,6 +361,9 @@
     <ClInclude Include="GUIHotkeyOnly.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="BlockGameInput.h">
+      <Filter>Services\Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -478,6 +481,9 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="FreeMCCCursor.cpp">
+      <Filter>Services\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockGameInput.cpp">
       <Filter>Services\Control</Filter>
     </ClCompile>
   </ItemGroup>

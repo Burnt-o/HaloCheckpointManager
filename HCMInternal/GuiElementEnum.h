@@ -37,6 +37,7 @@
 	((toggleGUIHotkeyGUI, (ALL_SUPPORTED_GAMES)))\
 	((GUISettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 	((GUIShowingFreesCursor, (ALL_SUPPORTED_GAMES)))\
+	((GUIShowingBlocksInput, (ALL_SUPPORTED_GAMES)))\
 ((saveManagementHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceRevertGUI, (ALL_SUPPORTED_GAMES)))\

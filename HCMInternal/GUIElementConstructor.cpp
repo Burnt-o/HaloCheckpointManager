@@ -88,11 +88,16 @@ private:
 						(game, "GUI settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
+							createNestedElement(GUIElementEnum::GUIShowingBlocksInput),
 							}));
 
 					case GUIElementEnum::GUIShowingFreesCursor:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Free cursor when GUI open", settings->GUIShowingFreesCursor));
+
+					case GUIElementEnum::GUIShowingBlocksInput:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Block input when GUI open", settings->GUIShowingBlocksInput));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

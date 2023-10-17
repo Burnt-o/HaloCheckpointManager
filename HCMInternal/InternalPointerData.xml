@@ -192,6 +192,23 @@
 			<value>false</value>
 		</Version>
 	</VersionedEntry>
+
+	<!--same as above, it's one of those funcs that accesses the pause flag.-->
+	<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1E522D</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--probably always zero & false, but juuuust in case -->
+	<VersionedEntry Name="blockGameInputFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" ProcessType="Steam">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+	</VersionedEntry>
 	<!-- #endregion control-->
 	
 	
