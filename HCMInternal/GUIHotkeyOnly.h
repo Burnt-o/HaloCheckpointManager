@@ -1,0 +1,31 @@
+#pragma once
+#include "IGUIElement.h"
+#include "SettingsStateAndEvents.h"
+
+
+
+class GUIHotkeyOnly : public IGUIElement {
+
+private:
+	std::string mText;
+public:
+
+
+	GUIHotkeyOnly(GameState implGame, std::optional<HotkeysEnum> hotkey, std::string buttonText)
+		: IGUIElement(implGame, hotkey), mText(buttonText)
+	{
+		if (mText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");
+		PLOG_VERBOSE << "Constructing GUIHotkeyOnly, name: " << getName();
+		this->currentHeight = 20;
+	}
+
+	void render(HotkeyRenderer& hotkeyRenderer) override
+	{
+		hotkeyRenderer.renderHotkey(mHotkey);
+		ImGui::SameLine();
+		ImGui::Text(mText.c_str());
+	}
+
+	std::string_view getName() override { return mText; }
+
+};

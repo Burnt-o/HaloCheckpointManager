@@ -1,6 +1,7 @@
 #pragma once
 
 #define ALLHOTKEYS 	\
+toggleGUI,\
 forceCheckpoint,\
 forceRevert,\
 forceDoubleRevert,\

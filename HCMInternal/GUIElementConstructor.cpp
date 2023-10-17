@@ -12,7 +12,7 @@
 #include "GUIConsoleCommand.h"
 #include "GUIHeading.h"
 #include "GUISubHeading.h"
-
+#include "GUIHotkeyOnly.h"
 
 class GUIElementConstructor::GUIElementConstructorImpl {
 private:
@@ -75,12 +75,24 @@ private:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, "Control", headerChildElements
 						{
-						createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
+						createNestedElement(GUIElementEnum::toggleGUIHotkeyGUI),
+						createNestedElement(GUIElementEnum::GUISettingsSubheading),
 						}));
 
-				case GUIElementEnum::GUIShowingFreesCursor:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, std::nullopt, "Free cursor when GUI open", settings->GUIShowingFreesCursor));
+				case GUIElementEnum::toggleGUIHotkeyGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHotkeyOnly>
+						(game, HotkeysEnum::toggleGUI, "Toggle this GUI"));
+
+				case GUIElementEnum::GUISettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "GUI settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
+							}));
+
+					case GUIElementEnum::GUIShowingFreesCursor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Free cursor when GUI open", settings->GUIShowingFreesCursor));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
@@ -154,11 +166,11 @@ private:
 
 				case GUIElementEnum::invulnNPCGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Invulnerability Settings", 20.f, headerChildElements
+						(game, "Invulnerability Settings", headerChildElements
 							{
 							std::make_optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle))
-							}));
+							}, 20.f));
 					//return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle>
 					//	(game, std::nullopt, "NPC Invulnerability", settings->invulnerabilityNPCToggle));
 

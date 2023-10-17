@@ -358,6 +358,9 @@
     <ClInclude Include="FreeMCCCursor.h">
       <Filter>Services\Control</Filter>
     </ClInclude>
+    <ClInclude Include="GUIHotkeyOnly.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

@@ -19,6 +19,7 @@ public:
 	};
 
 	//	hotkeys
+	std::shared_ptr<ActionEvent> toggleGUIHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> aiFreezeHotkeyEvent = std::make_shared<ActionEvent>();
@@ -38,12 +39,20 @@ public:
 
 
 	// settings
+	std::shared_ptr<Setting<bool>> GUIWindowOpen = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(GUIWindowOpen)
+		);
+
 	std::shared_ptr<Setting<bool>> GUIShowingFreesCursor = std::make_shared<Setting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(GUIShowingFreesCursor)
 		);
+
 
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
 	(
@@ -89,6 +98,6 @@ public:
 		);
 
 	// settings that ought to be serialised/deserialised between HCM runs
-	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions{invulnerabilityNPCToggle, speedhackSetting};
+	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions{invulnerabilityNPCToggle, speedhackSetting, GUIShowingFreesCursor, consoleCommandString};
 };
 

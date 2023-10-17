@@ -13,7 +13,7 @@ private:
 public:
 
 
-	GUISubHeading(GameState implGame, std::string headingText, float leftMargin, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
+	GUISubHeading(GameState implGame, std::string headingText,  std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements, float leftMargin = 20.f)
 		: IGUIElement(implGame, std::nullopt), mLeftMargin(leftMargin), mHeadingText(headingText)
 	{
 		PLOG_VERBOSE << "Constructing GUIHeading, name: " << getName();

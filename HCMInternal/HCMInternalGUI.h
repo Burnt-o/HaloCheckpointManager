@@ -47,7 +47,8 @@ private:
 
 	// GUI data
 	ImGuiWindowFlags windowFlags;
-	bool m_WindowOpen;
+	bool& m_WindowOpen;
+	bool m_windowOpenLastFrame;
 	Vec2 mWindowSize{ 500, 500 };
 	Vec2 mWindowPos{ 10, 25 };
 
@@ -72,7 +73,8 @@ public:
 		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIMCCState(MCCStateHook),
 		mControlServices(control),
 		mSettings(settings),
-		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); })
+		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); }),
+		m_WindowOpen(settings->GUIWindowOpen->GetValue())
 	{
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";
 	}

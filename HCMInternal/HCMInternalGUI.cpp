@@ -171,8 +171,9 @@ void HCMInternalGUI::primaryRender()
 	else
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.00f, 0.60f, 0.25f, 1.00f));
 
-	bool windowOpenLastFrame = m_WindowOpen;
-	m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags); // Create window
+
+	ImGui::SetNextWindowCollapsed(!m_WindowOpen);
+	m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags); // Create window. Returns false when window collapsed
 
 	ImGui::PopStyleColor();
 
@@ -190,17 +191,25 @@ void HCMInternalGUI::primaryRender()
 
 
 	// do stuff if window just opened
-	if (m_WindowOpen && !windowOpenLastFrame)
+	if (m_WindowOpen && !m_windowOpenLastFrame)
 	{
+		mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
+		mSettings->GUIWindowOpen->UpdateValueWithInput();
+
 		if (mSettings->GUIShowingFreesCursor->GetValue() && mControlServices->freeMCCSCursorService.has_value())
 			freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
 	}
 	// do stuff if window just closed
-	else if (!m_WindowOpen && windowOpenLastFrame)
+	else if (!m_WindowOpen && m_windowOpenLastFrame)
 	{
+		mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
+		mSettings->GUIWindowOpen->UpdateValueWithInput();
+
 		if (freeCursorRequest)
 			freeCursorRequest.reset();
 	}
+
+	m_windowOpenLastFrame = m_WindowOpen;
 
 	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
 
