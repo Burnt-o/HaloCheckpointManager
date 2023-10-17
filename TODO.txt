@@ -1,43 +1,97 @@
-Auto expansion of last column in checkpointViewModel
-
-Option to expand save folder tree width
-
-HCMExternal filterSearch thingy
 
 
+GUI Hierarchy (goal)
+* Control
+	* hotkey: toggle main GUI //TODO
+	* bool: Free cursor when GUI visible //TODO
+	* bool: Pause game when GUI visible //TODO
+	* bool: Freeze inputs when GUI visible //TODO
+	* bool: Pause Game //TODO
+		* action: Advance x ticks //TODO
+* Save Management
+	* action: Inject Checkpoint
+		* bool: Warn on injecting to wrong level //TODO
+		* bool: Force level load to different levels //TODO
+	* action: Dump Checkpoint
+		* bool: Autoname checkpoints //TODO
+	* action: Inject Core Save
+		* bool: Warn on injecting to wrong level //TODO
+		* bool: Force level load to different levels //TODO
+	* action: Dump Core Save
+		* bool: Autoname checkpoints //TODO
+	* action: Force Checkpoint
+	* action: Revert
+	* action: Force Double Revert
+	* action: Force Core Save
+	* action: Force Core Load
+	* bool: Disable Natural Checkpoints //TODO
+* Cheats
+	* bool: Speedhack
+	* bool: Invulnerability
+	* bool: AI Freeze //TODO (partially done)
+	* action: Force Teleport //TODO
+		* bool (radio): Forward or manually set position //TODO
+			* Teleport Forward //TODO
+				* float: Teleport forward X units //TODO
+			* Teleport to manually set position //TODO
+				* vec3: Set position //TODO
+					* action: Fill with current position //TODO
+	* action: Force Launch //TODO
+		* bool (radio): Forward or manually set velocity //TODO
+			* Launch Forward //TODO
+				* bool: Ignore Z component //TODO
+			* Manually set velocity //TODO
+				* vec3: Velocity //TODO
+	* bool: One Hit Kill mode //TODO
+	* bool: Infinite Ammo/Grenades //TODO
+	* Skulls (is just a heading) //TODO
+		* then each skull listed as a bool //TODO
+	* bool: Cheat Medusa //TODO
+ * Overlays
+	* bool: Trigger Overlay //TODO
+		// options? //TODO
+	* bool: 3D Waypoint //TODO
+		// options? //TODO
+	* Minisplitter //TODO
+		// options? //TODO
+	* Sprint Meter //TODO
+		// options? //TODO
+ * Camera
+	* bool: Freecam //TODO
+	* bool: Freeze player input while freecamming //TODO
+	* bool: Pause game while freecamming //TODO
+	* action: Teleport To Camera //TODO
+ * Theater
+	* bool: No-clip camera//TODO
+	* bool: Theater Synchronoiser //TODO
 
 
-GUICheats:
-* Pause
-	* Advance x ticks
-	* free cursor
-	* bring up gui ? 
-* Freeze AI -> remaining game implementations
-* Force Teleport
-* Force Launch
-* One hit kill
-* Infinite ammo/nades
-* Skulls
-* Natural Checkpoint Disable
-* DisplayInfo
-	* PlayerData
-		* Health
-		* Shields
-		* Position
-		* Velocity
-		* ViewAngle
-	* GameData
-		* GameTick (and as seconds/minutes)
-		* Aggro mechanics (ce at least)
-* CheatMedusa
-* Trigger Overlay
-* Force level loads - on inject (and for random practice mode)
-* Console commands
-* 3D waypoint marker
+
+
+
+
+
 
 maybe:
-* Freecam - at least debug camera for ce
-* Theater friend
 * Random practice mode
-* Waypoint timing / minisplitter
+* Synchronoiser
 
+
+
+
+
+
+
+add pauseGameService // Needs to have the property that the player can still look around / freecam around while paused
+add freezeInputService
+
+make hotkey for opening mainGUI and render as element in Control heading. 
+give control services (freeCursorService, pauseGameService, freezeInputService) to HCMInternalGUI so it can request them when GUI is up.
+	* and add gui elements so user can choose whether they are actually used or not
+	* will need to pass SettingsStateAndEvents to hcmInternal but that's fine
+	* could even make it so the main IsWindowOpen option is serialised lol. That's dump though
+
+
+Need to fix hotkey serialisation
+Need to fix setting serialisation
+HCMExternal filterSearch thingy
