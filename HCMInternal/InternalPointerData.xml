@@ -209,6 +209,25 @@
 			<value>false</value>
 		</Version>
 	</VersionedEntry>
+
+
+	<VersionedEntry Name="pauseGameFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAC2C18</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--probably always zero & false, but juuuust in case -->
+	<VersionedEntry Name="pauseGameFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="All" Game="Halo1">
+			<Parameters>
+				<tickRateUnit>rax</tickRateUnit>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
 	<!-- #endregion control-->
 	
 	

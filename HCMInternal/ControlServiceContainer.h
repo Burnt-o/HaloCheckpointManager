@@ -2,6 +2,7 @@
 #include "PointerManager.h"
 #include "FreeMCCCursor.h"
 #include "BlockGameInput.h"
+#include "PauseGame.h"
 
 
 class ControlServiceContainer
@@ -12,6 +13,9 @@ public:
 
 	std::optional<std::shared_ptr<BlockGameInput>> blockGameInputService = std::nullopt;
 	std::optional<HCMInitException> blockGameInputServiceFailure = std::nullopt;
+
+	std::optional<std::shared_ptr<PauseGame>> pauseGameService = std::nullopt;
+	std::optional<HCMInitException> pauseGameServiceFailure = std::nullopt;
 
 	ControlServiceContainer(std::shared_ptr<PointerManager> ptr)
 	{
@@ -24,6 +28,7 @@ public:
 			PLOG_ERROR << "Failed to create freeMCCCursorService, " << ex.what();
 			freeMCCSCursorServiceFailure = ex;
 		}
+
 		try
 		{
 			blockGameInputService = std::make_optional<std::shared_ptr<BlockGameInput>>(std::make_shared<BlockGameInput>(ptr));
@@ -32,6 +37,16 @@ public:
 		{
 			PLOG_ERROR << "Failed to create blockGameInputService, " << ex.what();
 			blockGameInputServiceFailure = ex;
+		}
+
+		try
+		{
+			pauseGameService = std::make_optional<std::shared_ptr<PauseGame>>(std::make_shared<PauseGame>(ptr));
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Failed to create pauseGameService, " << ex.what();
+			pauseGameServiceFailure = ex;
 		}
 	}
 

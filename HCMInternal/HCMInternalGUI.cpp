@@ -234,6 +234,18 @@ void HCMInternalGUI::onGUIShowingBlocksGameInputChanged(bool& newval)
 	}
 }
 
+void HCMInternalGUI::onGUIShowingPausesGameChanged(bool& newval)
+{
+	if (newval && m_WindowOpen && mControlServices->pauseGameService.has_value() && !pauseGameRequest)
+	{
+		pauseGameRequest = mControlServices->pauseGameService.value()->scopedRequest(nameof(HCMInternalGUI));
+	}
+	else if (!newval && m_WindowOpen && pauseGameRequest)
+	{
+		pauseGameRequest.reset();
+	}
+}
+
 void HCMInternalGUI::onWindowJustOpened()
 {
 	mSettings->GUIWindowOpen->GetValueDisplay() = m_WindowOpen;
@@ -244,6 +256,9 @@ void HCMInternalGUI::onWindowJustOpened()
 
 	if (mSettings->GUIShowingBlocksInput->GetValue() && mControlServices->blockGameInputService.has_value())
 		blockGameInputRequest = mControlServices->blockGameInputService.value()->scopedRequest(nameof(HCMInternalGUI));
+
+	if (mSettings->GUIShowingPausesGame->GetValue() && mControlServices->pauseGameService.has_value())
+		pauseGameRequest = mControlServices->pauseGameService.value()->scopedRequest(nameof(HCMInternalGUI));
 }
 
 void HCMInternalGUI::onWindowJustClosed()
@@ -256,5 +271,8 @@ void HCMInternalGUI::onWindowJustClosed()
 
 	if (blockGameInputRequest)
 		blockGameInputRequest.reset();
+
+	if (pauseGameRequest)
+		pauseGameRequest.reset();
 }
 

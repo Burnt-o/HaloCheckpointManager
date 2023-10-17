@@ -89,6 +89,7 @@ private:
 							{
 							createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
 							createNestedElement(GUIElementEnum::GUIShowingBlocksInput),
+							createNestedElement(GUIElementEnum::GUIShowingPausesGame),
 							}));
 
 					case GUIElementEnum::GUIShowingFreesCursor:
@@ -98,6 +99,10 @@ private:
 					case GUIElementEnum::GUIShowingBlocksInput:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Block input when GUI open", settings->GUIShowingBlocksInput));
+
+					case GUIElementEnum::GUIShowingPausesGame:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Pause game when GUI open", settings->GUIShowingPausesGame));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

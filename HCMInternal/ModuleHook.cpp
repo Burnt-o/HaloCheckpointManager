@@ -74,7 +74,7 @@ void ModuleInlineHook::attach()
 		return;
 	}
 
-	PLOG_VERBOSE << "pOriginalFunction " << pOriginalFunction;
+	PLOG_VERBOSE << "pOriginalFunction " << std::hex << pOriginalFunction;
 
 	this->mInlineHook = safetyhook::create_inline((void*)pOriginalFunction, this->mHookFunction);
 
@@ -103,7 +103,7 @@ void ModuleMidHook::attach()
 		return;
 	}
 
-	PLOG_VERBOSE << "pOriginalFunction " << pOriginalFunction;
+	PLOG_VERBOSE << "pOriginalFunction " << std::hex << pOriginalFunction;
 	// per https://github.com/cursey/safetyhook/commit/77243791d72bfe49b94349922710c443db1df0fa
 	// mid hooks don't freeze the threads. 
 	// I don't know why they made this change but it can obv cause crashes with hooks that run frequently

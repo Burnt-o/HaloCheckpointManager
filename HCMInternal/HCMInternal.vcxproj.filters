@@ -364,6 +364,9 @@
     <ClInclude Include="BlockGameInput.h">
       <Filter>Services\Control</Filter>
     </ClInclude>
+    <ClInclude Include="PauseGame.h">
+      <Filter>Services\Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -484,6 +487,9 @@
       <Filter>Services\Control</Filter>
     </ClCompile>
     <ClCompile Include="BlockGameInput.cpp">
+      <Filter>Services\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseGame.cpp">
       <Filter>Services\Control</Filter>
     </ClCompile>
   </ItemGroup>

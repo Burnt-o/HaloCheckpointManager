@@ -28,6 +28,10 @@ private:
 	ScopedCallback<ToggleEvent> mGUIShowingBlocksGameInputCallbackHandle;
 	std::unique_ptr<ScopedServiceRequest> blockGameInputRequest;
 
+	void onGUIShowingPausesGameChanged(bool& newval);
+	ScopedCallback<ToggleEvent> mGUIShowingPausesGameCallbackHandle;
+	std::unique_ptr<ScopedServiceRequest> pauseGameRequest;
+
 	//injected services
 	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
 	gsl::not_null<std::shared_ptr<GUIElementStore>> mGUIStore;
@@ -82,7 +86,8 @@ public:
 		mControlServices(control),
 		mSettings(settings),
 		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); }),
-		mGUIShowingBlocksGameInputCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingBlocksGameInputChanged(n); }),
+		mGUIShowingBlocksGameInputCallbackHandle(settings->GUIShowingBlocksInput->valueChangedEvent, [this](bool& n) { onGUIShowingBlocksGameInputChanged(n); }),
+		mGUIShowingPausesGameCallbackHandle(settings->GUIShowingPausesGame->valueChangedEvent, [this](bool& n) { onGUIShowingPausesGameChanged(n); }),
 		m_WindowOpen(settings->GUIWindowOpen->GetValue())
 	{
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";

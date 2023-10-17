@@ -58,7 +58,14 @@ public:
 		(
 			true,
 			[](bool in) { return true; },
-			nameof(GUIShowingFreesCursor)
+			nameof(GUIShowingBlocksInput)
+		);
+
+	std::shared_ptr<Setting<bool>> GUIShowingPausesGame = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(GUIShowingPausesGame)
 		);
 
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
@@ -105,6 +112,7 @@ public:
 		);
 
 	// settings that ought to be serialised/deserialised between HCM runs
-	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions{invulnerabilityNPCToggle, speedhackSetting, GUIShowingFreesCursor, consoleCommandString};
+	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
+	{invulnerabilityNPCToggle, speedhackSetting, GUIShowingFreesCursor, GUIShowingBlocksInput, GUIShowingPausesGame, consoleCommandString};
 };
 

@@ -250,6 +250,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetPlayerDatum.h" />
     <ClInclude Include="MidhookFlagInterpreter.h" />
     <ClInclude Include="ModalDialogRenderer.h" />
+    <ClInclude Include="PauseGame.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
     <ClInclude Include="ScopedCallback.h" />
     <ClInclude Include="ScopedServiceRequest.h" />
@@ -364,6 +365,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="ModuleHookManager.cpp" />
     <ClCompile Include="MultilevelPointer.cpp" />
     <ClCompile Include="GetPlayerDatum.cpp" />
+    <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="Setting.cpp" />
     <ClCompile Include="OptionalCheatManager.cpp" />
     <ClCompile Include="SettingsSerialiser.cpp" />
