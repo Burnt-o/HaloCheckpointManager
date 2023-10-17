@@ -7,6 +7,7 @@
 #include "Vec2.h"
 #include "HotkeyRenderer.h"
 #include "GUIMCCState.h"
+#include "ControlServiceContainer.h"
 
 class HCMInternalGUI : public IAnchorPoint, public std::enable_shared_from_this<HCMInternalGUI>
 {
@@ -22,6 +23,7 @@ private:
 	std::shared_ptr<IMCCStateHook> mccStateHook;
 	std::shared_ptr<GUIElementStore> mGUIStore;
 	std::shared_ptr<HotkeyRenderer> mHotkeyRenderer;
+	std::shared_ptr<ControlServiceContainer> mControlServices;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
 	void onImGuiRenderEvent(Vec2 ss);
@@ -56,13 +58,14 @@ private:
 public:
 
 	// Gets passed ImGuiManager ImGuiRenderEvent reference so we can subscribe and unsubscribe
-	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent)
+	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent, std::shared_ptr<ControlServiceContainer> control)
 		: mDestructionGuard(),
 		currentGameGUIElementsMutex(),
 		mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
 		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
 		mGUIStore(guistore),
-		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIMCCState(MCCStateHook)
+		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIMCCState(MCCStateHook),
+		mControlServices(control)
 	{
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";
 	}

@@ -142,6 +142,9 @@ void HCMInternalGUI::onGameStateChange(const MCCState& newState)
 	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
 }
 
+
+
+std::unique_ptr<ScopedServiceRequest> freeCursorRequest;
 void HCMInternalGUI::primaryRender()
 {
 	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "onGameStateChange locking currentGameGUIElementsMutex @ 0x" << std::hex << pMutex, pMutex = &currentGameGUIElementsMutex);
@@ -168,7 +171,7 @@ void HCMInternalGUI::primaryRender()
 	else
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.00f, 0.60f, 0.25f, 1.00f));
 
-
+	bool windowOpenLastFrame = m_WindowOpen;
 	m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags); // Create window
 
 	ImGui::PopStyleColor();
@@ -184,6 +187,21 @@ void HCMInternalGUI::primaryRender()
 	}
 
 	ImGui::End(); // end main window
+
+
+	// do stuff if window just opened
+	if (m_WindowOpen && !windowOpenLastFrame)
+	{
+		if (mControlServices->freeMCCSCursorService.has_value())
+			freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
+	}
+	// do stuff if window just closed
+	else if (!m_WindowOpen && windowOpenLastFrame)
+	{
+		if (freeCursorRequest)
+			freeCursorRequest.reset();
+	}
+
 	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
 
 }
