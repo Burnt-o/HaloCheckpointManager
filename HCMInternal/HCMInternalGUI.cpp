@@ -192,7 +192,7 @@ void HCMInternalGUI::primaryRender()
 	// do stuff if window just opened
 	if (m_WindowOpen && !windowOpenLastFrame)
 	{
-		if (mControlServices->freeMCCSCursorService.has_value())
+		if (mSettings->GUIShowingFreesCursor->GetValue() && mControlServices->freeMCCSCursorService.has_value())
 			freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
 	}
 	// do stuff if window just closed
@@ -204,4 +204,16 @@ void HCMInternalGUI::primaryRender()
 
 	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
 
+}
+
+void HCMInternalGUI::onGUIShowingFreesMCCCursorChanged(bool& newval)
+{
+	if (newval && m_WindowOpen && mControlServices->freeMCCSCursorService.has_value() && !freeCursorRequest)
+	{
+		freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
+	}
+	else if (!newval && m_WindowOpen && freeCursorRequest)
+	{
+		freeCursorRequest.reset();
+	}
 }

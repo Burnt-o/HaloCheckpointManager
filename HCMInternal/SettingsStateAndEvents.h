@@ -38,6 +38,13 @@ public:
 
 
 	// settings
+	std::shared_ptr<Setting<bool>> GUIShowingFreesCursor = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(GUIShowingFreesCursor)
+		);
+
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
 	(
 		false,

@@ -73,7 +73,14 @@ private:
 			{
 			case GUIElementEnum::controlHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Control", headerChildElements{std::nullopt}));
+					(game, "Control", headerChildElements
+						{
+						createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
+						}));
+
+				case GUIElementEnum::GUIShowingFreesCursor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, std::nullopt, "Free cursor when GUI open", settings->GUIShowingFreesCursor));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

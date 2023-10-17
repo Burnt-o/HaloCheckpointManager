@@ -8,6 +8,7 @@
 #include "HotkeyRenderer.h"
 #include "GUIMCCState.h"
 #include "ControlServiceContainer.h"
+#include "SettingsStateAndEvents.h"
 
 class HCMInternalGUI : public IAnchorPoint, public std::enable_shared_from_this<HCMInternalGUI>
 {
@@ -19,11 +20,15 @@ private:
 	ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> mMCCStateChangedCallbackHandle;
 
+	void onGUIShowingFreesMCCCursorChanged(bool& newval);
+	ScopedCallback<ToggleEvent> mGUIShowingFreesMCCCursorCallbackHandle;
+
 	//injected services
-	std::shared_ptr<IMCCStateHook> mccStateHook;
-	std::shared_ptr<GUIElementStore> mGUIStore;
-	std::shared_ptr<HotkeyRenderer> mHotkeyRenderer;
-	std::shared_ptr<ControlServiceContainer> mControlServices;
+	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
+	gsl::not_null<std::shared_ptr<GUIElementStore>> mGUIStore;
+	gsl::not_null<std::shared_ptr<HotkeyRenderer>> mHotkeyRenderer;
+	gsl::not_null<std::shared_ptr<ControlServiceContainer>> mControlServices;
+	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
 	void onImGuiRenderEvent(Vec2 ss);
@@ -58,14 +63,16 @@ private:
 public:
 
 	// Gets passed ImGuiManager ImGuiRenderEvent reference so we can subscribe and unsubscribe
-	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent, std::shared_ptr<ControlServiceContainer> control)
+	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent, std::shared_ptr<ControlServiceContainer> control, std::shared_ptr<SettingsStateAndEvents> settings)
 		: mDestructionGuard(),
 		currentGameGUIElementsMutex(),
 		mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
 		mMCCStateChangedCallbackHandle(pMCCStateChangeEvent, [this](const MCCState& n) { onGameStateChange(n); }),
 		mGUIStore(guistore),
 		mccStateHook(MCCStateHook), mHotkeyRenderer(hotkeyRenderer), mGUIMCCState(MCCStateHook),
-		mControlServices(control)
+		mControlServices(control),
+		mSettings(settings),
+		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); })
 	{
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";
 	}

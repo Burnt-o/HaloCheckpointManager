@@ -34,6 +34,7 @@
 // A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that guielement
 #define ALLGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((controlHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((GUIShowingFreesCursor, (ALL_SUPPORTED_GAMES)))\
 ((saveManagementHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceRevertGUI, (ALL_SUPPORTED_GAMES)))\
