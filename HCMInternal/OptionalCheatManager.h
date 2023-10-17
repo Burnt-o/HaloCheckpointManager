@@ -8,6 +8,7 @@
 #include "ISharedMemory.h"
 #include "PointerManager.h"
 #include "ModalDialogRenderer.h"
+#include "ControlServiceContainer.h"
 // constructs and stores optionalcheats, updating OptionalCheatInfoManager as it constructs
 
 
@@ -20,7 +21,17 @@ private:
 public:
 	OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>, std::shared_ptr<OptionalCheatInfo>,  
 		/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
-		std::shared_ptr<SettingsStateAndEvents>, std::shared_ptr<PointerManager>, std::shared_ptr<IGetMCCVersion>, std::shared_ptr<IMCCStateHook>, std::shared_ptr<ISharedMemory>, std::shared_ptr<IMessagesGUI>, std::shared_ptr<RuntimeExceptionHandler>, std::string dirPath, std::shared_ptr<IModalDialogRenderer> modal);
+		std::shared_ptr<SettingsStateAndEvents>, 
+		std::shared_ptr<PointerManager>, 
+		std::shared_ptr<IGetMCCVersion>, 
+		std::shared_ptr<IMCCStateHook>, 
+		std::shared_ptr<ISharedMemory>, 
+		std::shared_ptr<IMessagesGUI>, 
+		std::shared_ptr<RuntimeExceptionHandler>, 
+		std::string dirPath, 
+		std::shared_ptr<IModalDialogRenderer> modal,
+		std::shared_ptr<ControlServiceContainer> control);
+	;
 	~OptionalCheatManager();
 };
 

@@ -223,6 +223,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="AIFreeze.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="ConsoleCommand.h" />
+    <ClInclude Include="ControlServiceContainer.h" />
     <ClInclude Include="DirPathContainer.h" />
     <ClInclude Include="DynamicStruct.h" />
     <ClInclude Include="DynamicStructFactory.h" />

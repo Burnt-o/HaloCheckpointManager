@@ -83,9 +83,10 @@ private:
 public:
 	std::tuple<bool, std::string> showCheckpointDumpNameDialog(std::string defaultName)
 	{
-		ScopedServiceRequest scopedFreeCursorRequest;
+		std::unique_ptr<ScopedServiceRequest> scopedFreeCursorRequest;
 		if (mFreeMCCCursorService.has_value())
 		{
+			PLOG_DEBUG << "ModalDialogRenderer requesting freeMCCCursor";
 			scopedFreeCursorRequest = mFreeMCCCursorService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
 		}
 		
@@ -99,16 +100,16 @@ public:
 		throw HCMRuntimeException("not impl yet");
 	}
 
-	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::optional<std::shared_ptr< FreeMCCCursor>> freeCursorService)
+	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
 		: mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2 screenSize) {onImGuiRenderEvent(screenSize); }),
-		mFreeMCCCursorService(freeCursorService)
+		mFreeMCCCursorService(controlServiceContainer->freeMCCSCursorService)
 	{
 	}
 };
 
 
-ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::optional<std::shared_ptr< FreeMCCCursor>> freeCursorService)
-	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, freeCursorService)) {}
+ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
+	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, controlServiceContainer)) {}
 
 ModalDialogRenderer::~ModalDialogRenderer() = default;
 

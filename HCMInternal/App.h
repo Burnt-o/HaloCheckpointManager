@@ -29,8 +29,7 @@
 #include "IMessagesGUI.h"
 #include "HotkeyEventsLambdas.h"
 #include "ModalDialogRenderer.h"
-#include "FreeMCCCursor.h"
-
+#include "ControlServiceContainer.h"
 
 
 class App {
@@ -82,26 +81,14 @@ public:
             auto ptr = std::make_shared<PointerManager>(ver, dirPath); PLOGV << "ptr init"; // retrieves data from github page for MultilevelPointers and other game-version-specific data
 
             // setup some optional services mainly related to controls, eg freeing the cursor, pausing the game, etc
-            std::optional<std::shared_ptr<FreeMCCCursor>> freeCursorService;
-            std::optional<HCMInitException> freeCursorServiceFail;
-            try
-            {
-                freeCursorService = std::make_optional< std::shared_ptr<FreeMCCCursor>>(std::make_shared<FreeMCCCursor>
-                    (ptr->getData<std::shared_ptr<MultilevelPointer>>("shouldCursorBeFreeFunction"),
-                        ptr->getData <std::shared_ptr<MidhookFlagInterpreter>>("shouldCursorBeFreeFunctionFlagSetter")));
-            }
-            catch (HCMInitException ex)
-            {
-                freeCursorServiceFail = std::make_optional< HCMInitException>(ex);
-            }
-
+            auto control = std::make_shared<ControlServiceContainer>(ptr);
 
 
             // set up rendering
             auto d3d = std::make_shared<D3D11Hook>(); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
             auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
 
-            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, freeCursorService); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
+            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
             auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
@@ -121,7 +108,7 @@ public:
             // set up optional cheats and optional gui elements
             auto guireq = std::make_shared<GUIRequiredServices>(); PLOGV << "guireq init"; // defines the gui elements we want to build and which optional cheats they will require
             auto cheatfail = std::make_shared<OptionalCheatInfo>(); PLOGV << "cheatfail init"; // stores info about failed optionalCheat construction (starts empty, obviously)
-            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
+            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty
             auto guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore
@@ -140,7 +127,7 @@ public:
 
             mes->addMessage("HCM successfully initialised!");
 
-            if (freeCursorServiceFail.has_value()) mes->addMessage(std::format("Failed to setup freeCursor service, error: {}", freeCursorServiceFail.value().what()));
+            if (control->freeMCCSCursorServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup freeCursor service, error: {}", control->freeMCCSCursorServiceFailure.value().what()));
 
 
 

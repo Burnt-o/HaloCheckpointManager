@@ -1,8 +1,6 @@
 #pragma once
-#include "MultilevelPointer.h"
-#include "MidhookFlagInterpreter.h".
 #include "ScopedServiceRequest.h"
-
+#include "PointerManager.h"
 class FreeMCCCursor
 {
 public:
@@ -11,11 +9,11 @@ private:
 	std::shared_ptr< FreeMCCCursorImpl> pimpl;
 public:
 
-	FreeMCCCursor(std::shared_ptr<MultilevelPointer> freeCursorFunc, std::shared_ptr<MidhookFlagInterpreter> flagSetter);
+	FreeMCCCursor(std::shared_ptr<PointerManager> ptr);
 	~FreeMCCCursor();
 
 
-	ScopedServiceRequest scopedRequest(std::string callerID);
+	std::unique_ptr<ScopedServiceRequest> scopedRequest(std::string callerID);
 
 };
 

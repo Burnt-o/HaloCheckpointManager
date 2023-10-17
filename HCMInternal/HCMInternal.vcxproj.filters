@@ -53,6 +53,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\Services">
       <UniqueIdentifier>{07345286-baf4-4a5b-9e05-e5dbd51bfd1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\Control">
+      <UniqueIdentifier>{ba0b1f25-6689-445e-b492-ab1646c72bc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -346,11 +349,14 @@
     <ClInclude Include="ModalDialogRenderer.h">
       <Filter>Services</Filter>
     </ClInclude>
-    <ClInclude Include="FreeMCCCursor.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="ScopedServiceRequest.h">
       <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlServiceContainer.h">
+      <Filter>Services\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeMCCCursor.h">
+      <Filter>Services\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -469,7 +475,7 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="FreeMCCCursor.cpp">
-      <Filter>Services</Filter>
+      <Filter>Services\Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

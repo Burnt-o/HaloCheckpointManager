@@ -21,17 +21,20 @@ private:
 	}
 
 public:
-	FreeMCCCursorImpl(std::shared_ptr<MultilevelPointer> freeCursorFunc, std::shared_ptr<MidhookFlagInterpreter> flagSetter)
-		: shouldCursorBeFreeFunctionFlagSetter(flagSetter)
+	FreeMCCCursorImpl(std::shared_ptr<PointerManager> ptr)
 	{
 		if (instance) throw HCMInitException("Cannot have more than one FreeMCCCursor");
+
+		auto shouldCursorBeFreeFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(shouldCursorBeFreeFunction));
+		shouldCursorBeFreeFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(shouldCursorBeFreeFunctionFlagSetter));
+		shouldCursorBeFreeHook = ModuleMidHook::make(L"", shouldCursorBeFreeFunction, aiFreezeHookFunction, false);
+
 		instance = this;
-		shouldCursorBeFreeHook = ModuleMidHook::make(L"", freeCursorFunc, aiFreezeHookFunction, false);
 	}
 
 	~FreeMCCCursorImpl() 
-	{ 
-		PLOG_DEBUG << "~" << nameof(FreeMCCCursorImpl); 
+	{		PLOG_DEBUG << "~" << nameof(FreeMCCCursorImpl);  
+
 		instance = nullptr;
 	}
 	void requestService(std::string callerID)
@@ -61,9 +64,9 @@ public:
 
 
 
-FreeMCCCursor::FreeMCCCursor(std::shared_ptr<MultilevelPointer> freeCursorFunc, std::shared_ptr<MidhookFlagInterpreter> flagSetter)
-	: pimpl(std::make_shared< FreeMCCCursorImpl>(freeCursorFunc, flagSetter)) {}
+FreeMCCCursor::FreeMCCCursor(std::shared_ptr<PointerManager> ptr)
+	: pimpl(std::make_shared< FreeMCCCursorImpl>(ptr)) {}
 
 FreeMCCCursor::~FreeMCCCursor() = default;
 
-ScopedServiceRequest FreeMCCCursor::scopedRequest(std::string callerID) { return ScopedServiceRequest(pimpl, callerID); }
+std::unique_ptr<ScopedServiceRequest> FreeMCCCursor::scopedRequest(std::string callerID) { return std::make_unique<ScopedServiceRequest>(pimpl, callerID); }

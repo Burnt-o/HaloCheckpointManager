@@ -49,7 +49,7 @@ public:
 		{
 			throw HCMInitException("Cannot have more than one MCCStateHook");
 		}
-		instance = this;
+
 
 
 		// Get pointers
@@ -86,7 +86,9 @@ public:
 			throw ex;
 		}
 
+		instance = this;
 		updateMCCState();
+
 
 	}
 
