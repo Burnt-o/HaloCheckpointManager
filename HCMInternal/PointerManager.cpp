@@ -263,6 +263,26 @@ void PointerManager::PointerManagerImpl::parseXML(std::string& xml)
         {
                 processVersionedEntry(entry);
         }
+        else if (entryName == "SupportedGameVersions")
+        {
+            bool foundSupportedVersion = false;
+            for (xml_node supportedVersion = entry.first_child(); supportedVersion; supportedVersion = supportedVersion.next_sibling())
+            {
+                std::string versionString = supportedVersion.text().as_string();
+                if (versionString == m_getMCCver->getMCCVersionAsString())
+                {
+                    foundSupportedVersion = true;
+                    break;
+                }
+            }
+
+            if (!foundSupportedVersion)
+            {
+                throw HCMInitException(std::format("The current version of MCC ({}) is not yet supported by HCM! ", m_getMCCver->getMCCVersionAsString()) +
+                    "\nYou'll have to wait for Burnt to update it if HCM just got a patch," +
+                    "\nor if you're on an old MCC patch, kindly ask him to add support.");
+            }
+        }
         else
         {
             PLOG_ERROR << "Unexpected item in pointer data: " << entry.name();

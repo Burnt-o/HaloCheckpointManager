@@ -78,20 +78,13 @@ maybe:
 
 
 
-
-
-
-
-add pauseGameService // Needs to have the property that the player can still look around / freecam around while paused
-add freezeInputService
-
-make hotkey for opening mainGUI and render as element in Control heading. 
-give control services (freeCursorService, pauseGameService, freezeInputService) to HCMInternalGUI so it can request them when GUI is up.
-	* and add gui elements so user can choose whether they are actually used or not
-	* will need to pass SettingsStateAndEvents to hcmInternal but that's fine
-	* could even make it so the main IsWindowOpen option is serialised lol. That's dump though
-
-
-Need to fix hotkey serialisation
-Need to fix setting serialisation
+Fix null checkpoint data issue
+Fix hotkey serialisation
+Fix setting serialisation
+Add modal popup for rendering GUI element fails instead of printing messages
+	* And a button to bring this up whenever
+* Add cp injection level warning logic & modal popup
 HCMExternal filterSearch thingy
+Add backup cheats system and internal injection toggle to external
+Add mcc supported versions pointer data and check, closing hcm internal if it fails
+Fix unit tests and make em all pass

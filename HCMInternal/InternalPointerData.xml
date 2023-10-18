@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 
+	
+	<!--Supported game versions-->
+	<SupportedGameVersions>
+		<Entry>1.2448.0.0</Entry>
+		<Entry>1.2645.0.0</Entry>
+		<Entry>1.3272.0.0</Entry>
+	</SupportedGameVersions>
+	
 <!--#region MCCStateHook-->
 
 	<VersionedEntry Name="gameIndicator" Type="MultilevelPointer::ExeOffset">
