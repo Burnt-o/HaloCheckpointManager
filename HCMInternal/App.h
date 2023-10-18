@@ -112,7 +112,7 @@ public:
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty
             auto guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore
-            guifail->printAllFailures();
+            //guifail->printAllFailures();
  
             // set up main gui
             auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, mccStateHook->getMCCStateChangedEvent(), control, settings); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
@@ -127,17 +127,13 @@ public:
 
             mes->addMessage("HCM successfully initialised!");
 
-            //// log errors about Control service failures
-            //if (control->freeMCCSCursorServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup freeCursor service, error: {}", control->freeMCCSCursorServiceFailure.value().what()));
-            //if (control->blockGameInputServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup blockGameInput service, error: {}", control->blockGameInputServiceFailure.value().what()));
-            //if (control->pauseGameServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup pauseGame service, error: {}", control->pauseGameServiceFailure.value().what()));
-            //if (control->pauseGameService.has_value())
-            //{
-            //    for (auto& [game, ex] : control->pauseGameService.value()->getServiceFailures())
-            //    {
-            //        mes->addMessage(std::format("Partial pauseGame service failure for game {}, error: {}", game.toString(), ex.what()));
-            //    }
-            //}
+            std::thread modalFailureWindowThread;
+            if (!guifail->getFailureMessagesMap().empty())
+            {
+                PLOG_DEBUG << "creating showFailedOptionalCheatServices modal dialog ";
+                modalFailureWindowThread = std::thread{([modal = modal, guifail = guifail]() { modal->showFailedOptionalCheatServices(guifail); })};
+                modalFailureWindowThread.detach();
+            }
 
 
             // We live in this loop 99% of the time
@@ -145,6 +141,10 @@ public:
                 Sleep(10);
             }
             PLOG_INFO << "HCMInternal services are about to fall out of scope";
+
+            if (modalFailureWindowThread.joinable())
+                modalFailureWindowThread.join();
+
         }
         catch (HCMInitException& ex) // mandatory services that fail to init will be caught here
         {

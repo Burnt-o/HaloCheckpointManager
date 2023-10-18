@@ -65,16 +65,99 @@ public:
 	}
 };
 
+class FailedOptionalCheatServicesDialog : public IModalDialog<std::tuple<>>
+{
+private:
+	std::map<GameState, std::vector<std::pair<GUIElementEnum, std::string>>> guiFailureMap;
+	bool anyErrorsAtAll = false;
+public:
+	FailedOptionalCheatServicesDialog() : IModalDialog("Failed optional cheat services")
+	{
+	}
+
+	void setGUIFailures(std::shared_ptr<GUIServiceInfo> guiFailures)
+	{
+		// reset guiFailureMap to empty state
+		guiFailureMap =
+		{
+			{GameState::Value::Halo1, {} },
+			{GameState::Value::Halo2, {} },
+			{GameState::Value::Halo3, {} },
+			{GameState::Value::Halo3ODST, {} },
+			{GameState::Value::HaloReach, {} },
+			{GameState::Value::Halo4, {} },
+		};
+
+		// fill up guiFailureMap
+		anyErrorsAtAll = false;
+		for (auto& [gameGuiPair, errorMessage] : guiFailures->getFailureMessagesMap())
+		{
+			anyErrorsAtAll = true;
+			guiFailureMap.at(gameGuiPair.first).emplace_back(std::pair<GUIElementEnum, std::string>{ gameGuiPair.second, errorMessage });
+		}
+	}
+	virtual void render()
+	{
+		if (needToBeginDialog)
+		{
+			PLOG_DEBUG << "opening popup " << mDialogTitle;
+			ImGui::OpenPopup(mDialogTitle.c_str());
+			needToBeginDialog = false;
+		}
+
+
+		if (ImGui::BeginPopupModal(mDialogTitle.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+
+			ImGui::Text("Services that failed to initialise are shown below, grouped by game. ");
+
+			if (!anyErrorsAtAll)
+			{
+				ImGui::Text("All optional services successfully initialised!");
+			}
+			else
+			{
+				for (auto& [game, enumMessagePairVector] : guiFailureMap)
+				{
+					if (enumMessagePairVector.empty()) continue;
+
+					if (ImGui::TreeNodeEx(game.toString().c_str(), ImGuiTreeNodeFlags_FramePadding))
+					{
+						for (auto enumMessagePair : enumMessagePairVector)
+						{
+							ImGui::Text(std::format("{} service failed! Error: ", magic_enum::enum_name(enumMessagePair.first)).c_str());
+							ImGui::Text(enumMessagePair.second.c_str());
+							ImGui::Dummy({ 2,2 }); // padding between messages
+						}
+						ImGui::TreePop();
+					}
+				}
+			}
+
+			if (ImGui::Button("Ok"))
+			{
+				PLOG_DEBUG << "closing FailedOptionalCheatServicesDialog with Ok";
+				isOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+};
+
 
 class ModalDialogRenderer::ModalDialogRendererImpl
 {
 private:
 	CheckpointDumpNameDialog checkpointDumpNameDialog;
+	FailedOptionalCheatServicesDialog failedOptionalCheatServicesDialog;
 
 		ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
 		void onImGuiRenderEvent(Vec2 screenSize)
 		{
 			checkpointDumpNameDialog.render();
+			failedOptionalCheatServicesDialog.render();
 		}
 
 
@@ -82,38 +165,60 @@ private:
 		std::optional<std::shared_ptr< BlockGameInput>> mBlockGameInputService;
 		std::optional<std::shared_ptr< PauseGame>> mPauseGameService;
 
+		std::shared_ptr<GUIServiceInfo> guiFailures;
+
+		std::tuple<std::unique_ptr<ScopedServiceRequest>, std::unique_ptr<ScopedServiceRequest>, std::unique_ptr<ScopedServiceRequest>> getScopedRequests()
+		{
+			std::unique_ptr<ScopedServiceRequest> scopedFreeCursorRequest;
+			if (mFreeMCCCursorService.has_value())
+			{
+				PLOG_DEBUG << "ModalDialogRenderer requesting freeMCCCursor";
+				scopedFreeCursorRequest = mFreeMCCCursorService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
+			}
+
+			std::unique_ptr<ScopedServiceRequest> scopedBlockInputRequest;
+			if (mBlockGameInputService.has_value())
+			{
+				PLOG_DEBUG << "ModalDialogRenderer requesting blockGameInput";
+				scopedBlockInputRequest = mBlockGameInputService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
+			}
+
+			std::unique_ptr<ScopedServiceRequest> scopedPauseRequest;
+			if (mPauseGameService.has_value())
+			{
+				PLOG_DEBUG << "ModalDialogRenderer requesting pauseGame";
+				scopedPauseRequest = mPauseGameService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
+			}
+
+			return std::tuple<std::unique_ptr<ScopedServiceRequest>, std::unique_ptr<ScopedServiceRequest>, std::unique_ptr<ScopedServiceRequest>>
+			{ std::move(scopedFreeCursorRequest) , std::move(scopedBlockInputRequest), std::move(scopedPauseRequest) };
+		}
+
 public:
 	std::tuple<bool, std::string> showCheckpointDumpNameDialog(std::string defaultName)
 	{
-		std::unique_ptr<ScopedServiceRequest> scopedFreeCursorRequest;
-		if (mFreeMCCCursorService.has_value())
-		{
-			PLOG_DEBUG << "ModalDialogRenderer requesting freeMCCCursor";
-			scopedFreeCursorRequest = mFreeMCCCursorService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
-		}
-
-		std::unique_ptr<ScopedServiceRequest> scopedBlockInputRequest;
-		if (mBlockGameInputService.has_value())
-		{
-			PLOG_DEBUG << "ModalDialogRenderer requesting blockGameInput";
-			scopedBlockInputRequest = mBlockGameInputService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
-		}
-
-		std::unique_ptr<ScopedServiceRequest> scopedPauseRequest;
-		if (mPauseGameService.has_value())
-		{
-			PLOG_DEBUG << "ModalDialogRenderer requesting pauseGame";
-			scopedPauseRequest = mPauseGameService.value()->scopedRequest(nameof(showCheckpointDumpNameDialog));
-		}
+		auto scopedRequests = getScopedRequests();
 		
 		checkpointDumpNameDialog.beginDialog();
 		while (!GlobalKill::isKillSet() && checkpointDumpNameDialog.isDialogOpen()) { Sleep(10); }
 		PLOG_DEBUG << "showCheckpointDumpNameDialog returning " << std::get<bool>(checkpointDumpNameDialog.currentReturnValue) << ", " << std::get<std::string>(checkpointDumpNameDialog.currentReturnValue);
 		return checkpointDumpNameDialog.currentReturnValue;
 	}
+
 	bool showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel)
 	{
 		throw HCMRuntimeException("not impl yet");
+	}
+
+	void showFailedOptionalCheatServices(std::shared_ptr<GUIServiceInfo> guiFailures)
+	{
+		auto scopedRequests = getScopedRequests();
+
+		failedOptionalCheatServicesDialog.setGUIFailures(guiFailures);
+		failedOptionalCheatServicesDialog.beginDialog();
+		while (!GlobalKill::isKillSet() && failedOptionalCheatServicesDialog.isDialogOpen()) { Sleep(10); }
+		PLOG_DEBUG << "showFailedOptionalCheatServices returning";
+		return;
 	}
 
 	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
@@ -135,3 +240,4 @@ ModalDialogRenderer::~ModalDialogRenderer() = default;
 
 std::tuple<bool, std::string> ModalDialogRenderer::showCheckpointDumpNameDialog(std::string defaultValue) { return pimpl->showCheckpointDumpNameDialog(defaultValue); }
 bool ModalDialogRenderer::showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel) { return pimpl->showCheckpointInjectWrongLevelWarningDialog(expectedLevel, observedLevel); }
+void ModalDialogRenderer::showFailedOptionalCheatServices(std::shared_ptr<GUIServiceInfo> guiFailures) { return pimpl->showFailedOptionalCheatServices(guiFailures); }

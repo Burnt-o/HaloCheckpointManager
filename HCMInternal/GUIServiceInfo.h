@@ -18,5 +18,7 @@ public:
 		if (!failureMessagesMap.contains(gameElePair)) return "No failure message stored!";
 		return failureMessagesMap.at(gameElePair);
 	}
+
+	const std::map<std::pair<GameState, GUIElementEnum>, std::string>& getFailureMessagesMap() { return failureMessagesMap; }
 };
 
