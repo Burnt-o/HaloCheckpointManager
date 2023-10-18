@@ -53,7 +53,7 @@ public:
 	{
 		auto control = dicon.Resolve<ControlServiceContainer>();
 		if (control->pauseGameServiceFailure.has_value()) throw control->pauseGameServiceFailure.value();
-
+		if (control->pauseGameService.value()->getServiceFailures().contains(gameImpl)) throw control->pauseGameService.value()->getServiceFailures().at(gameImpl);
 		pauseGameService = control->pauseGameService.value();
 	}
 

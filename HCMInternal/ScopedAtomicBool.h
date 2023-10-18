@@ -9,5 +9,5 @@ public:
 	{
 		atom = true;
 	}
-	~ScopedAtomicBool() { atom = false; }
+	~ScopedAtomicBool() { atom = false; atom.notify_all(); }
 };

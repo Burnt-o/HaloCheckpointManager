@@ -419,15 +419,23 @@ D3D11Hook::~D3D11Hook()
 {
 	if (m_pOriginalPresent)
 	{
-		PLOG_VERBOSE << "~D3D11Hook() unpatching present pointer";
-		if (presentHookRunning) presentHookRunning.wait(true);
+		PLOG_INFO << "~D3D11Hook()";
+		if (presentHookRunning)
+		{
+			PLOG_INFO << "Waiting for presentHook to finish execution";
+			presentHookRunning.wait(true);
+		}
+		PLOG_INFO << "Freezing threads";
+
 		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
 
+		PLOG_INFO << "Unpatching present pointer";
 		// rewrite the pointers to go back to the original value
 		patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
 		// resizeBuffers too
 		patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
 
+		PLOG_INFO << "Successfully unpatched present pointer!";
 		//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
 	}
 		// D3D resource releasing:
