@@ -3,7 +3,7 @@
 
 // A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that GUIElementEnum
 #define TOPGUIELEMENTS_ANDSUPPORTEDGAMES \
-((controlHeadingGUI,(ALL_SUPPORTED_GAMES)))\
+((controlHeadingGUI,(ALL_GAMES_AND_MAINMENU)))\
 ((saveManagementHeadingGUI,(ALL_SUPPORTED_GAMES)))\
 ((cheatsHeadingGUI,(ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI,(ALL_SUPPORTED_GAMES)))\

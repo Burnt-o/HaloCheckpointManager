@@ -7,6 +7,7 @@ private:
 	std::shared_ptr<ActionEvent> mEventToFire;
 	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
 	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
+	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
 	GUISpeedhack(GameState implGame, std::optional<HotkeysEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
@@ -32,8 +33,22 @@ public:
 		if (ImGui::InputDouble("##settingForSpeedhack", &mSettings->speedhackSetting->GetValueDisplay()))
 		{
 			PLOG_VERBOSE << "GUISpeedhack speedsetting being updated to " << mSettings->speedhackSetting->GetValueDisplay();
-			mSettings->speedhackSetting->UpdateValueWithInput();
+			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mSettings->speedhackSetting]() { optionToggle->UpdateValueWithInput(); }));
+			newThread.detach();
 
+		}
+	}
+
+	~GUISpeedhack()
+	{
+		for (auto& thread : mUpdateSettingThreads)
+		{
+			if (thread.joinable())
+			{
+				PLOG_DEBUG << getName() << " joining mUpdateSettingThread";
+				thread.join();
+				PLOG_DEBUG << getName() << " mUpdateSettingThread finished";
+			}
 		}
 	}
 

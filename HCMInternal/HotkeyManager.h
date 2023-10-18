@@ -17,6 +17,7 @@ private:
 	// data 
 	std::string mHotkeyConfigPath;
 	bool mDisableHotkeysForRebinding = false;
+	std::vector<std::thread> mFireEventThreads;
 
 	void pollInput();
 

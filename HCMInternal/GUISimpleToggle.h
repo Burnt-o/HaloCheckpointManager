@@ -8,6 +8,7 @@ class GUISimpleToggle : public IGUIElement {
 private:
 	std::string mToggleText;
 	std::shared_ptr<Setting<bool>> mOptionToggle;
+	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
 
@@ -31,7 +32,22 @@ public:
 		if (ImGui::Checkbox(mToggleText.c_str(), &mOptionToggle->GetValueDisplay()))
 		{
 			PLOG_VERBOSE << "GUIToggleButton (" << getName() << ") firing toggle event, new value: " << mOptionToggle->GetValueDisplay();
-			mOptionToggle->UpdateValueWithInput();
+			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionToggle]() { optionToggle->UpdateValueWithInput(); }));
+			newThread.detach();
+		}
+	}
+
+	~GUISimpleToggle()
+	{
+		for (auto& thread : mUpdateSettingThreads)
+		{
+			if (thread.joinable())
+			{
+				PLOG_DEBUG << getName() << " joining mUpdateSettingThread";
+				thread.join();
+				PLOG_DEBUG << getName() << " mUpdateSettingThread finished";
+			}
+
 		}
 	}
 

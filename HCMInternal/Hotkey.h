@@ -20,6 +20,7 @@ private:
 	// vector of vectors so user can do more than one set of bindings
 
 
+
 	const std::vector<std::vector<ImGuiKey>>& getBindings() 
 	{ 
 		return mBindings; 
@@ -40,6 +41,8 @@ private:
 	void invokeEvent()
 	{
 		if (!mEvent.get()) PLOG_ERROR << "event not set";
+
+
 		mEvent->operator()();
 	}
 	

@@ -79,6 +79,7 @@ private:
 						createNestedElement(GUIElementEnum::GUISettingsSubheading),
 						createNestedElement(GUIElementEnum::togglePauseGUI),
 						createNestedElement(GUIElementEnum::togglePauseSettingsSubheading),
+						createNestedElement(GUIElementEnum::showGUIFailuresGUI),
 						}));
 
 				case GUIElementEnum::toggleGUIHotkeyGUI:
@@ -125,6 +126,10 @@ private:
 					case GUIElementEnum::pauseAlsoFreesCursorGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Pause also frees cursor", settings->pauseAlsoFreesCursor));
+
+				case GUIElementEnum::showGUIFailuresGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, std::nullopt, "Show optional cheat service failures", settings->showGUIFailures));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
@@ -203,8 +208,6 @@ private:
 							std::make_optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle))
 							}, 20.f));
-					//return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle>
-					//	(game, std::nullopt, "NPC Invulnerability", settings->invulnerabilityNPCToggle));
 
 				case GUIElementEnum::aiFreezeGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>

@@ -67,6 +67,17 @@ HotkeyManager::~HotkeyManager()
 	{
 		PLOG_ERROR << "Error saving hotkeyConfig to " << mHotkeyConfigPath;
 	}
+
+	for (auto& thread : mFireEventThreads)
+	{
+		if (thread.joinable())
+		{
+			PLOG_DEBUG << "~HotkeyManager " << "joining mFireEventThread";
+			thread.join();
+			PLOG_DEBUG << "~HotkeyManager " << "FireEventThread finished";
+		}
+	}
+
 }
 
 void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen any time interval but this is convienent
@@ -79,7 +90,8 @@ void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen
 		{
 			if (HotkeyManagerImpl::shouldHotkeyActivate(bindingSet))
 			{
-				hotkey->invokeEvent();
+				auto& newThread = mFireEventThreads.emplace_back(std::thread([hk = hotkey]() {hk->invokeEvent(); }));
+				newThread.detach();
 				break; // continue to next hotkey, we don't need to check the rest of the bindingSets for this hotkey
 			}
 		}

@@ -29,20 +29,21 @@
 
 
 #define ALL_SUPPORTED_GAMES Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
-
+#define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
 
 // A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that guielement
 #define ALLGUIELEMENTS_ANDSUPPORTEDGAMES \
-((controlHeadingGUI, (ALL_SUPPORTED_GAMES)))\
-	((toggleGUIHotkeyGUI, (ALL_SUPPORTED_GAMES)))\
-	((GUISettingsSubheading, (ALL_SUPPORTED_GAMES)))\
-		((GUIShowingFreesCursor, (ALL_SUPPORTED_GAMES)))\
-		((GUIShowingBlocksInput, (ALL_SUPPORTED_GAMES)))\
-		((GUIShowingPausesGame, (ALL_SUPPORTED_GAMES)))\
-	((togglePauseGUI, (ALL_SUPPORTED_GAMES)))\
-	((togglePauseSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
-		((pauseAlsoFreesCursorGUI, (ALL_SUPPORTED_GAMES)))\
-		((pauseAlsoBlocksInputGUI, (ALL_SUPPORTED_GAMES)))\
+((controlHeadingGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((toggleGUIHotkeyGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((GUISettingsSubheading, (ALL_GAMES_AND_MAINMENU)))\
+		((GUIShowingFreesCursor, (ALL_GAMES_AND_MAINMENU)))\
+		((GUIShowingBlocksInput, (ALL_GAMES_AND_MAINMENU)))\
+		((GUIShowingPausesGame, (ALL_GAMES_AND_MAINMENU)))\
+	((togglePauseGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((togglePauseSettingsSubheading, (ALL_GAMES_AND_MAINMENU)))\
+		((pauseAlsoFreesCursorGUI, (ALL_GAMES_AND_MAINMENU)))\
+		((pauseAlsoBlocksInputGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((showGUIFailuresGUI, (ALL_GAMES_AND_MAINMENU)))\
 ((saveManagementHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceRevertGUI, (ALL_SUPPORTED_GAMES)))\

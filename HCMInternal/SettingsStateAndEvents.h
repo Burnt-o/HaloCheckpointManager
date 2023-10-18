@@ -1,6 +1,8 @@
 #pragma once
 #include "Setting.h"
 #include "ISettingsSerialiser.h"
+#include "GUIServiceInfo.h"
+
 class SettingsStateAndEvents
 {
 private:
@@ -27,6 +29,7 @@ public:
 
 
 	// events
+	std::shared_ptr<ActionEvent> showGUIFailures = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceCheckpointEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceRevertEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceDoubleRevertEvent = std::make_shared<ActionEvent>();

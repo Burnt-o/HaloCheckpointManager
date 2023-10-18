@@ -231,8 +231,11 @@ public:
 };
 
 
-ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
-	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, controlServiceContainer)) {}
+ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<ActionEvent> showFailsEvent, std::shared_ptr<GUIServiceInfo> guiFailures)
+	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, controlServiceContainer)),
+	mGUIFailures(guiFailures),
+	mShowGUIFailuresEventCallback(showFailsEvent, [this]() {showFailedOptionalCheatServices(); })
+	{}
 
 ModalDialogRenderer::~ModalDialogRenderer() = default;
 
@@ -240,4 +243,4 @@ ModalDialogRenderer::~ModalDialogRenderer() = default;
 
 std::tuple<bool, std::string> ModalDialogRenderer::showCheckpointDumpNameDialog(std::string defaultValue) { return pimpl->showCheckpointDumpNameDialog(defaultValue); }
 bool ModalDialogRenderer::showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel) { return pimpl->showCheckpointInjectWrongLevelWarningDialog(expectedLevel, observedLevel); }
-void ModalDialogRenderer::showFailedOptionalCheatServices(std::shared_ptr<GUIServiceInfo> guiFailures) { return pimpl->showFailedOptionalCheatServices(guiFailures); }
+void ModalDialogRenderer::showFailedOptionalCheatServices() { return pimpl->showFailedOptionalCheatServices(mGUIFailures); }

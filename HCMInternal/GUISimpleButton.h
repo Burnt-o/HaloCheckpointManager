@@ -9,6 +9,7 @@ class GUISimpleButton : public IGUIElement {
 private:
 	std::string mButtonText;
 	std::shared_ptr<ActionEvent> mEventToFire;
+	std::vector<std::thread> mFireEventThreads;
 public:
 
 
@@ -33,7 +34,22 @@ public:
 		{
 			PLOG_VERBOSE << "GUISimplebutton (" << getName() << ") firing event";
 			PLOG_DEBUG << "&mEventToFire: " << std::hex << &mEventToFire;
-			mEventToFire->operator()();
+			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
+			newThread.detach();
+		}
+	}
+
+	~GUISimpleButton()
+	{
+		for (auto& thread : mFireEventThreads)
+		{
+			if (thread.joinable())
+			{
+				PLOG_DEBUG << getName() << "joining mFireEventThread";
+				thread.join();
+				PLOG_DEBUG << getName() << "FireEventThread finished";
+			}
+
 		}
 	}
 
