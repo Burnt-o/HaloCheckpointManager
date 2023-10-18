@@ -5,6 +5,27 @@
 // ALL GUI ELEMENTS, nested or not, are allowed to go in here - but if they have no required services, you don't have to
 const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServices::requiredServicesPerGUIElement =
 {
+	{GUIElementEnum::GUIShowingPausesGame,
+			{OptionalCheatEnum::TogglePause}
+	},
+	{GUIElementEnum::GUIShowingFreesCursor,
+			{OptionalCheatEnum::ToggleFreeCursor}
+	},
+	{GUIElementEnum::GUIShowingBlocksInput,
+			{OptionalCheatEnum::ToggleBlockInput}
+	},
+	// Above elements don't directly use the optionalCheat but rather the control service container directly. 
+	// But the optionalCheats only successfully construct when the control services do.
+
+	{GUIElementEnum::togglePauseGUI,
+			{OptionalCheatEnum::TogglePause}
+	},
+	{GUIElementEnum::pauseAlsoFreesCursorGUI,
+			{OptionalCheatEnum::ToggleFreeCursor}
+	},
+	{GUIElementEnum::pauseAlsoBlocksInputGUI,
+			{OptionalCheatEnum::ToggleBlockInput}
+	},
 	{GUIElementEnum::forceCheckpointGUI, 
 			{OptionalCheatEnum::ForceCheckpoint} 
 	},

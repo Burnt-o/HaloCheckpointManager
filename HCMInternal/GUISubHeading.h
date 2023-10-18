@@ -44,10 +44,10 @@ public:
 		if (headingOpen)
 		{
 
-			currentHeight = 23; // extra 3 pixels for frame padding
+			currentHeight = 23; // extra 3 pixels for frame padding between the tree node and the contained elements
 			for (auto& element : mChildElements)
 			{
-				currentHeight += element->getCurrentHeight();
+				currentHeight += element->getCurrentHeight() + 3; // extra 3 pixels for frame padding between each element
 
 				ImGui::Dummy({ mLeftMargin, 20 }); // left margin
 				ImGui::SameLine();

@@ -36,9 +36,13 @@
 ((controlHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((toggleGUIHotkeyGUI, (ALL_SUPPORTED_GAMES)))\
 	((GUISettingsSubheading, (ALL_SUPPORTED_GAMES)))\
-	((GUIShowingFreesCursor, (ALL_SUPPORTED_GAMES)))\
-	((GUIShowingBlocksInput, (ALL_SUPPORTED_GAMES)))\
-	((GUIShowingPausesGame, (ALL_SUPPORTED_GAMES)))\
+		((GUIShowingFreesCursor, (ALL_SUPPORTED_GAMES)))\
+		((GUIShowingBlocksInput, (ALL_SUPPORTED_GAMES)))\
+		((GUIShowingPausesGame, (ALL_SUPPORTED_GAMES)))\
+	((togglePauseGUI, (ALL_SUPPORTED_GAMES)))\
+	((togglePauseSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
+		((pauseAlsoFreesCursorGUI, (ALL_SUPPORTED_GAMES)))\
+		((pauseAlsoBlocksInputGUI, (ALL_SUPPORTED_GAMES)))\
 ((saveManagementHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceRevertGUI, (ALL_SUPPORTED_GAMES)))\

@@ -255,6 +255,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ScopedCallback.h" />
     <ClInclude Include="ScopedServiceRequest.h" />
     <ClInclude Include="SharedMemoryInternal.h" />
+    <ClInclude Include="ToggleBlockInput.h" />
+    <ClInclude Include="ToggleFreeCursor.h" />
+    <ClInclude Include="TogglePause.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="IOptionalCheat.h" />
     <ClInclude Include="ControlDefs.h" />

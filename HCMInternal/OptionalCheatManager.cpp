@@ -3,6 +3,10 @@
 #include "OptionalCheatEnum.h"
 #include "IOptionalCheat.h"
 
+#include "TogglePause.h"
+#include "ToggleFreeCursor.h"
+#include "ToggleBlockInput.h"
+
 #include "ForceCheckpoint.h"
 #include "ForceRevert.h"
 #include "ForceDoubleRevert.h"
@@ -19,6 +23,8 @@
 #include "GetObjectAddress.h"
 #include "AIFreeze.h"
 #include "ConsoleCommand.h"
+
+
 
 #include "DIContainer.h"
 #include "map.h"

@@ -179,7 +179,7 @@ void HCMInternalGUI::primaryRender()
 	ImGui::PopStyleColor();
 
 	if (m_WindowOpen)  //only bother rendering children if it's not collapsed
-	{
+	{	
 		mGUIMCCState.render(); // render header
 
 		// Tell all the current-games GUI elements to render themselves
@@ -206,6 +206,14 @@ void HCMInternalGUI::primaryRender()
 	m_windowOpenLastFrame = m_WindowOpen;
 
 	LOG_ONCE(PLOG_VERBOSE << "unlocking currentGameGUIElementsMutex");
+
+	//// little colour picker for gui stuff
+	//ImGuiStyle* style = &ImGui::GetStyle();
+	//ImVec4 newCol = style->Colors[ImGuiCol_ChildBg];
+	//if (ImGui::ColorPicker4("col", &newCol.x))
+	//{
+	//	style->Colors[ImGuiCol_ChildBg] = newCol;
+	//}
 
 }
 

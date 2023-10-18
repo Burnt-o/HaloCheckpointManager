@@ -367,6 +367,15 @@
     <ClInclude Include="PauseGame.h">
       <Filter>Services\Control</Filter>
     </ClInclude>
+    <ClInclude Include="TogglePause.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ToggleBlockInput.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="ToggleFreeCursor.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

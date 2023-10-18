@@ -77,6 +77,8 @@ private:
 						{
 						createNestedElement(GUIElementEnum::toggleGUIHotkeyGUI),
 						createNestedElement(GUIElementEnum::GUISettingsSubheading),
+						createNestedElement(GUIElementEnum::togglePauseGUI),
+						createNestedElement(GUIElementEnum::togglePauseSettingsSubheading),
 						}));
 
 				case GUIElementEnum::toggleGUIHotkeyGUI:
@@ -103,6 +105,26 @@ private:
 					case GUIElementEnum::GUIShowingPausesGame:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Pause game when GUI open", settings->GUIShowingPausesGame));
+
+				case GUIElementEnum::togglePauseGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, HotkeysEnum::togglePause, "Pause game", settings->togglePause));
+
+				case GUIElementEnum::togglePauseSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Pause settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::pauseAlsoBlocksInputGUI),
+							createNestedElement(GUIElementEnum::pauseAlsoFreesCursorGUI),
+							}));
+
+					case GUIElementEnum::pauseAlsoBlocksInputGUI:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Pause also blocks game input", settings->pauseAlsoBlocksInput));
+
+					case GUIElementEnum::pauseAlsoFreesCursorGUI:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Pause also frees cursor", settings->pauseAlsoFreesCursor));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

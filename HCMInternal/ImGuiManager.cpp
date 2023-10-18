@@ -88,7 +88,7 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 
 	// Colors
 	style->Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.04f, 0.08f, 1.00f);
-	style->Colors[ImGuiCol_ChildBg] = ImVec4(0.12f, 0.06f, 0.12f, 0.50f);
+	style->Colors[ImGuiCol_ChildBg] = ImVec4(0.18f, 0.10f, 0.18f, 0.50f);
 	style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.90f, 0.90f, 1.00f);
 	style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.29f, 0.29f, 1.00f);
 

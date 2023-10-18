@@ -20,6 +20,7 @@ public:
 
 	//	hotkeys
 	std::shared_ptr<ActionEvent> toggleGUIHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> togglePauseHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> aiFreezeHotkeyEvent = std::make_shared<ActionEvent>();
@@ -68,6 +69,27 @@ public:
 			nameof(GUIShowingPausesGame)
 		);
 
+	std::shared_ptr<Setting<bool>> togglePause = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(togglePause)
+		);
+
+	std::shared_ptr<Setting<bool>> pauseAlsoBlocksInput = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(pauseAlsoBlocksInput)
+		);
+
+	std::shared_ptr<Setting<bool>> pauseAlsoFreesCursor = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(pauseAlsoFreesCursor)
+		);
+
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
 	(
 		false,
@@ -113,6 +135,15 @@ public:
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
-	{invulnerabilityNPCToggle, speedhackSetting, GUIShowingFreesCursor, GUIShowingBlocksInput, GUIShowingPausesGame, consoleCommandString};
+	{
+		invulnerabilityNPCToggle, 
+		speedhackSetting, 
+		GUIShowingFreesCursor, 
+		GUIShowingBlocksInput, 
+		GUIShowingPausesGame, 
+		pauseAlsoBlocksInput,
+		pauseAlsoFreesCursor,
+		consoleCommandString
+	};
 };
 

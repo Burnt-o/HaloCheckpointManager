@@ -127,17 +127,17 @@ public:
 
             mes->addMessage("HCM successfully initialised!");
 
-            // log errors about Control service failures
-            if (control->freeMCCSCursorServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup freeCursor service, error: {}", control->freeMCCSCursorServiceFailure.value().what()));
-            if (control->blockGameInputServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup blockGameInput service, error: {}", control->blockGameInputServiceFailure.value().what()));
-            if (control->pauseGameServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup pauseGame service, error: {}", control->pauseGameServiceFailure.value().what()));
-            if (control->pauseGameService.has_value())
-            {
-                for (auto& [game, ex] : control->pauseGameService.value()->getServiceFailures())
-                {
-                    mes->addMessage(std::format("Partial pauseGame service failure for game {}, error: {}", game.toString(), ex.what()));
-                }
-            }
+            //// log errors about Control service failures
+            //if (control->freeMCCSCursorServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup freeCursor service, error: {}", control->freeMCCSCursorServiceFailure.value().what()));
+            //if (control->blockGameInputServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup blockGameInput service, error: {}", control->blockGameInputServiceFailure.value().what()));
+            //if (control->pauseGameServiceFailure.has_value()) mes->addMessage(std::format("Failed to setup pauseGame service, error: {}", control->pauseGameServiceFailure.value().what()));
+            //if (control->pauseGameService.has_value())
+            //{
+            //    for (auto& [game, ex] : control->pauseGameService.value()->getServiceFailures())
+            //    {
+            //        mes->addMessage(std::format("Partial pauseGame service failure for game {}, error: {}", game.toString(), ex.what()));
+            //    }
+            //}
 
 
             // We live in this loop 99% of the time
