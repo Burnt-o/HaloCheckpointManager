@@ -142,8 +142,10 @@ private:
 							createNestedElement(GUIElementEnum::forceCoreLoadGUI),
 							createNestedElement(GUIElementEnum::injectCheckpointGUI),
 							createNestedElement(GUIElementEnum::dumpCheckpointGUI),
+							createNestedElement(GUIElementEnum::dumpCheckpointSettingsSubheading),
 							createNestedElement(GUIElementEnum::injectCoreGUI),
 							createNestedElement(GUIElementEnum::dumpCoreGUI),
+							createNestedElement(GUIElementEnum::dumpCoreSettingsSubheading),
 						}));
 
 				case GUIElementEnum::forceCheckpointGUI:
@@ -174,6 +176,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, HotkeysEnum::dumpCheckpoint, "Dump Checkpoint", settings->dumpCheckpointEvent));
 
+				case GUIElementEnum::dumpCheckpointSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Dump Checkpoint Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::dumpCheckpointAutonameGUI)
+							}));
+
+					case GUIElementEnum::dumpCheckpointAutonameGUI:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+							(game, std::nullopt, "Autoname checkpoints", settings->autonameCheckpoints));
+
 				case GUIElementEnum::injectCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, HotkeysEnum::injectCore, "Inject Core Save", settings->injectCoreEvent));
@@ -181,6 +194,17 @@ private:
 				case GUIElementEnum::dumpCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, HotkeysEnum::dumpCore, "Dump Core Save", settings->dumpCoreEvent));
+
+				case GUIElementEnum::dumpCoreSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Dump Core Save Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::dumpCoreAutonameGUI)
+							}));
+
+					case GUIElementEnum::dumpCoreAutonameGUI:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+							(game, std::nullopt, "Autoname core saves", settings->autonameCoresaves));
 
 			case GUIElementEnum::cheatsHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

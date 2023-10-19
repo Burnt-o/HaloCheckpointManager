@@ -44,13 +44,12 @@
 		</Version>
 	</VersionedEntry>-->
 
-	<!--load into mission select of games, scanning for enum value. Needs 2 level pointer with neg offset-->
+	<!--load into mission select of games, scanning for enum value. 1 level pointer with huge offset, 200,000 etc. pointer is actually near gameEnginePointer, duh.-->
 	<VersionedEntry Name="gameEngineIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x03FFDA70</Offset>
-				<Offset>0x10</Offset>
-				<Offset>-0xD8</Offset>
+				<Offset>0x03FFDAD0</Offset>
+				<Offset>0x2BFE8</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

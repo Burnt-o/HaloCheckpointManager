@@ -32,6 +32,7 @@ private:
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
 	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
 	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modalDialogs;
+	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
 
 
 	// data
@@ -42,11 +43,6 @@ private:
 	std::shared_ptr<int64_t> mCheckpointLength;
 
 
-	std::thread dontBlockRendering;
-	void onDumpToSeperateThread()
-	{
-		dontBlockRendering = std::thread(&DumpCheckpoint::onDump, this);
-	}
 
 	// primary event callback
 	void onDump() {
@@ -58,17 +54,20 @@ private:
 			SYSTEMTIME t;
 			GetSystemTime(&t);
 			std::string checkpointName = std::format(
-				"Checkpoint_{:04}{:02}{:02}_{:02}{:02}{:02}.dmp",
+				"Checkpoint_{:04}{:02}{:02}_{:02}{:02}{:02}",
 				t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
 			// ask the user what they want to call it, if they want that
-			// TODO add option for this
-			PLOG_DEBUG << "calling blocking func showCheckpointDumpNameDialog";
-			auto modalReturn = modalDialogs->showCheckpointDumpNameDialog(checkpointName); // this is a blocking call
-			PLOG_DEBUG << "showCheckpointDumpNameDialog returned! ";
+			if (settings->autonameCheckpoints->GetValue())
+			{
+				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
+				auto modalReturn = modalDialogs->showSaveDumpNameDialog("Name dumped checkpoint", checkpointName); // this is a blocking call
+				PLOG_DEBUG << "showSaveDumpNameDialog returned! ";
 
-			if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
-			checkpointName = std::get<std::string>(modalReturn); // get the name the user set
+				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
+				checkpointName = std::get<std::string>(modalReturn); // get the name the user set
+			}
+
 
 			int64_t checkpointLength = *mCheckpointLength.get();
 			auto currentSaveFolder = sharedMem->getDumpInfo();
@@ -143,13 +142,14 @@ private:
 public:
 	DumpCheckpoint(GameState game, IDIContainer& dicon) 
 		: mImplGame(game),
-		mDumpCheckpointEventCallback(dicon.Resolve<SettingsStateAndEvents>()->dumpCheckpointEvent, [this]() { onDumpToSeperateThread(); }),
+		mDumpCheckpointEventCallback(dicon.Resolve<SettingsStateAndEvents>()->dumpCheckpointEvent, [this]() { onDump(); }),
 		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		sharedMem(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
-		modalDialogs(dicon.Resolve<IModalDialogRenderer>())
+		modalDialogs(dicon.Resolve<IModalDialogRenderer>()),
+		settings(dicon.Resolve<SettingsStateAndEvents>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>();
 		mInjectRequirements = ptr->getData<std::shared_ptr<InjectRequirements>>("injectRequirements", game);
@@ -168,8 +168,6 @@ public:
 	~DumpCheckpoint()
 	{
 		PLOG_VERBOSE << "~" << getName();
-		if (dontBlockRendering.joinable())
-			dontBlockRendering.join();
 	}
 
 

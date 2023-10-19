@@ -30,8 +30,13 @@ public:
 
 class CheckpointDumpNameDialog : public IModalDialog<std::tuple<bool, std::string>>
 {
+private:
 public:
 	CheckpointDumpNameDialog() : IModalDialog("Name dumped checkpoint") {}
+
+	void setTitle(std::string dialogTitle) { mDialogTitle = dialogTitle; }
+
+
 	virtual void render()
 	{
 		if (needToBeginDialog)
@@ -195,10 +200,11 @@ private:
 		}
 
 public:
-	std::tuple<bool, std::string> showCheckpointDumpNameDialog(std::string defaultName)
+	std::tuple<bool, std::string> showSaveDumpNameDialog(std::string dialogTitle, std::string defaultName)
 	{
 		auto scopedRequests = getScopedRequests();
-		
+		checkpointDumpNameDialog.setTitle(dialogTitle);
+		std::get<std::string>(checkpointDumpNameDialog.currentReturnValue) = defaultName;
 		checkpointDumpNameDialog.beginDialog();
 		while (!GlobalKill::isKillSet() && checkpointDumpNameDialog.isDialogOpen()) { Sleep(10); }
 		PLOG_DEBUG << "showCheckpointDumpNameDialog returning " << std::get<bool>(checkpointDumpNameDialog.currentReturnValue) << ", " << std::get<std::string>(checkpointDumpNameDialog.currentReturnValue);
@@ -241,6 +247,6 @@ ModalDialogRenderer::~ModalDialogRenderer() = default;
 
 
 
-std::tuple<bool, std::string> ModalDialogRenderer::showCheckpointDumpNameDialog(std::string defaultValue) { return pimpl->showCheckpointDumpNameDialog(defaultValue); }
+std::tuple<bool, std::string> ModalDialogRenderer::showSaveDumpNameDialog(std::string dialogTitle, std::string defaultValue) { return pimpl->showSaveDumpNameDialog(dialogTitle, defaultValue); }
 bool ModalDialogRenderer::showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel) { return pimpl->showCheckpointInjectWrongLevelWarningDialog(expectedLevel, observedLevel); }
 void ModalDialogRenderer::showFailedOptionalCheatServices() { return pimpl->showFailedOptionalCheatServices(mGUIFailures); }

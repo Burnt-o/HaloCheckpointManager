@@ -93,6 +93,20 @@ public:
 			nameof(pauseAlsoFreesCursor)
 		);
 
+	std::shared_ptr<Setting<bool>> autonameCheckpoints = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(autonameCheckpoints)
+		);
+
+	std::shared_ptr<Setting<bool>> autonameCoresaves = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(autonameCoresaves)
+		);
+
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
 	(
 		false,

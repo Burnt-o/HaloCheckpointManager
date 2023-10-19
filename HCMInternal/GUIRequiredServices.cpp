@@ -47,11 +47,17 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::dumpCheckpointGUI,
 			{OptionalCheatEnum::DumpCheckpoint} 
 	},
+	{GUIElementEnum::dumpCheckpointAutonameGUI,
+			{OptionalCheatEnum::DumpCheckpoint}
+	},
 	{GUIElementEnum::injectCoreGUI,
 			{OptionalCheatEnum::InjectCore} 
 	},
 	{GUIElementEnum::dumpCoreGUI,
 			{OptionalCheatEnum::DumpCore} 
+	},
+	{GUIElementEnum::dumpCoreAutonameGUI,
+			{OptionalCheatEnum::DumpCore}
 	},
 	{GUIElementEnum::speedhackGUI,
 			{OptionalCheatEnum::Speedhack} 

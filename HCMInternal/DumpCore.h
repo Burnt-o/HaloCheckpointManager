@@ -12,6 +12,7 @@
 #include "PointerManager.h"
 #include "IMessagesGUI.h"
 #include "RuntimeExceptionHandler.h"
+#include "ModalDialogRenderer.h"
 
 class DumpCore : public IOptionalCheat
 {
@@ -28,7 +29,8 @@ private:
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
 	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
-
+	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modalDialogs;
+	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
 
 	// primary event callback
 	void onDump()
@@ -36,7 +38,26 @@ private:
 		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 		try
 		{
-			std::string coreSaveName = "somecoresavename";
+
+			// generate a default checkpoint name
+			SYSTEMTIME t;
+			GetSystemTime(&t);
+			std::string coreSaveName = std::format(
+				"Checkpoint_{:04}{:02}{:02}_{:02}{:02}{:02}",
+				t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+
+			// ask the user what they want to call it, if they want that
+			if (settings->autonameCoresaves->GetValue() == false)
+			{
+				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
+				auto modalReturn = modalDialogs->showSaveDumpNameDialog("Name dumped core save", coreSaveName); // this is a blocking call
+				PLOG_DEBUG << "showSaveDumpNameDialog returned! ";
+
+				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
+				coreSaveName = std::get<std::string>(modalReturn); // get the name the user set
+			}
+			
+
 			constexpr int minimumFileLength = 10000;
 			auto currentSaveFolder = sharedMem->getDumpInfo();
 			PLOG_DEBUG << "Attempting core dump for game: " << mGame;
@@ -117,8 +138,9 @@ public:
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		sharedMem(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>())
-
+		messagesGUI(dicon.Resolve<IMessagesGUI>()),
+		modalDialogs(dicon.Resolve<IModalDialogRenderer>()),
+		settings(dicon.Resolve<SettingsStateAndEvents>())
 	{
 	}
 
