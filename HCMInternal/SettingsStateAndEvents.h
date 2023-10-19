@@ -93,6 +93,13 @@ public:
 			nameof(pauseAlsoFreesCursor)
 		);
 
+	std::shared_ptr<Setting<bool>> injectCheckpointForcesRevert = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCheckpointForcesRevert)
+		);
+
 	std::shared_ptr<Setting<bool>> injectCheckpointLevelCheck = std::make_shared<Setting<bool>>
 		(
 			true,
@@ -100,12 +107,13 @@ public:
 			nameof(injectCheckpointLevelCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCheckpointForcesRevert = std::make_shared<Setting<bool>>
+	std::shared_ptr<Setting<bool>> injectCheckpointVersionCheck = std::make_shared<Setting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
-			nameof(injectCheckpointForcesRevert)
+			nameof(injectCheckpointVersionCheck)
 		);
+
 
 	std::shared_ptr<Setting<bool>> autonameCheckpoints = std::make_shared<Setting<bool>>
 		(
@@ -121,6 +129,13 @@ public:
 			nameof(dumpCheckpointForcesSave)
 		);
 
+	std::shared_ptr<Setting<bool>> injectCoreForcesRevert = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCoreForcesRevert)
+		);
+
 	std::shared_ptr<Setting<bool>> injectCoreLevelCheck = std::make_shared<Setting<bool>>
 		(
 			true,
@@ -128,11 +143,11 @@ public:
 			nameof(injectCoreLevelCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCoreForcesRevert = std::make_shared<Setting<bool>>
+	std::shared_ptr<Setting<bool>> injectCoreVersionCheck = std::make_shared<Setting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
-			nameof(injectCoreForcesRevert)
+			nameof(injectCoreVersionCheck)
 		);
 
 	std::shared_ptr<Setting<bool>> dumpCoreForcesSave = std::make_shared<Setting<bool>>
@@ -195,12 +210,14 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
-		injectCheckpointLevelCheck,
 		injectCheckpointForcesRevert,
+		injectCheckpointLevelCheck,
+		injectCheckpointVersionCheck,
 		autonameCheckpoints,
 		dumpCheckpointForcesSave,
+			injectCoreForcesRevert,
 		injectCoreLevelCheck,
-		injectCoreForcesRevert,
+		injectCoreVersionCheck,
 		autonameCoresaves,
 		dumpCoreForcesSave,
 		invulnerabilityNPCToggle, 

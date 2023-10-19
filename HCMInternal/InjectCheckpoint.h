@@ -17,6 +17,7 @@
 #include "GetCurrentLevelCode.h"
 #include "IModalDialogRenderer.h"
 #include "IMakeOrGetCheat.h"
+#include "IGetMCCVersion.h"
 
 class InjectCheckpoint : public IOptionalCheat {
 private:
@@ -46,6 +47,7 @@ private:
 	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
 	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
 	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modal;
+	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
 	std::optional<std::shared_ptr<GetCurrentLevelCode>> levelCode;
 
 
@@ -60,7 +62,25 @@ private:
 			
 
 			//TODO: load correct level if level not aligned
-			// TODO: add version, difficulty checks (if user wants them)
+			// TODO: add difficulty check (if user wants them)
+
+			// check if user wants us to warn them on injecting to wrong game version
+			if (settings->injectCheckpointVersionCheck->GetValue())
+			{
+				// check if wrong game version
+				if (getMCCVer->getMCCVersionAsString() != currentCheckpoint.selectedCheckpointGameVersion && currentCheckpoint.selectedCheckpointGameVersion.size() == 10)
+				{
+					// no match! warn the user. This is a blocking call until they choose an option.
+					auto continueWithInject = modal->showInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
+						"Warning! The checkpoint you are injecting appears to be from a different version of MCC than the one you are currently playing\n{}\nCheckpoint MCC ver: {}\nCurrent MCC ver: {}",
+						"Checkpoints from different versions sometimes are, and sometimes aren't, compatible with eachother. Continue anyway?",
+						currentCheckpoint.selectedCheckpointGameVersion,
+						getMCCVer->getMCCVersionAsString()
+					));
+
+					if (!continueWithInject) return;
+				}
+			}
 
 			// check if user wants us to warn them on injecting to wrong level (and if we can do the check)
 			if (settings->injectCheckpointLevelCheck->GetValue() && levelCode.has_value())
@@ -249,7 +269,8 @@ private:
 			runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()), 
 			sharedMem(dicon.Resolve<ISharedMemory>()),
 			settings(dicon.Resolve<SettingsStateAndEvents>()),
-			modal(dicon.Resolve<IModalDialogRenderer>())
+			modal(dicon.Resolve<IModalDialogRenderer>()),
+			getMCCVer(dicon.Resolve<IGetMCCVersion>())
 		{
 		auto ptr = dicon.Resolve<PointerManager>().get();
 

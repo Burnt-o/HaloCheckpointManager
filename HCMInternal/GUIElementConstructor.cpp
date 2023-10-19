@@ -178,17 +178,22 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Inject Checkpoint Settings", headerChildElements
 							{
+							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert),
 							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck),
-							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert)
+							createNestedElement(GUIElementEnum::injectCheckpointVersionCheck)
 							}));
+
+				case GUIElementEnum::injectCheckpointForcesRevert:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
 
 					case GUIElementEnum::injectCheckpointLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCheckpointLevelCheck));
 
-					case GUIElementEnum::injectCheckpointForcesRevert:
+					case GUIElementEnum::injectCheckpointVersionCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
+							(game, std::nullopt, "Warn on injecting to wrong game version", settings->injectCheckpointVersionCheck));
 
 				case GUIElementEnum::dumpCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -218,17 +223,24 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Inject Core Save Settings", headerChildElements
 							{
+							createNestedElement(GUIElementEnum::injectCoreForcesRevert),
 							createNestedElement(GUIElementEnum::injectCoreLevelCheck),
-							createNestedElement(GUIElementEnum::injectCoreForcesRevert)
+							createNestedElement(GUIElementEnum::injectCoreVersionCheck)
 							}));
+
+				case GUIElementEnum::injectCoreForcesRevert:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
 
 					case GUIElementEnum::injectCoreLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCoreLevelCheck));
 
-					case GUIElementEnum::injectCoreForcesRevert:
+					case GUIElementEnum::injectCoreVersionCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
+							(game, std::nullopt, "Warn on injecting to wrong game version", settings->injectCoreVersionCheck));
+
+
 
 				case GUIElementEnum::dumpCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
