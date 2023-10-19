@@ -112,6 +112,11 @@ namespace HCMExternal.ViewModels
         //RequestTabChange?.Invoke(this, requestedTab);
         //}
 
+
+        private FileSystemWatcher? SaveFileWatcher = new FileSystemWatcher(@"Saves\" , "*.bin");
+        private FileSystemWatcher? SaveDirWatcher = new FileSystemWatcher(@"Saves\");
+
+
         private readonly SynchronizationContext _syncContext;
         private CheckpointService CheckpointServices { get; init; }
         public CheckpointViewModel(CheckpointService cs)
@@ -146,6 +151,32 @@ namespace HCMExternal.ViewModels
             };
 
 
+            // Setup FileSystemWatcher to monitor save folders for changes
+            // set filters
+            SaveFileWatcher.NotifyFilter = NotifyFilters.CreationTime
+                                 | NotifyFilters.FileName
+                                 | NotifyFilters.LastWrite
+                                 | NotifyFilters.Size;
+
+            SaveDirWatcher.NotifyFilter = NotifyFilters.DirectoryName;
+
+            // sub to events
+            SaveFileWatcher.Changed += OnFileChanged;
+            SaveFileWatcher.Created += OnFileChanged;
+            SaveFileWatcher.Deleted += OnFileChanged;
+            SaveFileWatcher.Renamed += OnFileChanged;
+
+            SaveDirWatcher.Changed += OnDirChanged;
+            SaveDirWatcher.Created += OnDirChanged;
+            SaveDirWatcher.Deleted += OnDirChanged;
+            SaveDirWatcher.Renamed += OnDirChanged;
+
+            SaveFileWatcher.IncludeSubdirectories = true;
+            SaveDirWatcher.IncludeSubdirectories = true;
+
+            SaveFileWatcher.EnableRaisingEvents = true;
+            SaveDirWatcher.EnableRaisingEvents = true;
+
 
             RefreshSaveFolderTree();
             RefreshCheckpointList();
@@ -178,6 +209,24 @@ namespace HCMExternal.ViewModels
 
 
         }
+
+        private void OnFileChanged(object sender, FileSystemEventArgs e)
+        {
+            HCMExternal.App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+            {
+                RefreshCheckpointList();
+            });
+        }
+
+        private void OnDirChanged(object sender, FileSystemEventArgs e)
+        {
+            HCMExternal.App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+            {
+                RefreshSaveFolderTree();
+                RefreshCheckpointList();
+            });
+        }
+
 
         void CheckpointViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
