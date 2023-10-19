@@ -58,7 +58,7 @@ private:
 				t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
 			// ask the user what they want to call it, if they want that
-			if (settings->autonameCheckpoints->GetValue())
+			if (settings->autonameCheckpoints->GetValue() == false)
 			{
 				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
 				auto modalReturn = modalDialogs->showSaveDumpNameDialog("Name dumped checkpoint", checkpointName); // this is a blocking call
