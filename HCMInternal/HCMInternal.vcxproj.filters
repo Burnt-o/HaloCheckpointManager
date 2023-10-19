@@ -376,6 +376,12 @@
     <ClInclude Include="ToggleFreeCursor.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="GetCurrentLevelCode.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="IModalDialogRenderer.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -500,6 +506,9 @@
     </ClCompile>
     <ClCompile Include="PauseGame.cpp">
       <Filter>Services\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCurrentLevelCode.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

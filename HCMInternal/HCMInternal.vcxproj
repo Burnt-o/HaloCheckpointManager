@@ -229,6 +229,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DynamicStruct.h" />
     <ClInclude Include="DynamicStructFactory.h" />
     <ClInclude Include="FreeMCCCursor.h" />
+    <ClInclude Include="GetCurrentLevelCode.h" />
     <ClInclude Include="GetObjectAddress.h" />
     <ClInclude Include="GUIConsoleCommand.h" />
     <ClInclude Include="GUIHeading.h" />
@@ -244,6 +245,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IMakeOrGetCheat.h" />
     <ClInclude Include="IMCCStateHook.h" />
     <ClInclude Include="IMessagesGUI.h" />
+    <ClInclude Include="IModalDialogRenderer.h" />
     <ClInclude Include="ISettingsSerialiser.h" />
     <ClInclude Include="ISharedMemory.h" />
     <ClInclude Include="MCCState.h" />
@@ -335,6 +337,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="DynamicStruct.cpp" />
     <ClCompile Include="DynamicStructFactory.cpp" />
     <ClCompile Include="FreeMCCCursor.cpp" />
+    <ClCompile Include="GetCurrentLevelCode.cpp" />
     <ClCompile Include="GetObjectAddress.cpp" />
     <ClCompile Include="GUIServiceInfo.cpp" />
     <ClCompile Include="MCCStateHook.cpp" />

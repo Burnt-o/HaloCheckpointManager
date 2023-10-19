@@ -18,6 +18,7 @@ Speedhack,\
 Invulnerability,\
 GetPlayerDatum,\
 GetObjectAddress,\
+GetCurrentLevelCode,\
 AIFreeze,\
 ConsoleCommand\
 

@@ -36,7 +36,7 @@ SharedMemoryExternal::SharedMemoryExternal(bool CPnullData, bool SFnullData,
 	selectedCheckpointFilePath = segment.construct<shm_string>("selectedCheckpointFilePath")(sa);
 	selectedCheckpointFilePath->assign(CPpath);
 	selectedCheckpointLevelCode = segment.construct<shm_string>("selectedCheckpointLevelCode")(sa);
-	selectedCheckpointLevelCode->assign(CPpath);
+	selectedCheckpointLevelCode->assign(CPlevelcode);
 	selectedCheckpointGameVersion = segment.construct<shm_string>("selectedCheckpointGameVersion")(sa);
 	selectedCheckpointGameVersion->assign(CPgameVersion);
 	selectedCheckpointDifficulty = segment.construct<int>("selectedCheckpointDifficulty")(CPdifficulty);

@@ -14,8 +14,9 @@
 #include "IMCCStateHook.h"
 #include "boost\iostreams\device\mapped_file.hpp"
 #include "openssl\sha.h"
-
-
+#include "GetCurrentLevelCode.h"
+#include "IModalDialogRenderer.h"
+#include "IMakeOrGetCheat.h"
 
 class InjectCheckpoint : public IOptionalCheat {
 private:
@@ -43,6 +44,9 @@ private:
 	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
+	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
+	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modal;
+	std::optional<std::shared_ptr<GetCurrentLevelCode>> levelCode;
 
 
 	void onInject() {
@@ -53,7 +57,38 @@ private:
 			PLOG_DEBUG << "Attempting checkpoint inject for game: " << mImplGame.toString();
 			if (currentCheckpoint.selectedCheckpointNull) throw HCMRuntimeException("Can't inject - no checkpoint selected!");
 			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't inject - checkpoint from wrong game! Expected: {}, Actual: {}", mImplGame.toString(), ((GameState)currentCheckpoint.selectedCheckpointGame).toString()));
-			// TODO: add version, difficulty, and levelcode checks (if user wants them)
+			
+
+			//TODO: load correct level if level not aligned
+			// TODO: add version, difficulty checks (if user wants them)
+
+			// check if user wants us to warn them on injecting to wrong level (and if we can do the check)
+			if (settings->injectCheckpointLevelCheck->GetValue() && levelCode.has_value())
+			{
+				try
+				{
+					// compare current level code to checkpoint level code (only check first 3 characters of each)
+					if (levelCode.value()->getCurrentLevelCode().substr(0, 3) != currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3))
+					{
+						// no match! warn the user. This is a blocking call until they choose an option.
+						auto continueWithInject = modal->showInjectionWarningDialog("Injection: incorrect level warning!", std::format(
+							"Warning! The checkpoint you are injecting appears to be from a different level than the one you are currently playing\n{}\nCheckpoint level: {}\nCurrent level: {}",
+							"If this is the case, the game will probably crash. Continue anyway?",
+							currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3),
+							levelCode.value()->getCurrentLevelCode().substr(0, 3)
+						));
+
+						if (!continueWithInject) return;
+					}
+				}
+				catch (std::out_of_range ex)
+				{
+					PLOG_ERROR << "out_of_range exception occured testing checkpoint levelCode strings: " << std::endl
+						<< "currentCheckpoint.selectedCheckpointLevelCode.size(): " << currentCheckpoint.selectedCheckpointLevelCode.size() << std::endl
+						<< "levelCode.value()->getCurrentLevelCode().size(): " << levelCode.value()->getCurrentLevelCode().size();
+				}
+			}
+
 
 			PLOG_DEBUG << "injectPath: " << currentCheckpoint.selectedCheckpointFilePath;
 
@@ -207,7 +242,9 @@ private:
 			mccStateHook(dicon.Resolve<IMCCStateHook>()),
 			messagesGUI(dicon.Resolve<IMessagesGUI>()), 
 			runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()), 
-			sharedMem(dicon.Resolve<ISharedMemory>())
+			sharedMem(dicon.Resolve<ISharedMemory>()),
+			settings(dicon.Resolve<SettingsStateAndEvents>()),
+			modal(dicon.Resolve<IModalDialogRenderer>())
 		{
 		auto ptr = dicon.Resolve<PointerManager>().get();
 
@@ -236,6 +273,15 @@ private:
 			mBSPdata = ptr->getData< std::shared_ptr<offsetLengthPair>>("BSPdata", game);
 			mLoadedBSP1 = ptr->getData< std::shared_ptr<MultilevelPointer>>("loadedBSP1", game);
 			if (!mInjectRequirements->singleCheckpoint) 	mLoadedBSP2 = ptr->getData< std::shared_ptr<MultilevelPointer>>("loadedBSP2", game);
+		}
+
+		try
+		{
+			levelCode = std::dynamic_pointer_cast<GetCurrentLevelCode>( dicon.Resolve<IMakeOrGetCheat>()->getOrMakeCheat({ game, OptionalCheatEnum::GetCurrentLevelCode }, dicon));
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_DEBUG << "Inject checkpoint couldn't acquire GetCurrentLevelCode service: " << ex.what();
 		}
 
 	}

@@ -28,6 +28,49 @@ public:
 	virtual ~IModalDialog() = default;
 };
 
+class InjectionWarningDialog : public IModalDialog<bool>
+{
+private:
+	std::string mText = "text not set, burnt made an oopsie";
+public:
+	InjectionWarningDialog() : IModalDialog("Injection warning") {}
+
+	void setTitle(std::string dialogTitle) { mDialogTitle = dialogTitle; }
+	void setText(std::string text) { mText = text; }
+
+	virtual void render()
+	{
+		if (needToBeginDialog)
+		{
+			PLOG_DEBUG << "opening popup " << mDialogTitle;
+			ImGui::OpenPopup(mDialogTitle.c_str());
+			needToBeginDialog = false;
+		}
+
+		if (ImGui::BeginPopupModal(mDialogTitle.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text(mText.c_str());
+			if (ImGui::Button("Continue"))
+			{
+				PLOG_DEBUG << "closing InjectionWarningDialog with continue";
+				currentReturnValue = true;
+				isOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				PLOG_DEBUG << "closing InjectionWarningDialog with Cancel";
+				currentReturnValue = false;
+				isOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+};
+
 class CheckpointDumpNameDialog : public IModalDialog<std::tuple<bool, std::string>>
 {
 private:
@@ -56,7 +99,7 @@ public:
 				isOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
-
+			ImGui::SameLine();
 			if (ImGui::Button("Cancel"))
 			{
 				PLOG_DEBUG << "closing CheckpointDumpNameDialog with Cancel";
@@ -156,12 +199,14 @@ class ModalDialogRenderer::ModalDialogRendererImpl
 {
 private:
 	CheckpointDumpNameDialog checkpointDumpNameDialog;
+	InjectionWarningDialog injectionWarningDialog;
 	FailedOptionalCheatServicesDialog failedOptionalCheatServicesDialog;
 
 		ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
 		void onImGuiRenderEvent(Vec2 screenSize)
 		{
 			checkpointDumpNameDialog.render();
+			injectionWarningDialog.render();
 			failedOptionalCheatServicesDialog.render();
 		}
 
@@ -202,7 +247,9 @@ private:
 public:
 	std::tuple<bool, std::string> showSaveDumpNameDialog(std::string dialogTitle, std::string defaultName)
 	{
+		PLOG_DEBUG << "beginning showSaveDumpNameDialog";
 		auto scopedRequests = getScopedRequests();
+
 		checkpointDumpNameDialog.setTitle(dialogTitle);
 		std::get<std::string>(checkpointDumpNameDialog.currentReturnValue) = defaultName;
 		checkpointDumpNameDialog.beginDialog();
@@ -211,13 +258,23 @@ public:
 		return checkpointDumpNameDialog.currentReturnValue;
 	}
 
-	bool showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel)
+	bool showInjectionWarningDialog(std::string dialogTitle, std::string dialogText)
 	{
-		throw HCMRuntimeException("not impl yet");
+		PLOG_DEBUG << "beginning showInjectionWarningDialog";
+		auto scopedRequests = getScopedRequests();
+
+		injectionWarningDialog.setTitle(dialogTitle);
+		injectionWarningDialog.setText(dialogText);
+
+		injectionWarningDialog.beginDialog();
+		while (!GlobalKill::isKillSet() && injectionWarningDialog.isDialogOpen()) { Sleep(10); }
+		PLOG_DEBUG << "injectionWarningDialog returning " << injectionWarningDialog.currentReturnValue;
+		return injectionWarningDialog.currentReturnValue;
 	}
 
 	void showFailedOptionalCheatServices(std::shared_ptr<GUIServiceInfo> guiFailures)
 	{
+		PLOG_DEBUG << "beginning showFailedOptionalCheatServices";
 		auto scopedRequests = getScopedRequests();
 
 		failedOptionalCheatServicesDialog.setGUIFailures(guiFailures);
@@ -248,5 +305,5 @@ ModalDialogRenderer::~ModalDialogRenderer() = default;
 
 
 std::tuple<bool, std::string> ModalDialogRenderer::showSaveDumpNameDialog(std::string dialogTitle, std::string defaultValue) { return pimpl->showSaveDumpNameDialog(dialogTitle, defaultValue); }
-bool ModalDialogRenderer::showCheckpointInjectWrongLevelWarningDialog(std::string expectedLevel, std::string observedLevel) { return pimpl->showCheckpointInjectWrongLevelWarningDialog(expectedLevel, observedLevel); }
+bool ModalDialogRenderer::showInjectionWarningDialog(std::string dialogTitle, std::string dialogText) { return pimpl->showInjectionWarningDialog(dialogTitle, dialogText); }
 void ModalDialogRenderer::showFailedOptionalCheatServices() { return pimpl->showFailedOptionalCheatServices(mGUIFailures); }

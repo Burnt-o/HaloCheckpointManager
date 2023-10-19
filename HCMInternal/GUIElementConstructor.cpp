@@ -141,9 +141,11 @@ private:
 							createNestedElement(GUIElementEnum::forceCoreSaveGUI),
 							createNestedElement(GUIElementEnum::forceCoreLoadGUI),
 							createNestedElement(GUIElementEnum::injectCheckpointGUI),
+							createNestedElement(GUIElementEnum::injectCheckpointSettingsSubheading),
 							createNestedElement(GUIElementEnum::dumpCheckpointGUI),
 							createNestedElement(GUIElementEnum::dumpCheckpointSettingsSubheading),
 							createNestedElement(GUIElementEnum::injectCoreGUI),
+							createNestedElement(GUIElementEnum::injectCoreSettingsSubheading),
 							createNestedElement(GUIElementEnum::dumpCoreGUI),
 							createNestedElement(GUIElementEnum::dumpCoreSettingsSubheading),
 						}));
@@ -172,6 +174,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, HotkeysEnum::injectCheckpoint, "Inject Checkpoint", settings->injectCheckpointEvent));
 
+				case GUIElementEnum::injectCheckpointSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Inject Checkpoint Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck)
+							}));
+
+					case GUIElementEnum::injectCheckpointLevelCheck:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCheckpointLevelCheck));
+
 				case GUIElementEnum::dumpCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, HotkeysEnum::dumpCheckpoint, "Dump Checkpoint", settings->dumpCheckpointEvent));
@@ -184,12 +197,23 @@ private:
 							}));
 
 					case GUIElementEnum::dumpCheckpointAutonameGUI:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Autoname checkpoints", settings->autonameCheckpoints));
 
 				case GUIElementEnum::injectCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, HotkeysEnum::injectCore, "Inject Core Save", settings->injectCoreEvent));
+
+				case GUIElementEnum::injectCoreSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Inject Core Save Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::injectCoreLevelCheck)
+							}));
+
+					case GUIElementEnum::injectCoreLevelCheck:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCoreLevelCheck));
 
 				case GUIElementEnum::dumpCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -203,7 +227,7 @@ private:
 							}));
 
 					case GUIElementEnum::dumpCoreAutonameGUI:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Autoname core saves", settings->autonameCoresaves));
 
 			case GUIElementEnum::cheatsHeadingGUI:

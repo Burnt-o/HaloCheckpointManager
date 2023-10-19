@@ -51,10 +51,14 @@
 	((forceCoreSaveGUI, (Halo1)))\
 	((forceCoreLoadGUI, (Halo1)))\
 	((injectCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
+	((injectCheckpointSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
+		((injectCheckpointLevelCheck, (ALL_SUPPORTED_GAMES)))\
 	((dumpCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((dumpCheckpointSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 		((dumpCheckpointAutonameGUI, (ALL_SUPPORTED_GAMES)))\
 	((injectCoreGUI, (Halo1)))\
+	((injectCoreSettingsSubheading, (Halo1)))\
+		((injectCoreLevelCheck, (Halo1)))\
 	((dumpCoreSettingsSubheading, (Halo1)))\
 		((dumpCoreAutonameGUI, (Halo1)))\
 	((dumpCoreGUI, (Halo1)))\

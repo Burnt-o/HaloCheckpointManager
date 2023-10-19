@@ -14,7 +14,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
-#include "ModalDialogRenderer.h"
+#include "IModalDialogRenderer.h"
 
 
 class DumpCheckpoint : public IOptionalCheat {

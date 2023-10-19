@@ -15,6 +15,7 @@ extern "C"
 		*g_SharedMemoryExternal->selectedCheckpointGame = game;
 		g_SharedMemoryExternal->selectedCheckpointName->assign(name);
 		g_SharedMemoryExternal->selectedCheckpointFilePath->assign(path);
+		g_SharedMemoryExternal->selectedCheckpointLevelCode->assign(levelcode);
 		g_SharedMemoryExternal->selectedCheckpointGameVersion->assign(gameVersion);
 		*g_SharedMemoryExternal->selectedCheckpointDifficulty = difficulty;
 	}

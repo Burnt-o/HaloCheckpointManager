@@ -93,11 +93,25 @@ public:
 			nameof(pauseAlsoFreesCursor)
 		);
 
+	std::shared_ptr<Setting<bool>> injectCheckpointLevelCheck = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCheckpointLevelCheck)
+		);
+
 	std::shared_ptr<Setting<bool>> autonameCheckpoints = std::make_shared<Setting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(autonameCheckpoints)
+		);
+
+	std::shared_ptr<Setting<bool>> injectCoreLevelCheck = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCoreLevelCheck)
 		);
 
 	std::shared_ptr<Setting<bool>> autonameCoresaves = std::make_shared<Setting<bool>>

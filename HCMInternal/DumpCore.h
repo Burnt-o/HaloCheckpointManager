@@ -12,7 +12,7 @@
 #include "PointerManager.h"
 #include "IMessagesGUI.h"
 #include "RuntimeExceptionHandler.h"
-#include "ModalDialogRenderer.h"
+#include "IModalDialogRenderer.h"
 
 class DumpCore : public IOptionalCheat
 {

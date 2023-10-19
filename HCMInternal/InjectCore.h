@@ -10,6 +10,9 @@
 #include "RuntimeExceptionHandler.h"
 #include "DIContainer.h"
 #include "boost\iostreams\device\mapped_file.hpp"
+#include "GetCurrentLevelCode.h"
+#include "IModalDialogRenderer.h"
+#include "IMakeOrGetCheat.h"
 
 
 
@@ -27,6 +30,9 @@ private:
 	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
 	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
 	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
+	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
+	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modal;
+	std::optional<std::shared_ptr<GetCurrentLevelCode>> levelCode;
 
 
 	void onInject()
@@ -48,11 +54,38 @@ private:
 			PLOG_DEBUG << "injectPath: " << currentCheckpoint.selectedCheckpointFilePath;
 
 			//TODO: load correct level if level not aligned
+			//TODO: add version, difficulty checks (if user wants them)
 
-				//TODO: safety checks if the user enables them (wrong level? wrong difficulty? wrong game?)
+			// check if user wants us to warn them on injecting to wrong level (and if we can do the check)
+			if (settings->injectCoreLevelCheck->GetValue() && levelCode.has_value())
+			{
+				try
+				{
+					// compare current level code to checkpoint level code (only check first 3 characters of each)
+					if (levelCode.value()->getCurrentLevelCode().substr(0, 3) != currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3))
+					{
+						// no match! warn the user. This is a blocking call until they choose an option.
+						auto continueWithInject = modal->showInjectionWarningDialog("Injection: incorrect level warning!", std::format(
+							"Warning! The core save you are injecting appears to be from a different level than the one you are currently playing\n{}\nCore save level: {}\nCurrent level: {}",
+							"If this is the case, the game will probably crash. Continue anyway?",
+							currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3),
+							levelCode.value()->getCurrentLevelCode().substr(0, 3)
+						));
 
-				// store checkpoint data in a vector buffer
-				// uses memory-mapped file + memcpy
+						if (!continueWithInject) return;
+					}
+				}
+				catch (std::out_of_range ex) // will occur on std::string.substring if string size less than substring length.
+				{
+					PLOG_ERROR << "out_of_range exception occured testing coresave levelCode strings: " << std::endl
+						<< "currentCheckpoint.selectedCheckpointLevelCode.size(): " << currentCheckpoint.selectedCheckpointLevelCode.size() << std::endl
+						<< "levelCode.value()->getCurrentLevelCode().size(): " << levelCode.value()->getCurrentLevelCode().size();
+				}
+			}
+
+
+			// store checkpoint data in a vector buffer
+			// uses memory-mapped file + memcpy
 			boost::iostreams::mapped_file_source checkpointFile(currentCheckpoint.selectedCheckpointFilePath);
 			if (!checkpointFile.is_open()) throw HCMRuntimeException(std::format("Failed to open core save file for reading"));
 			if (checkpointFile.size() < minimumFileLength)
@@ -122,8 +155,19 @@ public:
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		sharedMem(dicon.Resolve<ISharedMemory>()),
-		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		settings(dicon.Resolve<SettingsStateAndEvents>()),
+		modal(dicon.Resolve<IModalDialogRenderer>())
 	{
+		try
+		{
+			levelCode = std::dynamic_pointer_cast<GetCurrentLevelCode>(dicon.Resolve<IMakeOrGetCheat>()->getOrMakeCheat({ game, OptionalCheatEnum::GetCurrentLevelCode }, dicon));
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_DEBUG << "Inject core save couldn't acquire GetCurrentLevelCode service: " << ex.what();
+		}
+
 	}
 
 	~InjectCore()

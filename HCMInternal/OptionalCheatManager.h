@@ -7,7 +7,7 @@
 #include "SettingsStateAndEvents.h"
 #include "ISharedMemory.h"
 #include "PointerManager.h"
-#include "ModalDialogRenderer.h"
+#include "IModalDialogRenderer.h"
 #include "ControlServiceContainer.h"
 // constructs and stores optionalcheats, updating OptionalCheatInfoManager as it constructs
 
