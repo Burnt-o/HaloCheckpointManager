@@ -23,9 +23,10 @@ private:
 	std::unique_ptr<ModuleMidHook> gameLoadStartHook; // hit when loading screen starts
 	std::unique_ptr<ModuleMidHook> gameLoadEndHook;	// hit when loading screen ends
 	std::unique_ptr<ModuleMidHook> gameQuitHook;	// hit when quiting to menu from game
+	std::unique_ptr<ModuleMidHook> gameEngineChangedHook;	// hit when loaded game engine changes (usually in main menu)
 
 
-	std::shared_ptr<MultilevelPointer> gameIndicator;
+	std::shared_ptr<MultilevelPointer> gameEngineIndicator;
 	std::shared_ptr<MultilevelPointer> loadIndicator;
 	std::shared_ptr<MultilevelPointer> menuIndicator;
 	std::shared_ptr<MultilevelPointer> levelIndicator;
@@ -34,7 +35,6 @@ private:
 
 	static void loadHookFunction(SafetyHookContext ctx)
 	{
-		//auto guard = instance->shared_from_this();
 		instance->updateMCCState();
 	}
 
@@ -55,14 +55,15 @@ public:
 		// Get pointers
 		try
 		{
-			gameIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("gameIndicator");
-			levelIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("levelIndicator");
-			loadIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("loadIndicator");
-			menuIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("menuIndicator");
+			gameEngineIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameEngineIndicator));
+			levelIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(levelIndicator));
+			loadIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(loadIndicator));
+			menuIndicator = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(menuIndicator));
 
-			auto gameLoadStartFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("gameLoadStartFunction");
-			auto gameLoadEndFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("gameLoadEndFunction");
-			auto gameQuitFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>("gameQuitFunction");
+			auto gameLoadStartFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameLoadStartFunction));
+			auto gameLoadEndFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameLoadEndFunction));
+			auto gameQuitFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameQuitFunction));
+			auto gameEngineChangedFunction = ptrMan->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameEngineChangedFunction));
 			// bind both hooks to same function
 			gameLoadStartHook = ModuleMidHook::make(
 				L"main",
@@ -77,6 +78,11 @@ public:
 			gameQuitHook = ModuleMidHook::make(
 				L"main",
 				gameQuitFunction,
+				(safetyhook::MidHookFn)&loadHookFunction,
+				true);
+			gameEngineChangedHook = ModuleMidHook::make(
+				L"main",
+				gameEngineChangedFunction,
 				(safetyhook::MidHookFn)&loadHookFunction,
 				true);
 		}

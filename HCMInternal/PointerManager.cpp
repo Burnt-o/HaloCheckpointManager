@@ -420,16 +420,16 @@ int64_t stringToInt(std::string& string)
 {
     std::string justNumbers = string;
     bool negativeFlag = string.starts_with("-");
-    if (negativeFlag) justNumbers = string.substr(1); // remove the negative sign from string
-    bool hexFlag = string.starts_with("0x");
+    if (negativeFlag) justNumbers = justNumbers.substr(1); // remove the negative sign from string
+
+    bool hexFlag = justNumbers.starts_with("0x");
     if (hexFlag) justNumbers = justNumbers.substr(2); // remove the hex sign from string
 
 
     try
     {
-        int64_t result = stoi(string, 0, hexFlag ? 16 : 10);
-
-        if (negativeFlag) result *= -1;
+        int64_t result = stoi(justNumbers, 0, hexFlag ? 16 : 10);
+        if (negativeFlag) result = -result;
         PLOG_VERBOSE << std::format("stringToInt converted {0} to {1}", string, result);
         return result;
     }

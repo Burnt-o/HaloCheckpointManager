@@ -11,7 +11,7 @@
 	
 <!--#region MCCStateHook-->
 
-	<VersionedEntry Name="gameIndicator" Type="MultilevelPointer::ExeOffset">
+	<!--<VersionedEntry Name="gameIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3A253A0</Offset>
@@ -42,6 +42,26 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+	</VersionedEntry>-->
+
+	<!--load into mission select of games, scanning for enum value. Needs 2 level pointer with neg offset-->
+	<VersionedEntry Name="gameEngineIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FFDA70</Offset>
+				<Offset>0x10</Offset>
+				<Offset>-0xD8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--what writes to above-->
+	<VersionedEntry Name="gameEngineChangedFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1EB43E</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!--1 when in load. should be approx 0xA34 BEHIND gameIndicator pointer-->
@@ -63,21 +83,21 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--0 when in MainMenu, 1 when in-game. 2 bytes behind loadindicator-->
+	<!--1 when in MainMenu, 0 when in-game. 0x11 bytes ahead loadindicator-->
 	<VersionedEntry Name="menuIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x3A24FC2</Offset>
+				<Offset>0x3A24FD5</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x3B80E62</Offset>
+				<Offset>0x3B80E75</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x3FFDAA2</Offset>
+				<Offset>0x3FFDAB5</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
