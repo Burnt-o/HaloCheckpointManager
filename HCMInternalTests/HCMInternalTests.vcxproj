@@ -179,6 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\HCMInternal\AIFreeze.cpp" />
+    <ClCompile Include="..\HCMInternal\BlockGameInput.cpp" />
     <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\HCMInternal\ModuleHookManager.cpp" />
     <ClCompile Include="..\HCMInternal\MultilevelPointer.cpp" />
     <ClCompile Include="..\HCMInternal\OptionalCheatManager.cpp" />
+    <ClCompile Include="..\HCMInternal\PauseGame.cpp" />
     <ClCompile Include="..\HCMInternal\PointerManager.cpp" />
     <ClCompile Include="..\HCMInternal\RuntimeExceptionHandler.cpp" />
     <ClCompile Include="..\HCMInternal\Setting.cpp" />
@@ -235,8 +237,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HCMInternal\App.h" />
+    <ClInclude Include="..\HCMInternal\BlockGameInput.h" />
     <ClInclude Include="..\HCMInternal\ConsoleCommand.h" />
     <ClInclude Include="..\HCMInternal\ControlDefs.h" />
+    <ClInclude Include="..\HCMInternal\ControlServiceContainer.h" />
     <ClInclude Include="..\HCMInternal\CustomExceptions.h" />
     <ClInclude Include="..\HCMInternal\D3D11Hook.h" />
     <ClInclude Include="..\HCMInternal\Datum.h" />
@@ -264,6 +268,7 @@
     <ClInclude Include="..\HCMInternal\GUIElementStore.h" />
     <ClInclude Include="..\HCMInternal\GUIHeader.h" />
     <ClInclude Include="..\HCMInternal\GUIHeading.h" />
+    <ClInclude Include="..\HCMInternal\GUIHotkeyOnly.h" />
     <ClInclude Include="..\HCMInternal\GUIInvulnerability.h" />
     <ClInclude Include="..\HCMInternal\GUIRequiredServices.h" />
     <ClInclude Include="..\HCMInternal\GUIServiceInfo.h" />
@@ -314,6 +319,7 @@
     <ClInclude Include="..\HCMInternal\OptionalCheatEnum.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatInfo.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatManager.h" />
+    <ClInclude Include="..\HCMInternal\PauseGame.h" />
     <ClInclude Include="..\HCMInternal\PointerManager.h" />
     <ClInclude Include="..\HCMInternal\RuntimeExceptionHandler.h" />
     <ClInclude Include="..\HCMInternal\ScopedCallback.h" />
@@ -324,6 +330,9 @@
     <ClInclude Include="..\HCMInternal\SharedMemoryInternal.h" />
     <ClInclude Include="..\HCMInternal\Speedhack.h" />
     <ClInclude Include="..\HCMInternal\StaticHookWrapper.h" />
+    <ClInclude Include="..\HCMInternal\ToggleBlockInput.h" />
+    <ClInclude Include="..\HCMInternal\ToggleFreeCursor.h" />
+    <ClInclude Include="..\HCMInternal\TogglePause.h" />
     <ClInclude Include="..\HCMInternal\UnhandledExceptionHandler.h" />
     <ClInclude Include="..\HCMInternal\Vec2.h" />
     <ClInclude Include="..\HCMInternal\VersionInfo.h" />

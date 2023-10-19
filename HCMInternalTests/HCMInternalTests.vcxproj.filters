@@ -156,6 +156,12 @@
     <ClCompile Include="..\HCMInternal\ModalDialogRenderer.cpp">
       <Filter>HCMInternalFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\PauseGame.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\BlockGameInput.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -469,6 +475,27 @@
     </ClInclude>
     <ClInclude Include="MockModalDialogRenderer.h">
       <Filter>Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ToggleFreeCursor.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ToggleBlockInput.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\TogglePause.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\PauseGame.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\BlockGameInput.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIHotkeyOnly.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ControlServiceContainer.h">
+      <Filter>HCMInternalFiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
