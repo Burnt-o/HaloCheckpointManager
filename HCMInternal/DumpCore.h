@@ -39,6 +39,12 @@ private:
 		try
 		{
 
+			if (settings->dumpCoreForcesSave->GetValue())
+			{
+				settings->forceCoreSaveEvent->operator()();
+				Sleep(10);
+			}
+
 			// generate a default checkpoint name
 			SYSTEMTIME t;
 			GetSystemTime(&t);

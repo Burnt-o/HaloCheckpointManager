@@ -100,6 +100,13 @@ public:
 			nameof(injectCheckpointLevelCheck)
 		);
 
+	std::shared_ptr<Setting<bool>> injectCheckpointForcesRevert = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCheckpointForcesRevert)
+		);
+
 	std::shared_ptr<Setting<bool>> autonameCheckpoints = std::make_shared<Setting<bool>>
 		(
 			false,
@@ -107,11 +114,32 @@ public:
 			nameof(autonameCheckpoints)
 		);
 
+	std::shared_ptr<Setting<bool>> dumpCheckpointForcesSave = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(dumpCheckpointForcesSave)
+		);
+
 	std::shared_ptr<Setting<bool>> injectCoreLevelCheck = std::make_shared<Setting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCoreLevelCheck)
+		);
+
+	std::shared_ptr<Setting<bool>> injectCoreForcesRevert = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCoreForcesRevert)
+		);
+
+	std::shared_ptr<Setting<bool>> dumpCoreForcesSave = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(dumpCoreForcesSave)
 		);
 
 	std::shared_ptr<Setting<bool>> autonameCoresaves = std::make_shared<Setting<bool>>
@@ -167,6 +195,14 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		injectCheckpointLevelCheck,
+		injectCheckpointForcesRevert,
+		autonameCheckpoints,
+		dumpCheckpointForcesSave,
+		injectCoreLevelCheck,
+		injectCoreForcesRevert,
+		autonameCoresaves,
+		dumpCoreForcesSave,
 		invulnerabilityNPCToggle, 
 		speedhackSetting, 
 		GUIShowingFreesCursor, 

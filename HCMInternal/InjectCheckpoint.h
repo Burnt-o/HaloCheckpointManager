@@ -222,11 +222,16 @@ private:
 			}
 
 
-			// TODO: force revert if setting set
-
 			messagesGUI->addMessage(std::format("Injected checkpoint {}.bin", currentCheckpoint.selectedCheckpointName));
 
 			PLOG_INFO << "succesfully injected checkpoint from path: " << currentCheckpoint.selectedCheckpointFilePath << " to " << std::hex << (uint64_t)checkpointLoc;
+
+			if (settings->injectCheckpointForcesRevert->GetValue())
+			{
+				settings->forceRevertEvent->operator()();
+			}
+
+			
 
 		}
 		catch (HCMRuntimeException ex)

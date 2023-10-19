@@ -47,11 +47,17 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::injectCheckpointLevelCheck,
 			{OptionalCheatEnum::InjectCheckpoint, OptionalCheatEnum::GetCurrentLevelCode}
 	},
+	{GUIElementEnum::injectCheckpointForcesRevert,
+			{OptionalCheatEnum::InjectCheckpoint, OptionalCheatEnum::ForceRevert}
+	},
 	{GUIElementEnum::dumpCheckpointGUI,
 			{OptionalCheatEnum::DumpCheckpoint} 
 	},
 	{GUIElementEnum::dumpCheckpointAutonameGUI,
 			{OptionalCheatEnum::DumpCheckpoint}
+	},
+	{GUIElementEnum::dumpCheckpointForcesSave,
+			{OptionalCheatEnum::DumpCheckpoint, OptionalCheatEnum::ForceCheckpoint}
 	},
 	{GUIElementEnum::injectCoreGUI,
 			{OptionalCheatEnum::InjectCore} 
@@ -59,11 +65,17 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::injectCoreLevelCheck,
 			{OptionalCheatEnum::InjectCore, OptionalCheatEnum::GetCurrentLevelCode}
 	},
+	{GUIElementEnum::injectCoreForcesRevert,
+			{OptionalCheatEnum::InjectCore, OptionalCheatEnum::ForceCoreLoad}
+	},
 	{GUIElementEnum::dumpCoreGUI,
 			{OptionalCheatEnum::DumpCore} 
 	},
 	{GUIElementEnum::dumpCoreAutonameGUI,
 			{OptionalCheatEnum::DumpCore}
+	},
+	{GUIElementEnum::dumpCoreForcesSave,
+			{OptionalCheatEnum::DumpCore, OptionalCheatEnum::ForceCoreSave}
 	},
 	{GUIElementEnum::speedhackGUI,
 			{OptionalCheatEnum::Speedhack} 

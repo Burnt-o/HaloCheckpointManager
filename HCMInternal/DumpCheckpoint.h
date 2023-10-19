@@ -50,6 +50,13 @@ private:
 
 		try
 		{
+
+			if (settings->dumpCheckpointForcesSave->GetValue())
+			{
+				settings->forceCheckpointEvent->operator()();
+				Sleep(10);
+			}
+
 			// generate a default checkpoint name
 			SYSTEMTIME t;
 			GetSystemTime(&t);

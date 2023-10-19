@@ -178,12 +178,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Inject Checkpoint Settings", headerChildElements
 							{
-							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck)
+							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck),
+							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert)
 							}));
 
 					case GUIElementEnum::injectCheckpointLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCheckpointLevelCheck));
+
+					case GUIElementEnum::injectCheckpointForcesRevert:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
 
 				case GUIElementEnum::dumpCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -193,12 +198,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Dump Checkpoint Settings", headerChildElements
 							{
-							createNestedElement(GUIElementEnum::dumpCheckpointAutonameGUI)
+							createNestedElement(GUIElementEnum::dumpCheckpointAutonameGUI),
+							createNestedElement(GUIElementEnum::dumpCheckpointForcesSave)
 							}));
 
 					case GUIElementEnum::dumpCheckpointAutonameGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Autoname checkpoints", settings->autonameCheckpoints));
+
+					case GUIElementEnum::dumpCheckpointForcesSave:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Force checkpoint before dumping", settings->dumpCheckpointForcesSave));
 
 				case GUIElementEnum::injectCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -208,12 +218,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Inject Core Save Settings", headerChildElements
 							{
-							createNestedElement(GUIElementEnum::injectCoreLevelCheck)
+							createNestedElement(GUIElementEnum::injectCoreLevelCheck),
+							createNestedElement(GUIElementEnum::injectCoreForcesRevert)
 							}));
 
 					case GUIElementEnum::injectCoreLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCoreLevelCheck));
+
+					case GUIElementEnum::injectCoreForcesRevert:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
 
 				case GUIElementEnum::dumpCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -223,12 +238,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Dump Core Save Settings", headerChildElements
 							{
-							createNestedElement(GUIElementEnum::dumpCoreAutonameGUI)
+							createNestedElement(GUIElementEnum::dumpCoreAutonameGUI),
+							createNestedElement(GUIElementEnum::dumpCoreForcesSave)
 							}));
 
 					case GUIElementEnum::dumpCoreAutonameGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Autoname core saves", settings->autonameCoresaves));
+
+					case GUIElementEnum::dumpCoreForcesSave:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Force core save before dumping", settings->dumpCoreForcesSave));
 
 			case GUIElementEnum::cheatsHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

@@ -139,6 +139,12 @@ private:
 
 			PLOG_INFO << "Successfully injected coresave from " << currentCheckpoint.selectedCheckpointFilePath << " to " << coreSaveInjectLocation;
 
+			if (settings->injectCoreForcesRevert->GetValue())
+			{
+				settings->forceCoreLoadEvent->operator()();
+			}
+
+
 		}
 		catch (HCMRuntimeException ex)
 		{
