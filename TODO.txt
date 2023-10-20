@@ -78,19 +78,15 @@ maybe:
 
 
 
-Fix null checkpoint data issue
 Fix hotkey serialisation
 Fix setting serialisation
-Add modal popup for rendering GUI element fails instead of printing messages
-	* And a button to bring this up whenever
-* Add cp injection level warning logic & modal popup
 HCMExternal filterSearch thingy
 Add backup cheats system and internal injection toggle to external
-Add mcc supported versions pointer data and check, closing hcm internal if it fails
-Fix unit tests and make em all pass
+add loading the correct level if possible on inject / change level feature in general
+Update pointer data to make unit tests pass
 
 
-* crash in HCMExternal if you dragdrop a save folder to the bottom of a list
+* First call to FreeMCCCursor not working when on mainmenu during GUiFails modal popup
 
 
 Rare sporadic errors/crashes:

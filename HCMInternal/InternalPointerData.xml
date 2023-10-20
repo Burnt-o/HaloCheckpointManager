@@ -945,25 +945,19 @@
 
 	<VersionedEntry Name="checksumIgnoreCode" Type="Vector" Typename="byte">
 		<Version Version="All" Game="Halo3">
-			<Data>0x4D, 0x85, 0xE4</Data>
+			<Data>0x48, 0x39, 0xC9</Data>
 		</Version>
 
-		<Version Version="1.2448.0.0" Game="Halo3ODST">
-			<Data>0x4D, 0x85, 0xFF</Data>
-		</Version>
-		<Version Version="1.2645.0.0" Game="Halo3ODST">
-			<Data>0x4D, 0x85, 0xFF</Data>
-		</Version>
-		<Version Version="1.3272.0.0" Game="Halo3ODST">
-			<Data>0x4D, 0x85, 0xE4</Data>
+		<Version Version="All" Game="Halo3ODST">
+			<Data>0x48, 0x39, 0xC9</Data>
 		</Version>
 
 		<Version Version="All" Game="HaloReach">
-			<Data>0x4D, 0x85, 0xE4</Data>
+			<Data>0x4D, 0x39, 0xC9</Data>
 		</Version>
 
 		<Version Version="All" Game="Halo4">
-			<Data>0x4D, 0x85, 0xED</Data>
+			<Data>0x4D, 0x39, 0xC9</Data>
 		</Version>
 	</VersionedEntry>
 
