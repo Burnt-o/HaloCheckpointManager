@@ -103,13 +103,16 @@ void ModuleMidHook::attach()
 		return;
 	}
 
-	PLOG_VERBOSE << "pOriginalFunction " << std::hex << pOriginalFunction;
+	PLOG_VERBOSE << "pOriginalFunction: " << std::hex << pOriginalFunction;
+	PLOG_VERBOSE << "mHookFunction: " << std::hex << this->mHookFunction;
+	PLOG_VERBOSE << "this->mMidhook: " << this->mMidHook.operator bool();
 	// per https://github.com/cursey/safetyhook/commit/77243791d72bfe49b94349922710c443db1df0fa
-	// mid hooks don't freeze the threads. 
-	// I don't know why they made this change but it can obv cause crashes with hooks that run frequently
+	// mid hooks don't freeze the threads.  
+	// I don't know why they made this change (perhaps there's a good reason)
+	// but to me it appears this would cause crashes with hooks that run frequently.
+	// So we'll freeze the threads manually.
 	auto freeze = safetyhook::ThreadFreezer();
 	this->mMidHook = safetyhook::create_mid((void*)pOriginalFunction, this->mHookFunction);
-	freeze.~ThreadFreezer();
 	PLOG_DEBUG << "mid_hook successfully attached: " << this->getAssociatedModule();
 }
 

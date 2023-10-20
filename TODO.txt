@@ -91,3 +91,14 @@ Fix unit tests and make em all pass
 
 
 * crash in HCMExternal if you dragdrop a save folder to the bottom of a list
+
+
+Rare sporadic errors/crashes:
+* BlockGameInput sometimes crashing when attaching it's midhook (h3 only?)
+* ImGui context error thing (can just hit ignore but why is it happening? modal popping up before imgui init?)
+	* I THINK i've fixed this by adding a half second delay before modal popup begins.
+
+
+Handled unhandled exceptions. Don't cause an issue for me but might for someone else:
+* One of my control->MCC-midhook services is having a small heartattack with null values when calling scopedRequests right at init
+	* I THINK i've fixed this by adding a half second delay before modal popup begins.

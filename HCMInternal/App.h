@@ -131,7 +131,7 @@ public:
             if (!guifail->getFailureMessagesMap().empty())
             {
                 PLOG_DEBUG << "creating showFailedOptionalCheatServices modal dialog ";
-                modalFailureWindowThread = std::thread{([modal = modal]() { modal->showFailedOptionalCheatServices(); })};
+                modalFailureWindowThread = std::thread{ ([modal = modal]() { Sleep(500); modal->showFailedOptionalCheatServices(); }) };
                 modalFailureWindowThread.detach();
             }
 
