@@ -22,9 +22,13 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="comparers">List of comparerers passed from user selection.</param>
         /// <param name="gameIndex">Which game are we sorting? Needed to implement level sorting.</param>
         /// <exception cref="Exception"></exception>
-        public void SortCheckpoints(SaveFolder? SelectedSaveFolder, ObservableCollection<Checkpoint> CheckpointCollection, List<Tuple<ICompareCheckpoints, bool>> comparers, HaloTabEnum gameIndex)
+        public void SortCheckpoints(SaveFolder SelectedSaveFolder, ObservableCollection<Checkpoint> CheckpointCollection, List<Tuple<ICompareCheckpoints, bool>> comparers, HaloTabEnum gameIndex)
         {
-            if (SelectedSaveFolder == null) throw new Exception("Can't sort - no savefolder selected");
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath))
+            {
+                Log.Error("SortCheckpoints: selected save folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+                return;
+            }
 
             List<Checkpoint> UnsortedCheckpoints = new(CheckpointCollection);
             

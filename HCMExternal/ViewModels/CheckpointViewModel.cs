@@ -38,7 +38,7 @@ namespace HCMExternal.ViewModels
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
 
-        public SaveFolder? RootSaveFolder { get; private set; }
+        public SaveFolder RootSaveFolder { get; private set; }
 
         private HaloTabEnum _selectedGame = HaloTabEnum.Halo1;
         public HaloTabEnum SelectedGame
@@ -65,28 +65,21 @@ namespace HCMExternal.ViewModels
 
                 if (value == null)
                 {
-                    Log.Verbose("SelectedCheckpoint set to null! Stacktrace:\n" + Environment.StackTrace);
+                    Log.Debug("Selected checkpoint set to null");
+                   // Log.Verbose("SelectedCheckpoint set to null! Stacktrace:\n" + Environment.StackTrace);
                 }    
 
             }
         }
 
-        private SaveFolder? _selectedSaveFolder = null;
-        public SaveFolder? SelectedSaveFolder
+        private SaveFolder _selectedSaveFolder;
+        public SaveFolder SelectedSaveFolder
         { get { return _selectedSaveFolder; }
             set
             {
                 if (_selectedSaveFolder != value)
                 {
-                    if (value == null)
-                    {
-                        Log.Error("_selectedSaveFolder was null!");
-                    }
-                    else
-                    {
-                        Log.Verbose(string.Format("Setting saveFolderPath to {0}", value.SaveFolderPath));
-                    }
-
+                     Log.Verbose(string.Format("Setting saveFolderPath to {0}", value.SaveFolderPath));
                 }
 
                 _selectedSaveFolder = value;
@@ -266,6 +259,7 @@ namespace HCMExternal.ViewModels
             var oldCP = this.SelectedCheckpoint?.CheckpointName;
 
             this.CheckpointCollection.Clear();
+            Log.Debug("Populating checkpoint list with data from folder: " + this.SelectedSaveFolder.SaveFolderPath);
             ObservableCollection<Checkpoint> newCollection = this.CheckpointServices.PopulateCheckpointList(this.SelectedSaveFolder, this.SelectedGame);
             foreach (Checkpoint c in newCollection)
             {
@@ -295,7 +289,7 @@ namespace HCMExternal.ViewModels
 
 
             this.SaveFolderHierarchy.Clear();
-            ObservableCollection<SaveFolder> newHierarchy = this.CheckpointServices.PopulateSaveFolderTree(out SaveFolder? rootFolder, this.SelectedGame);
+            ObservableCollection<SaveFolder> newHierarchy = this.CheckpointServices.PopulateSaveFolderTree(out SaveFolder rootFolder, this.SelectedGame);
             this.RootSaveFolder = rootFolder;
             foreach (SaveFolder s in newHierarchy)
             {
@@ -380,11 +374,14 @@ namespace HCMExternal.ViewModels
         {
             Trace.WriteLine("FolderChanged. Sender: " + sender + ", currentgame?: " + this.SelectedGame);
             SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
-            Trace.WriteLine("Selected Folder Path: " + saveFolder?.SaveFolderPath);
 
-            if (saveFolder != null)
+            if (saveFolder == null) return; 
+
+            Trace.WriteLine("Selected Folder Path: " + saveFolder.SaveFolderPath);
+
+            if (Directory.Exists(saveFolder.SaveFolderPath))
             {
-                Trace.WriteLine("not null, so changing.");
+                Trace.WriteLine("valid new saveFolder, so changing internal selection and inserting into lastSelectedFolder list.");
                 Properties.Settings.Default.LastSelectedFolder.Insert((int)SelectedGame, saveFolder.SaveFolderPath);
                 this.SelectedSaveFolder = saveFolder;
                 this.RefreshCheckpointList();
@@ -398,6 +395,7 @@ namespace HCMExternal.ViewModels
             }
             else 
             {
+                MessageBox.Show("Error with new selected save folder at path: " + saveFolder.SaveFolderPath);
                 //this.RefreshSaveFolderTree();
             }
 

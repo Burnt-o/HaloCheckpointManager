@@ -16,9 +16,9 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="SelectedSaveFolder">The parent saveFolder within which to create a new saveFolder.</param>
         /// <exception cref="Exception"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public void NewFolder(SaveFolder? SelectedSaveFolder)
+        public void NewFolder(SaveFolder SelectedSaveFolder)
         {
-            if (SelectedSaveFolder == null) throw new Exception("Can't create new folder - no savefolder selected to place it under");
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath)) throw new Exception("Can't create new folder - parent folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
 
 
             // Ask user what they want to name the folder

@@ -13,9 +13,14 @@ std::string getOwnProcessDirectory()
 }
 
 
-SharedMemoryExternal::SharedMemoryExternal(bool CPnullData, bool SFnullData,
+SharedMemoryExternal::SharedMemoryExternal(bool CPnullData,
 	int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,
-	int SFgame, const char* SFname, const char* SFpath)
+	const char* SFnameH1, const char* SFpathH1,
+	const char* SFnameH2, const char* SFpathH2,
+	const char* SFnameH3, const char* SFpathH3,
+	const char* SFnameOD, const char* SFpathOD,
+	const char* SFnameHR, const char* SFpathHR,
+	const char* SFnameH4, const char* SFpathH4)
 {
 	// TODO:: catch exceptions
 	bip::shared_memory_object::remove("hcm_shm");
@@ -41,16 +46,38 @@ SharedMemoryExternal::SharedMemoryExternal(bool CPnullData, bool SFnullData,
 	selectedCheckpointGameVersion->assign(CPgameVersion);
 	selectedCheckpointDifficulty = segment.construct<int>("selectedCheckpointDifficulty")(CPdifficulty);
 
-
+	PLOG_DEBUG << "SharedMemoryExternal::SharedMemoryExternal: SFnameH1: " << SFnameH1;
 
 	// selected folder info
-	selectedFolderNull = segment.construct<bool>("selectedFolderNull")(SFnullData);
-	selectedFolderGame = segment.construct<int>("selectedFolderGame")(SFgame);
-	selectedFolderName = segment.construct<shm_string>("selectedFolderName")(sa);
-	selectedFolderName->assign(SFname);
-	selectedFolderPath = segment.construct<shm_string>("selectedFolderPath")(sa);
-	selectedFolderPath->assign(SFpath);
+	selectedH1FolderName = segment.construct<shm_string>("selectedH1FolderName")(sa);
+	selectedH1FolderName->assign(SFnameH1);
+	selectedH1FolderPath = segment.construct<shm_string>("selectedH1FolderPath")(sa);
+	selectedH1FolderPath->assign(SFpathH1);
 
+	selectedH2FolderName = segment.construct<shm_string>("selectedH2FolderName")(sa);
+	selectedH2FolderName->assign(SFnameH2);
+	selectedH2FolderPath = segment.construct<shm_string>("selectedH2FolderPath")(sa);
+	selectedH2FolderPath->assign(SFpathH2);
+
+	selectedH3FolderName = segment.construct<shm_string>("selectedH3FolderName")(sa);
+	selectedH3FolderName->assign(SFnameH3);
+	selectedH3FolderPath = segment.construct<shm_string>("selectedH3FolderPath")(sa);
+	selectedH3FolderPath->assign(SFpathH3);
+
+	selectedODFolderName = segment.construct<shm_string>("selectedODFolderName")(sa);
+	selectedODFolderName->assign(SFnameOD);
+	selectedODFolderPath = segment.construct<shm_string>("selectedODFolderPath")(sa);
+	selectedODFolderPath->assign(SFpathOD);
+
+	selectedHRFolderName = segment.construct<shm_string>("selectedHRFolderName")(sa);
+	selectedHRFolderName->assign(SFnameHR);
+	selectedHRFolderPath = segment.construct<shm_string>("selectedHRFolderPath")(sa);
+	selectedHRFolderPath->assign(SFpathHR);
+
+	selectedH4FolderName = segment.construct<shm_string>("selectedH4FolderName")(sa);
+	selectedH4FolderName->assign(SFnameH4);
+	selectedH4FolderPath = segment.construct<shm_string>("selectedH4FolderPath")(sa);
+	selectedH4FolderPath->assign(SFpathH4);
 	}
 
 std::unique_ptr<SharedMemoryExternal> g_SharedMemoryExternal;

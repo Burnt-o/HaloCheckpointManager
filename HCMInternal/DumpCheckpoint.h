@@ -50,7 +50,7 @@ private:
 
 		try
 		{
-
+			// Automatically force checkpoint beforehand if user wants that
 			if (settings->dumpCheckpointForcesSave->GetValue())
 			{
 				settings->forceCheckpointEvent->operator()();
@@ -64,7 +64,7 @@ private:
 				"Checkpoint_{:04}{:02}{:02}_{:02}{:02}{:02}",
 				t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
-			// ask the user what they want to call it, if they want that
+			// ask the user what they want to call it, if they want that. Otherwise we use the default checkpoint name
 			if (settings->autonameCheckpoints->GetValue() == false)
 			{
 				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
@@ -77,15 +77,9 @@ private:
 
 
 			int64_t checkpointLength = *mCheckpointLength.get();
-			auto currentSaveFolder = sharedMem->getDumpInfo();
+			auto currentSaveFolder = sharedMem->getDumpInfo(mImplGame);
 			PLOG_DEBUG << "Attempting checkpoint dump for game: " << mImplGame.toString();;
-			if (currentSaveFolder.selectedFolderNull) throw HCMRuntimeException("No savefolder selected, somehow?!");
-			if ((GameState)currentSaveFolder.selectedFolderGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't dump - savefolder from wrong game! Expected: {}, Actual: {}", this->mImplGame.toString(), ((GameState)currentSaveFolder.selectedFolderGame).toString()));
 
-			// TODO: force checkpoint if setting se
-			// get the folder to dump the checkpoint file to
-			// ask the user what they want to call it
-			// TODO (need to implement dialogbox stuff, and make sure we're on a seperate thread)
 			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\" + checkpointName + ".bin";
 			PLOG_DEBUG << "dump path: " << dumpPath;
 

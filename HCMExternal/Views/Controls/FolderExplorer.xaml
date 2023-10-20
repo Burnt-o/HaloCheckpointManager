@@ -92,7 +92,7 @@
 
         </Grid.Resources>
             <Label Grid.Row="0" Height="20" HorizontalAlignment="Center" Margin="0,3,0,0" Padding="0">Folder Explorer:</Label>
-            <TreeView Height="Auto" Grid.Row="1" Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged"   dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.SelectDroppedItems="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+            <TreeView Height="Auto" Grid.Row="1" Background="Transparent" BorderThickness="0" ItemsSource="{Binding SaveFolderHierarchy}" SelectedItemChanged="TreeView_SelectedItemChanged"   dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"  dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.SelectDroppedItems="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" >
 
                 <TreeView.Resources>
 

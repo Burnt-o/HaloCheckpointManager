@@ -88,3 +88,6 @@ HCMExternal filterSearch thingy
 Add backup cheats system and internal injection toggle to external
 Add mcc supported versions pointer data and check, closing hcm internal if it fails
 Fix unit tests and make em all pass
+
+
+* crash in HCMExternal if you dragdrop a save folder to the bottom of a list

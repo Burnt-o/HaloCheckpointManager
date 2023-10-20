@@ -2,6 +2,7 @@
 using System.Text;
 using System.IO;
 using HCMExternal.Models;
+using Serilog;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -15,14 +16,20 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="SelectedCheckpoint">The checkpoint whose version string will be manually entered.</param>
         /// <exception cref="Exception"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public void ReVersionCheckpoint(SaveFolder? SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
+        public void ReVersionCheckpoint(SaveFolder SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
         {
-            if (SelectedSaveFolder == null || SelectedCheckpoint == null) throw new Exception("Can't edit version - no checkpoint selected");
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath))
+            {
+                Log.Error("ReVersionCheckpoint: selected save folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+                return;
+            }
+
+            if (SelectedCheckpoint == null) throw new Exception("Can't edit checkpoint game version - no checkpoint selected");
 
             string oldversion = SelectedCheckpoint.GameVersion != null ? SelectedCheckpoint.GameVersion.ToString() : string.Empty;
 
             // Prompt for input
-            string? userInput = Microsoft.VisualBasic.Interaction.InputBox("Must be 10 chars long, in the style \"1.2645.0.0\"",
+            string? userInput = Microsoft.VisualBasic.Interaction.InputBox("Must be 10 chars long, in the format \"1.2645.0.0\"",
                                                        $"Edit checkpoint version: {SelectedCheckpoint.CheckpointName}",
                                                        $"{oldversion}",
                                                        -1, -1);

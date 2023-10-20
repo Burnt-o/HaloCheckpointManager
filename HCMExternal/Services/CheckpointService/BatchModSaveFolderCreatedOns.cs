@@ -16,17 +16,23 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="listCreatedOns">List (in order) of the new createdOnTimes.</param>
         public void BatchModSaveFolderCreatedOns(List<SaveFolder> listSaveFolders, List<DateTime?> listCreatedOns)
         {
+
             for (int i = 0; i < listSaveFolders.Count; i++)
             {
                 string saveFolderPath = listSaveFolders[i].SaveFolderPath;
                 DirectoryInfo saveFolderInfo = new(saveFolderPath);
-                if (saveFolderInfo.Exists && listCreatedOns[i] != null)
+                if (!saveFolderInfo.Exists)
                 {
-                    saveFolderInfo.CreationTime = listCreatedOns[i].Value;
+                    Log.Error("BatchModSaveFolderCreatedOns failed, dir didn't exist at path: " + saveFolderPath);
+                }
+                else if (listCreatedOns[i] == null)
+                {
+                    Log.Error("BatchModSaveFolderCreatedOns failed, listCreatedOns[i] was null at index " + i);
                 }
                 else
                 {
-                    Log.Error("Something went wrong modifying SaveFolderCreatedOns; path: " + saveFolderPath);
+                    saveFolderInfo.CreationTime = listCreatedOns[i].Value;
+
                 }
             }
         }

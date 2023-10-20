@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using HCMExternal.Models;
 using HCMExternal.Helpers.DictionariesNS;
 using Serilog;
+using System.Windows;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -19,9 +20,8 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="RootFolder">Out parameter: the root folder for this game.</param>
         /// <param name="SelectedGame">Which game is this for?</param>
         /// <returns></returns>
-        public ObservableCollection<SaveFolder> PopulateSaveFolderTree(out SaveFolder? RootFolder, HaloTabEnum SelectedGame)
+        public ObservableCollection<SaveFolder> PopulateSaveFolderTree(out SaveFolder RootFolder, HaloTabEnum SelectedGame)
         {
-            RootFolder = null;
             ObservableCollection<SaveFolder> saveFolderCollection = new();
 
 
@@ -33,8 +33,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
             // Since we force-created the root folders on HCM start, the only way this can happen is if the user deleted the root folder *after* booting HCM.
             if (!Directory.Exists(rootSaveFolderPath))
             {
-                //TODO: need to put up a messagebox yelling at the user not to delete the root folder. Naughty user.
-                Log.Error("Somehow the rootSaveFolder didn't exist");
+                //yell at the user not to delete the root folder. Naughty user.
+                MessageBox.Show("OH GOD you deleted a root save folder at path " + rootSaveFolderPath + "\nDON'T DO THAT DEAR GOD WHY ARHHHH\n(You need to restart HCM, it'll autocreate them on startup\n(don't do that again))");
+                Log.Error("Somehow the rootSaveFolder didn't exist at path " + rootSaveFolderPath);
+                RootFolder = new SaveFolder("ERROR: no root folder", "ERROR: no root folder", saveFolderCollection, "ERROR: no root folder", null);
                 return saveFolderCollection;
             }
 
@@ -67,7 +69,17 @@ namespace HCMExternal.Services.CheckpointServiceNS
 
         }
 
+        public SaveFolder GetRootFolder(HaloTabEnum SelectedGame)
+        {
+            PopulateSaveFolderTree(out SaveFolder rootFolder, SelectedGame);
+            return rootFolder;
+        }
+
 
 
     }
+
+
+   
+
 }

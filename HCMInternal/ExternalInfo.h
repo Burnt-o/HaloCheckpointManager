@@ -15,8 +15,6 @@ struct SelectedCheckpointData {
 };
 
 struct SelectedFolderData {
-	bool selectedFolderNull = true;
-	int selectedFolderGame = 0;
 	std::string selectedFolderName = "";
 	std::string selectedFolderPath = "";
 };
@@ -43,13 +41,11 @@ struct SelectedCheckpointDataExternal // what checkpoint to inject from HCMExter
 
 struct SelectedFolderDataExternal // what saveFolder to dump to
 {
-	bool selectedFolderNull = true;
-	int selectedFolderGame = 0;
 	char selectedFolderName[260];
 	char selectedFolderPath[260];
-	MSGPACK_DEFINE_ARRAY(selectedFolderNull, selectedFolderGame, selectedFolderName, selectedFolderPath);
+	MSGPACK_DEFINE_ARRAY(selectedFolderName, selectedFolderPath);
 
 	operator SelectedFolderData () {
-		return SelectedFolderData{ selectedFolderNull, selectedFolderGame, selectedFolderName, selectedFolderPath };
+		return SelectedFolderData{ selectedFolderName, selectedFolderPath };
 	}
 };

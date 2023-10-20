@@ -27,15 +27,33 @@ public:
 	shm_string* selectedCheckpointGameVersion;
 	int* selectedCheckpointDifficulty;
 
-	bool* selectedFolderNull;
-	int* selectedFolderGame;
-	shm_string* selectedFolderName;
-	shm_string* selectedFolderPath;
+	shm_string* selectedH1FolderName;
+	shm_string* selectedH1FolderPath;
+
+	shm_string* selectedH2FolderName;
+	shm_string* selectedH2FolderPath;
+
+	shm_string* selectedH3FolderName;
+	shm_string* selectedH3FolderPath;
+
+	shm_string* selectedODFolderName;
+	shm_string* selectedODFolderPath;
+
+	shm_string* selectedHRFolderName;
+	shm_string* selectedHRFolderPath;
+
+	shm_string* selectedH4FolderName;
+	shm_string* selectedH4FolderPath;
 
 
-	SharedMemoryExternal(bool CPnullData, bool SFnullData, 
+	SharedMemoryExternal(bool CPnullData, 
 		int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,
-		int SFgame, const char* SFname, const char* SFpath);
+		const char* SFnameH1, const char* SFpathH1,
+		const char* SFnameH2, const char* SFpathH2,
+		const char* SFnameH3, const char* SFpathH3,
+		const char* SFnameOD, const char* SFpathOD,
+		const char* SFnameHR, const char* SFpathHR,
+		const char* SFnameH4, const char* SFpathH4);
 
 
 };

@@ -38,7 +38,7 @@ private:
 		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 		try
 		{
-
+			// Automatically force coresave beforehand if user wants that
 			if (settings->dumpCoreForcesSave->GetValue())
 			{
 				settings->forceCoreSaveEvent->operator()();
@@ -65,15 +65,8 @@ private:
 			
 
 			constexpr int minimumFileLength = 10000;
-			auto currentSaveFolder = sharedMem->getDumpInfo();
+			auto currentSaveFolder = sharedMem->getDumpInfo(mGame);
 			PLOG_DEBUG << "Attempting core dump for game: " << mGame;
-			if (currentSaveFolder.selectedFolderNull) throw HCMRuntimeException("No savefolder selected, somehow?!");
-			if ((GameState)currentSaveFolder.selectedFolderGame != this->mGame) throw HCMRuntimeException(std::format("Can't dump - savefolder from wrong game! Expected: {}, Actual: {}", mGame.toString(), ((GameState)currentSaveFolder.selectedFolderGame).toString()));
-
-			// TODO: force checkpoint if setting se
-			// get the folder to dump the checkpoint file to
-			// ask the user what they want to call it
-			// TODO (need to implement dialogbox stuff, and make sure we're on a seperate thread)
 
 			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\" + coreSaveName + ".bin";
 			PLOG_DEBUG << "dump path: " << dumpPath;

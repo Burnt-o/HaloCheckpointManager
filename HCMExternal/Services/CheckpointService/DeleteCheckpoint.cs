@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using HCMExternal.Models;
+using Serilog;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -12,13 +13,17 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// </summary>
         /// <param name="SelectedSaveFolder">The folder containing the checkpoint to delete.</param>
         /// <param name="SelectedCheckpoint">The checkpoint to delete.</param>
-        public void DeleteCheckpoint(SaveFolder? SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
+        public void DeleteCheckpoint(SaveFolder SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
         {
-            if (SelectedSaveFolder == null || SelectedCheckpoint == null) return;
+            if (SelectedCheckpoint == null) return;
 
             string savePath = SelectedSaveFolder.SaveFolderPath + "//" + SelectedCheckpoint.CheckpointName + ".bin";
 
-            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath) || !File.Exists(savePath)) return;
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath) || !File.Exists(savePath))
+            {
+                Log.Error("Delete checkpoint failed! File didn't exist at path " + savePath);
+                return;
+            }
 
             File.Delete(savePath);
 

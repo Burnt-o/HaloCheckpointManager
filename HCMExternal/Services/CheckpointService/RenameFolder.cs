@@ -16,10 +16,13 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="SelectedSaveFolder">The saveFolder to rename.</param>
         /// <exception cref="Exception"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public void RenameFolder(SaveFolder? SelectedSaveFolder)
+        public void RenameFolder(SaveFolder SelectedSaveFolder)
         {
-            if (SelectedSaveFolder == null) throw new Exception("Can't rename - no savefolder selected");
-
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath))
+            {
+                Log.Error("RenameFolder: selected save folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+                return;
+            }
 
             // Ask user what they want to name the folder
             string? userInput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no fancy characters",

@@ -18,21 +18,16 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="SelectedSaveFolder">The saveFolder containing the checkpoints to parse.</param>
         /// <param name="SelectedGame">Which game are these checkpoints from?</param>
         /// <returns></returns>
-        public ObservableCollection<Checkpoint> PopulateCheckpointList(SaveFolder? SelectedSaveFolder, HaloTabEnum SelectedGame)
+        public ObservableCollection<Checkpoint> PopulateCheckpointList(SaveFolder SelectedSaveFolder, HaloTabEnum SelectedGame)
         {
             ObservableCollection<Checkpoint> checkpointCollection = new();
 
 
-                string? saveFolderPath = SelectedSaveFolder?.SaveFolderPath;
-            if (saveFolderPath == null && SelectedGame >= 0)
-            { 
-                // Set it to root folder
-            saveFolderPath = @"Saves\" + Dictionaries.GameToRootFolderPath[SelectedGame];
-            }
+                string saveFolderPath = SelectedSaveFolder.SaveFolderPath;
                 
                 if (!Directory.Exists(saveFolderPath))
                 {
-                    Log.Error("RefreshCheckpointList: saveFolderPath didn't exist!");
+                    Log.Error("RefreshCheckpointList: saveFolderPath didn't exist at path " + saveFolderPath);
                     return checkpointCollection;
                 }
 
