@@ -140,6 +140,47 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
     return std::any_cast<T>(impl->mAllData.at(key));
 }
 
+
+template <typename T>
+std::shared_ptr<std::vector<T>> PointerManager::getVectorData(std::string dataName, std::optional<GameState> game)
+{
+
+    auto key = DataKey(dataName, game);
+    auto altkey = DataKey(dataName, std::nullopt); // alternate key for non-game specific data
+    // Check data exists
+    if (!impl->mAllData.contains(key))
+    {
+        if (!impl->mAllData.contains(altkey))
+        {
+            PLOG_ERROR << "no valid pointer data for " << dataName;
+            throw HCMInitException(std::format("pointerData was null for {}", dataName));
+        }
+        else // grab altkey data
+        {
+            // Check correct type
+            auto& type = impl->mAllData.at(altkey).type();
+            if (!(typeid(std::shared_ptr<std::vector<T>>) == type))
+            {
+                throw HCMInitException(std::format("Invalid type access for {}\nType was {} but {} was requested", dataName, type.name(), typeid(std::shared_ptr<std::vector<T>>).name()));
+            }
+
+  
+
+            return std::any_cast<std::shared_ptr<std::vector<T>>>(impl->mAllData.at(altkey));
+        }
+
+    }
+
+    // Check correct type
+    auto& type = impl->mAllData.at(key).type();
+    if (!(typeid(std::shared_ptr<std::vector<T>>) == type))
+    {
+        throw HCMInitException(std::format("Invalid type access for {}\nType was {} but {} was requested", dataName, type.name(), typeid(std::shared_ptr<std::vector<T>>).name()));
+    }
+
+    return std::any_cast<std::shared_ptr<std::vector<T>>>(impl->mAllData.at(key));
+}
+
 // explicit template instantiations of PointerManager::getData
 template
 std::shared_ptr<MultilevelPointer> PointerManager::getData(std::string dataName, std::optional<GameState> game);
@@ -157,6 +198,9 @@ template
 std::shared_ptr<MidhookFlagInterpreter> PointerManager::getData(std::string dataName, std::optional<GameState> game);
 template
 std::shared_ptr<DynStructOffsetInfo> PointerManager::getData(std::string dataName, std::optional<GameState> game);
+
+template
+std::shared_ptr<std::vector<byte>> PointerManager::getVectorData(std::string dataName, std::optional<GameState> game);
 
 std::string PointerManager::PointerManagerImpl::readLocalXML()
 {
@@ -597,20 +641,22 @@ void PointerManager::PointerManagerImpl::instantiateMidhookFlagInterpreter(pugi:
 template <typename T>
 void PointerManager::PointerManagerImpl::instantiateVectorInteger(pugi::xml_node versionEntry, DataKey dKey)
 {
-    std::shared_ptr<std::vector<std::any>> out = std::make_shared<std::vector<std::any>>();
+    std::shared_ptr<std::vector<T>> out = std::make_shared<std::vector<T>>();
 
-    std::string tmp;
+
     std::string s = versionEntry.first_child().text().as_string();
     PLOG_INFO << "instantiateVectorNumber: " << s;
     std::stringstream ss(s);
 
-
-    while (std::getline(ss, tmp, ','))
+    PLOG_DEBUG << "instantiateVectorInteger processing string: " << s;
+    for (std::string entry; std::getline( ss, entry, ',');)
     {
-        auto number = stringToInt(tmp);
+        std::erase_if(entry, [](const char& c) { return std::isspace(c); }); // remove whitespace
+        PLOG_DEBUG << "instantiateVectorInteger processing split string: " << entry;
+        auto number = stringToInt(entry);
         out->push_back((T)number);
     }
-
+    PLOG_DEBUG << "instantiateVectorInteger emplacing vector of size: " << out->size();
     
     mAllData.try_emplace(dKey, out);
 
@@ -622,18 +668,18 @@ void PointerManager::PointerManagerImpl::instantiateVectorInteger(pugi::xml_node
 template <typename T>
 void PointerManager::PointerManagerImpl::instantiateVectorFloat(pugi::xml_node versionEntry, DataKey dKey)
 {
-    std::shared_ptr<std::vector<std::any>> out = std::make_shared<std::vector<std::any>>();
+    std::shared_ptr<std::vector<T>> out = std::make_shared<std::vector<T>>();
 
-    std::string tmp;
     std::string s = versionEntry.first_child().text().as_string();
     PLOG_INFO << "instantiateVectorNumber: " << s;
     std::stringstream ss(s);
 
   
-    while (std::getline(ss, tmp, ','))
+    for (std::string entry; std::getline(ss, entry, ',');)
     {
+        std::erase_if(entry, [](const char& c) { return std::isspace(c); }); // remove whitespace
         // string to long double which we dynamic_cast down to T
-        auto number = stold(tmp);
+        auto number = stold(entry);
         try
         {
 
@@ -647,7 +693,7 @@ void PointerManager::PointerManagerImpl::instantiateVectorFloat(pugi::xml_node v
     }
    
    
-
+    PLOG_DEBUG << "instantiateVectorFloat emplacing vector of size: " << out->size();
     mAllData.try_emplace(dKey, out);
 
 
@@ -657,7 +703,7 @@ void PointerManager::PointerManagerImpl::instantiateVectorFloat(pugi::xml_node v
 
 void PointerManager::PointerManagerImpl::instantiateVectorString(pugi::xml_node versionEntry, DataKey dKey)
 {
-    std::shared_ptr<std::vector<std::any>> out = std::make_shared<std::vector<std::any>>();
+    std::shared_ptr<std::vector<std::string>> out = std::make_shared<std::vector<std::string>>();
 
 
     for (pugi::xml_node stringEntry = versionEntry.first_child(); stringEntry; stringEntry = stringEntry.next_sibling())

@@ -10,6 +10,7 @@ ForceRevert,\
 ForceDoubleRevert,\
 ForceCoreSave,\
 ForceCoreLoad,\
+IgnoreCheckpointChecksum,\
 InjectCheckpoint,\
 DumpCheckpoint,\
 InjectCore,\

@@ -388,6 +388,9 @@
     <ClInclude Include="DifficultyEnum.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="IgnoreCheckpointChecksum.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

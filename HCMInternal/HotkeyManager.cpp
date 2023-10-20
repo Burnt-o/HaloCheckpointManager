@@ -146,37 +146,48 @@ void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::
 	PLOG_VERBOSE << "Deserialising hotkey: " << magic_enum::enum_name(hotkey->mHotkeyEnum);
 
 	std::vector<std::vector<ImGuiKey>> newBindings;
-	for (pugi::xml_node bindingSetNode = input.first_child(); bindingSetNode; bindingSetNode = input.next_sibling())
+	if (input.first_child())
 	{
-		std::vector<ImGuiKey> thisBindingSet;
-
-		// TODO: fix infinite loop if this gets fed an empty binding set "<BindingSet/>"
-		for (pugi::xml_node keyNode = bindingSetNode.first_child(); keyNode; keyNode = bindingSetNode.next_sibling()) 
+		for (pugi::xml_node bindingSetNode = input.first_child(); bindingSetNode; bindingSetNode = bindingSetNode.next_sibling())
 		{
-			// convert text to int (ImGuiKey)
-				int key = keyNode.text().as_int(-1);
-				if (key == -1)
+
+			std::vector<ImGuiKey> thisBindingSet;
+
+			if (bindingSetNode.first_child())
+			{
+				for (pugi::xml_node keyNode = bindingSetNode.first_child(); keyNode; keyNode = keyNode.next_sibling())
 				{
-					PLOG_ERROR << "could not convert hotkey text: " << keyNode.text().as_string() << " to an integer. E";
+					// convert text to int (ImGuiKey)
+					int key = keyNode.text().as_int(-1);
+					if (key == -1)
+					{
+						PLOG_ERROR << "could not convert hotkey text: " << keyNode.text().as_string() << " to an integer. E";
+					}
+					else
+					{
+						// does GetKeyName throw if fed a bad int?
+						PLOG_VERBOSE << "adding key " << ImGui::GetKeyName((ImGuiKey)key) << " to binding set";
+						thisBindingSet.push_back((ImGuiKey)key);
+					}
+
+
+
 				}
-				else
-				{
-					// does GetKeyName throw if fed a bad int?
-					PLOG_VERBOSE << "adding key " << ImGui::GetKeyName((ImGuiKey)key) << " to binding set";
-					thisBindingSet.push_back((ImGuiKey)key);
-				}
+			}
 
 
-
+			if (thisBindingSet.empty())
+			{
+				PLOG_VERBOSE << "empty deserialised binding set";
+				continue;
+			}
+			PLOG_VERBOSE << "adding binding set with " << thisBindingSet.size() << " keys to mBindings";
+			newBindings.push_back(thisBindingSet);
 		}
-		if (thisBindingSet.empty())
-		{
-			PLOG_VERBOSE << "empty deserialised binding set";
-			continue;
-		}
-		PLOG_VERBOSE << "adding binding set with " << thisBindingSet.size() << " keys to mBindings";
-		newBindings.push_back(thisBindingSet);
 	}
+	
+
+
 	if (newBindings.empty())
 	{
 		PLOG_VERBOSE << "empty newBindings";

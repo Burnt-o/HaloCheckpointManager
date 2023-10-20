@@ -93,6 +93,13 @@ public:
 			nameof(pauseAlsoFreesCursor)
 		);
 
+	std::shared_ptr<Setting<bool>> injectionIgnoresChecksum = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectionIgnoresChecksum)
+		);
+
 	std::shared_ptr<Setting<bool>> injectCheckpointForcesRevert = std::make_shared<Setting<bool>>
 		(
 			true,
@@ -223,6 +230,7 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		injectionIgnoresChecksum,
 		injectCheckpointForcesRevert,
 		injectCheckpointLevelCheck,
 		injectCheckpointVersionCheck,

@@ -181,12 +181,13 @@ private:
 							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert),
 							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck),
 							createNestedElement(GUIElementEnum::injectCheckpointVersionCheck),
-							createNestedElement(GUIElementEnum::injectCheckpointDifficultyCheck)
+							createNestedElement(GUIElementEnum::injectCheckpointDifficultyCheck),
+							createNestedElement(GUIElementEnum::injectCheckpointIgnoresChecksum)
 							}));
 
-				case GUIElementEnum::injectCheckpointForcesRevert:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
+					case GUIElementEnum::injectCheckpointForcesRevert:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
 
 					case GUIElementEnum::injectCheckpointLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
@@ -199,6 +200,10 @@ private:
 					case GUIElementEnum::injectCheckpointDifficultyCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCheckpointDifficultyCheck));
+
+					case GUIElementEnum::injectCheckpointIgnoresChecksum:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Ignore checkpoint checksum on revert", settings->injectionIgnoresChecksum));
 
 				case GUIElementEnum::dumpCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -231,12 +236,12 @@ private:
 							createNestedElement(GUIElementEnum::injectCoreForcesRevert),
 							createNestedElement(GUIElementEnum::injectCoreLevelCheck),
 							createNestedElement(GUIElementEnum::injectCoreVersionCheck),
-							createNestedElement(GUIElementEnum::injectCoreDifficultyCheck)
+							createNestedElement(GUIElementEnum::injectCoreDifficultyCheck),
 							}));
 
-				case GUIElementEnum::injectCoreForcesRevert:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
+					case GUIElementEnum::injectCoreForcesRevert:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
 
 					case GUIElementEnum::injectCoreLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
@@ -249,7 +254,6 @@ private:
 					case GUIElementEnum::injectCoreDifficultyCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCoreDifficultyCheck));
-
 
 
 				case GUIElementEnum::dumpCoreGUI:

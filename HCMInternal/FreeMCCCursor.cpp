@@ -27,7 +27,7 @@ public:
 
 		auto shouldCursorBeFreeFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(shouldCursorBeFreeFunction));
 		shouldCursorBeFreeFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(shouldCursorBeFreeFunctionFlagSetter));
-		shouldCursorBeFreeHook = ModuleMidHook::make(L"", shouldCursorBeFreeFunction, shouldCursorBeFreeHookFunction, false);
+		shouldCursorBeFreeHook = ModuleMidHook::make(L"main", shouldCursorBeFreeFunction, shouldCursorBeFreeHookFunction, false);
 
 		instance = this;
 	}

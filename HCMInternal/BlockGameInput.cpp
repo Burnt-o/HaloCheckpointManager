@@ -27,7 +27,7 @@ public:
 
 		auto blockGameInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameInputFunction));
 		blockGameInputFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(blockGameInputFunctionFlagSetter));
-		blockGameInputHook = ModuleMidHook::make(L"", blockGameInputFunction, blockGameInputHookFunction, false);
+		blockGameInputHook = ModuleMidHook::make(L"main", blockGameInputFunction, blockGameInputHookFunction, false);
 
 		instance = this;
 	}

@@ -56,6 +56,7 @@
 		((injectCheckpointLevelCheck, (ALL_SUPPORTED_GAMES)))\
 		((injectCheckpointVersionCheck, (ALL_SUPPORTED_GAMES)))\
 		((injectCheckpointDifficultyCheck, (ALL_SUPPORTED_GAMES)))\
+		((injectCheckpointIgnoresChecksum, (Halo3, Halo3ODST, HaloReach, Halo4)))\
 	((dumpCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((dumpCheckpointSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 		((dumpCheckpointAutonameGUI, (ALL_SUPPORTED_GAMES)))\

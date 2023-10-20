@@ -863,6 +863,111 @@
 		</Version>
 	</VersionedEntry>
 
+	<!-- #region ignoreCheckpointChecksum-->
+	<VersionedEntry Name="checksumCheckFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xC25EF</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xACB53</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xA4827</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1CFF3</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xAFD43</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xB18F7</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x22A57</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x22C27</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x204B3</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x54E9B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x54F7B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x5378B</Offset>
+			</Offsets>
+		</Version>
+
+	</VersionedEntry>
+
+	<VersionedEntry Name="checksumIgnoreCode" Type="Vector" Typename="byte">
+		<Version Version="All" Game="Halo3">
+			<Data>0x4D, 0x85, 0xE4</Data>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Data>0x4D, 0x85, 0xFF</Data>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Data>0x4D, 0x85, 0xFF</Data>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Data>0x4D, 0x85, 0xE4</Data>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<Data>0x4D, 0x85, 0xE4</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<Data>0x4D, 0x85, 0xED</Data>
+		</Version>
+	</VersionedEntry>
+
+	<!-- #endregion ignoreCheckpointChecksum-->
 
 
 	<!-- #region checkpointLength-->

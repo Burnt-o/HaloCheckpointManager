@@ -26,4 +26,7 @@ public:
 	template <typename T>
 	T getData(std::string dataName, std::optional<GameState> game = std::nullopt);
 
+	template <typename T>
+	std::shared_ptr<std::vector<T>> getVectorData(std::string dataName, std::optional<GameState> game = std::nullopt);
+
 };

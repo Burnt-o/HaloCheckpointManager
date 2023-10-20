@@ -24,7 +24,7 @@
 #include "AIFreeze.h"
 #include "ConsoleCommand.h"
 #include "GetCurrentDifficulty.h"
-
+#include "IgnoreCheckpointChecksum.h"
 
 
 #include "DIContainer.h"

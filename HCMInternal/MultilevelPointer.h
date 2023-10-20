@@ -113,9 +113,9 @@ public:
 		uintptr_t address;
 		if (!this->resolve(&address)) return false;
 
-		if (IsBadWritePtr((void*)address, sizeof(T)))
+		if (IsBadReadPtr((void*)address, sizeof(T)))
 		{
-			*SetLastErrorByRef() << std::format("Bad write address at 0x{:X}, size: 0x{:X}", address, sizeof(T)) << std::endl;
+			*SetLastErrorByRef() << std::format("Bad read address at 0x{:X}, size: 0x{:X}", address, sizeof(T)) << std::endl;
 			return false;
 		}
 
@@ -125,7 +125,6 @@ public:
 		}
 		else
 		{
-			patch_memory((void*)address, dataIn, sizeof(T));
 			memcpy((void*)address, dataIn, sizeof(T));
 		}
 		return true;
@@ -144,9 +143,10 @@ public:
 		uintptr_t address;
 		if (!this->resolve(&address)) return false;
 
-		if (IsBadWritePtr((void*)address, arraySize))
+
+		if (IsBadReadPtr((void*)address, arraySize))
 		{
-			*SetLastErrorByRef() << std::format("Bad write address at 0x{:X}, size: 0x{:X}", address, arraySize) << std::endl;
+			*SetLastErrorByRef() << std::format("Bad read address at 0x{:X}, size: 0x{:X}", address, arraySize) << std::endl;
 			return false;
 		}
 

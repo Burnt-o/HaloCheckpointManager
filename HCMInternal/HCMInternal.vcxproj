@@ -244,6 +244,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HotkeyEventsLambdas.h" />
     <ClInclude Include="HotkeyRenderer.h" />
     <ClInclude Include="HotkeyRendererImpl.h" />
+    <ClInclude Include="IgnoreCheckpointChecksum.h" />
     <ClInclude Include="IMakeOrGetCheat.h" />
     <ClInclude Include="IMCCStateHook.h" />
     <ClInclude Include="IMessagesGUI.h" />

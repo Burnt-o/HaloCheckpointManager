@@ -146,12 +146,12 @@ void ModulePatch::attach()
 	if (mOriginalBytes.empty())
 	{
 		mOriginalBytes.resize(mPatchedBytes.size());
-		logErrorReturn(mOriginalFunction->readArrayData(mOriginalBytes.data(), mPatchedBytes.size()) == false, "Could not resolve original function");
+		logErrorReturn(mOriginalFunction->readArrayData(mOriginalBytes.data(), mPatchedBytes.size()) == false, std::format("Could not resolve original function: {}", MultilevelPointer::GetLastError()));
 	}
 
 	std::vector<byte> currentBytes;
 	currentBytes.resize(mPatchedBytes.size());
-	logErrorReturn(mOriginalFunction->readArrayData(currentBytes.data(), mPatchedBytes.size()) == false, "Could not resolve original function");
+	logErrorReturn(mOriginalFunction->readArrayData(currentBytes.data(), mPatchedBytes.size()) == false, std::format("Could not resolve original function: {}", MultilevelPointer::GetLastError()));
 
 	logErrorReturn(currentBytes != mOriginalBytes, "Current bytes did not match original bytes");
 
@@ -160,7 +160,7 @@ void ModulePatch::attach()
 	PLOG_DEBUG << "mOriginalFunction loc: " << std::hex << (uint64_t)addy;
 		PLOG_DEBUG << "mPatchedBytes size: " << mPatchedBytes.size();
 
-	logErrorReturn(mOriginalFunction->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false, "Failed to patch new bytes");
+	logErrorReturn(mOriginalFunction->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false, std::format("Failed to patch new bytes: {}", MultilevelPointer::GetLastError()));
 }
 
 void ModulePatch::detach()

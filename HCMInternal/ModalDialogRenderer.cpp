@@ -42,7 +42,7 @@ public:
 	{
 		if (needToBeginDialog)
 		{
-			PLOG_DEBUG << "opening popup " << mDialogTitle;
+			PLOG_DEBUG << "opening modal popup: \"" << mDialogTitle << "\"";
 			ImGui::OpenPopup(mDialogTitle.c_str());
 			needToBeginDialog = false;
 		}
@@ -84,7 +84,7 @@ public:
 	{
 		if (needToBeginDialog)
 		{
-			PLOG_DEBUG << "opening popup " << mDialogTitle;
+			PLOG_DEBUG << "opening modal popup: \"" << mDialogTitle << "\"";
 			ImGui::OpenPopup(mDialogTitle.c_str());
 			needToBeginDialog = false;
 		}
@@ -148,7 +148,7 @@ public:
 	{
 		if (needToBeginDialog)
 		{
-			PLOG_DEBUG << "opening popup " << mDialogTitle;
+			PLOG_DEBUG << "opening modal popup: \"" << mDialogTitle << "\"";
 			ImGui::OpenPopup(mDialogTitle.c_str());
 			needToBeginDialog = false;
 		}

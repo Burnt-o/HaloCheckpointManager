@@ -21,10 +21,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 			{OptionalCheatEnum::TogglePause}
 	},
 	{GUIElementEnum::pauseAlsoFreesCursorGUI,
-			{OptionalCheatEnum::ToggleFreeCursor}
+			{OptionalCheatEnum::TogglePause, OptionalCheatEnum::ToggleFreeCursor}
 	},
 	{GUIElementEnum::pauseAlsoBlocksInputGUI,
-			{OptionalCheatEnum::ToggleBlockInput}
+			{OptionalCheatEnum::TogglePause, OptionalCheatEnum::ToggleBlockInput}
 	},
 	{GUIElementEnum::forceCheckpointGUI, 
 			{OptionalCheatEnum::ForceCheckpoint} 
@@ -41,6 +41,7 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::forceCoreLoadGUI,
 			{OptionalCheatEnum::ForceCoreLoad} 
 	},
+
 	{GUIElementEnum::injectCheckpointGUI,
 			{OptionalCheatEnum::InjectCheckpoint} 
 	},
@@ -55,6 +56,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	},
 	{GUIElementEnum::injectCheckpointDifficultyCheck,
 			{OptionalCheatEnum::InjectCheckpoint, OptionalCheatEnum::GetCurrentDifficulty}
+	},
+	{GUIElementEnum::injectCheckpointIgnoresChecksum,
+			{OptionalCheatEnum::InjectCheckpoint, OptionalCheatEnum::ForceRevert, OptionalCheatEnum::IgnoreCheckpointChecksum}
 	},
 	{GUIElementEnum::dumpCheckpointGUI,
 			{OptionalCheatEnum::DumpCheckpoint} 

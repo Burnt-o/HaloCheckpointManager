@@ -29,7 +29,7 @@ void throwOnDuplicateName(pugi::xml_document& doc)
 				}
 				else
 				{
-					throw HCMSerialisationException(std::format("Non-unique acronym \"{}\"! Burnt made an oopsie", child.name()));
+					throw HCMSerialisationException(std::format("Non-unique setting name \"{}\"! Burnt made an oopsie", child.name()));
 				}
 			}
 		}
@@ -48,7 +48,7 @@ void SettingsSerialiser::serialise(std::vector<std::shared_ptr<SerialisableSetti
 	{
 		pugi::xml_document doc;
 		// options
-		auto optionArray = doc.append_child(acronymOf(Setting));
+		auto optionArray = doc.append_child(nameof(Setting));
 
 		for (auto& option : allSerialisableOptions)
 		{
@@ -82,12 +82,12 @@ void SettingsSerialiser::deserialise(std::vector<std::shared_ptr<SerialisableSet
 	{
 		try
 		{
-			auto optionArray = doc.child(acronymOf(Setting));
+			auto optionArray = doc.child(nameof(Setting));
 			if (optionArray.type() == pugi::node_null) throw HCMSerialisationException("Could not find OptionArray node");
 			for (auto& option : allSerialisableOptions)
 			{
 				PLOG_VERBOSE << "Deserialising setting: " << option->getOptionName();
-				auto optionXML = optionArray.child(getShortName(option->getOptionName()).c_str());
+				auto optionXML = optionArray.child(option->getOptionName().c_str());
 				if (optionXML.type() == pugi::node_null) throw HCMSerialisationException(std::format("Setting deserialisation failed: Could not find Option node {}", option->getOptionName()));
 				option->deserialise(optionXML);
 			}
