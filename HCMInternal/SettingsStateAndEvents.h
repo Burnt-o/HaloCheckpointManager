@@ -45,7 +45,7 @@ public:
 	// settings
 	std::shared_ptr<Setting<bool>> GUIWindowOpen = std::make_shared<Setting<bool>>
 		(
-			true,
+			false,
 			[](bool in) { return true; },
 			nameof(GUIWindowOpen)
 		);
@@ -114,6 +114,12 @@ public:
 			nameof(injectCheckpointVersionCheck)
 		);
 
+	std::shared_ptr<Setting<bool>> injectCheckpointDifficultyCheck = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCheckpointDifficultyCheck)
+		);
 
 	std::shared_ptr<Setting<bool>> autonameCheckpoints = std::make_shared<Setting<bool>>
 		(
@@ -148,6 +154,13 @@ public:
 			true,
 			[](bool in) { return true; },
 			nameof(injectCoreVersionCheck)
+		);
+
+	std::shared_ptr<Setting<bool>> injectCoreDifficultyCheck = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(injectCoreDifficultyCheck)
 		);
 
 	std::shared_ptr<Setting<bool>> dumpCoreForcesSave = std::make_shared<Setting<bool>>
@@ -213,11 +226,13 @@ public:
 		injectCheckpointForcesRevert,
 		injectCheckpointLevelCheck,
 		injectCheckpointVersionCheck,
+			injectCheckpointDifficultyCheck,
 		autonameCheckpoints,
 		dumpCheckpointForcesSave,
 			injectCoreForcesRevert,
 		injectCoreLevelCheck,
 		injectCoreVersionCheck,
+			injectCoreDifficultyCheck,
 		autonameCoresaves,
 		dumpCoreForcesSave,
 		invulnerabilityNPCToggle, 

@@ -812,6 +812,17 @@
 		</Version>
 	</VersionedEntry>
 	<!--#endregion currentLevelCode-->
+	
+	<!--#region currentDifficulty-->
+	<VersionedEntry Name="currentDifficulty" Type="MultilevelPointer::ExeOffset">
+	<Version Version="1.3272.0.0" ProcessType="Steam">
+		<Offsets>
+			<Offset>0x03FFE4D8</Offset>
+			<Offset>0x9C</Offset>
+		</Offsets>
+	</Version>
+	</VersionedEntry>
+	<!--#endregion currentDifficulty-->
 
 	<VersionedEntry Name="injectRequirements" Type="injectRequirements">
 		<Version Version="All" Game="Halo1">

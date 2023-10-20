@@ -190,7 +190,7 @@ namespace HCMExternal.Services.InterprocServiceNS
                     if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null)
                         updateSelectedCheckpoint(true);
                     else
-                        updateSelectedCheckpoint(false, (int)CheckpointViewModel.SelectedGame, cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "");
+                        updateSelectedCheckpoint(false, (int)CheckpointViewModel.SelectedGame, cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "", cp.Difficulty ?? 0);
                 }
                 else if (e.PropertyName == nameof(CheckpointViewModel.SelectedSaveFolder))
                 {

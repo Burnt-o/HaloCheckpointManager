@@ -55,6 +55,7 @@
 		((injectCheckpointForcesRevert, (ALL_SUPPORTED_GAMES)))\
 		((injectCheckpointLevelCheck, (ALL_SUPPORTED_GAMES)))\
 		((injectCheckpointVersionCheck, (ALL_SUPPORTED_GAMES)))\
+		((injectCheckpointDifficultyCheck, (ALL_SUPPORTED_GAMES)))\
 	((dumpCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((dumpCheckpointSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 		((dumpCheckpointAutonameGUI, (ALL_SUPPORTED_GAMES)))\
@@ -64,6 +65,7 @@
 		((injectCoreForcesRevert, (Halo1)))\
 		((injectCoreLevelCheck, (Halo1)))\
 		((injectCoreVersionCheck, (Halo1)))\
+		((injectCoreDifficultyCheck, (Halo1)))\
 	((dumpCoreSettingsSubheading, (Halo1)))\
 		((dumpCoreAutonameGUI, (Halo1)))\
 		((dumpCoreForcesSave, (Halo1)))\

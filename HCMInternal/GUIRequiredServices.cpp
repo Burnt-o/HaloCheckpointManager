@@ -53,6 +53,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::injectCheckpointVersionCheck,
 			{OptionalCheatEnum::InjectCheckpoint}
 	},
+	{GUIElementEnum::injectCheckpointDifficultyCheck,
+			{OptionalCheatEnum::InjectCheckpoint, OptionalCheatEnum::GetCurrentDifficulty}
+	},
 	{GUIElementEnum::dumpCheckpointGUI,
 			{OptionalCheatEnum::DumpCheckpoint} 
 	},
@@ -73,6 +76,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	},
 	{GUIElementEnum::injectCoreVersionCheck,
 			{OptionalCheatEnum::InjectCore}
+	},
+	{GUIElementEnum::injectCoreDifficultyCheck,
+			{OptionalCheatEnum::InjectCore, OptionalCheatEnum::GetCurrentDifficulty}
 	},
 	{GUIElementEnum::dumpCoreGUI,
 			{OptionalCheatEnum::DumpCore} 

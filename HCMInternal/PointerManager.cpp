@@ -107,11 +107,27 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
 {
 
     auto key = DataKey(dataName, game);
+    auto altkey = DataKey(dataName, std::nullopt); // alternate key for non-game specific data
     // Check data exists
-    if (!impl->mAllData.contains(key))
+    if (!impl->mAllData.contains(key) )
     {
-        PLOG_ERROR << "no valid pointer data for " << dataName;
-        throw HCMInitException(std::format("pointerData was null for {}", dataName));
+        if (!impl->mAllData.contains(altkey))
+        {
+            PLOG_ERROR << "no valid pointer data for " << dataName;
+            throw HCMInitException(std::format("pointerData was null for {}", dataName));
+        }
+        else // grab altkey data
+        {
+            // Check correct type
+            auto& type = impl->mAllData.at(altkey).type();
+            if (!(typeid(T) == type))
+            {
+                throw HCMInitException(std::format("Invalid type access for {}\nType was {} but {} was requested", dataName, type.name(), typeid(T).name()));
+            }
+
+            return std::any_cast<T>(impl->mAllData.at(altkey));
+        }
+
     }
 
     // Check correct type
@@ -121,7 +137,6 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
         throw HCMInitException(std::format("Invalid type access for {}\nType was {} but {} was requested", dataName, type.name(), typeid(T).name()));
     }
     
-    //    return std::any_cast<T>(instance->impl->mAllData.at(key));
     return std::any_cast<T>(impl->mAllData.at(key));
 }
 

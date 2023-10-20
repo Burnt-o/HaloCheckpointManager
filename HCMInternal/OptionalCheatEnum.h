@@ -16,6 +16,7 @@ InjectCore,\
 DumpCore,\
 Speedhack,\
 Invulnerability,\
+GetCurrentDifficulty,\
 GetPlayerDatum,\
 GetObjectAddress,\
 GetCurrentLevelCode,\

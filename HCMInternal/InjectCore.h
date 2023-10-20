@@ -13,7 +13,7 @@
 #include "GetCurrentLevelCode.h"
 #include "IModalDialogRenderer.h"
 #include "IMakeOrGetCheat.h"
-
+#include "GetCurrentDifficulty.h"
 
 
 class InjectCore : public IOptionalCheat
@@ -34,6 +34,7 @@ private:
 	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modal;
 	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
 	std::optional<std::shared_ptr<GetCurrentLevelCode>> levelCode;
+	std::optional<std::shared_ptr<GetCurrentDifficulty>> difficulty;
 
 
 	void onInject()
@@ -55,25 +56,6 @@ private:
 			PLOG_DEBUG << "injectPath: " << currentCheckpoint.selectedCheckpointFilePath;
 
 			//TODO: load correct level if level not aligned
-			//TODO: add difficulty check (if user wants them)
-
-			// check if user wants us to warn them on injecting to wrong game version
-			if (settings->injectCoreVersionCheck->GetValue())
-			{
-				// check if wrong game version
-				if (getMCCVer->getMCCVersionAsString() != currentCheckpoint.selectedCheckpointGameVersion && currentCheckpoint.selectedCheckpointGameVersion.size() == 10)
-				{
-					// no match! warn the user. This is a blocking call until they choose an option.
-					auto continueWithInject = modal->showInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
-						"Warning! The core save you are injecting appears to be from a different version of MCC than the one you are currently playing\n{}\nCheckpoint MCC ver: {}\nCurrent MCC ver: {}",
-						"Core saves from different versions sometimes are, and sometimes aren't, compatible with eachother. Continue anyway?",
-						currentCheckpoint.selectedCheckpointGameVersion,
-						getMCCVer->getMCCVersionAsString()
-					));
-
-					if (!continueWithInject) return;
-				}
-			}
 
 			// check if user wants us to warn them on injecting to wrong level (and if we can do the check)
 			if (settings->injectCoreLevelCheck->GetValue() && levelCode.has_value())
@@ -99,6 +81,42 @@ private:
 					PLOG_ERROR << "out_of_range exception occured testing coresave levelCode strings: " << std::endl
 						<< "currentCheckpoint.selectedCheckpointLevelCode.size(): " << currentCheckpoint.selectedCheckpointLevelCode.size() << std::endl
 						<< "levelCode.value()->getCurrentLevelCode().size(): " << levelCode.value()->getCurrentLevelCode().size();
+				}
+			}
+
+			// check if user wants us to warn them on injecting to wrong game version
+			if (settings->injectCoreVersionCheck->GetValue())
+			{
+				// check if wrong game version
+				if (getMCCVer->getMCCVersionAsString() != currentCheckpoint.selectedCheckpointGameVersion && currentCheckpoint.selectedCheckpointGameVersion.size() == 10)
+				{
+					// no match! warn the user. This is a blocking call until they choose an option.
+					auto continueWithInject = modal->showInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
+						"Warning! The core save you are injecting appears to be from a different version of MCC than the one you are currently playing\n{}\nCheckpoint MCC ver: {}\nCurrent MCC ver: {}",
+						"Core saves from different versions sometimes are, and sometimes aren't, compatible with eachother. Continue anyway?",
+						currentCheckpoint.selectedCheckpointGameVersion,
+						getMCCVer->getMCCVersionAsString()
+					));
+
+					if (!continueWithInject) return;
+				}
+			}
+
+			// check if user wants us to warn them on injecting to wrong difficulty
+			if (settings->injectCheckpointDifficultyCheck->GetValue() && difficulty.has_value() && magic_enum::enum_contains<DifficultyEnum>(currentCheckpoint.selectedCheckpointDifficulty))
+			{
+				// check if wrong game version
+				if (difficulty.value()->getCurrentDifficulty() != (DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty)
+				{
+					// no match! warn the user. This is a blocking call until they choose an option.
+					auto continueWithInject = modal->showInjectionWarningDialog("Injection: mismatched difficulty warning!", std::format(
+						"Warning! The core save you are injecting appears to have been played on a different difficulty than the one you are currently playing\n{}\nCheckpoint Difficulty: {}\nCurrent Difficulty: {}",
+						"Injecting a core save from a different difficulty can sometimes crash the game, and always messes up your pause menu interface. \nContinue anyway?",
+						magic_enum::enum_name((DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty),
+						magic_enum::enum_name(difficulty.value()->getCurrentDifficulty())
+					));
+
+					if (!continueWithInject) return;
 				}
 			}
 
@@ -191,7 +209,16 @@ public:
 		}
 		catch (HCMInitException ex)
 		{
-			PLOG_DEBUG << "Inject core save couldn't acquire GetCurrentLevelCode service: " << ex.what();
+			PLOG_ERROR << "Inject core save couldn't acquire GetCurrentLevelCode service: " << ex.what();
+		}
+
+		try
+		{
+			difficulty = std::dynamic_pointer_cast<GetCurrentDifficulty>(dicon.Resolve<IMakeOrGetCheat>()->getOrMakeCheat({ game, OptionalCheatEnum::GetCurrentDifficulty }, dicon));
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Inject core save couldn't acquire GetCurrentDifficulty service: " << ex.what();
 		}
 
 	}

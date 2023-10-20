@@ -180,7 +180,8 @@ private:
 							{
 							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert),
 							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck),
-							createNestedElement(GUIElementEnum::injectCheckpointVersionCheck)
+							createNestedElement(GUIElementEnum::injectCheckpointVersionCheck),
+							createNestedElement(GUIElementEnum::injectCheckpointDifficultyCheck)
 							}));
 
 				case GUIElementEnum::injectCheckpointForcesRevert:
@@ -194,6 +195,10 @@ private:
 					case GUIElementEnum::injectCheckpointVersionCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong game version", settings->injectCheckpointVersionCheck));
+
+					case GUIElementEnum::injectCheckpointDifficultyCheck:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCheckpointDifficultyCheck));
 
 				case GUIElementEnum::dumpCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
@@ -225,7 +230,8 @@ private:
 							{
 							createNestedElement(GUIElementEnum::injectCoreForcesRevert),
 							createNestedElement(GUIElementEnum::injectCoreLevelCheck),
-							createNestedElement(GUIElementEnum::injectCoreVersionCheck)
+							createNestedElement(GUIElementEnum::injectCoreVersionCheck),
+							createNestedElement(GUIElementEnum::injectCoreDifficultyCheck)
 							}));
 
 				case GUIElementEnum::injectCoreForcesRevert:
@@ -239,6 +245,10 @@ private:
 					case GUIElementEnum::injectCoreVersionCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, std::nullopt, "Warn on injecting to wrong game version", settings->injectCoreVersionCheck));
+
+					case GUIElementEnum::injectCoreDifficultyCheck:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCoreDifficultyCheck));
 
 
 

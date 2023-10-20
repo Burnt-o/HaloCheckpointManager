@@ -23,6 +23,7 @@
 #include "GetObjectAddress.h"
 #include "AIFreeze.h"
 #include "ConsoleCommand.h"
+#include "GetCurrentDifficulty.h"
 
 
 
@@ -90,7 +91,6 @@ public:
 	// Very likely to throw HCMInitExceptions so be ready to catch them.
 	// called in OptionalCheatManagerImpl constructors for loop, AND thru dicon by cheats that depend on other cheats.
 	std::shared_ptr< IOptionalCheat> getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon); 
-
 
 };
 

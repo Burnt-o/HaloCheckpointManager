@@ -382,6 +382,12 @@
     <ClInclude Include="IModalDialogRenderer.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="GetCurrentDifficulty.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="DifficultyEnum.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -508,6 +514,9 @@
       <Filter>Services\Control</Filter>
     </ClCompile>
     <ClCompile Include="GetCurrentLevelCode.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCurrentDifficulty.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
