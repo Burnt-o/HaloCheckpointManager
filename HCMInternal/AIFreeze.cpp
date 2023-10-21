@@ -8,9 +8,9 @@ class AIFreezeImpl : public AIFreezeImplUntemplated {
 	ScopedCallback <ToggleEvent> mAIFreezeCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	static inline std::shared_ptr<ModuleMidHook> aiFreezeHook;
@@ -32,9 +32,11 @@ class AIFreezeImpl : public AIFreezeImplUntemplated {
 	{
 		aiFreezeHook->setWantsToBeAttached(newValue);
 		PLOG_DEBUG << "onToggleChange: newval: " << newValue;
-		if (mccStateHook->isGameCurrentlyPlaying(mGame))
+
+
+		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
 		{
-			messagesGUI->addMessage(newValue ? "AI frozen." : "AI unfrozen.");
+			messagesGUI.lock()->addMessage(newValue ? "AI frozen." : "AI unfrozen.");
 		}
 
 	}
@@ -43,12 +45,12 @@ class AIFreezeImpl : public AIFreezeImplUntemplated {
 
 public:
 	AIFreezeImpl(IDIContainer& dicon) :
-		mAIFreezeCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->aiFreezeToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
+		mAIFreezeCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->aiFreezeToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>();
+		auto ptr = dicon.Resolve<PointerManager>().lock();
 		auto aiFreezeFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(aiFreezeFunction), mGame);
 		aiFreezeFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(aiFreezeFunctionFlagSetter), mGame);
 		aiFreezeHook = ModuleMidHook::make( GameState(mGame).toModuleName(), aiFreezeFunction, aiFreezeHookFunction);

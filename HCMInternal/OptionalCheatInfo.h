@@ -25,7 +25,7 @@ private:
 	OptionalCheatInfoData emptyInfo = OptionalCheatInfoData::emptyCheat();
 	std::map<std::pair<GameState, OptionalCheatEnum>, OptionalCheatInfoData> infoMap;
 
-	friend class OptionalCheatManager;
+	friend class OptionalCheatConstructor;
 	void setInfo(std::pair<GameState, OptionalCheatEnum> gameCheatPair, OptionalCheatInfoData info)
 	{
 		infoMap.emplace(gameCheatPair, info);

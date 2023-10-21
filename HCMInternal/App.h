@@ -38,6 +38,7 @@ class App {
 public:
 	App()
 	{
+        std::shared_ptr<SettingsStateAndEvents> settings;
         std::shared_ptr<UnhandledExceptionHandler> unhandled; // init later, but we need it to be the last thing to go out of scope
 
         // these are needed in the init exception catch block, so declared here
@@ -90,7 +91,7 @@ public:
 
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
-            auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
+            settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
             auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
             auto mccStateHook = std::make_shared<MCCStateHook>(ptr, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
@@ -167,6 +168,7 @@ public:
         // Auto managed resources have fallen out of scope
         PLOG_INFO << "HCMInternal services successfully shut down";
 
+        PLOG_DEBUG << "settings reference count: " << settings.use_count();
 
 #ifdef HCM_DEBUG
         PLOG_DEBUG << "Closing console";

@@ -11,4 +11,4 @@ public:
 };
 
 
-#define resolveDependentCheat(x) std::dynamic_pointer_cast<x>(dicon.Resolve<IMakeOrGetCheat>()->getOrMakeCheat({game, OptionalCheatEnum::x}, dicon))
+#define resolveDependentCheat(x) std::dynamic_pointer_cast<x>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat({game, OptionalCheatEnum::x}, dicon))

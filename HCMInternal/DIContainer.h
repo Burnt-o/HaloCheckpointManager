@@ -135,7 +135,7 @@ protected:
 
 public:
 	template<typename Get>
-	std::shared_ptr<Get> Resolve()
+	std::weak_ptr<Get> Resolve()
 	{
 		const std::type_info* typeId = &typeid(Get);
 		std::string typeString = typeId->raw_name();
@@ -144,11 +144,8 @@ public:
 
 		if (!mMapping.contains(typeString)) throw HCMInitException(std::format("Could not locate type in DIContainer: {}", typeString));
 
-		// I should change the design of DI containers.. probably use std::any or something
-		// because converting from shared_ptr<void> to shared_ptr<T> is uh a bit sketchy.
-		return	std::any_cast<std::shared_ptr<Get>>(mMapping.at(typeString));
-		//return (std::shared_ptr<Get>)mMapping.at(typeString);
-		//return	std::static_pointer_cast<Get>(mMapping.at(typeString));
+
+		return	std::weak_ptr<Get>(std::any_cast<std::shared_ptr<Get>>(mMapping.at(typeString)));
 
 
 	}

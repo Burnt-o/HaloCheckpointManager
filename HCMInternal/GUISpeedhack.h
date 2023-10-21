@@ -6,7 +6,7 @@ class GUISpeedhack : public IGUIElement {
 private:
 	std::shared_ptr<ActionEvent> mEventToFire;
 	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
-	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
+	std::shared_ptr<SettingsStateAndEvents> mSettings;
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
 

@@ -11,7 +11,7 @@ private:
 public:
 	GetCurrentLevelCodeImpl(GameState game, IDIContainer& dicon)
 	{
-		currentLevelCode = dicon.Resolve<PointerManager>()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentLevelCode), game);
+		currentLevelCode = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentLevelCode), game);
 	}
 
 	std::string getCurrentLevelCode()

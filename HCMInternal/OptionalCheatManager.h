@@ -9,15 +9,20 @@
 #include "PointerManager.h"
 #include "IModalDialogRenderer.h"
 #include "ControlServiceContainer.h"
+#include "IMakeOrGetCheat.h"
 // constructs and stores optionalcheats, updating OptionalCheatInfoManager as it constructs
 
-
+class OptionalCheatConstructor;
 
 class OptionalCheatManager
 {
+public:
+	class OptionalCheatStore;
 private:
-	class OptionalCheatManagerImpl;
-	std::shared_ptr<OptionalCheatManagerImpl> pimpl;
+
+	std::shared_ptr<OptionalCheatStore> storePimpl;
+
+	std::shared_ptr<OptionalCheatConstructor> constructorPimpl;
 public:
 	OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>, std::shared_ptr<OptionalCheatInfo>,  
 		/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
@@ -33,5 +38,6 @@ public:
 		std::shared_ptr<ControlServiceContainer> control);
 	;
 	~OptionalCheatManager();
+
 };
 

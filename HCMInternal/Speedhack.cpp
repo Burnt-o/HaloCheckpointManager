@@ -14,8 +14,8 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(double&)>> mSpeedhackSettingCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<Setting<double>>> speedhackSetting;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<Setting<double>> speedhackSetting;
 
 	// data
 	std::function<void(double)> setSpeed;
@@ -24,35 +24,35 @@ public:
 
 	void onToggle(bool& newToggleValue)
 	{
-		auto currentSpeedSetting = speedhackSetting->GetValue();
+		auto currentSpeedSetting = speedhackSetting.lock()->GetValue();
 		PLOG_DEBUG << "SpeedhackImpl recevied onToggle event, value: " << newToggleValue;
 		PLOG_DEBUG << "(the speedhack value is: " << currentSpeedSetting << ")";
 		if (newToggleValue)
 		{
 			setSpeed(currentSpeedSetting);
-			messagesGUI->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
+			messagesGUI.lock()->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
 		}
 		else
 		{
 			setSpeed(1.00);
-			messagesGUI->addMessage(std::format("Disabling Speedhack."));
+			messagesGUI.lock()->addMessage(std::format("Disabling Speedhack."));
 		}
 	}
 	void updateSetting(double& newSpeedValue)
 	{
 		PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
 		setSpeed(newSpeedValue);
-		messagesGUI->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
+		messagesGUI.lock()->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
 	}
 
 	SpeedhackImpl(GameState game, IDIContainer& dicon)
-		: speedhackSetting(dicon.Resolve<SettingsStateAndEvents>()->speedhackSetting),
-		mSpeedhackToggleCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackToggle->valueChangedEvent, [this](bool& i) {onToggle(i); }),
-		mSpeedhackSettingCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->speedhackSetting->valueChangedEvent, [this](double& i) {updateSetting(i); }),
+		: speedhackSetting(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting),
+		mSpeedhackToggleCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackToggle->valueChangedEvent, [this](bool& i) {onToggle(i); }),
+		mSpeedhackSettingCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting->valueChangedEvent, [this](double& i) {updateSetting(i); }),
 		messagesGUI(dicon.Resolve<IMessagesGUI>())
 	{
 		// load HCMSpeedhack.dll
-		auto dirPathCont = dicon.Resolve<DirPathContainer>();
+		auto dirPathCont = dicon.Resolve<DirPathContainer>().lock();
 		std::string speedhackPath = dirPathCont->dirPath;
 		speedhackPath += "\\HCMSpeedhack.dll";
 

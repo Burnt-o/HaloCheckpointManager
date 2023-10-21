@@ -20,7 +20,7 @@ public:
 	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>& getHotkeys() { return allHotkeys; }
 
 private:
-	gsl::not_null<std::shared_ptr< SettingsStateAndEvents>> mSettings;
+	std::shared_ptr< SettingsStateAndEvents> mSettings;
 
 	typedef std::vector<std::vector<ImGuiKey>> vvk;
 #define initHotkey(enumName, hotkeyEvent, defaultBinding) \

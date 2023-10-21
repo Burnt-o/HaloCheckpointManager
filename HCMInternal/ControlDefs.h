@@ -8,5 +8,3 @@ typedef eventpp::CallbackList<void(bool&)> ToggleEvent;
 #define nameof(x) #x
 
 #define safe_release(p) if (p) { p->Release(); p = nullptr; } 
-
-

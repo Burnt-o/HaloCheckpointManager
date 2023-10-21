@@ -13,7 +13,7 @@ private:
 public:
 	SimpleGetPlayerDatum(GameState game, IDIContainer& dicon) : mGame(game)
 	{
-		playerDatumPointer = dicon.Resolve< PointerManager>()->getData<std::shared_ptr<MultilevelPointer>>("playerDatum", mGame);
+		playerDatumPointer = dicon.Resolve< PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>("playerDatum", mGame);
 	}
 
 	virtual Datum getPlayerDatum() override

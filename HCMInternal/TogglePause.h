@@ -19,10 +19,10 @@ private:
 	ScopedCallback <ToggleEvent>mTogglePauseCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	std::shared_ptr<PauseGame> pauseGameService; // actual implementation is over here
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<PauseGame> pauseGameService; // actual implementation is over here
 
 	// data
 	std::unique_ptr<ScopedServiceRequest> pauseRequest;
@@ -32,7 +32,7 @@ private:
 	{
 		if (newValue)
 		{
-			pauseRequest = pauseGameService->scopedRequest(mGame.toString() + nameof(TogglePause));
+			pauseRequest = pauseGameService.lock()->scopedRequest(mGame.toString() + nameof(TogglePause));
 		}
 		else
 		{
@@ -46,12 +46,12 @@ private:
 public:
 	TogglePause(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
-		mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
+		mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto control = dicon.Resolve<ControlServiceContainer>();
+		auto control = dicon.Resolve<ControlServiceContainer>().lock();
 		if (control->pauseGameServiceFailure.has_value()) throw control->pauseGameServiceFailure.value();
 		if (control->pauseGameService.value()->getServiceFailures().contains(gameImpl)) throw control->pauseGameService.value()->getServiceFailures().at(gameImpl);
 		pauseGameService = control->pauseGameService.value();

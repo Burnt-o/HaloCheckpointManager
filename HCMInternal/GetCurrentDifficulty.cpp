@@ -11,7 +11,7 @@ private:
 public:
 	GetCurrentDifficultyImpl(GameState game, IDIContainer& dicon)
 	{
-		currentDifficulty = dicon.Resolve<PointerManager>()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentDifficulty), game);
+		currentDifficulty = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentDifficulty), game);
 	}
 
 	DifficultyEnum getCurrentDifficulty()

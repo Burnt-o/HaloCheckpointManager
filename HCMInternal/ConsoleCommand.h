@@ -22,10 +22,10 @@ private:
 	ScopedCallback<ActionEvent> mConsoleCommandEventCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> mSettings;
 
 
 	//data
@@ -35,7 +35,7 @@ private:
 	// primary event callback
 	void onSendCommand()
 	{
-		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
 
 		try
 		{
@@ -53,17 +53,17 @@ private:
 			engine_command_vptr = static_cast<EngineCommand_t>((void*)pCommand);
 
 
-			std::string command = "HS: " + mSettings->consoleCommandString->GetValue();
+			std::string command = "HS: " + mSettings.lock()->consoleCommandString->GetValue();
 			
 
-			messagesGUI->addMessage(std::format("Sending command: {}", mSettings->consoleCommandString->GetValue()));
+			messagesGUI.lock()->addMessage(std::format("Sending command: {}", mSettings.lock()->consoleCommandString->GetValue()));
 			auto commandResult = engine_command_vptr((void*)pEngine, command.c_str());
-			messagesGUI->addMessage(std::format("Result: 0x{:X}", commandResult));
+			messagesGUI.lock()->addMessage(std::format("Result: 0x{:X}", commandResult));
 
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions->handleMessage(ex);
+			runtimeExceptions.lock()->handleMessage(ex);
 		}
 
 	}
@@ -74,7 +74,7 @@ public:
 
 	ConsoleCommand(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
-		mConsoleCommandEventCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->consoleCommandEvent, [this]() {onSendCommand(); }),
+		mConsoleCommandEventCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandEvent, [this]() {onSendCommand(); }),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
@@ -82,7 +82,7 @@ public:
 
 	{
 		PLOG_VERBOSE << "constructing ConsoleCommand OptionalCheat for game: " << mGame.toString();
-		auto ptr = dicon.Resolve<PointerManager>();
+		auto ptr = dicon.Resolve<PointerManager>().lock();
 		gameEnginePointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameEnginePointer));
 		sendCommandPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(sendCommandPointer), mGame);
 	}

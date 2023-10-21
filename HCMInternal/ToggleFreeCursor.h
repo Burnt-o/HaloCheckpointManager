@@ -16,14 +16,14 @@ private:
 	GameState mGame;
 
 	// event callbacks
-	ScopedCallback <ToggleEvent>mTogglePauseCallbackHandle;
+	//ScopedCallback <ToggleEvent>mTogglePauseCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
-	std::shared_ptr<FreeMCCCursor> freeCursorService; // actual implementation is over here
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> mSettings;
+	std::weak_ptr<FreeMCCCursor> freeCursorService; // actual implementation is over here
 
 	// data
 	std::unique_ptr<ScopedServiceRequest> freeCursorRequest;
@@ -32,9 +32,9 @@ private:
 	void onTogglePauseChanged(bool& newValue)
 	{
 
-		if (newValue && mSettings->pauseAlsoFreesCursor->GetValue())
+		if (newValue && mSettings.lock()->pauseAlsoFreesCursor->GetValue())
 		{
-			freeCursorRequest = freeCursorService->scopedRequest(mGame.toString() + nameof(ToggleFreeCursor));
+			freeCursorRequest = freeCursorService.lock()->scopedRequest(mGame.toString() + nameof(ToggleFreeCursor));
 		}
 		else
 		{
@@ -48,13 +48,16 @@ private:
 public:
 	ToggleFreeCursor(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
-		mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
+		//mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		mSettings(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto control = dicon.Resolve<ControlServiceContainer>();
+		PLOG_DEBUG << "made it to ToggleFreeCursor constructor body, atleast";
+		PLOG_DEBUG << "settingsStateAndEvents expired? " << dicon.Resolve<SettingsStateAndEvents>().expired();
+		PLOG_DEBUG << "settingsStateAndEvents lock? " << dicon.Resolve<SettingsStateAndEvents>().lock();
+		auto control = dicon.Resolve<ControlServiceContainer>().lock();
 		if (control->freeMCCSCursorServiceFailure.has_value()) throw control->freeMCCSCursorServiceFailure.value();
 
 		freeCursorService = control->freeMCCSCursorService.value();

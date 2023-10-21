@@ -18,8 +18,8 @@ private:
 	ScopedCallback <ToggleEvent> mInjectionIgnoresChecksumCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<IMCCStateHook> mccStateHook;
 
 	//data
 	std::shared_ptr<ModulePatch> ignoreChecksumPatch;
@@ -29,21 +29,21 @@ private:
 	{
 		ignoreChecksumPatch->setWantsToBeAttached(newValue);
 		PLOG_DEBUG << "onToggleChange: newval: " << newValue;
-		if (mccStateHook->isGameCurrentlyPlaying(mGame))
+		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
 		{
-			messagesGUI->addMessage(newValue ? "Checkpoint checksums will be ignored on revert." : "Checkpoint checksums will NOT be ignored on revert.");
+			messagesGUI.lock()->addMessage(newValue ? "Checkpoint checksums will be ignored on revert." : "Checkpoint checksums will NOT be ignored on revert.");
 		}
 
 	}
 
 public:
 	IgnoreCheckpointChecksum(GameState gameImpl, IDIContainer& dicon) :
-		mInjectionIgnoresChecksumCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->injectionIgnoresChecksum->valueChangedEvent, [this](bool& newValue) { onToggleChange(newValue); }),
+		mInjectionIgnoresChecksumCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->injectionIgnoresChecksum->valueChangedEvent, [this](bool& newValue) { onToggleChange(newValue); }),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		mGame(gameImpl)
 	{
-		auto ptr = dicon.Resolve<PointerManager>();
+		auto ptr = dicon.Resolve<PointerManager>().lock();
 		auto checksumCheckFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(checksumCheckFunction), mGame);
 
 		PLOG_DEBUG << "getting checksumIgnoreCode";
@@ -51,7 +51,7 @@ public:
 		PLOG_DEBUG << "got checksumIgnoreCode, size: " << checksumIgnoreCode->size();
 		ignoreChecksumPatch = ModulePatch::make(mGame.toModuleName(), checksumCheckFunction, *checksumIgnoreCode.get());
 
-		ignoreChecksumPatch->setWantsToBeAttached(dicon.Resolve<SettingsStateAndEvents>()->injectionIgnoresChecksum->GetValue());
+		ignoreChecksumPatch->setWantsToBeAttached(dicon.Resolve<SettingsStateAndEvents>().lock()->injectionIgnoresChecksum->GetValue());
 	}
 	~IgnoreCheckpointChecksum() { PLOG_VERBOSE << "~" << getName(); }
 

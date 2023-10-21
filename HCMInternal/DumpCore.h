@@ -24,24 +24,24 @@ private:
 	ScopedCallback<ActionEvent> mDumpCoreEventCallback;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	gsl::not_null<std::shared_ptr<IGetMCCVersion>> getMCCVer;
-	gsl::not_null<std::shared_ptr<ISharedMemory>> sharedMem;
-	gsl::not_null<std::shared_ptr<IModalDialogRenderer>> modalDialogs;
-	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> settings;
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IGetMCCVersion> getMCCVer;
+	std::weak_ptr<ISharedMemory> sharedMem;
+	std::weak_ptr<IModalDialogRenderer> modalDialogs;
+	std::weak_ptr<SettingsStateAndEvents> settings;
 
 	// primary event callback
 	void onDump()
 	{
-		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
 		try
 		{
 			// Automatically force coresave beforehand if user wants that
-			if (settings->dumpCoreForcesSave->GetValue())
+			if (settings.lock()->dumpCoreForcesSave->GetValue())
 			{
-				settings->forceCoreSaveEvent->operator()();
+				settings.lock()->forceCoreSaveEvent->operator()();
 				Sleep(10);
 			}
 
@@ -53,10 +53,10 @@ private:
 				t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
 			// ask the user what they want to call it, if they want that
-			if (settings->autonameCoresaves->GetValue() == false)
+			if (settings.lock()->autonameCoresaves->GetValue() == false)
 			{
 				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
-				auto modalReturn = modalDialogs->showSaveDumpNameDialog("Name dumped core save", coreSaveName); // this is a blocking call
+				auto modalReturn = modalDialogs.lock()->showSaveDumpNameDialog("Name dumped core save", coreSaveName); // this is a blocking call
 				PLOG_DEBUG << "showSaveDumpNameDialog returned! ";
 
 				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
@@ -65,7 +65,7 @@ private:
 			
 
 			constexpr int minimumFileLength = 10000;
-			auto currentSaveFolder = sharedMem->getDumpInfo(mGame);
+			auto currentSaveFolder = sharedMem.lock()->getDumpInfo(mGame);
 			PLOG_DEBUG << "Attempting core dump for game: " << mGame;
 
 			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\" + coreSaveName + ".bin";
@@ -98,7 +98,7 @@ private:
 			if (checkpointData.size() != checkpointLength) 	throw HCMRuntimeException(std::format("Checkpoint data was incorrect length! expected: 0x{:X}, actual: 0x{:X}", checkpointLength, checkpointData.size()));
 
 			// add version information to last 10 bytes of file
-			std::string versionString = getMCCVer->getMCCVersionAsString().data();
+			std::string versionString = getMCCVer.lock()->getMCCVersionAsString().data();
 			if (versionString.size() != 10) throw HCMRuntimeException(std::format("Version string was the wrong size somehow?! Expected: 10, Actual: {}", versionString.size()));
 			std::copy(std::begin(versionString), std::end(versionString), std::end(checkpointData) - 10);
 
@@ -117,13 +117,13 @@ private:
 				throw HCMRuntimeException(std::format("Failed to write core save file to location {}: error: {}", dumpPath, e.what()));
 			}
 
-			messagesGUI->addMessage(std::format("Dumped core save: {}.bin to {}", coreSaveName, currentSaveFolder.selectedFolderName));
+			messagesGUI.lock()->addMessage(std::format("Dumped core save: {}.bin to {}", coreSaveName, currentSaveFolder.selectedFolderName));
 
 			PLOG_INFO << std::format("Successfully dumped core save from {} to {}", coreSaveInjectLocation, dumpPath);
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions->handleMessage(ex);
+			runtimeExceptions.lock()->handleMessage(ex);
 		}
 	}
 
@@ -132,7 +132,7 @@ private:
 public:
 	DumpCore(GameState game, IDIContainer& dicon) 
 		: mGame(game),
-		mDumpCoreEventCallback(dicon.Resolve<SettingsStateAndEvents>()->dumpCoreEvent, [this]() { onDump(); }),
+		mDumpCoreEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->dumpCoreEvent, [this]() { onDump(); }),
 		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		sharedMem(dicon.Resolve<ISharedMemory>()),

@@ -19,10 +19,10 @@ private:
 	ScopedCallback <ToggleEvent>mTogglePauseCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
-	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> mSettings;
 	std::shared_ptr<BlockGameInput> blockInputService; // actual implementation is over here
 
 	// data
@@ -31,7 +31,7 @@ private:
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)
 	{
-		if (newValue && mSettings->pauseAlsoBlocksInput->GetValue())
+		if (newValue && mSettings.lock()->pauseAlsoBlocksInput->GetValue())
 		{
 			blockInputRequest = blockInputService->scopedRequest(mGame.toString() + nameof(ToggleBlockInput));
 		}
@@ -47,13 +47,13 @@ private:
 public:
 	ToggleBlockInput(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
-		mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
+		mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		mSettings(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto control = dicon.Resolve<ControlServiceContainer>();
+		auto control = dicon.Resolve<ControlServiceContainer>().lock();
 		if (control->blockGameInputServiceFailure.has_value()) throw control->blockGameInputServiceFailure.value();
 
 		blockInputService = control->blockGameInputService.value();

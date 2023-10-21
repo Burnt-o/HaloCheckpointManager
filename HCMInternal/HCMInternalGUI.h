@@ -33,11 +33,11 @@ private:
 	std::unique_ptr<ScopedServiceRequest> pauseGameRequest;
 
 	//injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<GUIElementStore>> mGUIStore;
-	gsl::not_null<std::shared_ptr<HotkeyRenderer>> mHotkeyRenderer;
-	gsl::not_null<std::shared_ptr<ControlServiceContainer>> mControlServices;
-	gsl::not_null<std::shared_ptr<SettingsStateAndEvents>> mSettings;
+	std::shared_ptr<IMCCStateHook> mccStateHook;
+	std::shared_ptr<GUIElementStore> mGUIStore;
+	std::shared_ptr<HotkeyRenderer> mHotkeyRenderer;
+	std::shared_ptr<ControlServiceContainer> mControlServices;
+	std::shared_ptr<SettingsStateAndEvents> mSettings;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
 	void onImGuiRenderEvent(Vec2 ss);

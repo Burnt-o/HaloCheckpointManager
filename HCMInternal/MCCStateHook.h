@@ -14,7 +14,7 @@ private:
 	static inline MCCStateHook* instance = nullptr; // Private Singleton instance so static hooks/callbacks can access
 
 	// injected services
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	MCCState currentMCCState;

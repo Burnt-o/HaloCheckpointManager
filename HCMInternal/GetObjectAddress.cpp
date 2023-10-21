@@ -57,7 +57,7 @@ public:
 	GetObjectAddressImpl(GameState game, IDIContainer& dicon) 
 		: mGame(game)
 	{
-		getObjectAddressFunction = dicon.Resolve<PointerManager>()->getData<std::shared_ptr<MultilevelPointer>>(nameof(getObjectAddressFunction), game);
+		getObjectAddressFunction = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(getObjectAddressFunction), game);
 	}
 };
 

@@ -11,9 +11,9 @@ private:
 	void renderHotkeyRebindDialog(Vec2);
 
 	// injected services
-	gsl::not_null<std::shared_ptr<MessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<HotkeyManager>> hotkeyManager;
-	gsl::not_null<std::shared_ptr<HotkeyDefinitions>> hotkeyDefinitions;
+	std::shared_ptr<MessagesGUI> messagesGUI;
+	std::shared_ptr<HotkeyManager> hotkeyManager;
+	std::shared_ptr<HotkeyDefinitions> hotkeyDefinitions;
 
 	//data
 	std::shared_ptr<Hotkey> mHotkeyToManipulate;

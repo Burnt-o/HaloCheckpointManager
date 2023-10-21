@@ -36,39 +36,69 @@
 
 
 
+typedef std::map<std::pair<GameState, OptionalCheatEnum>, std::shared_ptr<IOptionalCheat>> CheatCollection;
 
-class OptionalCheatManager::OptionalCheatManagerImpl : public std::enable_shared_from_this<OptionalCheatManagerImpl>, public IMakeOrGetCheat
+class OptionalCheatManager::OptionalCheatStore 
 {
+public:
+
 private:
 
-	// cheats that depend on other cheats will need to access this to check if they're already initialised before attempting to init it themselves
-	typedef std::map<std::pair<GameState, OptionalCheatEnum>, std::shared_ptr<IOptionalCheat>> CheatCollection;
-	CheatCollection cheatCollection;
+	// cheats that depend on other cheats will need to access this to check if they're already initialised before attempting to init it themselves.
+	// This is the main point of ownership keeping all the optional cheats alive. 
+	std::shared_ptr<CheatCollection> cheatCollection = std::make_shared<CheatCollection>();
+	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer> dicon;
 
 
 public:
-	OptionalCheatManagerImpl()
-	{ 
-	}
-
-	// needs to be split away from constructor so we can use shared_from_this
-	void createCheats(std::shared_ptr<IGUIRequiredServices> reqSer, std::shared_ptr<OptionalCheatInfo> info,
-		/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
-		std::shared_ptr<SettingsStateAndEvents> settings, 
-		std::shared_ptr<PointerManager> ptr, 
-		std::shared_ptr<IGetMCCVersion> ver, 
-		std::shared_ptr<IMCCStateHook> mccStateHook, 
-		std::shared_ptr<ISharedMemory> sharedMem, 
-		std::shared_ptr<IMessagesGUI> mes, 
-		std::shared_ptr<RuntimeExceptionHandler> exp, 
-		std::string dirPath, 
+	OptionalCheatStore(std::shared_ptr<IMakeOrGetCheat> cheatConstructor, 
+		std::shared_ptr<SettingsStateAndEvents> settings,
+		std::shared_ptr<PointerManager> ptr,
+		std::shared_ptr<IGetMCCVersion> ver,
+		std::shared_ptr<IMCCStateHook> mccStateHook,
+		std::shared_ptr<ISharedMemory> sharedMem,
+		std::shared_ptr<IMessagesGUI> mes,
+		std::shared_ptr<RuntimeExceptionHandler> exp,
+		std::string dirPath,
 		std::shared_ptr<IModalDialogRenderer> modal,
 		std::shared_ptr<ControlServiceContainer> control)
-	{
+		:
 		// create a di container with the dependencies that the cheats will need
 		// remember: you need to register types as the base interface the optionalCheats will want to resolve
-		DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer> dicon
-		{shared_from_this(), settings, ptr, ver, mccStateHook, sharedMem, mes, exp,std::make_shared<DirPathContainer>(dirPath), modal, control};
+		dicon(cheatConstructor, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, std::make_shared<DirPathContainer>(dirPath), modal, control)
+	{ 
+		
+	}
+
+	~OptionalCheatStore()
+	{
+		PLOG_DEBUG << "~OptionalCheatStore";
+		// important: the cheat collection must be destroyed before the dicon, so the cheat destructors are still guarenteed access to their services
+		cheatCollection->clear();
+	}
+
+	friend class OptionalCheatConstructor;
+
+};
+
+class OptionalCheatConstructor : public IMakeOrGetCheat
+{
+
+private:
+	// weak reference to the stores cheatCollection while we construct cheats
+	std::shared_ptr<CheatCollection> cheatCollection;
+
+public:
+	OptionalCheatConstructor()
+	{
+
+	}
+
+	// needs to be split away from constructor so we can use pass a weak ptr to OptionalCheatStore
+	void createCheats(std::weak_ptr<OptionalCheatManager::OptionalCheatStore> cheatStore, std::shared_ptr<IGUIRequiredServices> reqSer, std::shared_ptr<OptionalCheatInfo> info)
+	{
+		if (cheatStore.expired()) throw HCMInitException("Bad cheatStore weak ptr");
+		cheatCollection = cheatStore.lock()->cheatCollection;
 
 		PLOG_DEBUG << "Looping over required services";
 		// loop over each cheat-game combo in requiredServices, pushing them into our cheatCollection as we make them (or telling info about it if failed construction)
@@ -77,7 +107,7 @@ public:
 			try
 			{
 				// create the cheat 
-				getOrMakeCheat(gameCheatPair, dicon);
+				getOrMakeCheat(gameCheatPair, cheatStore.lock()->dicon);
 				info->setInfo(gameCheatPair, {});
 			}
 			catch (HCMInitException ex)
@@ -86,12 +116,14 @@ public:
 				info->setInfo(gameCheatPair, { ex });
 			}
 		}
+
+		cheatCollection.reset();
+
 	}
 
 	// Very likely to throw HCMInitExceptions so be ready to catch them.
-	// called in OptionalCheatManagerImpl constructors for loop, AND thru dicon by cheats that depend on other cheats.
-	std::shared_ptr< IOptionalCheat> getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon); 
-
+	// called in OptionalCheatConstructor createCheats for loop, AND thru dicon by cheats that depend on other cheats.
+	std::shared_ptr< IOptionalCheat> getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon);
 };
 
 
@@ -108,10 +140,13 @@ OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>
 	std::string dirPath, 
 	std::shared_ptr<IModalDialogRenderer> modal,
 	std::shared_ptr<ControlServiceContainer> control)
-	: pimpl(std::make_shared<OptionalCheatManagerImpl>()) 
+	: constructorPimpl(std::make_shared<OptionalCheatConstructor>())
 
 {
-	pimpl->createCheats(reqSer, info, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control);
+	storePimpl = std::make_shared<OptionalCheatStore>(constructorPimpl, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control);
+
+	// Ah yes a cyclic dependency? But actually the storePimpl will go in as a weak ptr, and it doesn't keep it after the method finishes anyway
+	constructorPimpl->createCheats(storePimpl, reqSer, info);
 }
 
 
@@ -119,16 +154,22 @@ OptionalCheatManager::~OptionalCheatManager() = default;
 
 
 
-std::shared_ptr< IOptionalCheat> OptionalCheatManager::OptionalCheatManagerImpl::getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon)
+std::shared_ptr< IOptionalCheat> OptionalCheatConstructor::getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon)
 {
-	// macro shennanigans to make a switch case for every OptionalCheatEnum to create associated class
-#define _PPSTUFF_MAKECASE1(_var) case OptionalCheatEnum::_var: \
-	if(!cheatCollection.contains(gameCheatPair)) \
-	{ \
-	auto cheat = std::make_shared<_var>(gameCheatPair.first, dicon);\
-	cheatCollection.emplace(gameCheatPair, cheat);\
-	} \
-return cheatCollection.at(gameCheatPair);
+	PLOG_VERBOSE << "Creating cheat: " << gameCheatPair.first << "::" << magic_enum::enum_name(gameCheatPair.second);
+	//std::map<std::pair<GameState, OptionalCheatEnum>, std::shared_ptr<IOptionalCheat>>
+
+	// Macro shennanigans to make a switch case for every OptionalCheatEnum to create associated class.
+	// This macro is why it's crucial the OptionalCheatEnum shares the exact same name as the associated class.
+#define _PPSTUFF_MAKECASE1(_var)																\
+case OptionalCheatEnum::_var:																	\
+	if(!cheatCollection->contains(gameCheatPair))												\
+	{																							\
+	std::shared_ptr<IOptionalCheat> cheat = std::make_shared<_var>(gameCheatPair.first, dicon); \
+	cheatCollection->insert(std::make_pair(gameCheatPair, cheat));									\
+	}																							\
+return cheatCollection->at(gameCheatPair);
+
 
 #define _PPSTUFF_MAKECASE2(r, d, _var)  _PPSTUFF_MAKECASE1(_var) 
 #define _PPSTUFF_MAKECASE_SEQ(vseq) _PPSTUFF_MAKECASE1(BOOST_PP_SEQ_HEAD(vseq)) \
@@ -141,15 +182,15 @@ return cheatCollection.at(gameCheatPair);
 		// evals to
 		// 
 		// case OptionalCheatEnum::ForceCheckpoint: 
-		// if(!cheatCollection.contains(gameCheatPair))
+		// if(!cheatCollection->contains(gameCheatPair))
 		// { 
-		// auto cheat = std::make_shared<ForceCheckpoint>(gameCheatPair.first, dicon);
-		// cheatCollection.emplace(gameCheatPair, cheat);
+		// std::shared_ptr<IOptionalCheat> cheat = std::make_shared<ForceCheckpoint>(gameCheatPair.first, dicon);
+		// cheatCollection->at(gameCheatPair) = cheat;
 		// }
-		// return cheatCollection.at(gameCheatPair);
+		// return cheatCollection->at(gameCheatPair);
 		// 
 		// .. etc
 	default:
-		throw HCMInitException("makeswitchcheat recieved invalid optionalCheatEnum");
+		throw HCMInitException("getOrMakeCheat recieved invalid OptionalCheatEnum (did you forget to add an identically named class for your enum entry?)");
 	}
 }

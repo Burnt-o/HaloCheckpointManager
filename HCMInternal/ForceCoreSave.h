@@ -16,9 +16,9 @@ private:
 	ScopedCallback<ActionEvent> mForceCoreSaveCallbackHandle;
 
 	// injected services
-	gsl::not_null<std::shared_ptr<IMCCStateHook>> mccStateHook;
-	gsl::not_null<std::shared_ptr<IMessagesGUI>> messagesGUI;
-	gsl::not_null<std::shared_ptr<RuntimeExceptionHandler>> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUI;
+	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	std::shared_ptr<MultilevelPointer> forceCoreSaveFlag;
@@ -26,18 +26,18 @@ private:
 	// primary event callback
 	void onForceCoreSave()
 	{
-		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
 
 		PLOG_DEBUG << "Force CoreSave called";
 		try
 		{
 			byte enableFlag = 1;
 			if (!forceCoreSaveFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write CoreSave flag {}", MultilevelPointer::GetLastError()));
-			messagesGUI->addMessage("CoreSave forced.");
+			messagesGUI.lock()->addMessage("CoreSave forced.");
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions->handleMessage(ex);
+			runtimeExceptions.lock()->handleMessage(ex);
 		}
 
 	}
@@ -47,12 +47,12 @@ public:
 
 	ForceCoreSave(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl), 
-		mForceCoreSaveCallbackHandle(dicon.Resolve<SettingsStateAndEvents>()->forceCoreSaveEvent, [this]() {onForceCoreSave(); }),
+		mForceCoreSaveCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->forceCoreSaveEvent, [this]() {onForceCoreSave(); }),
 		mccStateHook(dicon.Resolve<IMCCStateHook>()),
 		messagesGUI(dicon.Resolve<IMessagesGUI>()), 
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>();
+		auto ptr = dicon.Resolve<PointerManager>().lock();
 		forceCoreSaveFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceCoreSaveFlag", mGame);
 	}
 
