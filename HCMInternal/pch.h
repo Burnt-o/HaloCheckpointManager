@@ -67,8 +67,7 @@
 #include <eventpp/eventdispatcher.h>
 #include "eventpp/callbacklist.h"
 #include "eventpp/utilities/scopedremover.h"
-#include "ScopedCallback.h"
-#include "ScopedAtomicBool.h"
+
 
 // boost
 #include "boost\stacktrace.hpp"
@@ -81,6 +80,8 @@
 #include "CustomExceptions.h"
 #include "ControlDefs.h"
 #include "WindowsUtilities.h"
+#include "ScopedCallback.h"
+#include "ScopedAtomicBool.h"
 
 template <typename T, typename F>
 void once(T t, F f) {

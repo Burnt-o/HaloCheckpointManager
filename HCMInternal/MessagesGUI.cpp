@@ -37,8 +37,33 @@ void MessagesGUI::iterateMessages()
 		});
 
 	// draw remaining messages
-	LOG_ONCE_THIS(PLOG_DEBUG << "mAnchorPoint exists? " << mAnchorPoint.operator bool());
-	Vec2 messagePosition = mAnchorPoint ? (mAnchorPoint->getAnchorPoint() + mAnchorOffset) : mAnchorOffset;
+	LOG_ONCE_THIS(PLOG_DEBUG << "mAnchorPoint exists? " << mAnchorPoint.has_value());
+	Vec2 messagePosition; 
+	if (mAnchorPoint.has_value())
+	{
+		auto anc = mAnchorPoint.value().lock();
+		if (!anc)
+		{
+#if HCM_DEBUG
+			PLOG_ERROR << "mAnchorPoint bad weak ptr";
+#else
+			LOG_ONCE(PLOG_ERROR << "mAnchorPoint bad weak ptr (at least once)");
+#endif
+
+			messagePosition = mAnchorOffset;
+		}
+		else
+		{
+			messagePosition = anc->getAnchorPoint() + mAnchorOffset;
+		}
+
+	}
+	else
+	{
+		messagePosition = mAnchorOffset;
+	}
+
+
 	for (auto& message : mMessages)
 	{
 		drawMessage(message, messagePosition);

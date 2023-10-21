@@ -23,6 +23,8 @@ public:
 	}
 
 	virtual std::string_view getName() = 0;
+
+	virtual ~IGUIElement() = default;
 };
 
 template <typename T>

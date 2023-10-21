@@ -8,4 +8,6 @@ public:
 	virtual SelectedFolderData getDumpInfo(GameState game) = 0;
 
 	std::string HCMDirPath;
+
+	~ISharedMemory() = default;
 };

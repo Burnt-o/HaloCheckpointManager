@@ -8,4 +8,5 @@ public:
 
 	// main event we fire when a new game/level loads
 	virtual std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> getMCCStateChangedEvent() = 0;
+	virtual ~IMCCStateHook() = default;
 };

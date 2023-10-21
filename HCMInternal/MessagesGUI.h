@@ -25,7 +25,7 @@ private:
 
 	// data
 	std::vector <temporaryMessage> mMessages;
-	std::shared_ptr<IAnchorPoint> mAnchorPoint;
+	std::optional<std::weak_ptr<IAnchorPoint>> mAnchorPoint = std::nullopt;
 	Vec2 mAnchorOffset;
 	// funcs
 	void iterateMessages();
@@ -41,7 +41,7 @@ public:
 
 	~MessagesGUI()
 	{
-		mRenderEventCallback.~ScopedCallback(); // no new callback invocation
+		mRenderEventCallback.removeCallback(); // no new callback invocation
 		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
 	}
 
@@ -57,6 +57,6 @@ public:
 	//	
 	//}
 
-	virtual void setAnchorPoint(std::shared_ptr<IAnchorPoint> anchorPoint) override { mAnchorPoint = anchorPoint; }
+	virtual void setAnchorPoint(std::weak_ptr<IAnchorPoint> anchorPoint) override { mAnchorPoint = anchorPoint; }
 };
 

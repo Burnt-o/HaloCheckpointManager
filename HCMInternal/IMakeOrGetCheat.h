@@ -8,6 +8,7 @@ class IMakeOrGetCheat
 {
 public:
 	virtual std::shared_ptr< IOptionalCheat> getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon) = 0;
+	virtual ~IMakeOrGetCheat() = default;
 };
 
 
