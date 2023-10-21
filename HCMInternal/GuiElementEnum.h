@@ -74,6 +74,7 @@
 ((cheatsHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((speedhackGUI, (ALL_SUPPORTED_GAMES)))\
 	((invulnGUI, (ALL_SUPPORTED_GAMES)))\
+	((invulnerabilitySettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 	((invulnNPCGUI, (ALL_SUPPORTED_GAMES)))\
 	((aiFreezeGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\

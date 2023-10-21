@@ -282,6 +282,7 @@ private:
 						{
 							createNestedElement(GUIElementEnum::speedhackGUI),
 							createNestedElement(GUIElementEnum::invulnGUI),
+							createNestedElement(GUIElementEnum::invulnerabilitySettingsSubheading),
 							createNestedElement(GUIElementEnum::aiFreezeGUI),
 							createNestedElement(GUIElementEnum::consoleCommandGUI),
 						}));
@@ -292,16 +293,21 @@ private:
 
 				case GUIElementEnum::invulnGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInvulnerability>
-						(game, HotkeysEnum::invuln, "Invulnerability", settings->invulnerabilityToggle,
-							createNestedElement(GUIElementEnum::invulnNPCGUI))); // optional nested element, recursively calls this function
+						(game, HotkeysEnum::invuln, "Invulnerability", settings->invulnerabilityToggle
+							)); 
 
-				case GUIElementEnum::invulnNPCGUI:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Invulnerability Settings", headerChildElements
+
+				case GUIElementEnum::invulnerabilitySettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
+						(game, "InvulnerabilitySettings", headerChildElements
 							{
-							std::make_optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle))
-							}, 20.f));
+								createNestedElement(GUIElementEnum::invulnNPCGUI),
+							}));
+
+					case GUIElementEnum::invulnNPCGUI:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle
+								));
 
 				case GUIElementEnum::aiFreezeGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
@@ -349,20 +355,15 @@ public:
 	GUIElementConstructorImpl(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings)
 		: mStore(store)
 	{
-		// problem.. how do we deal with toplevelness? rn all gui elements would be in the guireq thing.. even nested ones.
-		// do we need a seperate definition of which are top level?
-
-
+		// Create all top level GUI elements. Each one will recursively create it's nested elements, if it has any.
 		for (auto& [element, game] : guireq->getToplevelGUIElements())
 		{
 			auto x = createGUIElementAndStoreResult(element, game, guireq, fail, info, settings);
 			if (x.has_value())
 			{
 				store->getTopLevelGUIElementsMutable().at(game).push_back(x.value());
-
 			}
 		}
-
 	}
 };
 

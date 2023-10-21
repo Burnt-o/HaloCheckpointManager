@@ -7,22 +7,29 @@ class GUISimpleToggle : public IGUIElement {
 
 private:
 	std::string mToggleText;
-	std::shared_ptr<Setting<bool>> mOptionToggle;
+	std::weak_ptr<Setting<bool>> mOptionToggleWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
 
 	GUISimpleToggle(GameState implGame,  std::optional<HotkeysEnum> hotkey, std::string toggleText, std::shared_ptr<Setting<bool>> optionToggle)
-		: IGUIElement(implGame, hotkey), mToggleText(toggleText), mOptionToggle(optionToggle)
+		: IGUIElement(implGame, hotkey), mToggleText(toggleText), mOptionToggleWeak(optionToggle)
 	{
 		if (mToggleText.empty()) throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUISimpleToggle, name: " << getName();
-		PLOG_DEBUG << "mOptionToggle.getOptionName: " << std::hex << mOptionToggle->getOptionName();
+		PLOG_DEBUG << "mOptionToggle.getOptionName: " << std::hex << mOptionToggleWeak.lock()->getOptionName();
 		this->currentHeight = 20;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		auto mOptionToggle = mOptionToggleWeak.lock();
+		if (!mOptionToggle)
+		{
+			PLOG_ERROR << "bad mOptionToggle weakptr when rendering " << getName();
+			return;
+		}
+
 		if constexpr (shouldRenderHotkey)
 		{
 			hotkeyRenderer.renderHotkey(mHotkey);

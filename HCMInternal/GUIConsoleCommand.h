@@ -6,12 +6,12 @@ class GUIConsoleCommand : public IGUIElement {
 private:
 	std::shared_ptr<ActionEvent> mEventToFire;
 	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
-	std::shared_ptr<SettingsStateAndEvents> mSettings;
+	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
 	std::vector<std::thread> mFireEventThreads;
 public:
 
 	GUIConsoleCommand(GameState implGame, std::optional<HotkeysEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
-		: IGUIElement(implGame, hotkey), mSettings(settings)
+		: IGUIElement(implGame, hotkey), mSettingsWeak(settings)
 	{
 
 		PLOG_VERBOSE << "Constructing GUIConsoleCommand, name: " << getName();
@@ -21,6 +21,13 @@ public:
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		auto mSettings = mSettingsWeak.lock();
+		if (!mSettings)
+		{
+			PLOG_ERROR << "bad mSettings weakptr when rendering " << getName();
+			return;
+		}
+
 		static char commandString[255];
 		ImGui::Text("Console command: ");
 		ImGui::SameLine();
