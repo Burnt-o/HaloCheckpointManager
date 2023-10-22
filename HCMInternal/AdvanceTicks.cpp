@@ -3,7 +3,7 @@
 #include "AdvanceTicks.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "IMCCStateHook.h"
+
 #include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
@@ -27,7 +27,7 @@ private:
 	ScopedCallback <ActionEvent> mAdvanceTicksCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
+
 	std::weak_ptr<IMessagesGUI> messagesGUI;
 	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::weak_ptr<PauseGame> pauseService;
@@ -47,11 +47,12 @@ private:
 	{
 		advanceTicksCount = settings.lock()->advanceTicksCount->GetValue();
 		pauseOverrideRequest = pauseService.lock()->scopedOverrideRequest(nameof(AdvanceTicks::AdvanceTicksImpl));
+		messagesGUI.lock()->addMessage(std::format("Advancing {} tick{}.", advanceTicksCount, advanceTicksCount == 1 ? "" : "s"));
 	}
 public:
 	AdvanceTicksImpl(GameState gameImpl, IDIContainer& dicon)
 		: mAdvanceTicksCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->advanceTicksEvent, [this]() { onAdvanceTicksEvent(); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
+
 		messagesGUI(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		settings(dicon.Resolve<SettingsStateAndEvents>())
@@ -84,7 +85,11 @@ public:
 
 
 AdvanceTicks::AdvanceTicks(GameState gameImpl, IDIContainer& dicon)
+	: mGame(gameImpl),
+	mccStateHook(dicon.Resolve<IMCCStateHook>()),
+	mAdvanceTicksCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->advanceTicksEvent, [this]() { onAdvanceTicksEvent(); })
 {
+
 	// may throw, if so we don't want to create pimpl if it's not needed
 	auto tickIncrementFunction = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickIncrementFunction), gameImpl);
 
@@ -93,7 +98,8 @@ AdvanceTicks::AdvanceTicks(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<AdvanceTicksImpl>(gameImpl, dicon); // may throw eg if pauseGameService isn't available
 
 	// only assign to pimpls tickIncrementHookFunction now that pimpl is definitely constructed
-	tickIncrementHook = ModuleMidHook::make(gameImpl.toModuleName(), tickIncrementFunction, pimpl->tickIncrementHookFunction, true);
+	// hook state starts unattached, will be turned on the first time the advanceTicks event is fired;
+	tickIncrementHook = ModuleMidHook::make(gameImpl.toModuleName(), tickIncrementFunction, pimpl->tickIncrementHookFunction);
 
 }
 
@@ -102,6 +108,5 @@ AdvanceTicks::~AdvanceTicks()
 	PLOG_DEBUG << "~" << getName();
 }
 
-//AdvanceTicks::
 
 std::unique_ptr<AdvanceTicksImpl> AdvanceTicks::pimpl = nullptr;
