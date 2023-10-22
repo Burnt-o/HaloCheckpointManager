@@ -221,7 +221,7 @@
 	</VersionedEntry>
 
 	<!--same as above, it's one of those funcs that accesses the pause flag.-->
-	<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ExeOffset">
+	<!--<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1E522D</Offset>
@@ -229,11 +229,53 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--probably always zero & false, but juuuust in case -->
+	--><!--probably always zero & false, but juuuust in case --><!--
 	<VersionedEntry Name="blockGameInputFunctionFlagSetter" Type="MidhookFlagInterpreter">
 		<Version Version="All" ProcessType="Steam">
 			<rflag>zero</rflag>
 			<value>false</value>
+		</Version>
+	</VersionedEntry>-->
+
+	<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAC2A17</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x67A461</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="blockGameInputCode" Type="Vector" Typename="byte">
+		<Version Version="All" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		
+		<Version Version="All" Game="Halo2">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 

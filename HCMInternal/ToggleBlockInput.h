@@ -55,7 +55,7 @@ public:
 	{
 		auto control = dicon.Resolve<ControlServiceContainer>().lock();
 		if (control->blockGameInputServiceFailure.has_value()) throw control->blockGameInputServiceFailure.value();
-
+		if (control->blockGameInputService.value()->getServiceFailures().contains(gameImpl)) throw control->blockGameInputService.value()->getServiceFailures().at(gameImpl);
 		blockInputService = control->blockGameInputService.value();
 	}
 
