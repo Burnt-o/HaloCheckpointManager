@@ -27,19 +27,7 @@ private:
 	// data
 	std::unique_ptr<ScopedServiceRequest> pauseRequest;
 
-	// primary event callback
-	void onTogglePauseChanged(bool& newValue)
-	{
-		if (newValue)
-		{
-			pauseRequest = pauseGameService.lock()->scopedRequest(mGame.toString() + nameof(TogglePause));
-		}
-		else
-		{
-			if (pauseRequest)
-				pauseRequest.reset();
-		}
-	}
+
 
 
 
@@ -63,5 +51,20 @@ public:
 	}
 
 	std::string_view getName() override { return nameof(TogglePause); }
+
+	// primary event callback
+	// public so AdvanceTicks can access
+	void onTogglePauseChanged(bool& newValue)
+	{
+		if (newValue)
+		{
+			pauseRequest = pauseGameService.lock()->scopedRequest(mGame.toString() + nameof(TogglePause));
+		}
+		else
+		{
+			if (pauseRequest)
+				pauseRequest.reset();
+		}
+	}
 
 };

@@ -25,6 +25,7 @@
 #include "ConsoleCommand.h"
 #include "GetCurrentDifficulty.h"
 #include "IgnoreCheckpointChecksum.h"
+#include "AdvanceTicks.h"
 
 
 #include "DIContainer.h"

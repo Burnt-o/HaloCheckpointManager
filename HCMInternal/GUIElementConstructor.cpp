@@ -13,6 +13,7 @@
 #include "GUIHeading.h"
 #include "GUISubHeading.h"
 #include "GUIHotkeyOnly.h"
+#include "GUIAdvanceTicks.h"
 
 class GUIElementConstructor::GUIElementConstructorImpl {
 private:
@@ -115,9 +116,15 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "Pause settings", headerChildElements
 							{
+							createNestedElement(GUIElementEnum::advanceTicksGUI),
 							createNestedElement(GUIElementEnum::pauseAlsoBlocksInputGUI),
 							createNestedElement(GUIElementEnum::pauseAlsoFreesCursorGUI),
 							}));
+
+
+				case GUIElementEnum::advanceTicksGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIAdvanceTicks<true>>
+						(game, HotkeysEnum::advanceTicks, settings->advanceTicksEvent, settings->advanceTicksCount));
 
 					case GUIElementEnum::pauseAlsoBlocksInputGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>

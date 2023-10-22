@@ -247,7 +247,7 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--probably always zero & false, but juuuust in case -->
+
 	<VersionedEntry Name="pauseGameFunctionContext" Type="MidhookContextInterpreter">
 		<Version Version="All" Game="Halo1">
 			<Parameters>
@@ -255,6 +255,17 @@
 			</Parameters>
 		</Version>
 	</VersionedEntry>
+
+	<!--just check what writes to tick counter, put it immediately after-->
+	<VersionedEntry Name="tickIncrementFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB666C5</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
 	<!-- #endregion control-->
 	
 	

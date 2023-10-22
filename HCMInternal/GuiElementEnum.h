@@ -41,6 +41,7 @@
 		((GUIShowingPausesGame, (ALL_GAMES_AND_MAINMENU)))\
 	((togglePauseGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((togglePauseSettingsSubheading, (ALL_GAMES_AND_MAINMENU)))\
+		((advanceTicksGUI, (ALL_SUPPORTED_GAMES)))\
 		((pauseAlsoFreesCursorGUI, (ALL_GAMES_AND_MAINMENU)))\
 		((pauseAlsoBlocksInputGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((showGUIFailuresGUI, (ALL_GAMES_AND_MAINMENU)))\

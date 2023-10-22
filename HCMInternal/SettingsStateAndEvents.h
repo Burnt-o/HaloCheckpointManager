@@ -30,6 +30,7 @@ public:
 
 	// events
 	std::shared_ptr<ActionEvent> showGUIFailures = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> advanceTicksEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceCheckpointEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceRevertEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceDoubleRevertEvent = std::make_shared<ActionEvent>();
@@ -91,6 +92,13 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(pauseAlsoFreesCursor)
+		);
+
+	std::shared_ptr<Setting<int>> advanceTicksCount = std::make_shared<Setting<int>>
+		(
+			1,
+			[](int in) { return in > 0; }, // must be positive
+			nameof(advanceTicksCount)
 		);
 
 	std::shared_ptr<Setting<bool>> injectionIgnoresChecksum = std::make_shared<Setting<bool>>
@@ -230,6 +238,7 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		advanceTicksCount,
 		injectionIgnoresChecksum,
 		injectCheckpointForcesRevert,
 		injectCheckpointLevelCheck,

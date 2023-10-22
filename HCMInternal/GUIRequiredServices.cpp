@@ -20,6 +20,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::togglePauseGUI,
 			{OptionalCheatEnum::TogglePause}
 	},
+	{GUIElementEnum::advanceTicksGUI,
+			{OptionalCheatEnum::AdvanceTicks, OptionalCheatEnum::TogglePause}
+	},
 	{GUIElementEnum::pauseAlsoFreesCursorGUI,
 			{OptionalCheatEnum::TogglePause, OptionalCheatEnum::ToggleFreeCursor}
 	},

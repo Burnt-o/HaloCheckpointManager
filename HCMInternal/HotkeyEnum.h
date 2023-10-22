@@ -3,6 +3,7 @@
 #define ALLHOTKEYS 	\
 toggleGUI,\
 togglePause,\
+advanceTicks,\
 forceCheckpoint,\
 forceRevert,\
 forceDoubleRevert,\

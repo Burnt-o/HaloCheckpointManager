@@ -29,7 +29,7 @@ private:
 		HotkeysEnum::enumName,\
 		defaultBinding) }
 
-	static constexpr inline int hotkeyEnumCount = 14;// magic_enum::enum_count<HotkeysEnum>();
+	static constexpr inline int hotkeyEnumCount = 15;// magic_enum::enum_count<HotkeysEnum>();
 	static constexpr inline int magicEnumCount = magic_enum::enum_count<HotkeysEnum>();
 
 	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>::value_type allHotkeysData[hotkeyEnumCount]
@@ -45,6 +45,10 @@ private:
 		initHotkey(togglePause,
 		mSettings->togglePauseHotkeyEvent,
 		vvk{{ ImGuiKey_P }}),
+
+		initHotkey(advanceTicks,
+		mSettings->advanceTicksEvent,
+		vvk{}),
 
 		initHotkey(forceCheckpoint,
 		mSettings->forceCheckpointEvent,

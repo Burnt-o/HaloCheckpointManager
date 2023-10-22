@@ -391,6 +391,12 @@
     <ClInclude Include="IgnoreCheckpointChecksum.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="AdvanceTicks.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIAdvanceTicks.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -521,6 +527,9 @@
     </ClCompile>
     <ClCompile Include="GetCurrentDifficulty.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvanceTicks.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

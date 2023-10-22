@@ -220,6 +220,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AdvanceTicks.h" />
     <ClInclude Include="AIFreeze.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="BlockGameInput.h" />
@@ -233,6 +234,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetCurrentDifficulty.h" />
     <ClInclude Include="GetCurrentLevelCode.h" />
     <ClInclude Include="GetObjectAddress.h" />
+    <ClInclude Include="GUIAdvanceTicks.h" />
     <ClInclude Include="GUIConsoleCommand.h" />
     <ClInclude Include="GUIHeading.h" />
     <ClInclude Include="GUIHotkeyOnly.h" />
@@ -333,6 +335,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdvanceTicks.cpp" />
     <ClCompile Include="AIFreeze.cpp" />
     <ClCompile Include="BlockGameInput.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
