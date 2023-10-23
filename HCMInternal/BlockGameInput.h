@@ -15,6 +15,4 @@ public:
 
 	std::unique_ptr<ScopedServiceRequest> scopedRequest(std::string callerID);
 
-	std::map<GameState, HCMInitException>& getServiceFailures();
 };
-

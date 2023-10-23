@@ -6,55 +6,45 @@
 
 
 
+
 class BlockGameInput::BlockGameInputImpl : public IProvideScopedRequests
 {
 private:
 	static inline BlockGameInputImpl* instance = nullptr;
 
 	std::set<std::string> callersRequestingBlockedInput{};
-	std::map<GameState, std::shared_ptr<ModulePatch>> blockGameInputPatches;
+	std::shared_ptr<ModuleMidHook> blockGameKeyboardInputHook;
+	std::shared_ptr< MidhookFlagInterpreter> blockGameKeyboardInputFunctionFlagSetter;
 
-	std::map<GameState, HCMInitException> serviceFailures;
+	std::shared_ptr<ModulePatch> blockGameMouseInputPatch;
+
+	std::shared_ptr<ModulePatch> blockGameControllerInputPatch;
+
+
+	static void blockGameKeyboardInputHookFunction(SafetyHookContext& ctx)
+	{
+		instance->blockGameKeyboardInputFunctionFlagSetter->setFlag(ctx);
+	}
+
+
+	bool previousGamePadState = false;
+
 public:
 	BlockGameInputImpl(std::shared_ptr<PointerManager> ptr)
 	{
 		if (instance) throw HCMInitException("Cannot have more than one BlockGameInputImpl");
 
+		auto blockGameKeyboardInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameKeyboardInputFunction));
+		blockGameKeyboardInputFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(blockGameKeyboardInputFunctionFlagSetter));
+		blockGameKeyboardInputHook = ModuleMidHook::make(L"main", blockGameKeyboardInputFunction, blockGameKeyboardInputHookFunction, false);
 
-		for (auto game : AllSupportedGames)
-		{
-			try
-			{
-				auto blockGameInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameInputFunction), game);
-				auto blockGameInputCode = ptr->getVectorData<byte>(nameof(blockGameInputCode), game);
+		auto blockGameMouseInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameMouseInputFunction));
+		auto blockGameMouseInputCode = ptr->getVectorData<byte>(nameof(blockGameMouseInputCode));
+		blockGameMouseInputPatch = ModulePatch::make(L"main", blockGameMouseInputFunction, *blockGameMouseInputCode.get());
 
-				std::shared_ptr<ModulePatch> patch;
-				switch (game) // runtime gamevalue to template gamevalue shennaigans
-				{
-				case GameState::Value::Halo1: patch = ModulePatch::make(game.toModuleName(), blockGameInputFunction, *blockGameInputCode.get(), false); break;
-				case GameState::Value::Halo2: patch = ModulePatch::make(game.toModuleName(), blockGameInputFunction, *blockGameInputCode.get(), false); break;
-				case GameState::Value::Halo3: patch = ModulePatch::make(game.toModuleName(), blockGameInputFunction, *blockGameInputCode.get(), false); break;
-				case GameState::Value::Halo3ODST: patch = ModulePatch::make(game.toModuleName(), blockGameInputFunction, *blockGameInputCode.get(), false); break;
-				case GameState::Value::HaloReach: patch = ModulePatch::make(game.toModuleName(), blockGameInputFunction, *blockGameInputCode.get(), false); break;
-				case GameState::Value::Halo4: patch = ModulePatch::make(game.toModuleName(), blockGameInputFunction, *blockGameInputCode.get(), false); break;
-				}
-				blockGameInputPatches.emplace(game, patch);
-			}
-			catch (HCMInitException ex)
-			{
-				serviceFailures.emplace(game, ex);
-			}
-		}
-
-		if (blockGameInputPatches.empty())
-		{
-			std::stringstream oss;
-			for (auto& [game, ex] : serviceFailures)
-			{
-				oss << game.toString() << ": " << ex.what() << std::endl;
-			}
-			throw HCMInitException(std::format("Could not construct any game implementations\n{}", oss.str()));
-		}
+		auto blockGameControllerInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameControllerInputFunction));
+		auto blockGameControllerInputCode = ptr->getVectorData<byte>(nameof(blockGameControllerInputCode));
+		blockGameControllerInputPatch = ModulePatch::make(L"main", blockGameControllerInputFunction, *blockGameControllerInputCode.get());
 
 
 		instance = this;
@@ -71,10 +61,9 @@ public:
 		callersRequestingBlockedInput.insert(callerID);
 		if (callersRequestingBlockedInput.empty() == false)
 		{
-			for (auto& [game, patch] : blockGameInputPatches)
-			{
-				patch->setWantsToBeAttached(true);
-			}
+			blockGameKeyboardInputHook->setWantsToBeAttached(true);
+			blockGameMouseInputPatch->setWantsToBeAttached(true);
+			blockGameControllerInputPatch->setWantsToBeAttached(true);
 		}
 	}
 
@@ -83,15 +72,11 @@ public:
 		callersRequestingBlockedInput.erase(callerID);
 		if (callersRequestingBlockedInput.empty() == true)
 		{
-			for (auto& [game, patch] : blockGameInputPatches)
-			{
-				patch->setWantsToBeAttached(false);
-			}
+			blockGameKeyboardInputHook->setWantsToBeAttached(false);
+			blockGameMouseInputPatch->setWantsToBeAttached(false);
+			blockGameControllerInputPatch->setWantsToBeAttached(false);
 		}
 	}
-
-
-	std::map<GameState, HCMInitException>& getServiceFailures() { return serviceFailures; }
 
 };
 
@@ -108,6 +93,3 @@ BlockGameInput::BlockGameInput(std::shared_ptr<PointerManager> ptr)
 BlockGameInput::~BlockGameInput() = default;
 
 std::unique_ptr<ScopedServiceRequest> BlockGameInput::scopedRequest(std::string callerID) { return std::make_unique<ScopedServiceRequest>(pimpl, callerID); }
-
-
-std::map<GameState, HCMInitException>& BlockGameInput::getServiceFailures() { return pimpl->getServiceFailures(); }

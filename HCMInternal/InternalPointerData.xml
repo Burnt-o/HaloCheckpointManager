@@ -221,27 +221,59 @@
 	</VersionedEntry>
 
 	<!--same as above, it's one of those funcs that accesses the pause flag.-->
-	<!--<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ExeOffset">
+	<VersionedEntry Name="blockGameKeyboardInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x1E522D</Offset>
+				<Offset>0x87A35B</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
-	--><!--probably always zero & false, but juuuust in case --><!--
-	<VersionedEntry Name="blockGameInputFunctionFlagSetter" Type="MidhookFlagInterpreter">
+	<!--probably always zero & true, but juuuust in case -->
+	<VersionedEntry Name="blockGameKeyboardInputFunctionFlagSetter" Type="MidhookFlagInterpreter">
 		<Version Version="All" ProcessType="Steam">
 			<rflag>zero</rflag>
-			<value>false</value>
+			<value>true</value>
 		</Version>
-	</VersionedEntry>-->
+	</VersionedEntry>
 
-	<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ModuleOffset">
+	<VersionedEntry Name="blockGameMouseInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87A2C0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="blockGameMouseInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="blockGameControllerInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87A741</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="blockGameControllerInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+
+
+	<!--<VersionedEntry Name="blockGameInputFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xAC2A17</Offset>
+				--><!--<Offset>0xAC2A17</Offset>--><!--
+				<Offset>0xADC44B</Offset>
 			</Offsets>
 		</Version>
 
@@ -277,7 +309,7 @@
 		<Version Version="All" Game="Halo4">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
-	</VersionedEntry>
+	</VersionedEntry>-->
 
 
 	<VersionedEntry Name="pauseGameFunction" Type="MultilevelPointer::ModuleOffset">
