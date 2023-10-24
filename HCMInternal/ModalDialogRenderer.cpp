@@ -116,8 +116,9 @@ public:
 class FailedOptionalCheatServicesDialog : public IModalDialog<std::tuple<>>
 {
 private:
-	std::map<GameState, std::vector<std::pair<GUIElementEnum, std::string>>> guiFailureMap;
+	std::map<GameState, std::pair<std::vector<std::pair<GUIElementEnum, std::string>>, int>> guiFailureMap;
 	bool anyErrorsAtAll = false;
+	int totalErrors = 0;
 public:
 	FailedOptionalCheatServicesDialog() : IModalDialog("Failed optional cheat services")
 	{
@@ -128,21 +129,25 @@ public:
 		// reset guiFailureMap to empty state
 		guiFailureMap =
 		{
-			{GameState::Value::Halo1, {} },
-			{GameState::Value::Halo2, {} },
-			{GameState::Value::Halo3, {} },
-			{GameState::Value::Halo3ODST, {} },
-			{GameState::Value::HaloReach, {} },
-			{GameState::Value::Halo4, {} },
-			{GameState::Value::NoGame, {} },
+			{GameState::Value::Halo1, {{}, 0} },
+			{GameState::Value::Halo2, {{}, 0}  },
+			{GameState::Value::Halo3, {{}, 0}  },
+			{GameState::Value::Halo3ODST, {{}, 0}  },
+			{GameState::Value::HaloReach, {{}, 0}  },
+			{GameState::Value::Halo4, {{}, 0}  },
+			{GameState::Value::NoGame, {{}, 0}  },
 		};
 
 		// fill up guiFailureMap
 		anyErrorsAtAll = false;
+		totalErrors = 0;
+		
 		for (auto& [gameGuiPair, errorMessage] : guiFailures->getFailureMessagesMap())
 		{
+			guiFailureMap.at(gameGuiPair.first).second++; // increment error count
+			totalErrors++;
 			anyErrorsAtAll = true;
-			guiFailureMap.at(gameGuiPair.first).emplace_back(std::pair<GUIElementEnum, std::string>{ gameGuiPair.second, errorMessage });
+			guiFailureMap.at(gameGuiPair.first).first.emplace_back(std::pair<GUIElementEnum, std::string>{ gameGuiPair.second, errorMessage } );
 		}
 	}
 	virtual void render()
@@ -166,16 +171,17 @@ public:
 			}
 			else
 			{
+				ImGui::Text(std::format("Total failures: {}", totalErrors).c_str());
 				for (auto& [game, enumMessagePairVector] : guiFailureMap)
 				{
-					if (enumMessagePairVector.empty()) continue;
+					if (enumMessagePairVector.first.empty()) continue;
 
-					if (ImGui::TreeNodeEx(game.toString().c_str(), ImGuiTreeNodeFlags_FramePadding))
+					if (ImGui::TreeNodeEx(std::format("{} : {} failure{}", game.toString(), enumMessagePairVector.second, enumMessagePairVector.second == 1 ? "" : "s").c_str(), ImGuiTreeNodeFlags_FramePadding))
 					{
-						for (auto enumMessagePair : enumMessagePairVector)
+						for (auto enumMessagePair : enumMessagePairVector.first)
 						{
 							ImGui::Text(std::format("{} service failed! Error: ", magic_enum::enum_name(enumMessagePair.first)).c_str());
-							ImGui::Text(enumMessagePair.second.c_str());
+							ImGui::Text(std::format("   {}", enumMessagePair.second).c_str());
 							ImGui::Dummy({ 2,2 }); // padding between messages
 						}
 						ImGui::TreePop();
