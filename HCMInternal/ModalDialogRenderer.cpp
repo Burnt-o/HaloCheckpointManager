@@ -50,7 +50,7 @@ public:
 		if (ImGui::BeginPopupModal(mDialogTitle.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text(mText.c_str());
-			if (ImGui::Button("Continue"))
+			if (ImGui::Button("Continue") || ImGui::IsKeyPressed(ImGuiKey_Enter))
 			{
 				PLOG_DEBUG << "closing InjectionWarningDialog with continue";
 				currentReturnValue = true;
@@ -58,7 +58,7 @@ public:
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel"))
+			if (ImGui::Button("Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape))
 			{
 				PLOG_DEBUG << "closing InjectionWarningDialog with Cancel";
 				currentReturnValue = false;
@@ -92,7 +92,7 @@ public:
 		if (ImGui::BeginPopupModal(mDialogTitle.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::InputText("Name: ", &std::get<std::string>(currentReturnValue));
-			if (ImGui::Button("Accept"))
+			if (ImGui::Button("Accept") || ImGui::IsKeyPressed(ImGuiKey_Enter))
 			{
 				PLOG_DEBUG << "closing CheckpointDumpNameDialog with Accept";
 				std::get<bool>(currentReturnValue) = true;
@@ -100,7 +100,7 @@ public:
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel"))
+			if (ImGui::Button("Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape))
 			{
 				PLOG_DEBUG << "closing CheckpointDumpNameDialog with Cancel";
 				std::get<bool>(currentReturnValue) = false;
@@ -171,12 +171,12 @@ public:
 			}
 			else
 			{
-				ImGui::Text(std::format("Total failures: {}", totalErrors).c_str());
+				ImGui::Text(std::format("Total service failures: {}", totalErrors).c_str());
 				for (auto& [game, enumMessagePairVector] : guiFailureMap)
 				{
 					if (enumMessagePairVector.first.empty()) continue;
 
-					if (ImGui::TreeNodeEx(std::format("{} : {} failure{}", game.toString(), enumMessagePairVector.second, enumMessagePairVector.second == 1 ? "" : "s").c_str(), ImGuiTreeNodeFlags_FramePadding))
+					if (ImGui::TreeNodeEx(std::format("{} : {} service failure{}", game.toString(), enumMessagePairVector.second, enumMessagePairVector.second == 1 ? "" : "s").c_str(), ImGuiTreeNodeFlags_FramePadding))
 					{
 						for (auto enumMessagePair : enumMessagePairVector.first)
 						{
@@ -190,6 +190,13 @@ public:
 			}
 
 			if (ImGui::Button("Ok"))
+			{
+				PLOG_DEBUG << "closing FailedOptionalCheatServicesDialog with Ok";
+				isOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_Escape))
 			{
 				PLOG_DEBUG << "closing FailedOptionalCheatServicesDialog with Ok";
 				isOpen = false;
