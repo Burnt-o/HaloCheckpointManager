@@ -312,21 +312,31 @@
 	</VersionedEntry>-->
 
 
+	<!-- there's several ways to do this, the easiest way is to use mod tools to find where main gameloop gets the gamespeed float and nop that/set it to zero-->
 	<VersionedEntry Name="pauseGameFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xAC2C18</Offset>
+				<Offset>0xAC2C11</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x706B49</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
 
-	<VersionedEntry Name="pauseGameFunctionContext" Type="MidhookContextInterpreter">
+	<VersionedEntry Name="pauseGameCode" Type="Vector" Typename="byte">
 		<Version Version="All" Game="Halo1">
-			<Parameters>
-				<tickRateUnit>rax</tickRateUnit>
-			</Parameters>
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 
@@ -2946,6 +2956,7 @@
 	<!--#endregion DynamicStructs-->
 	
 	<!--#region ai freeze-->
+	<!--best to user commandline/tagtest to just flip it-->
 	<VersionedEntry Name="aiFreezeFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -2958,6 +2969,14 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x610EFC</Offset>
+			</Offsets>
+		</Version>
+
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x56C045</Offset>
 			</Offsets>
 		</Version>
 
@@ -2980,10 +2999,10 @@
 			<value>true</value>
 		</Version>
 
-		<!--<Version Version="All" Game="Halo3">
+		<Version Version="All" Game="Halo3">
 			<rflag>zero</rflag>
 			<value>true</value>
-		</Version>-->
+		</Version>
 	</VersionedEntry>
 
 

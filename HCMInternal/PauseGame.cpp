@@ -13,21 +13,9 @@ private:
 	static inline PauseGameImpl* instance = nullptr;
 
 	std::set<std::string> callersRequestingBlockedInput{};
-	std::map<GameState, std::shared_ptr<ModuleMidHook>> pauseGameInputHook;
-	std::map<GameState, std::shared_ptr< MidhookContextInterpreter>> pauseGameFunctionContext;
+	std::map<GameState, std::shared_ptr<ModulePatch>> pauseGamePatches;
 
 
-	template<GameState::Value game>
-	static void pauseGameHookFunction(SafetyHookContext& ctx) 
-	{
-		enum class param
-		{
-			tickRateUnit
-		};
-		auto* ctxInterpreter = instance->pauseGameFunctionContext.at(game).get();
-
-		*(byte*)ctxInterpreter->getParameterRef(ctx, (int)param::tickRateUnit) = 0;
-	}
 
 	bool isOverriden = false;
 
@@ -43,20 +31,19 @@ public:
 			try
 			{
 				auto pauseGameFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pauseGameFunction), game);
-				auto functionContext = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(pauseGameFunctionContext), game);
-				pauseGameFunctionContext.emplace(game, functionContext);
+				auto pauseGameCode = ptr->getVectorData<byte>(nameof(pauseGameCode), game);
 
-				std::shared_ptr<ModuleMidHook> midhook;
+				std::shared_ptr<ModulePatch> patch;
 				switch (game) // runtime gamevalue to template gamevalue shennaigans
 				{
-				case GameState::Value::Halo1: midhook = ModuleMidHook::make(game.toModuleName(), pauseGameFunction, pauseGameHookFunction<GameState::Value::Halo1>, false); break;
-				case GameState::Value::Halo2: midhook = ModuleMidHook::make(game.toModuleName(), pauseGameFunction, pauseGameHookFunction<GameState::Value::Halo2>, false); break;
-				case GameState::Value::Halo3: midhook = ModuleMidHook::make(game.toModuleName(), pauseGameFunction, pauseGameHookFunction<GameState::Value::Halo3>, false); break;
-				case GameState::Value::Halo3ODST: midhook = ModuleMidHook::make(game.toModuleName(), pauseGameFunction, pauseGameHookFunction<GameState::Value::Halo3ODST>, false); break;
-				case GameState::Value::HaloReach: midhook = ModuleMidHook::make(game.toModuleName(), pauseGameFunction, pauseGameHookFunction<GameState::Value::HaloReach>, false); break;
-				case GameState::Value::Halo4: midhook = ModuleMidHook::make(game.toModuleName(), pauseGameFunction, pauseGameHookFunction<GameState::Value::Halo4>, false); break;
+				case GameState::Value::Halo1: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
+				case GameState::Value::Halo2: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
+				case GameState::Value::Halo3: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
+				case GameState::Value::Halo3ODST: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
+				case GameState::Value::HaloReach: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
+				case GameState::Value::Halo4: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
 				}
-				pauseGameInputHook.emplace(game, midhook);
+				pauseGamePatches.emplace(game, patch);
 			}
 			catch (HCMInitException ex)
 			{
@@ -64,7 +51,7 @@ public:
 			}
 		}
 
-		if (pauseGameInputHook.empty())
+		if (pauseGamePatches.empty())
 		{
 			std::stringstream oss;
 			for (auto& [game, ex] : serviceFailures)
@@ -89,9 +76,9 @@ public:
 		callersRequestingBlockedInput.insert(callerID);
 		if (callersRequestingBlockedInput.empty() == false && !isOverriden)
 		{
-			for (auto& [game, midhook] : pauseGameInputHook)
+			for (auto& [game, patch] : pauseGamePatches)
 			{
-				midhook->setWantsToBeAttached(true);
+				patch->setWantsToBeAttached(true);
 			}
 		}
 	}
@@ -101,9 +88,9 @@ public:
 		callersRequestingBlockedInput.erase(callerID);
 		if (callersRequestingBlockedInput.empty() == true)
 		{
-			for (auto& [game, midhook] : pauseGameInputHook)
+			for (auto& [game, patch] : pauseGamePatches)
 			{
-				midhook->setWantsToBeAttached(false);
+				patch->setWantsToBeAttached(false);
 			}
 		}
 	}
@@ -114,18 +101,18 @@ public:
 		isOverriden = overrideValue;
 		if (overrideValue)
 		{
-			for (auto& [game, midhook] : pauseGameInputHook)
+			for (auto& [game, patch] : pauseGamePatches)
 			{
-				midhook->setWantsToBeAttached(false);
+				patch->setWantsToBeAttached(false);
 			}
 		}
 		else
 		{
 			if (callersRequestingBlockedInput.empty() == false)
 			{
-				for (auto& [game, midhook] : pauseGameInputHook)
+				for (auto& [game, patch] : pauseGamePatches)
 				{
-					midhook->setWantsToBeAttached(true);
+					patch->setWantsToBeAttached(true);
 				}
 			}
 		}
