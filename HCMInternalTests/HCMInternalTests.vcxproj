@@ -178,12 +178,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\HCMInternal\AdvanceTicks.cpp" />
     <ClCompile Include="..\HCMInternal\AIFreeze.cpp" />
     <ClCompile Include="..\HCMInternal\BlockGameInput.cpp" />
     <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
     <ClCompile Include="..\HCMInternal\FreeMCCCursor.cpp" />
+    <ClCompile Include="..\HCMInternal\GetCurrentDifficulty.cpp" />
+    <ClCompile Include="..\HCMInternal\GetCurrentLevelCode.cpp" />
     <ClCompile Include="..\HCMInternal\GetMCCVersion.cpp" />
     <ClCompile Include="..\HCMInternal\GetObjectAddress.cpp" />
     <ClCompile Include="..\HCMInternal\GetPlayerDatum.cpp" />
@@ -236,6 +239,7 @@
     <ClCompile Include="CheatConstructionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\HCMInternal\AdvanceTicks.h" />
     <ClInclude Include="..\HCMInternal\App.h" />
     <ClInclude Include="..\HCMInternal\BlockGameInput.h" />
     <ClInclude Include="..\HCMInternal\ConsoleCommand.h" />
@@ -245,6 +249,7 @@
     <ClInclude Include="..\HCMInternal\D3D11Hook.h" />
     <ClInclude Include="..\HCMInternal\Datum.h" />
     <ClInclude Include="..\HCMInternal\DIContainer.h" />
+    <ClInclude Include="..\HCMInternal\DifficultyEnum.h" />
     <ClInclude Include="..\HCMInternal\DirPathContainer.h" />
     <ClInclude Include="..\HCMInternal\DumpCheckpoint.h" />
     <ClInclude Include="..\HCMInternal\DumpCore.h" />
@@ -258,10 +263,13 @@
     <ClInclude Include="..\HCMInternal\ForceRevert.h" />
     <ClInclude Include="..\HCMInternal\FreeMCCCursor.h" />
     <ClInclude Include="..\HCMInternal\GameState.h" />
+    <ClInclude Include="..\HCMInternal\GetCurrentDifficulty.h" />
+    <ClInclude Include="..\HCMInternal\GetCurrentLevelCode.h" />
     <ClInclude Include="..\HCMInternal\GetMCCVersion.h" />
     <ClInclude Include="..\HCMInternal\GetObjectAddress.h" />
     <ClInclude Include="..\HCMInternal\GetPlayerDatum.h" />
     <ClInclude Include="..\HCMInternal\GlobalKill.h" />
+    <ClInclude Include="..\HCMInternal\GUIAdvanceTicks.h" />
     <ClInclude Include="..\HCMInternal\GUIConsoleCommand.h" />
     <ClInclude Include="..\HCMInternal\GUIElementConstructor.h" />
     <ClInclude Include="..\HCMInternal\GuiElementEnum.h" />
@@ -290,11 +298,13 @@
     <ClInclude Include="..\HCMInternal\HotkeyRendererImpl.h" />
     <ClInclude Include="..\HCMInternal\IAnchorPoint.h" />
     <ClInclude Include="..\HCMInternal\IGetMCCVersion.h" />
+    <ClInclude Include="..\HCMInternal\IgnoreCheckpointChecksum.h" />
     <ClInclude Include="..\HCMInternal\IGUIElement.h" />
     <ClInclude Include="..\HCMInternal\IGUIRequiredServices.h" />
     <ClInclude Include="..\HCMInternal\IMakeOrGetCheat.h" />
     <ClInclude Include="..\HCMInternal\IMessagesGUI.h" />
     <ClInclude Include="..\HCMInternal\ImGuiManager.h" />
+    <ClInclude Include="..\HCMInternal\IModalDialogRenderer.h" />
     <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="..\HCMInternal\includes\safetyhook\Zydis.h" />
     <ClInclude Include="..\HCMInternal\InjectCheckpoint.h" />

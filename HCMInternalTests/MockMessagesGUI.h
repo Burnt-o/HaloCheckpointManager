@@ -8,5 +8,5 @@ public:
 	{
 		PLOG_INFO << "USER FACING MESSAGE: " << message;
 	}
-	virtual void setAnchorPoint(std::shared_ptr<IAnchorPoint> anchorPoint) override {}
+	virtual void setAnchorPoint(std::weak_ptr<IAnchorPoint> anchorPoint) override {}
 };

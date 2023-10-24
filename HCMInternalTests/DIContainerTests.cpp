@@ -26,9 +26,9 @@ namespace HCMInternalTests
 				NeedyMock(IDIContainer& dicon)
 				{
 					auto serv = dicon.Resolve<ServiceMock>();
-					Assert::IsTrue(serv.operator bool());
+					Assert::IsFalse(serv.expired());
 
-					auto my69 = serv->return69();
+					auto my69 = serv.lock()->return69();
 					Assert::AreEqual(my69, 69);
 				}
 			};
@@ -58,9 +58,9 @@ namespace HCMInternalTests
 				NeedyMock(IDIContainer& dicon)
 				{
 					auto serv = dicon.Resolve<ServiceMockInterface>();
-					Assert::IsTrue(serv.operator bool());
+					Assert::IsFalse(serv.expired());
 
-					auto my69 = serv->return69();
+					auto my69 = serv.lock()->return69();
 					Assert::AreEqual(my69, 69);
 				}
 			};

@@ -9,7 +9,7 @@ public:
 	{
 		return SelectedCheckpointData{}; // null data
 	}
-	virtual SelectedFolderData getDumpInfo() override
+	virtual SelectedFolderData getDumpInfo(GameState game) override
 	{
 		return SelectedFolderData{}; // null data
 	}
