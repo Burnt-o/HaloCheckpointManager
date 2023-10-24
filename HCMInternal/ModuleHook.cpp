@@ -146,6 +146,14 @@ void ModulePatch::attach()
 {
 	PLOG_VERBOSE << " ModulePatch::attach()";
 #define logErrorReturn(x, y) if (x) { PLOG_ERROR << y; return; }
+
+	uintptr_t addy;
+	mOriginalFunction->resolve(&addy);
+	logErrorReturn(IsBadReadPtr((void*)addy, mPatchedBytes.size()), std::format("Bad read ptr at {:x}", addy));
+	//PLOG_DEBUG << "mOriginalFunction loc: " << std::hex << (uint64_t)addy;
+	//PLOG_DEBUG << "mPatchedBytes size: " << mPatchedBytes.size();
+
+
 	if (mOriginalBytes.empty())
 	{
 		mOriginalBytes.resize(mPatchedBytes.size());
@@ -158,10 +166,6 @@ void ModulePatch::attach()
 
 	logErrorReturn(currentBytes != mOriginalBytes, "Current bytes did not match original bytes");
 
-	uintptr_t addy;
-	mOriginalFunction->resolve(&addy);
-	PLOG_DEBUG << "mOriginalFunction loc: " << std::hex << (uint64_t)addy;
-		PLOG_DEBUG << "mPatchedBytes size: " << mPatchedBytes.size();
 
 	logErrorReturn(mOriginalFunction->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false, std::format("Failed to patch new bytes: {}", MultilevelPointer::GetLastError()));
 }

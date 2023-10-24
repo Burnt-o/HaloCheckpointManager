@@ -13,7 +13,7 @@ private:
 	static inline PauseGameImpl* instance = nullptr;
 
 	std::set<std::string> callersRequestingBlockedInput{};
-	std::map<GameState, std::shared_ptr<ModulePatch>> pauseGamePatches;
+	std::vector<std::unique_ptr<ModulePatch>> pauseGamePatches;
 
 
 
@@ -33,17 +33,9 @@ public:
 				auto pauseGameFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pauseGameFunction), game);
 				auto pauseGameCode = ptr->getVectorData<byte>(nameof(pauseGameCode), game);
 
-				std::shared_ptr<ModulePatch> patch;
-				switch (game) // runtime gamevalue to template gamevalue shennaigans
-				{
-				case GameState::Value::Halo1: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
-				case GameState::Value::Halo2: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
-				case GameState::Value::Halo3: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
-				case GameState::Value::Halo3ODST: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
-				case GameState::Value::HaloReach: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
-				case GameState::Value::Halo4: patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false); break;
-				}
-				pauseGamePatches.emplace(game, patch);
+				std::unique_ptr<ModulePatch> patch = ModulePatch::make(game.toModuleName(), pauseGameFunction, *pauseGameCode.get(), false);
+
+				pauseGamePatches.emplace_back(std::move(patch));
 			}
 			catch (HCMInitException ex)
 			{
@@ -76,7 +68,7 @@ public:
 		callersRequestingBlockedInput.insert(callerID);
 		if (callersRequestingBlockedInput.empty() == false && !isOverriden)
 		{
-			for (auto& [game, patch] : pauseGamePatches)
+			for (auto& patch : pauseGamePatches)
 			{
 				patch->setWantsToBeAttached(true);
 			}
@@ -88,7 +80,7 @@ public:
 		callersRequestingBlockedInput.erase(callerID);
 		if (callersRequestingBlockedInput.empty() == true)
 		{
-			for (auto& [game, patch] : pauseGamePatches)
+			for (auto& patch : pauseGamePatches)
 			{
 				patch->setWantsToBeAttached(false);
 			}
@@ -101,7 +93,7 @@ public:
 		isOverriden = overrideValue;
 		if (overrideValue)
 		{
-			for (auto& [game, patch] : pauseGamePatches)
+			for (auto& patch : pauseGamePatches)
 			{
 				patch->setWantsToBeAttached(false);
 			}
@@ -110,7 +102,7 @@ public:
 		{
 			if (callersRequestingBlockedInput.empty() == false)
 			{
-				for (auto& [game, patch] : pauseGamePatches)
+				for (auto& patch : pauseGamePatches)
 				{
 					patch->setWantsToBeAttached(true);
 				}

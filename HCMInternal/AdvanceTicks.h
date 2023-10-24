@@ -21,7 +21,7 @@ private:
 	static std::unique_ptr<AdvanceTicksImpl> pimpl; // one shared instance of impl
 
 	// hooks 
-	std::shared_ptr<ModuleMidHook> tickIncrementHook; // seperate hook for each game, each gets bound to impls tickIncrementHookFunction
+	std::unique_ptr<ModuleMidHook> tickIncrementHook; // seperate hook for each game, each gets bound to impls tickIncrementHookFunction
 
 	// event callback ( the main stuff happens in a different callback in impl, this just turns on the hook)
 	void onAdvanceTicksEvent()
@@ -29,7 +29,11 @@ private:
 		// Starts unattached, gets turned on the first time advanceTicks is called,
 		// juuuust in case there's a bug/crash with the hook
 		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
-			tickIncrementHook->setWantsToBeAttached(true); 
+		{
+			PLOG_DEBUG << "attaching tickIncrement hook for game: " << mGame.toString();
+			tickIncrementHook->setWantsToBeAttached(true);
+		}
+
 	}
 
 public:

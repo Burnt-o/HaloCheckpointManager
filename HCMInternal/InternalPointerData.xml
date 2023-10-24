@@ -332,7 +332,7 @@
 
 	<VersionedEntry Name="pauseGameCode" Type="Vector" Typename="byte">
 		<Version Version="All" Game="Halo1">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+			<Data>0xB8, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90</Data>
 		</Version>
 
 		<Version Version="All" Game="Halo2">
@@ -340,12 +340,48 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--just check what writes to tick counter, put it immediately after-->
+	<!--just check what writes to tick counter, put it immediately after
+	check if the tick counter is actually incrementing every tick lol-->
 	<VersionedEntry Name="tickIncrementFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0xB666C5</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6BE05C</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x4DCAD</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x19AD0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x418A42</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x9A6E2</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
