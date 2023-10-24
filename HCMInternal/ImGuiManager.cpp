@@ -13,13 +13,13 @@ LRESULT __stdcall ImGuiManager::mNewWndProc(const HWND hWnd, UINT uMsg, WPARAM w
 	LRESULT res = ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
 
-
 	switch (uMsg)
 	{
 	//case WM_CLOSE:
 	case WM_DESTROY:
 	case WM_NCDESTROY:
 		GlobalKill::killMe();
+		break;
 	default:
 		break;
 	}
@@ -67,7 +67,7 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 	PLOG_DEBUG << "Initializing ImGui";
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange | ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
 
 	if (!ImGui_ImplWin32_Init(m_windowHandle))
 	{

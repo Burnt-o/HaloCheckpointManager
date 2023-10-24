@@ -346,9 +346,6 @@
     <ClInclude Include="GUISubHeading.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="ModalDialogRenderer.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="ScopedServiceRequest.h">
       <Filter>Classes</Filter>
     </ClInclude>
@@ -396,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="GUIAdvanceTicks.h">
       <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ModalDialogRenderer.h">
+      <Filter>Services\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -510,9 +510,6 @@
     <ClCompile Include="AIFreeze.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="ModalDialogRenderer.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
     <ClCompile Include="FreeMCCCursor.cpp">
       <Filter>Services\Control</Filter>
     </ClCompile>
@@ -530,6 +527,9 @@
     </ClCompile>
     <ClCompile Include="AdvanceTicks.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="ModalDialogRenderer.cpp">
+      <Filter>Services\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
