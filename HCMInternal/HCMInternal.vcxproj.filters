@@ -397,6 +397,9 @@
     <ClInclude Include="ModalDialogRenderer.h">
       <Filter>Services\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="GameTickEventHook.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -530,6 +533,9 @@
     </ClCompile>
     <ClCompile Include="ModalDialogRenderer.cpp">
       <Filter>Services\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTickEventHook.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -56,6 +56,14 @@ public:
 	// public so AdvanceTicks can access
 	void onTogglePauseChanged(bool& newValue)
 	{
+		//if (!mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
+		//{
+		//	if (pauseRequest)
+		//		pauseRequest.reset();
+		//	return;
+		//}
+
+
 		if (newValue)
 		{
 			pauseRequest = pauseGameService.lock()->scopedRequest(mGame.toString() + nameof(TogglePause));

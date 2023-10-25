@@ -3,6 +3,7 @@
 // MUST HAVE SAME NAME AS ASSOCIATED CLASS (the macro will be used in a std::variant and etc to convert from enum to type)
 #define ALLOPTIONALCHEATS 	\
 TogglePause,\
+GameTickEventHook,\
 AdvanceTicks,\
 ToggleBlockInput,\
 ToggleFreeCursor,\

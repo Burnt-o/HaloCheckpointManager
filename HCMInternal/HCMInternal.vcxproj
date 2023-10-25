@@ -231,6 +231,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DynamicStruct.h" />
     <ClInclude Include="DynamicStructFactory.h" />
     <ClInclude Include="FreeMCCCursor.h" />
+    <ClInclude Include="GameTickEventHook.h" />
     <ClInclude Include="GetCurrentDifficulty.h" />
     <ClInclude Include="GetCurrentLevelCode.h" />
     <ClInclude Include="GetObjectAddress.h" />
@@ -343,6 +344,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="DynamicStruct.cpp" />
     <ClCompile Include="DynamicStructFactory.cpp" />
     <ClCompile Include="FreeMCCCursor.cpp" />
+    <ClCompile Include="GameTickEventHook.cpp" />
     <ClCompile Include="GetCurrentDifficulty.cpp" />
     <ClCompile Include="GetCurrentLevelCode.cpp" />
     <ClCompile Include="GetObjectAddress.cpp" />
