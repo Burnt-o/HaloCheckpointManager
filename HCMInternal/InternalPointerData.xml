@@ -327,6 +327,34 @@
 				<Offset>0x706B49</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x36222</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x38666</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x3438D</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x610A6</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -338,10 +366,27 @@
 		<Version Version="All" Game="Halo2">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
 	</VersionedEntry>
 
 	<!--just check what writes to tick counter, put it immediately after
-	check if the tick counter is actually incrementing every tick lol-->
+	check if the tick counter is actually incrementing every tick lol
+	and that it isn't hit on pause-->
 	<VersionedEntry Name="tickIncrementFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -360,11 +405,25 @@
 		<Version Version="1.3272.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x4DCAD</Offset>
+				<Offset>0x560E87</Offset>
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3ODST">
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x3AB723</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x9A6E2</Offset>
+			</Offsets>
+		</Version>
+
+		<!--<Version Version="1.3272.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x19AD0</Offset>
@@ -383,7 +442,7 @@
 			<Offsets>
 				<Offset>0x9A6E2</Offset>
 			</Offsets>
-		</Version>
+		</Version>-->
 	</VersionedEntry>
 
 	<!-- #endregion control-->
