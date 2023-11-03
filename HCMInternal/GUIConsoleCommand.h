@@ -1,72 +1,78 @@
-#pragma once
-#include "IGUIElement.h"
-#include "SettingsStateAndEvents.h"
-class GUIConsoleCommand : public IGUIElement {
-
-private:
-	std::shared_ptr<ActionEvent> mEventToFire;
-	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
-	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
-	std::vector<std::thread> mFireEventThreads;
-public:
-
-	GUIConsoleCommand(GameState implGame, std::optional<HotkeysEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
-		: IGUIElement(implGame, hotkey), mSettingsWeak(settings)
-	{
-
-		PLOG_VERBOSE << "Constructing GUIConsoleCommand, name: " << getName();
-		PLOG_DEBUG << "&mEventToFire: " << std::hex << &mEventToFire;
-		this->currentHeight = 20;
-	}
-
-	void render(HotkeyRenderer& hotkeyRenderer) override
-	{
-		auto mSettings = mSettingsWeak.lock();
-		if (!mSettings)
-		{
-			PLOG_ERROR << "bad mSettings weakptr when rendering " << getName();
-			return;
-		}
-
-		static char commandString[255];
-		ImGui::Text("Console command: ");
-		ImGui::SameLine();
-
-		ImGui::SetNextItemWidth(100);
-		if (ImGui::InputText("##Command", commandString, 255, ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			mSettings->consoleCommandString->GetValue() = commandString;
-			PLOG_VERBOSE << "GUIConsoleCommand firing event, command: " << commandString;
-
-			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mSettings->consoleCommandEvent]() {mEvent->operator()(); }));
-			newThread.detach();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Send"))
-		{
-			mSettings->consoleCommandString->GetValue() = commandString;
-			PLOG_VERBOSE << "GUIConsoleCommand firing event, command: " << commandString;
-			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mSettings->consoleCommandEvent]() {mEvent->operator()(); }));
-			newThread.detach();
-		}
-
-
-	}
-	~GUIConsoleCommand()
-	{
-		for (auto& thread : mFireEventThreads)
-		{
-			if (thread.joinable())
-			{
-				PLOG_DEBUG << getName() << "joining mFireEventThread";
-				thread.join();
-				PLOG_DEBUG << getName() << "FireEventThread finished";
-			}
-
-		}
-	}
-
-
-	std::string_view getName() override { return nameof(GUIConsoleCommand); }
-
-};
+//#pragma once
+//#include "IGUIElement.h"
+//
+//#include "SettingsStateAndEvents.h"
+//class GUIConsoleCommand : public IGUIElement {
+//
+//private:
+//	std::string mLabelText;
+//	std::shared_ptr<ActionEvent> mEventToFire;
+//	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
+//	std::weak_ptr<Setting<std::string>> mCommandStringWeak;
+//	std::vector<std::thread> mFireEventThreads;
+//
+//public:
+//
+//	GUIConsoleCommand(GameState implGame, std::string labelText, std::weak_ptr<Setting<std::string>> commandString, std::shared_ptr<ActionEvent> eventToFire)
+//		: IGUIElement(implGame, std::nullopt), mCommandStringWeak(commandString), mEventToFire(eventToFire), mLabelText(labelText)
+//	{
+//		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");
+//		PLOG_VERBOSE << "Constructing GUIConsoleCommand, name: " << getName();
+//		PLOG_DEBUG << "&mEventToFire: " << std::hex << &mEventToFire;
+//		this->currentHeight = GUIFrameHeightWithSpacing;
+//	}
+//
+//	void render(HotkeyRenderer& hotkeyRenderer) override
+//	{
+//		
+//
+//		auto mCommandString = mCommandStringWeak.lock();
+//		if (!mCommandString)
+//		{
+//			PLOG_ERROR << "bad mSettings weakptr when rendering " << getName();
+//			return;
+//		}
+//
+//
+//		ImGui::Text(mLabelText.c_str());
+//		ImGui::SameLine();
+//
+//		ImGui::SetNextItemWidth(100);
+//		if (ImGui::InputText(std::format("##{}", mLabelText).c_str(), &mCommandString->GetValueDisplay(), ImGuiInputTextFlags_EnterReturnsTrue))
+//		{
+//			mCommandString->UpdateValueWithInput();
+//			PLOG_VERBOSE << "GUIConsoleCommand firing event, command: " << mCommandString->GetValue();
+//
+//			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
+//			newThread.detach();
+//		}
+//		DEBUG_GUI_HEIGHT;
+//		ImGui::SameLine();
+//		if (ImGui::Button(std::format("Send##{}", mLabelText).c_str()))
+//		{
+//			mCommandString->UpdateValueWithInput();
+//			PLOG_VERBOSE << "GUIConsoleCommand firing event, command: " << mCommandString->GetValue();
+//			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
+//			newThread.detach();
+//		}
+//
+//
+//	}
+//	~GUIConsoleCommand()
+//	{
+//		for (auto& thread : mFireEventThreads)
+//		{
+//			if (thread.joinable())
+//			{
+//				PLOG_DEBUG << getName() << "joining mFireEventThread";
+//				thread.join();
+//				PLOG_DEBUG << getName() << "FireEventThread finished";
+//			}
+//
+//		}
+//	}
+//
+//
+//	std::string_view getName() override { return mLabelText; }
+//
+//};

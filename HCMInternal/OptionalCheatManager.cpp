@@ -27,7 +27,14 @@
 #include "IgnoreCheckpointChecksum.h"
 #include "AdvanceTicks.h"
 #include "GameTickEventHook.h"
-
+#include "ForceTeleport.h"
+#include "ForceLaunch.h"
+#include "GetPlayerViewAngle.h"
+#include "GetObjectPhysics.h"
+#include "GetHavokComponent.h"
+#include "GetHavokAnchorPoint.h"
+#include "UnfreezeObjectPhysics.h"
+#include "GetObjectAddressCLI.h"
 
 #include "DIContainer.h"
 #include "map.h"
@@ -126,6 +133,8 @@ public:
 	// Very likely to throw HCMInitExceptions so be ready to catch them.
 	// called in OptionalCheatConstructor createCheats for loop, AND thru dicon by cheats that depend on other cheats.
 	std::shared_ptr< IOptionalCheat> getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon);
+
+
 };
 
 
@@ -153,7 +162,6 @@ OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>
 
 
 OptionalCheatManager::~OptionalCheatManager() = default;
-
 
 
 std::shared_ptr< IOptionalCheat> OptionalCheatConstructor::getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon)

@@ -8,6 +8,7 @@
 #define PCH_H
 
 // Windows 
+#define NOMINMAX 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <Psapi.h>
@@ -51,6 +52,12 @@
 #include "gsl\gsl" //https://github.com/microsoft/GSL
 // hooking
 #include "safetyhook.hpp"
+
+
+
+
+
+
 // logging
 #define PLOG_OMIT_LOG_DEFINES //both plog and rpc define these
 #include <plog/Log.h>
@@ -68,6 +75,14 @@
 #include "eventpp/callbacklist.h"
 #include "eventpp/utilities/scopedremover.h"
 
+// directx
+#include <directxtk\SimpleMath.h>
+using namespace DirectX;
+#include "HCM_imconfig.h" 
+
+
+
+
 
 // boost
 #include "boost\stacktrace.hpp"
@@ -83,6 +98,10 @@
 #include "ScopedCallback.h"
 #include "ScopedAtomicBool.h"
 
+constexpr int GUIFrameHeight = 19;
+constexpr int GUISpacing = 4;
+constexpr int GUIFrameHeightWithSpacing = GUIFrameHeight + GUISpacing;
+
 template <typename T, typename F>
 void once(T t, F f) {
     static bool first = true;
@@ -95,8 +114,6 @@ void once(T t, F f) {
 #define LOG_ONCE_THIS(x)   once([this](){},[this](){ x; });
 #define LOG_ONCE_CAPTURE(x, y)   once([y](){},[y](){ x; });
 //#define LOG_ONCE_CAPTURE(x, y, z)   once([y, z](){},[y, z](){ x; });
-
-//#include "HCM_imconfig.h"
 
 
 

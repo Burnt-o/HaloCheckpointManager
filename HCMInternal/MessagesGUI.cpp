@@ -3,7 +3,7 @@
 #include "imgui.h"
  
 
-void MessagesGUI::onImGuiRenderEvent(Vec2 screenSize)
+void MessagesGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 {
 	std::unique_lock<std::mutex> lock(mDestructionGuard);
 	iterateMessages();
@@ -18,6 +18,7 @@ constexpr float messageFadeTime = messageExpiryTimeout - messageFullOpacityTime;
 
 void MessagesGUI::iterateMessages()
 {
+	std::unique_lock<std::mutex> lock(addMessageMutex);
 	if (mMessages.empty()) return;
 
 	// Calculate age of each message
@@ -38,7 +39,7 @@ void MessagesGUI::iterateMessages()
 
 	// draw remaining messages
 	LOG_ONCE_THIS(PLOG_DEBUG << "mAnchorPoint exists? " << mAnchorPoint.has_value());
-	Vec2 messagePosition; 
+	SimpleMath::Vector2 messagePosition;
 	if (mAnchorPoint.has_value())
 	{
 		auto anc = mAnchorPoint.value().lock();
@@ -68,12 +69,12 @@ void MessagesGUI::iterateMessages()
 	{
 		drawMessage(message, messagePosition);
 		// update messagePosition based on previous messages linecount
-		messagePosition = Vec2(messagePosition.x, messagePosition.y + (message.lineCount * 17.f) + 5.f);
+		messagePosition = SimpleMath::Vector2(messagePosition.x, messagePosition.y + (message.lineCount * 17.f) + 5.f);
 	}
 }
 
 // returns vertical pixel height of message
-void MessagesGUI::drawMessage(const temporaryMessage& message, const Vec2& position)
+void MessagesGUI::drawMessage(const temporaryMessage& message, const SimpleMath::Vector2& position)
 {
 	// Calculate opacity using message age
 	float opacity = 1.f; 
@@ -169,10 +170,18 @@ std::string insertNewLines(const std::string& in, const size_t every_n, __int64&
 
 }
 
-std::mutex addMessageMutex;
+
 void MessagesGUI::addMessage(std::string message)
 {
 	std::unique_lock<std::mutex> lock(addMessageMutex);
+
+	if (message.size() == 0)
+	{
+		HCMRuntimeException ex("Message added with zero length!");
+		message = std::format("{}\n{}", ex.what(), ex.trace());
+		PLOG_ERROR << message;
+	}
+
 	// split message to multiple lines if necessary
 	__int64 lineCount;
 	message = insertNewLines(message, 150, lineCount);

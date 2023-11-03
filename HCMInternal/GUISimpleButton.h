@@ -18,11 +18,13 @@ public:
 	{
 		if (mButtonText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUISimplebutton, name: " << getName();
-		this->currentHeight = 20;
+		this->currentHeight = GUIFrameHeightWithSpacing;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		
+
 		auto mEventToFire = mEventToFireWeak.lock();
 		if (!mEventToFire)
 		{
@@ -43,6 +45,7 @@ public:
 			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
 			newThread.detach();
 		}
+		DEBUG_GUI_HEIGHT;
 	}
 
 	~GUISimpleButton()

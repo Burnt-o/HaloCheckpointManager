@@ -4,33 +4,9 @@
 #include "WindowsUtilities.h"
 
 // static, only needs to be set once
-void* PointerTypes::ExeOffset::mEXEAddress = nullptr;
+void* MultilevelPointerSpecialisation::ExeOffset::mEXEAddress = nullptr;
 std::stringstream MultilevelPointer::mLastError = static_cast<std::stringstream&&>(std::stringstream{} << "No error set"); //https://stackoverflow.com/questions/21924156/how-to-initialize-a-stdstringstream
 
-
-// static factory methods
-std::shared_ptr<MultilevelPointer> MultilevelPointer::make(const std::vector<int64_t> offsets)
-{
-	return std::make_shared<PointerTypes::ExeOffset>(offsets);
-}
-
-// Pointer is relative to some void* baseAddress
-std::shared_ptr<MultilevelPointer> MultilevelPointer::make(void* const baseAddress, const std::vector<int64_t> offsets)
-{
-	return std::make_shared<PointerTypes::BaseOffset>(baseAddress, offsets);
-}
-
-// Pointer is relative to a module eg halo1.dll
-std::shared_ptr<MultilevelPointer> MultilevelPointer::make(const std::wstring_view moduleName, const std::vector<int64_t> offsets)
-{
-	return std::make_shared<PointerTypes::ModuleOffset>(moduleName, offsets);
-}
-
-// Pointer is already fully resolved (used for stuff that never changes address)
-std::shared_ptr<MultilevelPointer> MultilevelPointer::make(void* const baseAddress)
-{
-	return std::make_shared<PointerTypes::Resolved>(baseAddress);
-}
 
 
 
@@ -71,13 +47,13 @@ bool MultilevelPointer::dereferencePointer(const void* const& base, const std::v
 		std::stringstream offsetInfo;
 		for (int i = 0; i < offsets.size(); i++)
 		{
-			offsetInfo << std::hex << std::format("offset{}: {}", i, offsets[i]) << std::endl;
+			offsetInfo << std::hex << std::format("offset{}: 0x{:X}", i, offsets[i]) << std::endl;
 		}
 		*SetLastErrorByRef() << "dereferencing failed after looping through offsets" << std::endl
 			<< "base: " << base << std::endl
 			<< "offsets.size() " << offsets.size() << std::endl
 			<< offsetInfo.str() << std::endl
-			<< "bad read address: " << base << std::endl;
+			<< "bad read address: " << baseAddress << std::endl;
 		return false;
 	}
 
@@ -86,12 +62,12 @@ bool MultilevelPointer::dereferencePointer(const void* const& base, const std::v
 
 }
 
-bool PointerTypes::ExeOffset::resolve(uintptr_t* resolvedOut) const
+bool MultilevelPointerSpecialisation::ExeOffset::resolve(uintptr_t* resolvedOut) const
 {
-	if (!PointerTypes::ExeOffset::mEXEAddress)
+	if (!MultilevelPointerSpecialisation::ExeOffset::mEXEAddress)
 	{
-		PointerTypes::ExeOffset::mEXEAddress = GetModuleHandleA(NULL);// null means get the handle for the currently running process
-		if (!PointerTypes::ExeOffset::mEXEAddress) 
+		MultilevelPointerSpecialisation::ExeOffset::mEXEAddress = GetModuleHandleA(NULL);// null means get the handle for the currently running process
+		if (!MultilevelPointerSpecialisation::ExeOffset::mEXEAddress) 
 		{ 
 			*SetLastErrorByRef() << "Couldn't get MCC exe process handle" << std::endl;
 			return false;
@@ -100,12 +76,12 @@ bool PointerTypes::ExeOffset::resolve(uintptr_t* resolvedOut) const
 	return dereferencePointer(ExeOffset::mEXEAddress, this->mOffsets, resolvedOut);
 }
 
-bool PointerTypes::BaseOffset::resolve(uintptr_t* resolvedOut) const
+bool MultilevelPointerSpecialisation::BaseOffset::resolve(uintptr_t* resolvedOut) const
 {
 	return dereferencePointer(this->mBaseAddress, this->mOffsets, resolvedOut);
 }
 
-bool PointerTypes::ModuleOffset::resolve(uintptr_t* resolvedOut) const
+bool MultilevelPointerSpecialisation::ModuleOffset::resolve(uintptr_t* resolvedOut) const
 {
 	auto moduleAddress = ModuleCache::getModuleHandle(this->mModuleName);
 	if (!moduleAddress.has_value()) 
@@ -122,7 +98,7 @@ bool PointerTypes::ModuleOffset::resolve(uintptr_t* resolvedOut) const
 	return dereferencePointer(moduleAddress.value(), this->mOffsets, resolvedOut);
 }
 
-bool PointerTypes::Resolved::resolve(uintptr_t* resolvedOut) const
+bool MultilevelPointerSpecialisation::Resolved::resolve(uintptr_t* resolvedOut) const
 {
 	if (IsBadReadPtr(this->mBaseAddress, 8))
 	{
@@ -136,7 +112,7 @@ bool PointerTypes::Resolved::resolve(uintptr_t* resolvedOut) const
 
 
 
-void PointerTypes::BaseOffset::updateBaseAddress(void* const& baseAddress)
+void MultilevelPointerSpecialisation::BaseOffset::updateBaseAddress(void* const& baseAddress)
 {
 	this->mBaseAddress = baseAddress;
 }

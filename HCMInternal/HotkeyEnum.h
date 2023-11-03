@@ -15,7 +15,9 @@ injectCore,\
 dumpCore,\
 speedhack,\
 invuln,\
-aiFreeze
+aiFreeze,\
+forceTeleport,\
+forceLaunch
 
 
 enum class HotkeysEnum : int {

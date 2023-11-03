@@ -217,7 +217,7 @@ private:
 	FailedOptionalCheatServicesDialog failedOptionalCheatServicesDialog;
 
 		ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
-		void onImGuiRenderEvent(Vec2 screenSize)
+		void onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 		{
 			checkpointDumpNameDialog.render();
 			injectionWarningDialog.render();
@@ -299,7 +299,7 @@ public:
 	}
 
 	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
-		: mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2 screenSize) {onImGuiRenderEvent(screenSize); }),
+		: mImGuiRenderCallbackHandle(pRenderEvent, [this](SimpleMath::Vector2 screenSize) {onImGuiRenderEvent(screenSize); }),
 		mFreeMCCCursorService(controlServiceContainer->freeMCCSCursorService),
 		mBlockGameInputService(controlServiceContainer->blockGameInputService),
 		mPauseGameService(controlServiceContainer->pauseGameService)

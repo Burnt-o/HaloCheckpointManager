@@ -17,11 +17,13 @@ public:
 		: IGUIElement(implGame, hotkey),  mEventToFireWeak(eventToFire), mBoundIntWeak(boundInt)
 	{
 		PLOG_VERBOSE << "Constructing GUIAdvanceTicks";
-		this->currentHeight = 20;
+		this->currentHeight = GUIFrameHeightWithSpacing;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		
+
 		auto mEventToFire = mEventToFireWeak.lock();
 		if (!mEventToFire)
 		{
@@ -48,6 +50,7 @@ public:
 			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
 			newThread.detach();
 		}
+		DEBUG_GUI_HEIGHT;
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(75.f);
 		if (ImGui::InputInt("##advanceTicksInt", &mBoundInt->GetValueDisplay(), 1, 5))

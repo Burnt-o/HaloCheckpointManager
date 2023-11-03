@@ -32,7 +32,7 @@
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
 
 // A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that guielement
-#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES \
+#define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((controlHeadingGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((toggleGUIHotkeyGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((GUISettingsSubheading, (ALL_GAMES_AND_MAINMENU)))\
@@ -79,13 +79,47 @@
 	((invulnNPCGUI, (ALL_SUPPORTED_GAMES)))\
 	((aiFreezeGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
+	((forceTeleportGUI, (ALL_SUPPORTED_GAMES)))\
+	((forceTeleportSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
+		((forceTeleportApplyToPlayer, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportCustomObject, (ALL_SUPPORTED_GAMES)))\
+		((forceTeleportSettingsRadioGroup, (ALL_SUPPORTED_GAMES)))\
+		((forceTeleportForward, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportRelativeVec3, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportForwardIgnoreZ, (ALL_SUPPORTED_GAMES)))\
+		((forceTeleportManual, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportFillWithCurrentPositionEvent, (ALL_SUPPORTED_GAMES)))\
+	((forceLaunchGUI, (ALL_SUPPORTED_GAMES)))\
+	((forceLaunchSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
+		((forceLaunchApplyToPlayer, (ALL_SUPPORTED_GAMES)))\
+			((forceLaunchCustomObject, (ALL_SUPPORTED_GAMES)))\
+		((forceLaunchSettingsRadioGroup, (ALL_SUPPORTED_GAMES)))\
+		((forceLaunchForward, (ALL_SUPPORTED_GAMES)))\
+			((forceLaunchRelativeVec3, (ALL_SUPPORTED_GAMES)))\
+			((forceLaunchForwardIgnoreZ, (ALL_SUPPORTED_GAMES)))\
+		((forceLaunchManual, (ALL_SUPPORTED_GAMES)))\
+			((forceLaunchAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))
 
 
+#define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
+((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((consoleGUI, (Halo1)))\
+	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))
 
 
+#ifdef HCM_DEBUG
+
+#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES BOOST_PP_CAT(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES, DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES)
+
+#else 
+
+#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES
+
+#endif
 
 
 

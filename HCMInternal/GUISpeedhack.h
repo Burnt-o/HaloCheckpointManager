@@ -14,11 +14,12 @@ public:
 	{
 
 		PLOG_VERBOSE << "Constructing GUISpeedhack, name: " << getName();
-		this->currentHeight = 20;
+		this->currentHeight = GUIFrameHeightWithSpacing;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		
 
 		auto mSettings = mSettingsWeak.lock();
 		if (!mSettings)
@@ -44,6 +45,10 @@ public:
 			newThread.detach();
 
 		}
+		DEBUG_GUI_HEIGHT;
+
+
+
 	}
 
 	~GUISpeedhack()

@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "GameState.h"
 #include "imgui.h"
+#include "imgui_stdlib.h"
 #include "HotkeyRenderer.h"
 class IGUIElement
 {
@@ -25,6 +26,8 @@ public:
 	virtual std::string_view getName() = 0;
 
 	virtual ~IGUIElement() = default;
+
+	std::optional<HotkeysEnum> getHotkey() { return mHotkey; }
 };
 
 template <typename T>

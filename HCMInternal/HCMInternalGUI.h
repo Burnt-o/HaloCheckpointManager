@@ -4,7 +4,6 @@
 #include "IAnchorPoint.h"
 #include "GUIElementStore.h"
 #include "IMCCStateHook.h"
-#include "Vec2.h"
 #include "HotkeyRenderer.h"
 #include "GUIMCCState.h"
 #include "ControlServiceContainer.h"
@@ -40,7 +39,7 @@ private:
 	std::shared_ptr<SettingsStateAndEvents> mSettings;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
-	void onImGuiRenderEvent(Vec2 ss);
+	void onImGuiRenderEvent(SimpleMath::Vector2 ss);
 	void onGameStateChange(const MCCState&);
 
 	void onWindowJustOpened();
@@ -61,10 +60,10 @@ private:
 	ImGuiWindowFlags windowFlags;
 	bool& m_WindowOpen;
 	bool m_windowOpenLastFrame;
-	Vec2 mWindowSize{ 500, 500 };
-	Vec2 mWindowPos{ 10, 25 };
+	SimpleMath::Vector2 mWindowSize{ 500, 500 };
+	SimpleMath::Vector2 mWindowPos{ 10, 25 };
 
-	Vec2 mFullScreenSize;
+	SimpleMath::Vector2 mFullScreenSize;
 	GUIMCCState mGUIMCCState;
 
 	
@@ -106,7 +105,7 @@ public:
 
 	void addPopupError(HCMExceptionBase error) { if (errorsToDisplay.size() < 5) errorsToDisplay.push_back(error); }
 	bool isWindowOpen() { return m_WindowOpen; };
-	virtual Vec2 getAnchorPoint() override { return { 10, m_WindowOpen ? (mWindowSize.y + 10) : 30 }; } // anchors bottom left of window
+	virtual SimpleMath::Vector2 getAnchorPoint() override { return { 10, m_WindowOpen ? (mWindowSize.y + 10) : 30 }; } // anchors bottom left of window
 };
 
 // Todo: properly split the concepts of "desired window height" and "allocated window height". maybe call the former one "content height"

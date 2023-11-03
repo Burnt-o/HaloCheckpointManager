@@ -7,7 +7,7 @@
 
 
 
-// base factory class
+// base class
 class MultilevelPointer {
 private:
 
@@ -25,23 +25,11 @@ protected:
 		mLastError.str("");
 		return &mLastError;
 	}
-	virtual ~MultilevelPointer() = default;
+
 public:
 
+	virtual ~MultilevelPointer() = default;
 
-	// Factory methods
-	// Pointer is relative to the exe address
-	static std::shared_ptr<MultilevelPointer> make(const std::vector<int64_t> offsets);
-	//static MultilevelPointer* make(const std::vector<int64_t>& offsets);
-
-	// Pointer is relative to some void* baseAddress
-	static std::shared_ptr<MultilevelPointer> make(void* const baseAddress, const std::vector<int64_t> offsets);
-
-	// Pointer is relative to a module eg halo1.dll
-	static std::shared_ptr<MultilevelPointer> make(const std::wstring_view moduleName, const std::vector<int64_t> offsets);
-
-	// Pointer is already fully resolved (used for stuff that never changes address)
-	static std::shared_ptr<MultilevelPointer> make(void* const baseAddress);
 
 	// The useful stuff
 	virtual bool resolve(uintptr_t* resolvedOut) const = 0; // Overriden in derived classes
@@ -166,7 +154,7 @@ public:
 };
 
 
-namespace PointerTypes // So we don't pollute global namespace
+namespace MultilevelPointerSpecialisation // So we don't pollute global namespace
 {
 	class ExeOffset : public MultilevelPointer {
 	private:
@@ -179,12 +167,13 @@ namespace PointerTypes // So we don't pollute global namespace
 
 	class BaseOffset : public MultilevelPointer {
 	private:
-		void* mBaseAddress;
 		const std::vector<int64_t> mOffsets;
+		void* mBaseAddress;
 	public:
 		explicit BaseOffset(void* const& baseAddress, const std::vector<int64_t> offsets) : mBaseAddress(baseAddress), mOffsets(offsets) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
 		void updateBaseAddress(void* const& baseAddress);
+		void updateBaseAddress(uintptr_t const& baseAddress) { return updateBaseAddress((void*)baseAddress); }
 	};
 
 	class ModuleOffset : public MultilevelPointer {
@@ -203,6 +192,7 @@ namespace PointerTypes // So we don't pollute global namespace
 		explicit Resolved(void* const& baseAddress) : mBaseAddress(baseAddress) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
 	};
+
 
 
 

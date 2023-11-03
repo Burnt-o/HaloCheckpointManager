@@ -18,11 +18,13 @@ public:
 		if (mToggleText.empty()) throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUISimpleToggle, name: " << getName();
 		PLOG_DEBUG << "mOptionToggle.getOptionName: " << std::hex << mOptionToggleWeak.lock()->getOptionName();
-		this->currentHeight = 20;
+		this->currentHeight = GUIFrameHeightWithSpacing;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		
+
 		auto mOptionToggle = mOptionToggleWeak.lock();
 		if (!mOptionToggle)
 		{
@@ -42,6 +44,7 @@ public:
 			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionToggle]() { optionToggle->UpdateValueWithInput(); }));
 			newThread.detach();
 		}
+		DEBUG_GUI_HEIGHT;
 	}
 
 	~GUISimpleToggle()

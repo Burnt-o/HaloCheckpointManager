@@ -16,12 +16,14 @@ public:
 	{
 		if (mText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUIHotkeyOnly, name: " << getName();
-		this->currentHeight = 20;
+		this->currentHeight = GUIFrameHeightWithSpacing;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		
 		hotkeyRenderer.renderHotkey(mHotkey);
+		DEBUG_GUI_HEIGHT;
 		ImGui::SameLine();
 		ImGui::Text(mText.c_str());
 	}

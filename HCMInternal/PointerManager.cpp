@@ -140,6 +140,46 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
     return std::any_cast<T>(impl->mAllData.at(key));
 }
 
+template <>
+std::shared_ptr<MultilevelPointerSpecialisation::BaseOffset> PointerManager::getData(std::string dataName, std::optional<GameState> game)
+{
+    auto out = std::dynamic_pointer_cast<MultilevelPointerSpecialisation::BaseOffset>(getData<std::shared_ptr<MultilevelPointer>>(dataName, game));
+    if (out)
+        return out;
+    else
+        throw HCMInitException("Bad multilevel pointer access! Was not BaseOffset specialisation");
+}
+
+template <>
+std::shared_ptr<MultilevelPointerSpecialisation::ExeOffset> PointerManager::getData(std::string dataName, std::optional<GameState> game)
+{
+    auto out = std::dynamic_pointer_cast<MultilevelPointerSpecialisation::ExeOffset>(getData<std::shared_ptr<MultilevelPointer>>(dataName, game));
+    if (out)
+        return out;
+    else
+        throw HCMInitException("Bad multilevel pointer access! Was not ExeOffset specialisation");
+}
+
+template <>
+std::shared_ptr<MultilevelPointerSpecialisation::ModuleOffset> PointerManager::getData(std::string dataName, std::optional<GameState> game)
+{
+    auto out = std::dynamic_pointer_cast<MultilevelPointerSpecialisation::ModuleOffset>(getData<std::shared_ptr<MultilevelPointer>>(dataName, game));
+    if (out)
+        return out;
+    else
+        throw HCMInitException("Bad multilevel pointer access! Was not ModuleOffset specialisation");
+}
+
+template <>
+std::shared_ptr<MultilevelPointerSpecialisation::Resolved> PointerManager::getData(std::string dataName, std::optional<GameState> game)
+{
+    auto out = std::dynamic_pointer_cast<MultilevelPointerSpecialisation::Resolved>(getData<std::shared_ptr<MultilevelPointer>>(dataName, game));
+    if (out)
+        return out;
+    else
+        throw HCMInitException("Bad multilevel pointer access! Was not Resolved specialisation");
+}
+
 
 template <typename T>
 std::shared_ptr<std::vector<T>> PointerManager::getVectorData(std::string dataName, std::optional<GameState> game)
@@ -526,14 +566,15 @@ void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_
     {
         PLOG_DEBUG << "exeOffset";
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = MultilevelPointer::make(offsets);
+        result = std::make_shared<MultilevelPointerSpecialisation::ExeOffset>(offsets);
+
     }
     else if (entryType == "MultilevelPointer::ModuleOffset")
     {
         PLOG_DEBUG << "moduleOffset";
         std::string moduleString = versionEntry.child("Module").text().get();
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = MultilevelPointer::make(str_to_wstr(moduleString), offsets);
+        result = std::make_shared < MultilevelPointerSpecialisation::ModuleOffset>(str_to_wstr(moduleString), offsets);
 
         if (dKey._Get_rest()._Myfirst._Val.has_value() && dKey._Get_rest()._Myfirst._Val.value().toModuleName() != str_to_wstr(moduleString))
         {
@@ -542,12 +583,20 @@ void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_
         }
 
     }
+    else if (entryType == "MultilevelPointer::BaseOffset")
+    {
+        PLOG_DEBUG << "baseOffset";
+        auto offsets = getOffsetsFromXML(versionEntry);
+        result = std::make_shared < MultilevelPointerSpecialisation::BaseOffset>(nullptr, offsets);
+
+    }
     else
     {
         PLOG_ERROR << "INVALID MULTILEVEL POINTER TYPE: " << entryType;
         return;
     }
-    PLOG_DEBUG << "MultilevelPointer added to map: " << dKey._Myfirst._Val;
+
+    PLOG_DEBUG << entryType << "added to map : " << dKey._Myfirst._Val;
     mAllData.try_emplace(dKey, result);
 
 }

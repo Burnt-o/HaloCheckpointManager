@@ -1,5 +1,4 @@
 #pragma once
-#include "Vec2.h"
 #include "ControlServiceContainer.h"
 #include "GUIServiceInfo.h"
 #include "IModalDialogRenderer.h"

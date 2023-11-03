@@ -13,6 +13,12 @@ struct Vec2
     {
         return (x == other.x && y == other.y);
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vec2& vec)
+    {
+        os << vec.x << ", " << vec.y;
+        return os;
+    }
 };
 
 

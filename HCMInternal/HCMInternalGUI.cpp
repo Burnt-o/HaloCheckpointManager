@@ -32,7 +32,7 @@ void HCMInternalGUI::initializeHCMInternalGUI()
 
 
 
-void HCMInternalGUI::onImGuiRenderEvent(Vec2 screenSize)
+void HCMInternalGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 {
 	std::unique_lock<std::mutex> lock(mDestructionGuard);
 
@@ -88,8 +88,8 @@ void HCMInternalGUI::renderErrorDialog()
 		errorDialogShowing = true;
 	}
 
-	ImVec2 size = ImVec2(300, 0);
-	ImVec2 pos = ImVec2(mFullScreenSize / 2.f) - (size / 2.f);
+	SimpleMath::Vector2 size = SimpleMath::Vector2(300, 0);
+	SimpleMath::Vector2 pos = SimpleMath::Vector2(mFullScreenSize / 2.f) - (size / 2.f);
 
 	ImGui::SetNextWindowSize(size);
 	ImGui::SetNextWindowPos(pos);
@@ -157,8 +157,9 @@ void HCMInternalGUI::primaryRender()
 		totalContentHeight += element->getCurrentHeight();
 	}
 
-	totalContentHeight += 40; // some padding for debug
-	totalContentHeight += 20; // for header
+	totalContentHeight += 25; // some padding for.. actually I'm not sure why
+	totalContentHeight += GUIFrameHeightWithSpacing; // for header
+
 
 	mWindowSize.y = (minimumWindowSize.y > totalContentHeight ? totalContentHeight : minimumWindowSize.y);
 

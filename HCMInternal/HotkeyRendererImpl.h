@@ -8,7 +8,7 @@ class HotkeyRendererImpl : public IHotkeyRendererImpl
 {
 private:
 	void beginHotkeyRebindDialog(std::shared_ptr<Hotkey> hotkey);
-	void renderHotkeyRebindDialog(Vec2);
+	void renderHotkeyRebindDialog(SimpleMath::Vector2);
 
 	// injected services
 	std::shared_ptr<MessagesGUI> messagesGUI;
@@ -31,7 +31,7 @@ public:
 		: messagesGUI(mes),
 		hotkeyManager(hkm),
 		hotkeyDefinitions(hkd),
-		mImGuiRenderCallbackHandle(renderEvent, [this](Vec2 ss) {renderHotkeyRebindDialog(ss); })
+		mImGuiRenderCallbackHandle(renderEvent, [this](SimpleMath::Vector2 ss) {renderHotkeyRebindDialog(ss); })
 	{
 		PLOG_DEBUG << "HotkeyRendererImpl constructor";
 	}

@@ -28,6 +28,13 @@ struct Datum
 	bool isNull() const { return this->operator unsigned int() == 0xFFFFFFFF || this->operator unsigned int() == 0; }
 	//operator bool() const { return this->operator unsigned int() == 0xFFFFFFFF || this->operator unsigned int() == 0; } // null datum check
 
+	std::string toString()
+	{
+		std::stringstream ss;
+		ss << this;
+		return ss.str();
+	}
+
 };
 static_assert(sizeof(Datum) == sizeof(int32_t));
 

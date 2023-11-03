@@ -63,8 +63,8 @@ private:
 	void initializeD3Ddevice(IDXGISwapChain*);
 	bool isD3DdeviceInitialized = false;
 
-	static Vec2 mScreenSize;
-	static Vec2 mScreenCenter;
+	static SimpleMath::Vector2 mScreenSize;
+	static SimpleMath::Vector2 mScreenCenter;
 
 public:
 
@@ -76,7 +76,7 @@ public:
 	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
 
 	// Callback for window resize
-	std::shared_ptr<eventpp::CallbackList<void(Vec2 newScreenSize)>> resizeBuffersHookEvent = std::make_shared<eventpp::CallbackList<void(Vec2 newScreenSize)>>();
+	std::shared_ptr<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>> resizeBuffersHookEvent = std::make_shared<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>>();
 
 	// Banned operations for singleton
 	D3D11Hook(const D3D11Hook& arg) = delete; // Copy constructor
@@ -84,8 +84,8 @@ public:
 	D3D11Hook& operator=(const D3D11Hook& arg) = delete; // Assignment operator
 	D3D11Hook& operator=(const D3D11Hook&& arg) = delete; // Move operator
 
-	Vec2 getScreenSize() { return mScreenSize; }
-	Vec2 getScreenCenter() { return mScreenCenter; }
+	SimpleMath::Vector2 getScreenSize() { return mScreenSize; }
+	SimpleMath::Vector2 getScreenCenter() { return mScreenCenter; }
 
 	void beginHook();
 

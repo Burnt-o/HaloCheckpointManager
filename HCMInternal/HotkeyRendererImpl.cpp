@@ -39,7 +39,7 @@ void HotkeyRendererImpl::beginHotkeyRebindDialog(std::shared_ptr<Hotkey> hotkey)
 
 
 
-void HotkeyRendererImpl::renderHotkeyRebindDialog(Vec2 screenSize)
+void HotkeyRendererImpl::renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize)
 {
 	// it looks like this function can't properly access members of "this"?
 
@@ -196,16 +196,17 @@ void HotkeyRendererImpl::renderHotkeyRebindDialog(Vec2 screenSize)
 void HotkeyRendererImpl::renderHotkey(std::optional<HotkeysEnum> hotkeyEnum)
 {
 
+
 	if (!hotkeyEnum.has_value())
 	{
-		ImGui::Dummy({ 93,20 }); // padding
+		ImGui::Dummy({ 93,GUIFrameHeight }); // padding
 	}
 	else
 	{
 		if (!hotkeyDefinitions->getHotkeys().contains(hotkeyEnum.value()))
 		{
 			LOG_ONCE(PLOG_ERROR << "Error: bad hotkey passed to beginHotkeyRebindDialog");
-			ImGui::Dummy({ 93,20 }); // padding
+			ImGui::Dummy({ 93,GUIFrameHeight }); // padding
 			return;
 		}
 		auto hotkey = hotkeyDefinitions->getHotkeys().at(hotkeyEnum.value());
@@ -213,12 +214,12 @@ void HotkeyRendererImpl::renderHotkey(std::optional<HotkeysEnum> hotkeyEnum)
 		if (!hotkey)
 		{
 			PLOG_ERROR << "how the hell did this happen fuck";
-			ImGui::Dummy({ 93,20 }); // padding
+			ImGui::Dummy({ 93,GUIFrameHeight }); // padding
 			return;
 		}
 
 		ImGui::PushID(hotkey->getName().data());
-		ImGui::BeginChild("HotkeyChild", { 63, 20 });
+		ImGui::BeginChild("HotkeyChild", { 63, GUIFrameHeight });
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text(hotkey->getBindingTextShort().data());
 		addTooltip(std::format("{} hotkeys: {}", hotkey->getName().data(), hotkey->getBindingText().data()).c_str());

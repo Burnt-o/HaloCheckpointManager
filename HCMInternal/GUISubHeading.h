@@ -25,42 +25,48 @@ public:
 
 		hasElements = !mChildElements.empty();
 
-		this->currentHeight = hasElements ? 20 : 0;
+		this->currentHeight = hasElements ? GUIFrameHeightWithSpacing : 0;
+
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		//FORCEFULLY_DISABLE_GUIELEMENT;
+
 		if (!hasElements) return;
 
-		ImGui::Dummy({ mLeftMargin, 20 }); // left margin
+		ImGui::Dummy({ mLeftMargin, GUIFrameHeight }); // left margin
 		ImGui::SameLine();
 
-		ImGui::BeginChild(mHeadingText.c_str(), { 500 - mLeftMargin, currentHeight });
+		ImGui::BeginChild(mHeadingText.c_str(), { 500 - mLeftMargin, currentHeight - GUISpacing });
 
 
 
 		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), ImGuiTreeNodeFlags_FramePadding);
-
+		DEBUG_GUI_HEIGHT;
 		if (headingOpen)
 		{
 
-			currentHeight = 23; // extra 3 pixels for frame padding between the tree node and the contained elements
+			currentHeight = GUIFrameHeightWithSpacing;
 			for (auto& element : mChildElements)
 			{
-				currentHeight += element->getCurrentHeight() + 3; // extra 3 pixels for frame padding between each element
+				auto thisElementHeight = element->getCurrentHeight();
+				currentHeight += thisElementHeight;
 
-				ImGui::Dummy({ mLeftMargin, 20 }); // left margin
+				ImGui::Dummy({ mLeftMargin, thisElementHeight < 3 ? 0 : thisElementHeight - GUISpacing }); // left margin
 				ImGui::SameLine();
 				element->render(hotkeyRenderer);
 			}
+
 
 			ImGui::TreePop();
 		}
 		else
 		{
-			currentHeight = 20;
+			currentHeight = GUIFrameHeightWithSpacing;
 		}
 		ImGui::EndChild();
+
 
 	}
 

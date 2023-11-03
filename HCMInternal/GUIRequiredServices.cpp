@@ -108,6 +108,72 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::consoleCommandGUI,
 			{OptionalCheatEnum::ConsoleCommand}
 	},
+	{ GUIElementEnum::getObjectAddressGUI,
+		{OptionalCheatEnum::GetObjectAddressCLI}
+	},
+	{ GUIElementEnum::forceTeleportGUI,
+			{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportSettingsSubheading,
+			{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportApplyToPlayer,
+			{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportCustomObject,
+			{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportSettingsRadioGroup,
+			{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportForward,
+			{OptionalCheatEnum::ForceTeleport, OptionalCheatEnum::GetPlayerViewAngle}
+	},
+	{ GUIElementEnum::forceTeleportRelativeVec3,
+	{OptionalCheatEnum::ForceTeleport ,OptionalCheatEnum::GetPlayerViewAngle}
+	},
+	{ GUIElementEnum::forceTeleportForwardIgnoreZ,
+	{OptionalCheatEnum::ForceTeleport ,OptionalCheatEnum::GetPlayerViewAngle}
+	},
+	{ GUIElementEnum::forceTeleportManual,
+	{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportAbsoluteVec3,
+{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceTeleportFillWithCurrentPositionEvent,
+{OptionalCheatEnum::ForceTeleport}
+	},
+	{ GUIElementEnum::forceLaunchGUI,
+			{OptionalCheatEnum::ForceLaunch}
+	},
+	{ GUIElementEnum::forceLaunchSettingsSubheading,
+			{OptionalCheatEnum::ForceLaunch}
+	},
+	{ GUIElementEnum::forceLaunchApplyToPlayer,
+			{OptionalCheatEnum::ForceLaunch}
+	},
+		{ GUIElementEnum::forceLaunchCustomObject,
+			{OptionalCheatEnum::ForceLaunch}
+	},
+		{ GUIElementEnum::forceLaunchSettingsRadioGroup,
+			{OptionalCheatEnum::ForceLaunch}
+	},
+	{ GUIElementEnum::forceLaunchForward,
+			{OptionalCheatEnum::ForceLaunch ,OptionalCheatEnum::GetPlayerViewAngle }
+	},
+		{ GUIElementEnum::forceLaunchRelativeVec3,
+			{OptionalCheatEnum::ForceLaunch ,OptionalCheatEnum::GetPlayerViewAngle }
+	},
+		{ GUIElementEnum::forceLaunchForwardIgnoreZ,
+			{OptionalCheatEnum::ForceLaunch ,OptionalCheatEnum::GetPlayerViewAngle }
+	},
+		{ GUIElementEnum::forceLaunchManual,
+			{OptionalCheatEnum::ForceLaunch}
+	},
+		{ GUIElementEnum::forceLaunchAbsoluteVec3,
+			{OptionalCheatEnum::ForceLaunch}
+	},
 };
 
 
@@ -140,9 +206,9 @@ const std::map<GUIElementEnum, std::set<GameState>> GUIRequiredServices::support
 
 
 
-std::vector<std::pair<GameState, OptionalCheatEnum>> outRequiredServices;
+std::set<std::pair<GameState, OptionalCheatEnum>> outRequiredServices;
 bool initRequiredServices = false;
-const std::vector<std::pair<GameState, OptionalCheatEnum>>& GUIRequiredServices::getAllRequiredServices()
+const std::set<std::pair<GameState, OptionalCheatEnum>>& GUIRequiredServices::getAllRequiredServices()
 {
 	if (initRequiredServices) return outRequiredServices;
 
@@ -156,7 +222,7 @@ const std::vector<std::pair<GameState, OptionalCheatEnum>>& GUIRequiredServices:
 
 			for (auto req : reqServs)
 			{
-				outRequiredServices.push_back({ game, req });
+				outRequiredServices.insert(std::make_pair( game, req ));
 			}
 		}
 	}

@@ -41,6 +41,10 @@ public:
 	std::shared_ptr<ActionEvent> injectCoreEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> dumpCoreEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> consoleCommandEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> getObjectAddressEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceTeleportFillWithCurrentPositionEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceLaunchEvent = std::make_shared<ActionEvent>();
 
 
 	// settings
@@ -235,6 +239,126 @@ public:
 			nameof(consoleCommandString)
 		);
 
+
+	std::shared_ptr<Setting<uint32_t>> getObjectAddressDWORD = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(getObjectAddressDWORD)
+		);
+
+	std::shared_ptr<Setting<bool>> forceTeleportApplyToPlayer = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(forceTeleportApplyToPlayer)
+		);
+
+	std::shared_ptr<Setting<uint32_t>> forceTeleportCustomObject = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(forceTeleportCustomObject)
+		);
+
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> forceTeleportAbsoluteVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(forceTeleportAbsoluteVec3)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> forceTeleportRelativeVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(forceTeleportRelativeVec3)
+		);
+
+	std::shared_ptr<Setting<bool>> forceTeleportForward = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(forceTeleportForward)
+		);
+
+
+
+	std::shared_ptr<Setting<bool>> forceTeleportForwardIgnoreZ = std::make_shared<Setting<bool>> // ignore vertical component of players look angle
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(forceTeleportForwardIgnoreZ)
+		);
+
+
+
+	std::shared_ptr<Setting<bool>> forceTeleportManual = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(forceTeleportManual)
+		);
+
+	std::shared_ptr<Setting<bool>> forceLaunchApplyToPlayer = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(forceLaunchApplyToPlayer)
+		);
+
+	std::shared_ptr<Setting<uint32_t>> forceLaunchCustomObject = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(forceLaunchCustomObject)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> forceLaunchAbsoluteVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 0.f, 0.f, 5.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(forceLaunchAbsoluteVec3)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> forceLaunchRelativeVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(forceLaunchRelativeVec3)
+		);
+
+
+	std::shared_ptr<Setting<bool>> forceLaunchForward = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(forceLaunchForward)
+		);
+
+	std::shared_ptr<Setting<bool>> forceLaunchForwardIgnoreZ = std::make_shared<Setting<bool>> // ignore vertical component of players look angle
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(forceLaunchForwardIgnoreZ)
+		);
+
+	std::shared_ptr<Setting<bool>> forceLaunchManual = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(forceLaunchManual)
+		);
+
+
+
+
+
+
+
+
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
@@ -259,7 +383,22 @@ public:
 		GUIShowingPausesGame, 
 		pauseAlsoBlocksInput,
 		pauseAlsoFreesCursor,
-		consoleCommandString
+		consoleCommandString,
+		getObjectAddressDWORD,
+		forceTeleportApplyToPlayer,
+		forceTeleportCustomObject,
+		forceTeleportAbsoluteVec3,
+		forceTeleportRelativeVec3,
+		forceTeleportForward,
+		forceTeleportForwardIgnoreZ,
+		forceTeleportManual,
+		forceLaunchApplyToPlayer,
+		forceLaunchCustomObject,
+		forceLaunchAbsoluteVec3,
+		forceLaunchRelativeVec3,
+		forceLaunchForward,
+		forceLaunchForwardIgnoreZ,
+		forceLaunchManual,
 	};
 };
 

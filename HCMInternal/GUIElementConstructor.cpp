@@ -14,9 +14,18 @@
 #include "GUISubHeading.h"
 #include "GUIHotkeyOnly.h"
 #include "GUIAdvanceTicks.h"
+#include "GUIRadioButton.h"
+#include "GUIRadioGroup.h"
+#include "GUIFloat.h"
+#include "GUIVec3.h"
+#include "GUIVec3RelativeOrAbsolute.h"
+#include "GUIToggleWithChildren.h"
+#include "GUIInputString.h"
+#include "GUIInputDWORD.h"
 
 class GUIElementConstructor::GUIElementConstructorImpl {
 private:
+	std::set<std::pair<GUIElementEnum, GameState::Value>> cacheFailedServices;
 
 	std::optional<std::shared_ptr<IGUIElement>> createGUIElementAndStoreResult(GUIElementEnum guielementenum, GameState game, std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings)
 	{
@@ -34,7 +43,11 @@ private:
 			return std::nullopt; // don't construct for unsupported game
 		}
 
-
+		if (cacheFailedServices.contains(std::make_pair(guielementenum, game))) // ignore elements that have already failed construction
+		{
+			PLOG_DEBUG << "GUIElementEnum::" << magic_enum::enum_name(guielementenum) << " for Game::" << game.toString() << " already failed construction, skipping construction";
+			return std::nullopt;
+		}
 
 		PLOG_DEBUG << "attempting to construct guielement: " << magic_enum::enum_name(guielementenum) << " for game: " << game.toString();
 		try 
@@ -291,7 +304,10 @@ private:
 							createNestedElement(GUIElementEnum::invulnGUI),
 							createNestedElement(GUIElementEnum::invulnerabilitySettingsSubheading),
 							createNestedElement(GUIElementEnum::aiFreezeGUI),
-							createNestedElement(GUIElementEnum::consoleCommandGUI),
+							createNestedElement(GUIElementEnum::forceTeleportGUI),
+							createNestedElement(GUIElementEnum::forceTeleportSettingsSubheading),
+							createNestedElement(GUIElementEnum::forceLaunchGUI),
+							createNestedElement(GUIElementEnum::forceLaunchSettingsSubheading)
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -305,7 +321,7 @@ private:
 
 
 				case GUIElementEnum::invulnerabilitySettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 						(game, "InvulnerabilitySettings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::invulnNPCGUI),
@@ -320,9 +336,140 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 						(game, HotkeysEnum::aiFreeze, "Freeze AI", settings->aiFreezeToggle));
 
-				case GUIElementEnum::consoleCommandGUI:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIConsoleCommand>
-						(game, std::nullopt, settings));
+
+				case GUIElementEnum::forceTeleportGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+						(game, HotkeysEnum::forceTeleport, "Force Teleport", settings->forceTeleportEvent));
+
+				case GUIElementEnum::forceTeleportSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Force Teleport Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::forceTeleportApplyToPlayer),
+							createNestedElement(GUIElementEnum::forceTeleportSettingsRadioGroup),
+							}));
+
+					case GUIElementEnum::forceTeleportApplyToPlayer:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenFalse, false>>
+							(game, std::nullopt, "Apply to player", settings->forceTeleportApplyToPlayer, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::forceTeleportCustomObject),
+								}));
+
+						case GUIElementEnum::forceTeleportCustomObject:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+								(game, "Custom object datum", settings->forceTeleportCustomObject));
+
+
+
+					case GUIElementEnum::forceTeleportSettingsRadioGroup:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioGroup>
+							(game, "Force Teleport Radio Group", headerChildElements
+								{
+								createNestedElement(GUIElementEnum::forceTeleportForward),
+								createNestedElement(GUIElementEnum::forceTeleportManual)
+								}));
+
+
+						case GUIElementEnum::forceTeleportForward:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
+								(game, std::nullopt, "Teleport Relative to Player",   settings->forceTeleportForward, headerChildElements
+									{
+									createNestedElement(GUIElementEnum::forceTeleportRelativeVec3),
+									createNestedElement(GUIElementEnum::forceTeleportForwardIgnoreZ)
+									}));
+
+							case GUIElementEnum::forceTeleportRelativeVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false>>
+									(game, "Teleport: ", settings->forceTeleportRelativeVec3));
+
+
+							case GUIElementEnum::forceTeleportForwardIgnoreZ:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, std::nullopt, "Ignore vertical look angle",  settings->forceTeleportForwardIgnoreZ));
+
+
+						case GUIElementEnum::forceTeleportManual:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
+								(game, std::nullopt, "Teleport to Manual Coordinates",  settings->forceTeleportManual, headerChildElements
+									{
+									createNestedElement(GUIElementEnum::forceTeleportAbsoluteVec3),
+									createNestedElement(GUIElementEnum::forceTeleportFillWithCurrentPositionEvent)
+									}));
+
+							case GUIElementEnum::forceTeleportAbsoluteVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true>>
+									(game, "Teleport: ", settings->forceTeleportAbsoluteVec3));
+
+
+							case GUIElementEnum::forceTeleportFillWithCurrentPositionEvent:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, std::nullopt, "Fill with current position",  settings->forceTeleportFillWithCurrentPositionEvent));
+
+				case GUIElementEnum::forceLaunchGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+						(game, HotkeysEnum::forceLaunch, "Force Launch", settings->forceLaunchEvent));
+
+				case GUIElementEnum::forceLaunchSettingsSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, "Force Launch Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::forceLaunchApplyToPlayer),
+							createNestedElement(GUIElementEnum::forceLaunchSettingsRadioGroup),
+							}));
+
+					case GUIElementEnum::forceLaunchApplyToPlayer:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenFalse, false>>
+							(game, std::nullopt, "Apply to player", settings->forceLaunchApplyToPlayer, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::forceLaunchCustomObject)
+								}));
+
+						case GUIElementEnum::forceLaunchCustomObject:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+								(game, "Custom object datum", settings->forceLaunchCustomObject));
+
+
+					case GUIElementEnum::forceLaunchSettingsRadioGroup:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioGroup>
+							(game, "Force Launch Radio Group", headerChildElements
+								{
+								createNestedElement(GUIElementEnum::forceLaunchForward),
+								createNestedElement(GUIElementEnum::forceLaunchManual)
+								}));
+
+
+						case GUIElementEnum::forceLaunchForward:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
+								(game, std::nullopt, "Launch relative to player facing",  settings->forceLaunchForward, headerChildElements
+									{
+									createNestedElement(GUIElementEnum::forceLaunchRelativeVec3),
+									createNestedElement(GUIElementEnum::forceLaunchForwardIgnoreZ)
+									}));
+
+							case GUIElementEnum::forceLaunchRelativeVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false>>
+									(game, "Launch: ", settings->forceLaunchRelativeVec3));
+
+
+							case GUIElementEnum::forceLaunchForwardIgnoreZ:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, std::nullopt, "Ignore vertical look angle", settings->forceLaunchForwardIgnoreZ));
+
+
+						case GUIElementEnum::forceLaunchManual:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
+								(game, std::nullopt, "Launch with absolute velocity",  settings->forceLaunchManual, headerChildElements
+									{
+									createNestedElement(GUIElementEnum::forceLaunchAbsoluteVec3),
+									}));
+
+
+							case GUIElementEnum::forceLaunchAbsoluteVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true>>
+									(game, "Launch: ", settings->forceLaunchAbsoluteVec3));
+
+
 
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
@@ -338,6 +485,30 @@ private:
 
 
 			
+#ifdef HCM_DEBUG
+
+
+			case GUIElementEnum::debugHeadingGUI:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
+					(game, "Debug", headerChildElements
+						{ 
+						createNestedElement(GUIElementEnum::consoleCommandGUI),
+						createNestedElement(GUIElementEnum::getObjectAddressGUI),
+						}));
+
+
+				case GUIElementEnum::consoleCommandGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputString>
+						(game, "Console command: ", settings->consoleCommandString, settings->consoleCommandEvent));
+
+
+				case GUIElementEnum::getObjectAddressGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+						(game, "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
+
+
+#endif
+
 
 
 
@@ -350,12 +521,14 @@ private:
 		catch (HCMInitException ex)
 		{
 			info->addFailure(guielementenum, game, ex);
+			cacheFailedServices.insert(std::make_pair(guielementenum, game));
 			return std::nullopt;
 		}
 	}
 
 
 	std::shared_ptr<GUIElementStore> mStore;
+
 
 
 public:
@@ -365,6 +538,8 @@ public:
 		// Create all top level GUI elements. Each one will recursively create it's nested elements, if it has any.
 		for (auto& [element, game] : guireq->getToplevelGUIElements())
 		{
+
+
 			auto x = createGUIElementAndStoreResult(element, game, guireq, fail, info, settings);
 			if (x.has_value())
 			{

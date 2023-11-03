@@ -6,8 +6,8 @@
 #pragma comment(lib, "dxgi")
 
 D3D11Hook* D3D11Hook::instance = nullptr;
-Vec2 D3D11Hook::mScreenSize{1920, 1080};
-Vec2 D3D11Hook::mScreenCenter{960, 540};
+SimpleMath::Vector2 D3D11Hook::mScreenSize{1920, 1080};
+SimpleMath::Vector2 D3D11Hook::mScreenCenter{960, 540};
 
 struct rgba {
     float r, g, b, a;

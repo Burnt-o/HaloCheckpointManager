@@ -21,7 +21,7 @@ public:
 
 HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath)
 	: mHotkeyDefinitions(pHotkeyDefinitions),
-	mImGuiRenderCallbackHandle(pRenderEvent, [this](Vec2) { pollInput(); }) 	// setup render callback to poll hotkeys every frame
+	mImGuiRenderCallbackHandle(pRenderEvent, [this](SimpleMath::Vector2) { pollInput(); }) 	// setup render callback to poll hotkeys every frame
 {
 	// set hotkey config file path
 	mHotkeyConfigPath = dirPath + "HCMHotkeyConfig.xml";

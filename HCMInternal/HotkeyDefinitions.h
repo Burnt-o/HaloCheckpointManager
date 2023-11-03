@@ -29,7 +29,7 @@ private:
 		HotkeysEnum::enumName,\
 		defaultBinding) }
 
-	static constexpr inline int hotkeyEnumCount = 15;// magic_enum::enum_count<HotkeysEnum>();
+	static constexpr inline int hotkeyEnumCount = 17;// magic_enum::enum_count<HotkeysEnum>();
 	static constexpr inline int magicEnumCount = magic_enum::enum_count<HotkeysEnum>();
 
 	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>::value_type allHotkeysData[hotkeyEnumCount]
@@ -96,6 +96,14 @@ private:
 
 		initHotkey(aiFreeze,
 		mSettings->aiFreezeHotkeyEvent,
+		vvk{}),
+
+		initHotkey(forceTeleport,
+		mSettings->forceTeleportEvent,
+		vvk{}),
+
+		initHotkey(forceLaunch,
+		mSettings->forceLaunchEvent,
 		vvk{})
 
 

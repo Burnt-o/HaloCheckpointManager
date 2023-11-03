@@ -21,21 +21,22 @@ private:
 	ScopedCallback<RenderEvent> mRenderEventCallback;
 
 	// What we run when ImGuiManager ImGuiRenderEvent is invoked
-	void onImGuiRenderEvent(Vec2 screenSize);
+	void onImGuiRenderEvent(SimpleMath::Vector2 screenSize);
 
 	// data
 	std::vector <temporaryMessage> mMessages;
 	std::optional<std::weak_ptr<IAnchorPoint>> mAnchorPoint = std::nullopt;
-	Vec2 mAnchorOffset;
+	SimpleMath::Vector2 mAnchorOffset;
+	static inline std::mutex addMessageMutex{};
 	// funcs
 	void iterateMessages();
-	void drawMessage(const temporaryMessage& message, const Vec2& position);
+	void drawMessage(const temporaryMessage& message, const SimpleMath::Vector2& position);
 public:
 
 	virtual void addMessage(std::string message) override;
 
-	explicit MessagesGUI( Vec2 anchorOffset, std::shared_ptr<RenderEvent> renderEvent)
-		:  mAnchorOffset(anchorOffset), mRenderEventCallback(renderEvent, [this](Vec2 a) {onImGuiRenderEvent(a); })
+	explicit MessagesGUI(SimpleMath::Vector2 anchorOffset, std::shared_ptr<RenderEvent> renderEvent)
+		:  mAnchorOffset(anchorOffset), mRenderEventCallback(renderEvent, [this](SimpleMath::Vector2 a) {onImGuiRenderEvent(a); })
 	{
 	}
 

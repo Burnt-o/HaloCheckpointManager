@@ -22,9 +22,17 @@ Invulnerability,\
 GetCurrentDifficulty,\
 GetPlayerDatum,\
 GetObjectAddress,\
+GetObjectAddressCLI,\
 GetCurrentLevelCode,\
+GetPlayerViewAngle,\
 AIFreeze,\
-ConsoleCommand\
+ForceTeleport,\
+ForceLaunch,\
+ConsoleCommand,\
+GetObjectPhysics,\
+GetHavokComponent,\
+GetHavokAnchorPoint,\
+UnfreezeObjectPhysics
 
 
 enum class OptionalCheatEnum {

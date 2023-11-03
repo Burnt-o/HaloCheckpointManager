@@ -23,29 +23,32 @@ public:
 
 		hasElements = !mChildElements.empty();
 
-		this->currentHeight = hasElements ? 20 : 0;
+		this->currentHeight = hasElements ? GUIFrameHeightWithSpacing : 0;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
+		
 		if (!hasElements) return;
 
+
+
 		headingCollapsed = ImGui::CollapsingHeader(mHeadingText.c_str(), ImGui::IsItemHovered());
+		DEBUG_GUI_HEIGHT;
+		currentHeight = GUIFrameHeightWithSpacing;
 		if (!headingCollapsed)
 		{
-			currentHeight = 0;
 			for (auto& element : mChildElements)
 			{
-				ImGui::Dummy({ 5, 20 }); // very small left margin
+				ImGui::Dummy({ 5, element->getCurrentHeight() == 0.f ? 0.f : 1.f }); // very small left margin
 				ImGui::SameLine();
 				currentHeight += element->getCurrentHeight();
 				element->render(hotkeyRenderer);
 			}
 		}
-		else
-		{
-			currentHeight = 20;
-		}
+
+
+
 	}
 
 	std::string_view getName() override { return mHeadingText; }

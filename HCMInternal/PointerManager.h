@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "GameState.h"
 #include "GetMCCVersion.h"
 // Uses libcurl to download PointerData.xml from the github page,

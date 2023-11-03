@@ -77,10 +77,10 @@ public:
 	ImGuiManager& operator=(const ImGuiManager& arg) = delete; // Assignment operator
 	ImGuiManager& operator=(const ImGuiManager&& arg) = delete; // Move operator
 
-	 Vec2 getScreenSize() { 
+	SimpleMath::Vector2 getScreenSize() {
 		 if (m_d3d.expired()) return { 0, 0 };
 		 return m_d3d.lock()->getScreenSize(); }
-	 Vec2 getScreenCenter() { 
+	SimpleMath::Vector2 getScreenCenter() {
 		 if (m_d3d.expired()) return { 0, 0 };
 		 return m_d3d.lock()->getScreenCenter();
 	 }
