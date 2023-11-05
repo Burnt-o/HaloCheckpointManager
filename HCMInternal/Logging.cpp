@@ -5,7 +5,7 @@
 
 
 
-constexpr std::string_view logFileName = "HCMInternal_Logging.txt";
+constexpr std::string_view logFileName = "HCMInternal_Logging";
 
 enum AppenderID {
     ConsoleAppender = 1,
@@ -31,8 +31,12 @@ void Logging::initConsoleLogging()
 {
      // Setup file appender
      // Get log file path
+
+     SYSTEMTIME t;
+     GetSystemTime(&t);
      logFileDestination = dirPath;
-     logFileDestination += logFileName;
+     logFileDestination += std::format("{}_{:04}{:02}{:02}_{:02}{:02}{:02}.txt", logFileName, t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+   
 
      // test that the path is good
      std::fstream testPath(logFileDestination, std::ios::out | std::ios::in | std::ios::app);
