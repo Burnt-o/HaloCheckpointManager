@@ -13,8 +13,8 @@ private:
 public:
 
 
-	GUISimpleButton(GameState implGame, std::optional<HotkeysEnum> hotkey, std::string buttonText, std::shared_ptr<ActionEvent> eventToFire)
-		: IGUIElement(implGame, hotkey), mButtonText(buttonText), mEventToFireWeak(eventToFire)
+	GUISimpleButton(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::string buttonText, std::shared_ptr<ActionEvent> eventToFire)
+		: IGUIElement(implGame, hotkey, tooltip), mButtonText(buttonText), mEventToFireWeak(eventToFire)
 	{
 		if (mButtonText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUISimplebutton, name: " << getName();
@@ -45,6 +45,7 @@ public:
 			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
 			newThread.detach();
 		}
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 	}
 

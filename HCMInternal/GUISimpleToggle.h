@@ -12,8 +12,8 @@ private:
 public:
 
 
-	GUISimpleToggle(GameState implGame,  std::optional<HotkeysEnum> hotkey, std::string toggleText, std::shared_ptr<Setting<bool>> optionToggle)
-		: IGUIElement(implGame, hotkey), mToggleText(toggleText), mOptionToggleWeak(optionToggle)
+	GUISimpleToggle(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::string toggleText, std::shared_ptr<Setting<bool>> optionToggle)
+		: IGUIElement(implGame, hotkey, tooltip), mToggleText(toggleText), mOptionToggleWeak(optionToggle)
 	{
 		if (mToggleText.empty()) throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUISimpleToggle, name: " << getName();
@@ -44,6 +44,7 @@ public:
 			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionToggle]() { optionToggle->UpdateValueWithInput(); }));
 			newThread.detach();
 		}
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 	}
 

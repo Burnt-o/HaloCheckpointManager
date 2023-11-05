@@ -14,8 +14,8 @@ private:
 
 public:
 
-	GUIRadioGroup(GameState implGame, std::string debugName, std::vector<std::optional<std::shared_ptr<IGUIElement>>> radioButtons)
-		: IGUIElement(implGame, std::nullopt), mDebugName(debugName)
+	GUIRadioGroup(GameState implGame, ToolTipCollection tooltip, std::string debugName, std::vector<std::optional<std::shared_ptr<IGUIElement>>> radioButtons)
+		: IGUIElement(implGame, std::nullopt, tooltip), mDebugName(debugName)
 	{
 		int radioButtonCount = 0;
 		for (auto maybeRadioButton : radioButtons)
@@ -118,6 +118,7 @@ public:
 					}
 				}
 			}
+			radioBut->renderTooltip();
 			DEBUG_GUI_HEIGHT;
 
 			// if this button is the currently active one, render its children

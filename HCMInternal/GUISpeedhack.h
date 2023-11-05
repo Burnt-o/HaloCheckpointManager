@@ -9,8 +9,8 @@ private:
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
-	GUISpeedhack(GameState implGame, std::optional<HotkeysEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
-		: IGUIElement(implGame, hotkey), mSettingsWeak(settings)
+	GUISpeedhack(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
+		: IGUIElement(implGame, hotkey, tooltip), mSettingsWeak(settings)
 	{
 
 		PLOG_VERBOSE << "Constructing GUISpeedhack, name: " << getName();
@@ -36,6 +36,7 @@ public:
 			PLOG_VERBOSE << "GUISpeedhack being toggled to " << mSettings->speedhackToggle->GetValueDisplay();
 			mSettings->speedhackToggle->UpdateValueWithInput();
 		}
+		renderTooltip();
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(100);
 		if (ImGui::InputDouble("##settingForSpeedhack", &mSettings->speedhackSetting->GetValueDisplay()))
@@ -45,6 +46,7 @@ public:
 			newThread.detach();
 
 		}
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 
 

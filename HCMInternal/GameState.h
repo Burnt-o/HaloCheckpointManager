@@ -72,7 +72,17 @@ private:
 		(Value::HaloReach, L"haloreach.dll");
 };
 
-
+static inline const std::vector<GameState> AllGameStateValues
+{
+	GameState::Value::Halo1,
+		GameState::Value::Halo2,
+		GameState::Value::Halo2MP,
+		GameState::Value::Halo3,
+		GameState::Value::Halo4,
+		GameState::Value::Halo3ODST,
+		GameState::Value::HaloReach,
+		GameState::Value::NoGame
+};
 
 
 static inline const std::vector<GameState> AllSupportedGames

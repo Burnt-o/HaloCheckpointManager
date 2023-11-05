@@ -11,8 +11,8 @@ private:
 public:
 
 
-	GUIHeading(GameState implGame, std::string headingText, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
-		: IGUIElement(implGame, std::nullopt), mHeadingText(headingText)
+	GUIHeading(GameState implGame, ToolTipCollection tooltip, std::string headingText, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
+		: IGUIElement(implGame, std::nullopt, tooltip), mHeadingText(headingText)
 	{
 		PLOG_VERBOSE << "Constructing GUIHeading, name: " << getName();
 
@@ -34,6 +34,7 @@ public:
 
 
 		headingCollapsed = ImGui::CollapsingHeader(mHeadingText.c_str(), ImGui::IsItemHovered());
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		currentHeight = GUIFrameHeightWithSpacing;
 		if (!headingCollapsed)
@@ -46,6 +47,7 @@ public:
 				element->render(hotkeyRenderer);
 			}
 		}
+
 
 
 

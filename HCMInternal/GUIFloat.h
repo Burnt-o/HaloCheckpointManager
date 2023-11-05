@@ -11,8 +11,8 @@ private:
 public:
 
 
-	GUIFloat(GameState implGame, std::string labelText, std::shared_ptr<Setting<float>> optionFloat)
-		: IGUIElement(implGame, std::nullopt), mLabelText(labelText), mOptionFloatWeak(optionFloat)
+	GUIFloat(GameState implGame, ToolTipCollection tooltip,  std::string labelText, std::shared_ptr<Setting<float>> optionFloat)
+		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionFloatWeak(optionFloat)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUIFloat, name: " << getName();
@@ -39,6 +39,7 @@ public:
 			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionFloat]() { optionToggle->UpdateValueWithInput(); }));
 			newThread.detach();
 		}
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		
 

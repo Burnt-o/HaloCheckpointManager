@@ -346,6 +346,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="PointerManager.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
     <ClInclude Include="Speedhack.h" />
+    <ClInclude Include="ToolTipCollection.h" />
     <ClInclude Include="UnfreezeObjectPhysics.h" />
     <ClInclude Include="UnhandledExceptionHandler.h" />
     <ClInclude Include="VersionInfo.h" />

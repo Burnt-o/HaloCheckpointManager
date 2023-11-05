@@ -13,8 +13,8 @@ private:
 public:
 
 
-	GUISubHeading(GameState implGame, std::string headingText,  std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements, float leftMargin = 20.f)
-		: IGUIElement(implGame, std::nullopt), mLeftMargin(leftMargin), mHeadingText(headingText)
+	GUISubHeading(GameState implGame, ToolTipCollection tooltip, std::string headingText,  std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements, float leftMargin = 20.f)
+		: IGUIElement(implGame, std::nullopt, tooltip), mLeftMargin(leftMargin), mHeadingText(headingText)
 	{
 		PLOG_VERBOSE << "Constructing GUIHeading, name: " << getName();
 
@@ -43,6 +43,7 @@ public:
 
 
 		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), ImGuiTreeNodeFlags_FramePadding);
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		if (headingOpen)
 		{

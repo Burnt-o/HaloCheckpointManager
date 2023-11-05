@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_stdlib.h"
 #include "HotkeyRenderer.h"
+#include "ToolTipCollection.h"
 class IGUIElement
 {
 protected:
@@ -11,14 +12,15 @@ protected:
 	float currentHeight = 0;
 	GameState mImplGame;
 	bool requiredServicesReady = true;
+	ToolTipCollection toolTipCollection;
 
 
 public:
 	float getCurrentHeight() { return this->currentHeight; }
 	virtual void render(HotkeyRenderer&) = 0;
 
-	IGUIElement(GameState implGame, std::optional<HotkeysEnum> hotkey)
-		: mImplGame(implGame), mHotkey(hotkey)
+	IGUIElement(GameState implGame, std::optional<HotkeysEnum> hotkey, ToolTipCollection tooltip)
+		: mImplGame(implGame), mHotkey(hotkey), toolTipCollection(tooltip)
 	{
 	
 	}
@@ -28,6 +30,14 @@ public:
 	virtual ~IGUIElement() = default;
 
 	std::optional<HotkeysEnum> getHotkey() { return mHotkey; }
+
+	void renderTooltip()
+	{
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+		{
+			ImGui::SetTooltip(toolTipCollection.getToolTip(mImplGame).data());
+		}
+	}
 };
 
 template <typename T>

@@ -87,7 +87,7 @@ private:
 			{
 			case GUIElementEnum::controlHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Control", headerChildElements
+					(game, ToolTipCollection("General HCM options"), "Control", headerChildElements
 						{
 						createNestedElement(GUIElementEnum::toggleGUIHotkeyGUI),
 						createNestedElement(GUIElementEnum::GUISettingsSubheading),
@@ -98,11 +98,11 @@ private:
 
 				case GUIElementEnum::toggleGUIHotkeyGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHotkeyOnly>
-						(game, HotkeysEnum::toggleGUI, "Toggle this GUI"));
+						(game, ToolTipCollection("Brings up or collapses this main GUI window"), HotkeysEnum::toggleGUI, "Toggle this GUI"));
 
 				case GUIElementEnum::GUISettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "GUI settings", headerChildElements
+						(game, ToolTipCollection("Options related to this main GUI"), "GUI settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
 							createNestedElement(GUIElementEnum::GUIShowingBlocksInput),
@@ -111,23 +111,23 @@ private:
 
 					case GUIElementEnum::GUIShowingFreesCursor:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Free cursor when GUI open", settings->GUIShowingFreesCursor));
+							(game, ToolTipCollection("Automatically free the curson when this GUI is open"), std::nullopt, "Free cursor when GUI open", settings->GUIShowingFreesCursor));
 
 					case GUIElementEnum::GUIShowingBlocksInput:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Block input when GUI open", settings->GUIShowingBlocksInput));
+							(game, ToolTipCollection("Automatically block game input when this GUI is open"), std::nullopt, "Block input when GUI open", settings->GUIShowingBlocksInput));
 
 					case GUIElementEnum::GUIShowingPausesGame:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Pause game when GUI open", settings->GUIShowingPausesGame));
+							(game, ToolTipCollection("Automatically pause the game when this GUI is open"), std::nullopt, "Pause game when GUI open", settings->GUIShowingPausesGame));
 
 				case GUIElementEnum::togglePauseGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, HotkeysEnum::togglePause, "Pause game", settings->togglePause));
+						(game, ToolTipCollection("Pauses the game simulation"), HotkeysEnum::togglePause, "Pause game", settings->togglePause));
 
 				case GUIElementEnum::togglePauseSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Pause settings", headerChildElements
+						(game, ToolTipCollection("Settings for pausing the game"), "Pause settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::advanceTicksGUI),
 							createNestedElement(GUIElementEnum::pauseAlsoBlocksInputGUI),
@@ -137,23 +137,23 @@ private:
 
 				case GUIElementEnum::advanceTicksGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIAdvanceTicks<true>>
-						(game, HotkeysEnum::advanceTicks, settings->advanceTicksEvent, settings->advanceTicksCount));
+						(game, ToolTipCollection("Advances the game simulation by x ticks while the game is paused"), HotkeysEnum::advanceTicks, settings->advanceTicksEvent, settings->advanceTicksCount));
 
 					case GUIElementEnum::pauseAlsoBlocksInputGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Pause also blocks game input", settings->pauseAlsoBlocksInput));
+							(game, ToolTipCollection("Makes this pause feature also block game input"), std::nullopt, "Pause also blocks game input", settings->pauseAlsoBlocksInput));
 
 					case GUIElementEnum::pauseAlsoFreesCursorGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Pause also frees cursor", settings->pauseAlsoFreesCursor));
+							(game, ToolTipCollection("Makes this pause feature also free MCC's cursor"), std::nullopt, "Pause also frees cursor", settings->pauseAlsoFreesCursor));
 
 				case GUIElementEnum::showGUIFailuresGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-						(game, std::nullopt, "Show optional cheat service failures", settings->showGUIFailures));
+						(game, ToolTipCollection("Shows a modal list of optional cheat services that failed to initialise, sorted by game"), std::nullopt, "Show optional cheat service failures", settings->showGUIFailures));
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Save Management", headerChildElements
+					(game, ToolTipCollection("Features for managing your checkpoints (savestates)"), "Save Management", headerChildElements
 						{ 
 							createNestedElement(GUIElementEnum::forceCheckpointGUI),
 							createNestedElement(GUIElementEnum::forceRevertGUI),
@@ -172,31 +172,31 @@ private:
 
 				case GUIElementEnum::forceCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceCheckpoint, "Force Checkpoint", settings->forceCheckpointEvent));
+						(game, ToolTipCollection("Forces a checkpoint, regardless of if the player is safe or not"), HotkeysEnum::forceCheckpoint, "Force Checkpoint", settings->forceCheckpointEvent));
 
 				case GUIElementEnum::forceRevertGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceRevert, "Force Revert", settings->forceRevertEvent));
+						(game, ToolTipCollection("Forces a revert (without having to die or go to the pause menu)"), HotkeysEnum::forceRevert, "Force Revert", settings->forceRevertEvent));
 
 				case GUIElementEnum::forceDoubleRevertGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceDoubleRevert, "Force Double Revert", settings->forceDoubleRevertEvent));
+						(game, ToolTipCollection("Reverts you back to the checkpoint BEFORE the last checkpoint you got"), HotkeysEnum::forceDoubleRevert, "Force Double Revert", settings->forceDoubleRevertEvent));
 
 				case GUIElementEnum::forceCoreSaveGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceCoreSave, "Force Core Save", settings->forceCoreSaveEvent));
+						(game, ToolTipCollection("Core saves are exactly like checkpoints, but seperate from them (they don't override eachother)"), HotkeysEnum::forceCoreSave, "Force Core Save", settings->forceCoreSaveEvent));
 
 				case GUIElementEnum::forceCoreLoadGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceCoreLoad, "Force Core Load", settings->forceCoreLoadEvent));
+						(game, ToolTipCollection("Reverts to your core save"), HotkeysEnum::forceCoreLoad, "Force Core Load", settings->forceCoreLoadEvent));
 
 				case GUIElementEnum::injectCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::injectCheckpoint, "Inject Checkpoint", settings->injectCheckpointEvent));
+						(game, ToolTipCollection("Injects the selected checkpoint into the games memory in place of your last actual checkpoint"), HotkeysEnum::injectCheckpoint, "Inject Checkpoint", settings->injectCheckpointEvent));
 
 				case GUIElementEnum::injectCheckpointSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Inject Checkpoint Settings", headerChildElements
+						(game, ToolTipCollection(""), "Inject Checkpoint Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert),
 							createNestedElement(GUIElementEnum::injectCheckpointLevelCheck),
@@ -207,31 +207,31 @@ private:
 
 					case GUIElementEnum::injectCheckpointForcesRevert:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
+							(game, ToolTipCollection("Automatically revert to the checkpoint you injected when injecting"), std::nullopt, "Force revert after injecting", settings->injectCheckpointForcesRevert));
 
 					case GUIElementEnum::injectCheckpointLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCheckpointLevelCheck));
+							(game, ToolTipCollection("If you try to inject a checkpoint from a level that ISN'T from the one you're playing on, will warn you with an \"are you sure?\" popup"), std::nullopt, "Warn on injecting to wrong level", settings->injectCheckpointLevelCheck));
 
 					case GUIElementEnum::injectCheckpointVersionCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Warn on injecting to wrong game version", settings->injectCheckpointVersionCheck));
+							(game, ToolTipCollection("If you try to inject a checkpoint from an MCC version that ISN'T the same one you're playing on, will warn you with an \"are you sure?\" popup"), std::nullopt, "Warn on injecting to wrong game version", settings->injectCheckpointVersionCheck));
 
 					case GUIElementEnum::injectCheckpointDifficultyCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCheckpointDifficultyCheck));
+							(game, ToolTipCollection("If you try to inject a checkpoint from a difficulty that ISN'T the same one you're playing on, will warn you with an \"are you sure?\" popup"), std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCheckpointDifficultyCheck));
 
 					case GUIElementEnum::injectCheckpointIgnoresChecksum:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Ignore checkpoint checksum on revert", settings->injectionIgnoresChecksum));
+							(game, ToolTipCollection("Turns off the games checkpoint integrity check system, allowing you to inject checkpoints made by other players or from modified maps"), std::nullopt, "Ignore checkpoint checksum on revert", settings->injectionIgnoresChecksum));
 
 				case GUIElementEnum::dumpCheckpointGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::dumpCheckpoint, "Dump Checkpoint", settings->dumpCheckpointEvent));
+						(game, ToolTipCollection("Dumps your current last checkpoint to the HCM checkpoint library for later use"), HotkeysEnum::dumpCheckpoint, "Dump Checkpoint", settings->dumpCheckpointEvent));
 
 				case GUIElementEnum::dumpCheckpointSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Dump Checkpoint Settings", headerChildElements
+						(game, ToolTipCollection(""), "Dump Checkpoint Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::dumpCheckpointAutonameGUI),
 							createNestedElement(GUIElementEnum::dumpCheckpointForcesSave)
@@ -239,19 +239,19 @@ private:
 
 					case GUIElementEnum::dumpCheckpointAutonameGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Autoname checkpoints", settings->autonameCheckpoints));
+							(game, ToolTipCollection("Automatically name dumped checkpoints with a timestamp instead of prompting you to input a name"), std::nullopt, "Autoname checkpoints", settings->autonameCheckpoints));
 
 					case GUIElementEnum::dumpCheckpointForcesSave:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Force checkpoint before dumping", settings->dumpCheckpointForcesSave));
+							(game, ToolTipCollection("Automatically force a new checkpoint before dumping it"), std::nullopt, "Force checkpoint before dumping", settings->dumpCheckpointForcesSave));
 
 				case GUIElementEnum::injectCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::injectCore, "Inject Core Save", settings->injectCoreEvent));
+						(game, ToolTipCollection("Injects the selected core save into the games memory in place of your last actual core save"), HotkeysEnum::injectCore, "Inject Core Save", settings->injectCoreEvent));
 
 				case GUIElementEnum::injectCoreSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Inject Core Save Settings", headerChildElements
+						(game, ToolTipCollection(""), "Inject Core Save Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::injectCoreForcesRevert),
 							createNestedElement(GUIElementEnum::injectCoreLevelCheck),
@@ -261,28 +261,28 @@ private:
 
 					case GUIElementEnum::injectCoreForcesRevert:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
+							(game, ToolTipCollection("Automatically revert to the core save you injected when injecting"), std::nullopt, "Force core load after injecting", settings->injectCoreForcesRevert));
 
 					case GUIElementEnum::injectCoreLevelCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Warn on injecting to wrong level", settings->injectCoreLevelCheck));
+							(game, ToolTipCollection("If you try to inject a core save from a level that ISN'T from the one you're playing on, will warn you with an \"are you sure?\" popup"), std::nullopt, "Warn on injecting to wrong level", settings->injectCoreLevelCheck));
 
 					case GUIElementEnum::injectCoreVersionCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Warn on injecting to wrong game version", settings->injectCoreVersionCheck));
+							(game, ToolTipCollection("If you try to inject a core save from an MCC version that ISN'T the same one you're playing on, will warn you with an \"are you sure?\" popup"), std::nullopt, "Warn on injecting to wrong game version", settings->injectCoreVersionCheck));
 
 					case GUIElementEnum::injectCoreDifficultyCheck:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCoreDifficultyCheck));
+							(game, ToolTipCollection("If you try to inject a core save from a difficulty that ISN'T the same one you're playing on, will warn you with an \"are you sure?\" popup"), std::nullopt, "Warn on injecting to wrong difficulty", settings->injectCoreDifficultyCheck));
 
 
 				case GUIElementEnum::dumpCoreGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::dumpCore, "Dump Core Save", settings->dumpCoreEvent));
+						(game, ToolTipCollection("Dumps your current last core save to the HCM checkpoint library for later use"), HotkeysEnum::dumpCore, "Dump Core Save", settings->dumpCoreEvent));
 
 				case GUIElementEnum::dumpCoreSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Dump Core Save Settings", headerChildElements
+						(game, ToolTipCollection(""), "Dump Core Save Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::dumpCoreAutonameGUI),
 							createNestedElement(GUIElementEnum::dumpCoreForcesSave)
@@ -290,15 +290,15 @@ private:
 
 					case GUIElementEnum::dumpCoreAutonameGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Autoname core saves", settings->autonameCoresaves));
+							(game, ToolTipCollection("Automatically name dumped core saves with a timestamp instead of prompting you to input a name"), std::nullopt, "Autoname core saves", settings->autonameCoresaves));
 
 					case GUIElementEnum::dumpCoreForcesSave:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, std::nullopt, "Force core save before dumping", settings->dumpCoreForcesSave));
+							(game, ToolTipCollection("Automatically force a new core save before dumping it"), std::nullopt, "Force core save before dumping", settings->dumpCoreForcesSave));
 
 			case GUIElementEnum::cheatsHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Useful Cheats", headerChildElements
+					(game, ToolTipCollection("Stuff like invulnerabiltiy, speedhack, teleport, ai disable etc"), "Useful Cheats", headerChildElements
 						{
 							createNestedElement(GUIElementEnum::speedhackGUI),
 							createNestedElement(GUIElementEnum::invulnGUI),
@@ -313,42 +313,42 @@ private:
 
 				case GUIElementEnum::speedhackGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISpeedhack>
-						(game, HotkeysEnum::speedhack, settings));
+						(game, ToolTipCollection("Multiply the games clock speed by this value (1 = normal speed)"), HotkeysEnum::speedhack, settings));
 
 				case GUIElementEnum::invulnGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInvulnerability>
-						(game, HotkeysEnum::invuln, "Invulnerability", settings->invulnerabilityToggle
+						(game, ToolTipCollection("Makes the player invulnerable to all damage and kill triggers"), HotkeysEnum::invuln, "Invulnerability", settings->invulnerabilityToggle
 							)); 
 
 
 				case GUIElementEnum::invulnerabilitySettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "InvulnerabilitySettings", headerChildElements
+						(game, ToolTipCollection(""), "InvulnerabilitySettings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::invulnNPCGUI),
 							}));
 
 					case GUIElementEnum::invulnNPCGUI:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-								(game, std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle
+								(game, ToolTipCollection("Makes all non-player characters invulnerable as well"), std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle
 								));
 
 				case GUIElementEnum::aiFreezeGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, HotkeysEnum::aiFreeze, "Freeze AI", settings->aiFreezeToggle));
+						(game, ToolTipCollection("Disables NPC AI, causing them to stand around like puppets"), HotkeysEnum::aiFreeze, "Freeze AI", settings->aiFreezeToggle));
 
 				case GUIElementEnum::medusaGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, HotkeysEnum::medusa, "Medusa", settings->medusaToggle));
+						(game, ToolTipCollection("Automatically kill enemies when they see the player"), HotkeysEnum::medusa, "Medusa", settings->medusaToggle));
 
 
 				case GUIElementEnum::forceTeleportGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceTeleport, "Force Teleport", settings->forceTeleportEvent));
+						(game, ToolTipCollection("Teleports an objects physical position"), HotkeysEnum::forceTeleport, "Force Teleport", settings->forceTeleportEvent));
 
 				case GUIElementEnum::forceTeleportSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Force Teleport Settings", headerChildElements
+						(game, ToolTipCollection(""), "Force Teleport Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::forceTeleportApplyToPlayer),
 							createNestedElement(GUIElementEnum::forceTeleportSettingsRadioGroup),
@@ -356,20 +356,20 @@ private:
 
 					case GUIElementEnum::forceTeleportApplyToPlayer:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenFalse, false>>
-							(game, std::nullopt, "Apply to player", settings->forceTeleportApplyToPlayer, headerChildElements
+							(game, ToolTipCollection("The teleport should be applied to the player, as opposed to some other object"), std::nullopt, "Apply to player", settings->forceTeleportApplyToPlayer, headerChildElements
 								{
 								createNestedElement(GUIElementEnum::forceTeleportCustomObject),
 								}));
 
 						case GUIElementEnum::forceTeleportCustomObject:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
-								(game, "Custom object datum", settings->forceTeleportCustomObject));
+								(game, ToolTipCollection("The datum (unique ID) of the object the teleport should be applied to"), "Custom object datum", settings->forceTeleportCustomObject));
 
 
 
 					case GUIElementEnum::forceTeleportSettingsRadioGroup:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioGroup>
-							(game, "Force Teleport Radio Group", headerChildElements
+							(game, ToolTipCollection(""), "Force Teleport Radio Group", headerChildElements
 								{
 								createNestedElement(GUIElementEnum::forceTeleportForward),
 								createNestedElement(GUIElementEnum::forceTeleportManual)
@@ -378,7 +378,7 @@ private:
 
 						case GUIElementEnum::forceTeleportForward:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
-								(game, std::nullopt, "Teleport Relative to Player",   settings->forceTeleportForward, headerChildElements
+								(game, ToolTipCollection("Teleport relative to the players position and look-direction"), std::nullopt, "Teleport Relative to Player",   settings->forceTeleportForward, headerChildElements
 									{
 									createNestedElement(GUIElementEnum::forceTeleportRelativeVec3),
 									createNestedElement(GUIElementEnum::forceTeleportForwardIgnoreZ)
@@ -386,17 +386,17 @@ private:
 
 							case GUIElementEnum::forceTeleportRelativeVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false>>
-									(game, "Teleport: ", settings->forceTeleportRelativeVec3));
+									(game, ToolTipCollection("How far forward/right/up to teleport the player, relative to their look-direction"), "Teleport: ", settings->forceTeleportRelativeVec3));
 
 
 							case GUIElementEnum::forceTeleportForwardIgnoreZ:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-									(game, std::nullopt, "Ignore vertical look angle",  settings->forceTeleportForwardIgnoreZ));
+									(game, ToolTipCollection("Will ignore the vertical component of your look direction (ie pretends you're looking at the horizon)"), std::nullopt, "Ignore vertical look angle",  settings->forceTeleportForwardIgnoreZ));
 
 
 						case GUIElementEnum::forceTeleportManual:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
-								(game, std::nullopt, "Teleport to Manual Coordinates",  settings->forceTeleportManual, headerChildElements
+								(game, ToolTipCollection("Teleport to absolute world coordinates"), std::nullopt, "Teleport to Manual Coordinates",  settings->forceTeleportManual, headerChildElements
 									{
 									createNestedElement(GUIElementEnum::forceTeleportAbsoluteVec3),
 									createNestedElement(GUIElementEnum::forceTeleportFillWithCurrentPositionEvent)
@@ -404,20 +404,20 @@ private:
 
 							case GUIElementEnum::forceTeleportAbsoluteVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true>>
-									(game, "Teleport: ", settings->forceTeleportAbsoluteVec3));
+									(game, ToolTipCollection("The xyz world coordinates to teleport to"), "Teleport: ", settings->forceTeleportAbsoluteVec3));
 
 
 							case GUIElementEnum::forceTeleportFillWithCurrentPositionEvent:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-									(game, std::nullopt, "Fill with current position",  settings->forceTeleportFillWithCurrentPositionEvent));
+									(game, ToolTipCollection("Fill with the current xyz position of the player/object"), std::nullopt, "Fill with current position",  settings->forceTeleportFillWithCurrentPositionEvent));
 
 				case GUIElementEnum::forceLaunchGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-						(game, HotkeysEnum::forceLaunch, "Force Launch", settings->forceLaunchEvent));
+						(game, ToolTipCollection("Boosts an objects velocity"), HotkeysEnum::forceLaunch, "Force Launch", settings->forceLaunchEvent));
 
 				case GUIElementEnum::forceLaunchSettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
-						(game, "Force Launch Settings", headerChildElements
+						(game, ToolTipCollection(""), "Force Launch Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::forceLaunchApplyToPlayer),
 							createNestedElement(GUIElementEnum::forceLaunchSettingsRadioGroup),
@@ -425,19 +425,19 @@ private:
 
 					case GUIElementEnum::forceLaunchApplyToPlayer:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenFalse, false>>
-							(game, std::nullopt, "Apply to player", settings->forceLaunchApplyToPlayer, headerChildElements
+							(game, ToolTipCollection("The launch should be applied to the player, as opposed to some other object"), std::nullopt, "Apply to player", settings->forceLaunchApplyToPlayer, headerChildElements
 								{
 								createNestedElement(GUIElementEnum::forceLaunchCustomObject)
 								}));
 
 						case GUIElementEnum::forceLaunchCustomObject:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
-								(game, "Custom object datum", settings->forceLaunchCustomObject));
+								(game, ToolTipCollection("The datum (unique ID) of the object the launch should be applied to"), "Custom object datum", settings->forceLaunchCustomObject));
 
 
 					case GUIElementEnum::forceLaunchSettingsRadioGroup:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioGroup>
-							(game, "Force Launch Radio Group", headerChildElements
+							(game, ToolTipCollection(""), "Force Launch Radio Group", headerChildElements
 								{
 								createNestedElement(GUIElementEnum::forceLaunchForward),
 								createNestedElement(GUIElementEnum::forceLaunchManual)
@@ -446,7 +446,7 @@ private:
 
 						case GUIElementEnum::forceLaunchForward:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
-								(game, std::nullopt, "Launch relative to player facing",  settings->forceLaunchForward, headerChildElements
+								(game, ToolTipCollection("Add velocity relative to the players look-direction"), std::nullopt, "Launch relative to player facing",  settings->forceLaunchForward, headerChildElements
 									{
 									createNestedElement(GUIElementEnum::forceLaunchRelativeVec3),
 									createNestedElement(GUIElementEnum::forceLaunchForwardIgnoreZ)
@@ -454,17 +454,17 @@ private:
 
 							case GUIElementEnum::forceLaunchRelativeVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false>>
-									(game, "Launch: ", settings->forceLaunchRelativeVec3));
+									(game, ToolTipCollection("How much velocity to apply in the forward/right/up directions, relative to the players look-direction"), "Launch: ", settings->forceLaunchRelativeVec3));
 
 
 							case GUIElementEnum::forceLaunchForwardIgnoreZ:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-									(game, std::nullopt, "Ignore vertical look angle", settings->forceLaunchForwardIgnoreZ));
+									(game, ToolTipCollection("Will ignore the vertical component of your look direction (ie pretends you're looking at the horizon)"), std::nullopt, "Ignore vertical look angle", settings->forceLaunchForwardIgnoreZ));
 
 
 						case GUIElementEnum::forceLaunchManual:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIRadioButton>
-								(game, std::nullopt, "Launch with absolute velocity",  settings->forceLaunchManual, headerChildElements
+								(game, ToolTipCollection("Add velocity relative to the absolute world-axes"), std::nullopt, "Launch with absolute velocity", settings->forceLaunchManual, headerChildElements
 									{
 									createNestedElement(GUIElementEnum::forceLaunchAbsoluteVec3),
 									}));
@@ -472,21 +472,21 @@ private:
 
 							case GUIElementEnum::forceLaunchAbsoluteVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true>>
-									(game, "Launch: ", settings->forceLaunchAbsoluteVec3));
+									(game, ToolTipCollection("How much velocity to add, in absolute world-axes"), "Launch: ", settings->forceLaunchAbsoluteVec3));
 
 
 
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Overlays", headerChildElements{ std::nullopt }));
+					(game, ToolTipCollection("this is where overlay stuff would go IF I HAD ANY"), "Overlays", headerChildElements{ std::nullopt }));
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Camera", headerChildElements{ std::nullopt }));
+					(game, ToolTipCollection("this is where camera stuff would go IF I HAD ANY"), "Camera", headerChildElements{ std::nullopt }));
 
 			case GUIElementEnum::theaterHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Camera", headerChildElements{ std::nullopt }));
+					(game, ToolTipCollection("this is where theater stuff would go IF I HAD ANY"), "Camera", headerChildElements{ std::nullopt }));
 
 
 			
@@ -495,7 +495,7 @@ private:
 
 			case GUIElementEnum::debugHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, "Debug", headerChildElements
+					(game, ToolTipCollection("Debug tools for HCM development"), "Debug", headerChildElements
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
@@ -504,12 +504,12 @@ private:
 
 				case GUIElementEnum::consoleCommandGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputString>
-						(game, "Console command: ", settings->consoleCommandString, settings->consoleCommandEvent));
+						(game, ToolTipCollection("Sends commands to the games console parser"), "Console command: ", settings->consoleCommandString, settings->consoleCommandEvent));
 
 
 				case GUIElementEnum::getObjectAddressGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
-						(game, "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
+						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
 
 #endif

@@ -10,8 +10,8 @@ typedef eventpp::CallbackList<void(bool&)> ToggleEvent;
 
 
 #ifdef HCM_DEBUG
-#define FORCEFULLY_DISABLE_GUIELEMENT currentHeight = 0; return;
-#define DEBUG_GUI_HEIGHT addTooltip(std::format("Height: {}", currentHeight).c_str());
+#define FORCEFULLY_DISABLE_GUIELEMENT currentHeight = 0; return
+#define DEBUG_GUI_HEIGHT //addTooltip(std::format("Height: {}", currentHeight).c_str())
 #else
 #define FORCEFULLY_DISABLE_GUIELEMENT
 #define DEBUG_GUI_HEIGHT 

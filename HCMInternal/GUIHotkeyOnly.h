@@ -11,8 +11,8 @@ private:
 public:
 
 
-	GUIHotkeyOnly(GameState implGame, std::optional<HotkeysEnum> hotkey, std::string buttonText)
-		: IGUIElement(implGame, hotkey), mText(buttonText)
+	GUIHotkeyOnly(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::string buttonText)
+		: IGUIElement(implGame, hotkey, tooltip), mText(buttonText)
 	{
 		if (mText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUIHotkeyOnly, name: " << getName();
@@ -26,6 +26,7 @@ public:
 		DEBUG_GUI_HEIGHT;
 		ImGui::SameLine();
 		ImGui::Text(mText.c_str());
+		renderTooltip();
 	}
 
 	std::string_view getName() override { return mText; }

@@ -15,8 +15,8 @@ private:
 
 public:
 
-	GUIInputDWORD(GameState implGame, std::string labelText, std::weak_ptr<Setting<uint32_t>> optionDWORD, std::optional<std::shared_ptr<ActionEvent>> eventToFire = std::nullopt)
-		: IGUIElement(implGame, std::nullopt), mOptionDWORDWeak(optionDWORD), mLabelText(labelText), mEventToFire(eventToFire)
+	GUIInputDWORD(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::weak_ptr<Setting<uint32_t>> optionDWORD, std::optional<std::shared_ptr<ActionEvent>> eventToFire = std::nullopt)
+		: IGUIElement(implGame, std::nullopt, tooltip), mOptionDWORDWeak(optionDWORD), mLabelText(labelText), mEventToFire(eventToFire)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUIInputDWORD, name: " << getName();
@@ -42,6 +42,7 @@ public:
 				mOptionDWORD->UpdateValueWithInput();
 				PLOG_VERBOSE << "GUIInputDWORD firing input event, value: " << std::hex << mOptionDWORD->GetValue();
 		}
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		if (mEventToFire.has_value())
 		{
@@ -53,6 +54,7 @@ public:
 				auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire.value()]() {mEvent->operator()(); }));
 				newThread.detach();
 			}
+			renderTooltip();
 		}
 
 

@@ -13,8 +13,8 @@ private:
 public:
 
 
-	GUIAdvanceTicks(GameState implGame, std::optional<HotkeysEnum> hotkey, std::weak_ptr<ActionEvent> eventToFire, std::weak_ptr<Setting<int>> boundInt)
-		: IGUIElement(implGame, hotkey),  mEventToFireWeak(eventToFire), mBoundIntWeak(boundInt)
+	GUIAdvanceTicks(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::weak_ptr<ActionEvent> eventToFire, std::weak_ptr<Setting<int>> boundInt)
+		: IGUIElement(implGame, hotkey, tooltip),  mEventToFireWeak(eventToFire), mBoundIntWeak(boundInt)
 	{
 		PLOG_VERBOSE << "Constructing GUIAdvanceTicks";
 		this->currentHeight = GUIFrameHeightWithSpacing;
@@ -50,6 +50,7 @@ public:
 			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire]() {mEvent->operator()(); }));
 			newThread.detach();
 		}
+		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(75.f);
@@ -57,8 +58,10 @@ public:
 		{
 			mBoundInt->UpdateValueWithInput(); // nothing actually subscribes to this value changed event so doesn't matter that it's on ui thread
 		}
+		renderTooltip();
 		ImGui::SameLine();
 		ImGui::Text(mBoundInt->GetValue() == 1 ? "tick" : "ticks");
+		renderTooltip();
 
 
 	}

@@ -17,8 +17,8 @@ private:
 public:
 
 
-	GUIVec3(GameState implGame, std::string labelText, std::shared_ptr<Setting<SimpleMath::Vector3>> optionVec3)
-		: IGUIElement(implGame, std::nullopt), mLabelText(labelText), mOptionVec3Weak(optionVec3)
+	GUIVec3(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<SimpleMath::Vector3>> optionVec3)
+		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionVec3Weak(optionVec3)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty vec3 label (needs label for imgui ID system, use ## for invisible labels)");
 		PLOG_VERBOSE << "Constructing GUIVec3, name: " << getName();
@@ -63,6 +63,7 @@ public:
 			ImGui::BeginChild(std::format("##", mLabelText).c_str(), { 0, currentHeight - GUISpacing });
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text(std::format("{} {}", type, mLabelText).c_str());
+			renderTooltip();
 			// 3 float boxes each seperately bound to x, y, z of mOptionVec3. Each will render on a seperate horizontal line.
 			ImGui::SetNextItemWidth(100);
 			if (ImGui::InputFloat(std::format("{}##{}", xLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().x, 0, 0, "%.8f"))
@@ -71,6 +72,7 @@ public:
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
 				newThread.detach();
 			}
+			renderTooltip();
 
 			ImGui::SetNextItemWidth(100);
 			if (ImGui::InputFloat(std::format("{}##{}", yLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().y, 0, 0, "%.8f"))
@@ -79,6 +81,7 @@ public:
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
 				newThread.detach();
 			}
+			renderTooltip();
 
 			ImGui::SetNextItemWidth(100);
 			if (ImGui::InputFloat(std::format("{}##{}", zLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().z, 0, 0, "%.8f"))
@@ -87,6 +90,7 @@ public:
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
 				newThread.detach();
 			}
+			renderTooltip();
 			ImGui::EndChild();
 		}
 		else
@@ -97,6 +101,7 @@ public:
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
 				newThread.detach();
 			}
+			renderTooltip();
 		}
 		DEBUG_GUI_HEIGHT;
 
