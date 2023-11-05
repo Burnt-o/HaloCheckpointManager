@@ -16,6 +16,7 @@ dumpCore,\
 speedhack,\
 invuln,\
 aiFreeze,\
+medusa,\
 forceTeleport,\
 forceLaunch
 

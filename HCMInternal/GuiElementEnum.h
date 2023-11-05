@@ -78,6 +78,7 @@
 	((invulnerabilitySettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 	((invulnNPCGUI, (ALL_SUPPORTED_GAMES)))\
 	((aiFreezeGUI, (ALL_SUPPORTED_GAMES)))\
+	((medusaGUI, (Halo1, Halo2)))\
 	((consoleCommandGUI, (Halo1)))\
 	((forceTeleportGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceTeleportSettingsSubheading, (ALL_SUPPORTED_GAMES)))\

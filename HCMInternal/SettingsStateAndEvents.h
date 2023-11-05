@@ -26,6 +26,7 @@ public:
 	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> aiFreezeHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> medusaHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -230,6 +231,13 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(aiFreezeToggle)
+		);
+
+	std::shared_ptr<Setting<bool>> medusaToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(medusaToggle)
 		);
 
 	std::shared_ptr<Setting<std::string>> consoleCommandString = std::make_shared<Setting<std::string>>

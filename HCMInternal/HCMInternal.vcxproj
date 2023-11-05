@@ -271,6 +271,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ISharedMemory.h" />
     <ClInclude Include="MCCState.h" />
     <ClInclude Include="GetPlayerDatum.h" />
+    <ClInclude Include="Medusa.h" />
     <ClInclude Include="MidhookFlagInterpreter.h" />
     <ClInclude Include="ModalDialogRenderer.h" />
     <ClInclude Include="ObjectTypes.h" />
@@ -395,6 +396,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </ClCompile>
     <ClCompile Include="Invulnerability.cpp" />
     <ClCompile Include="Logging.cpp" />
+    <ClCompile Include="Medusa.cpp" />
     <ClCompile Include="MessagesGUI.cpp" />
     <ClCompile Include="MidhookContextInterpreter.cpp" />
     <ClCompile Include="ModalDialogRenderer.cpp" />

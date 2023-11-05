@@ -304,6 +304,7 @@ private:
 							createNestedElement(GUIElementEnum::invulnGUI),
 							createNestedElement(GUIElementEnum::invulnerabilitySettingsSubheading),
 							createNestedElement(GUIElementEnum::aiFreezeGUI),
+							createNestedElement(GUIElementEnum::medusaGUI),
 							createNestedElement(GUIElementEnum::forceTeleportGUI),
 							createNestedElement(GUIElementEnum::forceTeleportSettingsSubheading),
 							createNestedElement(GUIElementEnum::forceLaunchGUI),
@@ -335,6 +336,10 @@ private:
 				case GUIElementEnum::aiFreezeGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 						(game, HotkeysEnum::aiFreeze, "Freeze AI", settings->aiFreezeToggle));
+
+				case GUIElementEnum::medusaGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, HotkeysEnum::medusa, "Medusa", settings->medusaToggle));
 
 
 				case GUIElementEnum::forceTeleportGUI:

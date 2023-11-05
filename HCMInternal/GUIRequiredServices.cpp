@@ -105,6 +105,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::aiFreezeGUI,
 			{OptionalCheatEnum::AIFreeze}
 	},
+	{ GUIElementEnum::medusaGUI,
+	{OptionalCheatEnum::Medusa}
+	},
 	{GUIElementEnum::consoleCommandGUI,
 			{OptionalCheatEnum::ConsoleCommand}
 	},

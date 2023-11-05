@@ -10,6 +10,7 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mSpeedhackHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mInvulnerabilityHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mAIFreezeHotkeyCallbackHandle;
+	ScopedCallback<ActionEvent> mMedusaHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mToggleGUIHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mTogglePauseHotkeyCallbackHandle;
 
@@ -18,6 +19,7 @@ public:
 		: mSpeedhackHotkeyCallbackHandle(settings->speedhackHotkeyEvent, [boolsetting = settings->speedhackToggle]() { boolsetting->flipBoolSetting(); }),
 		mInvulnerabilityHotkeyCallbackHandle(settings->invulnerabilityHotkeyEvent, [boolsetting = settings->invulnerabilityToggle]() { boolsetting->flipBoolSetting(); }),
 		mAIFreezeHotkeyCallbackHandle(settings->aiFreezeHotkeyEvent, [boolsetting = settings->aiFreezeToggle]() { boolsetting->flipBoolSetting(); }),
+		mMedusaHotkeyCallbackHandle(settings->medusaHotkeyEvent, [boolsetting = settings->medusaToggle]() { boolsetting->flipBoolSetting(); }),
 		mToggleGUIHotkeyCallbackHandle(settings->toggleGUIHotkeyEvent, [boolsetting = settings->GUIWindowOpen]() { boolsetting->flipBoolSetting(); }),
 		mTogglePauseHotkeyCallbackHandle(settings->togglePauseHotkeyEvent, [boolsetting = settings->togglePause]() { boolsetting->flipBoolSetting(); })
 

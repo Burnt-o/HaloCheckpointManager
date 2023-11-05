@@ -26,6 +26,7 @@ GetObjectAddressCLI,\
 GetCurrentLevelCode,\
 GetPlayerViewAngle,\
 AIFreeze,\
+Medusa,\
 ForceTeleport,\
 ForceLaunch,\
 ConsoleCommand,\

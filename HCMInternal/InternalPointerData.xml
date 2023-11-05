@@ -2330,10 +2330,31 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x0</Offset>
+				<Offset>0xCCFFCB</Offset>
 			</Offsets>
 		</Version>
-		</VersionedEntry>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6460B2</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="medusaFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo1">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+	</VersionedEntry>
 	<!-- #endregion medusa-->
 	
 	<!-- #region invulnerability-->

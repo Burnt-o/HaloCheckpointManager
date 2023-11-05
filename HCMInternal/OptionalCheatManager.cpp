@@ -35,6 +35,7 @@
 #include "GetHavokAnchorPoint.h"
 #include "UnfreezeObjectPhysics.h"
 #include "GetObjectAddressCLI.h"
+#include "Medusa.h"
 
 #include "DIContainer.h"
 #include "map.h"

@@ -448,6 +448,9 @@
     <ClInclude Include="GUIInputDWORD.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="Medusa.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -608,6 +611,9 @@
     </ClCompile>
     <ClCompile Include="GetHavokAnchorPoint.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Medusa.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
