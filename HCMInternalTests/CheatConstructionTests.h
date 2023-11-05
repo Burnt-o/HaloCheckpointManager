@@ -1,4 +1,5 @@
 #pragma once
+#include "CppUnitTest.h"
 #include "TestLogging.h"
 #include "curl\curl.h"
 #include "GlobalKill.h"
@@ -28,7 +29,6 @@
 #include "MockMCCStateHook.h"
 #include "MockModalDialogRenderer.h"
 #include "ControlServiceContainer.h"
-
 	class CheatConstructionTestHarness
 	{
 	public:

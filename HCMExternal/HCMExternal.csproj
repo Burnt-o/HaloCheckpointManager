@@ -402,10 +402,15 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="ExternalPointerData.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+	
+	  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<None Update="ExternalPointerData.xml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+    </ItemGroup>	
+	
+	
+	<ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

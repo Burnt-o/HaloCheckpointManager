@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "DIContainer.h"
+#include "CppUnitTest.h"
+#include "TestLogging.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

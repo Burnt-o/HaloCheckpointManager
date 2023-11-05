@@ -1,6 +1,5 @@
 #pragma once
 #include "Logging.h"
-#include "curl\curl.h"
 #include "GlobalKill.h"
 #include "ModuleCache.h"
 #include "ModuleHookManager.h"
@@ -71,7 +70,7 @@ public:
         logging->SetFileLoggingLevel(plog::verbose);
         PLOG_INFO << "HCMInternal initializing. DirPath: " << dirPath;
         unhandled = std::make_shared<UnhandledExceptionHandler>(dirPath); PLOGV << "unhandled init";
-        curl_global_init(CURL_GLOBAL_DEFAULT);
+       //curl_global_init(CURL_GLOBAL_DEFAULT);
         try
         {
             // some very important services
@@ -163,7 +162,7 @@ public:
 
             GlobalKill::killMe();
         }
-        curl_global_cleanup(); PLOG_INFO << "Curl cleaned up";
+       // curl_global_cleanup(); PLOG_INFO << "Curl cleaned up";
         // Auto managed resources have fallen out of scope
         PLOG_INFO << "HCMInternal services successfully shut down";
 
@@ -174,7 +173,6 @@ public:
 #endif 
 
 	}
-
 
 
 };

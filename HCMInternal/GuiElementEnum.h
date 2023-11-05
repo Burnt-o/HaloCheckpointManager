@@ -79,7 +79,6 @@
 	((invulnNPCGUI, (ALL_SUPPORTED_GAMES)))\
 	((aiFreezeGUI, (ALL_SUPPORTED_GAMES)))\
 	((medusaGUI, (Halo1, Halo2)))\
-	((consoleCommandGUI, (Halo1)))\
 	((forceTeleportGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceTeleportSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 		((forceTeleportApplyToPlayer, (ALL_SUPPORTED_GAMES)))\
@@ -108,7 +107,7 @@
 
 #define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
-	((consoleGUI, (Halo1)))\
+	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))
 
 

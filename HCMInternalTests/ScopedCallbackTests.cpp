@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ScopedCallback.h"
-
+#include "CppUnitTest.h"
+#include "TestLogging.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

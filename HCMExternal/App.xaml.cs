@@ -31,13 +31,11 @@ namespace HCMExternal
         public App()
         {
             // Logging
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
             Log.Logger = new LoggerConfiguration()
-#if HCM_DEBUG
                 .MinimumLevel.Verbose().WriteTo.Debug()
-#endif
-                .MinimumLevel.Verbose().WriteTo.File("HCMExternal_Logging.txt", 
-                rollOnFileSizeLimit: true, 
-                fileSizeLimitBytes: 1024 * 1024 * 10, 
+                .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt", 
                 flushToDiskInterval: TimeSpan.FromSeconds(3))
                 .CreateLogger();
             Log.Information("Logging started");

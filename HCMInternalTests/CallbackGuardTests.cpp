@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ScopedCallback.h"
-
+#include "CppUnitTest.h"
+#include "TestLogging.h"
 //std::wstring str_to_wstr(const std::string str)
 //{
 //	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);

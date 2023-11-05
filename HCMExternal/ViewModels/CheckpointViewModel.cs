@@ -154,12 +154,12 @@ namespace HCMExternal.ViewModels
             SaveDirWatcher.NotifyFilter = NotifyFilters.DirectoryName;
 
             // sub to events
-            SaveFileWatcher.Changed += OnFileChanged;
+            //SaveFileWatcher.Changed += OnFileChanged;
             SaveFileWatcher.Created += OnFileChanged;
             SaveFileWatcher.Deleted += OnFileChanged;
             SaveFileWatcher.Renamed += OnFileChanged;
 
-            SaveDirWatcher.Changed += OnDirChanged;
+            //SaveDirWatcher.Changed += OnDirChanged;
             SaveDirWatcher.Created += OnDirChanged;
             SaveDirWatcher.Deleted += OnDirChanged;
             SaveDirWatcher.Renamed += OnDirChanged;
@@ -205,6 +205,11 @@ namespace HCMExternal.ViewModels
 
         private void OnFileChanged(object sender, FileSystemEventArgs e)
         {
+#if HCM_DEBUG
+            Log.Debug($"OnFileChanged: Stacktrace: {Environment.StackTrace}");
+            Log.Debug($"args: {e.ToString()}, affected file path: {e.FullPath}, sender: {sender.ToString()}");
+#endif
+
             HCMExternal.App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
             {
                 RefreshCheckpointList();
@@ -213,6 +218,11 @@ namespace HCMExternal.ViewModels
 
         private void OnDirChanged(object sender, FileSystemEventArgs e)
         {
+
+#if HCM_DEBUG
+            Log.Debug($"OnDirChanged: Stacktrace: {Environment.StackTrace}");
+            Log.Debug($"args: {e.ToString()}, affected file path: {e.FullPath}, sender: {sender.ToString()}");
+#endif
             HCMExternal.App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
             {
                 RefreshSaveFolderTree();
@@ -260,6 +270,9 @@ namespace HCMExternal.ViewModels
 
             this.CheckpointCollection.Clear();
             Log.Debug("Populating checkpoint list with data from folder: " + this.SelectedSaveFolder.SaveFolderPath);
+
+
+
             ObservableCollection<Checkpoint> newCollection = this.CheckpointServices.PopulateCheckpointList(this.SelectedSaveFolder, this.SelectedGame);
             foreach (Checkpoint c in newCollection)
             {

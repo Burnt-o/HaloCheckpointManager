@@ -620,11 +620,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="InternalPointerData.xml">
-      <Filter>Resource Files</Filter>
-    </CopyFileToFolders>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
+    <Xml Include="InternalPointerData.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

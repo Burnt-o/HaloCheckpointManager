@@ -108,12 +108,6 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{ GUIElementEnum::medusaGUI,
 	{OptionalCheatEnum::Medusa}
 	},
-	{GUIElementEnum::consoleCommandGUI,
-			{OptionalCheatEnum::ConsoleCommand}
-	},
-	{ GUIElementEnum::getObjectAddressGUI,
-		{OptionalCheatEnum::GetObjectAddressCLI}
-	},
 	{ GUIElementEnum::forceTeleportGUI,
 			{OptionalCheatEnum::ForceTeleport}
 	},
@@ -177,6 +171,18 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{ GUIElementEnum::forceLaunchAbsoluteVec3,
 			{OptionalCheatEnum::ForceLaunch}
 	},
+
+#ifdef HCM_DEBUG
+
+	{ GUIElementEnum::getObjectAddressGUI,
+		{OptionalCheatEnum::GetObjectAddressCLI}
+	},
+	{ GUIElementEnum::consoleCommandGUI,
+		{OptionalCheatEnum::ConsoleCommand}
+	},
+
+#endif
+
 };
 
 

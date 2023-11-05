@@ -96,7 +96,7 @@ namespace HCMExternal.Services.DataPointersServiceNS
 #else
             try
             {
-                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM2/HCM3/ExternalPointerData.xml";
+                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMExternal/ExternalPointerData.xml";
                 System.Net.WebClient client = new System.Net.WebClient();
                 xml = client.DownloadString(url);
 

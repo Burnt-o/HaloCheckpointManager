@@ -9,12 +9,17 @@
 #define useDevPointerData 1
 #define debugPointerManager 1
 
+#ifndef HCM_DEBUG // don't use dev pointer data in release
+#define useDevPointerData 0
+#endif
+
 typedef std::tuple<std::string, std::optional<GameState>> DataKey;
 
 
 
 constexpr std::string_view xmlFileName = "InternalPointerData.xml";
-constexpr std::string_view githubPath = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/HCM3/HCMInternal/InternalPointerData.xml";
+constexpr std::string_view githubPath = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMInternal/InternalPointerData.xml";
+                   
 
 class PointerManager::PointerManagerImpl {
 
@@ -73,19 +78,36 @@ PointerManager::PointerManagerImpl::PointerManagerImpl(std::shared_ptr<IGetMCCVe
     pointerDataLocation = m_dirPath;
     pointerDataLocation += xmlFileName;
 
+    HCMInitException downloadFailure("not attempted");
 #ifndef HCM_DEBUG
+
     try
     {
         PLOG_INFO << "downloading pointerData.xml";
         downloadXML(githubPath);
+        downloadFailure = HCMInitException("download succeeded!");
     }
     catch (HCMInitException ex)
     {
+        downloadFailure = ex;
         PLOG_ERROR << "Failed to download HCM PointerData xml, trying local backup";
     }
 #endif
 
-    std::string pointerData = readLocalXML();
+    std::string pointerData;
+    try
+    {
+        pointerData = readLocalXML();
+    }
+    catch (HCMInitException ex)
+    {
+        throw HCMInitException(std::format("Failed to download or read local pointer data backup:\n"
+            "Download attempt info: {}\n"
+            "File read attempt info: {}\n"
+            "", downloadFailure.what(), ex.what()
+        ));
+    }
+
 
     parseXML(pointerData);
     PLOG_DEBUG << "pointer parsing complete";
@@ -295,19 +317,24 @@ using curl_uptr = std::unique_ptr<CURL, curl_dter>;
 
 void PointerManager::PointerManagerImpl::downloadXML(std::string_view url)
 {
+    auto curl = curl_uptr(curl_easy_init());
     // Download from the intertubes
     std::string xmlString;
-    if (auto curl = curl_uptr(curl_easy_init()))
+    if (curl)
     {
-        curl_easy_setopt(curl.get(), CURLOPT_URL, url);
+        curl_easy_setopt(curl.get(), CURLOPT_URL, url.data()); // curl is a c library, needs c strings
         curl_easy_setopt(curl.get(), CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &xmlString);
 
         CURLcode ec;
         if ((ec = curl_easy_perform(curl.get())) != CURLE_OK)
-            throw HCMInitException(curl_easy_strerror(ec));
+            throw HCMInitException(std::format("Failed to download pointer data from url:\n{}\nError: {}", url, curl_easy_strerror(ec)));
 
+    }
+    else
+    {
+        throw HCMInitException(("Failed to init curl service!"));
     }
 
     // Write to local file
@@ -323,10 +350,10 @@ void PointerManager::PointerManagerImpl::downloadXML(std::string_view url)
     else
     {
         std::stringstream er;
-        er << "Failed to write file : " << GetLastError() << std::endl << "at: " << pathToFile;
+        er << "Failed to write pointer data file after downloading: " << GetLastError() << std::endl << "at: " << pathToFile;
         throw HCMInitException(er.str().c_str());
     }
-
+    
 }
 
 
