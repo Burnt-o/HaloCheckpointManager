@@ -224,20 +224,19 @@
 	<VersionedEntry Name="blockGameKeyboardInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x87A35B</Offset>
+				<Offset>0x87A358</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
-	<!--probably always zero & true, but juuuust in case -->
-	<VersionedEntry Name="blockGameKeyboardInputFunctionFlagSetter" Type="MidhookFlagInterpreter">
-		<Version Version="All" ProcessType="Steam">
-			<rflag>zero</rflag>
-			<value>true</value>
+	<!-- "test rdx, rdx" -> "xor rdx, rdx". this will set zeroFlag true and clear rdx like what the branch was actually testing.-->
+	<VersionedEntry Name="blockGameKeyboardInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="blockGameMouseInputFunction" Type="MultilevelPointer::ExeOffset">
+	<VersionedEntry Name="blockGameMouseMoveInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A2C0</Offset>
@@ -245,9 +244,24 @@
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="blockGameMouseInputCode" Type="Vector" Typename="byte">
+	<VersionedEntry Name="blockGameMouseMoveInputCode" Type="Vector" Typename="byte">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="blockGameMouseClickInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87A1ED</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--nops the code that moves mouse click input flagset into edi-->
+	<VersionedEntry Name="blockGameMouseClickInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 

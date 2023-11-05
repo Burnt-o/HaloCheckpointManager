@@ -13,21 +13,12 @@ private:
 	static inline BlockGameInputImpl* instance = nullptr;
 
 	std::set<std::string> callersRequestingBlockedInput{};
-	std::shared_ptr<ModuleMidHook> blockGameKeyboardInputHook;
-	std::shared_ptr< MidhookFlagInterpreter> blockGameKeyboardInputFunctionFlagSetter;
 
-	std::shared_ptr<ModulePatch> blockGameMouseInputPatch;
-
+	std::shared_ptr<ModulePatch> blockGameKeyboardInputHook;
+	std::shared_ptr<ModulePatch> blockGameMouseMoveInputPatch;
+	std::shared_ptr<ModulePatch> blockGameMouseClickInputPatch;
 	std::shared_ptr<ModulePatch> blockGameControllerInputPatch;
 
-
-	static void blockGameKeyboardInputHookFunction(SafetyHookContext& ctx)
-	{
-		instance->blockGameKeyboardInputFunctionFlagSetter->setFlag(ctx);
-	}
-
-
-	bool previousGamePadState = false;
 
 public:
 	BlockGameInputImpl(std::shared_ptr<PointerManager> ptr)
@@ -35,12 +26,16 @@ public:
 		if (instance) throw HCMInitException("Cannot have more than one BlockGameInputImpl");
 
 		auto blockGameKeyboardInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameKeyboardInputFunction));
-		blockGameKeyboardInputFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(blockGameKeyboardInputFunctionFlagSetter));
-		blockGameKeyboardInputHook = ModuleMidHook::make(L"main", blockGameKeyboardInputFunction, blockGameKeyboardInputHookFunction, false);
+		auto blockGameKeyboardInputCode = ptr->getVectorData<byte>(nameof(blockGameKeyboardInputCode));
+		blockGameKeyboardInputHook = ModulePatch::make(L"main", blockGameKeyboardInputFunction, *blockGameKeyboardInputCode.get());
 
-		auto blockGameMouseInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameMouseInputFunction));
-		auto blockGameMouseInputCode = ptr->getVectorData<byte>(nameof(blockGameMouseInputCode));
-		blockGameMouseInputPatch = ModulePatch::make(L"main", blockGameMouseInputFunction, *blockGameMouseInputCode.get());
+		auto blockGameMouseMoveInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameMouseMoveInputFunction));
+		auto blockGameMouseMoveInputCode = ptr->getVectorData<byte>(nameof(blockGameMouseMoveInputCode));
+		blockGameMouseMoveInputPatch = ModulePatch::make(L"main", blockGameMouseMoveInputFunction, *blockGameMouseMoveInputCode.get());
+
+		auto blockGameMouseClickInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameMouseClickInputFunction));
+		auto blockGameMouseClickInputCode = ptr->getVectorData<byte>(nameof(blockGameMouseClickInputCode));
+		blockGameMouseClickInputPatch = ModulePatch::make(L"main", blockGameMouseClickInputFunction, *blockGameMouseClickInputCode.get());
 
 		auto blockGameControllerInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(blockGameControllerInputFunction));
 		auto blockGameControllerInputCode = ptr->getVectorData<byte>(nameof(blockGameControllerInputCode));
@@ -61,8 +56,16 @@ public:
 		callersRequestingBlockedInput.insert(callerID);
 		if (callersRequestingBlockedInput.empty() == false)
 		{
+			PLOG_DEBUG << "attaching blockKeyboard hook";
 			blockGameKeyboardInputHook->setWantsToBeAttached(true);
-			blockGameMouseInputPatch->setWantsToBeAttached(true);
+
+			PLOG_DEBUG << "attaching blockMouseMove hook";
+			blockGameMouseMoveInputPatch->setWantsToBeAttached(true);
+
+			PLOG_DEBUG << "attaching blockMouseClick hook";
+			blockGameMouseClickInputPatch->setWantsToBeAttached(true);
+
+			PLOG_DEBUG << "attaching blockController hook";
 			blockGameControllerInputPatch->setWantsToBeAttached(true);
 		}
 	}
@@ -73,7 +76,8 @@ public:
 		if (callersRequestingBlockedInput.empty() == true)
 		{
 			blockGameKeyboardInputHook->setWantsToBeAttached(false);
-			blockGameMouseInputPatch->setWantsToBeAttached(false);
+			blockGameMouseMoveInputPatch->setWantsToBeAttached(false);
+			blockGameMouseClickInputPatch->setWantsToBeAttached(false);
 			blockGameControllerInputPatch->setWantsToBeAttached(false);
 		}
 	}
