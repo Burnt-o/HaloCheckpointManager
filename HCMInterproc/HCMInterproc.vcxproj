@@ -157,6 +157,7 @@
     <ClInclude Include="HaloEnums.h" />
     <ClInclude Include="Inject.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SharedMemoryExternal.h" />
     <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
@@ -174,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="SharedMemoryExternal.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HCMInterproc.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

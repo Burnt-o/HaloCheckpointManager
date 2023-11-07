@@ -17,6 +17,7 @@ using HCMExternal.Services.MCCStateServiceNS;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.IO;
 using System.Runtime.InteropServices;
+using static System.Net.WebRequestMethods;
 
 namespace HCMExternal
 {
@@ -25,7 +26,7 @@ namespace HCMExternal
     {
 
 
-        public string CurrentHCMVersion = "2.0.7";
+        public string CurrentHCMVersion = "unset";
         private ServiceProvider _serviceProvider;
 
         public App()
@@ -76,6 +77,11 @@ namespace HCMExternal
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            CurrentHCMVersion = fvi.FileVersion ?? "no version info";
+
             // TODO: check for required files/folders
 
             // Tell DataPointersService to load data
@@ -114,7 +120,10 @@ namespace HCMExternal
             }
 
             // Check if there's a newer version of HCM available
-            if (HCMExternal.Properties.Settings.Default.CheckForUpdates && dataPointersService.LatestHCMVersions.Count > 0 && !dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion))
+            Log.Debug($"dataPointersService.LatestHCMVersions.Count: {dataPointersService.LatestHCMVersions.Count}");
+            Log.Debug($"dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion): {dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion)}");
+            Log.Debug($"this.CurrentHCMVersion: {this.CurrentHCMVersion}");
+            if (dataPointersService.LatestHCMVersions.Count > 0 && !dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion))
             {
                 //Tell the user a new HCM version exists and ask them if they would like to download it (send them to github release page)
                 if (!(MessageBox.Show("A newer version of HCM exists, probably with bugfixes or new features.\nWould you like to go to the HCM releases page now?", "Download HCM update?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))
@@ -145,7 +154,7 @@ namespace HCMExternal
 
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
-            mainWindow.Title = "HaloCheckpointManager " + this.CurrentHCMVersion;
+            mainWindow.Title = "HaloCheckpointManager " + (this.CurrentHCMVersion.Length > 5 ? this.CurrentHCMVersion.Substring(0, 6) : this.CurrentHCMVersion);
             mainWindow.Show();
 
             // Tell MCCStateService to begin trying to attach to MCC
@@ -189,7 +198,7 @@ namespace HCMExternal
         };
 
         //Required files that HCM needs to be able to run.
-        private static readonly string[] _requiredFiles =
+        private static readonly string[] _requiredAssemblies =
         {
                        @"HCMInternal.dll",
                        @"HCMInterproc.dll"
@@ -261,13 +270,28 @@ namespace HCMExternal
             //Check if we have the required assemblies, like BurntMemory.dll, etc. Get's a list of missing files if any are missing.
 
                 string missingAssemblies = "";
-                foreach (var assembly in _requiredFiles)
+                foreach (var assembly in _requiredAssemblies)
                 {
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), assembly);
-                    if (!File.Exists(filePath))
+                    if (!System.IO.File.Exists(filePath))
                     {
                         missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly;
                     }
+                    else
+                    {
+                        // file exists: check that it has the current version information
+                        FileVersionInfo assemblyVersion = FileVersionInfo.GetVersionInfo(filePath);
+                        string versionString = string.Format("{0}.{1}.{2}.{3}", assemblyVersion.FileMajorPart,
+                                                                            assemblyVersion.FileMinorPart,
+                                                                              assemblyVersion.FileBuildPart,
+                                                                              assemblyVersion.FilePrivatePart);
+                        if (versionString != this.CurrentHCMVersion)
+                        {
+                            missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly + "(wrong file version! was " + versionString +")";
+                        }
+                }
+                    
+
                 }
 
                 if (missingAssemblies != "")
@@ -276,6 +300,8 @@ namespace HCMExternal
                     "\nYou may have to re-download HCM to get the required files."
                     + "\n\nMissing files: " + missingAssemblies);
                 }
+
+
             
             #endregion
 

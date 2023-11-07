@@ -274,6 +274,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ModalDialogRenderer.h" />
     <ClInclude Include="ObjectTypes.h" />
     <ClInclude Include="PauseGame.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
     <ClInclude Include="ScopedCallback.h" />
     <ClInclude Include="ScopedServiceRequest.h" />
@@ -424,6 +425,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HCMInternal.rc"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

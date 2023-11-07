@@ -7,6 +7,9 @@
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU;x64</Platforms>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -395,6 +398,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -407,7 +415,15 @@
 		<None Update="ExternalPointerData.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-    </ItemGroup>	
+    </ItemGroup>
+
+	
+	  <ItemGroup>
+	    <EmbeddedResource Update="Properties\Resources.resx">
+	      <Generator>ResXFileCodeGenerator</Generator>
+	      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	    </EmbeddedResource>
+	  </ItemGroup>	
 	
 	
 	<ItemGroup>
@@ -415,6 +431,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
+  </ItemGroup>	
+	
+	
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+	  <Exec Command="powershell -ExecutionPolicy RemoteSigned $(SolutionDir)updateVersionInfo.ps1 -SolutionDir $(SolutionDir) -VersionInfo $(VersionPrefix) " />
+	</Target>
 
 </Project>
