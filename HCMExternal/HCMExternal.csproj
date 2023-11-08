@@ -205,6 +205,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="HCM.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
@@ -436,10 +440,15 @@
 
 	<PropertyGroup>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+		<ApplicationIcon>HCM.ico</ApplicationIcon>
 	</PropertyGroup>
 	
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-	  <Exec Command="powershell -ExecutionPolicy RemoteSigned $(SolutionDir)updateVersionInfo.ps1 -SolutionDir $(SolutionDir) -VersionInfo $(VersionPrefix) " />
+	  <Exec Command="powershell -ExecutionPolicy RemoteSigned $(SolutionDir)updateVersionInfo.ps1 -SolutionDir $(SolutionDir) -VersionInfo $(VersionPrefix)&#xD;&#xA; " />
+	</Target>
+	
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="copy $(TargetDir)$(MSBuildProjectName).exe $(TargetDir)HaloCheckpointManager.exe /Y" />
 	</Target>
 
 </Project>
