@@ -304,7 +304,7 @@ public:
 
 	std::shared_ptr<Setting<bool>> forceTeleportManual = std::make_shared<Setting<bool>>
 		(
-			true,
+			false,
 			[](bool in) { return true; },
 			nameof(forceTeleportManual)
 		);
@@ -332,7 +332,7 @@ public:
 
 	std::shared_ptr<Setting<SimpleMath::Vector3>> forceLaunchRelativeVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
 		(
-			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
+			SimpleMath::Vector3{ 0.5f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(forceLaunchRelativeVec3)
 		);

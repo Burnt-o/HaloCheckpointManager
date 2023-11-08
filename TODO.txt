@@ -2,23 +2,23 @@
 
 GUI Hierarchy (goal)
 * Control
-	* hotkey: toggle main GUI //TODO
-	* bool: Free cursor when GUI visible //TODO
-	* bool: Pause game when GUI visible //TODO
-	* bool: Freeze inputs when GUI visible //TODO
-	* bool: Pause Game //TODO
-		* action: Advance x ticks //TODO
+	* hotkey: toggle main GUI 
+	* bool: Free cursor when GUI visible 
+	* bool: Pause game when GUI visible 
+	* bool: Freeze inputs when GUI visible 
+	* bool: Pause Game 
+		* action: Advance x ticks 
 * Save Management
 	* action: Inject Checkpoint
-		* bool: Warn on injecting to wrong level //TODO
-		* bool: Force level load to different levels //TODO
+		* bool: Warn on injecting to wrong level 
+		* bool: Force level load to different levels 
 	* action: Dump Checkpoint
-		* bool: Autoname checkpoints //TODO
+		* bool: Autoname checkpoints 
 	* action: Inject Core Save
-		* bool: Warn on injecting to wrong level //TODO
+		* bool: Warn on injecting to wrong level 
 		* bool: Force level load to different levels //TODO
 	* action: Dump Core Save
-		* bool: Autoname checkpoints //TODO
+		* bool: Autoname checkpoints 
 	* action: Force Checkpoint
 	* action: Revert
 	* action: Force Double Revert
@@ -28,26 +28,18 @@ GUI Hierarchy (goal)
 * Cheats
 	* bool: Speedhack
 	* bool: Invulnerability
-	* bool: AI Freeze //TODO (partially done)
-	* action: Force Teleport //TODO
-		* bool (radio): Forward or manually set position //TODO
-			* Teleport Forward //TODO
-				* float: Teleport forward X units //TODO
-			* Teleport to manually set position //TODO
-				* vec3: Set position //TODO
-					* action: Fill with current position //TODO
-	* action: Force Launch //TODO
-		* bool (radio): Forward or manually set velocity //TODO
-			* Launch Forward //TODO
-				* bool: Ignore Z component //TODO
-			* Manually set velocity //TODO
-				* vec3: Velocity //TODO
-	* bool: One Hit Kill mode //TODO
+	* bool: AI Freeze 
+	* action: Force Teleport 
+	* action: Force Launch 
 	* bool: Infinite Ammo/Grenades //TODO
 	* Skulls (is just a heading) //TODO
 		* then each skull listed as a bool //TODO
-	* bool: Cheat Medusa //TODO
+	* bool: Cheat Medusa 
  * Overlays
+	* bool: Display Player/Game Info //TODO
+		// options? //TODO
+	* bool: Display All Entity Info //TODO
+		// options? //TODO
 	* bool: Trigger Overlay //TODO
 		// options? //TODO
 	* bool: 3D Waypoint //TODO
@@ -70,6 +62,12 @@ GUI Hierarchy (goal)
 
 
 
+	* Pause cheat causing theater desync
+	* Natural CP
+	* Skull stuff
+	* 
+
+
 
 
 maybe:
@@ -78,21 +76,14 @@ maybe:
 
 
 
-Fix hotkey serialisation
-Fix setting serialisation
+
 HCMExternal filterSearch thingy
 Add backup cheats system and internal injection toggle to external
 add loading the correct level if possible on inject / change level feature in general
 Update pointer data to make unit tests pass
 
 
-* First call to FreeMCCCursor not working when on mainmenu during GUiFails modal popup
 
-
-Rare sporadic errors/crashes:
-* BlockGameInput sometimes crashing when attaching it's midhook (h3 only?)
-* ImGui context error thing (can just hit ignore but why is it happening? modal popping up before imgui init?)
-	* I THINK i've fixed this by adding a half second delay before modal popup begins.
 
 
 Handled unhandled exceptions. Don't cause an issue for me but might for someone else:

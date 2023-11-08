@@ -15,7 +15,8 @@ private:
 
 	// injected services
 	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<Setting<double>> speedhackSetting;
+	std::weak_ptr<Setting<double>> speedhackValueSetting;
+	std::weak_ptr<Setting<bool>> speedhackToggleSetting;
 
 	// data
 	std::function<void(double)> setSpeed;
@@ -24,7 +25,7 @@ public:
 
 	void onToggle(bool& newToggleValue)
 	{
-		auto currentSpeedSetting = speedhackSetting.lock()->GetValue();
+		auto currentSpeedSetting = speedhackValueSetting.lock()->GetValue();
 		PLOG_DEBUG << "SpeedhackImpl recevied onToggle event, value: " << newToggleValue;
 		PLOG_DEBUG << "(the speedhack value is: " << currentSpeedSetting << ")";
 		if (newToggleValue)
@@ -40,13 +41,17 @@ public:
 	}
 	void updateSetting(double& newSpeedValue)
 	{
-		PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
-		setSpeed(newSpeedValue);
-		messagesGUI.lock()->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
+		if (speedhackToggleSetting.lock()->GetValue())
+		{
+			PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
+			setSpeed(newSpeedValue);
+			messagesGUI.lock()->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
+		}
 	}
 
 	SpeedhackImpl(GameState game, IDIContainer& dicon)
-		: speedhackSetting(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting),
+		: speedhackValueSetting(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting),
+		speedhackToggleSetting(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackToggle),
 		mSpeedhackToggleCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackToggle->valueChangedEvent, [this](bool& i) {onToggle(i); }),
 		mSpeedhackSettingCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting->valueChangedEvent, [this](double& i) {updateSetting(i); }),
 		messagesGUI(dicon.Resolve<IMessagesGUI>())
