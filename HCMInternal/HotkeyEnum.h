@@ -18,7 +18,8 @@ invuln,\
 aiFreeze,\
 medusa,\
 forceTeleport,\
-forceLaunch
+forceLaunch,\
+naturalCheckpointDisable
 
 
 enum class HotkeysEnum : int {

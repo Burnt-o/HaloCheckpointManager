@@ -455,6 +455,9 @@
       <Filter>Services\GUI</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="NaturalCheckpointDisable.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -617,6 +620,9 @@
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
     <ClCompile Include="Medusa.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="NaturalCheckpointDisable.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>

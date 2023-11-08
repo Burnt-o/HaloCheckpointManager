@@ -4,12 +4,16 @@
 
 #include "SettingsStateAndEvents.h"
 #include "imgui.h"
+#include "boost\preprocessor.hpp"
 class HotkeyDefinitions {
 public:
 
 	HotkeyDefinitions(std::shared_ptr<SettingsStateAndEvents> settings) : mSettings(settings) 
 	{
 		PLOG_DEBUG << "HotkeyDefinitions constructor";
+
+
+		assert(std::size(allHotkeys) == hotkeyEnumCount, "Bad hotkey definition count - do you have a hotkey defined for each enum entry?");
 	}
 
 	~HotkeyDefinitions()
@@ -29,14 +33,12 @@ private:
 		HotkeysEnum::enumName,\
 		defaultBinding) }
 
-	static constexpr inline int hotkeyEnumCount = 17;// magic_enum::enum_count<HotkeysEnum>();
-	static constexpr inline int magicEnumCount = magic_enum::enum_count<HotkeysEnum>();
+	static constexpr inline int hotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALLHOTKEYS));
 
 	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>::value_type allHotkeysData[hotkeyEnumCount]
 	{
 		// TODO: make a macro that automates this, since the names are set up good like.
 		// TODO: bind the lambda for toggle events here instead of HotkeyEventsLambdas
-		// TODO: figure out how to get the array count automagically (prob can do in the macro)
 
 		initHotkey(toggleGUI,
 		mSettings->toggleGUIHotkeyEvent,
@@ -104,7 +106,15 @@ private:
 
 		initHotkey(forceLaunch,
 		mSettings->forceLaunchEvent,
-		vvk{})
+		vvk{}),
+
+			initHotkey(medusa,
+		mSettings->medusaHotkeyEvent,
+		vvk{}),
+
+				initHotkey(naturalCheckpointDisable,
+		mSettings->naturalCheckpointDisableHotkeyEvent,
+		vvk{}),
 
 
 	};
@@ -114,8 +124,7 @@ private:
 
 	 friend class HotkeyManager;
 
-	// TODO: why is magic_enum::enum_count not working?
-	//static_assert(std::size(allHotkeysData) == hotkeyEnumCount, "Bad hotkey definition count - do you have a hotkey defined for each enum entry?");
+
 
 
 };

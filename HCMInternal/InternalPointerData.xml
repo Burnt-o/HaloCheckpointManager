@@ -1204,6 +1204,82 @@
 
 	<!-- #endregion ignoreCheckpointChecksum-->
 
+	<!-- #region naturalCheckpointDisable-->
+	<VersionedEntry Name="naturalCheckpointDisableFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAC5098</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x67A998</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1C8F28</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1FDECA</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x166292</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x194C3A</Offset>
+			</Offsets>
+		</Version>
+
+	</VersionedEntry>
+
+	<!-- move byte "0" into forceCheckpoint flag instead of 1-->
+	<VersionedEntry Name="naturalCheckpointDisableCode" Type="Vector" Typename="byte">
+
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<Data>0x0</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<Data>0x0</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<Data>0x0</Data>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<Data>0x0</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<Data>0x0</Data>
+		</Version>
+	</VersionedEntry>
+
+	<!-- #endregion naturalCheckpointDisable-->
+
 
 	<!-- #region checkpointLength-->
 	<VersionedEntry Name="checkpointLength" Type="int64_t">

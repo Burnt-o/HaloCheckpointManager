@@ -27,6 +27,7 @@ public:
 	std::shared_ptr<ActionEvent> invulnerabilityHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> aiFreezeHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> medusaHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> naturalCheckpointDisableHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -361,6 +362,12 @@ public:
 
 
 
+	std::shared_ptr<Setting<bool>> naturalCheckpointDisable = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(naturalCheckpointDisable)
+		);
 
 
 

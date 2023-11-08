@@ -154,7 +154,7 @@ namespace HCMExternal
 
             var mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
-            mainWindow.Title = "HaloCheckpointManager " + (this.CurrentHCMVersion.Length > 5 ? this.CurrentHCMVersion.Substring(0, 6) : this.CurrentHCMVersion);
+            mainWindow.Title = "HaloCheckpointManager " + (this.CurrentHCMVersion.Length > 4 ? this.CurrentHCMVersion.Substring(0, 5) : this.CurrentHCMVersion);
             mainWindow.Show();
 
             // Tell MCCStateService to begin trying to attach to MCC

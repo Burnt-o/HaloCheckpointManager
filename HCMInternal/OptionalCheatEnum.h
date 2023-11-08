@@ -33,7 +33,8 @@ ConsoleCommand,\
 GetObjectPhysics,\
 GetHavokComponent,\
 GetHavokAnchorPoint,\
-UnfreezeObjectPhysics
+UnfreezeObjectPhysics,\
+NaturalCheckpointDisable
 
 
 enum class OptionalCheatEnum {

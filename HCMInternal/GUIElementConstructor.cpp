@@ -168,6 +168,7 @@ private:
 							createNestedElement(GUIElementEnum::injectCoreSettingsSubheading),
 							createNestedElement(GUIElementEnum::dumpCoreGUI),
 							createNestedElement(GUIElementEnum::dumpCoreSettingsSubheading),
+							createNestedElement(GUIElementEnum::naturalCheckpointDisableGUI),
 						}));
 
 				case GUIElementEnum::forceCheckpointGUI:
@@ -295,6 +296,10 @@ private:
 					case GUIElementEnum::dumpCoreForcesSave:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection("Automatically force a new core save before dumping it"), std::nullopt, "Force core save before dumping", settings->dumpCoreForcesSave));
+
+				case GUIElementEnum::naturalCheckpointDisableGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Disables naturally occuring checkpoints (will break cutscenes)"), HotkeysEnum::naturalCheckpointDisable, "Disable Natural Checkpoints", settings->naturalCheckpointDisable));
 
 			case GUIElementEnum::cheatsHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

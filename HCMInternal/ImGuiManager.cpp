@@ -78,6 +78,8 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 		throw HCMInitException(std::format("ImGui_ImplDX11_Init failed w/ {}, {} ", (uint64_t)pDevice, (uint64_t)pDeviceContext).c_str());
 	};
 
+	PLOG_DEBUG << "ImGui Initialized";
+
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();

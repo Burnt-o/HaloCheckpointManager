@@ -93,6 +93,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::dumpCoreAutonameGUI,
 			{OptionalCheatEnum::DumpCore}
 	},
+		{GUIElementEnum::naturalCheckpointDisableGUI,
+			{OptionalCheatEnum::NaturalCheckpointDisable}
+	},
 	{GUIElementEnum::dumpCoreForcesSave,
 			{OptionalCheatEnum::DumpCore, OptionalCheatEnum::ForceCoreSave}
 	},

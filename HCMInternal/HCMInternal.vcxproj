@@ -272,6 +272,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="Medusa.h" />
     <ClInclude Include="MidhookFlagInterpreter.h" />
     <ClInclude Include="ModalDialogRenderer.h" />
+    <ClInclude Include="NaturalCheckpointDisable.h" />
     <ClInclude Include="ObjectTypes.h" />
     <ClInclude Include="PauseGame.h" />
     <ClInclude Include="resource.h" />
@@ -405,6 +406,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="ModuleHookManager.cpp" />
     <ClCompile Include="MultilevelPointer.cpp" />
     <ClCompile Include="GetPlayerDatum.cpp" />
+    <ClCompile Include="NaturalCheckpointDisable.cpp" />
     <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="Setting.cpp" />
     <ClCompile Include="OptionalCheatManager.cpp" />
@@ -427,7 +429,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="HCMInternal.rc"/>
+    <ResourceCompile Include="HCMInternal.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,6 +13,7 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mMedusaHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mToggleGUIHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mTogglePauseHotkeyCallbackHandle;
+	ScopedCallback<ActionEvent> mNaturalCheckpointDisableHotkeyCallbackHandle;
 
 public:
 	HotkeyEventsLambdas(std::shared_ptr< SettingsStateAndEvents> settings)
@@ -21,7 +22,8 @@ public:
 		mAIFreezeHotkeyCallbackHandle(settings->aiFreezeHotkeyEvent, [boolsetting = settings->aiFreezeToggle]() { boolsetting->flipBoolSetting(); }),
 		mMedusaHotkeyCallbackHandle(settings->medusaHotkeyEvent, [boolsetting = settings->medusaToggle]() { boolsetting->flipBoolSetting(); }),
 		mToggleGUIHotkeyCallbackHandle(settings->toggleGUIHotkeyEvent, [boolsetting = settings->GUIWindowOpen]() { boolsetting->flipBoolSetting(); }),
-		mTogglePauseHotkeyCallbackHandle(settings->togglePauseHotkeyEvent, [boolsetting = settings->togglePause]() { boolsetting->flipBoolSetting(); })
+		mTogglePauseHotkeyCallbackHandle(settings->togglePauseHotkeyEvent, [boolsetting = settings->togglePause]() { boolsetting->flipBoolSetting(); }),
+		mNaturalCheckpointDisableHotkeyCallbackHandle(settings->naturalCheckpointDisableHotkeyEvent, [boolsetting = settings->naturalCheckpointDisable]() { boolsetting->flipBoolSetting(); })
 
 	{ PLOG_DEBUG << "HotkeyEvents con"; }
 
