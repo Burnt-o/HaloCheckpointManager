@@ -20,12 +20,19 @@ private:
 public:
 	SharedMemoryInternal()
 	{
-		// TODO catch exceptions and convert to initExceptions
-		segment = bip::managed_shared_memory(bip::open_only, "hcm_shm");
-		auto* pdirPath = segment.find<shm_string>("HCMdirPath").first;
-		if (!pdirPath) throw HCMInitException("Could not access HCMDirPath");
+		try
+		{
+			segment = bip::managed_shared_memory(bip::open_only, "hcm_shm");
+			auto* pdirPath = segment.find<shm_string>("HCMdirPath").first;
+			if (!pdirPath) throw HCMInitException("Could not access HCMDirPath");
 
-		HCMDirPath = *pdirPath;
+			HCMDirPath = *pdirPath;
+		}
+		catch (bip::interprocess_exception ex)
+		{
+			throw HCMInitException(std::format("boost::interprocess::interprocess_exception: {}", ex.what())
+		}
+
 	}
 
 	virtual SelectedCheckpointData getInjectInfo() override;
