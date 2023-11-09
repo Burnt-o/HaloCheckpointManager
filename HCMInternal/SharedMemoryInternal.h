@@ -30,7 +30,7 @@ public:
 		}
 		catch (bip::interprocess_exception ex)
 		{
-			throw HCMInitException(std::format("boost::interprocess::interprocess_exception: {}", ex.what())
+			throw HCMInitException(std::format("boost::interprocess::interprocess_exception: {}", ex.what()));
 		}
 
 	}
