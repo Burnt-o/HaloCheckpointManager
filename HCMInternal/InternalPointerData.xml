@@ -839,8 +839,36 @@
 			</Offsets>
 		</Version>
 	</VersionedEntry>
-	<!-- #endregion forceRevertFlag-->
 
+<!--+0x15 of revert flag. Only needed for h1, zeroes out the flag that a revert is queued up, for if you die then force a revert / core load.-->
+	<VersionedEntry Name="revertQueuedFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF10E7</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2AF8257</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2CA0797</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B23717</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	
+	<!-- #endregion forceRevertFlag-->
 	<!-- #region doubleRevertFlag-->
 	<VersionedEntry Name="doubleRevertFlag" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo2">

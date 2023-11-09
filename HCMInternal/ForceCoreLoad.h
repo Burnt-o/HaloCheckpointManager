@@ -22,6 +22,7 @@ private:
 
 	//data
 	std::shared_ptr<MultilevelPointer> forceCoreLoadFlag;
+	std::shared_ptr<MultilevelPointer> revertQueuedFlag; // only used/non-null for Halo1
 
 	// primary event callback
 	void onForceCoreLoad()
@@ -33,6 +34,13 @@ private:
 		{
 			byte enableFlag = 1;
 			if (!forceCoreLoadFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write CoreLoad flag {}", MultilevelPointer::GetLastError()));
+			
+			if (mGame.operator GameState::Value() == GameState::Value::Halo1)
+			{
+				byte clearQueueFlag = 0;
+				if (!revertQueuedFlag->writeData(&clearQueueFlag)) PLOG_ERROR << "Failed to clear revertQueuedFlag, error: " << MultilevelPointer::GetLastError();
+			}
+			
 			messagesGUI.lock()->addMessage("CoreLoad forced.");
 		}
 		catch (HCMRuntimeException ex)
@@ -54,6 +62,11 @@ public:
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 		forceCoreLoadFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceCoreLoadFlag", mGame);
+
+		if (gameImpl.operator GameState::Value() == GameState::Value::Halo1)
+		{
+			revertQueuedFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(revertQueuedFlag), mGame);
+		}
 	}
 
 	~ForceCoreLoad()

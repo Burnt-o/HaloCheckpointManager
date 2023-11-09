@@ -25,6 +25,7 @@ private:
 
 	//data
 	std::shared_ptr<MultilevelPointer> forceRevertFlag;
+	std::shared_ptr<MultilevelPointer> revertQueuedFlag; // only used/non-null for Halo1
 
 	// primary event callback
 	void onForceRevert()
@@ -36,6 +37,13 @@ private:
 		{
 			byte enableFlag = 1;
 			if (!forceRevertFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write Revert flag {}", MultilevelPointer::GetLastError()));
+
+			if (mGame.operator GameState::Value() == GameState::Value::Halo1)
+			{
+				byte clearQueueFlag = 0;
+				if (!revertQueuedFlag->writeData(&clearQueueFlag)) PLOG_ERROR << "Failed to clear revertQueuedFlag, error: " << MultilevelPointer::GetLastError();
+			}
+
 			messagesGUI.lock()->addMessage("Revert forced.");
 		}
 		catch (HCMRuntimeException ex)
@@ -56,7 +64,12 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
-		forceRevertFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceRevertFlag", mGame);
+		forceRevertFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(forceRevertFlag), mGame);
+
+		if (gameImpl.operator GameState::Value() == GameState::Value::Halo1)
+		{
+			revertQueuedFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(revertQueuedFlag), mGame);
+		}
 	}
 
 	~ForceRevert()
