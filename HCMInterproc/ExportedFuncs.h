@@ -4,6 +4,18 @@
 
 extern "C"
 {
+
+	__declspec(dllexport) extern void queueInjectCommand()
+	{
+		if (!g_SharedMemoryExternal.get())
+		{
+			PLOG_ERROR << "g_SharedMemoryExternal not initialised!";
+			return;
+		}
+		*g_SharedMemoryExternal->injectCommandQueued = true;
+		PLOG_VERBOSE << "inject command queued";
+	}
+
 	__declspec(dllexport) extern void updateSelectedCheckpoint(bool nullData, int game, const char* name, const char* path, const char* levelcode, const char* gameVersion, int difficulty)
 	{
 		if (!g_SharedMemoryExternal.get())

@@ -30,7 +30,7 @@ public:
 
 	virtual SelectedCheckpointData getInjectInfo() override;
 	virtual SelectedFolderData getDumpInfo(GameState game) override;
-
+	virtual bool getAndClearInjectQueue() override;
 	std::string HCMDirPath;
 };
 

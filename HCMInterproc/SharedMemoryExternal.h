@@ -45,6 +45,8 @@ public:
 	shm_string* selectedH4FolderName;
 	shm_string* selectedH4FolderPath;
 
+	bool* injectCommandQueued;
+
 
 	SharedMemoryExternal(bool CPnullData, 
 		int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,

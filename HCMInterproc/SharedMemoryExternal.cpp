@@ -32,6 +32,7 @@ SharedMemoryExternal::SharedMemoryExternal(bool CPnullData,
 	auto HCMdirPath = segment.construct<shm_string>("HCMdirPath")(sa);
 	HCMdirPath->assign(getOwnProcessDirectory().c_str());
 
+	injectCommandQueued = segment.construct<bool>("injectCommandQueued")(false);
 
 	// selectedCheckpointInfo
 	selectedCheckpointNull = segment.construct<bool>("selectedCheckpointNull")(CPnullData);

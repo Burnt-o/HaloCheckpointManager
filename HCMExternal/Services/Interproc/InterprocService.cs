@@ -60,6 +60,10 @@ namespace HCMExternal.Services.InterprocServiceNS
             string SFnameH4, string SFpathH4
             );
 
+        [LibraryImport("HCMInterproc.DLL")]
+        private static partial void queueInjectCommand();
+
+
 
 
         [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal();
@@ -86,11 +90,11 @@ namespace HCMExternal.Services.InterprocServiceNS
             //    Log.Information("Sending dump command to internal");
             //    sendDumpCommand();
             //};
-            //InjectCommand.InjectEvent += () =>
-            //{
-            //    Log.Information("Sending inject command to internal");
-            //    sendInjectCommand();
-            //};
+            InjectCommand.InjectEvent += () =>
+            {
+                Log.Information("Sending inject command to internal");
+                queueInjectCommand();
+            };
 
             // Since InterprocService is created after CheckpointViewModel, the deserialised first selected checkpoint & savefolder events will be missed. So we need to manually fire them here.
             CheckpointViewModel.SelectedCheckpoint = CheckpointViewModel.SelectedCheckpoint;

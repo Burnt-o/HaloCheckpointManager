@@ -94,3 +94,20 @@ SelectedFolderData SharedMemoryInternal::getDumpInfo(GameState game)
 
 }
 
+
+bool SharedMemoryInternal::getAndClearInjectQueue()
+{
+
+	bool* injectCommandQueued = segment.find<bool>("injectCommandQueued").first;
+	nullCheck(injectCommandQueued);
+
+	if (*injectCommandQueued)
+	{
+		*injectCommandQueued = false;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

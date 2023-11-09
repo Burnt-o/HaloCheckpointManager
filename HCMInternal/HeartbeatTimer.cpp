@@ -40,7 +40,8 @@ DWORD findProcess(std::wstring targetProcessName)
 }
 
 
-HeartbeatTimer::HeartbeatTimer()
+HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::weak_ptr<SettingsStateAndEvents> set)
+	: sharedMemWeak(shm), settingsWeak(set)
     {
 	DWORD HCMExternalPID = findProcess(L"HCMExternal.exe");
 
@@ -64,6 +65,25 @@ HeartbeatTimer::HeartbeatTimer()
             {
                 while (!GlobalKill::isKillSet())
                 {
+					// process inject command queue
+					try
+					{
+						lockOrThrow(settingsWeak, settings);
+						lockOrThrow(sharedMemWeak, sharedMem);
+
+						if (sharedMem->getAndClearInjectQueue())
+						{
+							PLOG_DEBUG << "Inject command recieved, firing event!";
+							settings->injectCheckpointEvent->operator()();
+						}
+					}
+					catch (HCMRuntimeException ex)
+					{
+						PLOG_ERROR << "Heartbeat timer unable to check inject command queue";
+					}
+
+
+
 					DWORD exitCode = 0;
 					if (GetExitCodeProcess(HCMExternalHandle.get(), &exitCode) == FALSE)
 					{

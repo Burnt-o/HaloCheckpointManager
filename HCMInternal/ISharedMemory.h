@@ -6,6 +6,7 @@ class ISharedMemory
 public:
 	virtual SelectedCheckpointData getInjectInfo() = 0;
 	virtual SelectedFolderData getDumpInfo(GameState game) = 0;
+	virtual bool getAndClearInjectQueue() = 0;
 
 	std::string HCMDirPath;
 
