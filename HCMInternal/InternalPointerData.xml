@@ -11,45 +11,20 @@
 	
 <!--#region MCCStateHook-->
 
-	<!--<VersionedEntry Name="gameIndicator" Type="MultilevelPointer::ExeOffset">
-		<Version Version="1.2448.0.0" ProcessType="Steam">
-			<Offsets>
-				<Offset>0x3A253A0</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.2645.0.0" ProcessType="Steam">
-			<Offsets>
-				<Offset>0x3B81270</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.3073.0.0" ProcessType="Steam">
-			<Offsets>
-				<Offset>0x0401C1C0</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.3272.0.0" ProcessType="Steam">
-			<Offsets>
-				<Offset>0x3FFE4D8</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
-			<Offsets>
-				<Offset>0x3E4CA78</Offset>
-				<Offset>0x0</Offset>
-			</Offsets>
-		</Version>
-	</VersionedEntry>-->
-
 	<!--load into mission select of games, scanning for enum value. 1 level pointer with huge offset, 200,000 etc. pointer is actually near gameEnginePointer, duh.-->
+	<!-- will be two good values seperated by only 4 bytes - use the earlier one -->
 	<VersionedEntry Name="gameEngineIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFDAD0</Offset>
 				<Offset>0x2BFE8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x03E4C060</Offset>
+				<Offset>0x2BFC8</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -61,9 +36,15 @@
 				<Offset>0x1EB43E</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x1E643A</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
-	<!--1 when in load. should be approx 0xA34 BEHIND gameIndicator pointer-->
+	<!--1 when in load. should be approx 0xA34 BEHIND gameIndicator (the old shit one) pointer (was a44 behind for winstore 3272)-->
 	<VersionedEntry Name="loadIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
@@ -80,9 +61,15 @@
 				<Offset>0x3FFDAA4</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x3E4C034</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
-	<!--1 when in MainMenu, 0 when in-game. 0x11 bytes ahead loadindicator-->
+	<!--0 when in MainMenu, 1 when in-game. 0x11 bytes ahead loadindicator-->
 	<VersionedEntry Name="menuIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
@@ -99,9 +86,15 @@
 				<Offset>0x3FFDAB5</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x3E4C045</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
-	<!--gameIndicator +0x78-->
+	<!--gameIndicator (old shitty one) +0x78-->
 	<VersionedEntry Name="levelIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
@@ -137,7 +130,7 @@
 
 	
 	<!--check what writes 1 to loadIndicator when doing a real start from resume or menu. 
-	Should be a "Loading screen" lea nearby. Put it right after loadIndicator written.
+	Should be a "LoadingScreen" lea nearby. Put it right after loadIndicator written.
 	-->
 	<VersionedEntry Name="gameLoadStartFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
@@ -153,6 +146,12 @@
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1EA916</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x1E594E</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -174,6 +173,12 @@
 				<Offset>0x4A675E</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x48DC26</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!--writes zero to loadIndicator on s&q-->
@@ -193,6 +198,12 @@
 				<Offset>0x1EB275</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x1E6271</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 <!--#endregion MCCStateHook-->
 
@@ -210,11 +221,22 @@
 				<Offset>0x1F4BF9</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x1EFF99</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!--probably always zero & false, but juuuust in case -->
 	<VersionedEntry Name="shouldCursorBeFreeFunctionFlagSetter" Type="MidhookFlagInterpreter">
 		<Version Version="All" ProcessType="Steam">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+		<Version Version="All" ProcessType="WinStore">
 			<rflag>zero</rflag>
 			<value>false</value>
 		</Version>
@@ -227,11 +249,21 @@
 				<Offset>0x87A358</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x85E080</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!-- "test rdx, rdx" -> "xor rdx, rdx". this will set zeroFlag true and clear rdx like what the branch was actually testing.-->
 	<VersionedEntry Name="blockGameKeyboardInputCode" Type="Vector" Typename="byte">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x48, 0x31, 0xD2</Data>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
 	</VersionedEntry>
@@ -242,18 +274,37 @@
 				<Offset>0x87A2C0</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x85DFE8</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
+	<!--nop both instructions-->
 	<VersionedEntry Name="blockGameMouseMoveInputCode" Type="Vector" Typename="byte">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
+		
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
 	</VersionedEntry>
 
+
+	<!--just scroll up a bit in same func as above for mov edi, [rdx+50]-->
 	<VersionedEntry Name="blockGameMouseClickInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A1ED</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x85DF15</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -263,19 +314,35 @@
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Data>0x90, 0x90, 0x90</Data>
+		</Version>
 	</VersionedEntry>
 
 
+	<!--a call to XINPUT1_3.XInputGetState-->
 	<VersionedEntry Name="blockGameControllerInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A741</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x85E469</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
+	<!--nop the call-->
 	<VersionedEntry Name="blockGameControllerInputCode" Type="Vector" Typename="byte">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -286,7 +353,8 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				--><!--<Offset>0xAC2A17</Offset>--><!--
+				-->
+	<!--<Offset>0xAC2A17</Offset>--><!--
 				<Offset>0xADC44B</Offset>
 			</Offsets>
 		</Version>
@@ -1055,13 +1123,21 @@
 	<!--#endregion currentLevelCode-->
 	
 	<!--#region currentDifficulty-->
+	<!--gameIndicator (old shitty one) +0x9C-->
 	<VersionedEntry Name="currentDifficulty" Type="MultilevelPointer::ExeOffset">
-	<Version Version="1.3272.0.0" ProcessType="Steam">
-		<Offsets>
-			<Offset>0x03FFE4D8</Offset>
-			<Offset>0x9C</Offset>
-		</Offsets>
-	</Version>
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FFE4D8</Offset>
+				<Offset>0x9C</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x3E4CA78</Offset>
+				<Offset>0x9C</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 	<!--#endregion currentDifficulty-->
 
@@ -3698,10 +3774,18 @@
 		</Version>
 	</VersionedEntry>
 
+	<!--put bp on halo1.CreateGameEngine. step out when it gets hit and see addy moved into rax immediately after, ptr scan for that-->
 	<VersionedEntry Name="gameEnginePointer" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFDAB8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x03E4C048</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>

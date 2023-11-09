@@ -164,7 +164,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>xcopy /y $(ProjectDir)InternalPointerData.xml  $(OutDir)</Command>
+      <Command>xcopy /y $(ProjectDir)InternalPointerData.xml  $(OutDir)InternalPointerData.xml</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

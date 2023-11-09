@@ -201,6 +201,9 @@
     <ClCompile Include="..\HCMInternal\GameTickEventHook.cpp">
       <Filter>HCMInternalFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\NaturalCheckpointDisable.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp">
@@ -623,5 +626,21 @@
     <ClInclude Include="..\HCMInternal\GameTickEventHook.h">
       <Filter>HCMInternalFiles</Filter>
     </ClInclude>
+    <ClInclude Include="..\HCMInternal\NaturalCheckpointDisable.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\resource.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\HCMInternal\HCMInternal.aps">
+      <Filter>HCMInternalFiles</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\HCMInternal\HCMInternal.rc">
+      <Filter>HCMInternalFiles</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

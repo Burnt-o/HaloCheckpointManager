@@ -81,7 +81,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
 
         }
 
-        private static readonly string[] processesToAttach = { "MCC-Win64-Shipping", "MCC-Win64-Winstore-Shipping" };
+        private static readonly string[] processesToAttach = { "MCC-Win64-Shipping", "MCC-Win64-Winstore-Shipping", "MCCWinstore-Win64-Shipping" };
 
         // Timer that will continually try to attach to MCC until it succeeds
         private static readonly System.Timers.Timer checkMCCStatusLoop = new System.Timers.Timer()

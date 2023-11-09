@@ -225,6 +225,7 @@
     <ClCompile Include="..\HCMInternal\ModuleHook.cpp" />
     <ClCompile Include="..\HCMInternal\ModuleHookManager.cpp" />
     <ClCompile Include="..\HCMInternal\MultilevelPointer.cpp" />
+    <ClCompile Include="..\HCMInternal\NaturalCheckpointDisable.cpp" />
     <ClCompile Include="..\HCMInternal\OptionalCheatManager.cpp" />
     <ClCompile Include="..\HCMInternal\PauseGame.cpp" />
     <ClCompile Include="..\HCMInternal\PointerManager.cpp" />
@@ -355,12 +356,14 @@
     <ClInclude Include="..\HCMInternal\ModuleHook.h" />
     <ClInclude Include="..\HCMInternal\ModuleHookManager.h" />
     <ClInclude Include="..\HCMInternal\MultilevelPointer.h" />
+    <ClInclude Include="..\HCMInternal\NaturalCheckpointDisable.h" />
     <ClInclude Include="..\HCMInternal\ObjectTypes.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatEnum.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatInfo.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatManager.h" />
     <ClInclude Include="..\HCMInternal\PauseGame.h" />
     <ClInclude Include="..\HCMInternal\PointerManager.h" />
+    <ClInclude Include="..\HCMInternal\resource.h" />
     <ClInclude Include="..\HCMInternal\RuntimeExceptionHandler.h" />
     <ClInclude Include="..\HCMInternal\ScopedCallback.h" />
     <ClInclude Include="..\HCMInternal\ScopedServiceRequest.h" />
@@ -389,6 +392,12 @@
     <ClInclude Include="MockSettingsSerialiser.h" />
     <ClInclude Include="MockSharedMemory.h" />
     <ClInclude Include="TestLogging.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\HCMInternal\HCMInternal.aps" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\HCMInternal\HCMInternal.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
