@@ -49,6 +49,18 @@ private:
 			return std::nullopt;
 		}
 
+
+		// stupid override to make core save/dump stuff only construct for steam since I can't be bothered reworking the macro system to do this properly
+		if ((magic_enum::enum_name<GUIElementEnum>(guielementenum).contains("core") || magic_enum::enum_name<GUIElementEnum>(guielementenum).contains("Core")) // is the gui elemenet a core save thing? this is the most icky part of this, doing a stringcheck of the enum name.. what if I want to add another cheat that uses the name "core" to mean something else? eh prolly won't come up
+			&& game.operator GameState::Value() == GameState::Value::Halo1 // and is halo 1
+			&& mProcType == MCCProcessType::WinStore // and current process is winstore
+			)
+		{
+			PLOG_DEBUG << "GUIElementEnum::" << magic_enum::enum_name(guielementenum) << " for game " << game.toString() << " does not support WinStore version of MCC (steam only), skipping construction";
+			return std::nullopt; // don't construct 
+		}
+
+
 		PLOG_DEBUG << "attempting to construct guielement: " << magic_enum::enum_name(guielementenum) << " for game: " << game.toString();
 		try 
 		{
@@ -539,11 +551,11 @@ private:
 
 	std::shared_ptr<GUIElementStore> mStore;
 
-
+	MCCProcessType mProcType;
 
 public:
-	GUIElementConstructorImpl(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings)
-		: mStore(store)
+	GUIElementConstructorImpl(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, MCCProcessType procType)
+		: mStore(store), mProcType(procType)
 	{
 		// Create all top level GUI elements. Each one will recursively create it's nested elements, if it has any.
 		for (auto& [element, game] : guireq->getToplevelGUIElements())
@@ -564,5 +576,5 @@ public:
 
 
 
-GUIElementConstructor::GUIElementConstructor(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings) : pimpl(std::make_unique<GUIElementConstructorImpl>(guireq, fail, store, info, settings)) {}
+GUIElementConstructor::GUIElementConstructor(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, MCCProcessType procType) : pimpl(std::make_unique<GUIElementConstructorImpl>(guireq, fail, store, info, settings, procType)) {}
 GUIElementConstructor::~GUIElementConstructor() = default;
