@@ -45,6 +45,9 @@ HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::wea
     {
 	DWORD HCMExternalPID = findProcess(L"HCMExternal.exe");
 
+	// PROCESS_QUERY_LIMITED_INFORMATION allows non-admin HCMInternal(mcc) to use GetExitCodeProcess on admin HCMExternal.
+	// PROCESS_QUERY_INFORMATION is a denied permission in that scenario.
+
 	HandlePtr h(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, TRUE, HCMExternalPID));
 	if (!h)
 	{

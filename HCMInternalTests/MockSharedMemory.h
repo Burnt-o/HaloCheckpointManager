@@ -14,5 +14,7 @@ public:
 		return SelectedFolderData{}; // null data
 	}
 
+	virtual bool getAndClearInjectQueue() override { return false; }
+
 	std::string HCMDirPath;
 };
