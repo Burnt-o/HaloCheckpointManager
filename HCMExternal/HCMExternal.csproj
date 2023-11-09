@@ -448,7 +448,7 @@
 	</Target>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="copy $(TargetDir)$(MSBuildProjectName).exe $(TargetDir)HaloCheckpointManager.exe /Y" />
+	  <Exec Command="copy $(TargetDir)$(MSBuildProjectName).exe $(TargetDir)HaloCheckpointManager.exe /Y&#xD;&#xA;copy $(ProjectDir)ExternalPointerData.xml  $(OutDir)ExternalPointerData.xml /Y" />
 	</Target>
 
 </Project>

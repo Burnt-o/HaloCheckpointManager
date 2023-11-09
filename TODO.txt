@@ -1,6 +1,5 @@
 
 Rasec/Sloth crash -> add better injection logging, try win11 vm
-Fix revert timer
 Fix HCMExternal guessing checkpoint version when version missing
 Remove HCMExternal inject button (or add to heartbeat commands)
 
