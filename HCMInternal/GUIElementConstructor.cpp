@@ -320,6 +320,8 @@ private:
 							createNestedElement(GUIElementEnum::speedhackGUI),
 							createNestedElement(GUIElementEnum::invulnGUI),
 							createNestedElement(GUIElementEnum::invulnerabilitySettingsSubheading),
+							createNestedElement(GUIElementEnum::infiniteAmmoGUI),
+							createNestedElement(GUIElementEnum::bottomlessClipGUI),
 							createNestedElement(GUIElementEnum::aiFreezeGUI),
 							createNestedElement(GUIElementEnum::medusaGUI),
 							createNestedElement(GUIElementEnum::forceTeleportGUI),
@@ -349,6 +351,16 @@ private:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 								(game, ToolTipCollection("Makes all non-player characters invulnerable as well"), std::nullopt, "NPC's invulnerable too", settings->invulnerabilityNPCToggle
 								));
+
+				case GUIElementEnum::infiniteAmmoGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Gives the player infinite ammo (doesn't consume on reload) and infinite grenades"), HotkeysEnum::infiniteAmmo, "Infinite Ammo", settings->infiniteAmmoToggle
+						));
+
+				case GUIElementEnum::bottomlessClipGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("The player no longer has to reload"), HotkeysEnum::bottomlessClip, "Bottomless Clip", settings->bottomlessClipToggle
+						));
 
 				case GUIElementEnum::aiFreezeGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>

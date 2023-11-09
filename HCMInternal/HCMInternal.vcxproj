@@ -222,6 +222,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="AIFreeze.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="BlockGameInput.h" />
+    <ClInclude Include="BottomlessClip.h" />
     <ClInclude Include="ConsoleCommand.h" />
     <ClInclude Include="ControlServiceContainer.h" />
     <ClInclude Include="DifficultyEnum.h" />
@@ -265,6 +266,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IMCCStateHook.h" />
     <ClInclude Include="IMessagesGUI.h" />
     <ClInclude Include="IModalDialogRenderer.h" />
+    <ClInclude Include="InfiniteAmmo.h" />
     <ClInclude Include="ISettingsSerialiser.h" />
     <ClInclude Include="ISharedMemory.h" />
     <ClInclude Include="MCCState.h" />
@@ -357,6 +359,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="AdvanceTicks.cpp" />
     <ClCompile Include="AIFreeze.cpp" />
     <ClCompile Include="BlockGameInput.cpp" />
+    <ClCompile Include="BottomlessClip.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DynamicStruct.cpp" />
@@ -374,6 +377,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetPlayerViewAngle.cpp" />
     <ClCompile Include="GUIServiceInfo.cpp" />
     <ClCompile Include="HCM_imconfig.cpp" />
+    <ClCompile Include="InfiniteAmmo.cpp" />
     <ClCompile Include="MCCStateHook.cpp" />
     <ClCompile Include="GetMCCVersion.cpp" />
     <ClCompile Include="GUIElementConstructor.cpp" />

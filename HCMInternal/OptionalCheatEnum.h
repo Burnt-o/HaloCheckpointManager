@@ -34,7 +34,9 @@ GetObjectPhysics,\
 GetHavokComponent,\
 GetHavokAnchorPoint,\
 UnfreezeObjectPhysics,\
-NaturalCheckpointDisable
+NaturalCheckpointDisable,\
+InfiniteAmmo,\
+BottomlessClip
 
 
 enum class OptionalCheatEnum {

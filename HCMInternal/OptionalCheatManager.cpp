@@ -37,6 +37,8 @@
 #include "GetObjectAddressCLI.h"
 #include "Medusa.h"
 #include "NaturalCheckpointDisable.h"
+#include "InfiniteAmmo.h"
+#include "BottomlessClip.h"
 
 #include "DIContainer.h"
 #include "map.h"

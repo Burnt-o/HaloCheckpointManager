@@ -3791,6 +3791,27 @@
 
 	<!--#endregion ai freeze-->
 
+	<!--#region InfiniteAmmo/BottomlessClip-->
+
+	<VersionedEntry Name="infiniteAmmoFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1C421C6</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="bottomlessClipFlag" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1C421B1</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--#endregion InfiniteAmmo/BottomlessClip-->
 
 	<!--#region consoleCommand-->
 	<VersionedEntry Name="sendCommandPointer" Type="MultilevelPointer::ModuleOffset">

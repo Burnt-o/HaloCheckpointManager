@@ -117,6 +117,16 @@ private:
 		vvk{}),
 
 
+				initHotkey(infiniteAmmo,
+		mSettings->infiniteAmmoHotkeyEvent,
+		vvk{}),
+
+
+				initHotkey(bottomlessClip,
+		mSettings->bottomlessClipHotkeyEvent,
+		vvk{}),
+
+
 	};
 
 	 std::map<HotkeysEnum, std::shared_ptr<Hotkey>> allHotkeys = std::map<HotkeysEnum, std::shared_ptr<Hotkey>>

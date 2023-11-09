@@ -1,8 +1,4 @@
 
-Rasec/Sloth crash -> add better injection logging, try win11 vm
-
-
-
 
 
 GUI Hierarchy (goal)

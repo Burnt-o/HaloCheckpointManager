@@ -28,6 +28,8 @@ public:
 	std::shared_ptr<ActionEvent> aiFreezeHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> medusaHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> naturalCheckpointDisableHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> infiniteAmmoHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> bottomlessClipHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -367,6 +369,20 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(naturalCheckpointDisable)
+		);
+
+	std::shared_ptr<Setting<bool>> infiniteAmmoToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(infiniteAmmoToggle)
+		);
+
+	std::shared_ptr<Setting<bool>> bottomlessClipToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(bottomlessClipToggle)
 		);
 
 

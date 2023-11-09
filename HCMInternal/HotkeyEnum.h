@@ -19,7 +19,9 @@ aiFreeze,\
 medusa,\
 forceTeleport,\
 forceLaunch,\
-naturalCheckpointDisable
+naturalCheckpointDisable,\
+infiniteAmmo,\
+bottomlessClip
 
 
 enum class HotkeysEnum : int {

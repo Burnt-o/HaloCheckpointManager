@@ -175,6 +175,14 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 			{OptionalCheatEnum::ForceLaunch}
 	},
 
+	{ GUIElementEnum::infiniteAmmoGUI,
+		{OptionalCheatEnum::InfiniteAmmo}
+	},
+
+	{ GUIElementEnum::bottomlessClipGUI,
+		{OptionalCheatEnum::BottomlessClip}
+	},
+
 #ifdef HCM_DEBUG
 
 	{ GUIElementEnum::getObjectAddressGUI,
