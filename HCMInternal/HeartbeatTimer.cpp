@@ -45,7 +45,19 @@ HeartbeatTimer::HeartbeatTimer()
 	DWORD HCMExternalPID = findProcess(L"HCMExternal.exe");
 
 	HandlePtr h(OpenProcess(PROCESS_QUERY_INFORMATION, TRUE, HCMExternalPID));
-	if (!h) throw HCMInitException(std::format("Could not open HCMExternal process with perm PROCESS_QUERY_INFORMATION, {}", GetLastError()));
+	if (!h)
+	{
+		HCMExternalPID = findProcess(L"HaloCheckpointManager.exe");
+		h = HandlePtr(OpenProcess(PROCESS_QUERY_INFORMATION, TRUE, HCMExternalPID));
+
+		if (!h)
+		{
+			throw HCMInitException(std::format("Could not open HCMExternal process with perm PROCESS_QUERY_INFORMATION, {}", GetLastError()));
+		}
+
+	}
+		
+
 	HCMExternalHandle = std::move(h);
 
         _thd = std::thread([this]()
