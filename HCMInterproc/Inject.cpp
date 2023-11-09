@@ -3,6 +3,7 @@
 #include "Events.h"
 #include "WinHandle.h"
 #include "SharedMemoryExternal.h"
+#include "WindowsUtilities.h"
 
 class MissingPermissionException : public std::exception {
 private:
@@ -17,10 +18,11 @@ public:
 
 DWORD findMCCProcessID();
 void InjectModule(DWORD pid, std::string dllFilePath);
+bool processContainsModule(DWORD pid, std::wstring moduleName);
 
 
 constexpr auto dllName = "HCMInternal";
-constexpr WCHAR wdllChars[] = L"HCMInternal.DLL";
+constexpr WCHAR wdllChars[] = L"HCMInternal.dll";
 
 bool SetupInternal()
 {
@@ -61,13 +63,24 @@ bool SetupInternal()
 		PLOG_INFO << "Found MCC process! ID: 0x" << std::hex << mccPID;
 
 		InjectModule(mccPID, dllFilePath);
-		// todo ; 
+		
+
+		if (!processContainsModule(mccPID, std::wstring(wdllChars)))
+		{
+			PLOG_ERROR << "Process didn't appear to contain HCMInternal after injecting!";
+			return true; // cooooould return false instead, but the issue could be with processContainsModule func and not the injection
+		}
+		else
+		{
+			PLOG_INFO << "Confirmed that MCC contains HCMInternal!";
+		}
+
 		return true;
 
 	}
 	catch (MissingPermissionException ex)
 	{
-		PLOG_FATAL << "CEER didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, CEER needs to be run as admin too.\nNerdy details: " << ex.what();
+		PLOG_FATAL << "CEER didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, HCM needs to be run as admin too.\nNerdy details: " << ex.what();
 		PLOG_INFO << "Press Enter to shutdown CEER";
 
 	}
@@ -133,14 +146,72 @@ DWORD findMCCProcessID()
 
 
 
+bool processContainsModule(DWORD pid, std::wstring moduleName)
+{
+	// Now to actually confirm that the module was injected succesfully by enumerating mcc's modules
+
+// Fill with current values
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+
+
+	HandlePtr mcc(OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, TRUE, pid));
+	if (!mcc)
+	{
+		PLOG_ERROR << (std::format("InjectCEER: Couldn't open MCC with EnumProcessModules permissions: {}", GetLastError()).c_str());
+		return false;
+	}
+
+
+	if (EnumProcessModules(mcc.get(), hMods, sizeof(hMods), &cbNeeded))
+	{
+		for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++)
+		{
+			TCHAR szModName[MAX_PATH];
+
+			if (GetModuleBaseName(mcc.get(), hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) 
+			{
+				MODULEINFO info;
+				if (GetModuleInformation(mcc.get(), hMods[i], &info, sizeof(info))) 
+				{
+					std::wstring name{ szModName };					
+					if (name == moduleName) return true;
+				}
+				else
+				{
+					PLOG_ERROR << "GetModuleInformation failed with error code: " << GetLastError();
+					return false;
+				}
+			}
+			else
+			{
+				PLOG_ERROR << "GetModuleBaseName failed with error code: " << GetLastError();
+				return false;
+			}
+		}
+	}
+	else
+	{
+		PLOG_ERROR << "EnumProcessModules failed with error code: " << GetLastError();
+		return false;
+	}
+
+	// no match
+	PLOG_DEBUG << "No matching module found in target process! moduleName: " << moduleName;
+	return false;
+}
+
+
 void InjectModule(DWORD pid, std::string dllFilePath)
 {
 	HandlePtr mcc(OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, TRUE, pid));
 	if (!mcc) throw MissingPermissionException(std::format("InjectCEER: Couldn't open MCC with createRemoteThread permissions: {}", GetLastError()).c_str());
 
-	// Get the address of our own Kernel32's loadLibraryA (it will be the same in the target process because Kernel32 is loaded in the same virtual memory in all processes)
+	// Get the address of our own Kernel32's loadLibrary (it will be the same in the target process because Kernel32 is loaded in the same virtual memory in all processes)
 	auto loadLibraryAddr = GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
 	if (!loadLibraryAddr) throw std::exception("Couldn't find addr of loadLibraryA");
+
+
 
 	// Allocate some memory on the target process, enough to store the filepath of the DLL
 	auto pathAlloc = VirtualAllocEx(mcc.get(), 0, dllFilePath.size(), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
@@ -159,6 +230,9 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 	if (bytesWritten != dllFilePath.size())
 		throw std::exception(std::format("Failed to completely write pathAlloc: {}", GetLastError()).c_str());
 
+	PLOG_DEBUG << "Wrote path " << dllFilePath << "to MCC allocated memory at 0x" << std::hex << pathAlloc << "(0x" << bytesWritten << " bytes written)";
+
+	PLOG_DEBUG << "Calling createRemoteThread";
 	// Create a thread to call LoadLibraryA with pathAlloc as parameter
 	auto tHandle = CreateRemoteThread(mcc.get(), NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(loadLibraryAddr), pathAlloc, NULL, NULL);
 	if (!tHandle) throw std::exception("Couldn't create loadLibrary thread in mcc");
@@ -176,11 +250,18 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 		break;
 	}
 
+	PLOG_DEBUG << "Remote thread finished execution";
+
 	// Get thread exit code 
 	DWORD exitCode;
 	GetExitCodeThread(tHandle, &exitCode);
 	if (exitCode == 0) throw std::exception(std::format("LoadLibraryA failed: {}", GetLastError()).c_str());
 
-	PLOG_INFO << "Success!";
-	// Should I do a check here if module is actually in process? eh
+	PLOG_DEBUG << "Remote thread exit code: 0x" << std::hex << exitCode;
+
+	PLOG_INFO << "Successfully injected module " << dllName;
 }
+
+
+
+

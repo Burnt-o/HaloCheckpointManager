@@ -161,7 +161,15 @@ namespace HCMExternal.Services.InterprocServiceNS
         // first return is directory name, second return is directory path
         private (string, string) getGameSFData(HaloTabEnum game)
         {
-            var rootFolder = AppContext.BaseDirectory + @"Saves\" + Dictionaries.GameToRootFolderPath[game];
+            // Not sure which of these methods is the most reliable
+            Log.Verbose("AppContext.BaseDirectory: " + AppContext.BaseDirectory
+                + "\nSystem.AppDomain.CurrentDomain.BaseDirectory: " + System.AppDomain.CurrentDomain.BaseDirectory
+                + "\nSystem.Reflection.Assembly.GetExecutingAssembly().Location: " + System.Reflection.Assembly.GetExecutingAssembly().Location
+                + "\nDirectory.GetCurrentDirectory(): " + Directory.GetCurrentDirectory()
+                );
+            var currentBaseDirectory = Directory.GetCurrentDirectory();
+
+            var rootFolder = currentBaseDirectory + @"Saves\" + Dictionaries.GameToRootFolderPath[game];
             var dir = Settings.Default.LastSelectedFolder[(int)game]; // need to try catch this and return root folder on failure. 
             
             if (dir == null) // check if dir is real and exists
