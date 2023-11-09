@@ -45,11 +45,11 @@ HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::wea
     {
 	DWORD HCMExternalPID = findProcess(L"HCMExternal.exe");
 
-	HandlePtr h(OpenProcess(PROCESS_QUERY_INFORMATION, TRUE, HCMExternalPID));
+	HandlePtr h(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, TRUE, HCMExternalPID));
 	if (!h)
 	{
 		HCMExternalPID = findProcess(L"HaloCheckpointManager.exe");
-		h = HandlePtr(OpenProcess(PROCESS_QUERY_INFORMATION, TRUE, HCMExternalPID));
+		h = HandlePtr(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, TRUE, HCMExternalPID));
 
 		if (!h)
 		{
