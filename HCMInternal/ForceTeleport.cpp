@@ -29,7 +29,7 @@ private:
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptionsWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr< GetPlayerDatum> getPlayerDatumWeak;
 	std::optional<std::weak_ptr<GetPlayerViewAngle>> getPlayerViewAngleWeak;
@@ -80,9 +80,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			ex.prepend("Force Teleport failed: ");
-			auto runtimeExceptions = runtimeExceptionsWeak.lock();
-			if (runtimeExceptions) runtimeExceptions->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -117,9 +115,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			ex.prepend("Fill position failed: ");
-			auto runtimeExceptions = runtimeExceptionsWeak.lock();
-			if (runtimeExceptions) runtimeExceptions->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 	}
 
@@ -131,7 +127,7 @@ public:
 		mForceTeleportEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->forceTeleportEvent, [this]() {onForceTeleportEvent(); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		runtimeExceptionsWeak(dicon.Resolve<RuntimeExceptionHandler>()),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getPlayerDatumWeak(resolveDependentCheat(GetPlayerDatum)),
 		getObjectPhysicsWeak(resolveDependentCheat(GetObjectPhysics)),
 		mForceTeleportFillPositionEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->forceTeleportFillWithCurrentPositionEvent, [this]() { fillPosition(); })

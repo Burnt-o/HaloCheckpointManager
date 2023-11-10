@@ -18,8 +18,9 @@ private:
 	ScopedCallback <ToggleEvent> mInjectionIgnoresChecksumCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	std::shared_ptr<ModulePatch> ignoreChecksumPatch;
@@ -27,21 +28,38 @@ private:
 	// primary event callback
 	void onToggleChange(bool& newValue)
 	{
-		ignoreChecksumPatch->setWantsToBeAttached(newValue);
-		PLOG_DEBUG << "onToggleChange: newval: " << newValue;
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
+		try
 		{
-			messagesGUI.lock()->addMessage(newValue ? "Checkpoint checksums will be ignored on revert." : "Checkpoint checksums will NOT be ignored on revert.");
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame))
+			{
+				PLOG_DEBUG << "onToggleChange: newval: " << newValue;
+				messagesGUI->addMessage(newValue ? "Checkpoint checksums will be ignored on revert." : "Checkpoint checksums will NOT be ignored on revert.");
+			}
+			// gets set whether or not game is currently playing
+			ignoreChecksumPatch->setWantsToBeAttached(newValue);
 		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
+
+
+
 
 	}
 
 public:
 	IgnoreCheckpointChecksum(GameState gameImpl, IDIContainer& dicon) :
 		mInjectionIgnoresChecksumCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->injectionIgnoresChecksum->valueChangedEvent, [this](bool& newValue) { onToggleChange(newValue); }),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		mGame(gameImpl)
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		mGame(gameImpl),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 		auto checksumCheckFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(checksumCheckFunction), mGame);

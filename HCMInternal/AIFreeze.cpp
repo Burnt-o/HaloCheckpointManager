@@ -8,9 +8,9 @@ class AIFreezeImpl : public AIFreezeImplUntemplated {
 	ScopedCallback <ToggleEvent> mAIFreezeCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	static inline std::shared_ptr<ModuleMidHook> aiFreezeHook;
@@ -30,14 +30,25 @@ class AIFreezeImpl : public AIFreezeImplUntemplated {
 	// primary event callback
 	void onToggleChange(bool& newValue)
 	{
-		aiFreezeHook->setWantsToBeAttached(newValue);
-		PLOG_DEBUG << "onToggleChange: newval: " << newValue;
-
-
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
+		try
 		{
-			messagesGUI.lock()->addMessage(newValue ? "AI frozen." : "AI unfrozen.");
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI)
+
+			aiFreezeHook->setWantsToBeAttached(newValue);
+			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
+
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame))
+			{
+				messagesGUI->addMessage(newValue ? "AI frozen." : "AI unfrozen.");
+			}
 		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
 
 	}
 
@@ -46,8 +57,8 @@ class AIFreezeImpl : public AIFreezeImplUntemplated {
 public:
 	AIFreezeImpl(IDIContainer& dicon) :
 		mAIFreezeCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->aiFreezeToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();

@@ -19,11 +19,9 @@ private:
 	ScopedCallback <ToggleEvent>mTogglePauseCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<SettingsStateAndEvents> mSettings;
-	std::shared_ptr<BlockGameInput> blockInputService; // actual implementation is over here
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
+	std::weak_ptr<BlockGameInput> blockInputServiceWeak; // actual implementation is over here
 
 	// data
 	std::unique_ptr<ScopedServiceRequest> blockInputRequest;
@@ -31,15 +29,27 @@ private:
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)
 	{
-		if (newValue && mSettings.lock()->pauseAlsoBlocksInput->GetValue())
+		try
 		{
-			blockInputRequest = blockInputService->scopedRequest(mGame.toString() + nameof(ToggleBlockInput));
+			lockOrThrow(mSettingsWeak, mSettings);
+
+
+			if (newValue && mSettings->pauseAlsoBlocksInput->GetValue())
+			{
+				lockOrThrow(blockInputServiceWeak, blockInputService);
+				blockInputRequest = blockInputService->scopedRequest(mGame.toString() + nameof(ToggleBlockInput));
+			}
+			else
+			{
+				if (blockInputRequest)
+					blockInputRequest.reset();
+			}
 		}
-		else
+		catch (HCMRuntimeException ex)
 		{
-			if (blockInputRequest)
-				blockInputRequest.reset();
+			runtimeExceptions->handleMessage(ex);
 		}
+
 	}
 
 
@@ -48,14 +58,13 @@ public:
 	ToggleBlockInput(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
 		mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
-		mSettings(dicon.Resolve<SettingsStateAndEvents>()),
+		mSettingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
+
 	{
 		auto control = dicon.Resolve<ControlServiceContainer>().lock();
 		if (control->blockGameInputServiceFailure.has_value()) throw control->blockGameInputServiceFailure.value();
-		blockInputService = control->blockGameInputService.value();
+		blockInputServiceWeak = control->blockGameInputService.value();
 	}
 
 	~ToggleBlockInput()

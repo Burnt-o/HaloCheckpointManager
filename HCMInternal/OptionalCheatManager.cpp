@@ -128,6 +128,11 @@ public:
 				// update OptionalCheatInfoManager with failure. GUIElementManager will check this later to know what GUIElements will work or not
 				info->setInfo(gameCheatPair, { ex });
 			}
+			catch (std::bad_weak_ptr ex)
+			{
+				HCMInitException converted(std::format("std::bad_weak_ptr exception! {}", ex.what()));
+				info->setInfo(gameCheatPair, { converted });
+			}
 		}
 
 		cheatCollection.reset();

@@ -15,9 +15,9 @@ private:
 	ScopedCallback <ToggleEvent> mNaturalCheckpointDisableCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	std::shared_ptr<ModulePatch> naturalCheckpointDisablePatch;
@@ -27,14 +27,26 @@ private:
 	// primary event callback
 	void onToggleChange(bool& newValue)
 	{
-		naturalCheckpointDisablePatch->setWantsToBeAttached(newValue);
-		PLOG_DEBUG << "onToggleChange: newval: " << newValue;
-
-
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
+		try
 		{
-			messagesGUI.lock()->addMessage(newValue ? "Natural Checkpoints disabled." : "Natural Checkpoints re-enabled.");
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+
+			naturalCheckpointDisablePatch->setWantsToBeAttached(newValue);
+			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
+
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame))
+			{
+				messagesGUI->addMessage(newValue ? "Natural Checkpoints disabled." : "Natural Checkpoints re-enabled.");
+			}
 		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
+
 
 	}
 
@@ -44,8 +56,8 @@ public:
 	NaturalCheckpointDisableImpl(GameState game, IDIContainer& dicon) :
 		mGame(game),
 		mNaturalCheckpointDisableCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->naturalCheckpointDisable->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();

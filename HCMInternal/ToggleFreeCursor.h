@@ -19,11 +19,9 @@ private:
 	//ScopedCallback <ToggleEvent>mTogglePauseCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<SettingsStateAndEvents> mSettings;
-	std::weak_ptr<FreeMCCCursor> freeCursorService; // actual implementation is over here
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
+	std::weak_ptr<FreeMCCCursor> freeCursorServiceWeak; // actual implementation is over here
 
 	// data
 	std::unique_ptr<ScopedServiceRequest> freeCursorRequest;
@@ -31,15 +29,25 @@ private:
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)
 	{
+		try
+		{
+			lockOrThrow(mSettingsWeak, mSettings);
 
-		if (newValue && mSettings.lock()->pauseAlsoFreesCursor->GetValue())
-		{
-			freeCursorRequest = freeCursorService.lock()->scopedRequest(mGame.toString() + nameof(ToggleFreeCursor));
+
+			if (newValue && mSettings->pauseAlsoFreesCursor->GetValue())
+			{
+				lockOrThrow(freeCursorServiceWeak, freeCursorService);
+				freeCursorRequest = freeCursorService->scopedRequest(mGame.toString() + nameof(ToggleFreeCursor));
+			}
+			else
+			{
+				if (freeCursorRequest)
+					freeCursorRequest.reset();
+			}
 		}
-		else
+		catch (HCMRuntimeException ex)
 		{
-			if (freeCursorRequest)
-				freeCursorRequest.reset();
+			runtimeExceptions->handleMessage(ex);
 		}
 	}
 
@@ -49,9 +57,7 @@ public:
 	ToggleFreeCursor(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
 		//mTogglePauseCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->togglePause->valueChangedEvent, [this](bool& newValue) { onTogglePauseChanged(newValue); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
-		mSettings(dicon.Resolve<SettingsStateAndEvents>()),
+		mSettingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		PLOG_DEBUG << "made it to ToggleFreeCursor constructor body, atleast";
@@ -60,7 +66,7 @@ public:
 		auto control = dicon.Resolve<ControlServiceContainer>().lock();
 		if (control->freeMCCSCursorServiceFailure.has_value()) throw control->freeMCCSCursorServiceFailure.value();
 
-		freeCursorService = control->freeMCCSCursorService.value();
+		freeCursorServiceWeak = control->freeMCCSCursorService.value();
 	}
 
 	~ToggleFreeCursor()

@@ -19,9 +19,9 @@ private:
 	ScopedCallback <ActionEvent>mForceRevertCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	std::shared_ptr<MultilevelPointer> forceRevertFlag;
@@ -30,11 +30,14 @@ private:
 	// primary event callback
 	void onForceRevert()
 	{
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
 
-		PLOG_DEBUG << "Force Revert called";
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+			PLOG_DEBUG << "Force Revert called";
+
 			byte enableFlag = 1;
 			if (!forceRevertFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write Revert flag {}", MultilevelPointer::GetLastError()));
 
@@ -44,11 +47,11 @@ private:
 				if (!revertQueuedFlag->writeData(&clearQueueFlag)) PLOG_ERROR << "Failed to clear revertQueuedFlag, error: " << MultilevelPointer::GetLastError();
 			}
 
-			messagesGUI.lock()->addMessage("Revert forced.");
+			messagesGUI->addMessage("Revert forced.");
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -59,8 +62,8 @@ public:
 	ForceRevert(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl), 
 		mForceRevertCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->forceRevertEvent, [this]() { onForceRevert(); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()), 
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()), 
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();

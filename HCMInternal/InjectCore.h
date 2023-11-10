@@ -26,25 +26,35 @@ private:
 	ScopedCallback<ActionEvent> mInjectCoreEventCallback;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<ISharedMemory> sharedMem;
-	std::weak_ptr<SettingsStateAndEvents> settings;
-	std::weak_ptr<IModalDialogRenderer> modal;
-	std::weak_ptr<IGetMCCVersion> getMCCVer;
-	std::optional<std::weak_ptr<GetCurrentLevelCode>> levelCode;
-	std::optional<std::weak_ptr<GetCurrentDifficulty>> difficulty;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<ISharedMemory> sharedMemWeak;
+	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::weak_ptr<IModalDialogRenderer> modalDialogsWeak;
+	std::weak_ptr<IGetMCCVersion> getMCCVerWeak;
+	std::optional<std::weak_ptr<GetCurrentLevelCode>> levelCodeOptionalWeak;
+	std::optional<std::weak_ptr<GetCurrentDifficulty>> difficultyOptionalWeak;
 
 
 	void onInject()
 	{
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
+		
 		try
 		{
-			constexpr int minimumFileLength = 10000;
-			auto currentCheckpoint = sharedMem.lock()->getInjectInfo();
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+			lockOrThrow(getMCCVerWeak, getMCCVer);
+			lockOrThrow(sharedMemWeak, sharedMem);
+			lockOrThrow(modalDialogsWeak, modalDialogs);
+			lockOrThrow(settingsWeak, settings);
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 			PLOG_DEBUG << "Attempting core inject for game: " << mGame.toString();
+
+			constexpr int minimumFileLength = 10000;
+			auto currentCheckpoint = sharedMem->getInjectInfo();
+
 			if (currentCheckpoint.selectedCheckpointNull) throw HCMRuntimeException("Can't inject - no core save selected!");
 			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mGame) throw HCMRuntimeException(std::format("Can't inject - core save from wrong game! Expected: {}, Actual: {}", this->mGame.toString(), ((GameState)currentCheckpoint.selectedCheckpointGame).toString()));
 			// TODO: add version, difficulty, and levelcode checks (if user wants them)
@@ -58,19 +68,20 @@ private:
 			//TODO: load correct level if level not aligned
 
 			// check if user wants us to warn them on injecting to wrong level (and if we can do the check)
-			if (settings.lock()->injectCoreLevelCheck->GetValue() && levelCode.has_value())
+			if (settings->injectCoreLevelCheck->GetValue() && levelCodeOptionalWeak.has_value())
 			{
+				lockOrThrow(levelCodeOptionalWeak.value(), levelCode);
 				try
 				{
 					// compare current level code to checkpoint level code (only check first 3 characters of each)
-					if (levelCode.value().lock()->getCurrentLevelCode().substr(0, 3) != currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3))
+					if (levelCode->getCurrentLevelCode().substr(0, 3) != currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3))
 					{
 						// no match! warn the user. This is a blocking call until they choose an option.
-						auto continueWithInject = modal.lock()->showInjectionWarningDialog("Injection: incorrect level warning!", std::format(
+						auto continueWithInject = modalDialogs->showInjectionWarningDialog("Injection: incorrect level warning!", std::format(
 							"Warning! The core save you are injecting appears to be from a different level than the one you are currently playing\n{}\nCore save level: {}\nCurrent level: {}",
 							"If this is the case, the game will probably crash. Continue anyway?",
 							currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3),
-							levelCode.value().lock()->getCurrentLevelCode().substr(0, 3)
+							levelCode->getCurrentLevelCode().substr(0, 3)
 						));
 
 						if (!continueWithInject) return;
@@ -80,22 +91,22 @@ private:
 				{
 					PLOG_ERROR << "out_of_range exception occured testing coresave levelCode strings: " << std::endl
 						<< "currentCheckpoint.selectedCheckpointLevelCode.size(): " << currentCheckpoint.selectedCheckpointLevelCode.size() << std::endl
-						<< "levelCode.value()->getCurrentLevelCode().size(): " << levelCode.value().lock()->getCurrentLevelCode().size();
+						<< "levelCode.value()->getCurrentLevelCode().size(): " << levelCode->getCurrentLevelCode().size();
 				}
 			}
 
 			// check if user wants us to warn them on injecting to wrong game version
-			if (settings.lock()->injectCoreVersionCheck->GetValue())
+			if (settings->injectCoreVersionCheck->GetValue())
 			{
 				// check if wrong game version
-				if (getMCCVer.lock()->getMCCVersionAsString() != currentCheckpoint.selectedCheckpointGameVersion && currentCheckpoint.selectedCheckpointGameVersion.size() == 10)
+				if (getMCCVer->getMCCVersionAsString() != currentCheckpoint.selectedCheckpointGameVersion && currentCheckpoint.selectedCheckpointGameVersion.size() == 10)
 				{
 					// no match! warn the user. This is a blocking call until they choose an option.
-					auto continueWithInject = modal.lock()->showInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
+					auto continueWithInject = modalDialogs->showInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
 						"Warning! The core save you are injecting appears to be from a different version of MCC than the one you are currently playing\n{}\nCheckpoint MCC ver: {}\nCurrent MCC ver: {}",
 						"Core saves from different versions sometimes are, and sometimes aren't, compatible with eachother. Continue anyway?",
 						currentCheckpoint.selectedCheckpointGameVersion,
-						getMCCVer.lock()->getMCCVersionAsString()
+						getMCCVer->getMCCVersionAsString()
 					));
 
 					if (!continueWithInject) return;
@@ -103,17 +114,19 @@ private:
 			}
 
 			// check if user wants us to warn them on injecting to wrong difficulty
-			if (settings.lock()->injectCheckpointDifficultyCheck->GetValue() && difficulty.has_value() && magic_enum::enum_contains<DifficultyEnum>(currentCheckpoint.selectedCheckpointDifficulty))
+			if (settings->injectCheckpointDifficultyCheck->GetValue() && difficultyOptionalWeak.has_value() && magic_enum::enum_contains<DifficultyEnum>(currentCheckpoint.selectedCheckpointDifficulty))
 			{
+				lockOrThrow(difficultyOptionalWeak.value(), difficulty);
+
 				// check if wrong game version
-				if (difficulty.value().lock()->getCurrentDifficulty() != (DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty)
+				if (difficulty->getCurrentDifficulty() != (DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty)
 				{
 					// no match! warn the user. This is a blocking call until they choose an option.
-					auto continueWithInject = modal.lock()->showInjectionWarningDialog("Injection: mismatched difficulty warning!", std::format(
+					auto continueWithInject = modalDialogs->showInjectionWarningDialog("Injection: mismatched difficulty warning!", std::format(
 						"Warning! The core save you are injecting appears to have been played on a different difficulty than the one you are currently playing\n{}\nCheckpoint Difficulty: {}\nCurrent Difficulty: {}",
 						"Injecting a core save from a different difficulty can sometimes crash the game, and always messes up your pause menu interface. \nContinue anyway?",
 						magic_enum::enum_name((DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty),
-						magic_enum::enum_name(difficulty.value().lock()->getCurrentDifficulty())
+						magic_enum::enum_name(difficulty->getCurrentDifficulty())
 					));
 
 					if (!continueWithInject) return;
@@ -172,20 +185,20 @@ private:
 				throw HCMRuntimeException(std::format("Failed to write core save file: {}", e.what()));
 			}
 
-			messagesGUI.lock()->addMessage(std::format("Injected checkpoint {}.bin", currentCheckpoint.selectedCheckpointName));
+			messagesGUI->addMessage(std::format("Injected checkpoint {}.bin", currentCheckpoint.selectedCheckpointName));
 
 			PLOG_INFO << "Successfully injected coresave from " << currentCheckpoint.selectedCheckpointFilePath << " to " << coreSaveInjectLocation;
 
-			if (settings.lock()->injectCoreForcesRevert->GetValue())
+			if (settings->injectCoreForcesRevert->GetValue())
 			{
-				settings.lock()->forceCoreLoadEvent->operator()();
+				settings->forceCoreLoadEvent->operator()();
 			}
 
 
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 	}
 
@@ -195,17 +208,17 @@ public:
 	InjectCore(GameState game, IDIContainer& dicon) 
 		: mGame(game),
 		mInjectCoreEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->injectCoreEvent, [this]() { onInject(); }),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		sharedMem(dicon.Resolve<ISharedMemory>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		sharedMemWeak(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		settings(dicon.Resolve<SettingsStateAndEvents>()),
-		modal(dicon.Resolve<IModalDialogRenderer>()),
-		getMCCVer(dicon.Resolve<IGetMCCVersion>())
+		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
+		modalDialogsWeak(dicon.Resolve<IModalDialogRenderer>()),
+		getMCCVerWeak(dicon.Resolve<IGetMCCVersion>())
 	{
 		try
 		{
-			levelCode = std::dynamic_pointer_cast<GetCurrentLevelCode>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat({game, OptionalCheatEnum::GetCurrentLevelCode}, dicon));
+			levelCodeOptionalWeak = std::dynamic_pointer_cast<GetCurrentLevelCode>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat({game, OptionalCheatEnum::GetCurrentLevelCode}, dicon));
 		}
 		catch (HCMInitException ex)
 		{
@@ -214,7 +227,7 @@ public:
 
 		try
 		{
-			difficulty = std::dynamic_pointer_cast<GetCurrentDifficulty>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat({game, OptionalCheatEnum::GetCurrentDifficulty}, dicon));
+			difficultyOptionalWeak = std::dynamic_pointer_cast<GetCurrentDifficulty>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat({game, OptionalCheatEnum::GetCurrentDifficulty}, dicon));
 		}
 		catch (HCMInitException ex)
 		{

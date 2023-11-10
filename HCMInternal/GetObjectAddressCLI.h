@@ -29,7 +29,7 @@ private:
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
 	std::weak_ptr<GetObjectAddress> getObjectAddressWeak;
 
@@ -63,8 +63,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			if (!runtimeExceptions.expired())
-				runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 	}
 

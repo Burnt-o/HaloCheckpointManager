@@ -21,7 +21,7 @@ private:
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptionsWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	std::shared_ptr<MultilevelPointer> bottomlessClipFlag;
@@ -46,7 +46,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptionsWeak.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -58,7 +58,7 @@ public:
 		mBottomlessClipCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->bottomlessClipToggle->valueChangedEvent, [this](bool& n) {onBottomlessClipToggle(n); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		runtimeExceptionsWeak(dicon.Resolve<RuntimeExceptionHandler>())
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 
 		auto ptr = dicon.Resolve<PointerManager>().lock();

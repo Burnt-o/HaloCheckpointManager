@@ -19,7 +19,7 @@ private:
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptionHandlerWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	static inline std::shared_ptr<ModuleMidHook> medusaHook;
@@ -54,11 +54,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			auto runtimeExceptionHandler = runtimeExceptionHandlerWeak.lock();
-			if (runtimeExceptionHandler)
-				runtimeExceptionHandler->handleMessage(ex);
-			else
-				PLOG_ERROR << ex.what() << std::endl << ex.source() << std::endl << ex.trace();
+			runtimeExceptions->handleMessage(ex);
 		}
 		
 
@@ -70,7 +66,7 @@ public:
 	MedusaImpl(GameState gameImpl, IDIContainer& dicon)
 		: mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		runtimeExceptionHandlerWeak(dicon.Resolve<RuntimeExceptionHandler>()),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		mMedusaToggleCallbackHandle(dicon.Resolve< SettingsStateAndEvents>().lock()->medusaToggle->valueChangedEvent, [this](bool& n) {onToggleChange(n); })
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();

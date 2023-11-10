@@ -3,6 +3,7 @@
 #include "SettingsStateAndEvents.h"
 #include "IMessagesGUI.h"
 #include "DirPathContainer.h"
+#include "RuntimeExceptionHandler.h"
 // see HCMSpeedhack.dll
 
 
@@ -14,9 +15,10 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(double&)>> mSpeedhackSettingCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<Setting<double>> speedhackValueSetting;
-	std::weak_ptr<Setting<bool>> speedhackToggleSetting;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::weak_ptr<Setting<double>> speedhackValueSettingWeak;
+	std::weak_ptr<Setting<bool>> speedhackToggleSettingWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// data
 	std::function<void(double)> setSpeed;
@@ -25,36 +27,60 @@ public:
 
 	void onToggle(bool& newToggleValue)
 	{
-		auto currentSpeedSetting = speedhackValueSetting.lock()->GetValue();
-		PLOG_DEBUG << "SpeedhackImpl recevied onToggle event, value: " << newToggleValue;
-		PLOG_DEBUG << "(the speedhack value is: " << currentSpeedSetting << ")";
-		if (newToggleValue)
+		try
 		{
-			setSpeed(currentSpeedSetting);
-			messagesGUI.lock()->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
+			lockOrThrow(speedhackValueSettingWeak, speedhackValueSetting);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+
+			auto currentSpeedSetting = speedhackValueSetting->GetValue();
+			PLOG_DEBUG << "SpeedhackImpl recevied onToggle event, value: " << newToggleValue;
+			PLOG_DEBUG << "(the speedhack value is: " << currentSpeedSetting << ")";
+			if (newToggleValue)
+			{
+				setSpeed(currentSpeedSetting);
+				messagesGUI->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
+			}
+			else
+			{
+				setSpeed(1.00);
+				messagesGUI->addMessage(std::format("Disabling Speedhack."));
+			}
 		}
-		else
+		catch (HCMRuntimeException ex)
 		{
-			setSpeed(1.00);
-			messagesGUI.lock()->addMessage(std::format("Disabling Speedhack."));
+			runtimeExceptions->handleMessage(ex);
 		}
+
+
 	}
 	void updateSetting(double& newSpeedValue)
 	{
-		if (speedhackToggleSetting.lock()->GetValue())
+		try
 		{
-			PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
-			setSpeed(newSpeedValue);
-			messagesGUI.lock()->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
+			lockOrThrow(speedhackToggleSettingWeak, speedhackToggleSetting);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+
+			if (speedhackToggleSetting->GetValue())
+			{
+				PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
+				setSpeed(newSpeedValue);
+				messagesGUI->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
+			}
 		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
 	}
 
 	SpeedhackImpl(GameState game, IDIContainer& dicon)
-		: speedhackValueSetting(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting),
-		speedhackToggleSetting(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackToggle),
+		: speedhackValueSettingWeak(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting),
+		speedhackToggleSettingWeak(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackToggle),
 		mSpeedhackToggleCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackToggle->valueChangedEvent, [this](bool& i) {onToggle(i); }),
 		mSpeedhackSettingCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->speedhackSetting->valueChangedEvent, [this](double& i) {updateSetting(i); }),
-		messagesGUI(dicon.Resolve<IMessagesGUI>())
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		// load HCMSpeedhack.dll
 		auto dirPathCont = dicon.Resolve<DirPathContainer>().lock();

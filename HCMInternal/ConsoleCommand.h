@@ -22,10 +22,10 @@ private:
 	ScopedCallback<ActionEvent> mConsoleCommandEventCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<SettingsStateAndEvents> mSettings;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
 
 
 	//data
@@ -35,11 +35,17 @@ private:
 	// primary event callback
 	void onSendCommand()
 	{
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
+
 
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(mSettingsWeak, mSettings);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+
 			PLOG_DEBUG << "onSendCommand called for game: " << mGame.toString();
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 
 			uintptr_t pCommand;
 			if (!sendCommandPointer->resolve(&pCommand)) throw HCMRuntimeException("Could not resolve pointer to sendCommand function");
@@ -53,17 +59,17 @@ private:
 			engine_command_vptr = static_cast<EngineCommand_t>((void*)pCommand);
 
 
-			std::string command = "HS: " + mSettings.lock()->consoleCommandString->GetValue();
+			std::string command = "HS: " + mSettings->consoleCommandString->GetValue();
 			
 
-			messagesGUI.lock()->addMessage(std::format("Sending command: {}", mSettings.lock()->consoleCommandString->GetValue()));
+			messagesGUI->addMessage(std::format("Sending command: {}", mSettings->consoleCommandString->GetValue()));
 			auto commandResult = engine_command_vptr((void*)pEngine, command.c_str());
-			messagesGUI.lock()->addMessage(std::format("Result: 0x{:X}", commandResult));
+			messagesGUI->addMessage(std::format("Result: 0x{:X}", commandResult));
 
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -75,10 +81,10 @@ public:
 	ConsoleCommand(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
 		mConsoleCommandEventCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandEvent, [this]() {onSendCommand(); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		mSettings(dicon.Resolve<SettingsStateAndEvents>())
+		mSettingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 
 	{
 		PLOG_VERBOSE << "constructing ConsoleCommand OptionalCheat for game: " << mGame.toString();

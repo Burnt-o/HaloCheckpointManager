@@ -17,10 +17,10 @@ private:
 	ScopedCallback<ActionEvent> mForceDoubleRevertCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<SettingsStateAndEvents> settings;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 
 	//data
 	std::shared_ptr<MultilevelPointer> doubleRevertFlag;
@@ -28,11 +28,15 @@ private:
 	// primary event callback
 	void onForceDoubleRevert()
 	{
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
 
-		PLOG_DEBUG << "Force DoubleRevert called";
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+			lockOrThrow(settingsWeak, settings);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+			PLOG_DEBUG << "Force DoubleRevert called";
+
 			// read the flag
 			byte currentFlag = 1;
 			if (!doubleRevertFlag->readData(&currentFlag)) throw HCMRuntimeException(std::format("Failed to read doubleRevertFlag {}", MultilevelPointer::GetLastError()));
@@ -42,14 +46,14 @@ private:
 			
 			// write the flag
 			if (!doubleRevertFlag->writeData(&currentFlag)) throw HCMRuntimeException(std::format("Failed to write DoubleRevert flag {}", MultilevelPointer::GetLastError()));
-			messagesGUI.lock()->addMessage("Checkpoint double reverted.");
+			messagesGUI->addMessage("Checkpoint double reverted.");
 
 			// fire revert event. Not our problem if it fails.
-			settings.lock()->forceRevertEvent->operator()();
+			settings->forceRevertEvent->operator()();
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -61,9 +65,9 @@ public:
 	ForceDoubleRevert(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl), 
 		mForceDoubleRevertCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->forceDoubleRevertEvent, [this]() { onForceDoubleRevert(); }),
-		settings(dicon.Resolve<SettingsStateAndEvents>()),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()), 
+		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()), 
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();

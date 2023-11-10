@@ -21,7 +21,7 @@ private:
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptionsWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	//data
 	std::shared_ptr<MultilevelPointer> infiniteAmmoFlag;
@@ -31,13 +31,15 @@ private:
 	{
 
 
-		PLOG_DEBUG << "onInfiniteAmmoToggle called, newValue: " << newValue;
+
 		try
 		{
 			lockOrThrow(mccStateHookWeak, mccStateHook);
 			lockOrThrow(messagesGUIWeak, messagesGUI);
 			
 			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+
+			PLOG_DEBUG << "onInfiniteAmmoToggle called, newValue: " << newValue;
 
 			byte newFlagValue = newValue ? 1 : 0;
 			if (!infiniteAmmoFlag->writeData(&newFlagValue)) throw HCMRuntimeException(std::format("Failed to write infiniteAmmoFlag flag {}", MultilevelPointer::GetLastError()));
@@ -46,7 +48,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptionsWeak.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -58,7 +60,7 @@ public:
 		mInfiniteAmmoCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->infiniteAmmoToggle->valueChangedEvent, [this](bool& n) {onInfiniteAmmoToggle(n); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		runtimeExceptionsWeak(dicon.Resolve<RuntimeExceptionHandler>())
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 
 		auto ptr = dicon.Resolve<PointerManager>().lock();

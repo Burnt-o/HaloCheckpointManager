@@ -26,13 +26,13 @@ private:
 	ScopedCallback<ActionEvent> mDumpCheckpointEventCallback;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<IGetMCCVersion> getMCCVer;
-	std::weak_ptr<ISharedMemory> sharedMem;
-	std::weak_ptr<IModalDialogRenderer> modalDialogs;
-	std::weak_ptr<SettingsStateAndEvents> settings;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IGetMCCVersion> getMCCVerWeak;
+	std::weak_ptr<ISharedMemory> sharedMemWeak;
+	std::weak_ptr<IModalDialogRenderer> modalDialogsWeak;
+	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 
 
 	// data
@@ -46,14 +46,24 @@ private:
 
 	// primary event callback
 	void onDump() {
-		if (!mccStateHook.lock()->isGameCurrentlyPlaying(mImplGame)) return;
+
 
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+			lockOrThrow(getMCCVerWeak, getMCCVer);
+			lockOrThrow(sharedMemWeak, sharedMem);
+			lockOrThrow(modalDialogsWeak, modalDialogs);
+			lockOrThrow(settingsWeak, settings);
+
+
+			if (!mccStateHook->isGameCurrentlyPlaying(mImplGame)) return;
+			PLOG_DEBUG << "onDump called " << mImplGame.toString();
 			// Automatically force checkpoint beforehand if user wants that
-			if (settings.lock()->dumpCheckpointForcesSave->GetValue())
+			if (settings->dumpCheckpointForcesSave->GetValue())
 			{
-				settings.lock()->forceCheckpointEvent->operator()();
+				settings->forceCheckpointEvent->operator()();
 				Sleep(10);
 			}
 
@@ -65,10 +75,10 @@ private:
 				t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
 			// ask the user what they want to call it, if they want that. Otherwise we use the default checkpoint name
-			if (settings.lock()->autonameCheckpoints->GetValue() == false)
+			if (settings->autonameCheckpoints->GetValue() == false)
 			{
 				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
-				auto modalReturn = modalDialogs.lock()->showSaveDumpNameDialog("Name dumped checkpoint", checkpointName); // this is a blocking call
+				auto modalReturn = modalDialogs->showSaveDumpNameDialog("Name dumped checkpoint", checkpointName); // this is a blocking call
 				PLOG_DEBUG << "showSaveDumpNameDialog returned! ";
 
 				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
@@ -77,7 +87,7 @@ private:
 
 
 			int64_t checkpointLength = *mCheckpointLength.get();
-			auto currentSaveFolder = sharedMem.lock()->getDumpInfo(mImplGame);
+			auto currentSaveFolder = sharedMem->getDumpInfo(mImplGame);
 			PLOG_DEBUG << "Attempting checkpoint dump for game: " << mImplGame.toString();;
 
 			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\" + checkpointName + ".bin";
@@ -108,7 +118,7 @@ private:
 			if (err) throw HCMRuntimeException(std::format("error storing checkpointData from memory! code: {}", err));
 
 			// add version information to last 10 bytes of file
-			std::string versionString = getMCCVer.lock()->getMCCVersionAsString().data();
+			std::string versionString = getMCCVer->getMCCVersionAsString().data();
 			if (versionString.size() != 10) throw HCMRuntimeException(std::format("Version string was the wrong size somehow?! Expected: 10, Actual: {}", versionString.size()));
 			std::copy(std::begin(versionString), std::end(versionString), std::end(checkpointData) - 10);
 
@@ -128,14 +138,14 @@ private:
 				throw HCMRuntimeException(std::format("Failed to write checkpoint file to location {}: error: {}", dumpPath, e.what()));
 			}
 
-			messagesGUI.lock()->addMessage(std::format("Dumped checkpoint: {}.bin to {}", checkpointName, currentSaveFolder.selectedFolderName));
+			messagesGUI->addMessage(std::format("Dumped checkpoint: {}.bin to {}", checkpointName, currentSaveFolder.selectedFolderName));
 
 			PLOG_INFO << std::format("successfully dumped checkpoint from 0x{:X} to path: {}", (uint64_t)checkpointLoc, dumpPath);
 
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 	}
 
@@ -144,13 +154,13 @@ public:
 	DumpCheckpoint(GameState game, IDIContainer& dicon) 
 		: mImplGame(game),
 		mDumpCheckpointEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->dumpCheckpointEvent, [this]() { onDump(); }),
-		getMCCVer(dicon.Resolve<IGetMCCVersion>()), 
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		sharedMem(dicon.Resolve<ISharedMemory>()),
+		getMCCVerWeak(dicon.Resolve<IGetMCCVersion>()), 
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		sharedMemWeak(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
-		modalDialogs(dicon.Resolve<IModalDialogRenderer>()),
-		settings(dicon.Resolve<SettingsStateAndEvents>())
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
+		modalDialogsWeak(dicon.Resolve<IModalDialogRenderer>()),
+		settingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 		mInjectRequirements = ptr->getData<std::shared_ptr<InjectRequirements>>("injectRequirements", game);

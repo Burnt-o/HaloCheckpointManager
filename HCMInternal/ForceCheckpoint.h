@@ -25,9 +25,9 @@ private:
 	ScopedCallback<ActionEvent> mForceCheckpointCallbackHandle;
 
 	// injected services
-	std::weak_ptr<IMCCStateHook> mccStateHook;
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 
 	//data
@@ -36,18 +36,21 @@ private:
 	// primary event callback
 	void onForceCheckpoint()
 	{
-		if (mccStateHook.lock()->isGameCurrentlyPlaying(mGame) == false) return;
-
-		PLOG_DEBUG << "Force checkpoint called for game: " << mGame.toString();
+		
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+			PLOG_DEBUG << "Force checkpoint called for game: " << mGame.toString();
+
 			byte enableFlag = 1;
 			if (!forceCheckpointFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write checkpoint flag {}", MultilevelPointer::GetLastError()));
-			messagesGUI.lock()->addMessage("Checkpoint forced.");
+			messagesGUI->addMessage("Checkpoint forced.");
 		}
 		catch (HCMRuntimeException ex)
 		{
-			runtimeExceptions.lock()->handleMessage(ex);
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -59,8 +62,8 @@ public:
 	ForceCheckpoint(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl), 
 		mForceCheckpointCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->forceCheckpointEvent, [this]() {onForceCheckpoint(); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()), 
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()), 
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 		
 	{

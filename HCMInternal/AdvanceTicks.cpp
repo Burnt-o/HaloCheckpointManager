@@ -30,12 +30,12 @@ private:
 
 
 	// injected services
-	std::weak_ptr<IMessagesGUI> messagesGUI;
-	std::weak_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	std::weak_ptr<PauseGame> pauseService;
-	std::weak_ptr<GameTickEventHook> gameTickEventHook;
-	std::weak_ptr<SettingsStateAndEvents> settings;
-	std::weak_ptr<IMCCStateHook> mccStateHook;
+	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::weak_ptr<PauseGame> pauseServiceWeak;
+	std::weak_ptr<GameTickEventHook> gameTickEventHookWeak;
+	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 
 
 	int advanceTicksCount = 0;
@@ -63,47 +63,59 @@ private:
 	// primary event callback
 	void onAdvanceTicksEvent()
 	{
-		if (!mccStateHook.lock()->isGameCurrentlyPlaying(mGame))
+		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
+			lockOrThrow(settingsWeak, settings);
+			lockOrThrow(pauseServiceWeak, pauseService);
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+
+			if (!mccStateHook->isGameCurrentlyPlaying(mGame))
+			{
+				mGameTickEventCallback.reset();
+				pauseOverrideRequest.reset();
+				return;
+			}
+
+			// need to destroy old ones BEFORE constructing new ones
 			mGameTickEventCallback.reset();
 			pauseOverrideRequest.reset();
-			return;
+
+			// something is going wrong here. on any call but the first the mGameTIckEventCallback binding fails, somehow
+			// why? the event is absolutely firing. Why is the binding failing?
+			// I mean I could fix this by only binding once but I really don't want to have to do that
+			// it looks like the scoped call back is just instantly auto-destructing
+
+			advanceTicksCount = settings->advanceTicksCount->GetValue();
+			mGameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(int)>>>(gameTickEventHook->getGameTickEvent(), [this](int i) {onGameTickEvent(i); });
+			pauseOverrideRequest = pauseService->scopedOverrideRequest(nameof(AdvanceTicks::AdvanceTicksImpl));
+
+
+			messagesGUI->addMessage(std::format("Advancing {} tick{}.", advanceTicksCount, advanceTicksCount == 1 ? "" : "s"));
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
 		}
 
-		auto gameTickEvent = gameTickEventHook.lock();
-		if (!gameTickEvent) { messagesGUI.lock()->addMessage("Advance ticks failed: bad gameTickEventHook weak ptr."); return; }
-
-		// need to destroy old ones BEFORE constructing new ones
-		mGameTickEventCallback.reset();
-		pauseOverrideRequest.reset();
-
-		// something is going wrong here. on any call but the first the mGameTIckEventCallback binding fails, somehow
-		// why? the event is absolutely firing. Why is the binding failing?
-		// I mean I could fix this by only binding once but I really don't want to have to do that
-		// it looks like the scoped call back is just instantly auto-destructing
-
-		advanceTicksCount = settings.lock()->advanceTicksCount->GetValue();
-		mGameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(int)>>>(gameTickEvent->getGameTickEvent(), [this](int i) {onGameTickEvent(i); });
-		pauseOverrideRequest = pauseService.lock()->scopedOverrideRequest(nameof(AdvanceTicks::AdvanceTicksImpl));
-
-
-		messagesGUI.lock()->addMessage(std::format("Advancing {} tick{}.", advanceTicksCount, advanceTicksCount == 1 ? "" : "s"));
+		
 	}
 public:
 	AdvanceTicksImpl(GameState gameImpl, IDIContainer& dicon)
 		: mGame(gameImpl),
 		mAdvanceTicksCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->advanceTicksEvent, [this]() { onAdvanceTicksEvent(); }),
-		mccStateHook(dicon.Resolve<IMCCStateHook>()),
-		messagesGUI(dicon.Resolve<IMessagesGUI>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		settings(dicon.Resolve<SettingsStateAndEvents>())
+		settingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 	{
 		auto csc = dicon.Resolve<ControlServiceContainer>().lock();
 
 		if (!csc->pauseGameService.has_value()) throw HCMInitException("Cannot advance ticks without pause service");
-		pauseService = csc->pauseGameService.value();
+		pauseServiceWeak = csc->pauseGameService.value();
 
-		gameTickEventHook = std::dynamic_pointer_cast<GameTickEventHook>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat(std::make_pair(gameImpl, OptionalCheatEnum::GameTickEventHook), dicon));
+		gameTickEventHookWeak = std::dynamic_pointer_cast<GameTickEventHook>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat(std::make_pair(gameImpl, OptionalCheatEnum::GameTickEventHook), dicon));
 		
 
 	}
