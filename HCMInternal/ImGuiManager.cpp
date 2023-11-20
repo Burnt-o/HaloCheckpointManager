@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ImGuiManager.h"
 #include "GlobalKill.h"
-
+#include "ProggyVectorRegularFont.h"
 ImGuiManager* ImGuiManager::instance = nullptr;
 
 WNDPROC ImGuiManager::mOldWndProc = nullptr;
@@ -119,7 +119,9 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 
 	style->IndentSpacing = 10.f;
 
-
+	// setup font
+	io.Fonts->AddFontDefault();
+	mRescalableMonospacedFont = io.Fonts->AddFontFromMemoryCompressedTTF(ProggyVectorRegularFont_compressed_data, ProggyVectorRegularFont_compressed_size, 15.f * 2);
 
 
 }
@@ -194,15 +196,20 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+
 	// I don't 100% understand what this does, but it must be done before we try to render
 	pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, NULL);
 	auto screenSize = getScreenSize();
+
+
 	// invoke callback of anything that wants to render with ImGui
-	auto x = *BackgroundRenderEvent.get();
-	x(screenSize);
-	BackgroundRenderEvent->operator()(screenSize);
+
+	ImGui::PushFont(mRescalableMonospacedFont);
+	BackgroundRenderEvent->operator()(screenSize); // for overlays.
+	ImGui::PopFont();
 	MidgroundRenderEvent->operator()(screenSize);
 	ForegroundRenderEvent->operator()(screenSize);
+
 
 	// Finish ImGui frame
 	ImGui::EndFrame();

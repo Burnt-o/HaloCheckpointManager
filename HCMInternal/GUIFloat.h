@@ -24,7 +24,6 @@ public:
 	void render(HotkeyRenderer& hotkeyRenderer) override
 	{
 		
-
 		auto mOptionFloat = mOptionFloatWeak.lock();
 		if (!mOptionFloat)
 		{

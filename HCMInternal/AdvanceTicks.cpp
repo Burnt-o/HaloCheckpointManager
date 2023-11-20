@@ -102,21 +102,20 @@ private:
 		
 	}
 public:
-	AdvanceTicksImpl(GameState gameImpl, IDIContainer& dicon)
-		: mGame(gameImpl),
+	AdvanceTicksImpl(GameState game, IDIContainer& dicon)
+		: mGame(game),
 		mAdvanceTicksCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->advanceTicksEvent, [this]() { onAdvanceTicksEvent(); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		settingsWeak(dicon.Resolve<SettingsStateAndEvents>())
+		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
+		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
 	{
 		auto csc = dicon.Resolve<ControlServiceContainer>().lock();
 
 		if (!csc->pauseGameService.has_value()) throw HCMInitException("Cannot advance ticks without pause service");
 		pauseServiceWeak = csc->pauseGameService.value();
 
-		gameTickEventHookWeak = std::dynamic_pointer_cast<GameTickEventHook>(dicon.Resolve<IMakeOrGetCheat>().lock()->getOrMakeCheat(std::make_pair(gameImpl, OptionalCheatEnum::GameTickEventHook), dicon));
-		
 
 	}
 

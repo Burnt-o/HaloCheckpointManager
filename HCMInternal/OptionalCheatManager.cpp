@@ -39,6 +39,13 @@
 #include "NaturalCheckpointDisable.h"
 #include "InfiniteAmmo.h"
 #include "BottomlessClip.h"
+#include "DisplayPlayerInfo.h"
+#include "GetObjectHealth.h"
+#include "GetAggroData.h"
+#include "GetTagName.h"
+#include "GetObjectTagName.h"
+#include "GetBipedsVehicleDatum.h"
+#include "GetNextObjectDatum.h"
 
 #include "DIContainer.h"
 #include "map.h"
@@ -60,7 +67,7 @@ private:
 	// cheats that depend on other cheats will need to access this to check if they're already initialised before attempting to init it themselves.
 	// This is the main point of ownership keeping all the optional cheats alive. 
 	std::shared_ptr<CheatCollection> cheatCollection = std::make_shared<CheatCollection>();
-	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer> dicon;
+	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer, RenderEvent> dicon;
 
 
 public:
@@ -74,11 +81,12 @@ public:
 		std::shared_ptr<RuntimeExceptionHandler> exp,
 		std::string dirPath,
 		std::shared_ptr<IModalDialogRenderer> modal,
-		std::shared_ptr<ControlServiceContainer> control)
+		std::shared_ptr<ControlServiceContainer> control,
+		std::shared_ptr<RenderEvent> overlayRenderEvent)
 		:
 		// create a di container with the dependencies that the cheats will need
 		// remember: you need to register types as the base interface the optionalCheats will want to resolve
-		dicon(cheatConstructor, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, std::make_shared<DirPathContainer>(dirPath), modal, control)
+		dicon(cheatConstructor, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, std::make_shared<DirPathContainer>(dirPath), modal, control, overlayRenderEvent)
 	{ 
 		
 	}
@@ -159,11 +167,12 @@ OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>
 	std::shared_ptr<RuntimeExceptionHandler> exp, 
 	std::string dirPath, 
 	std::shared_ptr<IModalDialogRenderer> modal,
-	std::shared_ptr<ControlServiceContainer> control)
+	std::shared_ptr<ControlServiceContainer> control,
+	std::shared_ptr<RenderEvent> overlayRenderEvent)
 	: constructorPimpl(std::make_shared<OptionalCheatConstructor>())
 
 {
-	storePimpl = std::make_shared<OptionalCheatStore>(constructorPimpl, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control);
+	storePimpl = std::make_shared<OptionalCheatStore>(constructorPimpl, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, overlayRenderEvent);
 
 	// Ah yes a cyclic dependency? But actually the storePimpl will go in as a weak ptr, and it doesn't keep it after the method finishes anyway
 	constructorPimpl->createCheats(storePimpl, reqSer, info);

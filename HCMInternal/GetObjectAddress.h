@@ -20,6 +20,8 @@ public:
 	virtual uintptr_t getObjectAddressTemplated(Datum datum, Halo3ODSTObjectType* commonObjectType) { throw HCMRuntimeException("game mismatch!"); }
 	virtual uintptr_t getObjectAddressTemplated(Datum datum, HaloReachObjectType* commonObjectType) { throw HCMRuntimeException("game mismatch!"); }
 	virtual uintptr_t getObjectAddressTemplated(Datum datum, Halo4ObjectType* commonObjectType) { throw HCMRuntimeException("game mismatch!"); }
+
+	virtual bool isValidDatum(Datum entityDatum) = 0;
 };
 
 
@@ -39,6 +41,8 @@ class GetObjectAddress : public IOptionalCheat
 		uintptr_t getObjectAddress(Datum entityDatum, TemplatedObjectType* outObjectType);
 
 		uintptr_t getObjectAddress(Datum entityDatum, CommonObjectType* outObjectType);
+
+		bool isValidDatum(Datum entityDatum);
 	
 		virtual std::string_view getName() override { return nameof(GetObjectAddress); }
 };

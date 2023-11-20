@@ -85,6 +85,10 @@ InfiniteAmmo::InfiniteAmmo(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<InfiniteAmmoImplSetFlag<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
+	case GameState::Value::Halo2:
+		pimpl = std::make_unique<InfiniteAmmoImplSetFlag<GameState::Value::Halo2>>(gameImpl, dicon);
+		break;
+
 
 	default:
 		throw HCMInitException("not impl yet");

@@ -2,7 +2,7 @@
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
 
-template< bool shouldRenderVertically, bool AbsoluteOrRelative>
+template< bool shouldRenderVertically, bool AbsoluteOrRelative, int decimalPrecision>
 class GUIVec3 : public IGUIElement {
 
 private:
@@ -14,6 +14,8 @@ private:
 	std::string yLabel;
 	std::string zLabel;
 	std::string type;
+
+	std::string decimalPrecisionFormatter = std::format("%.{}f", decimalPrecision);
 public:
 
 
@@ -66,7 +68,7 @@ public:
 			renderTooltip();
 			// 3 float boxes each seperately bound to x, y, z of mOptionVec3. Each will render on a seperate horizontal line.
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::InputFloat(std::format("{}##{}", xLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().x, 0, 0, "%.8f"))
+			if (ImGui::InputFloat(std::format("{}##{}", xLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().x, 0, 0, decimalPrecisionFormatter.c_str()))
 			{
 				PLOG_VERBOSE << "GUIVec3 (" << getName() << ") firing toggle event, new value: " << mOptionVec3->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
@@ -75,7 +77,7 @@ public:
 			renderTooltip();
 
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::InputFloat(std::format("{}##{}", yLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().y, 0, 0, "%.8f"))
+			if (ImGui::InputFloat(std::format("{}##{}", yLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().y, 0, 0, decimalPrecisionFormatter.c_str()))
 			{
 				PLOG_VERBOSE << "GUIVec3 (" << getName() << ") firing toggle event, new value: " << mOptionVec3->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
@@ -84,7 +86,7 @@ public:
 			renderTooltip();
 
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::InputFloat(std::format("{}##{}", zLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().z, 0, 0, "%.8f"))
+			if (ImGui::InputFloat(std::format("{}##{}", zLabel, mLabelText).c_str(), &mOptionVec3->GetValueDisplay().z, 0, 0, decimalPrecisionFormatter.c_str()))
 			{
 				PLOG_VERBOSE << "GUIVec3 (" << getName() << ") firing toggle event, new value: " << mOptionVec3->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));
@@ -95,7 +97,7 @@ public:
 		}
 		else
 		{
-			if (ImGui::InputFloat3(mLabelText.c_str(), &mOptionVec3->GetValueDisplay().x)) // can bind InputFloat3 directly to Vec3.x for the whole thing
+			if (ImGui::InputFloat3(mLabelText.c_str(), &mOptionVec3->GetValueDisplay().x), decimalPrecisionFormatter.c_str()) // can bind InputFloat3 directly to Vec3.x for the whole thing
 			{
 				PLOG_VERBOSE << "GUIVec3 (" << getName() << ") firing toggle event, new value: " << mOptionVec3->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec3]() { optionToggle->UpdateValueWithInput(); }));

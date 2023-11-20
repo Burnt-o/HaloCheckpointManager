@@ -35,7 +35,8 @@ public:
 		std::shared_ptr<RuntimeExceptionHandler>, 
 		std::string dirPath, 
 		std::shared_ptr<IModalDialogRenderer> modal,
-		std::shared_ptr<ControlServiceContainer> control);
+		std::shared_ptr<ControlServiceContainer> control,
+		std::shared_ptr<RenderEvent> overlayRenderEvent);
 	;
 	~OptionalCheatManager();
 

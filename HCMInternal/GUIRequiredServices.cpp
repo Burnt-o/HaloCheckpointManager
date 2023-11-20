@@ -183,6 +183,64 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::BottomlessClip}
 	},
 
+		{ GUIElementEnum::display2DInfoToggleGUI,
+		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
+	},
+
+
+			{ GUIElementEnum::display2DInfoShowAggro,
+{ OptionalCheatEnum::GetAggroData}
+	},
+
+				{ GUIElementEnum::display2DInfoShowNextObjectDatum,
+{ OptionalCheatEnum::GetNextObjectDatum}
+	},
+
+		{ GUIElementEnum::display2DInfoShowPlayerViewAngle,
+{ OptionalCheatEnum::GetPlayerViewAngle}
+	},
+
+
+				{ GUIElementEnum::display2DInfoShowPlayerPosition,
+{OptionalCheatEnum::GetObjectPhysics}
+	},
+
+					{ GUIElementEnum::display2DInfoShowPlayerVelocity, // don't need to list abs/xy/xyz since they're child elements of this
+{ OptionalCheatEnum::GetObjectPhysics}
+	},
+						{ GUIElementEnum::display2DInfoShowPlayerHealth,
+{OptionalCheatEnum::GetObjectHealth}
+	},
+
+	{ GUIElementEnum::display2DInfoShowPlayerVehicleHealth,
+{OptionalCheatEnum::GetObjectHealth}
+	},
+
+
+	{ GUIElementEnum::display2DInfoShowEntityTagName,
+{OptionalCheatEnum::GetObjectTagName}
+	},
+
+	{ GUIElementEnum::display2DInfoShowEntityPosition,
+{OptionalCheatEnum::GetObjectPhysics}
+	},
+
+
+					{ GUIElementEnum::display2DInfoShowEntityVelocity,
+{OptionalCheatEnum::GetObjectPhysics}
+	},
+
+
+						{ GUIElementEnum::display2DInfoShowEntityHealth,
+{OptionalCheatEnum::GetObjectHealth}
+	},
+
+	{ GUIElementEnum::display2DInfoShowEntityVehicleHealth,
+{OptionalCheatEnum::GetObjectHealth}
+	},
+
+
+
 #ifdef HCM_DEBUG
 
 	{ GUIElementEnum::getObjectAddressGUI,

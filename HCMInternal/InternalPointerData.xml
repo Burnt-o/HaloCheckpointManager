@@ -2965,6 +2965,65 @@
 
 	
 	<!-- #endregion invulnerability-->
+
+
+	<!-- #region aggro mechanics-->
+
+	<VersionedEntry Name="aggroLevel" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02A8FC98</Offset>
+				<Offset>0x10</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02DCF968</Offset>
+				<Offset>0x10</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="aggroDecayTimer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02A8FC98</Offset>
+				<Offset>0x12</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02DCF968</Offset>
+				<Offset>0x12</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="playerHasAggro" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02A8FC98</Offset>
+				<Offset>0xC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02DCF968</Offset>
+				<Offset>0xC</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!-- #endregion aggro mechanics-->
 	
 	<!-- #region getObjectAddress-->
 
@@ -3042,6 +3101,27 @@
 			<Offsets>
 				<Offset>0x18B6360</Offset>
 				<Offset>0x48</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--I should really just use a dynStruct on the object table header here but ehh-->
+	<VersionedEntry Name="nextObjectSalt" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x18B6398</Offset>
+				<Offset>0x44</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="nextObjectIndex" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x18B6398</Offset>
+				<Offset>0x38</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -3252,12 +3332,13 @@
 	<!-- #endregion getObjectAddress-->
 
 	<!-- #region getHavokData-->
-	<VersionedEntry Name="havokComponentMetaDataTable" Type="MultilevelPointer::ModuleOffset">
+	<VersionedEntry Name="havokComponentMetaTableHeader" Type="MultilevelPointer::ModuleOffset">
+		<!-- ah be careful with the pointers here... one of them is sometimes off by 8 bytes-->
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x1647940</Offset>
-				<Offset>0x60</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 
@@ -3265,7 +3346,7 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x46B6708</Offset>
-				<Offset>0x84</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 
@@ -3273,7 +3354,7 @@
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x46E29F0</Offset>
-				<Offset>0x78</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 
@@ -3281,7 +3362,7 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xC51A38</Offset>
-				<Offset>0xA4</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 
@@ -3289,12 +3370,40 @@
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x10BE8E0</Offset>
-				<Offset>0xA4</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="havokComponentHeaderStride" Type="int64_t">
+
+	<VersionedEntry Name="havokComponentMetaTableHeaderFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo2">
+			<tableName>0x0</tableName>
+			<entryStride>0x24</entryStride>
+			<tableOffset>0x48</tableOffset>
+			<tableCount>0x40</tableCount> <!--also at 38, 3C - not sure which ones correct. maybe it's "next havok index"-->
+			<nextHavokSalt>0x44</nextHavokSalt>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<tableOffset>0x58</tableOffset>
+		</Version>
+		<Version Version="All" Game="Halo3ODST">
+			<tableOffset>0x58</tableOffset>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<tableOffset>0x60</tableOffset>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<tableOffset>0x60</tableOffset>
+		</Version>
+
+	</VersionedEntry>
+
+	<!--coooould just read from header but strideableDynStructs aren't coded to have stride set after construction-->
+	<VersionedEntry Name="havokComponentMetaStride" Type="int64_t">
 		<Version Version="All" Game="Halo2">
 			<Offset>0xC0</Offset>
 		</Version>
@@ -3316,11 +3425,13 @@
 		</Version>
 	</VersionedEntry>
 
+	<!--interesting note: havokComponent stuct contains: salt of havokComponentDatum for safety checking. datum of object this is tied to (for safety checking)-->
 	
+	<!--how to get from a havokComponentMeta element to the anchor point-->
 	<VersionedEntry Name="havokAnchorPointResolver" Type="MultilevelPointer::BaseOffset">
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Offsets>
-				<Offset>0x68</Offset> <!--I swear this was 70 before-->
+				<Offset>0x70</Offset>
 				<Offset>0x40</Offset>
 				<Offset>0x68</Offset>
 				<Offset>0x80</Offset>
@@ -3329,7 +3440,7 @@
 
 		<Version Version="1.3272.0.0" Game="Halo3">
 			<Offsets>
-				<Offset>0x0</Offset>
+				<Offset>0x20</Offset>
 				<Offset>0x50</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -3337,7 +3448,7 @@
 
 		<Version Version="1.3272.0.0" Game="Halo3ODST">
 			<Offsets>
-				<Offset>0x0</Offset>
+				<Offset>0x18</Offset>
 				<Offset>0x50</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -3345,7 +3456,7 @@
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Offsets>
-				<Offset>0x0</Offset>
+				<Offset>0x30</Offset>
 				<Offset>0x40</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
@@ -3353,7 +3464,7 @@
 
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Offsets>
-				<Offset>0x0</Offset>
+				<Offset>0x30</Offset>
 				<Offset>0x40</Offset>
 				<Offset>0x1C0</Offset>
 			</Offsets>
@@ -3605,7 +3716,7 @@
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="havokComponentDataFields" Type="DynStructOffsetInfo">
+	<VersionedEntry Name="havokAnchorDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo2">
 			<position>0x0</position>
 			<visualPosition>0x40</visualPosition>
@@ -3645,8 +3756,9 @@
 			<hideModelFlag>0x6F</hideModelFlag>
 			<teamIndex>0x74</teamIndex>
 			<angryAtPlayerFlag>0x75</angryAtPlayerFlag>
-			<currentHealth>0x9C</currentHealth>
-			<currentShields>0xA0</currentShields>
+			<health>0x9C</health>
+			<shields>0xA0</shields>
+			<shieldCooldown>0xC0</shieldCooldown>
 			<currentOutWeaponDatum>0xD4</currentOutWeaponDatum>
 			<currentVehicleDatum>0xD8</currentVehicleDatum>
 			<deathTimer>0x26B</deathTimer>
@@ -3663,6 +3775,9 @@
 			<!--these pos/vel are the non-havok physics versions (aka the ghost hitbox?)-->
 			<position>0x64</position>
 			<velocity>0x88</velocity>
+			<health>0xEC</health>
+			<shields>0xF0</shields>
+			<shieldCooldown>0x104</shieldCooldown>
 		</Version>
 
 		<Version Version="All" Game="Halo3">
@@ -3671,6 +3786,9 @@
 			<!--these pos/vel are the non-havok physics versions (aka the ghost hitbox?)-->
 			<position>0x50</position>
 			<velocity>0x74</velocity>
+			<health>0xF4</health>
+			<shields>0xF8</shields>
+			<shieldCooldown>0x10C</shieldCooldown>
 		</Version>
 
 		<Version Version="All" Game="Halo3ODST">
@@ -3678,6 +3796,9 @@
 			<currentVehicleDatum>0x10</currentVehicleDatum>
 			<position>0x50</position>
 			<velocity>0x74</velocity>
+			<health>0xE8</health>
+			<shields>0xEC</shields>
+			<shieldCooldown>0x100</shieldCooldown>
 		</Version>
 		
 		<Version Version="All" Game="HaloReach">
@@ -3685,6 +3806,10 @@
 			<currentVehicleDatum>0x14</currentVehicleDatum>
 			<position>0x44</position>
 			<velocity>0x68</velocity>
+			<health>0xE4C</health>
+			<shields>0xE7C</shields>
+			<healthCooldown>0xE48</healthCooldown>
+			<shieldCooldown>0xE78</shieldCooldown>
 		</Version>
 
 		<Version Version="All" Game="Halo4">
@@ -3692,7 +3817,23 @@
 			<currentVehicleDatum>0x24</currentVehicleDatum>
 			<position>0x64</position>
 			<velocity>0x88</velocity>
+			<health>0x13BC</health>
+			<shields>0x13EC</shields>
+			<healthCooldown>0x13B8</healthCooldown>
+			<shieldCooldown>0x13E8</shieldCooldown>
 		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="healthCooldownDataFields" Type="DynStructOffsetInfo">
+
+		<Version Version="All" Game="HaloReach">
+			<healthCooldown>0xE48</healthCooldown>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<healthCooldown>0x13B8</healthCooldown>
+		</Version>
+
 	</VersionedEntry>
 
 	<VersionedEntry Name="vehicleDataFields" Type="DynStructOffsetInfo">
@@ -3701,12 +3842,349 @@
 			<position>0x18</position>
 			<velocity>0x24</velocity>
 			<modelRotation>0x30</modelRotation>
+			<health>0x9C</health>
+			<shields>0xA0</shields>
 		</Version>
 
+		<Version Version="All" Game="Halo2">
+			<health>0xEC</health>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<health>0xF4</health>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<health>0xE8</health>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<health>0xE4C</health>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<health>0x13BC</health>
+		</Version>
 	
 	</VersionedEntry>
+	
+	<!--#region tagData-->
+	<VersionedEntry Name="commonObjectDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<tagDatum>0x0</tagDatum>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<tagDatum>0x0</tagDatum>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<tagDatum>0x0</tagDatum>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<tagDatum>0x0</tagDatum>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<tagDatum>0x0</tagDatum>
+		</Version>
+
+
+		<Version Version="All" Game="Halo4">
+			<tagDatum>0x8</tagDatum>
+			<!--actually not zero, go figure-->
+		</Version>
+	
+	</VersionedEntry>
+	
+	
+	<VersionedEntry Name="tagElementDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<StrideSize>0x20</StrideSize>
+			<tagGroupMagic>0x0</tagGroupMagic>
+			<parentGroupMagic>0x4</parentGroupMagic>
+			<grandparentGroupMagic>0x8</grandparentGroupMagic>
+			<tagDatum>0xC</tagDatum>
+			<nameOffset>0x10</nameOffset>
+			<offset>0x14</offset>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<StrideSize>0x10</StrideSize>
+			<tagGroupMagic>0x0</tagGroupMagic>
+			<tagDatum>0x4</tagDatum>
+			<offset>0x8</offset>
+			<dataSize>0xC</dataSize>
+		</Version>
+
+	</VersionedEntry>
+
+	<VersionedEntry Name="metaHeaderDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<tagTableOffset>0x0</tagTableOffset> <!--tag base needs to be added to this-->
+			<scenarioDatumIndex>0x4</scenarioDatumIndex>
+			<checksum>0x8</checksum>
+			<numberOfTags>0xC</numberOfTags>
+			<magic>0x24</magic> <!--safety check, should always read "sgat"-->
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<tagGroupTableOffset>0x0</tagGroupTableOffset>
+			<numberOfTagGroups>0x4</numberOfTagGroups>
+			<tagTableOffset>0x8</tagTableOffset>
+			<scenarioDatumIndex>0xC</scenarioDatumIndex>
+			<mapGlobalsDatumIndex>0x10</mapGlobalsDatumIndex>
+			<numberOfTags>0x18</numberOfTags>
+			<magic>0x1C</magic> <!--safety check, should always read "sgat-->
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="All" Game="Halo3">
+			<numberOfTagGroups>0x0</numberOfTagGroups>
+			<tagGroupTableAddress>0x8</tagGroupTableAddress>
+			<numberOfTags>0x10</numberOfTags>
+			<tagTableAddress>0x18</tagTableAddress>
+			<numberOfGlobalTags>0x20</numberOfGlobalTags>
+			<globalTagTableAddress>0x28</globalTagTableAddress>
+			<numberOfTagInterops>0x30</numberOfTagInterops>
+			<tagInteropTableAddress>0x38</tagInteropTableAddress>
+			<magic>0x44</magic>
+			<!--safety check, should always read "sgat-->
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="All" Game="Halo3ODST">
+			<numberOfTagGroups>0x0</numberOfTagGroups>
+			<tagGroupTableAddress>0x8</tagGroupTableAddress>
+			<numberOfTags>0x10</numberOfTags>
+			<tagTableAddress>0x18</tagTableAddress>
+			<numberOfGlobalTags>0x20</numberOfGlobalTags>
+			<globalTagTableAddress>0x28</globalTagTableAddress>
+			<numberOfTagInterops>0x30</numberOfTagInterops>
+			<tagInteropTableAddress>0x38</tagInteropTableAddress>
+			<magic>0x44</magic>
+			<!--safety check, should always read "sgat-->
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="All" Game="HaloReach">
+			<numberOfTagGroups>0x0</numberOfTagGroups>
+			<tagGroupTableAddress>0x8</tagGroupTableAddress>
+			<numberOfTags>0x10</numberOfTags>
+			<tagTableAddress>0x18</tagTableAddress>
+			<numberOfGlobalTags>0x20</numberOfGlobalTags>
+			<globalTagTableAddress>0x28</globalTagTableAddress>
+			<numberOfTagInterops>0x30</numberOfTagInterops>
+			<tagInteropTableAddress>0x38</tagInteropTableAddress>
+			<magic>0x48</magic>
+			<!--safety check, should always read "sgat-->
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="All" Game="Halo4">
+			<numberOfTagGroups>0x0</numberOfTagGroups>
+			<tagGroupTableAddress>0x8</tagGroupTableAddress>
+			<numberOfTags>0x10</numberOfTags>
+			<tagTableAddress>0x18</tagTableAddress>
+			<numberOfGlobalTags>0x20</numberOfGlobalTags>
+			<globalTagTableAddress>0x28</globalTagTableAddress>
+			<numberOfTagInterops>0x30</numberOfTagInterops>
+			<tagInteropTableAddress>0x38</tagInteropTableAddress>
+			<magic>0x48</magic>
+			<!--safety check, should always read "sgat-->
+		</Version>
+
+	</VersionedEntry>
+	
+
+	<!--meta for tag table-->
+	<VersionedEntry Name="metaHeaderAddress" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2D9CE10</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3251.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2D9CE10</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2F01D98</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2A53590</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15e3b58</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x20AC058</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20EF350</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+
+		<!--actually index table header-->
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25bdab0</Offset>
+				<Offset>0x2F8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<!--actually index table header-->
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x28BCCB0</Offset>
+				<Offset>0x2F0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	
+
+	<VersionedEntry Name="stringTable" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15E3b78</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xA48148</Offset>
+				<Offset>0x20000</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00A9EFC8</Offset>
+				<Offset>0x20000</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDAB0</Offset>
+				<Offset>0x10000</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x028FDDB8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="stringMetaTable" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15E3b68</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xA48148</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x00A9EFC8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+	</VersionedEntry>
+
+	<VersionedEntry Name="stringMetaTableOffset" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDAA0</Offset>
+				<Offset>0xA0C0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x028BCCB0</Offset>
+				<Offset>0x1E0C8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	
+	
+	<!--special value added to runtime tag addresses-->
+	<VersionedEntry Name="tagBase" Type="int64_t">
+		<Version Version="All" Game="Halo1">
+			<data>-0x50000000</data>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<data>0x0</data>
+		</Version>
+	</VersionedEntry>
+
+
+		<!--#endregion tagData-->
 
 	<!--#endregion DynamicStructs-->
+	
+	
+	
+
+	
 	
 	<!--#region ai freeze-->
 	<!--best to user commandline/tagtest to just flip it-->
@@ -3800,6 +4278,13 @@
 				<Offset>0x1C421C6</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F1883</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="bottomlessClipFlag" Type="MultilevelPointer::ModuleOffset">
@@ -3807,6 +4292,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x1C421B1</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F1888</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

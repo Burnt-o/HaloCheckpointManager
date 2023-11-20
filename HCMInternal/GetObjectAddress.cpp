@@ -73,6 +73,24 @@ public:
 
 
 
+	virtual bool isValidDatum(Datum entityDatum) override
+	{
+		if (objectMetaDataTable_cached == 0 || objectDataTable_cached == 0)
+		{
+			// resolve cache
+			PLOG_INFO << "resolving getObjectAddress caches";
+			if (!objectMetaDataTable->resolve(&objectMetaDataTable_cached)) throw HCMRuntimeException(std::format("Failed to resolve objectMetaDataTable: {}", MultilevelPointer::GetLastError()));
+			if (!objectDataTable->resolve(&objectDataTable_cached)) throw HCMRuntimeException(std::format("Failed to resolve objectMetaDataTable: {}", MultilevelPointer::GetLastError()));
+		}
+
+		auto ourObjectHeader = objectMetaDataTable_cached + (objectHeaderStride * entityDatum.index);
+
+		// first two bytes at object header are the salt.. confirm they match
+		return (*(uint16_t*)ourObjectHeader == entityDatum.salt);
+
+	}
+
+
 	template <typename TemplatedOrCommonObjectType>
 	uintptr_t getObjectAddress(Datum entityDatum, TemplatedOrCommonObjectType* outObjectType)
 	{
@@ -84,11 +102,21 @@ public:
 			if (!objectDataTable->resolve(&objectDataTable_cached)) throw HCMRuntimeException(std::format("Failed to resolve objectMetaDataTable: {}", MultilevelPointer::GetLastError()));
 
 		}
+
+
+
 		auto ourObjectHeader = objectMetaDataTable_cached + (objectHeaderStride * entityDatum.index);
+
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "ourObjectHeader: " << ooh, ooh = ourObjectHeader);
+
+		// first two bytes at object header are the salt.. confirm they match
+		if (*(uint16_t*)ourObjectHeader != entityDatum.salt) throw HCMRuntimeException(std::format("Mismatched datum salt! expected: {:X}, observed: {:X}", entityDatum.salt, *(uint16_t*)ourObjectHeader));
+
+
 		if (outObjectType)
 		{
 			auto tempOutObjectType = getObjectType<TemplatedOrCommonObjectType>(ourObjectHeader + objectTypeOffset);
-			PLOG_DEBUG << "as int: " << (int)tempOutObjectType;
+			LOG_ONCE_CAPTURE(PLOG_DEBUG << "as int: " << (int)tObjectType, tObjectType = tempOutObjectType);
 			*outObjectType = tempOutObjectType;
 		}
 
@@ -158,6 +186,24 @@ public:
 	}
 
 
+
+	virtual bool isValidDatum(Datum entityDatum) override
+	{
+		if (objectMetaDataTable_cached == 0)
+		{
+			// resolve cache
+			PLOG_INFO << "resolving getObjectAddress caches";
+			if (!objectMetaDataTable->resolve(&objectMetaDataTable_cached)) throw HCMRuntimeException(std::format("Failed to resolve objectMetaDataTable: {}", MultilevelPointer::GetLastError()));
+
+		}
+
+		auto ourObjectHeader = objectMetaDataTable_cached + (objectHeaderStride * entityDatum.index);
+
+		// first two bytes at object header are the salt.. confirm they match
+		return (*(uint16_t*)ourObjectHeader == entityDatum.salt);
+
+	}
+
 	template <typename TemplatedOrCommonObjectType>
 	uintptr_t getObjectAddress(Datum entityDatum, TemplatedOrCommonObjectType* outObjectType)
 	{
@@ -171,12 +217,21 @@ public:
 
 		}
 
+		// TODO:: ADD SALT CHECK, check that it matches what's listed in the header table, throw if not.
+		// Maybe also add a bool isDatumValid(Datum, TemplatedOrCommonObjectType) func
+		//static_assert(true == false && "DEAR GOD BURNT DON'T FORGET");
+
 		auto ourObjectHeader = objectMetaDataTable_cached + (objectHeaderStride * entityDatum.index);
+
+
+		// first two bytes at object header are the salt.. confirm they match
+		if (*(uint16_t*)ourObjectHeader != entityDatum.salt) throw HCMRuntimeException(std::format("Mismatched datum salt! expected: {:X}, observed: {:X}", entityDatum.salt, *(uint16_t*)ourObjectHeader));
+
 
 		if (outObjectType)
 		{
 			auto tempOutObjectType = getObjectType<TemplatedOrCommonObjectType>(ourObjectHeader + objectTypeOffset);
-			PLOG_DEBUG << "as int: " << (int)tempOutObjectType;
+			LOG_ONCE_CAPTURE(PLOG_DEBUG << "as int: " << (int)tObjectType, tObjectType = tempOutObjectType);
 			*outObjectType = tempOutObjectType;
 		}
 
@@ -240,6 +295,9 @@ GetObjectAddress::GetObjectAddress(GameState game, IDIContainer& dicon)
 }
 GetObjectAddress::~GetObjectAddress() = default;
 
+
+bool GetObjectAddress::isValidDatum(Datum entityDatum) { return pimpl->isValidDatum(entityDatum); }
+
 uintptr_t GetObjectAddress::getObjectAddress(Datum entityDatum) { return pimpl->getObjectAddressNoObj(entityDatum); }
 
 template <typename TemplatedObjectType>
@@ -269,90 +327,3 @@ uintptr_t GetObjectAddress::getObjectAddress<HaloReachObjectType>(Datum datum, H
 
 template <>
 uintptr_t GetObjectAddress::getObjectAddress<Halo4ObjectType>(Datum datum, Halo4ObjectType* outObjectType) { return pimpl->getObjectAddressTemplated(datum, outObjectType); }
-
-//
-//// coooooould change the implementation to do the lookup manually. then it could work with multiple kinds of tables..
-//
-//typedef int32_t enumBitmask;
-//
-//extern "C" typedef uintptr_t __fastcall getObjectAddressFunc(Datum datum, enumBitmask expectedObjectTypeBitMask);
-//
-//// Just calls the games inbuilt function for resolving object addreses from datum
-//class GetObjectAddress::GetObjectAddressImpl
-//{
-//	GameState mGame;
-//
-//
-//	// data
-//	std::shared_ptr<MultilevelPointer> getObjectAddressFunction;
-//
-//	template <typename TemplatedObjectType>
-//	enumBitmask expectedObjectTypeToBitmask(std::set <TemplatedObjectType> expectedObjectTypes)
-//	{
-//		// the games function actually takes a bit mask, so you can match against multiple expected object types.
-//		if (expectedObjectTypes.empty()) return -1;
-//		
-//		enumBitmask out;
-//		for (auto& expectedObjectType : expectedObjectTypes)
-//		{
-//			if ((int32_t)expectedObjectType == -1) return -1; // null means catch all
-//			out = out | ((int32_t)1 << (int32_t)expectedObjectType); // set bit at nth position where n = expectedObjectType
-//		}
-//		return out;
-//	}
-//
-//public:
-//
-//	template <typename TemplatedObjectType>
-//	uintptr_t getObjectAddress(Datum datum, std::set < TemplatedObjectType> expectedObjectTypes)
-//	{
-//		LOG_ONCE(PLOG_DEBUG << "getObjectAddress");
-//
-//		// resolve pointer to games getObjectAddressFunction
-//		uintptr_t p_getObjectAddressFunc;
-//		if (!getObjectAddressFunction->resolve(&p_getObjectAddressFunc)) throw HCMRuntimeException(std::format("could not resolve games getObjectAddressFunc: {}", MultilevelPointer::GetLastError()));
-//
-//		LOG_ONCE_CAPTURE(PLOG_DEBUG << "p_getObjectAddressFunc: " << pget, pget = p_getObjectAddressFunc);
-//
-//		LOG_ONCE(PLOG_DEBUG << "calling games getObjectAddressFunc");
-//		
-//		auto result = ((getObjectAddressFunc*)p_getObjectAddressFunc)(datum, expectedObjectTypeToBitmask<TemplatedObjectType>(expectedObjectTypes));
-//		if (!result) throw HCMRuntimeException(std::format("null object address for datum: {:X}, with bitmask {}", datum.operator unsigned int(), expectedObjectTypeToBitmask<TemplatedObjectType>(expectedObjectTypes)));
-//		return result;
-//	}
-//
-//	GetObjectAddressImpl(GameState game, IDIContainer& dicon) 
-//		: mGame(game)
-//	{
-//		getObjectAddressFunction = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(getObjectAddressFunction), game);
-//	}
-//};
-//
-//GetObjectAddress::GetObjectAddress(GameState game, IDIContainer& dicon) : pimpl(std::make_unique<GetObjectAddressImpl>(game, dicon)) {}
-//GetObjectAddress::~GetObjectAddress() = default;
-//
-//
-//uintptr_t GetObjectAddress::getObjectAddress(Datum d, std::set < CommonObjectType> o) { return pimpl->getObjectAddress<CommonObjectType>(d, o); }
-//template <typename TemplatedObjectType>
-//uintptr_t GetObjectAddress::getObjectAddress(Datum d, std::set < TemplatedObjectType> o) { return pimpl->getObjectAddress<TemplatedObjectType>(d, o); }
-//
-//
-//template <>
-//uintptr_t GetObjectAddress::getObjectAddress<Halo1ObjectType>(Datum d, std::set<Halo1ObjectType> o) { return pimpl->getObjectAddress< Halo1ObjectType>(d, o); }
-//
-//template <>
-//uintptr_t GetObjectAddress::getObjectAddress<Halo2ObjectType>(Datum d, std::set < Halo2ObjectType> o) { return pimpl->getObjectAddress< Halo2ObjectType>(d, o); }
-//
-//template <>
-//uintptr_t GetObjectAddress::getObjectAddress<Halo3ObjectType>(Datum d, std::set < Halo3ObjectType> o) { return pimpl->getObjectAddress< Halo3ObjectType>(d, o); }
-//
-//template <>
-//uintptr_t GetObjectAddress::getObjectAddress<Halo3ODSTObjectType>(Datum d, std::set < Halo3ODSTObjectType> o) { return pimpl->getObjectAddress< Halo3ODSTObjectType>(d, o); }
-//
-//template <>
-//uintptr_t GetObjectAddress::getObjectAddress<HaloReachObjectType>(Datum d, std::set < HaloReachObjectType> o) { return pimpl->getObjectAddress< HaloReachObjectType>(d, o); }
-//
-//template <>
-//uintptr_t GetObjectAddress::getObjectAddress<Halo4ObjectType>(Datum d, std::set < Halo4ObjectType> o) { return pimpl->getObjectAddress< Halo4ObjectType>(d, o); }
-//
-//

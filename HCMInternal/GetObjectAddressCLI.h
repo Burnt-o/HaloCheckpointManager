@@ -50,7 +50,8 @@ private:
 
 			PLOG_DEBUG << "onGetObjectAddressGUIEvent processing datum: " << actualDatum << " for game: " << mGame.toString();
 
-			auto objectAddress = getObjectAddress->getObjectAddress(actualDatum);
+			CommonObjectType objectType;
+			auto objectAddress = getObjectAddress->getObjectAddress(actualDatum, &objectType);
 
 			lockOrThrow(messagesGUIWeak, messagesGUI);
 
@@ -58,7 +59,7 @@ private:
 			ss << std::hex << std::uppercase << objectAddress;
 			PLOG_VERBOSE << "Object Address: " << ss.str();
 
-			messagesGUI->addMessage(std::format("Object Address: 0x{}", ss.str()));
+			messagesGUI->addMessage(std::format("Object Address: 0x{}\nObject Type: {}", ss.str(), magic_enum::enum_name<CommonObjectType>(objectType)));
 			ImGui::SetClipboardText(ss.str().c_str());
 		}
 		catch (HCMRuntimeException ex)

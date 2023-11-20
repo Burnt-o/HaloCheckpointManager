@@ -5,6 +5,7 @@
 #include "ObjectTypes.h"
 #include "IMakeOrGetCheat.h"
 #include "GetHavokAnchorPoint.h"
+#include "GetBipedsVehicleDatum.h"
 
 class GetObjectPhysicsH1 : public IGetObjectPhysics
 {
@@ -14,21 +15,22 @@ private:
 
 	// injected services
 	std::weak_ptr< GetObjectAddress> getObjectAddressWeak;
+	std::weak_ptr< GetBipedsVehicleDatum> getBipedsVehicleDatumWeak;
 
 	//data
 	enum class physicsObjectDataFields { position, velocity };
 	std::shared_ptr<DynamicStruct<physicsObjectDataFields>> physicsObjectDataStruct;
 
-	enum class bipedDataFields { currentVehicleDatum};
-	std::shared_ptr<DynamicStruct<bipedDataFields>> bipedDataStruct;
+
 public:
 	GetObjectPhysicsH1(GameState game, IDIContainer& dicon)
 	{
 		getObjectAddressWeak = resolveDependentCheat(GetObjectAddress);
+		getBipedsVehicleDatumWeak = resolveDependentCheat(GetBipedsVehicleDatum);
 
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
-		bipedDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
+
 	}
 
 
@@ -56,15 +58,17 @@ public:
 		{
 			LOG_ONCE(PLOG_DEBUG << "Object is biped: checking if in vehicle");
 			// get bipeds vehicle datum
-			bipedDataStruct->currentBaseAddress = physicsObjectAddress;
-			Datum bipedsVehicleDatum = *bipedDataStruct->field<Datum>(bipedDataFields::currentVehicleDatum);
+			lockOrThrow(getBipedsVehicleDatumWeak, getBipedsVehicleDatum);
+			Datum bipedsVehicleDatum = getBipedsVehicleDatum->getBipedsVehicleDatum(physicsObjectAddress);
 
 			if (!bipedsVehicleDatum.isNull())
 			{
-				LOG_ONCE(PLOG_DEBUG << "Promoting to vehicles datum");
+				LOG_ONCE_CAPTURE(PLOG_DEBUG << "Promoting to vehicles datum: " << vDatum, vDatum = bipedsVehicleDatum);
 				// promote biped to vehicle
-				physicsObjectAddress = getObjectAddress->getObjectAddress(datum, &thisObjectTypeEnum);
-				if (thisObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(thisObjectTypeEnum)));
+				CommonObjectType vehiObjectTypeEnum;
+				physicsObjectAddress = getObjectAddress->getObjectAddress(bipedsVehicleDatum, &vehiObjectTypeEnum);
+				if (vehiObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead. BipedVehicleDatum: {}", magic_enum::enum_name(vehiObjectTypeEnum), bipedsVehicleDatum.toString()));
+				thisObjectTypeEnum = vehiObjectTypeEnum;
 			}
 		}	
 
@@ -102,15 +106,17 @@ public:
 		{
 			LOG_ONCE(PLOG_DEBUG << "Object is biped: checking if in vehicle");
 			// get bipeds vehicle datum
-			bipedDataStruct->currentBaseAddress = physicsObjectAddress;
-			Datum bipedsVehicleDatum = *bipedDataStruct->field<Datum>(bipedDataFields::currentVehicleDatum);
+			lockOrThrow(getBipedsVehicleDatumWeak, getBipedsVehicleDatum);
+			Datum bipedsVehicleDatum = getBipedsVehicleDatum->getBipedsVehicleDatum(physicsObjectAddress);
 
 			if (!bipedsVehicleDatum.isNull())
 			{
-				LOG_ONCE(PLOG_DEBUG << "Promoting to vehicles datum");
+				LOG_ONCE_CAPTURE(PLOG_DEBUG << "Promoting to vehicles datum: " << vDatum, vDatum = bipedsVehicleDatum);
 				// promote biped to vehicle
-				physicsObjectAddress = getObjectAddress->getObjectAddress(datum, &thisObjectTypeEnum);
-				if (thisObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(thisObjectTypeEnum)));
+				CommonObjectType vehiObjectTypeEnum;
+				physicsObjectAddress = getObjectAddress->getObjectAddress(bipedsVehicleDatum, &vehiObjectTypeEnum);
+				if (vehiObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead. BipedVehicleDatum: {}", magic_enum::enum_name(vehiObjectTypeEnum), bipedsVehicleDatum.toString()));
+				thisObjectTypeEnum = vehiObjectTypeEnum;
 			}
 		}
 
@@ -138,27 +144,26 @@ private:
 
 	// injected services
 	std::weak_ptr< GetObjectAddress> getObjectAddressWeak;
+	std::weak_ptr< GetBipedsVehicleDatum> getBipedsVehicleDatumWeak;
 	std::weak_ptr< GetHavokAnchorPoint> getHavokAnchorPointWeak;
 
 	//data
 	enum class physicsObjectDataFields { havokComponentDatum };
 	std::shared_ptr<DynamicStruct<physicsObjectDataFields>> physicsObjectDataStruct;
 
-	enum class bipedDataFields { currentVehicleDatum };
-	std::shared_ptr<DynamicStruct<bipedDataFields>> bipedDataStruct;
 
-	enum class havokComponentDataFields { position, visualPosition, velocity };
-	std::shared_ptr<DynamicStruct<havokComponentDataFields>> havokAnchorPointDataStruct;
+	enum class havokAnchorDataFields { position, visualPosition, velocity };
+	std::shared_ptr<DynamicStruct<havokAnchorDataFields>> havokAnchorPointDataStruct;
 public:
 	GetObjectPhysicsHavokVisualHavok(GameState game, IDIContainer& dicon)
 	{
 		getObjectAddressWeak = resolveDependentCheat(GetObjectAddress);
 		getHavokAnchorPointWeak = resolveDependentCheat(GetHavokAnchorPoint);
+		getBipedsVehicleDatumWeak = resolveDependentCheat(GetBipedsVehicleDatum);
 
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
-		havokAnchorPointDataStruct = DynamicStructFactory::make<havokComponentDataFields>(ptr, game);
-		bipedDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
+		havokAnchorPointDataStruct = DynamicStructFactory::make<havokAnchorDataFields>(ptr, game);
 	}
 
 
@@ -187,14 +192,15 @@ public:
 		{
 			LOG_ONCE(PLOG_DEBUG << "Object is biped: checking if in vehicle");
 			// need to check if the biped is in a vehicle- if so, we want to return the vehicles data instead of the bipeds
-			bipedDataStruct->currentBaseAddress = objectAddress;
-			auto* bipedsVehicleDatum = bipedDataStruct->field<Datum>(bipedDataFields::currentVehicleDatum);
-			if (!bipedsVehicleDatum->isNull())
+			lockOrThrow(getBipedsVehicleDatumWeak, getBipedsVehicleDatum);
+			Datum bipedsVehicleDatum = getBipedsVehicleDatum->getBipedsVehicleDatum(datum);
+			if (!bipedsVehicleDatum.isNull())
 			{
-				LOG_ONCE(PLOG_DEBUG << "Promoting to vehicles datum");
-				return getObjectPositionMutableAndVisual(*bipedsVehicleDatum);
-				//objectAddress = getObjectAddress->getObjectAddress(*bipedsVehicleDatum, &thisObjectTypeEnum);
-				//if (thisObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(thisObjectTypeEnum)));
+				LOG_ONCE_CAPTURE(PLOG_DEBUG << "Promoting to vehicles datum: " << vDatum, vDatum = bipedsVehicleDatum);
+				CommonObjectType vehiObjectTypeEnum;
+				auto vehiObjectAddress = getObjectAddress->getObjectAddress(bipedsVehicleDatum, &vehiObjectTypeEnum);
+				if (vehiObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(vehiObjectTypeEnum)));
+				return getObjectPositionMutableAndVisual(bipedsVehicleDatum);
 			}
 		}
 
@@ -204,8 +210,8 @@ public:
 
 		havokAnchorPointDataStruct->currentBaseAddress = havokAnchorPointAddress;
 
-		auto* outRealPos = havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokComponentDataFields::position);
-		auto* outVisPos = havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokComponentDataFields::visualPosition);
+		auto* outRealPos = havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokAnchorDataFields::position);
+		auto* outVisPos = havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokAnchorDataFields::visualPosition);
 
 		return { outRealPos , outVisPos };
 
@@ -230,14 +236,16 @@ public:
 		{
 			LOG_ONCE(PLOG_DEBUG << "Object is biped: checking if in vehicle");
 			// need to check if the biped is in a vehicle- if so, we want to return the vehicles data instead of the bipeds
-			bipedDataStruct->currentBaseAddress = objectAddress;
-			auto* bipedsVehicleDatum = bipedDataStruct->field<Datum>(bipedDataFields::currentVehicleDatum);
-			if (!bipedsVehicleDatum->isNull())
+			lockOrThrow(getBipedsVehicleDatumWeak, getBipedsVehicleDatum);
+			Datum bipedsVehicleDatum = getBipedsVehicleDatum->getBipedsVehicleDatum(datum);
+
+			if (!bipedsVehicleDatum.isNull())
 			{
-				LOG_ONCE(PLOG_DEBUG << "Promoting to vehicles datum");
-				return getObjectVelocityMutable(*bipedsVehicleDatum);
-				//objectAddress = getObjectAddress->getObjectAddress(*bipedsVehicleDatum, &thisObjectTypeEnum);
-				//if (thisObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(thisObjectTypeEnum)));
+				LOG_ONCE_CAPTURE(PLOG_DEBUG << "Promoting to vehicles datum: " << vDatum, vDatum = bipedsVehicleDatum);
+				CommonObjectType vehiObjectTypeEnum;
+				auto vehiObjectAddress = getObjectAddress->getObjectAddress(bipedsVehicleDatum, &vehiObjectTypeEnum);
+				if (vehiObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(vehiObjectTypeEnum)));
+				return getObjectVelocityMutable(bipedsVehicleDatum);
 			}
 		}
 
@@ -247,7 +255,7 @@ public:
 
 		havokAnchorPointDataStruct->currentBaseAddress = havokAnchorPointAddress;
 
-		return havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokComponentDataFields::velocity);
+		return havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokAnchorDataFields::velocity);
 	}
 };
 
@@ -262,26 +270,26 @@ private:
 	// injected services
 	std::weak_ptr< GetObjectAddress> getObjectAddressWeak;
 	std::weak_ptr< GetHavokAnchorPoint> getHavokAnchorPointWeak;
+	std::weak_ptr< GetBipedsVehicleDatum> getBipedsVehicleDatumWeak;
 
 	//data
 	enum class physicsObjectDataFields { havokComponentDatum, visualPosition };
 	std::shared_ptr<DynamicStruct<physicsObjectDataFields>> physicsObjectDataStruct;
 
-	enum class bipedDataFields { currentVehicleDatum };
-	std::shared_ptr<DynamicStruct<bipedDataFields>> bipedDataStruct;
 
-	enum class havokComponentDataFields { position, velocity };
-	std::shared_ptr<DynamicStruct<havokComponentDataFields>> havokAnchorPointDataStruct;
+	enum class havokAnchorDataFields { position, velocity };
+	std::shared_ptr<DynamicStruct<havokAnchorDataFields>> havokAnchorPointDataStruct;
 public:
 	GetObjectPhysicsHavokVisualObject(GameState game, IDIContainer& dicon)
 	{
 		getObjectAddressWeak = resolveDependentCheat(GetObjectAddress);
+		getBipedsVehicleDatumWeak = resolveDependentCheat(GetBipedsVehicleDatum);
 		getHavokAnchorPointWeak = resolveDependentCheat(GetHavokAnchorPoint);
 
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
-		havokAnchorPointDataStruct = DynamicStructFactory::make<havokComponentDataFields>(ptr, game);
-		bipedDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
+		havokAnchorPointDataStruct = DynamicStructFactory::make<havokAnchorDataFields>(ptr, game);
+
 	}
 
 
@@ -310,14 +318,16 @@ public:
 		{
 			LOG_ONCE(PLOG_DEBUG << "Object is biped: checking if in vehicle");
 			// need to check if the biped is in a vehicle- if so, we want to return the vehicles data instead of the bipeds
-			bipedDataStruct->currentBaseAddress = objectAddress;
-			auto* bipedsVehicleDatum = bipedDataStruct->field<Datum>(bipedDataFields::currentVehicleDatum);
-			if (!bipedsVehicleDatum->isNull())
+			lockOrThrow(getBipedsVehicleDatumWeak, getBipedsVehicleDatum);
+			Datum bipedsVehicleDatum = getBipedsVehicleDatum->getBipedsVehicleDatum(datum);
+
+			if (!bipedsVehicleDatum.isNull())
 			{
-				LOG_ONCE(PLOG_DEBUG << "Promoting to vehicles datum");
-				return getObjectPositionMutableAndVisual(*bipedsVehicleDatum);
-				//objectAddress = getObjectAddress->getObjectAddress(*bipedsVehicleDatum, &thisObjectTypeEnum);
-				//if (thisObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(thisObjectTypeEnum)));
+				LOG_ONCE_CAPTURE(PLOG_DEBUG << "Promoting to vehicles datum: " << vDatum, vDatum = bipedsVehicleDatum);
+				CommonObjectType vehiObjectTypeEnum;
+				auto vehiObjectAddress = getObjectAddress->getObjectAddress(bipedsVehicleDatum, &vehiObjectTypeEnum);
+				if (vehiObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(vehiObjectTypeEnum)));
+				return getObjectPositionMutableAndVisual(bipedsVehicleDatum);
 			}
 		}
 
@@ -328,7 +338,7 @@ public:
 		havokAnchorPointDataStruct->currentBaseAddress = havokAnchorPointAddress;
 
 
-		auto* outRealPos = havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokComponentDataFields::position);
+		auto* outRealPos = havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokAnchorDataFields::position);
 		auto* outVisPos = physicsObjectDataStruct->field<SimpleMath::Vector3>(physicsObjectDataFields::visualPosition);
 
 		return { outRealPos , outVisPos };
@@ -353,14 +363,16 @@ public:
 		{
 			LOG_ONCE(PLOG_DEBUG << "Object is biped: checking if in vehicle");
 			// need to check if the biped is in a vehicle- if so, we want to return the vehicles data instead of the bipeds
-			bipedDataStruct->currentBaseAddress = objectAddress;
-			auto* bipedsVehicleDatum = bipedDataStruct->field<Datum>(bipedDataFields::currentVehicleDatum);
-			if (!bipedsVehicleDatum->isNull())
+			lockOrThrow(getBipedsVehicleDatumWeak, getBipedsVehicleDatum);
+			Datum bipedsVehicleDatum = getBipedsVehicleDatum->getBipedsVehicleDatum(datum);
+
+			if (!bipedsVehicleDatum.isNull())
 			{
-				LOG_ONCE(PLOG_DEBUG << "Promoting to vehicles datum");
-				return getObjectVelocityMutable(*bipedsVehicleDatum);
-				//objectAddress = getObjectAddress->getObjectAddress(*bipedsVehicleDatum, &thisObjectTypeEnum);
-				//if (thisObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(thisObjectTypeEnum)));
+				LOG_ONCE_CAPTURE(PLOG_DEBUG << "Promoting to vehicles datum: " << vDatum, vDatum = bipedsVehicleDatum);
+				CommonObjectType vehiObjectTypeEnum;
+				auto vehiObjectAddress = getObjectAddress->getObjectAddress(bipedsVehicleDatum, &vehiObjectTypeEnum);
+				if (vehiObjectTypeEnum != CommonObjectType::Vehicle) throw HCMRuntimeException(std::format("bipeds Vehicle somehow wasn't a vehicle! Was {} instead", magic_enum::enum_name(vehiObjectTypeEnum)));
+				return getObjectVelocityMutable(bipedsVehicleDatum);
 			}
 		}
 
@@ -370,7 +382,7 @@ public:
 
 		havokAnchorPointDataStruct->currentBaseAddress = havokAnchorPointAddress;
 
-		return havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokComponentDataFields::velocity);
+		return havokAnchorPointDataStruct->field<SimpleMath::Vector3>(havokAnchorDataFields::velocity);
 	}
 };
 

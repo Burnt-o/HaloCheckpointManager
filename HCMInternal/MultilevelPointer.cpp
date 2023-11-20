@@ -18,16 +18,6 @@ bool MultilevelPointer::dereferencePointer(const void* const& base, const std::v
 	{
 		for (int i = 0; i < offsets.size(); i++) //skip the first offset since we already handled it
 		{
-			if (IsBadReadPtr((void*)baseAddress, 8)) // check that it's good to read before we read it
-			{
-				*SetLastErrorByRef() << "dereferencing failed during looping of offsets" << std::endl
-					<< "base: " << base << std::endl
-					<< "offsets index at failure" << i << std::endl
-					<< "offsets.size() " << offsets.size() << std::endl
-					<< "base += offsets[0]: " << (void*)baseAddress << std::endl
-					<< "bad read address: " << base << std::endl;
-				return false;
-			}
 
 			if (i == 0)
 			{
@@ -35,6 +25,42 @@ bool MultilevelPointer::dereferencePointer(const void* const& base, const std::v
 			}
 			else
 			{
+				if (IsBadReadPtr((void*)baseAddress, 8)) // check that it's good to read before we read it
+				{
+					std::ostringstream err;
+					
+					err << "dereferencing failed during looping of offsets" << std::endl
+						<< "base: " << base << std::endl
+						<< "offsets index at failure" << i << std::endl
+						<< "offsets.size() " << offsets.size() << std::endl;
+
+
+					uintptr_t debugBaseAddress = (uintptr_t)base;
+					for (int j = 0; j <= i; j++)
+					{
+						if (j == 0)
+						{
+							debugBaseAddress += offsets[0];
+							err << "base += offsets[0]: " << std::hex << debugBaseAddress;
+						}
+						else if (j != i)
+						{
+							debugBaseAddress = (uintptr_t) * (void**)debugBaseAddress; // read the value at baseaddress and assign it to base address
+							err << "base dereferenced: " << debugBaseAddress << std::endl;
+							debugBaseAddress += offsets[j]; // add the offset
+							err << "base dereference + offset[" << j << "]: " << debugBaseAddress << std::endl;
+						}
+						else
+						{
+							err << "bad read address: " << baseAddress << " at index " << j << " out of " << offsets.size() << std::endl;
+						}
+					}
+
+
+					*SetLastErrorByRef() << err.str();
+					return false;
+				}
+
 				baseAddress = (uintptr_t) * (void**)baseAddress; // read the value at baseaddress and assign it to base address
 				baseAddress += offsets[i]; // add the offset
 			}

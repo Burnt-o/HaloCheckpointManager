@@ -15,7 +15,7 @@ struct Datum
 
 	friend std::ostream& operator<<(std::ostream& os, const Datum& dt)
 	{
-		os << std::hex << "0x" << (uint32_t)dt;
+		os << std::hex << "0x" << std::uppercase << (uint32_t)dt << std::nouppercase;
 		return os;
 	}
 
@@ -31,7 +31,7 @@ struct Datum
 	std::string toString()
 	{
 		std::stringstream ss;
-		ss << this;
+		ss << *this;
 		return ss.str();
 	}
 

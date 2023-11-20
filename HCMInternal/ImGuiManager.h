@@ -36,7 +36,8 @@ private:
 	bool m_isImguiInitialized = false;
 
 	// Actual ImGui resources
-	ImFont* mDefaultFont = nullptr; // unused for now. In case we wanted to change the default font (or it's size)
+	ImFont* mRescalableMonospacedFont = nullptr; // initialised in initializeImGuiResources, used in background overlays
+
 
 	eventpp::ScopedRemover<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> testPresentCallback;
 

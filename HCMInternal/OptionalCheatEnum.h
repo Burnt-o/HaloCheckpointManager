@@ -36,7 +36,14 @@ GetHavokAnchorPoint,\
 UnfreezeObjectPhysics,\
 NaturalCheckpointDisable,\
 InfiniteAmmo,\
-BottomlessClip
+BottomlessClip,\
+DisplayPlayerInfo,\
+GetAggroData,\
+GetObjectHealth,\
+GetTagName,\
+GetObjectTagName,\
+GetBipedsVehicleDatum,\
+GetNextObjectDatum
 
 
 enum class OptionalCheatEnum {

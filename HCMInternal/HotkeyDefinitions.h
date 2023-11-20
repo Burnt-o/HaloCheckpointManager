@@ -13,7 +13,7 @@ public:
 		PLOG_DEBUG << "HotkeyDefinitions constructor";
 
 
-		assert(std::size(allHotkeys) == hotkeyEnumCount, "Bad hotkey definition count - do you have a hotkey defined for each enum entry?");
+		assert(std::size(allHotkeys) == hotkeyEnumCount && "Bad hotkey definition count - do you have a hotkey defined for each enum entry?");
 	}
 
 	~HotkeyDefinitions()
@@ -124,6 +124,11 @@ private:
 
 				initHotkey(bottomlessClip,
 		mSettings->bottomlessClipHotkeyEvent,
+		vvk{}),
+
+
+				initHotkey(display2DInfo,
+		mSettings->display2DInfoHotkeyEvent,
 		vvk{}),
 
 

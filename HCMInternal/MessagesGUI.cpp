@@ -33,7 +33,7 @@ void MessagesGUI::iterateMessages()
 	std::erase_if(mMessages, [&currentTime](const auto& message)
 		{
 			bool erase = message.messageAge > messageExpiryTimeout;
-			if (erase) PLOG_VERBOSE << "erasing expired message";
+			//if (erase) PLOG_VERBOSE << "erasing expired message";
 			return erase;
 		});
 

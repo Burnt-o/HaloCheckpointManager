@@ -78,8 +78,8 @@
 	((invulnGUI, (ALL_SUPPORTED_GAMES)))\
 	((invulnerabilitySettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 	((invulnNPCGUI, (ALL_SUPPORTED_GAMES)))\
-	((infiniteAmmoGUI, (ALL_SUPPORTED_GAMES)))\
-	((bottomlessClipGUI, (ALL_SUPPORTED_GAMES)))\
+	((infiniteAmmoGUI, (Halo1, Halo2)))\
+	((bottomlessClipGUI, (Halo1, Halo2)))\
 	((aiFreezeGUI, (ALL_SUPPORTED_GAMES)))\
 	((medusaGUI, (Halo1, Halo2)))\
 	((forceTeleportGUI, (ALL_SUPPORTED_GAMES)))\
@@ -104,6 +104,40 @@
 		((forceLaunchManual, (ALL_SUPPORTED_GAMES)))\
 			((forceLaunchAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
+	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoShowGameTick, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoShowAggro, (Halo1)))\
+			((display2DInfoShowNextObjectDatum, (Halo2)))\
+			((display2DInfoTrackPlayer, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowPlayerViewAngle, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowPlayerPosition, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowPlayerVelocity, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowPlayerVelocityAbs, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowPlayerVelocityXY, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowPlayerVelocityXYZ, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowPlayerHealth, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowPlayerRechargeCooldown, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowPlayerVehicleHealth, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoTrackCustomObject, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoCustomObjectDatum, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowEntityObjectType, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowEntityTagName, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowEntityPosition, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowEntityVelocity, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowEntityVelocityAbs, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowEntityVelocityXY, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowEntityVelocityXYZ, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowEntityHealth, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowEntityRechargeCooldown, (ALL_SUPPORTED_GAMES)))\
+					((display2DInfoShowEntityVehicleHealth, (ALL_SUPPORTED_GAMES)))\
+	((display2DInfoSettingsVisualSubheading, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoAnchorCorner, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoScreenOffset, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoFontSize, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoFontColour, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))
 

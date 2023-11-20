@@ -56,6 +56,9 @@
     <Filter Include="Services\Control">
       <UniqueIdentifier>{ba0b1f25-6689-445e-b492-ab1646c72bc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\DataStringGetters">
+      <UniqueIdentifier>{440cedb9-6e99-4d4f-963c-6760eaa31a6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -464,6 +467,54 @@
     <ClInclude Include="BottomlessClip.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="DisplayPlayerInfo.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIColourPickerAlpha.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIInputInt.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIVec2.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIComboEnum.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GetAggroData.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetObjectHealth.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetEntityDataAsString.h">
+      <Filter>Services\OptionalCheats\Implementations\DataStringGetters</Filter>
+    </ClInclude>
+    <ClInclude Include="GetPlayerDataAsString.h">
+      <Filter>Services\OptionalCheats\Implementations\DataStringGetters</Filter>
+    </ClInclude>
+    <ClInclude Include="GetGameDataAsString.h">
+      <Filter>Services\OptionalCheats\Implementations\DataStringGetters</Filter>
+    </ClInclude>
+    <ClInclude Include="GetObjectTagName.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetTagName.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetBipedsVehicleDatum.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Conduit_ITCFont.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="ProggyVectorRegularFont.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="GetNextObjectDatum.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -636,6 +687,33 @@
     </ClCompile>
     <ClCompile Include="InfiniteAmmo.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="DisplayPlayerInfo.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="GetAggroData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetObjectHealth.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetObjectTagName.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetTagName.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetBipedsVehicleDatum.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ProggyVectorRegularFont.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="Conduit_ITCFont.cpp">
+      <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="GetNextObjectDatum.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

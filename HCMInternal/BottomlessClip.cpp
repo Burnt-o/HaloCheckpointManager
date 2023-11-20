@@ -83,6 +83,10 @@ BottomlessClip::BottomlessClip(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<BottomlessClipImplSetFlag<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
+	case GameState::Value::Halo2:
+		pimpl = std::make_unique<BottomlessClipImplSetFlag<GameState::Value::Halo2>>(gameImpl, dicon);
+		break;
+
 
 	default:
 		throw HCMInitException("not impl yet");

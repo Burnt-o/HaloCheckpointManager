@@ -36,17 +36,17 @@ public:
 template<typename fieldEnum>
 class StrideableDynamicStruct : public DynamicStruct<fieldEnum>
 {
-private:
-	int StrideSize;
+public:
+	int StrideSize; // I intended to keep this private but "friend class DynamicStructFactory" isn't working how I thought it would
 public: 
 	void operator++ () noexcept
 	{
-		this.currentBaseAddress += StrideSize;
+		this->currentBaseAddress += StrideSize;
 	}
 
 	void setIndex(int i) noexcept
 	{
-		this.currentBaseAddress += (StrideSize * i);
+		this->currentBaseAddress += (StrideSize * i);
 	}
 
 

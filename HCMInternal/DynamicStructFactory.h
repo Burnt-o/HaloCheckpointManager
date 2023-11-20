@@ -58,8 +58,7 @@ public:
 		if (!stringFieldOffsetMap->contains("StrideSize")) throw HCMInitException("StrideableDynamicStruct missing entry for STrideSize");
 
 		// assign StrideableDynamicStruct's stride size
-		outDynStruct.StrideSize = stringFieldOffsetMap.at("StrideSize");
-
+		outDynStruct->StrideSize = stringFieldOffsetMap->at("StrideSize");
 		// for each field value in the field enum
 		magic_enum::enum_for_each<fieldEnum>([fom = &outDynStruct->fieldOffsetMap, sfom = stringFieldOffsetMap.get(), ecn = enumClassName](auto field)
 			{

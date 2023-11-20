@@ -18,10 +18,21 @@
 #include "GUIRadioGroup.h"
 #include "GUIFloat.h"
 #include "GUIVec3.h"
+#include "GUIVec2.h"
 #include "GUIVec3RelativeOrAbsolute.h"
 #include "GUIToggleWithChildren.h"
 #include "GUIInputString.h"
 #include "GUIInputDWORD.h"
+#include "GUIColourPickerAlpha.h"
+#include "GUIInputInt.h"
+#include "GUIComboEnum.h"
+
+
+
+
+
+
+
 
 class GUIElementConstructor::GUIElementConstructorImpl {
 private:
@@ -414,7 +425,7 @@ private:
 									}));
 
 							case GUIElementEnum::forceTeleportRelativeVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
 									(game, ToolTipCollection("How far forward/right/up to teleport the player, relative to their look-direction"), "Teleport: ", settings->forceTeleportRelativeVec3));
 
 
@@ -432,7 +443,7 @@ private:
 									}));
 
 							case GUIElementEnum::forceTeleportAbsoluteVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
 									(game, ToolTipCollection("The xyz world coordinates to teleport to"), "Teleport: ", settings->forceTeleportAbsoluteVec3));
 
 
@@ -482,7 +493,7 @@ private:
 									}));
 
 							case GUIElementEnum::forceLaunchRelativeVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
 									(game, ToolTipCollection("How much velocity to apply in the forward/right/up directions, relative to the players look-direction"), "Launch: ", settings->forceLaunchRelativeVec3));
 
 
@@ -500,14 +511,222 @@ private:
 
 
 							case GUIElementEnum::forceLaunchAbsoluteVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
 									(game, ToolTipCollection("How much velocity to add, in absolute world-axes"), "Launch: ", settings->forceLaunchAbsoluteVec3));
 
 
 
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, ToolTipCollection("this is where overlay stuff would go IF I HAD ANY"), "Overlays", headerChildElements{ std::nullopt }));
+					(game, ToolTipCollection("Overlays that various information over the top of the game view"), "Overlays", headerChildElements
+						{ 
+							createNestedElement(GUIElementEnum::display2DInfoToggleGUI),
+							createNestedElement(GUIElementEnum::display2DInfoSettingsInfoSubheading),
+							createNestedElement(GUIElementEnum::display2DInfoSettingsVisualSubheading),
+						}));
+
+
+				case GUIElementEnum::display2DInfoToggleGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Displays various player and game information as text on your screen"), HotkeysEnum::display2DInfo, "Display 2D Game Info", settings->display2DInfoToggle));
+
+				case GUIElementEnum::display2DInfoSettingsInfoSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, ToolTipCollection("Control what information should be displayed"), "Info Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::display2DInfoShowGameTick),
+							createNestedElement(GUIElementEnum::display2DInfoShowAggro),
+							createNestedElement(GUIElementEnum::display2DInfoShowNextObjectDatum),
+							createNestedElement(GUIElementEnum::display2DInfoTrackPlayer),
+							createNestedElement(GUIElementEnum::display2DInfoTrackCustomObject),
+							}));
+
+					case GUIElementEnum::display2DInfoShowGameTick:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection(""), std::nullopt, "Show Game Tickcounter", settings->display2DInfoShowGameTick));
+
+
+
+
+					case GUIElementEnum::display2DInfoShowAggro:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection(""), std::nullopt, "Show Aggro info", settings->display2DInfoShowAggro));
+
+
+					case GUIElementEnum::display2DInfoShowNextObjectDatum:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Shows the datum (salt + index) of the next object to spawn. Useful for Halo 2's Arbitary-unit-possession trick."), std::nullopt, "Show Next Object Datum", settings->display2DInfoShowNextObjectDatum));
+
+					case GUIElementEnum::display2DInfoTrackPlayer:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+							(game, ToolTipCollection(""), std::nullopt, "Track Player Entity", settings->display2DInfoTrackPlayer, headerChildElements
+								{
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerViewAngle),
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerPosition),
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerVelocity),
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerHealth),
+								}
+								));
+
+						case GUIElementEnum::display2DInfoShowPlayerViewAngle:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Player View Angle", settings->display2DInfoShowPlayerViewAngle));
+
+
+
+						case GUIElementEnum::display2DInfoShowPlayerPosition:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Position##player", settings->display2DInfoShowPlayerPosition));
+
+						case GUIElementEnum::display2DInfoShowPlayerVelocity:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Velocity##player", settings->display2DInfoShowPlayerVelocity, headerChildElements
+									{
+										createNestedElement(GUIElementEnum::display2DInfoShowPlayerVelocityAbs),
+										createNestedElement(GUIElementEnum::display2DInfoShowPlayerVelocityXY),
+										createNestedElement(GUIElementEnum::display2DInfoShowPlayerVelocityXYZ),
+									}));
+
+							case GUIElementEnum::display2DInfoShowPlayerVelocityAbs:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "As absolute velocity##player", settings->display2DInfoShowPlayerVelocityAbs));
+
+							case GUIElementEnum::display2DInfoShowPlayerVelocityXY:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "As XY magnitude##player", settings->display2DInfoShowPlayerVelocityXY));
+
+							case GUIElementEnum::display2DInfoShowPlayerVelocityXYZ:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "As XYZ magnitude##player", settings->display2DInfoShowPlayerVelocityXYZ));
+
+						case GUIElementEnum::display2DInfoShowPlayerHealth:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Health/Shields##player", settings->display2DInfoShowPlayerHealth, headerChildElements
+									{
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerRechargeCooldown),
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerVehicleHealth),
+									}
+									));
+
+						case GUIElementEnum::display2DInfoShowPlayerRechargeCooldown:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Recharge Cooldown##entity", settings->display2DInfoShowPlayerRechargeCooldown));
+
+							case GUIElementEnum::display2DInfoShowPlayerVehicleHealth:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "Show Vehicle's Health/Shields##player", settings->display2DInfoShowPlayerVehicleHealth));
+
+
+
+
+					case GUIElementEnum::display2DInfoTrackCustomObject:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+							(game, ToolTipCollection(""), std::nullopt, "Track Custom Entity", settings->display2DInfoTrackCustomObject, headerChildElements
+							{
+							createNestedElement(GUIElementEnum::display2DInfoCustomObjectDatum),
+							createNestedElement(GUIElementEnum::display2DInfoShowEntityObjectType),
+							createNestedElement(GUIElementEnum::display2DInfoShowEntityTagName),
+							createNestedElement(GUIElementEnum::display2DInfoShowEntityPosition),
+							createNestedElement(GUIElementEnum::display2DInfoShowEntityVelocity),
+							createNestedElement(GUIElementEnum::display2DInfoShowEntityHealth),
+							}
+							));
+
+						case GUIElementEnum::display2DInfoCustomObjectDatum:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+								(game, ToolTipCollection("Datum of custom object to track"), "Custom entity datum: ", settings->display2DInfoCustomObjectDatum));
+
+
+						case GUIElementEnum::display2DInfoShowEntityObjectType:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Object Type##entity", settings->display2DInfoShowEntityObjectType));
+
+						case GUIElementEnum::display2DInfoShowEntityTagName:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Tag Name##entity", settings->display2DInfoShowEntityTagName));
+
+						case GUIElementEnum::display2DInfoShowEntityPosition:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Position##entity", settings->display2DInfoShowEntityPosition));
+
+						case GUIElementEnum::display2DInfoShowEntityVelocity:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Velocity##entity", settings->display2DInfoShowEntityVelocity, headerChildElements
+									{
+										createNestedElement(GUIElementEnum::display2DInfoShowEntityVelocityAbs),
+										createNestedElement(GUIElementEnum::display2DInfoShowEntityVelocityXY),
+										createNestedElement(GUIElementEnum::display2DInfoShowEntityVelocityXYZ),
+									}));
+
+							case GUIElementEnum::display2DInfoShowEntityVelocityAbs:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "As absolute velocity##entity", settings->display2DInfoShowEntityVelocityAbs));
+
+							case GUIElementEnum::display2DInfoShowEntityVelocityXY:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "As XY magnitude##entity", settings->display2DInfoShowEntityVelocityXY));
+
+							case GUIElementEnum::display2DInfoShowEntityVelocityXYZ:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "As XYZ magnitude##entity", settings->display2DInfoShowEntityVelocityXYZ));
+
+						case GUIElementEnum::display2DInfoShowEntityHealth:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show Health/Shields##entity", settings->display2DInfoShowEntityHealth, headerChildElements
+							{
+								createNestedElement(GUIElementEnum::display2DInfoShowEntityRechargeCooldown),
+								createNestedElement(GUIElementEnum::display2DInfoShowEntityVehicleHealth),
+							}
+							));
+
+							case GUIElementEnum::display2DInfoShowEntityRechargeCooldown:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "Show Recharge Cooldown##entity", settings->display2DInfoShowEntityRechargeCooldown));
+
+							case GUIElementEnum::display2DInfoShowEntityVehicleHealth:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+									(game, ToolTipCollection(""), std::nullopt, "Show Vehicle's Health/Shields##entity", settings->display2DInfoShowEntityVehicleHealth));
+
+
+
+
+				case GUIElementEnum::display2DInfoSettingsVisualSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, ToolTipCollection("Cosmetic/visual settings for how the info should be displayed"), "Visual Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::display2DInfoAnchorCorner),
+							createNestedElement(GUIElementEnum::display2DInfoScreenOffset),
+							createNestedElement(GUIElementEnum::display2DInfoFontSize),
+							createNestedElement(GUIElementEnum::display2DInfoFontColour),
+							createNestedElement(GUIElementEnum::display2DInfoFloatPrecision),
+							createNestedElement(GUIElementEnum::display2DInfoOutline),
+							}));
+
+					case GUIElementEnum::display2DInfoAnchorCorner:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsStateAndEvents::Display2DInfoAnchorEnum>>
+							(game, ToolTipCollection(""), "Corner to Anchor to", settings->display2DInfoAnchorCorner));
+
+					case GUIElementEnum::display2DInfoScreenOffset:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<false, 0>> 
+							(game, ToolTipCollection(""), "Pixel Offset from Corner", settings->display2DInfoScreenOffset));
+
+
+					case GUIElementEnum::display2DInfoFontSize:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt> 
+							(game, ToolTipCollection(""),  "Info Font Size", settings->display2DInfoFontSize));
+
+					case GUIElementEnum::display2DInfoFontColour:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha>
+							(game, ToolTipCollection(""),  "Colour#2dinfo", settings->display2DInfoFontColour));
+
+					case GUIElementEnum::display2DInfoFloatPrecision:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+							(game, ToolTipCollection(""), "Info Decimal Precision", settings->display2DInfoFloatPrecision));
+
+					case GUIElementEnum::display2DInfoOutline:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Adds a black outline to text (has a small negative performance impact)"), std::nullopt, "Info Font Outline", settings->display2DInfoOutline));
+
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

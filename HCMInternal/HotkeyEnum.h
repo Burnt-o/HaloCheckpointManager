@@ -21,7 +21,8 @@ forceTeleport,\
 forceLaunch,\
 naturalCheckpointDisable,\
 infiniteAmmo,\
-bottomlessClip
+bottomlessClip,\
+display2DInfo
 
 
 enum class HotkeysEnum : int {

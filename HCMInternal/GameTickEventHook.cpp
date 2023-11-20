@@ -11,6 +11,7 @@ class GameTickEventHookTemplated : public GameTickEventHook::GameTickEventHookIm
 private:
 	GameState mGame;
 
+	static inline std::atomic_bool gameTickHookRunning = false;
 	static inline GameTickEventHookTemplated<gameT>* instance = nullptr;
 
 	std::shared_ptr<eventpp::CallbackList<void(int)>> gameTickEvent = std::make_shared<eventpp::CallbackList<void(int)>>();
@@ -21,6 +22,7 @@ private:
 	static void tickIncrementHookFunction(SafetyHookContext& ctx)
 	{
 		if (!instance) { PLOG_ERROR << "null GameTickEventHookTemplated instance"; return; }
+		ScopedAtomicBool lock(gameTickHookRunning);
 		int tickCount;
 		if (!instance->tickCounter->readData(&tickCount))
 		{
@@ -42,7 +44,7 @@ public:
 		auto tickIncrementFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickIncrementFunction), game);
 		tickCounter = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickCounter), game);
 		tickIncrementHook = ModuleMidHook::make(game.toModuleName(), tickIncrementFunction, tickIncrementHookFunction); 
-		// hook starts disabled, will be enabled on first call to gameTickSubscribe
+		// hook starts disabled, will be enabled on first call to getGameTickEvent
 
 		instance = this;
 	}
@@ -56,6 +58,16 @@ public:
 	~GameTickEventHookTemplated()
 	{
 		PLOG_DEBUG << "~GameTickEventHookTemplated";
+		if (gameTickHookRunning)
+		{
+			PLOG_INFO << "Waiting for gameTickHook to finish execution";
+			gameTickHookRunning.wait(true);
+		}
+
+		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we unhook
+		tickIncrementHook.reset();
+
+
 	}
 };
 
