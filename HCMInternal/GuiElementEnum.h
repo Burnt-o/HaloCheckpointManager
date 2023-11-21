@@ -139,6 +139,7 @@
 			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraToggleGUI, (ALL_SUPPORTED_GAMES)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))
 
 

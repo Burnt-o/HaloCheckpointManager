@@ -4332,4 +4332,58 @@
 		</Version>
 	</VersionedEntry>
 	<!--#endregion consoleCommand-->
+
+
+	<!--#region freeCamera-->
+
+	<VersionedEntry Name="setCameraDataFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAB0F2D</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="renderPlayerFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB14EC5</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="renderPlayerFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo1">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="cameraDataPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2D9B9C0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="cameraDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<position>0x4</position>
+			<velocity>0x3C</velocity>
+			<forwardLookDir>0x24</forwardLookDir>
+			<upLookDir>0x30</upLookDir>
+			<FOV>0x20</FOV>
+		</Version>
+
+	</VersionedEntry>
+	
+	<!--#endregion freeCamera-->
+
+
+
 </root>

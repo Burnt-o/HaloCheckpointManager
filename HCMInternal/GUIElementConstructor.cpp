@@ -730,7 +730,14 @@ private:
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, ToolTipCollection("this is where camera stuff would go IF I HAD ANY"), "Camera", headerChildElements{ std::nullopt }));
+					(game, ToolTipCollection("Tools to manipulate the camera"), "Camera", headerChildElements
+						{ 
+							createNestedElement(GUIElementEnum::freeCameraToggleGUI),
+						}));
+
+				case GUIElementEnum::freeCameraToggleGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection(""), HotkeysEnum::freeCamera, "Free Camera", settings->freeCameraToggle));
 
 			case GUIElementEnum::theaterHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

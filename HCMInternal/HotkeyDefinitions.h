@@ -131,6 +131,10 @@ private:
 		mSettings->display2DInfoHotkeyEvent,
 		vvk{}),
 
+						initHotkey(freeCamera,
+		mSettings->freeCameraHotkeyEvent,
+		vvk{}),
+
 
 	};
 

@@ -20,7 +20,7 @@ public:
 		mSerialiser->serialise(allSerialisableOptions); 
 	};
 
-	//	hotkeys
+	//	hotkeys - see HotkeyEventsLambdas for how they connect to respective toggle (they just flip the value)
 	std::shared_ptr<ActionEvent> toggleGUIHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> togglePauseHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> speedhackHotkeyEvent = std::make_shared<ActionEvent>();
@@ -31,6 +31,7 @@ public:
 	std::shared_ptr<ActionEvent> infiniteAmmoHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> bottomlessClipHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> display2DInfoHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -493,7 +494,7 @@ public:
 
 	std::shared_ptr<Setting<bool>> display2DInfoTrackCustomObject = std::make_shared<Setting<bool>>
 		(
-			true,
+			false,
 			[](bool in) { return true; },
 			nameof(display2DInfoTrackCustomObject)
 		);
@@ -593,7 +594,7 @@ public:
 
 	std::shared_ptr<Setting<SimpleMath::Vector2>> display2DInfoScreenOffset = std::make_shared<Setting<SimpleMath::Vector2>>
 		(
-			SimpleMath::Vector2{300, 300},
+			SimpleMath::Vector2{400, 400},
 			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
 			nameof(display2DInfoScreenOffset)
 		);
@@ -624,6 +625,13 @@ public:
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoOutline)
+		);
+
+	std::shared_ptr<Setting<bool>> freeCameraToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraToggle)
 		);
 
 	// settings that ought to be serialised/deserialised between HCM runs

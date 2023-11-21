@@ -239,6 +239,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::GetObjectHealth}
 	},
 
+		{ GUIElementEnum::freeCameraToggleGUI,
+{OptionalCheatEnum::FreeCamera}
+	},
 
 
 #ifdef HCM_DEBUG

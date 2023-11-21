@@ -59,6 +59,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\DataStringGetters">
       <UniqueIdentifier>{440cedb9-6e99-4d4f-963c-6760eaa31a6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\Camera">
+      <UniqueIdentifier>{8f023fa3-225e-49d6-a4e9-8be0135cbb84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -155,9 +158,6 @@
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
     <ClInclude Include="ForceCheckpoint.h">
-      <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClInclude>
-    <ClInclude Include="ForceCoreLoad.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
     <ClInclude Include="ForceCoreSave.h">
@@ -515,6 +515,21 @@
     <ClInclude Include="GetNextObjectDatum.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
+    <ClInclude Include="CameraDataPtr.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GetCameraData.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerControlledFreeCamera.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceCoreLoad.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -714,6 +729,15 @@
     </ClCompile>
     <ClCompile Include="GetNextObjectDatum.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCameraData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerControlledFreeCamera.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
