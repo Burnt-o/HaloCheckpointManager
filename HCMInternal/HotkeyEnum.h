@@ -23,7 +23,7 @@ naturalCheckpointDisable,\
 infiniteAmmo,\
 bottomlessClip,\
 display2DInfo,\
-freeCamera
+freeCamera 
 
 
 enum class HotkeysEnum : int {

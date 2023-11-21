@@ -2,9 +2,9 @@
 #include "pch.h"
 struct CameraDataPtr
 {
-	SimpleMath::Vector3* position = nullptr;
-	SimpleMath::Vector3* velocity = nullptr;
-	SimpleMath::Vector3* forwardLookDir = nullptr;
-	SimpleMath::Vector3* upLookDir = nullptr;
-	float* FOV = nullptr;
+	SimpleMath::Vector3* position;
+	SimpleMath::Vector3* velocity;
+	float* FOV;
+	SimpleMath::Vector3* lookDirForward;
+	SimpleMath::Vector3* lookDirUp;
 };

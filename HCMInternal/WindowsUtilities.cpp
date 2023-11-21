@@ -132,3 +132,11 @@ bool fileExists(std::string path)
 		return false;
 	}
 }
+
+
+void move_towards(float& value, float target, float step)
+{
+	value = target < value
+		? std::max(value - step, target)
+		: std::min(value + step, target);
+}

@@ -4365,7 +4365,7 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x2D9B9C0</Offset>
+				<Offset>0x2D9B978</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -4373,11 +4373,11 @@
 
 	<VersionedEntry Name="cameraDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo1">
-			<position>0x4</position>
-			<velocity>0x3C</velocity>
-			<forwardLookDir>0x24</forwardLookDir>
-			<upLookDir>0x30</upLookDir>
-			<FOV>0x20</FOV>
+			<position>0x4C</position>
+			<velocity>0x84</velocity>
+			<FOV>0x68</FOV>
+			<lookDirForward>0x6C</lookDirForward>
+			<lookDirUp>0x78</lookDirUp>
 		</Version>
 
 	</VersionedEntry>

@@ -103,12 +103,18 @@ private:
 	{
 		try
 		{
+
+
 			needToSetupCamera = true;
 			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
 
 			// set hooks 
-			setCameraDataHook->setWantsToBeAttached(newValue);
-			renderPlayerHook->setWantsToBeAttached(newValue);
+			{
+				safetyhook::ThreadFreezer threadFreezer; 
+				setCameraDataHook->setWantsToBeAttached(newValue);
+				renderPlayerHook->setWantsToBeAttached(newValue);
+			}
+
 
 
 			lockOrThrow(mccStateHookWeak, mccStateHook);

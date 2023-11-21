@@ -9,16 +9,15 @@ class GetCameraData::GetCameraDataImpl
 {
 private:
 
-
 	// data
-	enum class cameraDataFields { position, velocity, forwardLookDir, upLookDir, FOV };
+	enum class cameraDataFields { position, velocity, FOV, lookDirForward, lookDirUp};
 	std::shared_ptr<DynamicStruct<cameraDataFields>> cameraDataStruct;
 
 	std::shared_ptr<MultilevelPointer> cameraDataPointer;
 
 
 	bool cacheValid = false;
-	CameraDataPtr cachedCameraData;
+	std::unique_ptr<CameraDataPtr> cachedCameraData;
 
 	//callbacks
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
@@ -48,17 +47,22 @@ public:
 			uintptr_t cameraDataPointerResolved;
 			if (!cameraDataPointer->resolve(&cameraDataPointerResolved)) throw HCMRuntimeException("Failed to resolve cameraDataPointer");
 
+			LOG_ONCE_CAPTURE(PLOG_DEBUG << "cameraDataPointerResolved: " << std::hex << rs, rs = cameraDataPointerResolved);
+
 			cameraDataStruct->currentBaseAddress = cameraDataPointerResolved;
-			cachedCameraData.position = cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::position);
-			cachedCameraData.velocity = cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::velocity);
-			cachedCameraData.forwardLookDir = cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::forwardLookDir);
-			cachedCameraData.upLookDir = cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::upLookDir);
-			cachedCameraData.FOV = cameraDataStruct->field<float>(cameraDataFields::FOV);
+			cachedCameraData = std::make_unique<CameraDataPtr>
+			(
+				cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::position),
+				cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::velocity),
+				cameraDataStruct->field<float>(cameraDataFields::FOV),
+				cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::lookDirForward),
+				cameraDataStruct->field<SimpleMath::Vector3>(cameraDataFields::lookDirUp)
+			);
 
 			cacheValid = true;
 		}
 
-		return cachedCameraData;
+		return *cachedCameraData.get();
 	}
 };
 
