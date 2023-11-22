@@ -40,6 +40,7 @@ private:
 
 	// data
 	bool needToSetupCamera = true;
+	std::shared_ptr<MultilevelPointer> frameDeltaPointer;
 	
 	// event to fire on mcc state change (just set needToSetupCamera to true)
 	void onGameStateChange(const MCCState&)
@@ -85,8 +86,11 @@ private:
 				needToSetupCamera = false;
 			}
 
-			playerControlledFreeCamera->updateCamera(gameCameraData);
+			float frameDelta;
+			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
 
+			playerControlledFreeCamera->updateCameraRotation(gameCameraData, frameDelta);
+			playerControlledFreeCamera->updateCameraPosition(gameCameraData, frameDelta);
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -144,6 +148,7 @@ public:
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerManager>().lock();
+		frameDeltaPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(frameDeltaPointer), game);
 		auto setCameraDataFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(setCameraDataFunction), game);
 		setCameraDataHook = ModuleMidHook::make(game.toModuleName(), setCameraDataFunction, setCameraDataHookFunction);
 

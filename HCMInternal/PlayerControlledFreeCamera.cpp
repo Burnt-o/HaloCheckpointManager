@@ -1,27 +1,20 @@
 #include "pch.h"
 #include "PlayerControlledFreeCamera.h"
 #include "LinearInterpolator.h"
-
+#include "CubicInterpolator.h"
+#include "PointerManager.h"
+#include "MultilevelPointer.h"
 
 
 
 class PlayerControlledFreeCamera::PlayerControlledFreeCameraImpl
 {
 private:
-	LinearInterpolator<SimpleMath::Vector3> accelerator{ 0.05f };
-	LinearInterpolator<SimpleMath::Vector3> acceleratorRot{ 0.5f };
+	CubicInterpolator<SimpleMath::Vector3> accelerator{ 0.05f };
+	CubicInterpolator<SimpleMath::Vector3> acceleratorRot{ 0.05f };
 
-	// runtime camera data
-	//struct CameraData
-	//{
-	//	SimpleMath::Vector3 position;
-	//	SimpleMath::Vector3 velocity;
-	//	SimpleMath::Vector3 forwardLookDir;
-	//	SimpleMath::Vector3 upLookDir;
-	//	SimpleMath::Vector3 targetForwardLookDir;
-	//	SimpleMath::Vector3 targetUpLookDir;
-	//	float FOV;
-	//}mCameraData;
+	std::shared_ptr<MultilevelPointer> playerViewAngle;
+
 
 	bool cameraDataInitialised = false;
 
@@ -36,46 +29,18 @@ private:
 		SimpleMath::Vector3 currentlookDirUp;
 
 		// private data for math
-
-		SimpleMath::Vector3 currentYawPitchRoll; // NOT normalised, these are in radians
-		SimpleMath::Vector3 targetYawPitchRoll; // NOT normalised, these are in radians
+		SimpleMath::Vector3 targetlookDirForward;
+		SimpleMath::Vector3 targetlookDirRight; 
+		SimpleMath::Vector3 targetlookDirUp;
 		SimpleMath::Vector3 targetPosition;
 		float targetFOV;
 
 	}mCameraData;
 
-	void processMyCamera()
+	void processMyCameraPosition(float frameDelta)
 	{
 
-		// todo multiple by frame delta
-		constexpr float cameraSpeed = 0.04f;
-		constexpr float cameraRotationSpeed = 0.005f;
-		constexpr float halfPiPositive = DirectX::XM_PIDIV2;
-		constexpr float halfPiNegative = DirectX::XM_PIDIV2 * -1.0f;
-		constexpr float epsilon = 0.0001f;
-
-		// Section: Rotation
-		if (GetKeyState('J') & 0x8000)
-		{
-			mCameraData.targetYawPitchRoll.x = mCameraData.targetYawPitchRoll.x + cameraRotationSpeed;
-		}
-
-		if (GetKeyState('K') & 0x8000)
-		{
-			mCameraData.targetYawPitchRoll.x = mCameraData.targetYawPitchRoll.x - cameraRotationSpeed;
-		}
-
-		// clamp vertical viewangle to within half-pi of zero to avoid gimbal lok
-		mCameraData.targetYawPitchRoll.y = std::clamp(mCameraData.targetYawPitchRoll.y, halfPiNegative + epsilon, halfPiPositive - epsilon);
-
-		// interpolate currentYawPitchRoll towards target
-		acceleratorRot.interpolate(mCameraData.currentYawPitchRoll, mCameraData.targetYawPitchRoll);
-
-		// convert viewangle to lookdirections
-		auto rotMatrix = SimpleMath::Matrix::CreateFromYawPitchRoll(mCameraData.currentYawPitchRoll);
-		mCameraData.currentlookDirForward = rotMatrix.Forward();
-		mCameraData.currentlookDirRight = rotMatrix.Up();
-		mCameraData.currentlookDirUp = rotMatrix.Right();
+		float cameraSpeed = 5.f * frameDelta;
 
 
 		// Section: Translation
@@ -106,28 +71,99 @@ private:
 		// interpolate camera towards target position
 		accelerator.interpolate(mCameraData.currentPosition, mCameraData.targetPosition);
 
-
-		// problem: the camera doesn't have any "overshoot". this is a matter of taste, but the original debug camera has overshoot.
-		// problem: velocity doesn't follow your lookdir after you stop inputting velocity like the original debug camera has.
-		//	really i oughta just RE how the h1 debug camera does it's math
-		// problem: the vec3 lerp thing is operating on each axis seperately when it needs to work on all together. 
 	}
+
+	static inline int opSetup = 0;
+
+	void processMyCameraRotation(float frameDelta)
+	{
+
+		// todo multiple by frame delta
+		float cameraRotationSpeed = 3.f * frameDelta;
+		constexpr float halfPiPositive = DirectX::XM_PIDIV2;
+		constexpr float halfPiNegative = DirectX::XM_PIDIV2 * -1.0f;
+		constexpr float epsilon = 0.0001f;
+
+		// Section: Rotation
+		// yaw
+		if (GetKeyState('J') & 0x8000)
+		{
+			auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(mCameraData.targetlookDirUp, cameraRotationSpeed);
+			mCameraData.targetlookDirForward = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirForward, rotMat);
+			mCameraData.targetlookDirRight = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirRight, rotMat);
+		}
+
+		if (GetKeyState('K') & 0x8000)
+		{
+			auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(mCameraData.targetlookDirUp, cameraRotationSpeed * -1.f);
+			mCameraData.targetlookDirForward = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirForward, rotMat);
+			mCameraData.targetlookDirRight = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirRight, rotMat);
+		}
+
+		// pitch
+		if (GetKeyState('U') & 0x8000)
+		{
+			auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(mCameraData.targetlookDirRight, cameraRotationSpeed);
+			mCameraData.targetlookDirForward = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirForward, rotMat);
+			mCameraData.targetlookDirUp = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirUp, rotMat);
+		}
+
+		if (GetKeyState('I') & 0x8000)
+		{
+			auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(mCameraData.targetlookDirRight, cameraRotationSpeed * -1.f);
+			mCameraData.targetlookDirForward = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirForward, rotMat);
+			mCameraData.targetlookDirUp = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirUp, rotMat);
+		}
+
+		// roll
+		if (GetKeyState('B') & 0x8000)
+		{
+			auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(mCameraData.targetlookDirForward, cameraRotationSpeed);
+			mCameraData.targetlookDirForward = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirForward, rotMat);
+			mCameraData.targetlookDirUp = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirUp, rotMat);
+		}
+
+		if (GetKeyState('N') & 0x8000)
+		{
+			auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(mCameraData.targetlookDirForward, cameraRotationSpeed * -1.f);
+			mCameraData.targetlookDirRight = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirRight, rotMat);
+			mCameraData.targetlookDirUp = SimpleMath::Vector3::TransformNormal(mCameraData.targetlookDirUp, rotMat);
+		}
+
+		// interpolate camera towards target rotation
+		acceleratorRot.interpolate(mCameraData.currentlookDirForward, mCameraData.targetlookDirForward);
+		acceleratorRot.interpolate(mCameraData.currentlookDirRight, mCameraData.targetlookDirRight);
+		acceleratorRot.interpolate(mCameraData.currentlookDirUp, mCameraData.targetlookDirUp);
+
+	}
+
 public:
 	PlayerControlledFreeCameraImpl(GameState gameImpl, IDIContainer& dicon)
 	{
-
+		auto ptr = dicon.Resolve<PointerManager>().lock();
+		playerViewAngle = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(playerViewAngle), gameImpl);
 	}
 
 
 
 
-	void updateCamera(CameraDataPtr& gameCamera)
+	void updateCameraPosition(CameraDataPtr& gameCamera, float frameDelta)
 	{
 		if (!cameraDataInitialised) throw HCMRuntimeException("You must call setupCamera before calling updateCamera!");
 
-		processMyCamera();
+		processMyCameraPosition(frameDelta);
 		*gameCamera.position = mCameraData.currentPosition;
 		*gameCamera.velocity = mCameraData.currentVelocity;
+		
+		
+
+	}
+
+	void updateCameraRotation(CameraDataPtr& gameCamera, float frameDelta)
+	{
+		if (!cameraDataInitialised) throw HCMRuntimeException("You must call setupCamera before calling updateCamera!");
+
+		processMyCameraRotation(frameDelta);
 		*gameCamera.FOV = mCameraData.currentFOV;
 		*gameCamera.lookDirForward = mCameraData.currentlookDirForward;
 		*gameCamera.lookDirUp = mCameraData.currentlookDirUp;
@@ -150,18 +186,11 @@ public:
 
 		mCameraData.currentlookDirUp = *gameCamera.lookDirUp;
 
-		// calculate yawPitchRoll (ie euler angles) from lookdirections. yawPitchRoll is easier to use for calculating input.
-		// https://stackoverflow.com/questions/1847394/determine-pitch-yaw-roll-from-up-front-right
-		// https://stackoverflow.com/questions/35613741/convert-2-3d-points-to-directional-vectors-to-euler-angles
-		mCameraData.currentYawPitchRoll.x = std::asinf(mCameraData.currentlookDirForward.z);
-		mCameraData.currentYawPitchRoll.y = std::atan2f(mCameraData.currentlookDirForward.y, mCameraData.currentlookDirForward.x);
-		mCameraData.currentYawPitchRoll.z = 0.f;//std::atan2f(mCameraData.currentlookDirForward.z, std::sqrtf((mCameraData.currentlookDirForward.x * mCameraData.currentlookDirForward.x) + (mCameraData.currentlookDirForward.y * mCameraData.currentlookDirForward.y)));
+		mCameraData.currentlookDirRight = SimpleMath::Vector3::Transform(mCameraData.currentlookDirForward, SimpleMath::Quaternion::CreateFromAxisAngle(mCameraData.currentlookDirUp, DirectX::XM_PIDIV2));
 
-		mCameraData.targetYawPitchRoll.x = mCameraData.currentYawPitchRoll.x;
-		mCameraData.targetYawPitchRoll.y = mCameraData.currentYawPitchRoll.y;
-		mCameraData.targetYawPitchRoll.z = mCameraData.currentYawPitchRoll.z;
-
-		LOG_ONCE_CAPTURE(PLOG_DEBUG << "calculated yawPitchRoll: " << ypr, ypr = mCameraData.currentYawPitchRoll);
+		mCameraData.targetlookDirForward = mCameraData.currentlookDirForward;
+		mCameraData.targetlookDirRight = mCameraData.currentlookDirRight;
+		mCameraData.targetlookDirUp = mCameraData.currentlookDirUp;
 
 		cameraDataInitialised = true;
 	}
@@ -182,6 +211,8 @@ PlayerControlledFreeCamera::~PlayerControlledFreeCamera()
 	PLOG_DEBUG << "~" << getName();
 }
 
-void PlayerControlledFreeCamera::updateCamera(CameraDataPtr& gameCamera) { return pimpl->updateCamera(gameCamera); }
+void PlayerControlledFreeCamera::updateCameraPosition(CameraDataPtr& gameCamera, float frameDelta) { return pimpl->updateCameraPosition(gameCamera, frameDelta); }
+
+void PlayerControlledFreeCamera::updateCameraRotation(CameraDataPtr& gameCamera, float frameDelta) { return pimpl->updateCameraRotation(gameCamera, frameDelta); }
 
 void PlayerControlledFreeCamera::setupCamera(CameraDataPtr& gameCamera) { return pimpl->setupCamera(gameCamera); }

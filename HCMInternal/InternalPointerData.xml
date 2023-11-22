@@ -4379,9 +4379,18 @@
 			<lookDirForward>0x6C</lookDirForward>
 			<lookDirUp>0x78</lookDirUp>
 		</Version>
-
 	</VersionedEntry>
-	
+
+	<VersionedEntry Name="frameDeltaPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2d9B960</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
 	<!--#endregion freeCamera-->
 
 

@@ -15,7 +15,8 @@ public:
 	PlayerControlledFreeCamera(GameState gameImpl, IDIContainer& dicon);
 	~PlayerControlledFreeCamera();
 
-	void updateCamera(CameraDataPtr& gameCamera);
+	void updateCameraPosition(CameraDataPtr& gameCamera, float frameDelta);
+	void updateCameraRotation(CameraDataPtr& gameCamera, float frameDelta);
 	void setupCamera(CameraDataPtr& gameCamera);
 
 	std::string_view getName() override { return nameof(PlayerControlledFreeCameraImpl); }

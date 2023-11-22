@@ -227,6 +227,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="Conduit_ITCFont.h" />
     <ClInclude Include="ConsoleCommand.h" />
     <ClInclude Include="ControlServiceContainer.h" />
+    <ClInclude Include="CubicInterpolator.h" />
     <ClInclude Include="DifficultyEnum.h" />
     <ClInclude Include="DirPathContainer.h" />
     <ClInclude Include="DisplayPlayerInfo.h" />

@@ -539,6 +539,9 @@
     <ClInclude Include="IInterpolator.h">
       <Filter>Classes\Interpolators</Filter>
     </ClInclude>
+    <ClInclude Include="CubicInterpolator.h">
+      <Filter>Classes\Interpolators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
