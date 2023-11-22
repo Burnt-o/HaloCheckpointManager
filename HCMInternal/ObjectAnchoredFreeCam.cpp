@@ -1,16 +1,19 @@
 #include "pch.h"
-#include "PlayerControlledFreeCamera.h"
+#include "ObjectAnchoredFreeCam.h"
 #include "RelativeCameraState.h"
 
 
-class PlayerControlledFreeCamera::PlayerControlledFreeCameraImpl
+class ObjectAnchoredFreeCam::ObjectAnchoredFreeCamImpl
 {
 private:
 
+	RelativeCameraState mRelativeCameraState;
+
+
 public:
-	PlayerControlledFreeCameraImpl(GameState gameImpl, IDIContainer& dicon)
+	ObjectAnchoredFreeCamImpl(GameState gameImpl, IDIContainer& dicon)
 	{
-	
+
 	}
 
 
@@ -18,6 +21,7 @@ public:
 
 	void transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta)
 	{
+
 
 		float cameraSpeed = 5.f * freeCameraData.frameDelta;
 
@@ -47,11 +51,12 @@ public:
 
 
 
+
 	}
 
 	void transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta)
 	{
-		float cameraRotationSpeed = 3.f * frameDelta;
+		float cameraRotationSpeed = 3.f * freeCameraData.frameDelta;
 
 		// Section: Rotation
 		// yaw
@@ -101,45 +106,45 @@ public:
 	}
 
 
-	void transformCameraFOV(float& currentFOV, float frameDelta)
+	void transformCameraFOV(FreeCameraData& freeCameraData, float frameDelta)
 	{
-		float cameraFOVSpeed = 3.f * frameDelta;
+		float cameraFOVSpeed = 3.f * freeCameraData.frameDelta;
 
 		// Section: FOV
 		// increase
 		if (GetKeyState(VK_NUMPAD1) & 0x8000)
 		{
-			currentFOV = currentFOV + cameraFOVSpeed;
+			freeCameraData.targetFOV = freeCameraData.targetFOV + cameraFOVSpeed;
 		}
 
 		// decrease
 		if (GetKeyState(VK_NUMPAD3) & 0x8000)
 		{
-			currentFOV = currentFOV - cameraFOVSpeed;
+			freeCameraData.targetFOV = freeCameraData.targetFOV - cameraFOVSpeed;
 		}
 
-	
+
 	}
 
 
-	
+
 
 };
 
 
 
 
-PlayerControlledFreeCamera::PlayerControlledFreeCamera(GameState gameImpl, IDIContainer& dicon)
+ObjectAnchoredFreeCam::ObjectAnchoredFreeCam(GameState gameImpl, IDIContainer& dicon)
 {
-	pimpl = std::make_unique< PlayerControlledFreeCameraImpl>(gameImpl, dicon);
+	pimpl = std::make_unique< ObjectAnchoredFreeCamImpl>(gameImpl, dicon);
 }
-PlayerControlledFreeCamera::~PlayerControlledFreeCamera()
+ObjectAnchoredFreeCam::~ObjectAnchoredFreeCam()
 {
 	PLOG_DEBUG << "~" << getName();
 }
 
-void PlayerControlledFreeCamera::transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta) { return pimpl->transformCameraPosition(freeCameraData, frameDelta); }
+void ObjectAnchoredFreeCam::transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta) { return pimpl->transformCameraPosition(freeCameraData, frameDelta); }
 
-void PlayerControlledFreeCamera::transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta) { return pimpl->transformCameraRotation(freeCameraData, frameDelta); }
+void ObjectAnchoredFreeCam::transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta) { return pimpl->transformCameraRotation(freeCameraData, frameDelta); }
 
-void PlayerControlledFreeCamera::transformCameraFOV(float& currentFOV, float frameDelta) { return pimpl->transformCameraFOV(currentFOV, frameDelta); }
+void ObjectAnchoredFreeCam::transformCameraFOV(FreeCameraData& freeCameraData, float frameDelta) { return pimpl->transformCameraFOV(freeCameraData, frameDelta); }

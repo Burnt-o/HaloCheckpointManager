@@ -47,8 +47,8 @@
 #include "GetBipedsVehicleDatum.h"
 #include "GetNextObjectDatum.h"
 #include "FreeCamera.h"
-#include "GetCameraData.h"
-#include "PlayerControlledFreeCamera.h"
+#include "GetGameCameraData.h"
+#include "UpdateGameCameraData.h"
 
 #include "DIContainer.h"
 #include "map.h"

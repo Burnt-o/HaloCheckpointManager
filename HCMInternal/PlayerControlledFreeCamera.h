@@ -3,7 +3,18 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "CameraDataPtr.h"
+#include "FreeCameraData.h"
+
+
+struct RelativeCameraState
+{
+	SimpleMath::Vector3 targetlookDirForward;
+	SimpleMath::Vector3 targetlookDirRight;
+	SimpleMath::Vector3 targetlookDirUp;
+	SimpleMath::Vector3 targetPosition;
+};
+
+
 
 class PlayerControlledFreeCamera : public IOptionalCheat
 {
@@ -15,10 +26,10 @@ public:
 	PlayerControlledFreeCamera(GameState gameImpl, IDIContainer& dicon);
 	~PlayerControlledFreeCamera();
 
-	void updateCameraPosition(CameraDataPtr& gameCamera, float frameDelta);
-	void updateCameraRotation(CameraDataPtr& gameCamera, float frameDelta);
-	void setupCamera(CameraDataPtr& gameCamera);
+	void transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta);
+	void transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta);
+	void transformCameraFOV(float& currentFOV, float frameDelta);
 
-	std::string_view getName() override { return nameof(PlayerControlledFreeCameraImpl); }
+	std::string_view getName() override { return nameof(PlayerControlledFreeCamera); }
 
 };

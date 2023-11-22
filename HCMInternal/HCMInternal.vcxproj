@@ -223,7 +223,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="App.h" />
     <ClInclude Include="BlockGameInput.h" />
     <ClInclude Include="BottomlessClip.h" />
-    <ClInclude Include="CameraDataPtr.h" />
+    <ClInclude Include="CameraInputReader.h" />
+    <ClInclude Include="CameraTransformer.h" />
+    <ClInclude Include="GameCameraData.h" />
     <ClInclude Include="Conduit_ITCFont.h" />
     <ClInclude Include="ConsoleCommand.h" />
     <ClInclude Include="ControlServiceContainer.h" />
@@ -236,11 +238,12 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ForceLaunch.h" />
     <ClInclude Include="ForceTeleport.h" />
     <ClInclude Include="FreeCamera.h" />
+    <ClInclude Include="FreeCameraData.h" />
     <ClInclude Include="FreeMCCCursor.h" />
     <ClInclude Include="GameTickEventHook.h" />
     <ClInclude Include="GetAggroData.h" />
     <ClInclude Include="GetBipedsVehicleDatum.h" />
-    <ClInclude Include="GetCameraData.h" />
+    <ClInclude Include="GetGameCameraData.h" />
     <ClInclude Include="GetCurrentDifficulty.h" />
     <ClInclude Include="GetCurrentLevelCode.h" />
     <ClInclude Include="GetEntityDataAsString.h" />
@@ -296,6 +299,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="MidhookFlagInterpreter.h" />
     <ClInclude Include="ModalDialogRenderer.h" />
     <ClInclude Include="NaturalCheckpointDisable.h" />
+    <ClInclude Include="NullInterpolator.h" />
     <ClInclude Include="ObjectTypes.h" />
     <ClInclude Include="PauseGame.h" />
     <ClInclude Include="ProggyVectorRegularFont.h" />
@@ -373,7 +377,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ToolTipCollection.h" />
     <ClInclude Include="UnfreezeObjectPhysics.h" />
     <ClInclude Include="UnhandledExceptionHandler.h" />
-    <ClInclude Include="PlayerControlledFreeCamera.h" />
+    <ClInclude Include="UpdateGameCameraData.h" />
     <ClInclude Include="VersionInfo.h" />
     <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
@@ -383,7 +387,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="AIFreeze.cpp" />
     <ClCompile Include="BlockGameInput.cpp" />
     <ClCompile Include="BottomlessClip.cpp" />
+    <ClCompile Include="CameraInputReader.cpp" />
     <ClCompile Include="Conduit_ITCFont.cpp" />
+    <ClCompile Include="CubicInterpolator.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="DisplayPlayerInfo.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -396,7 +402,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GameTickEventHook.cpp" />
     <ClCompile Include="GetAggroData.cpp" />
     <ClCompile Include="GetBipedsVehicleDatum.cpp" />
-    <ClCompile Include="GetCameraData.cpp" />
+    <ClCompile Include="GetGameCameraData.cpp" />
     <ClCompile Include="GetCurrentDifficulty.cpp" />
     <ClCompile Include="GetCurrentLevelCode.cpp" />
     <ClCompile Include="GetHavokAnchorPoint.cpp" />
@@ -411,6 +417,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GUIServiceInfo.cpp" />
     <ClCompile Include="HCM_imconfig.cpp" />
     <ClCompile Include="InfiniteAmmo.cpp" />
+    <ClCompile Include="LinearInterpolator.cpp" />
     <ClCompile Include="MCCStateHook.cpp" />
     <ClCompile Include="GetMCCVersion.cpp" />
     <ClCompile Include="GUIElementConstructor.cpp" />
@@ -444,6 +451,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="MultilevelPointer.cpp" />
     <ClCompile Include="GetPlayerDatum.cpp" />
     <ClCompile Include="NaturalCheckpointDisable.cpp" />
+    <ClCompile Include="NullInterpolator.cpp" />
     <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="ProggyVectorRegularFont.cpp" />
     <ClCompile Include="Setting.cpp" />
@@ -461,7 +469,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Speedhack.cpp" />
     <ClCompile Include="UnfreezeObjectPhysics.cpp" />
     <ClCompile Include="UnhandledExceptionHandler.cpp" />
-    <ClCompile Include="PlayerControlledFreeCamera.cpp" />
+    <ClCompile Include="UpdateGameCameraData.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>
   <ItemGroup>

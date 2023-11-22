@@ -45,8 +45,8 @@ GetObjectTagName,\
 GetBipedsVehicleDatum,\
 GetNextObjectDatum,\
 FreeCamera,\
-GetCameraData,\
-PlayerControlledFreeCamera
+GetGameCameraData,\
+UpdateGameCameraData
 
 
 enum class OptionalCheatEnum {

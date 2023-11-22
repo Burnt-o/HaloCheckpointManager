@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-struct CameraDataPtr
+struct GameCameraData
 {
 	SimpleMath::Vector3* position;
 	SimpleMath::Vector3* velocity;

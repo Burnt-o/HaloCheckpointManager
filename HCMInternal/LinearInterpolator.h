@@ -2,7 +2,18 @@
 #include "pch.h"
 #include "IInterpolator.h"
 
-
+//// std::clamp but where you don't know which edge is higher or lower
+//template<typename valueType>
+//valueType agnosticClamp(valueType x, valueType edge0, valueType edge1)
+//{
+//	valueType& smallestEdge = std::min(edge0, edge1);
+//	if (x < smallestEdge) return smallestEdge;
+//
+//	valueType& largestEdge = std::max(edge0, edge1);
+//	if (x > largestEdge) return largestEdge;
+//
+//	return x;
+//}
 
 
 template<typename valueType>
@@ -19,17 +30,3 @@ public:
 	virtual void interpolate(valueType& currentValue, valueType desiredValue) override;
 };
 
-template <>
-virtual void LinearInterpolator<float>::interpolate(float& currentValue, float desiredValue)
-{
-	move_towards(currentValue, desiredValue, mInterpolationRate);
-}
-
-template <>
-virtual void LinearInterpolator<SimpleMath::Vector3>::interpolate(SimpleMath::Vector3& currentValue, SimpleMath::Vector3 desiredValue) 
-{
-	LOG_ONCE_CAPTURE(PLOG_DEBUG << "rate: " << r, r = mInterpolationRate);
-
-	currentValue = SimpleMath::Vector3::Lerp(currentValue, desiredValue, mInterpolationRate);
-
-}

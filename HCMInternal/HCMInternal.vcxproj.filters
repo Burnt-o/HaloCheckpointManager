@@ -518,13 +518,10 @@
     <ClInclude Include="GetNextObjectDatum.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
-    <ClInclude Include="CameraDataPtr.h">
+    <ClInclude Include="GameCameraData.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="GetCameraData.h">
-      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerControlledFreeCamera.h">
+    <ClInclude Include="GetGameCameraData.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
     <ClInclude Include="ForceCoreLoad.h">
@@ -541,6 +538,21 @@
     </ClInclude>
     <ClInclude Include="CubicInterpolator.h">
       <Filter>Classes\Interpolators</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateGameCameraData.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCameraData.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="NullInterpolator.h">
+      <Filter>Classes\Interpolators</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTransformer.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInputReader.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -742,14 +754,26 @@
     <ClCompile Include="GetNextObjectDatum.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
-    <ClCompile Include="GetCameraData.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerControlledFreeCamera.cpp">
+    <ClCompile Include="GetGameCameraData.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
     <ClCompile Include="FreeCamera.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateGameCameraData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraInputReader.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CubicInterpolator.cpp">
+      <Filter>Classes\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="LinearInterpolator.cpp">
+      <Filter>Classes\Interpolators</Filter>
+    </ClCompile>
+    <ClCompile Include="NullInterpolator.cpp">
+      <Filter>Classes\Interpolators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
