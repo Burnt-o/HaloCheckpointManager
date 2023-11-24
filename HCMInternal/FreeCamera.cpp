@@ -17,10 +17,10 @@
 #include "GameCameraData.h"
 #include "CameraTransformer.h"
 
-#include "IInterpolator.h"
-#include "CubicInterpolator.h"
-#include "LinearInterpolator.h"
-#include "NullInterpolator.h"
+#include "ISmoother.h"
+#include "NullSmoother.h"
+#include "LinearSmoother.h"
+#include "SquareSmoother.h"
 
 #include "CameraInputReader.h"
 
@@ -48,17 +48,17 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	CameraTransformer playerControlledCameraTransformer = CameraTransformer(
-		std::make_shared<NullInterpolator<SimpleMath::Vector3>>(0.3f),
-		std::make_shared<NullInterpolator<SimpleMath::Vector3>>(0.3f),
-		std::make_shared<NullInterpolator<float>>(0.3f)
+		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.01f),
+		std::make_shared<LinearSmoother<SimpleMath::Quaternion>>(0.015f),
+		std::make_shared<LinearSmoother<float>>(0.02f)
 	);
 
 	CameraInputReader playerControlledCameraInput = CameraInputReader(3.f, 3.f, 3.f);
 
 	CameraTransformer objectAnchoredCameraTransformer = CameraTransformer(
-		std::make_shared<NullInterpolator<SimpleMath::Vector3>>(0.3f),
-		std::make_shared<NullInterpolator<SimpleMath::Vector3>>(0.3f),
-		std::make_shared<NullInterpolator<float>>(0.3f)
+		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.01f),
+		std::make_shared<LinearSmoother<SimpleMath::Quaternion>>(0.015f),
+		std::make_shared<LinearSmoother<float>>(0.02f)
 	);
 
 	CameraInputReader objectAnchoredCameraInput = CameraInputReader(3.f, 3.f, 3.f);
@@ -111,23 +111,182 @@ private:
 
 			// "world" absolute data. Gets transformed into final position/rotation by cameraTransformers.
 			FreeCameraData freeCameraData;
-			freeCameraData.currentPosition = SimpleMath::Vector3::Zero;
 			float currentFOVOffset = 0;
+
+
+			static int debugWorldLook = 0;
+
+			if (GetKeyState('O') & 0x8000)
+			{
+				debugWorldLook++;
+				debugWorldLook = debugWorldLook % 7;
+				PLOG_DEBUG << "debugWorldLook: " << debugWorldLook;
+				Sleep(250);
+			}
+
+			switch (debugWorldLook)
+			{
+			case 1: // default
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitY * -1.f;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitX;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitZ;
+				break;
+
+
+			case 0: // default
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitX;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitY;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitZ;
+				break;
+
+			case 2:
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitX;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitZ;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitY;
+				break;
+
+			case 3:
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitY;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitX;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitZ;
+				break;
+
+			case 4:
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitY;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitZ;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitX;
+				break;
+
+			case 5:
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitZ;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitY;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitX;
+				break;
+
+			case 6:
+				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitZ;
+				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitX;
+				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitY;
+				break;
+
+
+			}
+
+
+
+			static int debugWorldLookSign = 0;
+
+			if (GetKeyState('I') & 0x8000)
+			{
+				debugWorldLookSign++;
+				debugWorldLookSign = debugWorldLookSign % 8;
+				PLOG_DEBUG << "debugWorldLookSign: " << debugWorldLookSign;
+				Sleep(250);
+			}
+
+
+#define FLIPA freeCameraData.currentlookDirForward = freeCameraData.currentlookDirForward * -1.f;
+#define FLIPB freeCameraData.currentlookDirRight = freeCameraData.currentlookDirRight * -1.f;
+#define FLIPC freeCameraData.currentlookDirUp = freeCameraData.currentlookDirUp * -1.f;
+
+			switch (debugWorldLookSign)
+			{
+			case 0:
+				break;
+
+			case 1:
+				FLIPA;
+				break;
+
+			case 2:
+				FLIPB;
+				break;
+
+			case 3:
+				FLIPC;
+				break;
+
+			case 4:
+				FLIPA;
+				FLIPB;
+				break;
+
+			case 5:
+				FLIPA;
+				FLIPC;
+				break;
+
+			case 6:
+				FLIPB;
+				FLIPC;
+				break;
+
+			case 7:
+				FLIPA;
+				FLIPB;
+				FLIPC;
+				break;
+			}
+
+
+			static float interpolationRate = 0.05f;
+			if (GetKeyState('J') & 0x8000)
+			{
+				interpolationRate += 0.001f;
+				playerControlledCameraTransformer.positionSmoother->setSmoothRate(interpolationRate);
+				playerControlledCameraTransformer.fovSmoother->setSmoothRate(interpolationRate);
+				playerControlledCameraTransformer.rotationSmoother->setSmoothRate(interpolationRate);
+				PLOG_DEBUG << "interpolationRate: " << interpolationRate;
+				Sleep(50);
+			}
+
+			if (GetKeyState('K') & 0x8000)
+			{
+				interpolationRate -= 0.001f;
+				playerControlledCameraTransformer.positionSmoother->setSmoothRate(interpolationRate);
+				playerControlledCameraTransformer.fovSmoother->setSmoothRate(interpolationRate);
+				playerControlledCameraTransformer.rotationSmoother->setSmoothRate(interpolationRate);
+					PLOG_DEBUG << "interpolationRate: " << interpolationRate;
+				Sleep(50);
+			}
+
 
 			if (needToSetupCamera)
 			{
 				LOG_ONCE("Setting up camera transformers");
 
-					// if objectAnchoring enabled then this target position actually needs to be like 0 or something close to it.
-					playerControlledCameraTransformer.relativeCameraState.targetlookDirForward = *gameCameraData.lookDirForward;
-					playerControlledCameraTransformer.relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(*gameCameraData.lookDirForward, SimpleMath::Quaternion::CreateFromAxisAngle(*gameCameraData.lookDirUp, DirectX::XM_PIDIV2));
-					playerControlledCameraTransformer.relativeCameraState.targetlookDirUp = *gameCameraData.lookDirUp;
-					playerControlledCameraTransformer.relativeCameraState.targetPosition = *gameCameraData.position;
-					playerControlledCameraTransformer.relativeCameraState.targetFOVOffset = 0;
+				// if objectAnchoring enabled then this target position actually needs to be like 0 or something close to it.
+				playerControlledCameraTransformer.relativeCameraState.targetlookDirForward = *gameCameraData.lookDirForward;
+				playerControlledCameraTransformer.relativeCameraState.targetlookDirUp = *gameCameraData.lookDirUp;
+
+				SimpleMath::Vector3 myUp = playerControlledCameraTransformer.relativeCameraState.targetlookDirUp;
+
+
+				playerControlledCameraTransformer.relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(playerControlledCameraTransformer.relativeCameraState.targetlookDirForward, SimpleMath::Quaternion::CreateFromAxisAngle(myUp, DirectX::XM_PIDIV2));
+				playerControlledCameraTransformer.relativeCameraState.targetPosition = *gameCameraData.position;
+				playerControlledCameraTransformer.relativeCameraState.targetFOVOffset = 0;
 					
-					
-					// todo init objectAnchoredCamera if applicable
-					
+
+
+				SimpleMath::Matrix dirMatrix = SimpleMath::Matrix(
+					playerControlledCameraTransformer.relativeCameraState.targetlookDirForward,
+					playerControlledCameraTransformer.relativeCameraState.targetlookDirRight,
+					playerControlledCameraTransformer.relativeCameraState.targetlookDirUp
+				);
+
+
+				playerControlledCameraTransformer.relativeCameraState.targetLookQuat = SimpleMath::Quaternion::CreateFromRotationMatrix(dirMatrix);
+
+				// set current value to.. current value
+				playerControlledCameraTransformer.relativeCameraState.currentlookDirForward = playerControlledCameraTransformer.relativeCameraState.targetlookDirForward;
+				playerControlledCameraTransformer.relativeCameraState.currentlookDirRight = playerControlledCameraTransformer.relativeCameraState.targetlookDirRight;
+				playerControlledCameraTransformer.relativeCameraState.currentlookDirUp = playerControlledCameraTransformer.relativeCameraState.targetlookDirUp;
+				playerControlledCameraTransformer.relativeCameraState.currentLookQuat = playerControlledCameraTransformer.relativeCameraState.targetLookQuat;
+				playerControlledCameraTransformer.relativeCameraState.currentFOVOffset = 0;
+				playerControlledCameraTransformer.relativeCameraState.currentPosition = playerControlledCameraTransformer.relativeCameraState.targetPosition;
+
+
+
 
 				needToSetupCamera = false;
 			}

@@ -229,7 +229,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="Conduit_ITCFont.h" />
     <ClInclude Include="ConsoleCommand.h" />
     <ClInclude Include="ControlServiceContainer.h" />
-    <ClInclude Include="CubicInterpolator.h" />
+    <ClInclude Include="LinearSmoother.h" />
     <ClInclude Include="DifficultyEnum.h" />
     <ClInclude Include="DirPathContainer.h" />
     <ClInclude Include="DisplayPlayerInfo.h" />
@@ -284,7 +284,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HotkeyRenderer.h" />
     <ClInclude Include="HotkeyRendererImpl.h" />
     <ClInclude Include="IgnoreCheckpointChecksum.h" />
-    <ClInclude Include="IInterpolator.h" />
+    <ClInclude Include="ISmoother.h" />
     <ClInclude Include="IMakeOrGetCheat.h" />
     <ClInclude Include="IMCCStateHook.h" />
     <ClInclude Include="IMessagesGUI.h" />
@@ -292,16 +292,16 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="InfiniteAmmo.h" />
     <ClInclude Include="ISettingsSerialiser.h" />
     <ClInclude Include="ISharedMemory.h" />
-    <ClInclude Include="LinearInterpolator.h" />
     <ClInclude Include="MCCState.h" />
     <ClInclude Include="GetPlayerDatum.h" />
     <ClInclude Include="Medusa.h" />
     <ClInclude Include="MidhookFlagInterpreter.h" />
     <ClInclude Include="ModalDialogRenderer.h" />
     <ClInclude Include="NaturalCheckpointDisable.h" />
-    <ClInclude Include="NullInterpolator.h" />
+    <ClInclude Include="NullSmoother.h" />
     <ClInclude Include="ObjectTypes.h" />
     <ClInclude Include="PauseGame.h" />
+    <ClInclude Include="SquareSmoother.h" />
     <ClInclude Include="ProggyVectorRegularFont.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
@@ -389,7 +389,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="BottomlessClip.cpp" />
     <ClCompile Include="CameraInputReader.cpp" />
     <ClCompile Include="Conduit_ITCFont.cpp" />
-    <ClCompile Include="CubicInterpolator.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="DisplayPlayerInfo.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -417,7 +416,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GUIServiceInfo.cpp" />
     <ClCompile Include="HCM_imconfig.cpp" />
     <ClCompile Include="InfiniteAmmo.cpp" />
-    <ClCompile Include="LinearInterpolator.cpp" />
     <ClCompile Include="MCCStateHook.cpp" />
     <ClCompile Include="GetMCCVersion.cpp" />
     <ClCompile Include="GUIElementConstructor.cpp" />
@@ -451,7 +449,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="MultilevelPointer.cpp" />
     <ClCompile Include="GetPlayerDatum.cpp" />
     <ClCompile Include="NaturalCheckpointDisable.cpp" />
-    <ClCompile Include="NullInterpolator.cpp" />
     <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="ProggyVectorRegularFont.cpp" />
     <ClCompile Include="Setting.cpp" />
@@ -467,6 +464,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
     <ClCompile Include="SharedMemoryInternal.cpp" />
     <ClCompile Include="Speedhack.cpp" />
+    <ClCompile Include="SquareSmoother.cpp" />
     <ClCompile Include="UnfreezeObjectPhysics.cpp" />
     <ClCompile Include="UnhandledExceptionHandler.cpp" />
     <ClCompile Include="UpdateGameCameraData.cpp" />

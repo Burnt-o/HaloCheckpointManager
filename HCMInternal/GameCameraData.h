@@ -3,8 +3,8 @@
 struct GameCameraData
 {
 	SimpleMath::Vector3* position;
-	SimpleMath::Vector3* velocity;
+	SimpleMath::Vector3* velocity; 
 	float* FOV;
 	SimpleMath::Vector3* lookDirForward;
-	SimpleMath::Vector3* lookDirUp;
-};
+	SimpleMath::Vector3* lookDirUp;        
+}; 

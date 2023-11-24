@@ -4343,8 +4343,17 @@
 				<Offset>0xAB0F2D</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6F1B5C</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
+	
+	<!--just check what accesses currentCameraFunctionPointer-->
 	<VersionedEntry Name="renderPlayerFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -4352,10 +4361,22 @@
 				<Offset>0xB14EC5</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6D4E94</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="renderPlayerFunctionFlagSetter" Type="MidhookFlagInterpreter">
 		<Version Version="All" Game="Halo1">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
 			<rflag>zero</rflag>
 			<value>false</value>
 		</Version>
@@ -4366,6 +4387,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2D9B978</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F197C</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -4379,6 +4407,14 @@
 			<lookDirForward>0x6C</lookDirForward>
 			<lookDirUp>0x78</lookDirUp>
 		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<position>0x0</position>
+			<velocity>0x14</velocity>
+			<FOV>0x38</FOV>
+			<lookDirForward>0x20</lookDirForward>
+			<lookDirUp>0x2C</lookDirUp>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="frameDeltaPointer" Type="MultilevelPointer::ModuleOffset">
@@ -4386,6 +4422,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2d9B960</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15EA210</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

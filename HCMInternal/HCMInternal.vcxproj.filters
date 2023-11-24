@@ -62,7 +62,7 @@
     <Filter Include="Services\OptionalCheats\Implementations\Camera">
       <UniqueIdentifier>{8f023fa3-225e-49d6-a4e9-8be0135cbb84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Interpolators">
+    <Filter Include="Classes\Smoother">
       <UniqueIdentifier>{fc84e771-a284-4a7b-9a81-f51257e0b992}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -530,14 +530,11 @@
     <ClInclude Include="FreeCamera.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="LinearInterpolator.h">
-      <Filter>Classes\Interpolators</Filter>
+    <ClInclude Include="ISmoother.h">
+      <Filter>Classes\Smoother</Filter>
     </ClInclude>
-    <ClInclude Include="IInterpolator.h">
-      <Filter>Classes\Interpolators</Filter>
-    </ClInclude>
-    <ClInclude Include="CubicInterpolator.h">
-      <Filter>Classes\Interpolators</Filter>
+    <ClInclude Include="LinearSmoother.h">
+      <Filter>Classes\Smoother</Filter>
     </ClInclude>
     <ClInclude Include="UpdateGameCameraData.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
@@ -545,14 +542,17 @@
     <ClInclude Include="FreeCameraData.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="NullInterpolator.h">
-      <Filter>Classes\Interpolators</Filter>
+    <ClInclude Include="NullSmoother.h">
+      <Filter>Classes\Smoother</Filter>
     </ClInclude>
     <ClInclude Include="CameraTransformer.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
     <ClInclude Include="CameraInputReader.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="SquareSmoother.h">
+      <Filter>Classes\Smoother</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -766,14 +766,8 @@
     <ClCompile Include="CameraInputReader.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="CubicInterpolator.cpp">
-      <Filter>Classes\Interpolators</Filter>
-    </ClCompile>
-    <ClCompile Include="LinearInterpolator.cpp">
-      <Filter>Classes\Interpolators</Filter>
-    </ClCompile>
-    <ClCompile Include="NullInterpolator.cpp">
-      <Filter>Classes\Interpolators</Filter>
+    <ClCompile Include="SquareSmoother.cpp">
+      <Filter>Classes\Smoother</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

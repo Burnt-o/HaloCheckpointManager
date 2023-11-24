@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "FreeCameraData.h"
-#include "IInterpolator.h"
+#include "ISmoother.h"
 
 struct RelativeCameraState
 {
@@ -25,45 +25,38 @@ class CameraTransformer
 {
 
 public:
-	std::shared_ptr<IInterpolator<SimpleMath::Vector3>> positionInterpolator;
-	std::shared_ptr<IInterpolator<SimpleMath::Vector3>> rotationInterpolator;
-	std::shared_ptr<IInterpolator<float>> fovInterpolator;
+	std::shared_ptr<ISmoother<SimpleMath::Vector3>> positionSmoother;
+	std::shared_ptr<ISmoother<SimpleMath::Quaternion>> rotationSmoother;
+	std::shared_ptr<ISmoother<float>> fovSmoother;
 
-	CameraTransformer(std::shared_ptr<IInterpolator<SimpleMath::Vector3>> pos, std::shared_ptr<IInterpolator<SimpleMath::Vector3>> rot, std::shared_ptr<IInterpolator<float>> fov)
-		: positionInterpolator(pos), rotationInterpolator(rot), fovInterpolator(fov) {}
+	CameraTransformer(std::shared_ptr<ISmoother<SimpleMath::Vector3>> pos, std::shared_ptr<ISmoother<SimpleMath::Quaternion>> rot, std::shared_ptr<ISmoother<float>> fov)
+		: positionSmoother(pos), rotationSmoother(rot), fovSmoother(fov) {}
 
 	RelativeCameraState relativeCameraState;
 
 	void transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta)
 	{
-		positionInterpolator->interpolate(relativeCameraState.currentPosition, relativeCameraState.targetPosition);
+		positionSmoother->smooth(relativeCameraState.currentPosition, relativeCameraState.targetPosition);
 
 		freeCameraData.currentPosition = freeCameraData.currentPosition + relativeCameraState.currentPosition;
 	}
 
 	void transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta)
 	{
+		// interpolate currentLookQuat to targetLookQuat
+		rotationSmoother->smooth(relativeCameraState.currentLookQuat, relativeCameraState.targetLookQuat);
 
-		// how to interpolate a quaternion? eh skip it for now
-		freeCameraData.currentlookDirForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.targetLookQuat);
-		freeCameraData.currentlookDirRight = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, relativeCameraState.targetLookQuat);
-		freeCameraData.currentlookDirUp = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.targetLookQuat);
+		// transform currentLookDirs by currentLookQuat
+		freeCameraData.currentlookDirForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentLookQuat);
+		freeCameraData.currentlookDirRight = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, relativeCameraState.currentLookQuat);
+		freeCameraData.currentlookDirUp = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.currentLookQuat);
 
 
-		//rotationInterpolator->interpolate(relativeCameraState.currentlookDirForward, relativeCameraState.targetlookDirForward);
-		//rotationInterpolator->interpolate(relativeCameraState.currentlookDirRight, relativeCameraState.targetlookDirRight);
-		//rotationInterpolator->interpolate(relativeCameraState.currentlookDirUp, relativeCameraState.targetlookDirUp);
-
-		//// This works but we have some gimbal lock issues. How do we clamp the pitch to hide it? do it in input?
-		//auto rotMat = SimpleMath::Matrix::CreateLookAt(SimpleMath::Vector3::Zero, relativeCameraState.currentlookDirForward, relativeCameraState.currentlookDirUp);
-		//freeCameraData.currentlookDirForward = SimpleMath::Vector3::TransformNormal(freeCameraData.currentlookDirForward, rotMat);
-		//freeCameraData.currentlookDirRight = SimpleMath::Vector3::TransformNormal(freeCameraData.currentlookDirRight, rotMat);
-		//freeCameraData.currentlookDirUp = SimpleMath::Vector3::TransformNormal(freeCameraData.currentlookDirUp, rotMat);
 	}
 
 	void transformCameraFOV(float& currentFOVOffset, float frameDelta)
 	{
-		fovInterpolator->interpolate(relativeCameraState.currentFOVOffset, relativeCameraState.targetFOVOffset);
+		fovSmoother->smooth(relativeCameraState.currentFOVOffset, relativeCameraState.targetFOVOffset);
 
 		currentFOVOffset = currentFOVOffset + relativeCameraState.currentFOVOffset;
 	}
