@@ -634,6 +634,27 @@ public:
 			nameof(freeCameraToggle)
 		);
 
+	std::shared_ptr<Setting<float>> freeCameraPositionSpeed = std::make_shared<Setting<float>>
+		(
+			3.0,
+			[](float in) { return true; },
+			nameof(freeCameraPositionSpeed)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraRotationSpeed = std::make_shared<Setting<float>>
+		(
+			3.0,
+			[](float in) { return true; },
+			nameof(freeCameraRotationSpeed)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraFOVSpeed = std::make_shared<Setting<float>>
+		(
+			3.0,
+			[](float in) { return true; },
+			nameof(freeCameraFOVSpeed)
+		);
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
@@ -704,7 +725,11 @@ public:
 		display2DInfoFontSize,
 		display2DInfoFontColour,
 		display2DInfoFloatPrecision,
-		display2DInfoOutline
+		display2DInfoOutline,
+		freeCameraPositionSpeed,
+		freeCameraRotationSpeed,
+		freeCameraFOVSpeed
+
 	};
 };
 

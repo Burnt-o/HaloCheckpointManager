@@ -46,7 +46,8 @@ GetBipedsVehicleDatum,\
 GetNextObjectDatum,\
 FreeCamera,\
 GetGameCameraData,\
-UpdateGameCameraData
+UpdateGameCameraData,\
+CameraInputReader
 
 
 enum class OptionalCheatEnum {

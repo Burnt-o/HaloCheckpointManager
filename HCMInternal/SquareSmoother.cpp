@@ -10,7 +10,7 @@
 template<>
 void SquareSmoother<SimpleMath::Vector3>::smooth(SimpleMath::Vector3& currentValue, SimpleMath::Vector3 desiredValue)
 {
-	//assert(false && "not implemented yet");
+	assert(false && "not implemented yet");
 
 	// I'm bad at math. The intent of this function is to make small differences (between desired and currentValue) SMALLER, and big differences BIGGER.
 	// soo like a exponential or square function or something

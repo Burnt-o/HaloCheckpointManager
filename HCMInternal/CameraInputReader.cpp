@@ -1,141 +1,268 @@
 #include "pch.h"
 #include "CameraInputReader.h"
+#include "SettingsStateAndEvents.h"
+#include "RuntimeExceptionHandler.h"
+#include "IMCCStateHook.h"
+#include "MultilevelPointer.h"
+#include "PointerManager.h"
 
 
-void CameraInputReader::readPositionInput(RelativeCameraState& relativeCameraState, float frameDelta)
+class CameraInputReader::CameraInputReaderImpl
 {
-	// TODO: need a good way to make this based on the ACTUAL lookdir and not the targetlookdir, but still accounting for it being relative ? hurting my head. not a big deal tho.
+private:
 
+	GameState mGame;
+
+	// injected services
+	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+
+	// callbacks
+	ScopedCallback< eventpp::CallbackList<void(float&)>> positionSpeedChangedCallback;
+	ScopedCallback< eventpp::CallbackList<void(float&)>> rotationSpeedChangedCallback;
+	ScopedCallback< eventpp::CallbackList<void(float&)>> FOVSpeedChangedCallback;
+	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
+
+
+	// data
+	float mPositionSpeed;
+	float mRotationSpeed;
+	float mFOVSpeed;
+
+	std::shared_ptr<MultilevelPointer> analogMoveLeftRight;
+	std::shared_ptr<MultilevelPointer> analogMoveForwardBack;
+	std::shared_ptr<MultilevelPointer> analogTurnLeftRight;
+	std::shared_ptr<MultilevelPointer> analogTurnUpDown;
+	std::shared_ptr<MultilevelPointer> isMouseInput;
+
+	float* cachedAnalogMoveLeftRight = nullptr;
+	float* cachedAnalogMoveForwardBack = nullptr;
+	float* cachedAnalogTurnLeftRight = nullptr;
+	float* cachedAnalogTurnUpDown = nullptr; 
+	bool* cachedIsMouseInput = nullptr;
+
+	bool cacheInitialised = false;
+
+	// event to fire on mcc state change (just update caches)
+	void updateCache()
+	{
+
+		LOG_ONCE(PLOG_DEBUG << "Updating cameraInputReader cache");
+
+		cachedAnalogMoveLeftRight = nullptr;
+		cachedAnalogMoveForwardBack = nullptr;
+		cachedAnalogTurnLeftRight = nullptr;
+		cachedAnalogTurnUpDown = nullptr;
+
+		try
+		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+
+			LOG_ONCE(PLOG_DEBUG << "resolving cache");
+
+			if (!analogMoveLeftRight->resolve((uintptr_t*)&cachedAnalogMoveLeftRight)) throw HCMRuntimeException(std::format("could not resolve analogMoveLeftRight: {}", MultilevelPointer::GetLastError()));
+			if (!analogMoveForwardBack->resolve((uintptr_t*)&cachedAnalogMoveForwardBack)) throw HCMRuntimeException(std::format("could not resolve analogMoveForwardBack: {}", MultilevelPointer::GetLastError()));
+			if (!analogTurnLeftRight->resolve((uintptr_t*)&cachedAnalogTurnLeftRight)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRight: {}", MultilevelPointer::GetLastError()));
+			if (!analogTurnUpDown->resolve((uintptr_t*)&cachedAnalogTurnUpDown)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDown: {}", MultilevelPointer::GetLastError()));
+			if (!isMouseInput->resolve((uintptr_t*)&cachedIsMouseInput)) throw HCMRuntimeException(std::format("could not resolve isMouseInput: {}", MultilevelPointer::GetLastError()));
+		
+			LOG_ONCE(PLOG_DEBUG << "cache resolved"); // can you tell I had an issue here
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+	void onSpeedChange()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+
+			mPositionSpeed = settings->freeCameraPositionSpeed->GetValue();
+			mRotationSpeed = settings->freeCameraRotationSpeed->GetValue();
+			mFOVSpeed = settings->freeCameraFOVSpeed->GetValue();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+
+public:
+
+	CameraInputReaderImpl(GameState game, IDIContainer& dicon)
+		: mGame(game),
+		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		positionSpeedChangedCallback(settingsWeak.lock()->freeCameraPositionSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
+		rotationSpeedChangedCallback(settingsWeak.lock()->freeCameraRotationSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
+		FOVSpeedChangedCallback(settingsWeak.lock()->freeCameraFOVSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { cacheInitialised = false; })
+	{
+		auto settings = settingsWeak.lock();
+		mPositionSpeed = settings->freeCameraPositionSpeed->GetValue();
+		mRotationSpeed = settings->freeCameraRotationSpeed->GetValue();
+		mFOVSpeed = settings->freeCameraFOVSpeed->GetValue();
+
+
+		auto ptr = dicon.Resolve<PointerManager>().lock();
+
+		analogMoveLeftRight = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogMoveLeftRight), game);
+		analogMoveForwardBack = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogMoveForwardBack), game);
+		analogTurnLeftRight = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRight), game);
+		analogTurnUpDown = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDown), game);
+		isMouseInput = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(isMouseInput), game);
+
+
+	}
+
+	void readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+
+	void readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+
+	void readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+};
+
+
+
+
+void CameraInputReader::CameraInputReaderImpl::readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+{
+	LOG_ONCE(PLOG_DEBUG << "readPositionInput");
+
+	if (cacheInitialised == false)
+	{
+		updateCache();
+		cacheInitialised = true;
+	}
 
 	// Section: Translation
 	auto cameraTranslationSpeed = frameDelta * mPositionSpeed;
 
+	if (cachedAnalogMoveLeftRight == nullptr || cachedAnalogMoveForwardBack == nullptr) throw HCMRuntimeException("null cachedAnalogMove pointers!");
+
+
 	// add from inputs
-	if (GetKeyState('W') & 0x8000)
+	if (*cachedAnalogMoveForwardBack != 0.f)
 	{
-		auto currentForward = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitX, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentForward * cameraTranslationSpeed);
+		auto currentForwardDir = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitX, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentForwardDir * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
 	}
-	if (GetKeyState('A') & 0x8000)
+
+	if (*cachedAnalogMoveLeftRight != 0.f)
 	{
-		auto currentRight = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitY, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentRight * cameraTranslationSpeed);
+		auto currentRightDir = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitY, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentRightDir * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
 	}
-	if (GetKeyState('S') & 0x8000)
+
+
+	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-		auto currentForward = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitX, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition - (currentForward * cameraTranslationSpeed);
+		auto currentUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentUp * cameraTranslationSpeed);
 	}
-	if (GetKeyState('D') & 0x8000)
+
+	if (GetKeyState(VK_CONTROL) & 0x8000)
 	{
-		auto currentRight = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitY, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition - (currentRight * cameraTranslationSpeed);
+		auto currentUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition - (currentUp * cameraTranslationSpeed);
 	}
+	
 
 }
 
-void CameraInputReader::readRotationInput(RelativeCameraState& relativeCameraState, float frameDelta)
+void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
 {
+	LOG_ONCE(PLOG_DEBUG << "readRotationInput");
+
+	if (cacheInitialised == false)
+	{
+		updateCache();
+		cacheInitialised = true;
+	}
+
 	// Section: Rotation
-	auto cameraRotationSpeed = frameDelta * mRotationSpeed;
-	// yaw
-	if (GetKeyState(VK_NUMPAD4) & 0x8000)
+	auto analogRotationSpeed = frameDelta * mRotationSpeed;
+	auto digitalRotationSpeed = frameDelta * mRotationSpeed;
+
+	if (cachedAnalogTurnLeftRight == nullptr || cachedAnalogTurnUpDown == nullptr || cachedIsMouseInput == nullptr) throw HCMRuntimeException("null cachedAnalogTurn pointers!");
+
+	if (*cachedIsMouseInput == true)
 	{
-		//static_assert(false, "this isn't doing what I think it's doing. the relativeCameraState.currentLookUp is only ever the initial value, it doesn't rotate with the camera");
-
-
-		auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirUp, cameraRotationSpeed);
-		relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
-
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, rotQuat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirRight, rotQuat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, rotQuat);
-
-		//auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(relativeCameraState.targetlookDirUp, cameraRotationSpeed);
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirForward, rotMat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirRight, rotMat);
+		analogRotationSpeed = analogRotationSpeed * 50.f;
 	}
 
-	if (GetKeyState(VK_NUMPAD6) & 0x8000)
+
+	bool needToApplyRotation = false;
+	SimpleMath::Quaternion quatYaw = SimpleMath::Quaternion::Identity;
+	SimpleMath::Quaternion quatPitch = SimpleMath::Quaternion::Identity;
+	SimpleMath::Quaternion quatRoll = SimpleMath::Quaternion::Identity;
+
+	// Yaw: means rotating around world UP axis. Rotating around world avoids inducing roll.
+	if (*cachedAnalogTurnLeftRight != 0.f)
 	{
-		auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirUp, cameraRotationSpeed * -1.f);
-		relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
+		needToApplyRotation = true;
 
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, rotQuat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirRight, rotQuat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, rotQuat);
+		quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(SimpleMath::Vector3::UnitZ, analogRotationSpeed * *cachedAnalogTurnLeftRight);
 
-		//auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(relativeCameraState.targetlookDirUp, cameraRotationSpeed * -1.f);
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirForward, rotMat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirRight, rotMat);
 	}
 
-	// pitch
-	if (GetKeyState(VK_NUMPAD8) & 0x8000)
+
+
+	// Pitch: means rotating around local RIGHT axis. 
+	if (*cachedAnalogTurnUpDown != 0.f)
 	{
-		auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirRight, cameraRotationSpeed);
-		relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
+		needToApplyRotation = true;
+		quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(SimpleMath::Vector3::UnitY, analogRotationSpeed * *cachedAnalogTurnUpDown);
 
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, rotQuat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirRight, rotQuat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, rotQuat);
-
-		//auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(relativeCameraState.targetlookDirRight, cameraRotationSpeed);
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirForward, rotMat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirUp, rotMat);
+		//auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirRight, cameraRotationSpeed * *cachedAnalogTurnUpDown);
+		//relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
 	}
 
-	if (GetKeyState(VK_NUMPAD2) & 0x8000)
+	// Roll: means rotating around local FORWARD axis.
+	if (GetKeyState('G') & 0x8000)
 	{
-		auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirRight, cameraRotationSpeed * -1.f);
-		relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
+		needToApplyRotation = true;
+		quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, digitalRotationSpeed);
 
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, rotQuat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirRight, rotQuat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, rotQuat);
-
-
-		//auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(relativeCameraState.targetlookDirRight, cameraRotationSpeed * -1.f);
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirForward, rotMat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirUp, rotMat);
+		//auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, cameraRotationSpeed);
+		//relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
 	}
 
-	// roll
-	if (GetKeyState(VK_NUMPAD7) & 0x8000)
+	if (GetKeyState('T') & 0x8000)
 	{
-		auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirForward, cameraRotationSpeed);
-		relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
+		needToApplyRotation = true;
+		quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, digitalRotationSpeed * -1.f);
 
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, rotQuat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirRight, rotQuat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, rotQuat);
-
-		//static_assert(false, "okay so using quat as source has the problem of not initializing the look angle correctly. using \
-		//	lookAngles directly like this fucks using pitch/roll/yaw");
-
-
-		//auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(relativeCameraState.targetlookDirForward, cameraRotationSpeed);
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirForward, rotMat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirUp, rotMat);
+		//auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirForward, cameraRotationSpeed * -1.f);
+		//relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
 	}
 
-	if (GetKeyState(VK_NUMPAD9) & 0x8000)
+
+	if (needToApplyRotation)
 	{
-		auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirForward, cameraRotationSpeed * -1.f);
-		relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
 
-		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, rotQuat);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirRight, rotQuat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, rotQuat);
-
-		//auto rotMat = SimpleMath::Matrix::CreateFromAxisAngle(relativeCameraState.targetlookDirForward, cameraRotationSpeed * -1.f);
-		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirRight, rotMat);
-		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::TransformNormal(relativeCameraState.targetlookDirUp, rotMat);
+		relativeCameraState.targetLookQuat = quatRoll * quatPitch * quatYaw * relativeCameraState.targetLookQuat;
 	}
+
 }
 
-void CameraInputReader::readFOVInput(RelativeCameraState& relativeCameraState, float frameDelta)
+void CameraInputReader::CameraInputReaderImpl::readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
 {
+	LOG_ONCE(PLOG_DEBUG << "readFOVInput");
+
+	if (cacheInitialised == false)
+	{
+		updateCache();
+		cacheInitialised = true;
+	}
+
 	float cameraFOVSpeed = mFOVSpeed * frameDelta;
 
 	// Section: FOV
@@ -150,4 +277,32 @@ void CameraInputReader::readFOVInput(RelativeCameraState& relativeCameraState, f
 	{
 		relativeCameraState.targetFOVOffset = relativeCameraState.targetFOVOffset - cameraFOVSpeed;
 	}
+}
+
+
+
+
+CameraInputReader::CameraInputReader(GameState game, IDIContainer& dicon)
+{
+	pimpl = std::make_unique<CameraInputReaderImpl>(game, dicon);
+}
+
+CameraInputReader::~CameraInputReader()
+{
+	PLOG_DEBUG << "~" << getName();
+}
+
+void CameraInputReader::readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+{
+	return pimpl->readPositionInput(relativeCameraState, freeCameraData, frameDelta);
+}
+
+void CameraInputReader::readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+{
+	return pimpl->readRotationInput(relativeCameraState, freeCameraData, frameDelta);
+}
+
+void CameraInputReader::readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+{
+	return pimpl->readFOVInput(relativeCameraState, freeCameraData, frameDelta);
 }

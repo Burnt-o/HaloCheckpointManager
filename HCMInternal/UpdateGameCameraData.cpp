@@ -22,8 +22,7 @@ public:
 		*gameCameraData.lookDirUp = freeCameraData.currentlookDirUp;
 
 		if (std::fabsf(currentFOVOffset) > 0.000001)
-			*gameCameraData.FOV = std::clamp(*gameCameraData.FOV + currentFOVOffset, 0.f, 2.f);
-		// TODO: check what the actual max is, it's not 2
+			*gameCameraData.FOV = std::clamp(*gameCameraData.FOV + currentFOVOffset, 0.f, 2.1f);
 
 	}
 };

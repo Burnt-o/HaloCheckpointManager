@@ -17,7 +17,7 @@ struct RelativeCameraState
 	SimpleMath::Vector3 targetlookDirRight		{0, 1, 0};
 	SimpleMath::Vector3 targetlookDirUp			{0, 0, 1};
 	SimpleMath::Vector3 targetPosition			{0, 0, 0};
-	float targetFOVOffset						= 0;
+	float targetFOVOffset						= 0;  
 };
 
 

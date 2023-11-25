@@ -1,22 +1,25 @@
 #pragma once
+#include "IOptionalCheat.h"
+#include "GameState.h"
+#include "DIContainer.h"
 #include "CameraTransformer.h"
-#include "Setting.h"
 
-class CameraInputReader
+class CameraInputReader : public IOptionalCheat
 {
-
+private:
+	class CameraInputReaderImpl;
+	std::unique_ptr< CameraInputReaderImpl> pimpl; // todo; working on hooking this up to multilevel pointer to read analog inputs
 public:
-	float mPositionSpeed, mRotationSpeed, mFOVSpeed;
 
-	CameraInputReader(float positionSpeed, float rotationSpeed, float FOVSpeed)
-		: mPositionSpeed(positionSpeed), mRotationSpeed(rotationSpeed), mFOVSpeed(FOVSpeed)
-	{
-		
-	}
-	void readPositionInput(RelativeCameraState& relativeCameraState, float frameDelta);
+	CameraInputReader(GameState game, IDIContainer& dicon);
+	~CameraInputReader();
 
-	void readRotationInput(RelativeCameraState& relativeCameraState, float frameDelta);
+	void readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
 
-	void readFOVInput(RelativeCameraState& relativeCameraState, float frameDelta);
+	void readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+
+	void readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+
+	std::string_view getName() override { return nameof(CameraInputReader); }
 };
 

@@ -49,6 +49,7 @@
 #include "FreeCamera.h"
 #include "GetGameCameraData.h"
 #include "UpdateGameCameraData.h"
+#include "CameraInputReader.h"
 
 #include "DIContainer.h"
 #include "map.h"

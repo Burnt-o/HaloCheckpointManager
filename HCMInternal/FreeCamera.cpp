@@ -48,20 +48,19 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	CameraTransformer playerControlledCameraTransformer = CameraTransformer(
-		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.01f),
-		std::make_shared<LinearSmoother<SimpleMath::Quaternion>>(0.015f),
-		std::make_shared<LinearSmoother<float>>(0.02f)
+		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.9f),
+		std::make_shared<LinearSmoother<SimpleMath::Quaternion>>(0.6f),
+		std::make_shared<LinearSmoother<float>>(0.85f)
 	);
 
-	CameraInputReader playerControlledCameraInput = CameraInputReader(3.f, 3.f, 3.f);
+	std::shared_ptr<CameraInputReader> playerControlledCameraInput;
 
 	CameraTransformer objectAnchoredCameraTransformer = CameraTransformer(
-		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.01f),
-		std::make_shared<LinearSmoother<SimpleMath::Quaternion>>(0.015f),
-		std::make_shared<LinearSmoother<float>>(0.02f)
+		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.9f),
+		std::make_shared<LinearSmoother<SimpleMath::Quaternion>>(0.6f),
+		std::make_shared<LinearSmoother<float>>(0.85f)
 	);
 
-	CameraInputReader objectAnchoredCameraInput = CameraInputReader(3.f, 3.f, 3.f);
 
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
@@ -126,14 +125,14 @@ private:
 
 			switch (debugWorldLook)
 			{
-			case 1: // default
+			case 1: 
 				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitY * -1.f;
 				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitX;
 				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitZ;
 				break;
 
 
-			case 0: // default
+			case 0:
 				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitX;
 				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitY;
 				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitZ;
@@ -145,7 +144,7 @@ private:
 				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitY;
 				break;
 
-			case 3:
+			case 3:  // default
 				freeCameraData.currentlookDirForward = SimpleMath::Vector3::UnitY;
 				freeCameraData.currentlookDirRight = SimpleMath::Vector3::UnitX;
 				freeCameraData.currentlookDirUp = SimpleMath::Vector3::UnitZ;
@@ -269,6 +268,7 @@ private:
 
 
 				SimpleMath::Matrix dirMatrix = SimpleMath::Matrix(
+					// You'd think this would be forward->right->up, but since game uses YXZ order and I prefer XYZ, we do right->backward->up to convert
 					playerControlledCameraTransformer.relativeCameraState.targetlookDirForward,
 					playerControlledCameraTransformer.relativeCameraState.targetlookDirRight,
 					playerControlledCameraTransformer.relativeCameraState.targetlookDirUp
@@ -294,13 +294,17 @@ private:
 			float frameDelta;
 			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
 
-			playerControlledCameraInput.readPositionInput(playerControlledCameraTransformer.relativeCameraState, frameDelta);
-			playerControlledCameraInput.readRotationInput(playerControlledCameraTransformer.relativeCameraState, frameDelta);
-			playerControlledCameraInput.readFOVInput(playerControlledCameraTransformer.relativeCameraState, frameDelta);
+			playerControlledCameraInput->readPositionInput(playerControlledCameraTransformer.relativeCameraState, freeCameraData,  frameDelta);
+			playerControlledCameraInput->readRotationInput(playerControlledCameraTransformer.relativeCameraState, freeCameraData, frameDelta);
+			playerControlledCameraInput->readFOVInput(playerControlledCameraTransformer.relativeCameraState, freeCameraData, frameDelta);
+
+			LOG_ONCE(PLOG_DEBUG << "reading done, transforming camera");
 
 			playerControlledCameraTransformer.transformCameraPosition(freeCameraData, frameDelta);
 			playerControlledCameraTransformer.transformCameraRotation(freeCameraData, frameDelta);
 			playerControlledCameraTransformer.transformCameraFOV(currentFOVOffset, frameDelta);
+
+			LOG_ONCE(PLOG_DEBUG << "transforming done, updating game camera");
 
 			updateGameCameraData->updateGameCameraData(gameCameraData, freeCameraData, currentFOVOffset);
 
@@ -356,6 +360,7 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getGameCameraData(resolveDependentCheat(GetGameCameraData)),
 		updateGameCameraData(resolveDependentCheat(UpdateGameCameraData)),
+		playerControlledCameraInput(resolveDependentCheat(CameraInputReader)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); })
 	{
