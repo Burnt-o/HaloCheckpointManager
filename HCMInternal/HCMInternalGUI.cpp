@@ -4,6 +4,7 @@
 #include "GUISimpleButton.h"
 #include "MCCStateHook.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #define addTooltip(x) if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) ImGui::SetTooltip(x)
 
 
@@ -17,6 +18,9 @@ void HCMInternalGUI::initializeHCMInternalGUI()
 {
 	ImGui::SetNextWindowCollapsed(false);
 	windowFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+
+	ImGui::SetShortcutRouting(ImGuiMod_Ctrl | ImGuiKey_Tab, ImGuiKeyOwner_None);
+	ImGui::SetShortcutRouting(ImGuiMod_Ctrl | ImGuiMod_Shift | ImGuiKey_Tab, ImGuiKeyOwner_None);
 
 	PLOG_VERBOSE << "actual screen size: " << mFullScreenSize.x << ", " << mFullScreenSize.y;
 	if (mFullScreenSize.x > minimumWindowSize.x && mFullScreenSize.y > minimumWindowSize.y) // check for really small screens or getScreenSize returning a junk value, then we just use default 500, 500

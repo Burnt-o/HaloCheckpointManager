@@ -44,12 +44,19 @@ public:
 	void transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta)
 	{
 		// interpolate currentLookQuat to targetLookQuat
-		rotationSmoother->smooth(relativeCameraState.currentLookQuat, relativeCameraState.targetLookQuat);
+		//rotationSmoother->smooth(relativeCameraState.currentLookQuat, relativeCameraState.targetLookQuat);
+
+		positionSmoother->smooth(relativeCameraState.currentlookDirForward, relativeCameraState.targetlookDirForward);
+		positionSmoother->smooth(relativeCameraState.currentlookDirRight, relativeCameraState.targetlookDirRight);
+		positionSmoother->smooth(relativeCameraState.currentlookDirUp, relativeCameraState.targetlookDirUp);
 
 		// transform currentLookDirs by currentLookQuat
-		freeCameraData.currentlookDirForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentLookQuat);
-		freeCameraData.currentlookDirRight = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, relativeCameraState.currentLookQuat);
-		freeCameraData.currentlookDirUp = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.currentLookQuat);
+		// todo make this relative
+		freeCameraData.currentlookDirForward = relativeCameraState.currentlookDirForward;
+			freeCameraData.currentlookDirRight = relativeCameraState.currentlookDirRight;
+			freeCameraData.currentlookDirUp = relativeCameraState.currentlookDirUp;
+
+
 
 
 	}

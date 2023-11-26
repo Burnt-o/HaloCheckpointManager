@@ -151,27 +151,26 @@ void CameraInputReader::CameraInputReaderImpl::readPositionInput(RelativeCameraS
 	// add from inputs
 	if (*cachedAnalogMoveForwardBack != 0.f)
 	{
-		auto currentForwardDir = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitX, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentForwardDir * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (relativeCameraState.currentlookDirForward * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
 	}
 
 	if (*cachedAnalogMoveLeftRight != 0.f)
 	{
-		auto currentRightDir = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitY, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentRightDir * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
+		//auto currentRightDir = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitY, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (relativeCameraState.currentlookDirRight * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
 	}
 
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-		auto currentUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (currentUp * cameraTranslationSpeed);
+		//auto currentUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition + (relativeCameraState.currentlookDirUp * cameraTranslationSpeed);
 	}
 
 	if (GetKeyState(VK_CONTROL) & 0x8000)
 	{
-		auto currentUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentLookQuat);
-		relativeCameraState.targetPosition = relativeCameraState.targetPosition - (currentUp * cameraTranslationSpeed);
+		//auto currentUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentLookQuat);
+		relativeCameraState.targetPosition = relativeCameraState.targetPosition - (relativeCameraState.currentlookDirUp * cameraTranslationSpeed);
 	}
 	
 
@@ -204,12 +203,19 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	SimpleMath::Quaternion quatPitch = SimpleMath::Quaternion::Identity;
 	SimpleMath::Quaternion quatRoll = SimpleMath::Quaternion::Identity;
 
+
+
+	SimpleMath::Vector3 yawPitchRoll = SimpleMath::Vector3::Zero;
+
 	// Yaw: means rotating around world UP axis. Rotating around world avoids inducing roll.
 	if (*cachedAnalogTurnLeftRight != 0.f)
 	{
 		needToApplyRotation = true;
+		//quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, analogRotationSpeed * *cachedAnalogTurnLeftRight);
+		//yawPitchRoll.x = analogRotationSpeed * *cachedAnalogTurnLeftRight;
 
-		quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(SimpleMath::Vector3::UnitZ, analogRotationSpeed * *cachedAnalogTurnLeftRight);
+		quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, analogRotationSpeed * *cachedAnalogTurnLeftRight);
+
 
 	}
 
@@ -219,7 +225,12 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	if (*cachedAnalogTurnUpDown != 0.f)
 	{
 		needToApplyRotation = true;
-		quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(SimpleMath::Vector3::UnitY, analogRotationSpeed * *cachedAnalogTurnUpDown);
+		//auto currentRight = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentLookQuat);
+		//currentRight = SimpleMath::Vector3::Transform(currentRight, SimpleMath::Quaternion::CreateFromAxisAngle(SimpleMath::Vector3::UnitZ, DirectX::XM_PIDIV2));
+		//quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(currentRight, analogRotationSpeed * *cachedAnalogTurnUpDown);
+
+		//yawPitchRoll.y = analogRotationSpeed * *cachedAnalogTurnUpDown;
+		quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirRight, analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f);
 
 		//auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirRight, cameraRotationSpeed * *cachedAnalogTurnUpDown);
 		//relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
@@ -229,7 +240,12 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	if (GetKeyState('G') & 0x8000)
 	{
 		needToApplyRotation = true;
-		quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, digitalRotationSpeed);
+		//auto currentForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentLookQuat);
+		//quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(currentForward, digitalRotationSpeed);
+
+		quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirForward, digitalRotationSpeed);
+
+		//yawPitchRoll.z = digitalRotationSpeed;
 
 		//auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, cameraRotationSpeed);
 		//relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
@@ -238,8 +254,10 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	if (GetKeyState('T') & 0x8000)
 	{
 		needToApplyRotation = true;
-		quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, digitalRotationSpeed * -1.f);
+		//auto currentForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentLookQuat);
+		//quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(currentForward, digitalRotationSpeed * -1.f);
 
+		quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirForward, digitalRotationSpeed * -1.f);
 		//auto rotQuat = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.currentlookDirForward, cameraRotationSpeed * -1.f);
 		//relativeCameraState.targetLookQuat = rotQuat * relativeCameraState.targetLookQuat;
 	}
@@ -248,8 +266,44 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	if (needToApplyRotation)
 	{
 
-		relativeCameraState.targetLookQuat = quatRoll * quatPitch * quatYaw * relativeCameraState.targetLookQuat;
+		// shit this was "working" when dirUp was transformed by pitch * yaw. breaks with "correct" pitch and roll. hm.
+
+		SimpleMath::Matrix basis = SimpleMath::Matrix::Matrix( relativeCameraState.targetlookDirRight, relativeCameraState.targetlookDirUp, relativeCameraState.targetlookDirForward);
+
+		basis = SimpleMath::Matrix::Transform(basis, quatPitch * quatYaw * quatRoll);
+
+		relativeCameraState.targetlookDirForward = basis.Backward();
+		relativeCameraState.targetlookDirUp = basis.Down();
+		relativeCameraState.targetlookDirRight = basis.Left();
+
+		//relativeCameraState.targetlookDirForward = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, quatPitch * quatYaw);
+		//relativeCameraState.targetlookDirUp = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirUp, quatPitch * quatRoll);
+		//relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(relativeCameraState.targetlookDirForward, SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.targetlookDirUp, DirectX::XM_PIDIV2));
+
+		// need to orthonormalise to prevent error accumlation
+		relativeCameraState.targetlookDirRight.Normalize();
+		relativeCameraState.targetlookDirUp = relativeCameraState.targetlookDirForward.Cross(relativeCameraState.targetlookDirRight);
+		relativeCameraState.targetlookDirUp.Normalize();
+		relativeCameraState.targetlookDirForward = relativeCameraState.targetlookDirRight.Cross(relativeCameraState.targetlookDirUp);
+		relativeCameraState.targetlookDirForward.Normalize();
+
+		//relativeCameraState.targetLookQuat = relativeCameraState.targetLookQuat * quatYaw * quatPitch  * quatRoll; // the order matters. do pitch then yaw then roll.
+
 	}
+
+
+
+	//static_assert(false, "READ THIS");
+	//https://gamedev.stackexchange.com/questions/129445/pitch-yaw-in-circle-causes-undesired-tilt
+	/*
+	Your code is allowing errors to accumulate in the up vector. Try replacing right = cross(forward, up) with right = normalized(cross(forward, Vector3(0, 1, 0))) if you don't need to look directly up/down. If you're using up to construct your matrix then you'll want to update it when yawing too. – 
+	You're using the previous value of the up vector to update the right vector and the up vector itself. That means any small deviation from the vertical will tend to accumulate in the up vector and snowball over repeated updates.
+	
+
+
+	*/
+
+
 
 }
 
