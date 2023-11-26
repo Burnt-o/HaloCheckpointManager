@@ -2,7 +2,6 @@
 #define IMGUI_USER_CONFIG "HCM_imconfig.h"
 //#include <directxtk\SimpleMath.h>
 
-
 #define IM_VEC2_CLASS_EXTRA                                                     \
         constexpr ImVec2(const SimpleMath::Vector2& f) : x(f.x), y(f.y) {}                   \
         operator SimpleMath::Vector2() const { return SimpleMath::Vector2(x,y); }
