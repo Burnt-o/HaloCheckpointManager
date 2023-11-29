@@ -23,7 +23,7 @@
 #include "LinearSmoother.h"
 #include "SquareSmoother.h"
 
-#include "CameraInputReader.h"
+#include "UserCameraInputReader.h"
 
 template <GameState::Value gameT>  // templated so that each game gets a seperate instance of the static members
 class FreeCameraImpl : public FreeCameraImplUntemplated
@@ -45,24 +45,14 @@ private:
 	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
 	std::shared_ptr<GetGameCameraData> getGameCameraData;
 	std::shared_ptr<UpdateGameCameraData> updateGameCameraData;
-	//std::shared_ptr<ObjectAnchoredFreeCam> objectAnchoredFreeCam;
-	//std::shared_ptr<PlayerControlledFreeCamera> playerControlledFreeCamera;
+
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
-	CameraTransformer playerControlledCameraTransformer = CameraTransformer(
-		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.06f),
-		std::make_shared<LinearSmoother<float>>(0.06f),
-		std::make_shared<LinearSmoother<float>>(0.85f)
-	);
 
-	std::shared_ptr<CameraInputReader> playerControlledCameraInput;
-
-	CameraTransformer objectAnchoredCameraTransformer = CameraTransformer(
-		std::make_shared<LinearSmoother<SimpleMath::Vector3>>(0.9f),
-		std::make_shared<LinearSmoother<float>>(0.6f),
-		std::make_shared<LinearSmoother<float>>(0.85f)
-	);
-
+	std::shared_ptr<UserCameraInputReader> userCameraInputReader;
+	PositionTransformer userControlledPosition;
+	RotationTransformer userControlledRotation;
+	FOVTransformer userControlledFOV;
 
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
@@ -115,62 +105,37 @@ private:
 			float currentFOVOffset = 0;
 
 
-
-
-			static float interpolationRate = 0.05f;
-			if (GetKeyState('J') & 0x8000)
-			{
-				interpolationRate += 0.001f;
-				playerControlledCameraTransformer.positionSmoother->setSmoothRate(interpolationRate);
-				playerControlledCameraTransformer.fovSmoother->setSmoothRate(interpolationRate);
-				playerControlledCameraTransformer.rotationSmoother->setSmoothRate(interpolationRate);
-				PLOG_DEBUG << "interpolationRate: " << interpolationRate;
-				Sleep(50);
-			}
-
-			if (GetKeyState('K') & 0x8000)
-			{
-				interpolationRate -= 0.001f;
-				playerControlledCameraTransformer.positionSmoother->setSmoothRate(interpolationRate);
-				playerControlledCameraTransformer.fovSmoother->setSmoothRate(interpolationRate);
-				playerControlledCameraTransformer.rotationSmoother->setSmoothRate(interpolationRate);
-					PLOG_DEBUG << "interpolationRate: " << interpolationRate;
-				Sleep(50);
-			}
-
-
 			if (needToSetupCamera)
 			{
-				LOG_ONCE("Setting up camera transformers");
+				LOG_ONCE("Setting up user controlled camera");
 
-				// if objectAnchoring enabled then this target position actually needs to be like 0 or something close to it.
-				playerControlledCameraTransformer.relativeCameraState.targetPositionTransformation = *gameCameraData.position;
-				playerControlledCameraTransformer.relativeCameraState.targetFOVOffset = 0;
-					
+				userControlledPosition = PositionTransformer(
+					std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f), 
+					userCameraInputReader,
+					*gameCameraData.position
+				);
+				
+				float initialYaw = std::atan2(gameCameraData.lookDirForward->y, gameCameraData.lookDirForward->x);
+				float initialPitch = std::asin(gameCameraData.lookDirForward->z) * -1.f;
+				float initialRoll = 0.f;
 
-				auto forward = *gameCameraData.lookDirForward;
-				auto up = *gameCameraData.lookDirUp;
-				auto right = SimpleMath::Vector3::Transform(forward, SimpleMath::Quaternion::CreateFromAxisAngle(up, DirectX::XM_PIDIV2));
+				PLOG_DEBUG << "Initial EulerYaw: " << initialYaw;
+				PLOG_DEBUG << "Initial EulerPitch: " << initialPitch;
+				PLOG_DEBUG << "Initial EulerRoll: " << initialRoll;
+				
+				userControlledRotation = RotationTransformer(
+					std::make_unique<LinearSmoother<float>>(0.06f), 
+					userCameraInputReader,
+					initialYaw,
+					initialPitch,
+					initialRoll
+				);
 
-
-				// https://stackoverflow.com/questions/21622956/how-to-convert-direction-vector-to-euler-angles
-				playerControlledCameraTransformer.relativeCameraState.targetEulerYaw = std::atan2(forward.y, forward.x);
-				playerControlledCameraTransformer.relativeCameraState.targetEulerPitch = std::asin(forward.z) * -1.f; // dunno why this is backwards
-				playerControlledCameraTransformer.relativeCameraState.targetEulerRoll = 0.f;
-
-				PLOG_DEBUG << "Initial EulerYaw: " << playerControlledCameraTransformer.relativeCameraState.targetEulerYaw;
-				PLOG_DEBUG << "Initial EulerPitch: " << playerControlledCameraTransformer.relativeCameraState.targetEulerPitch;
-				PLOG_DEBUG << "Initial EulerRoll: " << playerControlledCameraTransformer.relativeCameraState.targetEulerRoll;
-
-
-
-				// set current value to.. current value
-				playerControlledCameraTransformer.relativeCameraState.currentPositionTransformation = playerControlledCameraTransformer.relativeCameraState.targetPositionTransformation;
-				playerControlledCameraTransformer.relativeCameraState.currentFOVOffset = 0;
-				playerControlledCameraTransformer.relativeCameraState.currentEulerYaw = playerControlledCameraTransformer.relativeCameraState.targetEulerYaw;
-				playerControlledCameraTransformer.relativeCameraState.currentEulerPitch = playerControlledCameraTransformer.relativeCameraState.targetEulerPitch;
-				playerControlledCameraTransformer.relativeCameraState.currentEulerRoll = playerControlledCameraTransformer.relativeCameraState.targetEulerRoll;
-
+				userControlledFOV = FOVTransformer(
+					std::make_unique<LinearSmoother<float>>(0.06f),
+					userCameraInputReader,
+					1.0f
+				);
 
 
 				needToSetupCamera = false;
@@ -182,28 +147,11 @@ private:
 			LOG_ONCE(PLOG_DEBUG << "reading done, transforming camera");
 
 			// rotate FIRST so position updater knows which direction is "forward/up/right" etc 
-			playerControlledCameraInput->readRotationInput(playerControlledCameraTransformer.relativeCameraState, freeCameraData, frameDelta);
-			playerControlledCameraTransformer.transformCameraRotation(freeCameraData, frameDelta);
-
-			playerControlledCameraInput->readPositionInput(playerControlledCameraTransformer.relativeCameraState, freeCameraData,  frameDelta);
-			playerControlledCameraTransformer.transformCameraPosition(freeCameraData, frameDelta);
-
-			playerControlledCameraInput->readFOVInput(playerControlledCameraTransformer.relativeCameraState, freeCameraData, frameDelta);
-			playerControlledCameraTransformer.transformCameraFOV(currentFOVOffset, frameDelta);
-
-
-				if (GetKeyState('L') & 0x8000)
-				{
-					PLOG_DEBUG << "y: " << playerControlledCameraTransformer.relativeCameraState.targetEulerYaw;
-					PLOG_DEBUG << "p: " << playerControlledCameraTransformer.relativeCameraState.targetEulerPitch;
-					PLOG_DEBUG << "r: " << playerControlledCameraTransformer.relativeCameraState.targetEulerRoll;
-				}
-
-
-;
+			userControlledRotation.transformRotation(freeCameraData, frameDelta);
+			userControlledPosition.transformPosition(freeCameraData, frameDelta);
+			userControlledFOV.transformFOV(freeCameraData, frameDelta);
 
 			LOG_ONCE(PLOG_DEBUG << "transforming done, updating game camera");
-
 			updateGameCameraData->updateGameCameraData(gameCameraData, freeCameraData, currentFOVOffset);
 
 		}
@@ -259,9 +207,26 @@ public:
 		getGameCameraData(resolveDependentCheat(GetGameCameraData)),
 		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
 		updateGameCameraData(resolveDependentCheat(UpdateGameCameraData)),
-		playerControlledCameraInput(resolveDependentCheat(CameraInputReader)),
+		userCameraInputReader(resolveDependentCheat(UserCameraInputReader)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); })
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
+		userControlledPosition (
+			std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f),
+			userCameraInputReader,
+			{ 0,0,0 }
+		),
+		userControlledRotation (
+			std::make_unique<LinearSmoother<float>>(0.06f),
+			userCameraInputReader,
+			0,
+			0,
+			0
+		),
+		userControlledFOV (
+			std::make_unique<LinearSmoother<float>>(0.06f),
+			userCameraInputReader,
+			1.0f
+		)
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerManager>().lock();
@@ -272,6 +237,9 @@ public:
 		auto renderPlayerFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(renderPlayerFunction), game);
 		renderPlayerFunctionFlagSetter = ptr->getData< std::shared_ptr< MidhookFlagInterpreter>>(nameof(renderPlayerFunctionFlagSetter), game);
 		renderPlayerHook = ModuleMidHook::make(game.toModuleName(), renderPlayerFunction, renderPlayerHookFunction);
+
+
+
 
 	}
 

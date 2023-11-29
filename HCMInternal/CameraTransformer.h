@@ -2,61 +2,25 @@
 #include "pch.h"
 #include "FreeCameraData.h"
 #include "ISmoother.h"
+#include "IUpdateCameraTransform.h"
 
-struct RelativeCameraState
+
+class RotationTransformer
 {
+private:
 
-
-	SimpleMath::Vector3 currentPositionTransformation;
-	float currentFOVOffset = 0;
-
-	float currentEulerYaw;
-	float currentEulerPitch;
-	float currentEulerRoll;
-
-	SimpleMath::Vector3 targetPositionTransformation;
-	float targetFOVOffset = 0;
-
-
-	float targetEulerYaw;
-	float targetEulerPitch;
-	float targetEulerRoll;
-
-
-};
-
-
-class CameraTransformer
-{
-
-public:
-	std::shared_ptr<ISmoother<SimpleMath::Vector3>> positionSmoother;
-	std::shared_ptr<ISmoother<float>> rotationSmoother;
-	std::shared_ptr<ISmoother<float>> fovSmoother;
-
-	CameraTransformer(std::shared_ptr<ISmoother<SimpleMath::Vector3>> pos, std::shared_ptr<ISmoother<float>> rot, std::shared_ptr<ISmoother<float>> fov)
-		: positionSmoother(pos), rotationSmoother(rot), fovSmoother(fov) {}
-
-	RelativeCameraState relativeCameraState;
-
-	void transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta)
+	void applyRotationTransform(FreeCameraData& freeCameraData, float frameDelta)
 	{
-		positionSmoother->smooth(relativeCameraState.currentPositionTransformation, relativeCameraState.targetPositionTransformation);
 
-		freeCameraData.currentPosition = freeCameraData.currentPosition + relativeCameraState.currentPositionTransformation;
-	}
-
-	void transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta)
-	{
 		// interpolate euler angles
-		rotationSmoother->smooth(relativeCameraState.currentEulerYaw, relativeCameraState.targetEulerYaw);
-		rotationSmoother->smooth(relativeCameraState.currentEulerPitch, relativeCameraState.targetEulerPitch);
-		rotationSmoother->smooth(relativeCameraState.currentEulerRoll, relativeCameraState.targetEulerRoll);
+		rotationSmoother->smooth(currentEulerYaw, targetEulerYaw);
+		rotationSmoother->smooth(currentEulerPitch, targetEulerPitch);
+		rotationSmoother->smooth(currentEulerRoll, targetEulerRoll);
 
 
 
 		// step one: yaw
-		auto quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, relativeCameraState.currentEulerYaw);
+		auto quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, currentEulerYaw);
 
 		auto totalQuat = quatYaw;
 
@@ -69,11 +33,7 @@ public:
 		freeCameraData.currentlookDirRight.Normalize();
 
 		// step two: pitch
-		auto quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirRight, relativeCameraState.currentEulerPitch);
-
-
-
-
+		auto quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirRight, currentEulerPitch);
 
 		totalQuat = quatPitch;
 
@@ -87,7 +47,7 @@ public:
 
 
 		// step 3: roll
-		auto quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, relativeCameraState.currentEulerRoll);
+		auto quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, currentEulerRoll);
 
 		totalQuat = quatRoll;
 
@@ -100,14 +60,141 @@ public:
 		freeCameraData.currentlookDirRight.Normalize();
 
 	}
+	float currentEulerYaw;
+	float currentEulerPitch;
+	float currentEulerRoll;
 
-	void transformCameraFOV(float& currentFOVOffset, float frameDelta)
+
+
+	float targetEulerYaw;
+	float targetEulerPitch;
+	float targetEulerRoll;
+
+
+	std::unique_ptr<ISmoother<float>> rotationSmoother;
+	std::shared_ptr<IUpdateRotationTransform> rotationUpdater;
+
+public:
+
+
+
+
+	RotationTransformer(std::unique_ptr<ISmoother<float>> rotSmooth, std::shared_ptr<IUpdateRotationTransform> rotUp, float initialYaw, float initialPitch, float initialRoll)
+		: 
+		rotationSmoother(std::move(rotSmooth)), 
+		rotationUpdater(std::move(rotUp)),
+		currentEulerYaw(initialYaw),
+		currentEulerPitch(initialPitch),
+		currentEulerRoll(initialRoll),
+		targetEulerYaw(initialYaw),
+		targetEulerPitch(initialPitch),
+		targetEulerRoll(initialRoll)
+
+	{}
+
+	
+	
+
+	void transformRotation(FreeCameraData& freeCameraData, float frameDelta)
 	{
-		fovSmoother->smooth(relativeCameraState.currentFOVOffset, relativeCameraState.targetFOVOffset);
-
-		currentFOVOffset = currentFOVOffset + relativeCameraState.currentFOVOffset;
+		rotationUpdater->updateRotationTransform(freeCameraData, frameDelta, targetEulerYaw, targetEulerPitch, targetEulerRoll);
+		applyRotationTransform(freeCameraData, frameDelta);
 	}
 
+
+
+};
+
+class PositionTransformer
+{
+private:
+
+
+
+
+	void applyPositionTransform(FreeCameraData& freeCameraData, float frameDelta)
+	{
+
+
+		positionSmoother->smooth(currentPositionTransformation, targetPositionTransformation);
+
+		freeCameraData.currentPosition = freeCameraData.currentPosition + currentPositionTransformation;
+	}
+
+	SimpleMath::Vector3 currentPositionTransformation;
+
+	SimpleMath::Vector3 targetPositionTransformation;
+
+	std::unique_ptr<ISmoother<SimpleMath::Vector3>> positionSmoother;
+	std::shared_ptr<IUpdatePositionTransform> positionUpdater;
+
+
+
+public:
+
+
+
+	PositionTransformer(std::unique_ptr<ISmoother<SimpleMath::Vector3>> posSmooth, std::shared_ptr<IUpdatePositionTransform> posUp, SimpleMath::Vector3 initialPosition) 
+		:
+		positionSmoother(std::move(posSmooth)),
+		positionUpdater(std::move(posUp)),
+		currentPositionTransformation(initialPosition),
+		targetPositionTransformation(initialPosition)
+	{}
+
+
+
+	void transformPosition(FreeCameraData& freeCameraData, float frameDelta)
+	{
+		positionUpdater->updatePositionTransform(freeCameraData, frameDelta, targetPositionTransformation);
+		applyPositionTransform(freeCameraData, frameDelta);
+	}
+
+
+};
+
+class FOVTransformer
+{
+private:
+
+
+	void applyFOVTransform(FreeCameraData& freeCameraData, float frameDelta)
+	{
+
+		// TODO
+
+		//fovSmoother->smooth(currentFOVOffset, targetFOVOffset);
+
+		//currentFOVOffset = currentFOVOffset + currentFOVOffset;
+	}
+
+
+
+	float currentFOVScale;
+
+	float targetFOVScale;
+
+	std::unique_ptr<ISmoother<float>> fovSmoother;
+	std::shared_ptr<IUpdateFOVTransform> fovUpdater;
+
+public:
+
+
+
+
+	FOVTransformer(std::unique_ptr<ISmoother<float>> fovSmooth, std::shared_ptr<IUpdateFOVTransform> fovUp, float initialFOVScale)
+		:
+		fovSmoother(std::move(fovSmooth)),
+		fovUpdater(std::move(fovUp)),
+		currentFOVScale(initialFOVScale),
+		targetFOVScale(initialFOVScale)
+	{}
+
+	void transformFOV(FreeCameraData& freeCameraData, float frameDelta)
+	{
+		fovUpdater->updateFOVTransform(freeCameraData, frameDelta, targetFOVScale);
+		applyFOVTransform(freeCameraData, frameDelta);
+	}
 
 
 };

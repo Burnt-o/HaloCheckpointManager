@@ -1,0 +1,28 @@
+#pragma once
+#include "IOptionalCheat.h"
+#include "GameState.h"
+#include "DIContainer.h"
+#include "IUpdateCameraTransform.h"
+
+class UserCameraInputReader : public IOptionalCheat, public IUpdatePositionTransform, public IUpdateRotationTransform, public IUpdateFOVTransform
+{
+private:
+	class UserCameraInputReaderImpl;
+	std::unique_ptr< UserCameraInputReaderImpl> pimpl; // todo; working on hooking this up to multilevel pointer to read analog inputs
+
+	virtual void updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform) override;
+
+	virtual void updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll) override;
+
+	virtual void updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov) override;
+
+
+public:
+
+	UserCameraInputReader(GameState game, IDIContainer& dicon);
+	~UserCameraInputReader();
+
+
+	std::string_view getName() override { return nameof(UserCameraInputReader); }
+};
+

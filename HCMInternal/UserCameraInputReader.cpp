@@ -1,13 +1,15 @@
 #include "pch.h"
-#include "CameraInputReader.h"
+#include "UserCameraInputReader.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "IMCCStateHook.h"
 #include "MultilevelPointer.h"
 #include "PointerManager.h"
 
+#include "LinearSmoother.h"
 
-class CameraInputReader::CameraInputReaderImpl
+
+class UserCameraInputReader::UserCameraInputReaderImpl
 {
 private:
 
@@ -95,7 +97,7 @@ private:
 
 public:
 
-	CameraInputReaderImpl(GameState game, IDIContainer& dicon)
+	UserCameraInputReaderImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
@@ -122,17 +124,17 @@ public:
 
 	}
 
-	void readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+	void updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform);
 
-	void readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+	void updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll);
 
-	void readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta);
+	void updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov);
 };
 
 
 
 
-void CameraInputReader::CameraInputReaderImpl::readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+void UserCameraInputReader::UserCameraInputReaderImpl::updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform)
 {
 	LOG_ONCE(PLOG_DEBUG << "readPositionInput");
 
@@ -154,31 +156,31 @@ void CameraInputReader::CameraInputReaderImpl::readPositionInput(RelativeCameraS
 	// Forward/back
 	if (*cachedAnalogMoveForwardBack != 0.f)
 	{
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
+		positionTransform = positionTransform + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
 	}
 
 	// Left/Right
 	if (*cachedAnalogMoveLeftRight != 0.f)
 	{
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
+		positionTransform = positionTransform + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
 	}
 
 	// Up
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
+		positionTransform = positionTransform + (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
 	}
 
 	// Down
 	if (GetKeyState(VK_CONTROL) & 0x8000)
 	{
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation - (freeCameraData.currentlookDirUp * cameraTranslationSpeed * -1.f);
+		positionTransform = positionTransform - (freeCameraData.currentlookDirUp * cameraTranslationSpeed * -1.f);
 	}
 	
 
 }
 
-void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll)
 {
 	LOG_ONCE(PLOG_DEBUG << "readRotationInput");
 
@@ -213,11 +215,11 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 		// https://www.geogebra.org/m/aavMVjyK sin and cos will give us the multipliers we need
 
 
-		float yawProportion = std::cos(relativeCameraState.targetEulerRoll); // hmmm
-		float pitchProportion = std::sin(relativeCameraState.targetEulerRoll) * -1.f;
+		float yawProportion = std::cos(eulerRoll); // hmmm
+		float pitchProportion = std::sin(eulerRoll) * -1.f;
 
-		relativeCameraState.targetEulerYaw = (relativeCameraState.targetEulerYaw + (analogRotationSpeed * *cachedAnalogTurnLeftRight * yawProportion));
-		relativeCameraState.targetEulerPitch = (relativeCameraState.targetEulerPitch + (analogRotationSpeed * *cachedAnalogTurnLeftRight * pitchProportion));
+		eulerYaw = (eulerYaw + (analogRotationSpeed * *cachedAnalogTurnLeftRight * yawProportion));
+		eulerPitch = (eulerPitch + (analogRotationSpeed * *cachedAnalogTurnLeftRight * pitchProportion));
 	}
 
 
@@ -232,23 +234,23 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 		// when roll is 270 dir right (up is to the right): up yaws left
 		// https://www.geogebra.org/m/aavMVjyK sin and cos will give us the multipliers we need
 
-		float pitchProportion = std::cos(relativeCameraState.targetEulerRoll);
-		float yawProportion = std::sin(relativeCameraState.targetEulerRoll);
+		float pitchProportion = std::cos(eulerRoll);
+		float yawProportion = std::sin(eulerRoll);
 
-		relativeCameraState.targetEulerPitch = (relativeCameraState.targetEulerPitch + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * pitchProportion));
-		relativeCameraState.targetEulerYaw = (relativeCameraState.targetEulerYaw + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * yawProportion));
+		eulerPitch = (eulerPitch + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * pitchProportion));
+		eulerYaw = (eulerYaw + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * yawProportion));
 
 	}
 
 	// Roll: means rotating around local FORWARD axis.
 	if (GetKeyState('G') & 0x8000)
 	{
-		relativeCameraState.targetEulerRoll = relativeCameraState.targetEulerRoll + digitalRotationSpeed;
+		eulerRoll = eulerRoll + digitalRotationSpeed;
 	}
 
 	if (GetKeyState('T') & 0x8000)
 	{
-		relativeCameraState.targetEulerRoll = relativeCameraState.targetEulerRoll + (digitalRotationSpeed * -1.f);
+		eulerRoll = eulerRoll + (digitalRotationSpeed * -1.f);
 	}
 
 
@@ -256,7 +258,7 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 
 }
 
-void CameraInputReader::CameraInputReaderImpl::readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+void UserCameraInputReader::UserCameraInputReaderImpl::updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov)
 {
 	LOG_ONCE(PLOG_DEBUG << "readFOVInput");
 
@@ -272,40 +274,40 @@ void CameraInputReader::CameraInputReaderImpl::readFOVInput(RelativeCameraState&
 	// increase
 	if (GetKeyState(VK_NUMPAD1) & 0x8000)
 	{
-		relativeCameraState.targetFOVOffset = relativeCameraState.targetFOVOffset + cameraFOVSpeed;
+		fov = std::clamp(fov + cameraFOVSpeed, 0.f, 2.f);
 	}
 
 	// decrease
 	if (GetKeyState(VK_NUMPAD3) & 0x8000)
 	{
-		relativeCameraState.targetFOVOffset = relativeCameraState.targetFOVOffset - cameraFOVSpeed;
+		fov = std::clamp(fov - cameraFOVSpeed, 0.f, 2.f); 
 	}
 }
 
 
 
 
-CameraInputReader::CameraInputReader(GameState game, IDIContainer& dicon)
+UserCameraInputReader::UserCameraInputReader(GameState game, IDIContainer& dicon)
 {
-	pimpl = std::make_unique<CameraInputReaderImpl>(game, dicon);
+	pimpl = std::make_unique<UserCameraInputReaderImpl>(game, dicon);
 }
 
-CameraInputReader::~CameraInputReader()
+UserCameraInputReader::~UserCameraInputReader()
 {
 	PLOG_DEBUG << "~" << getName();
 }
 
-void CameraInputReader::readPositionInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+void UserCameraInputReader::updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform)
 {
-	return pimpl->readPositionInput(relativeCameraState, freeCameraData, frameDelta);
+	return pimpl->updatePositionTransform(freeCameraData, frameDelta, positionTransform);
 }
 
-void CameraInputReader::readRotationInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+void UserCameraInputReader::updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll)
 {
-	return pimpl->readRotationInput(relativeCameraState, freeCameraData, frameDelta);
+	return pimpl->updateRotationTransform(freeCameraData, frameDelta, eulerYaw, eulerPitch, eulerRoll);
 }
 
-void CameraInputReader::readFOVInput(RelativeCameraState& relativeCameraState, FreeCameraData& freeCameraData, float frameDelta)
+void UserCameraInputReader::updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov)
 {
-	return pimpl->readFOVInput(relativeCameraState, freeCameraData, frameDelta);
+	return pimpl->updateFOVTransform(freeCameraData, frameDelta, fov);
 }

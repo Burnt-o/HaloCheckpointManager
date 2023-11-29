@@ -548,11 +548,14 @@
     <ClInclude Include="CameraTransformer.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="CameraInputReader.h">
+    <ClInclude Include="UserCameraInputReader.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
     <ClInclude Include="SquareSmoother.h">
       <Filter>Classes\Smoother</Filter>
+    </ClInclude>
+    <ClInclude Include="IUpdateCameraTransform.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -763,7 +766,7 @@
     <ClCompile Include="UpdateGameCameraData.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="CameraInputReader.cpp">
+    <ClCompile Include="UserCameraInputReader.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
     <ClCompile Include="SquareSmoother.cpp">
