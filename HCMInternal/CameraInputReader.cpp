@@ -148,31 +148,31 @@ void CameraInputReader::CameraInputReaderImpl::readPositionInput(RelativeCameraS
 	if (cachedAnalogMoveLeftRight == nullptr || cachedAnalogMoveForwardBack == nullptr) throw HCMRuntimeException("null cachedAnalogMove pointers!");
 
 
-	// add from inputs
+	// Note: for this code to work properly, the freeCameraData lookDirs must be already updated this frame. 
+	// In other words, call readRotationInput & transformRotations BEFORE reading position input, so that this code knows which way is "forward" when you press W, etc.
+
+	// Forward/back
 	if (*cachedAnalogMoveForwardBack != 0.f)
 	{
-		auto forward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentRotationTransformation);
-
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (forward * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
+		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
 	}
 
+	// Left/Right
 	if (*cachedAnalogMoveLeftRight != 0.f)
 	{
-		auto right = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, relativeCameraState.currentRotationTransformation);
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (right * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
+		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
 	}
 
-
+	// Up
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-		auto up = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.currentRotationTransformation);
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (up * cameraTranslationSpeed);
+		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation + (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
 	}
 
+	// Down
 	if (GetKeyState(VK_CONTROL) & 0x8000)
 	{
-		auto up = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.currentRotationTransformation);
-		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation - (up * cameraTranslationSpeed * -1.f);
+		relativeCameraState.targetPositionTransformation = relativeCameraState.targetPositionTransformation - (freeCameraData.currentlookDirUp * cameraTranslationSpeed * -1.f);
 	}
 	
 
@@ -200,24 +200,24 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	}
 
 
-	bool needToApplyRotation = false;
-
-
 
 
 	// Yaw: rotation around WORLD up
 	if (*cachedAnalogTurnLeftRight != 0.f)
 	{
-		needToApplyRotation = true;
+		// some trig to make it instead pitch if camera is rolled perpindicular to horizon.
+		// when roll is zero : left yaws left. (duh)
+		// when roll is 90 dir right (up is to the left): left pitches up.
+		// when roll is 180 dir right (up is to the bottom): left yaws right.
+		// when roll is 270 dir right (up is to the right): left pitches down.
+		// https://www.geogebra.org/m/aavMVjyK sin and cos will give us the multipliers we need
 
-		
-		//auto quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, analogRotationSpeed * *cachedAnalogTurnLeftRight);
 
-		////https://gamedev.stackexchange.com/questions/136174/im-rotating-an-object-on-two-axes-so-why-does-it-keep-twisting-around-the-thir
-		//relativeCameraState.targetRotationTransformation = quatYaw * relativeCameraState.targetRotationTransformation;
+		float yawProportion = std::cos(relativeCameraState.targetEulerRoll); // hmmm
+		float pitchProportion = std::sin(relativeCameraState.targetEulerRoll) * -1.f;
 
-		relativeCameraState.eulerYaw = (relativeCameraState.eulerYaw + (analogRotationSpeed * *cachedAnalogTurnLeftRight));
-		relativeCameraState.eulerYaw = std::remainderf(relativeCameraState.eulerYaw, DirectX::XM_2PI);
+		relativeCameraState.targetEulerYaw = (relativeCameraState.targetEulerYaw + (analogRotationSpeed * *cachedAnalogTurnLeftRight * yawProportion));
+		relativeCameraState.targetEulerPitch = (relativeCameraState.targetEulerPitch + (analogRotationSpeed * *cachedAnalogTurnLeftRight * pitchProportion));
 	}
 
 
@@ -225,105 +225,34 @@ void CameraInputReader::CameraInputReaderImpl::readRotationInput(RelativeCameraS
 	// Pitch: rotation around local right
 	if (*cachedAnalogTurnUpDown != 0.f)
 	{
-		needToApplyRotation = true;
+		// some trig to make it instead yaw if camera is rolled perpindicular to horizon.
+		// when roll is zero : up pitches up. (duh)
+		// when roll is 90 dir right (up is to the left): up yaws right.
+		// when roll is 180 dir right (up is to the bottom): up pitches down.
+		// when roll is 270 dir right (up is to the right): up yaws left
+		// https://www.geogebra.org/m/aavMVjyK sin and cos will give us the multipliers we need
 
+		float pitchProportion = std::cos(relativeCameraState.targetEulerRoll);
+		float yawProportion = std::sin(relativeCameraState.targetEulerRoll);
 
-		//auto quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.targetLookDirRight, analogRotationSpeed * *cachedAnalogTurnUpDown);
+		relativeCameraState.targetEulerPitch = (relativeCameraState.targetEulerPitch + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * pitchProportion));
+		relativeCameraState.targetEulerYaw = (relativeCameraState.targetEulerYaw + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * yawProportion));
 
-
-		////https://gamedev.stackexchange.com/questions/136174/im-rotating-an-object-on-two-axes-so-why-does-it-keep-twisting-around-the-thir
-		//relativeCameraState.targetRotationTransformation =  relativeCameraState.targetRotationTransformation * quatPitch;
-
-		constexpr float maxPitch = DirectX::XM_PIDIV2 - 0.01;
-		constexpr float minPitch = maxPitch * -1.f;
-
-		relativeCameraState.eulerPitch = (relativeCameraState.eulerPitch + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f));
-		relativeCameraState.eulerPitch = std::clamp(relativeCameraState.eulerPitch, minPitch, maxPitch);
 	}
 
 	// Roll: means rotating around local FORWARD axis.
 	if (GetKeyState('G') & 0x8000)
 	{
-		needToApplyRotation = true;
-		
-		//auto quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.targetLookDirForward, digitalRotationSpeed);
-
-		////https://gamedev.stackexchange.com/questions/136174/im-rotating-an-object-on-two-axes-so-why-does-it-keep-twisting-around-the-thir
-		//relativeCameraState.targetRotationTransformation = relativeCameraState.targetRotationTransformation * quatRoll;
-
-		relativeCameraState.eulerRoll = relativeCameraState.eulerRoll + digitalRotationSpeed;
-		relativeCameraState.eulerRoll = std::remainderf(relativeCameraState.eulerRoll, DirectX::XM_2PI);
-
+		relativeCameraState.targetEulerRoll = relativeCameraState.targetEulerRoll + digitalRotationSpeed;
 	}
 
 	if (GetKeyState('T') & 0x8000)
 	{
-		needToApplyRotation = true;
-
-		//auto quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(relativeCameraState.targetLookDirForward, digitalRotationSpeed * -1.f);
-
-		////https://gamedev.stackexchange.com/questions/136174/im-rotating-an-object-on-two-axes-so-why-does-it-keep-twisting-around-the-thir
-		//relativeCameraState.targetRotationTransformation = relativeCameraState.targetRotationTransformation * quatRoll;
-
-		relativeCameraState.eulerRoll = relativeCameraState.eulerRoll + (digitalRotationSpeed * -1.f);
-		relativeCameraState.eulerRoll = std::remainderf(relativeCameraState.eulerRoll, DirectX::XM_2PI);
+		relativeCameraState.targetEulerRoll = relativeCameraState.targetEulerRoll + (digitalRotationSpeed * -1.f);
 	}
 
 
-	if (needToApplyRotation)
-	{
-		//relativeCameraState.targetRotationTransformation = relativeCameraState.targetRotationTransformation *  quatYaw  * quatPitch;
-		//relativeCameraState.targetRotationTransformation.Normalize();
 
-
-		// todo: try instead of having one quat, make a quat out of each euler (axisangle?) then apply
-
-		auto quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, relativeCameraState.eulerYaw);
-		auto quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirRight, relativeCameraState.eulerPitch);
-
-		auto quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirForward, relativeCameraState.eulerRoll);
-
-
-		//auto quatYaw = SimpleMath::Quaternion::CreateFromAxisAngle(freeCameraData.currentlookDirUp, relativeCameraState.eulerYaw);
-
-		//auto right = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, quatYaw);
-
-		//auto quatPitch = SimpleMath::Quaternion::CreateFromAxisAngle(right, relativeCameraState.eulerPitch);
-
-		//auto forward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, quatPitch * quatYaw);
-		//auto quatRoll = SimpleMath::Quaternion::CreateFromAxisAngle(forward, relativeCameraState.eulerRoll);
-
-
-		// i haven't quite got rolling working properly...
-		relativeCameraState.targetRotationTransformation =  quatPitch * quatRoll * quatYaw; // order matters
-		//  quatPitch * quatRoll * quatYaw ; mostly works but roll is kinda broken
-
-		//SimpleMath::Vector3 forward = SimpleMath::Vector3(
-		//	std::cos(relativeCameraState.eulerPitch) * std::sin(relativeCameraState.eulerYaw),
-		//	std::sin(relativeCameraState.eulerPitch),
-		//	std::cos(relativeCameraState.eulerPitch) * std::cos(relativeCameraState.eulerYaw));
-
-		//relativeCameraState.targetRotationTransformation = SimpleMath::Quaternion::LookRotation(forward, { 0, 1, 0 });
-
-
-
-		//relativeCameraState.targetRotationTransformation = SimpleMath::Quaternion::CreateFromYawPitchRoll(
-		//	relativeCameraState.eulerPitch, 
-		//	relativeCameraState.eulerRoll,
-		//	relativeCameraState.eulerYaw
-		//);
-
-		// recalculate lookdirs for next input
-		/*relativeCameraState.targetLookDirForward = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitX, relativeCameraState.currentRotationTransformation);
-		relativeCameraState.targetLookDirForward.Normalize();
-		relativeCameraState.targetLookDirUp = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitZ, relativeCameraState.currentRotationTransformation);
-		relativeCameraState.targetLookDirUp.Normalize();
-		relativeCameraState.targetLookDirRight = SimpleMath::Vector3::Transform(SimpleMath::Vector3::UnitY, relativeCameraState.currentRotationTransformation);
-		relativeCameraState.targetLookDirRight.Normalize();*/
-
-		//relativeCameraState.targetRotationTransformation = SimpleMath::Quaternion::CreateFromYawPitchRoll(relativeCameraState.eulerYaw, relativeCameraState.eulerPitch, relativeCameraState.eulerRoll);
-		//relativeCameraState.targetRotationTransformation.Conjugate();
-	}
 
 }
 

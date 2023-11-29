@@ -19,29 +19,29 @@ void LinearSmoother<SimpleMath::Vector3>::smooth(SimpleMath::Vector3& currentVal
 }
 
 
-
-
-template<>
-void LinearSmoother<SimpleMath::Quaternion>::smooth(SimpleMath::Quaternion& currentValue, SimpleMath::Quaternion desiredValue)
-{
-	
-	
-	auto distance = SimpleMath::Quaternion::Angle(desiredValue, currentValue);
-
-	if (GetKeyState('7') & 0x8000)
-	{
-		PLOG_DEBUG << "linearSmoother distance: " << distance;
-	}
-
-
-	distance = distance / DirectX::XM_PI; // normalise distance
-
-	if (GetKeyState('6') & 0x8000)
-	{
-		PLOG_DEBUG << "linearSmoother normalised distance: " << distance;
-	}
-
-
-	currentValue = SimpleMath::Quaternion::Slerp(currentValue, desiredValue, distance * mSmoothRate);
-}
-
+//
+//
+//template<>
+//void LinearSmoother<SimpleMath::Quaternion>::smooth(SimpleMath::Quaternion& currentValue, SimpleMath::Quaternion desiredValue)
+//{
+//	
+//	// this has a discontinuity
+//	auto distance = SimpleMath::Quaternion::Angle(desiredValue, currentValue);
+//
+//	if (GetKeyState('7') & 0x8000)
+//	{
+//		PLOG_DEBUG << "linearSmoother distance: " << distance;
+//	}
+//
+//
+//	distance = distance / 2.f; // normalise distance
+//
+//	if (GetKeyState('6') & 0x8000)
+//	{
+//		PLOG_DEBUG << "linearSmoother normalised distance: " << distance;
+//	}
+//
+//
+//	currentValue = SimpleMath::Quaternion::Slerp(currentValue, desiredValue, distance * mSmoothRate);
+//}
+//
