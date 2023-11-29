@@ -769,6 +769,9 @@
     <ClCompile Include="SquareSmoother.cpp">
       <Filter>Classes\Smoother</Filter>
     </ClCompile>
+    <ClCompile Include="LinearSmoother.cpp">
+      <Filter>Classes\Smoother</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

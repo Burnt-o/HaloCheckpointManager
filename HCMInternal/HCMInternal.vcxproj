@@ -463,6 +463,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="PointerManager.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
     <ClCompile Include="SharedMemoryInternal.cpp" />
+    <ClCompile Include="LinearSmoother.cpp" />
     <ClCompile Include="Speedhack.cpp" />
     <ClCompile Include="SquareSmoother.cpp" />
     <ClCompile Include="UnfreezeObjectPhysics.cpp" />

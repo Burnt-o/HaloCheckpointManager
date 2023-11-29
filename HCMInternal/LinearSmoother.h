@@ -14,15 +14,11 @@ private:
 public:
 	virtual void setSmoothRate(float inertia) override 
 	{ 
-		mSmoothRate = std::sqrt(1.f - inertia);
+		mSmoothRate = inertia;
 	}
 	LinearSmoother(float smoothRate) : mSmoothRate(smoothRate)
 	{}
 
-	virtual void smooth(valueType& currentValue, valueType desiredValue) override
-	{
-		valueType distance = desiredValue - currentValue;
-		currentValue = currentValue + (distance * mSmoothRate);
-	}
+	virtual void smooth(valueType& currentValue, valueType desiredValue) override;
 };
 

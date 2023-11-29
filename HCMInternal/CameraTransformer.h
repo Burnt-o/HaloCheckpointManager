@@ -5,19 +5,27 @@
 
 struct RelativeCameraState
 {
-	SimpleMath::Quaternion currentLookQuat;
-	SimpleMath::Vector3 currentlookDirForward	{1, 0, 0};
-	SimpleMath::Vector3 currentlookDirRight		{0, 1, 0};
-	SimpleMath::Vector3 currentlookDirUp		{0, 0, 1};
-	SimpleMath::Vector3 currentPosition			{0, 0, 0};
-	float currentFOVOffset						= 0;
 
-	SimpleMath::Quaternion targetLookQuat;
-	SimpleMath::Vector3 targetlookDirForward	{1, 0, 0};
-	SimpleMath::Vector3 targetlookDirRight		{0, 1, 0};
-	SimpleMath::Vector3 targetlookDirUp			{0, 0, 1};
-	SimpleMath::Vector3 targetPosition			{0, 0, 0};
-	float targetFOVOffset						= 0;  
+	SimpleMath::Quaternion currentRotationTransformation;
+	SimpleMath::Vector3 currentPositionTransformation;
+	float currentFOVOffset = 0;
+
+
+
+	SimpleMath::Quaternion targetRotationTransformation;
+	SimpleMath::Vector3 targetPositionTransformation;
+	float targetFOVOffset = 0;
+
+
+	SimpleMath::Vector3 targetLookDirForward;
+	SimpleMath::Vector3 targetLookDirRight;
+	SimpleMath::Vector3 targetLookDirUp;
+
+	float eulerYaw;
+	float eulerPitch;
+	float eulerRoll;
+
+
 };
 
 
@@ -36,20 +44,31 @@ public:
 
 	void transformCameraPosition(FreeCameraData& freeCameraData, float frameDelta)
 	{
-		positionSmoother->smooth(relativeCameraState.currentPosition, relativeCameraState.targetPosition);
+		positionSmoother->smooth(relativeCameraState.currentPositionTransformation, relativeCameraState.targetPositionTransformation);
 
-		freeCameraData.currentPosition = freeCameraData.currentPosition + relativeCameraState.currentPosition;
+		freeCameraData.currentPosition = freeCameraData.currentPosition + relativeCameraState.currentPositionTransformation;
 	}
 
 	void transformCameraRotation(FreeCameraData& freeCameraData, float frameDelta)
 	{
 		// interpolate currentLookQuat to targetLookQuat
-		rotationSmoother->smooth(relativeCameraState.currentLookQuat, relativeCameraState.targetLookQuat);
+		rotationSmoother->smooth(relativeCameraState.currentRotationTransformation, relativeCameraState.targetRotationTransformation);
+
+		//relativeCameraState.currentRotationTransformation = relativeCameraState.targetRotationTransformation;
 
 		// transform currentLookDirs by currentLookQuat
-		freeCameraData.currentlookDirForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentLookQuat);
-		freeCameraData.currentlookDirRight = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, relativeCameraState.currentLookQuat);
-		freeCameraData.currentlookDirUp = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.currentLookQuat);
+		freeCameraData.currentlookDirForward = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirForward, relativeCameraState.currentRotationTransformation);
+		freeCameraData.currentlookDirForward.Normalize();
+		freeCameraData.currentlookDirUp = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirUp, relativeCameraState.currentRotationTransformation);
+		freeCameraData.currentlookDirUp.Normalize();
+		freeCameraData.currentlookDirRight = SimpleMath::Vector3::Transform(freeCameraData.currentlookDirRight, relativeCameraState.currentRotationTransformation);
+		freeCameraData.currentlookDirRight.Normalize();
+
+		//freeCameraData.currentlookDirRight = freeCameraData.currentlookDirUp.Cross(freeCameraData.currentlookDirForward);
+
+
+
+
 
 
 	}

@@ -10,6 +10,7 @@
 #include "MidhookFlagInterpreter.h"
 #include "IMakeOrGetCheat.h"
 #include "GetGameCameraData.h"
+#include "GetPlayerViewAngle.h"
 //#include "PlayerControlledFreeCamera.h"
 //#include "ObjectAnchoredFreeCam.h"
 #include "UpdateGameCameraData.h"
@@ -41,6 +42,7 @@ private:
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
 	std::shared_ptr<GetGameCameraData> getGameCameraData;
 	std::shared_ptr<UpdateGameCameraData> updateGameCameraData;
 	//std::shared_ptr<ObjectAnchoredFreeCam> objectAnchoredFreeCam;
@@ -114,6 +116,20 @@ private:
 
 
 			static int debugWorldLook = 0;
+
+			static float rotsmooth = 0.6f;
+			if (GetKeyState('8') & 0x8000)
+			{
+				rotsmooth += 0.01f;
+				PLOG_DEBUG << rotsmooth;
+				playerControlledCameraTransformer.rotationSmoother->setSmoothRate(rotsmooth);
+			}
+			if (GetKeyState('9') & 0x8000)
+			{
+				rotsmooth -= 0.01f;
+				PLOG_DEBUG << rotsmooth;
+				playerControlledCameraTransformer.rotationSmoother->setSmoothRate(rotsmooth);
+			}
 
 			if (GetKeyState('O') & 0x8000)
 			{
@@ -255,35 +271,82 @@ private:
 				LOG_ONCE("Setting up camera transformers");
 
 				// if objectAnchoring enabled then this target position actually needs to be like 0 or something close to it.
-				playerControlledCameraTransformer.relativeCameraState.targetlookDirForward = *gameCameraData.lookDirForward;
-				playerControlledCameraTransformer.relativeCameraState.targetlookDirUp = *gameCameraData.lookDirUp;
-
-				SimpleMath::Vector3 myUp = playerControlledCameraTransformer.relativeCameraState.targetlookDirUp;
-
-
-				playerControlledCameraTransformer.relativeCameraState.targetlookDirRight = SimpleMath::Vector3::Transform(playerControlledCameraTransformer.relativeCameraState.targetlookDirForward, SimpleMath::Quaternion::CreateFromAxisAngle(myUp, DirectX::XM_PIDIV2));
-				playerControlledCameraTransformer.relativeCameraState.targetPosition = *gameCameraData.position;
+				playerControlledCameraTransformer.relativeCameraState.targetPositionTransformation = *gameCameraData.position;
 				playerControlledCameraTransformer.relativeCameraState.targetFOVOffset = 0;
 					
 
+				auto forward = *gameCameraData.lookDirForward;
+				auto up = *gameCameraData.lookDirUp;
+				auto right = SimpleMath::Vector3::Transform(forward, SimpleMath::Quaternion::CreateFromAxisAngle(up, DirectX::XM_PIDIV2));
 
 				SimpleMath::Matrix dirMatrix = SimpleMath::Matrix(
-					// You'd think this would be forward->right->up, but since game uses YXZ order and I prefer XYZ, we do right->backward->up to convert
-					playerControlledCameraTransformer.relativeCameraState.targetlookDirForward,
-					playerControlledCameraTransformer.relativeCameraState.targetlookDirRight,
-					playerControlledCameraTransformer.relativeCameraState.targetlookDirUp
+					forward,
+					right,
+					up
 				);
 
+				playerControlledCameraTransformer.relativeCameraState.targetRotationTransformation = SimpleMath::Quaternion::CreateFromRotationMatrix(dirMatrix);
+				playerControlledCameraTransformer.relativeCameraState.currentRotationTransformation = playerControlledCameraTransformer.relativeCameraState.targetRotationTransformation;
+				playerControlledCameraTransformer.relativeCameraState.targetLookDirForward = forward;
+				playerControlledCameraTransformer.relativeCameraState.targetLookDirRight = right;
+				playerControlledCameraTransformer.relativeCameraState.targetLookDirUp = up;
 
-				playerControlledCameraTransformer.relativeCameraState.targetLookQuat = SimpleMath::Quaternion::CreateFromRotationMatrix(dirMatrix);
+				// https://stackoverflow.com/questions/21622956/how-to-convert-direction-vector-to-euler-angles
+				playerControlledCameraTransformer.relativeCameraState.eulerYaw = std::remainderf(std::atan2(forward.y, forward.x) + DirectX::XM_2PI, DirectX::XM_2PI);
+				playerControlledCameraTransformer.relativeCameraState.eulerPitch = std::asin(forward.z) * -1.f;
+				playerControlledCameraTransformer.relativeCameraState.eulerRoll = 0.f;
+
+					PLOG_DEBUG << "calcEuler.x: " << playerControlledCameraTransformer.relativeCameraState.eulerYaw;
+					PLOG_DEBUG << "calcEuler.y: " << playerControlledCameraTransformer.relativeCameraState.eulerPitch;
+					PLOG_DEBUG << "calcEuler.z: " << playerControlledCameraTransformer.relativeCameraState.eulerRoll;
+
+				auto testEuler = dirMatrix.ToEuler();
+
+				PLOG_DEBUG << "testEuler.x: " << testEuler.x;
+				PLOG_DEBUG << "testEuler.y: " << testEuler.y;
+				PLOG_DEBUG << "testEuler.z: " << testEuler.z;
+
+				auto testEuler2 = playerControlledCameraTransformer.relativeCameraState.targetRotationTransformation.ToEuler();
+
+				PLOG_DEBUG << "testEuler2.x: " << testEuler2.x;
+				PLOG_DEBUG << "testEuler2.y: " << testEuler2.y;
+				PLOG_DEBUG << "testEuler2.z: " << testEuler2.z;
+
+				//auto conj = dirMatrix;
+				//conj.Invert();
+				//auto eul = conj.ToEuler();
+
+				//PLOG_DEBUG << "conjeuler.x: " << eul.x;
+				//PLOG_DEBUG << "conjeuler.y: " << eul.y;
+				//PLOG_DEBUG << "conjeuler.z: " << eul.z;
+
+				//playerControlledCameraTransformer.relativeCameraState.eulerYaw = eul.x;
+				//playerControlledCameraTransformer.relativeCameraState.eulerPitch = eul.y;
+				//playerControlledCameraTransformer.relativeCameraState.eulerRoll = eul.z;
+
+				//// this is just for debugging euler order. will go back to dir matrix approach.. maybe
+				//lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
+				//auto viewAngle = getPlayerViewAngle->getPlayerViewAngle();
+
+				//playerControlledCameraTransformer.relativeCameraState.eulerYaw = viewAngle.x;
+				//playerControlledCameraTransformer.relativeCameraState.eulerPitch = viewAngle.y;
+				//playerControlledCameraTransformer.relativeCameraState.eulerRoll = 0.5f;
+
+				//playerControlledCameraTransformer.relativeCameraState.targetRotationTransformation = SimpleMath::Quaternion::CreateFromYawPitchRoll(
+				//	playerControlledCameraTransformer.relativeCameraState.eulerYaw, 
+				//	playerControlledCameraTransformer.relativeCameraState.eulerPitch, 
+				//	playerControlledCameraTransformer.relativeCameraState.eulerRoll
+				//);
+
+				//playerControlledCameraTransformer.relativeCameraState.targetRotationTransformation.Conjugate();
+
+
+
 
 				// set current value to.. current value
-				playerControlledCameraTransformer.relativeCameraState.currentlookDirForward = playerControlledCameraTransformer.relativeCameraState.targetlookDirForward;
-				playerControlledCameraTransformer.relativeCameraState.currentlookDirRight = playerControlledCameraTransformer.relativeCameraState.targetlookDirRight;
-				playerControlledCameraTransformer.relativeCameraState.currentlookDirUp = playerControlledCameraTransformer.relativeCameraState.targetlookDirUp;
-				playerControlledCameraTransformer.relativeCameraState.currentLookQuat = playerControlledCameraTransformer.relativeCameraState.targetLookQuat;
+				playerControlledCameraTransformer.relativeCameraState.currentRotationTransformation = playerControlledCameraTransformer.relativeCameraState.targetRotationTransformation;
+				playerControlledCameraTransformer.relativeCameraState.currentPositionTransformation = playerControlledCameraTransformer.relativeCameraState.targetPositionTransformation;
 				playerControlledCameraTransformer.relativeCameraState.currentFOVOffset = 0;
-				playerControlledCameraTransformer.relativeCameraState.currentPosition = playerControlledCameraTransformer.relativeCameraState.targetPosition;
 
 
 
@@ -359,6 +422,7 @@ public:
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getGameCameraData(resolveDependentCheat(GetGameCameraData)),
+		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
 		updateGameCameraData(resolveDependentCheat(UpdateGameCameraData)),
 		playerControlledCameraInput(resolveDependentCheat(CameraInputReader)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
