@@ -2,34 +2,76 @@
 #include "SquareSmoother.h"
 
 
-//template<>
-//void SquareSmoother<float>::smooth(float& currentValue, float desiredValue)
-//{
-//}
+
+constexpr float minDistance = 0.00001f;
+
+template<>
+void SquareSmoother<float>::smooth(float& currentValue, float desiredValue)
+{
+	float distance = desiredValue - currentValue;
+
+	if (std::abs(distance) < minDistance)
+	{
+		currentValue = desiredValue;
+	}
+	else
+	{
+		bool isNeg = std::signbit(distance);
+		distance = std::sqrtf(std::abs(distance));
+		if (isNeg) { distance *= -1.f; }
+		currentValue = currentValue + (distance * mSmoothRate);
+	}
+
+}
+
 
 template<>
 void SquareSmoother<SimpleMath::Vector3>::smooth(SimpleMath::Vector3& currentValue, SimpleMath::Vector3 desiredValue)
 {
-	assert(false && "not implemented yet");
 
-	// I'm bad at math. The intent of this function is to make small differences (between desired and currentValue) SMALLER, and big differences BIGGER.
-	// soo like a exponential or square function or something
-	// but I can't figure out how to actually implement that because I'm dumb and stupid.
-	// Do I need to.. normalise the difference? then apply the square to the individual components? then multiple the original difference by that?
+	float distancex = desiredValue.x - currentValue.x;
 
-	SimpleMath::Vector3 difference = (desiredValue * desiredValue);
-	auto differenceNormalised = difference;
-	differenceNormalised.Normalize();
-	differenceNormalised = differenceNormalised * differenceNormalised;
-	difference = difference * differenceNormalised;
+	if (std::abs(distancex) < minDistance)
+	{
+		currentValue.x = desiredValue.x;
+	}
+	else
+	{
+		bool isNegx = std::signbit(distancex);
+		distancex = std::sqrtf(std::abs(distancex));
+		if (isNegx) { distancex *= -1.f; }
+		currentValue.x = currentValue.x + (distancex * mSmoothRate);
+	}
+
+
+	float distancey = desiredValue.y - currentValue.y;
+	
+	if (std::abs(distancey) < minDistance)
+	{
+		currentValue.y = desiredValue.y;
+	}
+	else
+	{
+		bool isNegy = std::signbit(distancey);
+		distancey = std::sqrtf(std::abs(distancey));
+		if (isNegy) { distancey *= -1.f; }
+		currentValue.y = currentValue.y + (distancey * mSmoothRate);
+	}
+
+	float distancez = desiredValue.z - currentValue.z;
+	
+	if (std::abs(distancez) < minDistance)
+	{
+		currentValue.z = desiredValue.z;
+	}
+	else
+	{
+		bool isNegz = std::signbit(distancez);
+		distancez = std::sqrtf(std::abs(distancez));
+		if (isNegz) { distancez *= -1.f; }
+		currentValue.z = currentValue.z + (distancez * mSmoothRate);
+	}
 
 
 
-	currentValue = currentValue + (difference * mSmoothRate);
 }
-
-
-//template<>
-//void SquareSmoother<SimpleMath::Quaternion>::smooth(SimpleMath::Quaternion& currentValue, SimpleMath::Quaternion desiredValue)
-//{
-//}

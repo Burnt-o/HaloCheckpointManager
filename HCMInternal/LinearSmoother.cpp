@@ -3,45 +3,59 @@
 
 
 
+constexpr float minDistance = 0.0001f;
+
 template<>
 void LinearSmoother<float>::smooth(float& currentValue, float desiredValue)
 {
 	float distance = desiredValue - currentValue;
-	currentValue = currentValue + (distance * mSmoothRate);
+	if (std::abs(distance) < minDistance)
+	{
+		currentValue = desiredValue;
+	}
+	else
+	{
+		currentValue = currentValue + (distance * mSmoothRate);
+	}
+
 }
 
 
 template<>
 void LinearSmoother<SimpleMath::Vector3>::smooth(SimpleMath::Vector3& currentValue, SimpleMath::Vector3 desiredValue)
 {
-	SimpleMath::Vector3 distance = desiredValue - currentValue;
-	currentValue = currentValue + (distance * mSmoothRate);
+
+		float distancex = desiredValue.x - currentValue.x;
+		if (std::abs(distancex) < minDistance)
+		{
+			currentValue.x = desiredValue.x;
+		}
+		else
+		{
+			currentValue.x = currentValue.x + (distancex * mSmoothRate);
+		}
+
+
+		float distancey = desiredValue.y - currentValue.y;
+		if (std::abs(distancey) < minDistance)
+		{
+			currentValue.y = desiredValue.y;
+		}
+		else
+		{
+			currentValue.y = currentValue.y + (distancey * mSmoothRate);
+		}
+
+		float distancez = desiredValue.z - currentValue.z;
+		if (std::abs(distancez) < minDistance)
+		{
+			currentValue.z = desiredValue.z;
+		}
+		else
+		{
+			currentValue.z = currentValue.z + (distancez * mSmoothRate);
+		}
+
+
+
 }
-
-
-//
-//
-//template<>
-//void LinearSmoother<SimpleMath::Quaternion>::smooth(SimpleMath::Quaternion& currentValue, SimpleMath::Quaternion desiredValue)
-//{
-//	
-//	// this has a discontinuity
-//	auto distance = SimpleMath::Quaternion::Angle(desiredValue, currentValue);
-//
-//	if (GetKeyState('7') & 0x8000)
-//	{
-//		PLOG_DEBUG << "linearSmoother distance: " << distance;
-//	}
-//
-//
-//	distance = distance / 2.f; // normalise distance
-//
-//	if (GetKeyState('6') & 0x8000)
-//	{
-//		PLOG_DEBUG << "linearSmoother normalised distance: " << distance;
-//	}
-//
-//
-//	currentValue = SimpleMath::Quaternion::Slerp(currentValue, desiredValue, distance * mSmoothRate);
-//}
-//

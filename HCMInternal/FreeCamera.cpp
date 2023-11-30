@@ -110,7 +110,7 @@ private:
 				LOG_ONCE("Setting up user controlled camera");
 
 				userControlledPosition = PositionTransformer(
-					std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f), 
+					std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f),
 					userCameraInputReader,
 					*gameCameraData.position
 				);
@@ -124,7 +124,7 @@ private:
 				PLOG_DEBUG << "Initial EulerRoll: " << initialRoll;
 				
 				userControlledRotation = RotationTransformer(
-					std::make_unique<LinearSmoother<float>>(0.06f), 
+					std::make_unique<LinearSmoother<float>>(0.06f),
 					userCameraInputReader,
 					initialYaw,
 					initialPitch,

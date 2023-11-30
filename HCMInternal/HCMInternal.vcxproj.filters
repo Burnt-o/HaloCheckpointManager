@@ -62,7 +62,7 @@
     <Filter Include="Services\OptionalCheats\Implementations\Camera">
       <UniqueIdentifier>{8f023fa3-225e-49d6-a4e9-8be0135cbb84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Smoother">
+    <Filter Include="Services\OptionalCheats\Implementations\Camera\Smoother">
       <UniqueIdentifier>{fc84e771-a284-4a7b-9a81-f51257e0b992}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -531,10 +531,10 @@
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
     <ClInclude Include="ISmoother.h">
-      <Filter>Classes\Smoother</Filter>
+      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClInclude>
     <ClInclude Include="LinearSmoother.h">
-      <Filter>Classes\Smoother</Filter>
+      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClInclude>
     <ClInclude Include="UpdateGameCameraData.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
@@ -543,7 +543,7 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="NullSmoother.h">
-      <Filter>Classes\Smoother</Filter>
+      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClInclude>
     <ClInclude Include="CameraTransformer.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
@@ -552,7 +552,7 @@
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
     <ClInclude Include="SquareSmoother.h">
-      <Filter>Classes\Smoother</Filter>
+      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClInclude>
     <ClInclude Include="IUpdateCameraTransform.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
@@ -770,10 +770,10 @@
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
     <ClCompile Include="SquareSmoother.cpp">
-      <Filter>Classes\Smoother</Filter>
+      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClCompile>
     <ClCompile Include="LinearSmoother.cpp">
-      <Filter>Classes\Smoother</Filter>
+      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

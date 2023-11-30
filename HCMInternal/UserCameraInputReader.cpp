@@ -174,7 +174,7 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updatePositionTransform(c
 	// Down
 	if (GetKeyState(VK_CONTROL) & 0x8000)
 	{
-		positionTransform = positionTransform - (freeCameraData.currentlookDirUp * cameraTranslationSpeed * -1.f);
+		positionTransform = positionTransform - (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
 	}
 	
 
