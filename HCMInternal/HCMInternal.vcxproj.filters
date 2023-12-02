@@ -569,6 +569,9 @@
     <ClInclude Include="ThirdPersonRendering.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="BlockPlayerCharacterInput.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -788,6 +791,9 @@
       <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClCompile>
     <ClCompile Include="ThirdPersonRendering.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockPlayerCharacterInput.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>

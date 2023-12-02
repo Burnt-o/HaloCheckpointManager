@@ -12,6 +12,7 @@
 #include "GetGameCameraData.h"
 #include "GetPlayerViewAngle.h"
 #include "ThirdPersonRendering.h"
+#include "BlockPlayerCharacterInput.h"
 //#include "PlayerControlledFreeCamera.h"
 //#include "ObjectAnchoredFreeCam.h"
 #include "UpdateGameCameraData.h"
@@ -37,7 +38,7 @@ private:
 	ScopedCallback <ToggleEvent> mFreeCameraToggleCallback;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
 	ScopedCallback <ToggleEvent> mThirdPersonRenderingToggleCallback;
-
+	ScopedCallback <ToggleEvent> mBlockPlayerCharacterInputToggleCallback;
 
 
 	// injected services
@@ -50,6 +51,7 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	std::optional<std::weak_ptr< ThirdPersonRendering>> thirdPersonRenderingOptionalWeak;
+	std::optional<std::weak_ptr< BlockPlayerCharacterInput>> blockPlayerCharacterInputOptionalWeak;
 
 
 	std::shared_ptr<UserCameraInputReader> userCameraInputReader;
@@ -164,7 +166,7 @@ private:
 		{
 
 
-			needToSetupCamera = true;
+			needToSetupCamera = true; 
 			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
 
 
@@ -173,7 +175,14 @@ private:
 			{
 				lockOrThrow(settingsWeak, settings);
 				lockOrThrow(thirdPersonRenderingOptionalWeak.value(), thirdPersonRendering);
-				thirdPersonRendering->toggleThirdPersonRendering(settings->freeCameraThirdPersonRendering->GetValue());
+				thirdPersonRendering->toggleThirdPersonRendering(settings->freeCameraThirdPersonRendering->GetValue() && newValue);
+			}
+
+			if (blockPlayerCharacterInputOptionalWeak.has_value())
+			{
+				lockOrThrow(settingsWeak, settings);
+				lockOrThrow(blockPlayerCharacterInputOptionalWeak.value(), blockPlayerCharacterInput);
+				blockPlayerCharacterInput->toggleBlockPlayerCharacterInput(settings->freeCameraGameInputDisable->GetValue() && newValue);
 			}
 
 			// set hooks 
@@ -218,7 +227,26 @@ private:
 		}
 	}
 
-public:
+	void onBlockPlayerCharacterInputChange(bool& newValue)
+	{
+		if (!blockPlayerCharacterInputOptionalWeak.has_value()) return;
+
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			if (settings->freeCameraToggle->GetValue()) // only need to bother flipping if freeCamera is enabled
+			{
+				lockOrThrow(blockPlayerCharacterInputOptionalWeak.value(), blockPlayerCharacterInput);
+				blockPlayerCharacterInput->toggleBlockPlayerCharacterInput(newValue);
+			}
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+public: 
 	FreeCameraImpl(GameState game, IDIContainer& dicon)
 		:
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
@@ -231,6 +259,7 @@ public:
 		userCameraInputReader(resolveDependentCheat(UserCameraInputReader)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onFreeCameraToggleChange(n); }),
 		mThirdPersonRenderingToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraThirdPersonRendering->valueChangedEvent, [this](bool& n) { onThirdPersonRenderingChange(n); }),
+		mBlockPlayerCharacterInputToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraGameInputDisable->valueChangedEvent, [this](bool& n) { onBlockPlayerCharacterInputChange(n); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
 		userControlledPosition (
 			std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f),
@@ -263,6 +292,15 @@ public:
 		catch (HCMInitException ex)
 		{
 			PLOG_DEBUG << "failed to resolve optional dependent cheat thirdPersonRenderingOptionalWeak, error: " << ex.what();
+		}
+
+		try
+		{
+			blockPlayerCharacterInputOptionalWeak = resolveDependentCheat(BlockPlayerCharacterInput);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_DEBUG << "failed to resolve optional dependent cheat blockPlayerCharacterInputOptionalWeak, error: " << ex.what();
 		}
 
 

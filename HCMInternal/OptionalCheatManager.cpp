@@ -51,6 +51,7 @@
 #include "UpdateGameCameraData.h"
 #include "UserCameraInputReader.h"
 #include "ThirdPersonRendering.h"
+#include "BlockPlayerCharacterInput.h"
 
 #include "DIContainer.h"
 #include "map.h"

@@ -4478,6 +4478,47 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="BlockPlayerCharacterInput1Function" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xA99646</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="BlockPlayerCharacterInput1FlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo1">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="BlockPlayerCharacterInput2Function" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xA99213</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	
+	<VersionedEntry Name="BlockPlayerCharacterInput2FlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo1">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+	</VersionedEntry>
 
 	<!--#endregion freeCamera-->
 

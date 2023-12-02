@@ -247,6 +247,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ThirdPersonRendering}
 	},
 
+	{ GUIElementEnum::freeCameraGameInputDisable,
+{OptionalCheatEnum::BlockPlayerCharacterInput}
+	},
+
 
 #ifdef HCM_DEBUG
 

@@ -48,7 +48,8 @@ FreeCamera,\
 GetGameCameraData,\
 UpdateGameCameraData,\
 UserCameraInputReader,\
-ThirdPersonRendering
+ThirdPersonRendering,\
+BlockPlayerCharacterInput
 
 
 enum class OptionalCheatEnum {
