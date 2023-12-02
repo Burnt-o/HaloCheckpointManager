@@ -4354,7 +4354,7 @@
 
 	
 	<!--just check what accesses currentCameraFunctionPointer-->
-	<VersionedEntry Name="renderPlayerFunction" Type="MultilevelPointer::ModuleOffset">
+	<VersionedEntry Name="thirdPersonRenderingFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
@@ -4370,7 +4370,7 @@
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="renderPlayerFunctionFlagSetter" Type="MidhookFlagInterpreter">
+	<VersionedEntry Name="thirdPersonRenderingFlagSetter" Type="MidhookFlagInterpreter">
 		<Version Version="All" Game="Halo1">
 			<rflag>zero</rflag>
 			<value>false</value>

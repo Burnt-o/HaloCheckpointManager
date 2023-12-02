@@ -785,6 +785,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							{
 								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
 								createNestedElement(GUIElementEnum::freeCameraHideMessages),
+								createNestedElement(GUIElementEnum::freeCameraThirdPersonRendering),
 								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraCameraInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraUserInputCameraSettings),
@@ -801,6 +802,10 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					case GUIElementEnum::freeCameraHideMessages:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection("Hides the HCM message log while free camera is active"), std::nullopt, "Hide HCM Messages", settings->freeCameraHideMessages));
+
+					case GUIElementEnum::freeCameraThirdPersonRendering:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Makes the player model render, and hides game UI (ala Blind skull)"), std::nullopt, "Third Person Rendering", settings->freeCameraThirdPersonRendering));
 
 
 					case GUIElementEnum::freeCameraGameInputDisable:

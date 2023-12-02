@@ -669,6 +669,14 @@ public:
 			nameof(freeCameraHideWatermark)
 		);
 
+	std::shared_ptr<Setting<bool>> freeCameraThirdPersonRendering = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(freeCameraThirdPersonRendering)
+		);
+
+
 	std::shared_ptr<Setting<bool>> freeCameraHideMessages = std::make_shared<Setting<bool>>
 		(
 			false,

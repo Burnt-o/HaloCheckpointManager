@@ -243,6 +243,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::FreeCamera}
 	},
 
+			{ GUIElementEnum::freeCameraThirdPersonRendering,
+		{OptionalCheatEnum::ThirdPersonRendering}
+	},
+
 
 #ifdef HCM_DEBUG
 

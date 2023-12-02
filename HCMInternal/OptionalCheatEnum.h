@@ -47,7 +47,8 @@ GetNextObjectDatum,\
 FreeCamera,\
 GetGameCameraData,\
 UpdateGameCameraData,\
-UserCameraInputReader
+UserCameraInputReader,\
+ThirdPersonRendering
 
 
 enum class OptionalCheatEnum {

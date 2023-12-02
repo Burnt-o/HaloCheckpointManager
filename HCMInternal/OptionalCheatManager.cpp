@@ -50,6 +50,7 @@
 #include "GetGameCameraData.h"
 #include "UpdateGameCameraData.h"
 #include "UserCameraInputReader.h"
+#include "ThirdPersonRendering.h"
 
 #include "DIContainer.h"
 #include "map.h"

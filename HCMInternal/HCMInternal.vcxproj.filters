@@ -566,6 +566,9 @@
     <ClInclude Include="GUIVec3CustomLabels.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="ThirdPersonRendering.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -783,6 +786,9 @@
     </ClCompile>
     <ClCompile Include="LinearSmoother.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdPersonRendering.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

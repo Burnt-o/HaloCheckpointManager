@@ -11,6 +11,7 @@
 #include "IMakeOrGetCheat.h"
 #include "GetGameCameraData.h"
 #include "GetPlayerViewAngle.h"
+#include "ThirdPersonRendering.h"
 //#include "PlayerControlledFreeCamera.h"
 //#include "ObjectAnchoredFreeCam.h"
 #include "UpdateGameCameraData.h"
@@ -35,6 +36,7 @@ private:
 	// event callbacks
 	ScopedCallback <ToggleEvent> mFreeCameraToggleCallback;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
+	ScopedCallback <ToggleEvent> mThirdPersonRenderingToggleCallback;
 
 
 
@@ -45,8 +47,9 @@ private:
 	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
 	std::shared_ptr<GetGameCameraData> getGameCameraData;
 	std::shared_ptr<UpdateGameCameraData> updateGameCameraData;
-
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+
+	std::optional<std::weak_ptr< ThirdPersonRendering>> thirdPersonRenderingOptionalWeak;
 
 
 	std::shared_ptr<UserCameraInputReader> userCameraInputReader;
@@ -56,8 +59,7 @@ private:
 
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
-	static inline std::shared_ptr<ModuleMidHook> renderPlayerHook; 
-	std::shared_ptr< MidhookFlagInterpreter> renderPlayerFunctionFlagSetter;
+
 
 	// data
 	bool needToSetupCamera = true;
@@ -70,17 +72,7 @@ private:
 	}
 
 
-	static void renderPlayerHookFunction(SafetyHookContext& ctx)
-	{
-		if (instance == nullptr)
-		{
-			PLOG_ERROR << "null freeCameraImpl for gameState " << ((GameState)gameT).toString();
-			return;
-		}
-
-		instance->renderPlayerFunctionFlagSetter->setFlag(ctx);
-
-	}
+	
 
 	static void setCameraDataHookFunction(SafetyHookContext& ctx)
 	{
@@ -166,7 +158,7 @@ private:
 
 
 	// setting toggle event callback
-	void onToggleChange(bool& newValue)
+	void onFreeCameraToggleChange(bool& newValue)
 	{
 		try
 		{
@@ -175,11 +167,19 @@ private:
 			needToSetupCamera = true;
 			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
 
+
+
+			if ( thirdPersonRenderingOptionalWeak.has_value())
+			{
+				lockOrThrow(settingsWeak, settings);
+				lockOrThrow(thirdPersonRenderingOptionalWeak.value(), thirdPersonRendering);
+				thirdPersonRendering->toggleThirdPersonRendering(settings->freeCameraThirdPersonRendering->GetValue());
+			}
+
 			// set hooks 
 			{
 				safetyhook::ThreadFreezer threadFreezer; 
 				setCameraDataHook->setWantsToBeAttached(newValue);
-				renderPlayerHook->setWantsToBeAttached(newValue);
 			}
 
 
@@ -197,6 +197,27 @@ private:
 		}
 
 	}
+
+
+	void onThirdPersonRenderingChange(bool& newValue)
+	{
+		if (!thirdPersonRenderingOptionalWeak.has_value()) return;
+
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			if (settings->freeCameraToggle->GetValue()) // only need to bother flipping if freeCamera is enabled
+			{
+				lockOrThrow(thirdPersonRenderingOptionalWeak.value(), thirdPersonRendering);
+				thirdPersonRendering->toggleThirdPersonRendering(newValue);
+			}
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
 public:
 	FreeCameraImpl(GameState game, IDIContainer& dicon)
 		:
@@ -208,7 +229,8 @@ public:
 		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
 		updateGameCameraData(resolveDependentCheat(UpdateGameCameraData)),
 		userCameraInputReader(resolveDependentCheat(UserCameraInputReader)),
-		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onToggleChange(n); }),
+		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onFreeCameraToggleChange(n); }),
+		mThirdPersonRenderingToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraThirdPersonRendering->valueChangedEvent, [this](bool& n) { onThirdPersonRenderingChange(n); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
 		userControlledPosition (
 			std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f),
@@ -234,11 +256,14 @@ public:
 		auto setCameraDataFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(setCameraDataFunction), game);
 		setCameraDataHook = ModuleMidHook::make(game.toModuleName(), setCameraDataFunction, setCameraDataHookFunction);
 
-		auto renderPlayerFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(renderPlayerFunction), game);
-		renderPlayerFunctionFlagSetter = ptr->getData< std::shared_ptr< MidhookFlagInterpreter>>(nameof(renderPlayerFunctionFlagSetter), game);
-		renderPlayerHook = ModuleMidHook::make(game.toModuleName(), renderPlayerFunction, renderPlayerHookFunction);
-
-
+		try
+		{
+			thirdPersonRenderingOptionalWeak = resolveDependentCheat(ThirdPersonRendering);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_DEBUG << "failed to resolve optional dependent cheat thirdPersonRenderingOptionalWeak, error: " << ex.what();
+		}
 
 
 	}

@@ -227,6 +227,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUIDummyContainer.h" />
     <ClInclude Include="GUIVec3CustomLabels.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
+    <ClInclude Include="ThirdPersonRendering.h" />
     <ClInclude Include="UserCameraInputReader.h" />
     <ClInclude Include="CameraTransformer.h" />
     <ClInclude Include="GameCameraData.h" />
@@ -391,6 +392,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="AIFreeze.cpp" />
     <ClCompile Include="BlockGameInput.cpp" />
     <ClCompile Include="BottomlessClip.cpp" />
+    <ClCompile Include="ThirdPersonRendering.cpp" />
     <ClCompile Include="UserCameraInputReader.cpp" />
     <ClCompile Include="Conduit_ITCFont.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
