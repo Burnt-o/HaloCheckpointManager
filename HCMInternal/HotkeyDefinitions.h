@@ -108,32 +108,86 @@ private:
 		mSettings->forceLaunchEvent,
 		vvk{}),
 
-			initHotkey(medusa,
+		initHotkey(medusa,
 		mSettings->medusaHotkeyEvent,
 		vvk{}),
 
-				initHotkey(naturalCheckpointDisable,
+		initHotkey(naturalCheckpointDisable,
 		mSettings->naturalCheckpointDisableHotkeyEvent,
 		vvk{}),
 
 
-				initHotkey(infiniteAmmo,
+		initHotkey(infiniteAmmo,
 		mSettings->infiniteAmmoHotkeyEvent,
 		vvk{}),
 
 
-				initHotkey(bottomlessClip,
+		initHotkey(bottomlessClip,
 		mSettings->bottomlessClipHotkeyEvent,
 		vvk{}),
 
 
-				initHotkey(display2DInfo,
+		initHotkey(display2DInfo,
 		mSettings->display2DInfoHotkeyEvent,
 		vvk{}),
 
-						initHotkey(freeCamera,
+		initHotkey(freeCamera,
 		mSettings->freeCameraHotkeyEvent,
 		vvk{}),
+
+		initHotkey(freeCameraGameInputDisable,
+		mSettings->freeCameraGameInputDisableHotkeyEvent,
+		vvk{}),
+
+		initHotkey(freeCameraCameraInputDisable,
+		mSettings->freeCameraCameraInputDisableHotkeyEvent,
+		vvk{}),
+
+		initHotkey(freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
+		mSettings->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
+		vvk{}),
+
+		initHotkey(freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
+		mSettings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
+		vvk{}),
+
+		initHotkey(freeCameraUserInputCameraSetPosition,
+		mSettings->freeCameraUserInputCameraSetPosition,
+		vvk{}),
+
+		initHotkey(freeCameraUserInputCameraSetRotation,
+		mSettings->freeCameraUserInputCameraSetRotation,
+		vvk{}),
+
+		initHotkey(freeCameraUserInputCameraMaintainVelocity,
+		mSettings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent,
+		vvk{}),
+
+		initHotkey(freeCameraUserInputCameraSetVelocity,
+		mSettings->freeCameraUserInputCameraSetVelocity,
+		vvk{}),
+
+			initHotkey(freeCameraAnchorPositionToObjectPosition,
+				mSettings->freeCameraAnchorPositionToObjectPositionHotkeyEvent,
+				vvk{}),
+
+			initHotkey(freeCameraAnchorPositionToObjectRotation,
+				mSettings->freeCameraAnchorPositionToObjectRotationHotkeyEvent,
+				vvk{}),
+
+			initHotkey(freeCameraAnchorRotationToObjectPosition,
+				mSettings->freeCameraAnchorRotationToObjectPositionHotkeyEvent,
+				vvk{}),
+
+			initHotkey(freeCameraAnchorRotationToObjectFacing,
+				mSettings->freeCameraAnchorRotationToObjectFacingHotkeyEvent,
+				vvk{}),
+
+			initHotkey(freeCameraAnchorFOVToObjectDistance,
+				mSettings->freeCameraAnchorFOVToObjectDistanceHotkeyEvent,
+				vvk{}),
+
+
 
 
 	};

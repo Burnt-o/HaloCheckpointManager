@@ -18,6 +18,9 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mBottomlessClipHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mDisplay2DInfoHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mFreeCameraHotkeyCallbackHandle;
+	ScopedCallback<ActionEvent> mFreeCameraGameInputDisableHotkeyCallbackHandle;
+	ScopedCallback<ActionEvent> mFreeCameraCameraInputDisableHotkeyCallbackHandle;
+	ScopedCallback<ActionEvent> mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle;
 
 public:
 	HotkeyEventsLambdas(std::shared_ptr< SettingsStateAndEvents> settings)
@@ -31,7 +34,10 @@ public:
 		mInfiniteAmmoHotkeyCallbackHandle(settings->infiniteAmmoHotkeyEvent, [boolsetting = settings->infiniteAmmoToggle]() { boolsetting->flipBoolSetting(); }),
 		mBottomlessClipHotkeyCallbackHandle(settings->bottomlessClipHotkeyEvent, [boolsetting = settings->bottomlessClipToggle]() { boolsetting->flipBoolSetting(); }),
 		mDisplay2DInfoHotkeyCallbackHandle(settings->display2DInfoHotkeyEvent, [boolsetting = settings->display2DInfoToggle]() { boolsetting->flipBoolSetting(); }),
-		mFreeCameraHotkeyCallbackHandle(settings->freeCameraHotkeyEvent, [boolsetting = settings->freeCameraToggle]() { boolsetting->flipBoolSetting(); })
+		mFreeCameraHotkeyCallbackHandle(settings->freeCameraHotkeyEvent, [boolsetting = settings->freeCameraToggle]() { boolsetting->flipBoolSetting(); }),
+		mFreeCameraGameInputDisableHotkeyCallbackHandle(settings->freeCameraGameInputDisableHotkeyEvent, [boolsetting = settings->freeCameraGameInputDisable]() { boolsetting->flipBoolSetting(); }),
+		mFreeCameraCameraInputDisableHotkeyCallbackHandle(settings->freeCameraCameraInputDisableHotkeyEvent, [boolsetting = settings->freeCameraCameraInputDisable]() { boolsetting->flipBoolSetting(); }),
+		mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle(settings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent, [boolsetting = settings->freeCameraUserInputCameraMaintainVelocity]() { boolsetting->flipBoolSetting(); })
 
 	{ PLOG_DEBUG << "HotkeyEvents con"; }
 

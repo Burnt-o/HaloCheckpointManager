@@ -557,6 +557,15 @@
     <ClInclude Include="IUpdateCameraTransform.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="GUIComboEnumWithChildren.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIDummyContainer.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIVec3CustomLabels.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

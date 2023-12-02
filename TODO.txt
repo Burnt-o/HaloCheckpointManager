@@ -18,6 +18,86 @@ dying fucks up camera
 
 
 
+Free Camera GUI
+
+freeCameraSettingsSimpleSubheading
+freeCameraSettingsAdvancedSubheading
+	freeCameraHideWatermark
+	freeCameraGameInputDisable
+	freeCameraCameraInputDisable
+	freeCameraUserInputCameraSettings
+		freeCameraUserInputCameraMaintainVelocity
+		freeCameraUserInputCameraBindingsPopup -- modal window with key/axis bind stuff
+		freeCameraUserInputCameraBaseFOV
+		freeCameraUserInputCameraTranslationSpeed
+		freeCameraUserInputCameraTranslationInterpolator
+		freeCameraUserInputCameraRotationSpeed
+		freeCameraUserInputCameraRotationInterpolator
+		freeCameraUserInputCameraFOVSpeed
+		freeCameraUserInputCameraFOVInterpolator
+		freeCameraUserInputCameraIncreaseTranslationSpeedHotkey
+		freeCameraUserInputCameraDecreaseTranslationSpeedHotkey
+		freeCameraUserInputCameraTranslationSpeedChangeFactor
+	freeCameraAnchorPositionToObjectPosition
+		freeCameraAnchorPositionToObjectPositionObjectToTrack -- radio button. player, custom object
+		freeCameraAnchorPositionToObjectPositionTranslationInterpolator
+		freeCameraAnchorPositionToObjectRotation -- aka orbit / 3rd person cam
+			freeCameraAnchorPositionToObjectRotationRotationInterpolator
+	freeCameraAnchorRotationToObjectPosition
+		freeCameraAnchorRotationToObjectPositionObjectToTrack -- radio button. player, custom object, absolute position
+		freeCameraAnchorRotationToObjectPositionTranslationInterpolator
+	freeCameraAnchorRotationToObjectFacing 
+		freeCameraAnchorRotationToObjectFacingObjectToTrack -- radio button. player, custom object
+		freeCameraAnchorRotationToObjectFacingRotationInterpolator
+	freeCameraAnchorFOVToObjectDistance
+		freeCameraAnchorFOVToObjectDistanceObjectToTrack -- radio button. player, custom object, absolute position
+		freeCameraAnchorFOVToObjectDistanceFOVInterpolator
+
+
+
+((freeCameraSettingsSimpleSubheading, (ALL_SUPPORTED_GAMES)))\
+((freeCameraSettingsAdvancedSubheading, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraHideWatermark, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraGameInputDisable, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraCameraInputDisable, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraUserInputCameraSettings, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraMaintainVelocity, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraBindingsPopup, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraBaseFOV, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraTranslationSpeed, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraTranslationInterpolator, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraRotationSpeed, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraRotationInterpolator, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraFOVSpeed, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraFOVInterpolator, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraUserInputCameraTranslationSpeedChangeFactor, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraAnchorPositionToObjectPosition, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorPositionToObjectPositionObjectToTrack, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorPositionToObjectPositionTranslationInterpolator, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorPositionToObjectRotation, (ALL_SUPPORTED_GAMES)))\
+			((freeCameraAnchorPositionToObjectRotationRotationInterpolator, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraAnchorRotationToObjectPosition, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorRotationToObjectPositionObjectToTrack, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorRotationToObjectPositionTranslationInterpolator, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraAnchorRotationToObjectFacing, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorRotationToObjectFacingObjectToTrack, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorRotationToObjectFacingRotationInterpolator, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraAnchorFOVToObjectDistance, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorFOVToObjectDistanceObjectToTrack, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraAnchorFOVToObjectDistanceFOVInterpolator, (ALL_SUPPORTED_GAMES)))\
+
+interpolation stuff using define
+Interpolator
+	None
+	Proportional
+		ChaseFactor
+	Momentum
+		MaxVelocity
+		Acceleration
+
+
 
 
 

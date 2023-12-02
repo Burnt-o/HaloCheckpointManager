@@ -26,6 +26,9 @@
 #include "GUIColourPickerAlpha.h"
 #include "GUIInputInt.h"
 #include "GUIComboEnum.h"
+#include "GUIComboEnumWithChildren.h"
+#include "GUIDummyContainer.h"
+#include "GUIVec3CustomLabels.h"
 
 
 
@@ -102,7 +105,35 @@ private:
 
 
 			typedef  std::vector<std::optional<std::shared_ptr<IGUIElement>>> headerChildElements;
+			typedef  std::vector<std::vector<std::optional<std::shared_ptr<IGUIElement>>>> vectorOfHeaderChildElements;
 #define createNestedElement(elementEnum) createGUIElementAndStoreResult(elementEnum, game, guireq, fail, info, settings) // optional nested element, recursively calls this function
+
+
+
+
+			/*
+			 
+Helper "macro" for making free Camera interpolator cases. I could've written this as a real macro, in fact I did initially, but realised pretty soon that it would've been an ABSOLUTE nightmare to debug issues with.
+So instead I just find&replace on below text with ZZname and YYtype.
+
+
+case GUIElementEnum::freeCameraZZnameYYtypeInterpolator:
+return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<FreeCameraInterpolationTypesEnum>>
+	(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), std::nullopt, "YYtype Interpolation Style##ZZname"  settings->freeCameraZZnameYYtypeInterpolator,
+			vectorOfHeaderChildElements
+			{
+				headerChildElements{},
+				headerChildElements{createNestedElement(GUIElementEnum::freeCameraZZnameYYtypeInterpolatorLinearFactor)}
+			}
+			));
+
+case GUIElementEnum::freeCameraZZnameYYtypeInterpolatorLinearFactor:
+return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+	(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), std::nullopt, "Snap Factor##ZZnameYYtype", settings->freeCameraZZnameYYtypeInterpolatorLinearFactor));
+			
+			
+			*/
+
 
 			// ALL GUI ELEMENTS MUST HAVE A CASE HERE, TOP LEVEL OR NOT
 			std::optional<std::shared_ptr<IGUIElement>> x;
@@ -703,7 +734,7 @@ private:
 							}));
 
 					case GUIElementEnum::display2DInfoAnchorCorner:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsStateAndEvents::Display2DInfoAnchorEnum>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsStateAndEvents::Display2DInfoAnchorEnum, 100.f>>
 							(game, ToolTipCollection(""), "Corner to Anchor to", settings->display2DInfoAnchorCorner));
 
 					case GUIElementEnum::display2DInfoScreenOffset:
@@ -733,11 +764,422 @@ private:
 					(game, ToolTipCollection("Tools to manipulate the camera"), "Camera", headerChildElements
 						{ 
 							createNestedElement(GUIElementEnum::freeCameraToggleGUI),
+							createNestedElement(GUIElementEnum::freeCameraSettingsSimpleSubheading),
+							createNestedElement(GUIElementEnum::freeCameraSettingsAdvancedSubheading),
 						}));
 
 				case GUIElementEnum::freeCameraToggleGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 						(game, ToolTipCollection(""), HotkeysEnum::freeCamera, "Free Camera", settings->freeCameraToggle));
+
+				case GUIElementEnum::freeCameraSettingsSimpleSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, ToolTipCollection("Simple settings for Free Camera"), "Free Camera Simple Settings", headerChildElements
+							{
+							//todo
+							}));
+
+				case GUIElementEnum::freeCameraSettingsAdvancedSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						(game, ToolTipCollection("Advanced settings for Free Camera"), "Free Camera Advanced Settings", headerChildElements
+							{
+								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
+								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
+								createNestedElement(GUIElementEnum::freeCameraCameraInputDisable),
+								createNestedElement(GUIElementEnum::freeCameraUserInputCameraSettings),
+								createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPosition),
+								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPosition),
+								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacing),
+								createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistance),
+							}));
+
+					case GUIElementEnum::freeCameraHideWatermark:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Hides the HCM collapsed-UI while free camera is active"), std::nullopt, "Hide HCM Watermark", settings->freeCameraHideWatermark));
+
+					case GUIElementEnum::freeCameraGameInputDisable:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+							(game, ToolTipCollection("Disables game inputs while freecam active"), HotkeysEnum::freeCameraGameInputDisable, "Disable Game Inputs", settings->freeCameraGameInputDisable));
+
+					case GUIElementEnum::freeCameraCameraInputDisable:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+							(game, ToolTipCollection("Disables direct user camera inputs (translation, rotation)"), HotkeysEnum::freeCameraCameraInputDisable, "Disable Camera Inputs", settings->freeCameraCameraInputDisable));
+
+					case GUIElementEnum::freeCameraUserInputCameraSettings:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+							(game, ToolTipCollection("Settings for user-controlled camera"), "User Input Camera Settings", headerChildElements
+								{
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraBindingsPopup),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraBaseFOV),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationSpeed),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationInterpolator),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationSpeed),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationInterpolator),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVSpeed),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVInterpolator),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPosition),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionChildren),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotation),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationChildren),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraMaintainVelocity),
+								}));
+
+						
+
+						case GUIElementEnum::freeCameraUserInputCameraBindingsPopup:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+								(game, ToolTipCollection("Allows you to edit bindings for user camera input"), std::nullopt, "Edit Camera Bindings", settings->freeCameraUserInputCameraBindingsPopup));
+
+						case GUIElementEnum::freeCameraUserInputCameraBaseFOV:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("Field of view of the camera, in vertical degrees (assumes 16:9. same as in-game-menu) (before any adjustment by anchorFOVtoObjectDistance automation)"), "Base Field of View", settings->freeCameraUserInputCameraBaseFOV));
+
+						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeed:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("How fast the camera translates (moves positionally)"), "Translation Speed", settings->freeCameraUserInputCameraTranslationSpeed));
+
+						case GUIElementEnum::freeCameraUserInputCameraTranslationInterpolator:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"),  "Translation Interpolation##UserInputCamera", settings->freeCameraUserInputCameraTranslationInterpolator,
+									vectorOfHeaderChildElements
+							{
+								headerChildElements{},
+								headerChildElements{ createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationInterpolatorLinearFactor) }
+							}
+							));
+
+						case GUIElementEnum::freeCameraUserInputCameraTranslationInterpolatorLinearFactor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."),  "Snap Factor##UserInputCameraTranslation", settings->freeCameraUserInputCameraTranslationInterpolatorLinearFactor));
+
+
+
+						case GUIElementEnum::freeCameraUserInputCameraRotationSpeed:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("How fast the camera rotates (turns about)"), "Rotation Speed", settings->freeCameraUserInputCameraRotationSpeed));
+
+						case GUIElementEnum::freeCameraUserInputCameraRotationInterpolator:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "Rotation Interpolation##UserInputCamera", settings->freeCameraUserInputCameraRotationInterpolator,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{ createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationInterpolatorLinearFactor) }
+									}
+							));
+
+						case GUIElementEnum::freeCameraUserInputCameraRotationInterpolatorLinearFactor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##UserInputCameraRotation", settings->freeCameraUserInputCameraRotationInterpolatorLinearFactor));
+
+
+
+						case GUIElementEnum::freeCameraUserInputCameraFOVSpeed:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("How fast the camera FOV changes when you hold down the increase/decrease FOV binding"), "FOV change Speed", settings->freeCameraUserInputCameraFOVSpeed));
+
+						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolator:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "FOV Interpolation##UserInputCamera", settings->freeCameraUserInputCameraFOVInterpolator,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{ createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVInterpolatorLinearFactor) }
+									}
+							));
+
+						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolatorLinearFactor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##UserInputCameraFOV", settings->freeCameraUserInputCameraFOVInterpolatorLinearFactor));
+
+
+
+						case GUIElementEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Increases camera translation speed by a scale factor"), HotkeysEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, "Increase Camera Speed", settings->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey));
+
+						case GUIElementEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Decreases camera translation speed by a scale factor"), HotkeysEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, "Decrease Camera Speed", settings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey));
+
+						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("How much the camera translation speed changes when you press the above hotkeys"), "Translation Speed Change Factor", settings->freeCameraUserInputCameraTranslationSpeedChangeFactor));
+
+
+
+						case GUIElementEnum::freeCameraUserInputCameraSetPosition:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Set camera Position"), HotkeysEnum::freeCameraUserInputCameraSetPosition, "Set Position To##freeCameraUserInputCameraSetPosition", settings->freeCameraUserInputCameraSetPosition));
+
+
+						case GUIElementEnum::freeCameraUserInputCameraSetPositionChildren:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIDummyContainer>
+								(game, "freeCameraUserInputCameraSetPositionChildren", headerChildElements
+									{
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionVec3),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionCopyCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionPaste),
+									}
+									));
+
+
+							case GUIElementEnum::freeCameraUserInputCameraSetPositionVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+									(game, ToolTipCollection("Position of the camera "), "Position: ##freeCameraUserInputCameraSetPositionVec3", settings->freeCameraUserInputCameraSetPositionVec3, "x", "y", "z"));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetPositionCopyCurrent:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy the cameras current Position to the clipboard"), std::nullopt, "Copy current Position to clipboard##freeCameraUserInputCameraSetPositionCopyCurrent", settings->freeCameraUserInputCameraSetPositionCopyCurrent));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetPositionPaste:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Paste in a Position from the clipboard"), std::nullopt, "Paste from Clipboard##freeCameraUserInputCameraSetPositionPaste", settings->freeCameraUserInputCameraSetPositionPaste));
+
+						case GUIElementEnum::freeCameraUserInputCameraSetRotation:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Set camera Rotation"), HotkeysEnum::freeCameraUserInputCameraSetRotation, "Set Rotation To##freeCameraUserInputCameraSetRotation", settings->freeCameraUserInputCameraSetRotation));
+
+						case GUIElementEnum::freeCameraUserInputCameraSetRotationChildren:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIDummyContainer>
+								(game, "freeCameraUserInputCameraSetRotationChildren", headerChildElements
+									{
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationVec3),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationCopyCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationPaste),
+									}
+							));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetRotationVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+									(game, ToolTipCollection("Rotation of the camera (in radians, yaw pitch roll)"), "Rotation: ##freeCameraUserInputCameraSetRotationVec3", settings->freeCameraUserInputCameraSetRotationVec3, "Yaw", "Pitch", "Roll"));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetRotationCopyCurrent:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy the cameras current Rotation to the clipboard"), std::nullopt, "Copy current Rotation to clipboard##freeCameraUserInputCameraSetRotationCopyCurrent", settings->freeCameraUserInputCameraSetRotationCopyCurrent));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetRotationPaste:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Paste in a Rotation from the clipboard"), std::nullopt, "Paste from Clipboard##freeCameraUserInputCameraSetRotationPaste", settings->freeCameraUserInputCameraSetRotationPaste));
+
+
+						case GUIElementEnum::freeCameraUserInputCameraMaintainVelocity:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, true>>
+								(game, ToolTipCollection("Maintains the current camera velocity while enabled"), HotkeysEnum::freeCameraUserInputCameraMaintainVelocity, "Maintain Velocity", settings->freeCameraUserInputCameraMaintainVelocity, headerChildElements
+									{
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocity),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityChildren),
+
+									}
+							));
+
+						case GUIElementEnum::freeCameraUserInputCameraSetVelocity:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Set camera Velocity"), HotkeysEnum::freeCameraUserInputCameraSetVelocity, "Set Velocity To##freeCameraUserInputCameraSetVelocity", settings->freeCameraUserInputCameraSetVelocity));
+
+
+						case GUIElementEnum::freeCameraUserInputCameraSetVelocityChildren:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIDummyContainer>
+								(game, "freeCameraUserInputCameraSetVelocityChildren", headerChildElements
+									{
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityVec3),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityCopyCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityPaste),
+									}
+							));
+
+
+							case GUIElementEnum::freeCameraUserInputCameraSetVelocityVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+									(game, ToolTipCollection("Velocity of the camera (relative to facing)"), "Velocity ##freeCameraUserInputCameraSetVelocityVec3", settings->freeCameraUserInputCameraSetVelocityVec3, "Forward", "Right", "Up"));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetVelocityCopyCurrent:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy the cameras current relative Velocity to the clipboard"), std::nullopt, "Copy current Velocity to clipboard##freeCameraUserInputCameraSetVelocityCopyCurrent", settings->freeCameraUserInputCameraSetVelocityCopyCurrent));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetVelocityPaste:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Paste in a relative Velocity from the clipboard"), std::nullopt, "Paste from Clipboard##freeCameraUserInputCameraSetVelocityPaste", settings->freeCameraUserInputCameraSetVelocityPaste));
+
+					case GUIElementEnum::freeCameraAnchorPositionToObjectPosition:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, true>>
+							(game, ToolTipCollection("Anchors the camera position to an objects position, following it around"), HotkeysEnum::freeCameraAnchorPositionToObjectPosition, "Anchor Camera Position to Object Position", settings->freeCameraAnchorPositionToObjectPosition, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup),
+								createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPositionTranslationInterpolator),
+								createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectRotation),
+								}
+							));
+
+						case GUIElementEnum::freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraObjectTrackEnum, 100.f>>
+								(game, ToolTipCollection(""), "Object to Anchor to##freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup", settings->freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum)},
+									}));
+
+
+							case GUIElementEnum::freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+									(game, ToolTipCollection("The datum (unique ID) of the object the camera should anchor to"), "Custom object datum##freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum", settings->freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum));
+
+
+						case GUIElementEnum::freeCameraAnchorPositionToObjectPositionTranslationInterpolator:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "Position Interpolation##freeCameraAnchorPositionToObjectPositionTranslationInterpolator", settings->freeCameraAnchorPositionToObjectPositionTranslationInterpolator,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{ createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor) }
+									}
+							));
+
+							case GUIElementEnum::freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor", settings->freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor));
+
+
+						case GUIElementEnum::freeCameraAnchorPositionToObjectRotation:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+								(game, ToolTipCollection("Anchors the camera position to an objects rotation, staying on the same side of it as it turns around"), HotkeysEnum::freeCameraAnchorPositionToObjectRotation, "Anchor Camera Position to Object Rotation", settings->freeCameraAnchorPositionToObjectRotation
+							));
+
+						
+
+					case GUIElementEnum::freeCameraAnchorRotationToObjectPosition:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, true>>
+							(game, ToolTipCollection("Anchors the camera rotation to an objects position, panning to track it as it moves"), HotkeysEnum::freeCameraAnchorRotationToObjectPosition, "Anchor Camera Rotation to Object Position", settings->freeCameraAnchorRotationToObjectPosition, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup),
+								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPositionRotationInterpolator),
+								}
+						));
+
+						case GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraObjectTrackEnumPlusAbsolute, 100.f>>
+								(game, ToolTipCollection(""), "Object to Anchor to##freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup", settings->freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum)},
+										headerChildElements{createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3)},
+									}));
+
+
+							case GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+									(game, ToolTipCollection("The datum (unique ID) of the object the camera should anchor to"), "Custom object datum##freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum", settings->freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum));
+
+
+							case GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+									(game, ToolTipCollection("Absolute position to anchor to"), "Absolute Position ##freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3", settings->freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3, "x", "y", "z"));
+
+
+
+						case GUIElementEnum::freeCameraAnchorRotationToObjectPositionRotationInterpolator:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "Rotation Interpolation##freeCameraAnchorRotationToObjectPositionRotationInterpolator", settings->freeCameraAnchorRotationToObjectPositionRotationInterpolator,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{ createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor) }
+									}
+							));
+
+							case GUIElementEnum::freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor", settings->freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor));
+
+
+					case GUIElementEnum::freeCameraAnchorRotationToObjectFacing:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, true>>
+							(game, ToolTipCollection("Anchors the camera rotation to an objects rotation, panning to track it as it moves"), HotkeysEnum::freeCameraAnchorRotationToObjectFacing, "Anchor Camera Rotation to Object Facing", settings->freeCameraAnchorRotationToObjectFacing, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup),
+								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacingRotationInterpolator),
+								}
+						));
+
+						case GUIElementEnum::freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraObjectTrackEnum, 100.f>>
+								(game, ToolTipCollection(""), "Object to Anchor to##freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup", settings->freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum)},
+									}));
+
+
+							case GUIElementEnum::freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+									(game, ToolTipCollection("The datum (unique ID) of the object the camera should anchor to"), "Custom object datum##freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum", settings->freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum));
+
+
+							case GUIElementEnum::freeCameraAnchorRotationToObjectFacingRotationInterpolator:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+									(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "Rotation Interpolation##freeCameraAnchorRotationToObjectFacingRotationInterpolator", settings->freeCameraAnchorRotationToObjectFacingRotationInterpolator,
+										vectorOfHeaderChildElements
+										{
+											headerChildElements{},
+											headerChildElements{ createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor) }
+										}
+								));
+
+								case GUIElementEnum::freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor:
+									return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+										(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor", settings->freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor));
+
+					case GUIElementEnum::freeCameraAnchorFOVToObjectDistance:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, true>>
+							(game, ToolTipCollection("Anchors the camera FOV to its distance to an object, zooming in as the object moves further away"), HotkeysEnum::freeCameraAnchorFOVToObjectDistance, "Anchor Camera FOV to Object Distance", settings->freeCameraAnchorFOVToObjectDistance, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup),
+								createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistanceFOVInterpolator),
+								}
+						));
+
+					case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraObjectTrackEnumPlusAbsolute, 100.f>>
+							(game, ToolTipCollection(""), "Object to Anchor to##freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup", settings->freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup,
+								vectorOfHeaderChildElements
+								{
+									headerChildElements{},
+									headerChildElements{createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum)},
+									headerChildElements{createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3)},
+								}));
+
+
+					case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+							(game, ToolTipCollection("The datum (unique ID) of the object the camera should anchor to"), "Custom object datum##freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum", settings->freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum));
+
+
+					case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+							(game, ToolTipCollection("Absolute position to anchor to"), "Absolute Position: ##freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3", settings->freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3, "x", "y", "z"));
+
+
+
+						case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceFOVInterpolator:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "FOV Interpolation##freeCameraAnchorFOVToObjectDistanceFOVInterpolator", settings->freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
+									vectorOfHeaderChildElements
+									{
+										headerChildElements{},
+										headerChildElements{ createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor) }
+									}
+							));
+
+							case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor", settings->freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor));
+
 
 			case GUIElementEnum::theaterHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

@@ -31,7 +31,7 @@ public:
 			return;
 		}
 
-
+		ImGui::SetNextItemWidth(100);
 		if (ImGui::InputFloat(mLabelText.c_str(), &mOptionFloat->GetValueDisplay()))
 		{
 			PLOG_VERBOSE << "GUIFloat (" << getName() << ") firing toggle event, new value: " << mOptionFloat->GetValueDisplay();

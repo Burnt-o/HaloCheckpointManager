@@ -32,6 +32,16 @@ public:
 	std::shared_ptr<ActionEvent> bottomlessClipHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> display2DInfoHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraGameInputDisableHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraCameraInputDisableHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraIncreaseTranslationSpeedHotkey = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraDecreaseTranslationSpeedHotkey = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraMaintainVelocityHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraAnchorPositionToObjectPositionHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraAnchorPositionToObjectRotationHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraAnchorRotationToObjectPositionHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraAnchorRotationToObjectFacingHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraAnchorFOVToObjectDistanceHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -51,6 +61,16 @@ public:
 	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportFillWithCurrentPositionEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceLaunchEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraBindingsPopup = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPosition = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionCopyCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionPaste = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotation = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotationCopyCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotationPaste = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocity = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopyCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
 
 
 	// settings
@@ -627,6 +647,14 @@ public:
 			nameof(display2DInfoOutline)
 		);
 
+
+	enum class FreeCameraInterpolationTypesEnum
+	{
+			None,
+			Linear
+	};
+
+
 	std::shared_ptr<Setting<bool>> freeCameraToggle = std::make_shared<Setting<bool>>
 		(
 			false,
@@ -634,26 +662,323 @@ public:
 			nameof(freeCameraToggle)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraPositionSpeed = std::make_shared<Setting<float>>
+	std::shared_ptr<Setting<bool>> freeCameraHideWatermark = std::make_shared<Setting<bool>>
 		(
-			3.0,
-			[](float in) { return true; },
-			nameof(freeCameraPositionSpeed)
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraHideWatermark)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraRotationSpeed = std::make_shared<Setting<float>>
+	std::shared_ptr<Setting<bool>> freeCameraGameInputDisable = std::make_shared<Setting<bool>>
 		(
-			3.0,
-			[](float in) { return true; },
-			nameof(freeCameraRotationSpeed)
+			true,
+			[](bool in) { return true; },
+			nameof(freeCameraGameInputDisable)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraFOVSpeed = std::make_shared<Setting<float>>
+	std::shared_ptr<Setting<bool>> freeCameraCameraInputDisable = std::make_shared<Setting<bool>>
 		(
-			3.0,
-			[](float in) { return true; },
-			nameof(freeCameraFOVSpeed)
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraCameraInputDisable)
 		);
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraTranslationSpeedChangeFactor = std::make_shared<Setting<float>>
+		(
+			1.5f,
+			[](float in) { return in > 1.f; }, // 
+			nameof(freeCameraUserInputCameraTranslationSpeedChangeFactor)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraUserInputCameraSetPositionVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(freeCameraUserInputCameraSetPositionVec3)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraUserInputCameraSetRotationVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(freeCameraUserInputCameraSetRotationVec3)
+		);
+
+	std::shared_ptr<Setting<bool>> freeCameraUserInputCameraMaintainVelocity = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraUserInputCameraMaintainVelocity)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraUserInputCameraSetVelocityVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(freeCameraUserInputCameraSetVelocityVec3)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraBaseFOV = std::make_shared<Setting<float>>
+		(
+			90.f,
+			[](float in) { return in > 0.f && in < 360.f; }, // TODO figure out what the max upper in vfov is 
+			nameof(freeCameraUserInputCameraBaseFOV)
+		);
+
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraTranslationSpeed = std::make_shared<Setting<float>>
+		(
+			3.f,
+			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
+			nameof(freeCameraUserInputCameraTranslationSpeed)
+		);
+	
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraUserInputCameraTranslationInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraUserInputCameraTranslationInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraTranslationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraUserInputCameraTranslationInterpolatorLinearFactor)
+		);
+
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraRotationSpeed = std::make_shared<Setting<float>>
+		(
+			3.f,
+			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
+			nameof(freeCameraUserInputCameraRotationSpeed)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraUserInputCameraRotationInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraUserInputCameraRotationInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraRotationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraUserInputCameraRotationInterpolatorLinearFactor)
+		);
+
+
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraFOVSpeed = std::make_shared<Setting<float>>
+		(
+			3.f,
+			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
+			nameof(freeCameraUserInputCameraFOVSpeed)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraUserInputCameraFOVInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraUserInputCameraFOVInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraUserInputCameraFOVInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraUserInputCameraFOVInterpolatorLinearFactor)
+		);
+
+	std::shared_ptr<Setting<bool>> freeCameraAnchorPositionToObjectPosition = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraAnchorPositionToObjectPosition)
+		);
+
+		// actually an enum but stored as int
+		std::shared_ptr<Setting<int>> freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup = std::make_shared<Setting<int>>
+			(
+				0, // 0 player, 1 is custom object
+				[](int in) { return in >= 0 && in <= 1; }, // within enum range
+				nameof(freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup)
+			);
+
+	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorPositionToObjectPositionTranslationInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraAnchorPositionToObjectPositionTranslationInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor)
+		);
+
+
+	std::shared_ptr<Setting<bool>> freeCameraAnchorPositionToObjectRotation = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraAnchorPositionToObjectRotation)
+		);
+
+	std::shared_ptr<Setting<bool>> freeCameraAnchorRotationToObjectPosition = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraAnchorRotationToObjectPosition)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup = std::make_shared<Setting<int>>
+		(
+			0, // 0 player, 1 is custom object, 2 is absolute position
+			[](int in) { return in >= 0 && in <= 2; }, // within enum range
+			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup)
+		);
+
+	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectPositionRotationInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraAnchorRotationToObjectPositionRotationInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor)
+		);
+
+	std::shared_ptr<Setting<bool>> freeCameraAnchorRotationToObjectFacing = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraAnchorRotationToObjectFacing)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup = std::make_shared<Setting<int>>
+		(
+			0, // 0 player, 1 is custom object
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup)
+		);
+
+	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectFacingRotationInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraAnchorRotationToObjectFacingRotationInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor)
+		);
+
+	std::shared_ptr<Setting<bool>> freeCameraAnchorFOVToObjectDistance = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraAnchorFOVToObjectDistance)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup = std::make_shared<Setting<int>>
+		(
+			0, // 0 player, 1 is custom object, 2 is absolute position
+			[](int in) { return in >= 0 && in <= 2; }, // within enum range
+			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup)
+		);
+
+	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum)
+		);
+
+	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
+			[](SimpleMath::Vector3 in) { return true; },
+			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3)
+		);
+
+	// actually an enum but stored as int
+	std::shared_ptr<Setting<int>> freeCameraAnchorFOVToObjectDistanceFOVInterpolator = std::make_shared<Setting<int>>
+		(
+			1, // 0 none, 1 is proportional
+			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolator)
+		);
+
+	std::shared_ptr<Setting<float>> freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor = std::make_shared<Setting<float>>
+		(
+			0.06f,
+			[](float in) { return in > 0.f && in <= 1.f; },
+			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor)
+		);
+
+
+
+	enum class FreeCameraObjectTrackEnum
+	{
+		Player,
+		CustomObject
+	};
+
+	enum class FreeCameraObjectTrackEnumPlusAbsolute
+	{
+		Player,
+		CustomObject,
+		ManualPosition
+	};
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
@@ -726,9 +1051,7 @@ public:
 		display2DInfoFontColour,
 		display2DInfoFloatPrecision,
 		display2DInfoOutline,
-		freeCameraPositionSpeed,
-		freeCameraRotationSpeed,
-		freeCameraFOVSpeed
+
 
 	};
 };

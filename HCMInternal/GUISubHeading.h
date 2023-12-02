@@ -16,7 +16,7 @@ public:
 	GUISubHeading(GameState implGame, ToolTipCollection tooltip, std::string headingText,  std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements, float leftMargin = 20.f)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLeftMargin(leftMargin), mHeadingText(headingText)
 	{
-		PLOG_VERBOSE << "Constructing GUIHeading, name: " << getName();
+		PLOG_VERBOSE << "Constructing GUISubHeading, name: " << getName();
 
 		for (auto maybeElement : childElements)
 		{
@@ -54,8 +54,8 @@ public:
 				auto thisElementHeight = element->getCurrentHeight();
 				currentHeight += thisElementHeight;
 
-				ImGui::Dummy({ mLeftMargin, thisElementHeight < 3 ? 0 : thisElementHeight - GUISpacing }); // left margin
-				ImGui::SameLine();
+				//ImGui::Dummy({ mLeftMargin, thisElementHeight < 3 ? 0 : thisElementHeight - GUISpacing }); // left margin
+				//ImGui::SameLine();
 				element->render(hotkeyRenderer);
 			}
 

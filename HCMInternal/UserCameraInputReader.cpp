@@ -84,9 +84,9 @@ private:
 		{
 			lockOrThrow(settingsWeak, settings);
 
-			mPositionSpeed = settings->freeCameraPositionSpeed->GetValue();
-			mRotationSpeed = settings->freeCameraRotationSpeed->GetValue();
-			mFOVSpeed = settings->freeCameraFOVSpeed->GetValue();
+			mPositionSpeed = settings->freeCameraUserInputCameraTranslationSpeed->GetValue();
+			mRotationSpeed = settings->freeCameraUserInputCameraRotationSpeed->GetValue();
+			mFOVSpeed = settings->freeCameraUserInputCameraFOVSpeed->GetValue();
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -102,15 +102,15 @@ public:
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		positionSpeedChangedCallback(settingsWeak.lock()->freeCameraPositionSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
-		rotationSpeedChangedCallback(settingsWeak.lock()->freeCameraRotationSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
-		FOVSpeedChangedCallback(settingsWeak.lock()->freeCameraFOVSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
+		positionSpeedChangedCallback(settingsWeak.lock()->freeCameraUserInputCameraTranslationSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
+		rotationSpeedChangedCallback(settingsWeak.lock()->freeCameraUserInputCameraRotationSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
+		FOVSpeedChangedCallback(settingsWeak.lock()->freeCameraUserInputCameraFOVSpeed->valueChangedEvent, [this](float& n) { onSpeedChange(); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { cacheInitialised = false; })
 	{
 		auto settings = settingsWeak.lock();
-		mPositionSpeed = settings->freeCameraPositionSpeed->GetValue();
-		mRotationSpeed = settings->freeCameraRotationSpeed->GetValue();
-		mFOVSpeed = settings->freeCameraFOVSpeed->GetValue();
+		mPositionSpeed = settings->freeCameraUserInputCameraTranslationSpeed->GetValue();
+		mRotationSpeed = settings->freeCameraUserInputCameraRotationSpeed->GetValue();
+		mFOVSpeed = settings->freeCameraUserInputCameraFOVSpeed->GetValue();
 
 
 		auto ptr = dicon.Resolve<PointerManager>().lock();

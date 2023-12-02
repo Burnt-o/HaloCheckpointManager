@@ -223,6 +223,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="App.h" />
     <ClInclude Include="BlockGameInput.h" />
     <ClInclude Include="BottomlessClip.h" />
+    <ClInclude Include="GUIComboEnumWithChildren.h" />
+    <ClInclude Include="GUIDummyContainer.h" />
+    <ClInclude Include="GUIVec3CustomLabels.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
     <ClInclude Include="UserCameraInputReader.h" />
     <ClInclude Include="CameraTransformer.h" />

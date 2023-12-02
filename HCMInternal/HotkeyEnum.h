@@ -23,7 +23,21 @@ naturalCheckpointDisable,\
 infiniteAmmo,\
 bottomlessClip,\
 display2DInfo,\
-freeCamera 
+freeCamera,\
+freeCameraGameInputDisable,\
+freeCameraCameraInputDisable,\
+freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,\
+freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,\
+freeCameraUserInputCameraSetPosition,\
+freeCameraUserInputCameraSetRotation,\
+freeCameraUserInputCameraMaintainVelocity, \
+freeCameraUserInputCameraSetVelocity,\
+freeCameraAnchorPositionToObjectPosition,\
+freeCameraAnchorPositionToObjectRotation,\
+freeCameraAnchorRotationToObjectPosition,\
+freeCameraAnchorRotationToObjectFacing,\
+freeCameraAnchorFOVToObjectDistance
+
 
 
 enum class HotkeysEnum : int {

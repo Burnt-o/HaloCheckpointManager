@@ -3,7 +3,7 @@
 #include "SettingsStateAndEvents.h"
 
 template <typename E, float itemWidth>
-class GUIComboEnum : public IGUIElement {
+class GUIComboEnumWithChildren : public IGUIElement {
 
 private:
 	std::string mLabelText;
@@ -11,15 +11,18 @@ private:
 	std::vector<std::thread> mUpdateSettingThreads;
 	static constexpr std::array<std::string_view, magic_enum::enum_count<E>()> itemLabels = magic_enum::enum_names<E>();
 	std::string itemLabelsMashedTogether;
+	float mLeftMargin;
+	std::vector<std::vector<std::shared_ptr<IGUIElement>>> mChildElementsPerItem;
+
 public:
 
 
-	GUIComboEnum(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<int>> optionEnum)
-		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionEnumWeak(optionEnum)
+	GUIComboEnumWithChildren(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<int>> optionEnum, std::vector<std::vector<std::optional<std::shared_ptr<IGUIElement>>>> childElementsPerItem, float leftMargin = 20.f)
+		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionEnumWeak(optionEnum), mLeftMargin(leftMargin)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");
-		PLOG_VERBOSE << "Constructing GUIComboEnum, name: " << getName();
-		PLOG_DEBUG << "GUIComboEnum.getOptionName: " << std::hex << mOptionEnumWeak.lock()->getOptionName();
+		PLOG_VERBOSE << "Constructing GUIComboEnumWithChildren, name: " << getName();
+		PLOG_DEBUG << "GUIComboEnumWithChildren.getOptionName: " << std::hex << mOptionEnumWeak.lock()->getOptionName();
 
 		this->currentHeight = GUIFrameHeightWithSpacing;
 
@@ -39,9 +42,22 @@ public:
 		debugString.append("\\0");
 
 
+		assert(childElementsPerItem.size() <= itemLabels.size() && "Too many items in GUIComboEnumWithChildren childElementsPerItem vector!");
 
 
-		PLOG_DEBUG << "GUIComboEnum itemLabelsMashedTogether: " << std::endl << debugString;
+
+		for (auto maybeChildElements : childElementsPerItem)
+		{
+			std::vector<std::shared_ptr<IGUIElement>> childElements;
+			for (auto maybeElement : maybeChildElements)
+			{
+				if (maybeElement.has_value()) childElements.push_back(maybeElement.value());
+			}
+			mChildElementsPerItem.push_back(childElements);
+		}
+
+
+		PLOG_DEBUG << "GUIComboEnumWithChildren itemLabelsMashedTogether: " << std::endl << debugString;
 	}
 
 	void render(HotkeyRenderer& hotkeyRenderer) override
@@ -65,7 +81,7 @@ public:
 				if (ImGui::Selectable(itemLabels.at(n).data(), is_selected))
 				{
 					mOptionEnum->GetValueDisplay() = n;
-					PLOG_VERBOSE << "GUIComboEnum (" << getName() << ") firing toggle event, new value: " << magic_enum::enum_name<E>((E)n);
+					PLOG_VERBOSE << "GUIComboEnumWithChildren (" << getName() << ") firing toggle event, new value: " << magic_enum::enum_name<E>((E)n);
 					auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionEnum]() { optionToggle->UpdateValueWithInput(); }));
 					newThread.detach();
 				}
@@ -84,9 +100,32 @@ public:
 		DEBUG_GUI_HEIGHT;
 
 
+		currentHeight = GUIFrameHeightWithSpacing;
+
+		// render children
+		int currentSelection = mOptionEnum->GetValue();
+		if (mChildElementsPerItem.size() - 1 < currentSelection)
+		{
+			// this selection never had children so we're done
+			return;
+		}
+
+		auto& currentSelectionChildElements = mChildElementsPerItem.at(currentSelection);
+
+
+		for (auto& element : currentSelectionChildElements)
+		{
+			auto thisElementHeight = element->getCurrentHeight();
+			currentHeight += thisElementHeight;
+
+			ImGui::Dummy({ mLeftMargin, thisElementHeight < 3 ? 0 : thisElementHeight - GUISpacing }); // left margin
+			ImGui::SameLine();
+			element->render(hotkeyRenderer);
+		}
+
 	}
 
-	~GUIComboEnum()
+	~GUIComboEnumWithChildren()
 	{
 		for (auto& thread : mUpdateSettingThreads)
 		{
