@@ -784,18 +784,24 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Advanced settings for Free Camera"), "Free Camera Advanced Settings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
+								createNestedElement(GUIElementEnum::freeCameraHideMessages),
 								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraCameraInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraUserInputCameraSettings),
-								createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPosition),
-								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPosition),
-								createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacing),
-								createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistance),
+								//createNestedElement(GUIElementEnum::freeCameraAnchorPositionToObjectPosition),
+								//createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectPosition),
+								//createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacing),
+								//createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistance),
 							}));
 
 					case GUIElementEnum::freeCameraHideWatermark:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection("Hides the HCM collapsed-UI while free camera is active"), std::nullopt, "Hide HCM Watermark", settings->freeCameraHideWatermark));
+
+					case GUIElementEnum::freeCameraHideMessages:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Hides the HCM message log while free camera is active"), std::nullopt, "Hide HCM Messages", settings->freeCameraHideMessages));
+
 
 					case GUIElementEnum::freeCameraGameInputDisable:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
@@ -809,22 +815,22 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
 							(game, ToolTipCollection("Settings for user-controlled camera"), "User Input Camera Settings", headerChildElements
 								{
-									createNestedElement(GUIElementEnum::freeCameraUserInputCameraBindingsPopup),
+									//createNestedElement(GUIElementEnum::freeCameraUserInputCameraBindingsPopup),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraBaseFOV),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationSpeed),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationInterpolator),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationSpeed),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationInterpolator),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVSpeed),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVInterpolator),
-									createNestedElement(GUIElementEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey),
-									createNestedElement(GUIElementEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey),
-									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPosition),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionChildren),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotation),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationChildren),
-									createNestedElement(GUIElementEnum::freeCameraUserInputCameraMaintainVelocity),
+									//createNestedElement(GUIElementEnum::freeCameraUserInputCameraMaintainVelocity),
 								}));
 
 						
@@ -840,6 +846,21 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeed:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								(game, ToolTipCollection("How fast the camera translates (moves positionally)"), "Translation Speed", settings->freeCameraUserInputCameraTranslationSpeed));
+
+
+						case GUIElementEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Increases camera translation speed by a scale factor"), HotkeysEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, "Increase Translation Speed", settings->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey));
+
+						case GUIElementEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+								(game, ToolTipCollection("Decreases camera translation speed by a scale factor"), HotkeysEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, "Decrease Translation Speed", settings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey));
+
+						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								(game, ToolTipCollection("How much the camera translation speed changes when you press the above hotkeys"), "Translation Speed Change Factor", settings->freeCameraUserInputCameraTranslationSpeedChangeFactor));
+
+
 
 						case GUIElementEnum::freeCameraUserInputCameraTranslationInterpolator:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
@@ -895,19 +916,6 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##UserInputCameraFOV", settings->freeCameraUserInputCameraFOVInterpolatorLinearFactor));
 
-
-
-						case GUIElementEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-								(game, ToolTipCollection("Increases camera translation speed by a scale factor"), HotkeysEnum::freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, "Increase Camera Speed", settings->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey));
-
-						case GUIElementEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
-								(game, ToolTipCollection("Decreases camera translation speed by a scale factor"), HotkeysEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, "Decrease Camera Speed", settings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey));
-
-						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-								(game, ToolTipCollection("How much the camera translation speed changes when you press the above hotkeys"), "Translation Speed Change Factor", settings->freeCameraUserInputCameraTranslationSpeedChangeFactor));
 
 
 

@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "IAnchorPoint.h"
 #include "IMessagesGUI.h"
+#include "SettingsStateAndEvents.h"
 // Displays temporary messages to the user, below the main GUI. Messages fade over time then disappear.
 
 struct temporaryMessage
@@ -26,6 +27,7 @@ private:
 	// data
 	std::vector <temporaryMessage> mMessages;
 	std::optional<std::weak_ptr<IAnchorPoint>> mAnchorPoint = std::nullopt;
+	std::optional < std::weak_ptr<SettingsStateAndEvents>> mSettingsWeak;
 	SimpleMath::Vector2 mAnchorOffset;
 	static inline std::mutex addMessageMutex{};
 	// funcs
@@ -45,6 +47,8 @@ public:
 		mRenderEventCallback.removeCallback(); // no new callback invocation
 		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
 	}
+
+	void setSettings(std::weak_ptr<SettingsStateAndEvents> settings) { mSettingsWeak = settings; }
 
 	//explicit MessagesGUI(Vec2 anchorOffset)
 	//	: mAnchorOffset(anchorOffset)

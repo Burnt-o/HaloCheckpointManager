@@ -95,6 +95,7 @@ public:
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
             auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, settings->showGUIFailures, guifail); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
 
+            mes->setSettings(settings);
             // hotkeys
             auto hkd = std::make_shared<HotkeyDefinitions>(settings); PLOGV << "hkd init";
             auto hkm = std::make_shared<HotkeyManager>(imm->ForegroundRenderEvent, hkd, mes, dirPath); PLOGV << "hkm init"; // hotkey manager doesn't render but wants to poll inputs every frame to know if keys pressed etc

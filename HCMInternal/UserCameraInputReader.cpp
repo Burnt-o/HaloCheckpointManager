@@ -144,6 +144,9 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updatePositionTransform(c
 		cacheInitialised = true;
 	}
 
+	lockOrThrow(settingsWeak, settings);
+	if (settings->freeCameraCameraInputDisable->GetValue()) return;
+
 	// Section: Translation
 	auto cameraTranslationSpeed = frameDelta * mPositionSpeed;
 
@@ -189,6 +192,9 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(c
 		updateCache();
 		cacheInitialised = true;
 	}
+
+	lockOrThrow(settingsWeak, settings);
+	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	// Section: Rotation
 	auto analogRotationSpeed = frameDelta * mRotationSpeed;
@@ -267,6 +273,9 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateFOVTransform(const 
 		updateCache();
 		cacheInitialised = true;
 	}
+
+	lockOrThrow(settingsWeak, settings);
+	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	float cameraFOVSpeed = mFOVSpeed * frameDelta;
 

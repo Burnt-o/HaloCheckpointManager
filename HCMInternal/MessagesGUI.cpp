@@ -6,7 +6,24 @@
 void MessagesGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 {
 	std::unique_lock<std::mutex> lock(mDestructionGuard);
-	iterateMessages();
+
+	bool hideMessages = false;
+	if (mSettingsWeak.has_value())
+	{
+		auto mSettings = mSettingsWeak->lock();
+		if (mSettings)
+		{
+			hideMessages = mSettings->freeCameraToggle->GetValue() && mSettings->freeCameraHideMessages->GetValue();
+		}
+	}
+
+
+	if (hideMessages == false)
+	{
+		iterateMessages();
+	}
+
+
 }
 
 

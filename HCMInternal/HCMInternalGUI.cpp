@@ -163,35 +163,45 @@ void HCMInternalGUI::primaryRender()
 
 	mWindowSize.y = (minimumWindowSize.y > totalContentHeight ? totalContentHeight : minimumWindowSize.y);
 
-
-
-	ImGui::SetNextWindowSize(mWindowSize);
-	ImGui::SetNextWindowPos(mWindowPos);
-
-	if (m_WindowOpen)
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.00f, 0.80f, 0.40f, 1.00f));
-	else
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.00f, 0.60f, 0.25f, 1.00f));
-
-
-	ImGui::SetNextWindowCollapsed(!m_WindowOpen);
-	m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags); // Create window. Returns false when window collapsed
-
-	ImGui::PopStyleColor();
-
-	if (m_WindowOpen)  //only bother rendering children if it's not collapsed
-	{	
-		mGUIMCCState.render(); // render header
-
-		// Tell all the current-games GUI elements to render themselves
-		for (auto& element : *p_currentGameGUIElements)
-		{
-			element->render(*mHotkeyRenderer.get());
-		}
+	// check for free-camera-hide-watermark (only if window is collapsed)
+	if (!m_WindowOpen && mSettings->freeCameraToggle->GetValue() && mSettings->freeCameraHideWatermark->GetValue())
+	{
+		// do nothing
+		LOG_ONCE(PLOG_DEBUG << "skipping rendering collapsed window due to freeCameraHideWatermark setting");
 	}
+	else
+	{
+		// render
+		ImGui::SetNextWindowSize(mWindowSize);
+		ImGui::SetNextWindowPos(mWindowPos);
 
-	ImGui::End(); // end main window
+		if (m_WindowOpen)
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.00f, 0.80f, 0.40f, 1.00f));
+		else
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.00f, 0.60f, 0.25f, 1.00f));
 
+
+
+
+		ImGui::SetNextWindowCollapsed(!m_WindowOpen);
+		m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags); // Create window. Returns false when window collapsed
+
+		ImGui::PopStyleColor();
+
+		if (m_WindowOpen)  //only bother rendering children if it's not collapsed
+		{	
+			mGUIMCCState.render(); // render header
+
+			// Tell all the current-games GUI elements to render themselves
+			for (auto& element : *p_currentGameGUIElements)
+			{
+				element->render(*mHotkeyRenderer.get());
+			}
+		}
+
+		ImGui::End(); // end main window
+
+	}
 
 	// do stuff if window just opened
 	if (m_WindowOpen && !m_windowOpenLastFrame)

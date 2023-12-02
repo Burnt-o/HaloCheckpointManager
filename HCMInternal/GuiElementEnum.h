@@ -150,6 +150,7 @@
 	((freeCameraSettingsSimpleSubheading, (ALL_SUPPORTED_GAMES)))\
 	((freeCameraSettingsAdvancedSubheading, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraHideWatermark, (ALL_SUPPORTED_GAMES)))\
+		((freeCameraHideMessages, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraGameInputDisable, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraCameraInputDisable, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraUserInputCameraSettings, (ALL_SUPPORTED_GAMES)))\
