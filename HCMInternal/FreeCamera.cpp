@@ -48,6 +48,9 @@ private:
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetRotationCopyCallback;
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetRotationPasteCallback;
 
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback;
+
 
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
@@ -382,6 +385,36 @@ private:
 		}
 	}
 
+	void onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			float factor = settings->freeCameraUserInputCameraTranslationSpeedChangeFactor->GetValue();
+			settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() = settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() * factor;
+			settings->freeCameraUserInputCameraTranslationSpeed->UpdateValueWithInput();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+	void onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			float factor = settings->freeCameraUserInputCameraTranslationSpeedChangeFactor->GetValue();
+			settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() = settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() / factor;
+			settings->freeCameraUserInputCameraTranslationSpeed->UpdateValueWithInput();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
 
 public: 
 	FreeCameraImpl(GameState game, IDIContainer& dicon)
@@ -409,7 +442,10 @@ public:
 		freeCameraUserInputCameraSetRotationCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotation, [this]() { onFreeCameraUserInputCameraSetRotation(); }),
 		freeCameraUserInputCameraSetRotationFillCurrentCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationFillCurrent, [this]() { onFreeCameraUserInputCameraSetRotationFillCurrent(); }),
 		freeCameraUserInputCameraSetRotationCopyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationCopy, [this]() { onFreeCameraUserInputCameraSetRotationCopy(); }),
-		freeCameraUserInputCameraSetRotationPasteCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationPaste, [this]() { onFreeCameraUserInputCameraSetRotationPaste(); })
+		freeCameraUserInputCameraSetRotationPasteCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationPaste, [this]() { onFreeCameraUserInputCameraSetRotationPaste(); }),
+	
+		freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey(); }),
+		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); })
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerManager>().lock();
