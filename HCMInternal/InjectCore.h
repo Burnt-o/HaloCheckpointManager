@@ -14,6 +14,7 @@
 #include "IModalDialogRenderer.h"
 #include "IMakeOrGetCheat.h"
 #include "GetCurrentDifficulty.h"
+#include "DirPathContainer.h"
 
 
 class InjectCore : public IOptionalCheat
@@ -35,6 +36,8 @@ private:
 	std::weak_ptr<IGetMCCVersion> getMCCVerWeak;
 	std::optional<std::weak_ptr<GetCurrentLevelCode>> levelCodeOptionalWeak;
 	std::optional<std::weak_ptr<GetCurrentDifficulty>> difficultyOptionalWeak;
+
+	CheckpointInjectionLogger checkpointInjectionLogger;
 
 
 	void onInject()
@@ -189,6 +192,8 @@ private:
 
 			PLOG_INFO << "Successfully injected coresave from " << currentCheckpoint.selectedCheckpointFilePath << " to " << coreSaveInjectLocation;
 
+			checkpointInjectionLogger.logInjection(currentCheckpoint);
+
 			if (settings->injectCoreForcesRevert->GetValue())
 			{
 				settings->forceCoreLoadEvent->operator()();
@@ -214,7 +219,8 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		modalDialogsWeak(dicon.Resolve<IModalDialogRenderer>()),
-		getMCCVerWeak(dicon.Resolve<IGetMCCVersion>())
+		getMCCVerWeak(dicon.Resolve<IGetMCCVersion>()),
+		checkpointInjectionLogger(dicon.Resolve<DirPathContainer>().lock()->dirPath)
 	{
 		try
 		{

@@ -2,7 +2,7 @@
 
 
 
-h1 rng in displayinfo
+
 h2 bsp switcher
 h2 blind w/ first person anims
 h2 tickrate changer
@@ -45,7 +45,7 @@ free cam
 
 DONE LIST:
 Fix ctrl-tab input bringing up imgui thing
-
+h1 rng in displayinfo
 
 
 

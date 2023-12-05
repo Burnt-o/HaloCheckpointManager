@@ -19,6 +19,8 @@
 #include "IMakeOrGetCheat.h"
 #include "IGetMCCVersion.h"
 #include "GetCurrentDifficulty.h"
+#include "CheckpointInjectionLogger.h"
+#include "DirPathContainer.h"
 
 class InjectCheckpoint : public IOptionalCheat {
 private:
@@ -52,6 +54,7 @@ private:
 	std::optional<std::weak_ptr<GetCurrentLevelCode>> levelCodeOptionalWeak;
 	std::optional<std::weak_ptr<GetCurrentDifficulty>> difficultyOptionalWeak;
 
+	CheckpointInjectionLogger checkpointInjectionLogger;
 
 	void onInject() {
 
@@ -279,7 +282,9 @@ private:
 			messagesGUI->addMessage(std::format("Injected checkpoint {}.bin", currentCheckpoint.selectedCheckpointName));
 
 			PLOG_INFO << "succesfully injected checkpoint from path: " << currentCheckpoint.selectedCheckpointFilePath << " to " << std::hex << (uint64_t)checkpointLoc;
-
+			
+			checkpointInjectionLogger.logInjection(currentCheckpoint);
+			
 			if (settings->injectCheckpointForcesRevert->GetValue())
 			{
 				settings->forceRevertEvent->operator()();
@@ -304,7 +309,8 @@ private:
 			sharedMemWeak(dicon.Resolve<ISharedMemory>()),
 			settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 			modalDialogsWeak(dicon.Resolve<IModalDialogRenderer>()),
-			getMCCVerWeak(dicon.Resolve<IGetMCCVersion>())
+			getMCCVerWeak(dicon.Resolve<IGetMCCVersion>()),
+			checkpointInjectionLogger(dicon.Resolve<DirPathContainer>().lock()->dirPath)
 		{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 
