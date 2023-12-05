@@ -205,7 +205,7 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(c
 
 	if (*cachedIsMouseInput == true)
 	{
-		analogRotationSpeed = analogRotationSpeed * 50.f;
+		analogRotationSpeed = analogRotationSpeed * (1.f / frameDelta);
 	}
 
 

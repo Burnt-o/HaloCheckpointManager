@@ -106,6 +106,12 @@ private:
 
 public:
 
+	const SimpleMath::Vector3 getRotationTransformation()
+	{
+		ScopedAtomicBool lock(dataInUse);
+		return SimpleMath::Vector3(currentEulerYaw, currentEulerPitch, currentEulerRoll);
+	}
+
 	void setRotationTransformation(float yaw, float pitch, float roll)
 	{
 		ScopedAtomicBool lock(dataInUse);
@@ -115,6 +121,17 @@ public:
 		targetEulerPitch = pitch;
 		currentEulerRoll = roll;
 		targetEulerRoll = roll;
+	}
+
+	void setRotationTransformation(SimpleMath::Vector3 rotvec)
+	{
+		ScopedAtomicBool lock(dataInUse);
+		currentEulerYaw = rotvec.x;
+		targetEulerYaw = rotvec.x;
+		currentEulerPitch = rotvec.y;
+		targetEulerPitch = rotvec.y;
+		currentEulerRoll = rotvec.z;
+		targetEulerRoll = rotvec.z;
 	}
 
 
@@ -207,6 +224,11 @@ private:
 
 public:
 
+	const SimpleMath::Vector3 getPositionTransformation()
+	{
+		ScopedAtomicBool lock(dataInUse);
+		return currentPositionTransformation;
+	}
 
 	void setPositionTransformation(SimpleMath::Vector3 newPos)
 	{
@@ -222,6 +244,8 @@ public:
 		currentLinearInterpolationFactorChangedCallback(currentLinearInterpolationFactor->valueChangedEvent, [this](float& n) { onLinearInterpolationFactorChanged(n); }),
 		linearPositionSmoother(currentLinearInterpolationFactor->GetValue())
 	{
+		PLOG_DEBUG << "constructing PositionTransformer";
+
 		int curInterpolationType = currentInterpolationType->GetValue();
 		switch (curInterpolationType)
 		{

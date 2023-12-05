@@ -88,6 +88,28 @@ public:
 
 	void deserialise(pugi::xml_node input) override; // Templated, see Option.cpp
 
+	void serialiseToClipboard()
+	{
+		pugi::xml_document doc;
+		pugi::xml_node node = doc.append_child("");
+		serialise(node);
+		std::ostringstream ss;
+		node.first_child().print(ss);
+		ImGui::SetClipboardText(ss.str().c_str());
+	}
+
+	void deserialiseFromClipboard()
+	{
+
+		pugi::xml_document doc;
+		auto parseResult = doc.load_string(ImGui::GetClipboardText()); // todo check parse result
+		if (!parseResult)
+		{
+			throw HCMRuntimeException(std::format("Error parsing clipboard text \"{}\": {}", ImGui::GetClipboardText(), parseResult.description()));
+		}
+
+		deserialise(doc.first_child());
+	}
 
 	void flipBoolSetting() {
 		PLOG_FATAL << "cannot call flipBoolSetting on non-bool setting";	throw HCMRuntimeException("cannot call flipBoolSetting on non-bool setting");

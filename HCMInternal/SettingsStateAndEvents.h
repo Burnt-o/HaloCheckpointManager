@@ -63,13 +63,16 @@ public:
 	std::shared_ptr<ActionEvent> forceLaunchEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraBindingsPopup = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPosition = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionCopyCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionFillCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionPaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotation = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotationCopyCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotationFillCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotationCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetRotationPaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocity = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopyCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityFillCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
 
 

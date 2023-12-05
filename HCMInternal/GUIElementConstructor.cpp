@@ -934,7 +934,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								(game, "freeCameraUserInputCameraSetPositionChildren", headerChildElements
 									{
 										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionVec3),
-										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionCopyCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionFillCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionCopy),
 										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionPaste),
 									}
 									));
@@ -944,9 +945,14 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
 									(game, ToolTipCollection("Position of the camera "), "Position: ##freeCameraUserInputCameraSetPositionVec3", settings->freeCameraUserInputCameraSetPositionVec3, "x", "y", "z"));
 
-							case GUIElementEnum::freeCameraUserInputCameraSetPositionCopyCurrent:
+							case GUIElementEnum::freeCameraUserInputCameraSetPositionFillCurrent:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-									(game, ToolTipCollection("Copy the cameras current Position to the clipboard"), std::nullopt, "Copy current Position to clipboard##freeCameraUserInputCameraSetPositionCopyCurrent", settings->freeCameraUserInputCameraSetPositionCopyCurrent));
+									(game, ToolTipCollection("Fill data with current camera position"), std::nullopt, "Fill with Current##freeCameraUserInputCameraSetPositionCopyCurrent", settings->freeCameraUserInputCameraSetPositionFillCurrent));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetPositionCopy:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy Position to the clipboard"), std::nullopt, "Copy to Clipboard##freeCameraUserInputCameraSetPositionPaste", settings->freeCameraUserInputCameraSetPositionCopy));
+
 
 							case GUIElementEnum::freeCameraUserInputCameraSetPositionPaste:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
@@ -961,7 +967,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								(game, "freeCameraUserInputCameraSetRotationChildren", headerChildElements
 									{
 										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationVec3),
-										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationCopyCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationFillCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationCopy),
 										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotationPaste),
 									}
 							));
@@ -970,9 +977,14 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
 									(game, ToolTipCollection("Rotation of the camera (in radians, yaw pitch roll)"), "Rotation: ##freeCameraUserInputCameraSetRotationVec3", settings->freeCameraUserInputCameraSetRotationVec3, "Yaw", "Pitch", "Roll"));
 
-							case GUIElementEnum::freeCameraUserInputCameraSetRotationCopyCurrent:
+							case GUIElementEnum::freeCameraUserInputCameraSetRotationFillCurrent:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-									(game, ToolTipCollection("Copy the cameras current Rotation to the clipboard"), std::nullopt, "Copy current Rotation to clipboard##freeCameraUserInputCameraSetRotationCopyCurrent", settings->freeCameraUserInputCameraSetRotationCopyCurrent));
+									(game, ToolTipCollection("Fill data with current camera rotation"), std::nullopt, "Fill with Current##freeCameraUserInputCameraSetRotationCopyCurrent", settings->freeCameraUserInputCameraSetRotationFillCurrent));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetRotationCopy:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy Rotation to the clipboard"), std::nullopt, "Copy to Clipboard##freeCameraUserInputCameraSetRotationPaste", settings->freeCameraUserInputCameraSetRotationCopy));
+
 
 							case GUIElementEnum::freeCameraUserInputCameraSetRotationPaste:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
@@ -999,7 +1011,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								(game, "freeCameraUserInputCameraSetVelocityChildren", headerChildElements
 									{
 										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityVec3),
-										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityCopyCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityFillCurrent),
+										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityCopy),
 										createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetVelocityPaste),
 									}
 							));
@@ -1009,9 +1022,14 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
 									(game, ToolTipCollection("Velocity of the camera (relative to facing)"), "Velocity ##freeCameraUserInputCameraSetVelocityVec3", settings->freeCameraUserInputCameraSetVelocityVec3, "Forward", "Right", "Up"));
 
-							case GUIElementEnum::freeCameraUserInputCameraSetVelocityCopyCurrent:
+							case GUIElementEnum::freeCameraUserInputCameraSetVelocityFillCurrent:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-									(game, ToolTipCollection("Copy the cameras current relative Velocity to the clipboard"), std::nullopt, "Copy current Velocity to clipboard##freeCameraUserInputCameraSetVelocityCopyCurrent", settings->freeCameraUserInputCameraSetVelocityCopyCurrent));
+									(game, ToolTipCollection("Fill with the cameras current relative Velocity"), std::nullopt, "Fill with Current##freeCameraUserInputCameraSetVelocityCopyCurrent", settings->freeCameraUserInputCameraSetVelocityFillCurrent));
+
+							case GUIElementEnum::freeCameraUserInputCameraSetVelocityCopy:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy a relative Velocity to the clipboard"), std::nullopt, "Copy to Clipboard##freeCameraUserInputCameraSetVelocityPaste", settings->freeCameraUserInputCameraSetVelocityCopy));
+
 
 							case GUIElementEnum::freeCameraUserInputCameraSetVelocityPaste:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>

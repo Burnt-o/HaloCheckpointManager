@@ -169,18 +169,21 @@
 			((freeCameraUserInputCameraSetPosition, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraSetPositionChildren, (ALL_SUPPORTED_GAMES)))\
 				((freeCameraUserInputCameraSetPositionVec3, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetPositionCopyCurrent, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputCameraSetPositionFillCurrent, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputCameraSetPositionCopy, (ALL_SUPPORTED_GAMES)))\
 				((freeCameraUserInputCameraSetPositionPaste, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraSetRotation, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraSetRotationChildren, (ALL_SUPPORTED_GAMES)))\
 				((freeCameraUserInputCameraSetRotationVec3, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetRotationCopyCurrent, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputCameraSetRotationFillCurrent, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputCameraSetRotationCopy, (ALL_SUPPORTED_GAMES)))\
 				((freeCameraUserInputCameraSetRotationPaste, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraMaintainVelocity, (ALL_SUPPORTED_GAMES)))\
 				((freeCameraUserInputCameraSetVelocity, (ALL_SUPPORTED_GAMES)))\
 				((freeCameraUserInputCameraSetVelocityChildren, (ALL_SUPPORTED_GAMES)))\
 					((freeCameraUserInputCameraSetVelocityVec3, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraUserInputCameraSetVelocityCopyCurrent, (ALL_SUPPORTED_GAMES)))\
+					((freeCameraUserInputCameraSetVelocityFillCurrent, (ALL_SUPPORTED_GAMES)))\
+					((freeCameraUserInputCameraSetVelocityCopy, (ALL_SUPPORTED_GAMES)))\
 					((freeCameraUserInputCameraSetVelocityPaste, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraAnchorPositionToObjectPosition, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup, (ALL_SUPPORTED_GAMES)))\

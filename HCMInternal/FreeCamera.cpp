@@ -39,6 +39,15 @@ private:
 	ScopedCallback <ToggleEvent> mThirdPersonRenderingToggleCallback;
 	ScopedCallback <ToggleEvent> mBlockPlayerCharacterInputToggleCallback;
 
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionFillCurrentCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionCopyCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionPasteCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetRotationCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetRotationFillCurrentCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetRotationCopyCallback;
+	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetRotationPasteCallback;
+
 
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
@@ -248,6 +257,132 @@ private:
 		}
 	}
 
+
+
+	void onFreeCameraUserInputCameraSetPosition()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+
+			if (settings->freeCameraToggle->GetValue() == false)
+			{
+				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+			}
+
+			userControlledPosition.setPositionTransformation(settings->freeCameraUserInputCameraSetPositionVec3->GetValue());
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetPositionFillCurrent()
+	{
+		try 
+		{
+			lockOrThrow(settingsWeak, settings);
+
+			if (settings->freeCameraToggle->GetValue() == false)
+			{
+				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+			}
+
+			settings->freeCameraUserInputCameraSetPositionVec3->GetValueDisplay() = userControlledPosition.getPositionTransformation();
+			settings->freeCameraUserInputCameraSetPositionVec3->UpdateValueWithInput();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetPositionCopy()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			settings->freeCameraUserInputCameraSetPositionVec3->serialiseToClipboard();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetPositionPaste()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			settings->freeCameraUserInputCameraSetPositionVec3->deserialiseFromClipboard();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetRotation()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+
+			if (settings->freeCameraToggle->GetValue() == false)
+			{
+				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+			}
+
+			userControlledRotation.setRotationTransformation(settings->freeCameraUserInputCameraSetRotationVec3->GetValue());
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetRotationFillCurrent()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+
+			if (settings->freeCameraToggle->GetValue() == false)
+			{
+				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+			}
+
+			settings->freeCameraUserInputCameraSetRotationVec3->GetValueDisplay() = userControlledRotation.getRotationTransformation();
+			settings->freeCameraUserInputCameraSetRotationVec3->UpdateValueWithInput();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetRotationCopy()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			settings->freeCameraUserInputCameraSetRotationVec3->serialiseToClipboard();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+	void onFreeCameraUserInputCameraSetRotationPaste()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			settings->freeCameraUserInputCameraSetRotationVec3->deserialiseFromClipboard();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+
 public: 
 	FreeCameraImpl(GameState game, IDIContainer& dicon)
 		:
@@ -265,7 +400,16 @@ public:
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
 		userControlledPosition(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolatorLinearFactor),
 		userControlledRotation(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolatorLinearFactor),
-		userControlledFOV(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolator, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolatorLinearFactor)
+		userControlledFOV(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolator, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolatorLinearFactor),
+
+		freeCameraUserInputCameraSetPositionCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetPosition, [this]() { onFreeCameraUserInputCameraSetPosition(); }),
+		freeCameraUserInputCameraSetPositionFillCurrentCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetPositionFillCurrent, [this]() { onFreeCameraUserInputCameraSetPositionFillCurrent(); }),
+		freeCameraUserInputCameraSetPositionCopyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetPositionCopy, [this]() { onFreeCameraUserInputCameraSetPositionCopy(); }),
+		freeCameraUserInputCameraSetPositionPasteCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetPositionPaste, [this]() { onFreeCameraUserInputCameraSetPositionPaste(); }),
+		freeCameraUserInputCameraSetRotationCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotation, [this]() { onFreeCameraUserInputCameraSetRotation(); }),
+		freeCameraUserInputCameraSetRotationFillCurrentCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationFillCurrent, [this]() { onFreeCameraUserInputCameraSetRotationFillCurrent(); }),
+		freeCameraUserInputCameraSetRotationCopyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationCopy, [this]() { onFreeCameraUserInputCameraSetRotationCopy(); }),
+		freeCameraUserInputCameraSetRotationPasteCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationPaste, [this]() { onFreeCameraUserInputCameraSetRotationPaste(); })
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerManager>().lock();
