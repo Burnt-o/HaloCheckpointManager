@@ -17,7 +17,7 @@ pausing game stops IsMouseInput from updatting
 Getting in vehicle (h1) fucks up camera and ui
 dying fucks up camera
 randomly crashes game
-hook up inc/dec trans speed
+
 
 
 ultrawide resolutions can crop out the watermark

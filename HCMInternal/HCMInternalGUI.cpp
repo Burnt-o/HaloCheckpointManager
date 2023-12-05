@@ -10,7 +10,32 @@
 
 ImVec2 minimumWindowSize{ 500, 500 };
 
+void HCMInternalGUI::adjustWindowPosition()
+{
+	// aspect ratio adjustment to main gui position so that it appears over the top of the games ammo counter ui
+	constexpr float ratio16to9 = 16.f / 9.f;
+	float currentRatio = mFullScreenSize.x / mFullScreenSize.y;
 
+	if (currentRatio > ratio16to9) // need to move HCM window pos to the right
+	{
+		// if the aspect radio were 16:9, how wide would the screen be?
+		float widthIf16to9 = mFullScreenSize.y * ratio16to9;
+		float currentExtraWidth = mFullScreenSize.x - widthIf16to9;
+		PLOG_DEBUG << "currentExtraWidth: " << currentExtraWidth;
+
+		constexpr float magicAdjustmentFactor = 0.6;
+
+
+		float delta = currentExtraWidth * 0.5;// halve it since each side gets half the extra width
+		delta = delta * magicAdjustmentFactor; // idk
+
+		mWindowPos = SimpleMath::Vector2(10 + delta, 25);
+	}
+	else
+	{
+		mWindowPos = SimpleMath::Vector2(10, 25);
+	}
+}
 
 
 void HCMInternalGUI::initializeHCMInternalGUI()
@@ -25,8 +50,7 @@ void HCMInternalGUI::initializeHCMInternalGUI()
 		minimumWindowSize.y = mFullScreenSize.y / 3 * 2;
 	}
 
-	//std::string currentHaloLevel = MCCStateHook::getCurrentHaloLevel().data();
-	//onGameStateChange(MCCStateHook::getCurrentGameState(), currentHaloLevel);
+	adjustWindowPosition();
 
 }
 
@@ -44,6 +68,8 @@ void HCMInternalGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 			// adjust vertical window height to be 2/3rds of screen
 			minimumWindowSize.y = screenSize.y / 3 * 2;
 		}
+
+		adjustWindowPosition();
 	}
 
 

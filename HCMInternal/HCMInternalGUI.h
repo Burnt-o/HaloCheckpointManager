@@ -67,6 +67,7 @@ private:
 	GUIMCCState mGUIMCCState;
 
 	
+	void adjustWindowPosition();
 
 	const std::vector<std::shared_ptr<IGUIElement>>* p_currentGameGUIElements = &mGUIStore->getTopLevelGUIElements(GameState::Value::Halo1);
 
