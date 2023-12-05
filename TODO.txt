@@ -2,7 +2,6 @@
 
 
 
-block gui mouse input when cursor not freed
 h1 rng in displayinfo
 h2 bsp switcher
 h2 blind w/ first person anims

@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "GetAggroData.h"
 #include "GetNextObjectDatum.h"
+#include "GetCurrentRNG.h"
 
 template <GameState::Value gameT>
 class GetGameDataAsString
@@ -42,6 +43,15 @@ public:
 				 
 		}
 
+		if (getCurrentRNGOptionalWeak.has_value())
+		{
+			lockOrThrow(getCurrentRNGOptionalWeak.value(), getCurrentRNG);
+			const auto currentRNG = getCurrentRNG->getCurrentRNG();
+
+			ss << "RNG Seed: " << currentRNG << std::endl;
+
+		}
+
 		if (getNextObjectDatumOptionalWeak.has_value())
 		{
 			lockOrThrow(getNextObjectDatumOptionalWeak.value(), getNextObjectDatum);
@@ -66,6 +76,7 @@ public:
 
 	std::optional<std::weak_ptr<GetAggroData>> getAggroDataOptionalWeak;
 	std::optional<std::weak_ptr<GetNextObjectDatum>> getNextObjectDatumOptionalWeak;
+	std::optional<std::weak_ptr<GetCurrentRNG>> getCurrentRNGOptionalWeak = std::nullopt;
 	bool showGameTick = false;
 };
 

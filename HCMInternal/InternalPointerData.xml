@@ -1178,6 +1178,15 @@
 	</VersionedEntry>
 	<!--#endregion currentDifficulty-->
 
+	<VersionedEntry Name="currentRNG" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2EA74E8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
 	<VersionedEntry Name="injectRequirements" Type="injectRequirements">
 		<Version Version="All" Game="Halo1">
 			<singleCheckpoint>true</singleCheckpoint>

@@ -567,6 +567,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							{
 							createNestedElement(GUIElementEnum::display2DInfoShowGameTick),
 							createNestedElement(GUIElementEnum::display2DInfoShowAggro),
+							createNestedElement(GUIElementEnum::display2DInfoShowRNG),
 							createNestedElement(GUIElementEnum::display2DInfoShowNextObjectDatum),
 							createNestedElement(GUIElementEnum::display2DInfoTrackPlayer),
 							createNestedElement(GUIElementEnum::display2DInfoTrackCustomObject),
@@ -582,6 +583,10 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					case GUIElementEnum::display2DInfoShowAggro:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection(""), std::nullopt, "Show Aggro info", settings->display2DInfoShowAggro));
+
+					case GUIElementEnum::display2DInfoShowRNG:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection(""), std::nullopt, "Show RNG seed", settings->display2DInfoShowRNG));
 
 
 					case GUIElementEnum::display2DInfoShowNextObjectDatum:

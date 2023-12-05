@@ -115,6 +115,7 @@
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowGameTick, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowAggro, (Halo1)))\
+			((display2DInfoShowRNG, (Halo1)))\
 			((display2DInfoShowNextObjectDatum, (Halo2)))\
 			((display2DInfoTrackPlayer, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerViewAngle, (ALL_SUPPORTED_GAMES)))\

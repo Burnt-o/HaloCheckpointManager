@@ -19,6 +19,7 @@
 #include "GetBipedsVehicleDatum.h"
 #include "GetTagName.h"
 #include "GetNextObjectDatum.h"
+#include "GetCurrentRNG.h"
 
 #include "GetGameDataAsString.h"
 #include "GetPlayerDataAsString.h"
@@ -266,6 +267,7 @@ private:
 	// settings callbacks (all bind to same func)
 	ScopedCallback<ToggleEvent> display2DInfoShowGameTickCallback; 
 	ScopedCallback<ToggleEvent> display2DInfoShowAggroCallback;
+	ScopedCallback<ToggleEvent> display2DInfoShowRNGCallback;
 	ScopedCallback<ToggleEvent> display2DInfoShowNextObjectDatumCallback;
 	ScopedCallback<ToggleEvent> display2DInfoTrackPlayerCallback;
 	ScopedCallback<ToggleEvent> display2DInfoShowPlayerViewAngleCallback;
@@ -302,6 +304,7 @@ private:
 		{
 			lockOrThrow(settingsWeak, settings);
 			getGameDataAsString.showGameTick = settings->display2DInfoShowGameTick->GetValue();
+			getGameDataAsString.getCurrentRNGOptionalWeak = settings->display2DInfoShowRNG->GetValue() ? this->getCurrentRNGOptionalWeak : std::nullopt;
 			getGameDataAsString.getAggroDataOptionalWeak = settings->display2DInfoShowAggro->GetValue() ? this->getAggroDataOptionalWeak : std::nullopt;
 			getGameDataAsString.getNextObjectDatumOptionalWeak = settings->display2DInfoShowNextObjectDatum->GetValue() ? this->getNextObjectDatumOptionalWeak : std::nullopt;
 			getGameDataAsString.ss << std::setprecision(settings->display2DInfoFloatPrecision->GetValue());
@@ -363,6 +366,7 @@ private:
 	std::optional<std::weak_ptr<GetObjectTagName>> getObjectTagNameOptionalWeak;
 	std::optional<std::weak_ptr<GetBipedsVehicleDatum>> getBipedsVehicleDatumOptionalWeak;
 	std::optional<std::weak_ptr<GetNextObjectDatum>> getNextObjectDatumOptionalWeak;
+	std::optional<std::weak_ptr<GetCurrentRNG>> getCurrentRNGOptionalWeak;
 
 	float fontSize;
 	bool needToLoadNewFont = true;
@@ -391,6 +395,7 @@ public:
 		display2DInfoFontSizeCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoFontSize->valueChangedEvent, [this](int& n) {onFontSizeChange(n); }),
 		setSettingCallback(display2DInfoShowGameTick, bool),
 		setSettingCallback(display2DInfoShowAggro, bool),
+		setSettingCallback(display2DInfoShowRNG, bool),
 		setSettingCallback(display2DInfoShowNextObjectDatum, bool),
 		setSettingCallback(display2DInfoTrackPlayer, bool),
 		setSettingCallback(display2DInfoShowPlayerViewAngle, bool),
@@ -441,6 +446,7 @@ public:
 		resolveOptionalDisplayInfoService(getObjectTagNameOptionalWeak, GetObjectTagName);
 		resolveOptionalDisplayInfoService(getBipedsVehicleDatumOptionalWeak, GetBipedsVehicleDatum);
 		resolveOptionalDisplayInfoService(getNextObjectDatumOptionalWeak, GetNextObjectDatum);
+		resolveOptionalDisplayInfoService(getCurrentRNGOptionalWeak, GetCurrentRNG);
 
 		if (atLeastOneServiceIsWorking == false) throw HCMInitException("DisplayPlayerInfoImpl could not resolve any optional services for getting data!");
 

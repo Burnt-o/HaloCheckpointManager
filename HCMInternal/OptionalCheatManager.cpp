@@ -52,6 +52,7 @@
 #include "UserCameraInputReader.h"
 #include "ThirdPersonRendering.h"
 #include "BlockPlayerCharacterInput.h"
+#include "GetCurrentRNG.h"
 
 #include "DIContainer.h"
 #include "map.h"
