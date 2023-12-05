@@ -2,6 +2,7 @@
 #include "ImGuiManager.h"
 #include "GlobalKill.h"
 #include "ProggyVectorRegularFont.h"
+#include "imgui_internal.h"
 ImGuiManager* ImGuiManager::instance = nullptr;
 
 WNDPROC ImGuiManager::mOldWndProc = nullptr;
@@ -67,7 +68,7 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 	PLOG_DEBUG << "Initializing ImGui";
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange | ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;// | ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
 
 	if (!ImGui_ImplWin32_Init(m_windowHandle))
 	{
@@ -196,6 +197,7 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+	GImGui->NavWindowingTarget = nullptr; // prevent navinputs altogether
 
 	// I don't 100% understand what this does, but it must be done before we try to render
 	pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, NULL);

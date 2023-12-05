@@ -20,12 +20,6 @@ randomly crashes game
 
 
 
-ultrawide resolutions can crop out the watermark
-	 make main gui position adjust for aspect radio
-
-
-
-
 
 
 
