@@ -267,7 +267,7 @@ private:
 
 			if (settings->freeCameraToggle->GetValue() == false)
 			{
-				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+				throw HCMRuntimeException("Can't do that while freecam is disabled!");
 			}
 
 			userControlledPosition.setPositionTransformation(settings->freeCameraUserInputCameraSetPositionVec3->GetValue());
@@ -285,7 +285,7 @@ private:
 
 			if (settings->freeCameraToggle->GetValue() == false)
 			{
-				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+				throw HCMRuntimeException("Can't do that while freecam is disabled!");
 			}
 
 			settings->freeCameraUserInputCameraSetPositionVec3->GetValueDisplay() = userControlledPosition.getPositionTransformation();
@@ -328,7 +328,7 @@ private:
 
 			if (settings->freeCameraToggle->GetValue() == false)
 			{
-				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+				throw HCMRuntimeException("Can't do that while freecam is disabled!");
 			}
 
 			userControlledRotation.setRotationTransformation(settings->freeCameraUserInputCameraSetRotationVec3->GetValue());
@@ -346,7 +346,7 @@ private:
 
 			if (settings->freeCameraToggle->GetValue() == false)
 			{
-				throw HCMRuntimeException("Can't do that while freecam is disabled!")
+				throw HCMRuntimeException("Can't do that while freecam is disabled!");
 			}
 
 			settings->freeCameraUserInputCameraSetRotationVec3->GetValueDisplay() = userControlledRotation.getRotationTransformation();

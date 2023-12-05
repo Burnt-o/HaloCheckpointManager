@@ -79,7 +79,7 @@ public:
 		auto node = parent.append_child(getOptionName().c_str());
 
 		std::ostringstream out;
-		out << value;
+		out << std::setprecision(8) << value;
 
 		node.text().set(out.str().c_str());
 

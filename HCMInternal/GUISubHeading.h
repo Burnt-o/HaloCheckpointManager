@@ -2,6 +2,7 @@
 #include "IGUIElement.h"
 
 // Very similiar to GUIHeading but with less visual contrast and a parameter to add a left margin to it and it's child elements
+template<bool startsOpen>
 class GUISubHeading : public IGUIElement {
 
 private:
@@ -41,8 +42,8 @@ public:
 		ImGui::BeginChild(mHeadingText.c_str(), { 500 - mLeftMargin, currentHeight - GUISpacing });
 
 
-
-		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), ImGuiTreeNodeFlags_FramePadding);
+		constexpr ImGuiTreeNodeFlags treeFlags = startsOpen ? ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_FramePadding;
+		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), treeFlags);
 		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		if (headingOpen)

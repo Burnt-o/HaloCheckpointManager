@@ -155,7 +155,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Brings up or collapses this main GUI window"), HotkeysEnum::toggleGUI, "Toggle this GUI"));
 
 				case GUIElementEnum::GUISettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Options related to this main GUI"), "GUI settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::GUIShowingFreesCursor),
@@ -180,7 +180,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Pauses the game simulation"), HotkeysEnum::togglePause, "Pause game", settings->togglePause));
 
 				case GUIElementEnum::togglePauseSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Settings for pausing the game"), "Pause settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::advanceTicksGUI),
@@ -250,7 +250,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Injects the selected checkpoint into the games memory in place of your last actual checkpoint"), HotkeysEnum::injectCheckpoint, "Inject Checkpoint", settings->injectCheckpointEvent));
 
 				case GUIElementEnum::injectCheckpointSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "Inject Checkpoint Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::injectCheckpointForcesRevert),
@@ -285,7 +285,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Dumps your current last checkpoint to the HCM checkpoint library for later use"), HotkeysEnum::dumpCheckpoint, "Dump Checkpoint", settings->dumpCheckpointEvent));
 
 				case GUIElementEnum::dumpCheckpointSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "Dump Checkpoint Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::dumpCheckpointAutonameGUI),
@@ -305,7 +305,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Injects the selected core save into the games memory in place of your last actual core save"), HotkeysEnum::injectCore, "Inject Core Save", settings->injectCoreEvent));
 
 				case GUIElementEnum::injectCoreSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "Inject Core Save Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::injectCoreForcesRevert),
@@ -336,7 +336,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Dumps your current last core save to the HCM checkpoint library for later use"), HotkeysEnum::dumpCore, "Dump Core Save", settings->dumpCoreEvent));
 
 				case GUIElementEnum::dumpCoreSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "Dump Core Save Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::dumpCoreAutonameGUI),
@@ -383,7 +383,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 
 				case GUIElementEnum::invulnerabilitySettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "InvulnerabilitySettings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::invulnNPCGUI),
@@ -418,7 +418,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Teleports an objects physical position"), HotkeysEnum::forceTeleport, "Force Teleport", settings->forceTeleportEvent));
 
 				case GUIElementEnum::forceTeleportSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "Force Teleport Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::forceTeleportApplyToPlayer),
@@ -487,7 +487,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Boosts an objects velocity"), HotkeysEnum::forceLaunch, "Force Launch", settings->forceLaunchEvent));
 
 				case GUIElementEnum::forceLaunchSettingsSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection(""), "Force Launch Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::forceLaunchApplyToPlayer),
@@ -562,7 +562,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection("Displays various player and game information as text on your screen"), HotkeysEnum::display2DInfo, "Display 2D Game Info", settings->display2DInfoToggle));
 
 				case GUIElementEnum::display2DInfoSettingsInfoSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Control what information should be displayed"), "Info Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::display2DInfoShowGameTick),
@@ -722,7 +722,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 
 				case GUIElementEnum::display2DInfoSettingsVisualSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Cosmetic/visual settings for how the info should be displayed"), "Visual Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::display2DInfoAnchorCorner),
@@ -773,14 +773,14 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						(game, ToolTipCollection(""), HotkeysEnum::freeCamera, "Free Camera", settings->freeCameraToggle));
 
 				case GUIElementEnum::freeCameraSettingsSimpleSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Simple settings for Free Camera"), "Free Camera Simple Settings", headerChildElements
 							{
 							//todo
 							}));
 
 				case GUIElementEnum::freeCameraSettingsAdvancedSubheading:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Advanced settings for Free Camera"), "Free Camera Advanced Settings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
@@ -817,7 +817,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							(game, ToolTipCollection("Disables direct user camera inputs (translation, rotation)"), HotkeysEnum::freeCameraCameraInputDisable, "Disable Camera Inputs", settings->freeCameraCameraInputDisable));
 
 					case GUIElementEnum::freeCameraUserInputCameraSettings:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<true>>
 							(game, ToolTipCollection("Settings for user-controlled camera"), "User Input Camera Settings", headerChildElements
 								{
 									//createNestedElement(GUIElementEnum::freeCameraUserInputCameraBindingsPopup),
