@@ -12,7 +12,7 @@ public:
 
 	}
 
-	void updateGameCameraData(GameCameraData& gameCameraData, FreeCameraData& freeCameraData, float currentFOVOffset)
+	void updateGameCameraData(GameCameraData& gameCameraData, FreeCameraData& freeCameraData, float fovInDegrees)
 	{
 		// write camera data back to the game
 		*gameCameraData.velocity = freeCameraData.currentPosition - *gameCameraData.position;
@@ -21,8 +21,9 @@ public:
 		*gameCameraData.lookDirForward = freeCameraData.currentlookDirForward;
 		*gameCameraData.lookDirUp = freeCameraData.currentlookDirUp;
 
-		if (std::fabsf(currentFOVOffset) > 0.000001)
-			*gameCameraData.FOV = std::clamp(*gameCameraData.FOV + currentFOVOffset, 0.f, 2.1f);
+		float fovInRadians = degreesToRadians(fovInDegrees); 
+
+		*gameCameraData.FOV = fovInRadians;
 
 	}
 };

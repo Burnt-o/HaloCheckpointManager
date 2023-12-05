@@ -12,8 +12,8 @@ class NullSmoother : public ISmoother<valueType>
 private:
 
 public:
-	virtual void setSmoothRate(float smoothRate) override {  }
-	NullSmoother(float smoothRate)
+
+	NullSmoother()
 	{}
 
 	virtual void smooth(valueType& currentValue, valueType desiredValue) override

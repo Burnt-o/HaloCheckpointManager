@@ -307,7 +307,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="NullSmoother.h" />
     <ClInclude Include="ObjectTypes.h" />
     <ClInclude Include="PauseGame.h" />
-    <ClInclude Include="SquareSmoother.h" />
     <ClInclude Include="ProggyVectorRegularFont.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
@@ -473,7 +472,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SharedMemoryInternal.cpp" />
     <ClCompile Include="LinearSmoother.cpp" />
     <ClCompile Include="Speedhack.cpp" />
-    <ClCompile Include="SquareSmoother.cpp" />
     <ClCompile Include="UnfreezeObjectPhysics.cpp" />
     <ClCompile Include="UnhandledExceptionHandler.cpp" />
     <ClCompile Include="UpdateGameCameraData.cpp" />

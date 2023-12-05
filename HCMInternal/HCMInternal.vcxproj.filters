@@ -551,9 +551,6 @@
     <ClInclude Include="UserCameraInputReader.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="SquareSmoother.h">
-      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
-    </ClInclude>
     <ClInclude Include="IUpdateCameraTransform.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
@@ -783,9 +780,6 @@
     </ClCompile>
     <ClCompile Include="UserCameraInputReader.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="SquareSmoother.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClCompile>
     <ClCompile Include="LinearSmoother.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>

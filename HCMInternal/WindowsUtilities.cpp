@@ -140,3 +140,9 @@ void move_towards(float& value, float target, float step)
 		? std::max(value - step, target)
 		: std::min(value + step, target);
 }
+
+float degreesToRadians(float degrees)
+{
+	constexpr float conv = (DirectX::XM_PI / 180.f);
+	return degrees * conv;
+}

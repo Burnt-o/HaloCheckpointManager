@@ -23,7 +23,6 @@
 #include "ISmoother.h"
 #include "NullSmoother.h"
 #include "LinearSmoother.h"
-#include "SquareSmoother.h"
 
 #include "UserCameraInputReader.h"
 
@@ -64,13 +63,13 @@ private:
 
 
 	// data
-	bool needToSetupCamera = true;
+	bool needToResetCamera = true;
 	std::shared_ptr<MultilevelPointer> frameDeltaPointer;
 	
 	// event to fire on mcc state change (just set needToSetupCamera to true)
 	void onGameStateChange(const MCCState&)
 	{
-		needToSetupCamera = true;
+		needToResetCamera = true;
 	}
 
 
@@ -88,6 +87,32 @@ private:
 	
 	}
 
+	
+
+	void resetCamera(GameCameraData& gameCameraData, std::shared_ptr<SettingsStateAndEvents> settings, float targetFOVCopy)
+	{
+	
+		// position
+		userControlledPosition.setPositionTransformation(*gameCameraData.position);
+
+
+		// rotation
+		float initialYaw = std::atan2(gameCameraData.lookDirForward->y, gameCameraData.lookDirForward->x);
+		float initialPitch = std::asin(gameCameraData.lookDirForward->z) * -1.f;
+		float initialRoll = 0.f;
+
+		PLOG_DEBUG << "Initial EulerYaw: " << initialYaw;
+		PLOG_DEBUG << "Initial EulerPitch: " << initialPitch;
+		PLOG_DEBUG << "Initial EulerRoll: " << initialRoll;
+
+		userControlledRotation.setRotationTransformation(initialYaw, initialPitch, initialRoll);
+
+		// fov
+		userControlledFOV.setFOV(targetFOVCopy);
+
+	}
+
+
 	void setCameraData()
 	{
 		try
@@ -96,43 +121,16 @@ private:
 
 			// "world" absolute data. Gets transformed into final position/rotation by cameraTransformers.
 			FreeCameraData freeCameraData;
-			float currentFOVOffset = 0;
+
+			lockOrThrow(settingsWeak, settings);
+
+			float targetFOVCopy = settings->freeCameraUserInputCameraBaseFOV->GetValue();
 
 
-			if (needToSetupCamera)
+			if (needToResetCamera)
 			{
-				LOG_ONCE("Setting up user controlled camera");
-
-				userControlledPosition = PositionTransformer(
-					std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f),
-					userCameraInputReader,
-					*gameCameraData.position
-				);
-				
-				float initialYaw = std::atan2(gameCameraData.lookDirForward->y, gameCameraData.lookDirForward->x);
-				float initialPitch = std::asin(gameCameraData.lookDirForward->z) * -1.f;
-				float initialRoll = 0.f;
-
-				PLOG_DEBUG << "Initial EulerYaw: " << initialYaw;
-				PLOG_DEBUG << "Initial EulerPitch: " << initialPitch;
-				PLOG_DEBUG << "Initial EulerRoll: " << initialRoll;
-				
-				userControlledRotation = RotationTransformer(
-					std::make_unique<LinearSmoother<float>>(0.06f),
-					userCameraInputReader,
-					initialYaw,
-					initialPitch,
-					initialRoll
-				);
-
-				userControlledFOV = FOVTransformer(
-					std::make_unique<LinearSmoother<float>>(0.06f),
-					userCameraInputReader,
-					1.0f
-				);
-
-
-				needToSetupCamera = false;
+				resetCamera(gameCameraData, settings, targetFOVCopy);
+				needToResetCamera = false;
 			}
 
 			float frameDelta;
@@ -143,10 +141,14 @@ private:
 			// rotate FIRST so position updater knows which direction is "forward/up/right" etc 
 			userControlledRotation.transformRotation(freeCameraData, frameDelta);
 			userControlledPosition.transformPosition(freeCameraData, frameDelta);
-			userControlledFOV.transformFOV(freeCameraData, frameDelta);
+			userControlledFOV.transformFOV(freeCameraData, frameDelta, targetFOVCopy);
+
+			// must be after userControlled and before any other transformers
+			settings->freeCameraUserInputCameraBaseFOV->GetValue() = targetFOVCopy;
+			settings->freeCameraUserInputCameraBaseFOV->GetValueDisplay() = targetFOVCopy; 
 
 			LOG_ONCE(PLOG_DEBUG << "transforming done, updating game camera");
-			updateGameCameraData->updateGameCameraData(gameCameraData, freeCameraData, currentFOVOffset);
+			updateGameCameraData->updateGameCameraData(gameCameraData, freeCameraData, targetFOVCopy);
 
 		}
 		catch (HCMRuntimeException ex)
@@ -166,7 +168,7 @@ private:
 		{
 
 
-			needToSetupCamera = true; 
+			needToResetCamera = true; 
 			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
 
 
@@ -261,23 +263,9 @@ public:
 		mThirdPersonRenderingToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraThirdPersonRendering->valueChangedEvent, [this](bool& n) { onThirdPersonRenderingChange(n); }),
 		mBlockPlayerCharacterInputToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraGameInputDisable->valueChangedEvent, [this](bool& n) { onBlockPlayerCharacterInputChange(n); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
-		userControlledPosition (
-			std::make_unique<LinearSmoother<SimpleMath::Vector3>>(0.06f),
-			userCameraInputReader,
-			{ 0,0,0 }
-		),
-		userControlledRotation (
-			std::make_unique<LinearSmoother<float>>(0.06f),
-			userCameraInputReader,
-			0,
-			0,
-			0
-		),
-		userControlledFOV (
-			std::make_unique<LinearSmoother<float>>(0.06f),
-			userCameraInputReader,
-			1.0f
-		)
+		userControlledPosition(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolatorLinearFactor),
+		userControlledRotation(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolatorLinearFactor),
+		userControlledFOV(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolator, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolatorLinearFactor)
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerManager>().lock();
@@ -302,6 +290,9 @@ public:
 		{
 			PLOG_DEBUG << "failed to resolve optional dependent cheat blockPlayerCharacterInputOptionalWeak, error: " << ex.what();
 		}
+
+		// setup user camera
+
 
 
 	}

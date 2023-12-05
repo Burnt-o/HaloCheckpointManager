@@ -736,7 +736,7 @@ public:
 	std::shared_ptr<Setting<float>> freeCameraUserInputCameraBaseFOV = std::make_shared<Setting<float>>
 		(
 			90.f,
-			[](float in) { return in > 0.f && in < 360.f; }, // TODO figure out what the max upper in vfov is 
+			[](float in) { return in > 0.f && in <= 120.f; }, 
 			nameof(freeCameraUserInputCameraBaseFOV)
 		);
 
@@ -790,7 +790,7 @@ public:
 
 	std::shared_ptr<Setting<float>> freeCameraUserInputCameraFOVSpeed = std::make_shared<Setting<float>>
 		(
-			3.f,
+			1.f,
 			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
 			nameof(freeCameraUserInputCameraFOVSpeed)
 		);

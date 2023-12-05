@@ -20,6 +20,7 @@ private:
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
+
 	// callbacks
 	ScopedCallback< eventpp::CallbackList<void(float&)>> positionSpeedChangedCallback;
 	ScopedCallback< eventpp::CallbackList<void(float&)>> rotationSpeedChangedCallback;
@@ -274,22 +275,26 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateFOVTransform(const 
 		cacheInitialised = true;
 	}
 
+
+
 	lockOrThrow(settingsWeak, settings);
 	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	float cameraFOVSpeed = mFOVSpeed * frameDelta;
 
 	// Section: FOV
+	// we scale by power for smoother transition
 	// increase
+	float scaleFactor = std::sqrt(fov) * 10.f;
 	if (GetKeyState(VK_NUMPAD1) & 0x8000)
 	{
-		fov = std::clamp(fov + cameraFOVSpeed, 0.f, 2.f);
+		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.f, 120.f);
 	}
 
 	// decrease
 	if (GetKeyState(VK_NUMPAD3) & 0x8000)
 	{
-		fov = std::clamp(fov - cameraFOVSpeed, 0.f, 2.f); 
+		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.f, 120.f);
 	}
 }
 

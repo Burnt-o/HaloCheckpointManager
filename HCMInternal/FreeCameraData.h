@@ -10,6 +10,8 @@ struct FreeCameraData
 	SimpleMath::Vector3 currentlookDirRight = SimpleMath::Vector3::UnitY; // not actually written back but handy
 	SimpleMath::Vector3 currentlookDirUp = SimpleMath::Vector3::UnitZ;
 
+	float currentFOV;
+
 	//// private data for math
 	//float frameDelta;
 	//SimpleMath::Vector3 targetlookDirForward;

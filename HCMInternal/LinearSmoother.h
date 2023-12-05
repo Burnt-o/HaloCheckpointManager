@@ -12,9 +12,9 @@ private:
 	float mSmoothRate;
 
 public:
-	virtual void setSmoothRate(float inertia) override 
+	void setSmoothRate(float smoothRate) 
 	{ 
-		mSmoothRate = inertia;
+		mSmoothRate = smoothRate;
 	}
 	LinearSmoother(float smoothRate) : mSmoothRate(smoothRate)
 	{}
