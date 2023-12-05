@@ -15,6 +15,8 @@ private:
 	std::mutex mDestructionGuard;
 	std::mutex currentGameGUIElementsMutex;
 
+	bool* mIsCursorShowing;
+
 	// callbacks
 	ScopedCallback<RenderEvent> mImGuiRenderCallbackHandle;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> mMCCStateChangedCallbackHandle;
@@ -76,7 +78,7 @@ private:
 public:
 
 	// Gets passed ImGuiManager ImGuiRenderEvent reference so we can subscribe and unsubscribe
-	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent, std::shared_ptr<ControlServiceContainer> control, std::shared_ptr<SettingsStateAndEvents> settings)
+	explicit HCMInternalGUI(std::shared_ptr<IMCCStateHook> MCCStateHook, std::shared_ptr< GUIElementStore> guistore, std::shared_ptr<HotkeyRenderer> hotkeyRenderer, std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> pMCCStateChangeEvent, std::shared_ptr<ControlServiceContainer> control, std::shared_ptr<SettingsStateAndEvents> settings, bool* isCursorShowing)
 		: mDestructionGuard(),
 		currentGameGUIElementsMutex(),
 		mImGuiRenderCallbackHandle(pRenderEvent, [this](ImVec2 ss) {onImGuiRenderEvent(ss); }),
@@ -88,8 +90,15 @@ public:
 		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); }),
 		mGUIShowingBlocksGameInputCallbackHandle(settings->GUIShowingBlocksInput->valueChangedEvent, [this](bool& n) { onGUIShowingBlocksGameInputChanged(n); }),
 		mGUIShowingPausesGameCallbackHandle(settings->GUIShowingPausesGame->valueChangedEvent, [this](bool& n) { onGUIShowingPausesGameChanged(n); }),
-		m_WindowOpen(settings->GUIWindowOpen->GetValue())
+		m_WindowOpen(settings->GUIWindowOpen->GetValue()),
+		mIsCursorShowing(isCursorShowing)
 	{
+
+		if (IsBadReadPtr((void*)mIsCursorShowing, 1))
+		{
+			throw HCMInitException(std::format("Bad isCursorShowing pointer! 0x{:x}", (uintptr_t)mIsCursorShowing));
+		}
+
 		PLOG_VERBOSE << "HCMInternalGUI finished construction";
 	}
 

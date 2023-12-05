@@ -6,7 +6,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_stdlib.h"
-
+#include "MultilevelPointer.h"
 // todo move stuff to impl
 
 // Singleton: on construction, just subscribes to D3D11Hook's presentHookEvent. 
@@ -16,6 +16,8 @@ class ImGuiManager : public std::enable_shared_from_this<ImGuiManager>
 {
 private:
 	std::weak_ptr<D3D11Hook> m_d3d;
+
+
 
 	static ImGuiManager* instance; 	// Private Singleton instance so static hooks/callbacks can access
 	static inline std::mutex mDestructionGuard{};
@@ -55,7 +57,7 @@ public:
 		instance = this;
 
 
-	
+
 	}
 
 

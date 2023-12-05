@@ -1,7 +1,7 @@
 
 
 
-Fix ctrl-tab input bringing up imgui thing
+
 block gui mouse input when cursor not freed
 h1 rng in displayinfo
 h2 bsp switcher
@@ -44,7 +44,8 @@ free cam
 
 
 
-
+DONE LIST:
+Fix ctrl-tab input bringing up imgui thing
 
 
 

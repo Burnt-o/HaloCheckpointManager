@@ -242,6 +242,15 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="isCursorShowing" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03E3C388</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
 	<!--same as above, it's one of those funcs that accesses the pause flag.-->
 	<VersionedEntry Name="blockGameKeyboardInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">

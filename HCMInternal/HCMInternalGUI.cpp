@@ -208,9 +208,10 @@ void HCMInternalGUI::primaryRender()
 
 
 
+		ImGuiWindowFlags blockInputsIfNoCursor = *mIsCursorShowing == true ? ImGuiWindowFlags_None : ImGuiWindowFlags_NoInputs & ImGuiWindowFlags_NoMouseInputs;
 
 		ImGui::SetNextWindowCollapsed(!m_WindowOpen);
-		m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags); // Create window. Returns false when window collapsed
+		m_WindowOpen = ImGui::Begin(m_WindowOpen ? "Halo Checkpoint Manager###HCM" : "HCM###HCM", nullptr, windowFlags | blockInputsIfNoCursor); // Create window. Returns false when window collapsed
 
 		ImGui::PopStyleColor();
 
