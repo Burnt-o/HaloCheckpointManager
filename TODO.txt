@@ -7,7 +7,6 @@ h2 bsp switcher
 h2 blind w/ first person anims
 h2 tickrate changer
 copy paste for force teleport position
-viewangle editing
 
 Free Camera issues:
 speedhack slows camera too
