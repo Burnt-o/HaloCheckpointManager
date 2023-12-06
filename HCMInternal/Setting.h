@@ -49,6 +49,7 @@ public:
 		}
 		else
 		{
+			PLOG_ERROR << "Input failed validation for setting: " << mOptionName << std::endl << "old setting: " << value << std::endl << "bad new setting: " << valueDisplay;
 			valueDisplay = value; // reset valueDisplay back to stored value
 		}
 	}

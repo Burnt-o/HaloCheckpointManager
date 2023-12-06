@@ -36,7 +36,10 @@ freeCameraAnchorPositionToObjectPosition,\
 freeCameraAnchorPositionToObjectRotation,\
 freeCameraAnchorRotationToObjectPosition,\
 freeCameraAnchorRotationToObjectFacing,\
-freeCameraAnchorFOVToObjectDistance
+freeCameraAnchorFOVToObjectDistance,\
+editPlayerViewAngleSet,\
+editPlayerViewAngleAdjustHorizontal,\
+editPlayerViewAngleAdjustVertical
 
 
 

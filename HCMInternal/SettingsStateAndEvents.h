@@ -61,6 +61,12 @@ public:
 	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportFillWithCurrentPositionEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceLaunchEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleSet = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleFillCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleCopy = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAnglePaste = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleAdjustHorizontal = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleAdjustVertical = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraBindingsPopup = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPosition = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPositionFillCurrent = std::make_shared<ActionEvent>();
@@ -74,6 +80,7 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityFillCurrent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
+
 
 
 	// settings
@@ -658,6 +665,21 @@ public:
 		);
 
 
+	std::shared_ptr<Setting<SimpleMath::Vector2>> editPlayerViewAngleVec2 = std::make_shared<Setting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2(4.20, 0.69), // gottem
+			[](SimpleMath::Vector2 in) { return (in.x >= 0.f) && (in.x < DirectX::XM_2PI) && (in.y < DirectX::XM_PIDIV2) && (in.y > (DirectX::XM_PIDIV2 * -1.f)); }, // x (yaw) must be from 0 to 6.14, y (pitch) must be from -1.57 to 1.57
+			nameof(editPlayerViewAngleVec2)
+		);
+
+	std::shared_ptr<Setting<float>> editPlayerViewAngleAdjustFactor = std::make_shared<Setting<float>>
+		(
+			0.1f,
+			[](float in) { return true; },
+			nameof(editPlayerViewAngleAdjustFactor)
+		);
+
+
 	enum class FreeCameraInterpolationTypesEnum
 	{
 			None,
@@ -989,6 +1011,9 @@ public:
 			[](float in) { return in > 0.f && in <= 1.f; },
 			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor)
 		);
+
+
+
 
 
 

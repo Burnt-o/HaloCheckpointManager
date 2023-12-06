@@ -409,9 +409,6 @@
     <ClInclude Include="ForceTeleport.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="GUIVec3.h">
-      <Filter>Services\GUI\GUIElements</Filter>
-    </ClInclude>
     <ClInclude Include="GUIRadioButton.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
@@ -422,9 +419,6 @@
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
     <ClInclude Include="GUIFloat.h">
-      <Filter>Services\GUI\GUIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIVec3RelativeOrAbsolute.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
     <ClInclude Include="GetHavokComponent.h">
@@ -560,7 +554,7 @@
     <ClInclude Include="GUIDummyContainer.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="GUIVec3CustomLabels.h">
+    <ClInclude Include="GUIVec3.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
     <ClInclude Include="ThirdPersonRendering.h">
@@ -574,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="CheckpointInjectionLogger.h">
       <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="EditPlayerViewAngle.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -801,6 +798,9 @@
     </ClCompile>
     <ClCompile Include="CheckpointInjectionLogger.cpp">
       <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="EditPlayerViewAngle.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

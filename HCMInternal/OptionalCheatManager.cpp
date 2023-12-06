@@ -53,6 +53,7 @@
 #include "ThirdPersonRendering.h"
 #include "BlockPlayerCharacterInput.h"
 #include "GetCurrentRNG.h"
+#include "EditPlayerViewAngle.h"
 
 #include "DIContainer.h"
 #include "map.h"

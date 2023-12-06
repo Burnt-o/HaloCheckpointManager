@@ -225,10 +225,11 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="BlockPlayerCharacterInput.h" />
     <ClInclude Include="BottomlessClip.h" />
     <ClInclude Include="CheckpointInjectionLogger.h" />
+    <ClInclude Include="EditPlayerViewAngle.h" />
     <ClInclude Include="GetCurrentRNG.h" />
     <ClInclude Include="GUIComboEnumWithChildren.h" />
     <ClInclude Include="GUIDummyContainer.h" />
-    <ClInclude Include="GUIVec3CustomLabels.h" />
+    <ClInclude Include="GUIVec3.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
     <ClInclude Include="ThirdPersonRendering.h" />
     <ClInclude Include="UserCameraInputReader.h" />
@@ -283,8 +284,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUISubHeading.h" />
     <ClInclude Include="GUIToggleWithChildren.h" />
     <ClInclude Include="GUIVec2.h" />
-    <ClInclude Include="GUIVec3.h" />
-    <ClInclude Include="GUIVec3RelativeOrAbsolute.h" />
     <ClInclude Include="H1PlayerStruct.h" />
     <ClInclude Include="HCM_imconfig.h" />
     <ClInclude Include="HotkeyEnum.h" />
@@ -396,6 +395,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="BlockPlayerCharacterInput.cpp" />
     <ClCompile Include="BottomlessClip.cpp" />
     <ClCompile Include="CheckpointInjectionLogger.cpp" />
+    <ClCompile Include="EditPlayerViewAngle.cpp" />
     <ClCompile Include="GetCurrentRNG.cpp" />
     <ClCompile Include="ThirdPersonRendering.cpp" />
     <ClCompile Include="UserCameraInputReader.cpp" />

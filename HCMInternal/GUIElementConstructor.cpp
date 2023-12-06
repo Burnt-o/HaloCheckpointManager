@@ -17,9 +17,6 @@
 #include "GUIRadioButton.h"
 #include "GUIRadioGroup.h"
 #include "GUIFloat.h"
-#include "GUIVec3.h"
-#include "GUIVec2.h"
-#include "GUIVec3RelativeOrAbsolute.h"
 #include "GUIToggleWithChildren.h"
 #include "GUIInputString.h"
 #include "GUIInputDWORD.h"
@@ -28,7 +25,8 @@
 #include "GUIComboEnum.h"
 #include "GUIComboEnumWithChildren.h"
 #include "GUIDummyContainer.h"
-#include "GUIVec3CustomLabels.h"
+#include "GUIVec3.h"
+#include "GUIVec2.h"
 
 
 
@@ -456,8 +454,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 									}));
 
 							case GUIElementEnum::forceTeleportRelativeVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
-									(game, ToolTipCollection("How far forward/right/up to teleport the player, relative to their look-direction"), "Teleport: ", settings->forceTeleportRelativeVec3));
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
+									(game, ToolTipCollection("How far forward/right/up to teleport the player, relative to their look-direction"), "Teleport: ##forceTeleportRelativeVec3", settings->forceTeleportRelativeVec3, "Forward", "Right", "Up"));
 
 
 							case GUIElementEnum::forceTeleportForwardIgnoreZ:
@@ -475,7 +473,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 							case GUIElementEnum::forceTeleportAbsoluteVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
-									(game, ToolTipCollection("The xyz world coordinates to teleport to"), "Teleport: ", settings->forceTeleportAbsoluteVec3));
+									(game, ToolTipCollection("The xyz world coordinates to teleport to"), "Teleport: ##forceTeleportAbsoluteVec3", settings->forceTeleportAbsoluteVec3));
 
 
 							case GUIElementEnum::forceTeleportFillWithCurrentPositionEvent:
@@ -524,8 +522,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 									}));
 
 							case GUIElementEnum::forceLaunchRelativeVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
-									(game, ToolTipCollection("How much velocity to apply in the forward/right/up directions, relative to the players look-direction"), "Launch: ", settings->forceLaunchRelativeVec3));
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
+									(game, ToolTipCollection("How much velocity to apply in the forward/right/up directions, relative to the players look-direction"), "Launch: ##forceLaunchRelativeVec3", settings->forceLaunchRelativeVec3, "Forward", "Right", "Up"));
 
 
 							case GUIElementEnum::forceLaunchForwardIgnoreZ:
@@ -543,7 +541,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 							case GUIElementEnum::forceLaunchAbsoluteVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
-									(game, ToolTipCollection("How much velocity to add, in absolute world-axes"), "Launch: ", settings->forceLaunchAbsoluteVec3));
+									(game, ToolTipCollection("How much velocity to add, in absolute world-axes"), "Launch: ##forceLaunchAbsoluteVec3", settings->forceLaunchAbsoluteVec3));
 
 
 
@@ -743,8 +741,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							(game, ToolTipCollection(""), "Corner to Anchor to", settings->display2DInfoAnchorCorner));
 
 					case GUIElementEnum::display2DInfoScreenOffset:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<false, 0>> 
-							(game, ToolTipCollection(""), "Pixel Offset from Corner", settings->display2DInfoScreenOffset));
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<false, false, 0>> 
+							(game, ToolTipCollection(""), "Pixel Offset from Corner", settings->display2DInfoScreenOffset, "Horizontal", "Vertical"));
 
 
 					case GUIElementEnum::display2DInfoFontSize:
@@ -768,10 +766,64 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, ToolTipCollection("Tools to manipulate the camera"), "Camera", headerChildElements
 						{ 
+							createNestedElement(GUIElementEnum::editPlayerViewAngleSubheading),
 							createNestedElement(GUIElementEnum::freeCameraToggleGUI),
 							createNestedElement(GUIElementEnum::freeCameraSettingsSimpleSubheading),
 							createNestedElement(GUIElementEnum::freeCameraSettingsAdvancedSubheading),
 						}));
+
+				case GUIElementEnum::editPlayerViewAngleSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Edit the view angle of the player"), "Edit View Angle", headerChildElements
+							{
+								createNestedElement(GUIElementEnum::editPlayerViewAngleSet),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleVec2),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleFillCurrent),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleCopy),
+								createNestedElement(GUIElementEnum::editPlayerViewAnglePaste),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleAdjustHorizontal),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleAdjustVertical),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleAdjustFactor),
+							}));
+
+					case GUIElementEnum::editPlayerViewAngleSet:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Set player view direction to the specified angles"), HotkeysEnum::editPlayerViewAngleSet, "Set view angle to: ##editPlayerViewAngleSet", settings->editPlayerViewAngleSet));
+
+					case GUIElementEnum::editPlayerViewAngleVec2:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<true, false, 8>>
+							(game, ToolTipCollection("Rotation of the player"), "Rotation: ##editPlayerViewAngleVec2", settings->editPlayerViewAngleVec2, "yaw", "pitch"));
+
+
+					case GUIElementEnum::editPlayerViewAngleFillCurrent:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+							(game, ToolTipCollection("Fill data above with players current look angles"), std::nullopt, "Fill with Current##editPlayerViewAngleFillCurrent", settings->editPlayerViewAngleFillCurrent));
+
+
+					case GUIElementEnum::editPlayerViewAngleCopy:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+							(game, ToolTipCollection("Copy view angles to the clipboard"), std::nullopt, "Copy to Clipboard##editPlayerViewAngleCopy", settings->editPlayerViewAngleCopy));
+
+
+					case GUIElementEnum::editPlayerViewAnglePaste:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+							(game, ToolTipCollection("Paste in view angles from the clipboard"), std::nullopt, "Paste from Clipboard##editPlayerViewAnglePaste", settings->editPlayerViewAnglePaste));
+
+
+					case GUIElementEnum::editPlayerViewAngleAdjustHorizontal:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Nudges the horizontal view angle by the factor below"), HotkeysEnum::editPlayerViewAngleAdjustHorizontal, "Nudge Horizontal Angle##editPlayerViewAngleAdjustHorizontal", settings->editPlayerViewAngleAdjustHorizontal));
+
+
+					case GUIElementEnum::editPlayerViewAngleAdjustVertical:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Nudges the vertical view angle by the factor below"), HotkeysEnum::editPlayerViewAngleAdjustVertical, "Nudge Vertical Angle##editPlayerViewAngleAdjustVertical", settings->editPlayerViewAngleAdjustVertical));
+
+
+					case GUIElementEnum::editPlayerViewAngleAdjustFactor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							(game, ToolTipCollection("Amount to nudge by when using above functions"), "Nudge Amount##editPlayerViewAngleAdjustFactor", settings->editPlayerViewAngleAdjustFactor));
+
 
 				case GUIElementEnum::freeCameraToggleGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
@@ -947,8 +999,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 
 							case GUIElementEnum::freeCameraUserInputCameraSetPositionVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
-									(game, ToolTipCollection("Position of the camera "), "Position: ##freeCameraUserInputCameraSetPositionVec3", settings->freeCameraUserInputCameraSetPositionVec3, "x", "y", "z"));
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
+									(game, ToolTipCollection("Position of the camera "), "Position: ##freeCameraUserInputCameraSetPositionVec3", settings->freeCameraUserInputCameraSetPositionVec3));
 
 							case GUIElementEnum::freeCameraUserInputCameraSetPositionFillCurrent:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
@@ -979,7 +1031,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							));
 
 							case GUIElementEnum::freeCameraUserInputCameraSetRotationVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
 									(game, ToolTipCollection("Rotation of the camera (in radians, yaw pitch roll)"), "Rotation: ##freeCameraUserInputCameraSetRotationVec3", settings->freeCameraUserInputCameraSetRotationVec3, "Yaw", "Pitch", "Roll"));
 
 							case GUIElementEnum::freeCameraUserInputCameraSetRotationFillCurrent:
@@ -1024,7 +1076,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 
 							case GUIElementEnum::freeCameraUserInputCameraSetVelocityVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
 									(game, ToolTipCollection("Velocity of the camera (relative to facing)"), "Velocity ##freeCameraUserInputCameraSetVelocityVec3", settings->freeCameraUserInputCameraSetVelocityVec3, "Forward", "Right", "Up"));
 
 							case GUIElementEnum::freeCameraUserInputCameraSetVelocityFillCurrent:
@@ -1113,7 +1165,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 
 							case GUIElementEnum::freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
 									(game, ToolTipCollection("Absolute position to anchor to"), "Absolute Position ##freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3", settings->freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3, "x", "y", "z"));
 
 
@@ -1197,7 +1249,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 
 					case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3CustomLabels<true, false, 8>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
 							(game, ToolTipCollection("Absolute position to anchor to"), "Absolute Position: ##freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3", settings->freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3, "x", "y", "z"));
 
 
@@ -1216,6 +1268,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor", settings->freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor));
 
+				
 
 			case GUIElementEnum::theaterHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

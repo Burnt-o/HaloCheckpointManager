@@ -50,7 +50,8 @@ UpdateGameCameraData,\
 UserCameraInputReader,\
 ThirdPersonRendering,\
 BlockPlayerCharacterInput,\
-GetCurrentRNG
+GetCurrentRNG,\
+EditPlayerViewAngle
 
 
 enum class OptionalCheatEnum {

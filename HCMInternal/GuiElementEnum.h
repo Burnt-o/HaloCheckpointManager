@@ -147,6 +147,15 @@
 			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleSet, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleVec2, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleFillCurrent, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleCopy, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAnglePaste, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleAdjustHorizontal, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleAdjustVertical, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleAdjustFactor, (ALL_SUPPORTED_GAMES)))\
 	((freeCameraToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((freeCameraSettingsSimpleSubheading, (ALL_SUPPORTED_GAMES)))\
 	((freeCameraSettingsAdvancedSubheading, (ALL_SUPPORTED_GAMES)))\

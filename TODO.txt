@@ -7,7 +7,6 @@ h2 bsp switcher
 h2 blind w/ first person anims
 h2 tickrate changer
 copy paste for force teleport position
-checkpoint injection log
 viewangle editing
 
 Free Camera issues:

@@ -9,7 +9,8 @@ class GetPlayerViewAngle : public IOptionalCheat
 public:
 	class IGetPlayerViewAngleImpl {
 	public:
-		virtual SimpleMath::Vector2 getPlayerViewAngle() = 0;
+		virtual const SimpleMath::Vector2 getPlayerViewAngle() = 0;
+		virtual void setPlayerViewAngle(SimpleMath::Vector2 newAngle) = 0;
 	};
 
 private:
@@ -19,7 +20,9 @@ public:
 	GetPlayerViewAngle(GameState game, IDIContainer& dicon);
 	~GetPlayerViewAngle();
 
-	SimpleMath::Vector2 getPlayerViewAngle() { return pimpl->getPlayerViewAngle(); }
+	const SimpleMath::Vector2 getPlayerViewAngle() { return pimpl->getPlayerViewAngle(); }
+
+	void setPlayerViewAngle(SimpleMath::Vector2 newAngle) { return pimpl->setPlayerViewAngle(newAngle); }
 
 	virtual std::string_view getName() override { return nameof(GetPlayerViewAngle); }
 };

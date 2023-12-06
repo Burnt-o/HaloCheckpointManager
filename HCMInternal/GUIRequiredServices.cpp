@@ -251,6 +251,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::BlockPlayerCharacterInput}
 	},
 
+		{ GUIElementEnum::editPlayerViewAngleSubheading,
+{OptionalCheatEnum::EditPlayerViewAngle}
+	},
+
 
 #ifdef HCM_DEBUG
 

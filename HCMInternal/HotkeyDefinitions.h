@@ -187,6 +187,18 @@ private:
 				mSettings->freeCameraAnchorFOVToObjectDistanceHotkeyEvent,
 				vvk{}),
 
+			initHotkey(editPlayerViewAngleSet,
+				mSettings->editPlayerViewAngleSet,
+				vvk{}),
+
+			initHotkey(editPlayerViewAngleAdjustHorizontal,
+				mSettings->editPlayerViewAngleAdjustHorizontal,
+				vvk{}),
+
+			initHotkey(editPlayerViewAngleAdjustVertical,
+				mSettings->editPlayerViewAngleAdjustVertical,
+				vvk{}),
+
 
 
 
