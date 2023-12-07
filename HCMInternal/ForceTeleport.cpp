@@ -23,7 +23,9 @@ private:
 
 	//callbacks
 	ScopedCallback<ActionEvent> mForceTeleportEventCallback;
-	ScopedCallback<ActionEvent> mForceTeleportFillPositionEventCallback;
+	ScopedCallback<ActionEvent> forceTeleportAbsoluteFillCurrentCallback;
+	ScopedCallback<ActionEvent> forceTeleportAbsoluteCopyCallback;
+	ScopedCallback<ActionEvent> forceTeleportAbsolutePasteCallback;
 
 
 	// injected services
@@ -119,6 +121,40 @@ private:
 		}
 	}
 
+	void copyPosition()
+	{
+		try
+		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (!mccStateHook->isGameCurrentlyPlaying(mGame)) return;
+
+			lockOrThrow(settingsWeak, settings);
+
+			settings->forceTeleportAbsoluteVec3->serialiseToClipboard();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+	void pastePosition()
+	{
+		try
+		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (!mccStateHook->isGameCurrentlyPlaying(mGame)) return;
+
+			lockOrThrow(settingsWeak, settings);
+
+			settings->forceTeleportAbsoluteVec3->deserialiseFromClipboard();
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
 
 public:
 	ForceTeleportSimple(GameState game, IDIContainer& dicon)
@@ -130,7 +166,9 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getPlayerDatumWeak(resolveDependentCheat(GetPlayerDatum)),
 		getObjectPhysicsWeak(resolveDependentCheat(GetObjectPhysics)),
-		mForceTeleportFillPositionEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->forceTeleportFillWithCurrentPositionEvent, [this]() { fillPosition(); })
+		forceTeleportAbsoluteFillCurrentCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->forceTeleportAbsoluteFillCurrent, [this]() { fillPosition(); }),
+		forceTeleportAbsoluteCopyCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->forceTeleportAbsoluteCopy, [this]() { copyPosition(); }),
+		forceTeleportAbsolutePasteCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->forceTeleportAbsolutePaste, [this]() { pastePosition(); })
 	{
 
 		try

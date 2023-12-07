@@ -99,7 +99,9 @@
 			((forceTeleportForwardIgnoreZ, (ALL_SUPPORTED_GAMES)))\
 		((forceTeleportManual, (ALL_SUPPORTED_GAMES)))\
 			((forceTeleportAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
-			((forceTeleportFillWithCurrentPositionEvent, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportAbsoluteFillCurrent, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportAbsoluteCopy, (ALL_SUPPORTED_GAMES)))\
+			((forceTeleportAbsolutePaste, (ALL_SUPPORTED_GAMES)))\
 	((forceLaunchGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceLaunchSettingsSubheading, (ALL_SUPPORTED_GAMES)))\
 		((forceLaunchApplyToPlayer, (ALL_SUPPORTED_GAMES)))\

@@ -47,7 +47,7 @@ class SwitchBSPImpl : public ISwitchBSPImpl
 			PLOG_DEBUG << "Calling switch BSP function at ptr " << (uint64_t)pSwitchBSPFunction << " with arg " << newBSPIndex;
 			auto result = switchBSPFunction_vptr(newBSPIndex);
 
-			PLOG_VERBOSE "useless switchBSP return: " << result; // we get garbage data here cos we're calling a subroutine. would prob need to switch to a inline hook if we cared but it doesn't really matter
+			PLOG_VERBOSE << "useless switchBSP return: " << result; // we get garbage data here cos we're calling a subroutine. would prob need to switch to a inline hook if we cared but it doesn't really matter
 
 			// todo (maybe): get proper return (success value) and throw if failed
 			messagesGUI->addMessage(std::format("Switching BSP to {}", newBSPIndex));

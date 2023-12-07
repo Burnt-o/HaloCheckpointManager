@@ -59,7 +59,9 @@ public:
 	std::shared_ptr<ActionEvent> consoleCommandEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> getObjectAddressEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> forceTeleportFillWithCurrentPositionEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceTeleportAbsoluteFillCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceTeleportAbsoluteCopy = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceTeleportAbsolutePaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceLaunchEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> editPlayerViewAngleSet = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> editPlayerViewAngleFillCurrent = std::make_shared<ActionEvent>();
@@ -1153,7 +1155,7 @@ public:
 		freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor,
-		switchBSPIndex
+		switchBSPIndex,
 
 	};
 };

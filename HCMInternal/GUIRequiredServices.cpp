@@ -141,9 +141,6 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{ GUIElementEnum::forceTeleportAbsoluteVec3,
 {OptionalCheatEnum::ForceTeleport}
 	},
-	{ GUIElementEnum::forceTeleportFillWithCurrentPositionEvent,
-{OptionalCheatEnum::ForceTeleport}
-	},
 	{ GUIElementEnum::forceLaunchGUI,
 			{OptionalCheatEnum::ForceLaunch}
 	},

@@ -470,7 +470,9 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								(game, ToolTipCollection("Teleport to absolute world coordinates"), std::nullopt, "Teleport to Manual Coordinates",  settings->forceTeleportManual, headerChildElements
 									{
 									createNestedElement(GUIElementEnum::forceTeleportAbsoluteVec3),
-									createNestedElement(GUIElementEnum::forceTeleportFillWithCurrentPositionEvent)
+									createNestedElement(GUIElementEnum::forceTeleportAbsoluteFillCurrent),
+									createNestedElement(GUIElementEnum::forceTeleportAbsoluteCopy),
+									createNestedElement(GUIElementEnum::forceTeleportAbsolutePaste),
 									}));
 
 							case GUIElementEnum::forceTeleportAbsoluteVec3:
@@ -478,9 +480,19 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 									(game, ToolTipCollection("The xyz world coordinates to teleport to"), "Teleport: ##forceTeleportAbsoluteVec3", settings->forceTeleportAbsoluteVec3));
 
 
-							case GUIElementEnum::forceTeleportFillWithCurrentPositionEvent:
+							case GUIElementEnum::forceTeleportAbsoluteFillCurrent:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-									(game, ToolTipCollection("Fill with the current xyz position of the player/object"), std::nullopt, "Fill with current position",  settings->forceTeleportFillWithCurrentPositionEvent));
+									(game, ToolTipCollection("Fill with the current xyz position of the player/object"), std::nullopt, "Fill with current position",  settings->forceTeleportAbsoluteFillCurrent));
+
+							case GUIElementEnum::forceTeleportAbsoluteCopy:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Copy the position above to your clipboard"), std::nullopt, "Copy to Clipboard", settings->forceTeleportAbsoluteCopy));
+
+							case GUIElementEnum::forceTeleportAbsolutePaste:
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+									(game, ToolTipCollection("Paste a position from your clipboard into above"), std::nullopt, "Paste from Clipboard", settings->forceTeleportAbsolutePaste));
+
+
 
 				case GUIElementEnum::forceLaunchGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
