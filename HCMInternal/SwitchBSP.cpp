@@ -85,9 +85,9 @@ SwitchBSP::SwitchBSP(GameState gameImpl, IDIContainer& dicon)
 {
 	switch (gameImpl)
 	{
-		//case GameState::Value::Halo1:
-		//	pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo1>>(gameImpl, dicon);
-		//	break;
+		case GameState::Value::Halo1:
+			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo1>>(gameImpl, dicon);
+			break;
 
 		case GameState::Value::Halo2:
 			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo2>>(gameImpl, dicon);

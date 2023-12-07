@@ -112,7 +112,7 @@
 			((forceLaunchForwardIgnoreZ, (ALL_SUPPORTED_GAMES)))\
 		((forceLaunchManual, (ALL_SUPPORTED_GAMES)))\
 			((forceLaunchAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
-	((switchBSPGUI, (Halo2)))\
+	((switchBSPGUI, (Halo1, Halo2)))\
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
