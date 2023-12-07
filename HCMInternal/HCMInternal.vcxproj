@@ -229,8 +229,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetCurrentRNG.h" />
     <ClInclude Include="GUIComboEnumWithChildren.h" />
     <ClInclude Include="GUIDummyContainer.h" />
+    <ClInclude Include="GUIButtonAndInt.h" />
     <ClInclude Include="GUIVec3.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
+    <ClInclude Include="SwitchBSP.h" />
     <ClInclude Include="ThirdPersonRendering.h" />
     <ClInclude Include="UserCameraInputReader.h" />
     <ClInclude Include="CameraTransformer.h" />
@@ -397,6 +399,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CheckpointInjectionLogger.cpp" />
     <ClCompile Include="EditPlayerViewAngle.cpp" />
     <ClCompile Include="GetCurrentRNG.cpp" />
+    <ClCompile Include="SwitchBSP.cpp" />
     <ClCompile Include="ThirdPersonRendering.cpp" />
     <ClCompile Include="UserCameraInputReader.cpp" />
     <ClCompile Include="Conduit_ITCFont.cpp" />

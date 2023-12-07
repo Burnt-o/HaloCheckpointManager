@@ -255,6 +255,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::EditPlayerViewAngle}
 	},
 
+			{ GUIElementEnum::switchBSPGUI,
+{OptionalCheatEnum::SwitchBSP}
+	},
+
 
 #ifdef HCM_DEBUG
 

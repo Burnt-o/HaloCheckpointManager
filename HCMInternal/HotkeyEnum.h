@@ -39,7 +39,8 @@ freeCameraAnchorRotationToObjectFacing,\
 freeCameraAnchorFOVToObjectDistance,\
 editPlayerViewAngleSet,\
 editPlayerViewAngleAdjustHorizontal,\
-editPlayerViewAngleAdjustVertical
+editPlayerViewAngleAdjustVertical,\
+switchBSP
 
 
 

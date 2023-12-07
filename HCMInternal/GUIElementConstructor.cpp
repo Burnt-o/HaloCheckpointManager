@@ -27,6 +27,7 @@
 #include "GUIDummyContainer.h"
 #include "GUIVec3.h"
 #include "GUIVec2.h"
+#include "GUIButtonAndInt.h"
 
 
 
@@ -367,7 +368,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							createNestedElement(GUIElementEnum::forceTeleportGUI),
 							createNestedElement(GUIElementEnum::forceTeleportSettingsSubheading),
 							createNestedElement(GUIElementEnum::forceLaunchGUI),
-							createNestedElement(GUIElementEnum::forceLaunchSettingsSubheading)
+							createNestedElement(GUIElementEnum::forceLaunchSettingsSubheading),
+							createNestedElement(GUIElementEnum::switchBSPGUI),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -542,6 +544,10 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							case GUIElementEnum::forceLaunchAbsoluteVec3:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, true, 8>>
 									(game, ToolTipCollection("How much velocity to add, in absolute world-axes"), "Launch: ##forceLaunchAbsoluteVec3", settings->forceLaunchAbsoluteVec3));
+
+				case GUIElementEnum::switchBSPGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIButtonAndInt<true>>
+						(game, ToolTipCollection("Loads a different part of the map by BSP Index"), HotkeysEnum::switchBSP, "Switch BSP to", "index", settings->switchBSPIndex, settings->switchBSPEvent));
 
 
 

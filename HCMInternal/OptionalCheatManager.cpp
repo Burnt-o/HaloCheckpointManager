@@ -54,6 +54,7 @@
 #include "BlockPlayerCharacterInput.h"
 #include "GetCurrentRNG.h"
 #include "EditPlayerViewAngle.h"
+#include "SwitchBSP.h"
 
 #include "DIContainer.h"
 #include "map.h"

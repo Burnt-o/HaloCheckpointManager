@@ -4540,6 +4540,23 @@
 
 	<!--#endregion freeCamera-->
 
+	
+	<VersionedEntry Name="switchBSPFunction" Type="MultilevelPointer::ModuleOffset">
+		
+		<!--scan nw "3b 90 10020000" should be a very short function-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x69D5E0</Offset>
+			</Offsets>
+		</Version>
 
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x67AA50</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
 
 </root>

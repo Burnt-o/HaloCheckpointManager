@@ -199,6 +199,10 @@ private:
 				mSettings->editPlayerViewAngleAdjustVertical,
 				vvk{}),
 
+			initHotkey(switchBSP,
+				mSettings->switchBSPEvent,
+				vvk{}),
+
 
 
 

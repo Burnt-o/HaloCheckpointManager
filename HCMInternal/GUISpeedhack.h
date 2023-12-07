@@ -4,7 +4,6 @@
 class GUISpeedhack : public IGUIElement {
 
 private:
-	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
 	std::weak_ptr<SettingsStateAndEvents> mSettingsWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
@@ -66,6 +65,6 @@ public:
 		}
 	}
 
-	std::string_view getName() override { return "Speedhack"; }
+	std::string_view getName() override { return nameof(GUISpeedhack); }
 
 };

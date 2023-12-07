@@ -51,7 +51,8 @@ UserCameraInputReader,\
 ThirdPersonRendering,\
 BlockPlayerCharacterInput,\
 GetCurrentRNG,\
-EditPlayerViewAngle
+EditPlayerViewAngle,\
+SwitchBSP
 
 
 enum class OptionalCheatEnum {

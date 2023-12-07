@@ -80,7 +80,7 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityFillCurrent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
-
+	std::shared_ptr<ActionEvent> switchBSPEvent = std::make_shared<ActionEvent>();
 
 
 	// settings
@@ -1012,7 +1012,12 @@ public:
 			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor)
 		);
 
-
+	std::shared_ptr<Setting<int>> switchBSPIndex = std::make_shared<Setting<int>>
+		(
+			0,
+			[](int in) { return true; },
+			nameof(switchBSPIndex)
+		);
 
 
 
@@ -1148,6 +1153,7 @@ public:
 		freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor,
+		switchBSPIndex
 
 	};
 };

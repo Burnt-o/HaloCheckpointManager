@@ -572,6 +572,12 @@
     <ClInclude Include="EditPlayerViewAngle.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="SwitchBSP.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIButtonAndInt.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -800,6 +806,9 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="EditPlayerViewAngle.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="SwitchBSP.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
