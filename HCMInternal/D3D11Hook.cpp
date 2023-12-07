@@ -221,7 +221,8 @@ void D3D11Hook::CreateDummySwapchain(IDXGISwapChain*& pDummySwapchain, ID3D11Dev
 }
 
 
-D3D11Hook::D3D11Hook()
+D3D11Hook::D3D11Hook(std::weak_ptr<PointerManager> pointerManager)
+	: pointerManagerWeak(pointerManager)
 {
 
 	if (instance != nullptr)
@@ -455,30 +456,77 @@ void D3D11Hook::beginHook()
 	PLOG_DEBUG << "beginning vmt hook";
 	safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
 
-	ID3D11Device* pDummyDevice = nullptr;
-	IDXGISwapChain* pDummySwapchain = nullptr;
+	// set up d3d11 hook. This requires us to get the vmt of Present and ResizeBuffers functions. 
+		   // There are two ways to do this: One is to just get a pointer to this from our pointer data. 
+		   // But failing that, we can create a dummy swapchain and get the vmt out of that.
+		   // The first option is preferred as creating (more specifically, releasing) a dummy swapchain can cause overlays like RivaTuner to crash.
 
-	// Create a dummy device
-	CreateDummySwapchain(pDummySwapchain, pDummyDevice);
+	try
+	{
+		lockOrThrow(pointerManagerWeak, ptr);
 
-	// Get swapchain vmt
-	void** pVMT = *(void***)pDummySwapchain;
+		uintptr_t ppPresent;
+		uintptr_t ppResizeBuffers;
 
-	// Get Present's address out of vmt
-	m_pOriginalPresent = (DX11Present*)pVMT[(UINT)IDXGISwapChainVMT::Present];
-	m_ppPresent = (DX11Present**)&pVMT[(UINT)IDXGISwapChainVMT::Present];
-	PLOG_INFO << "PRESENT: " << m_pOriginalPresent;
-	PLOG_INFO << "PRESENT pointer: " << m_ppPresent;
+		auto pppPresent = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pppPresent));
+		if (!pppPresent->resolve(&ppPresent)) throw HCMInitException(std::format("Could not resolve pppPresent: {}", MultilevelPointer::GetLastError()));
 
-	// Get resizeBuffers too
-	m_pOriginalResizeBuffers = (DX11ResizeBuffers*)pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
-	m_ppResizeBuffers = (DX11ResizeBuffers**)&pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
-	PLOG_INFO << "RESIZEBUFFERS: " << m_pOriginalResizeBuffers;
-	PLOG_INFO << "RESIZEBUFFERS pointer: " << m_ppResizeBuffers;
+		auto pppResizeBuffers = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pppResizeBuffers));
+		if (!pppResizeBuffers->resolve(&ppResizeBuffers)) throw HCMInitException(std::format("Could not resolve pppResizeBuffers: {}", MultilevelPointer::GetLastError()));
 
-	// Don't need the dummy device anymore
-	safe_release(pDummySwapchain);
-	safe_release(pDummyDevice);
+		PLOG_INFO << "Successfully resolved multilevelpointers to present/resizeBuffer VMT entries!";
+		PLOG_DEBUG << "ppPresent: " << ppPresent;
+		PLOG_DEBUG << "ppResizeBuffers: " << ppResizeBuffers;
+
+		m_ppPresent = (DX11Present**)ppPresent;
+		m_ppResizeBuffers = (DX11ResizeBuffers**)ppResizeBuffers;
+		m_pOriginalPresent = *m_ppPresent;
+		m_pOriginalResizeBuffers = *m_ppResizeBuffers;
+
+	}
+	catch (HCMInitException ex)
+	{
+		PLOG_ERROR << "Could not resolve directX vmt. Using dummy swapchain instead (may cause crash with overlays eg RTSS): " << std::endl << ex.what();
+	}
+	catch (HCMRuntimeException ex)
+	{
+		PLOG_ERROR << "Failed to lock pointer Manager service somehow?! Using dummy swapchain instead (may cause crash with overlays eg RTSS): " << std::endl << ex.what();  
+	}
+
+
+
+	if (m_ppPresent == nullptr || m_ppResizeBuffers == nullptr) // ie trycatch above ended up throwing
+	{
+		ID3D11Device* pDummyDevice = nullptr;
+		IDXGISwapChain* pDummySwapchain = nullptr;
+
+		// Create a dummy device
+		CreateDummySwapchain(pDummySwapchain, pDummyDevice);
+
+		// Get swapchain vmt
+		void** pVMT = *(void***)pDummySwapchain;
+
+		// Get Present's address out of vmt
+		m_pOriginalPresent = (DX11Present*)pVMT[(UINT)IDXGISwapChainVMT::Present];
+		m_ppPresent = (DX11Present**)&pVMT[(UINT)IDXGISwapChainVMT::Present];
+		PLOG_INFO << "PRESENT: " << m_pOriginalPresent;
+		PLOG_INFO << "PRESENT pointer: " << m_ppPresent;
+
+		// Get resizeBuffers too
+		m_pOriginalResizeBuffers = (DX11ResizeBuffers*)pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
+		m_ppResizeBuffers = (DX11ResizeBuffers**)&pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
+		PLOG_INFO << "RESIZEBUFFERS: " << m_pOriginalResizeBuffers;
+		PLOG_INFO << "RESIZEBUFFERS pointer: " << m_ppResizeBuffers;
+
+		// Don't need the dummy device anymore
+		// it appears that releasing these can cause the game to crash when using RivaTuner.
+		safe_release(pDummySwapchain);
+		safe_release(pDummyDevice);
+	}
+
+
+
+
 
 	PLOG_DEBUG << "rewriting present pointer";
 	// Rewrite the present pointer to instead point to our newPresent

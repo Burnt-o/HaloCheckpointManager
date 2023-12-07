@@ -15,11 +15,6 @@ randomly crashes game
 
 
 
-displayinfo current bsp
-bsp switch for other halo games besides h2
-
-
-
 
 
 

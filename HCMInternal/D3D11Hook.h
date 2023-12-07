@@ -1,6 +1,7 @@
 #pragma once
 #include "ModuleHook.h"
 #include "ModuleHookManager.h"
+#include "PointerManager.h"
 
 // imgui
 #include "imgui.h"
@@ -52,6 +53,8 @@ private:
 	 // Pointers to the games pointers to original function (we redirect these to create hook)
 	 DX11Present** m_ppPresent = nullptr;
 	 DX11ResizeBuffers** m_ppResizeBuffers = nullptr;
+
+	 std::weak_ptr<PointerManager> pointerManagerWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
 	
 
 	// D3D data
@@ -68,7 +71,7 @@ private:
 
 public:
 
-	explicit D3D11Hook();
+	explicit D3D11Hook(std::weak_ptr<PointerManager> pointerManager);
 	~D3D11Hook();
 
 

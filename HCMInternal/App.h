@@ -82,9 +82,8 @@ public:
             // setup some optional services mainly related to controls, eg freeing the cursor, pausing the game, etc
             auto control = std::make_shared<ControlServiceContainer>(ptr);
 
-
-
-            auto d3d = std::make_shared<D3D11Hook>(); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
+     
+            auto d3d = std::make_shared<D3D11Hook>(ptr); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
             auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
 
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen

@@ -9,6 +9,37 @@
 		<Entry>1.3272.0.0</Entry>
 	</SupportedGameVersions>
 	
+	
+	
+	
+	
+	
+	
+	<!--#region DirectX-->
+	<!-- These pointers are NOT required. If HCMInternal doesn't have them, it will resolve present and resizeBuffers VMT entries using a dummy swapchain.
+	But it prefers to resolve them this way since dummy swapchains can cause crashes when using rivatuner and etc-->
+	<VersionedEntry Name="pppPresent" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3FB1CC8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="pppResizeBuffers" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3FB1CC8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+	<!--#endregion DirectX-->
+	
+	
 <!--#region MCCStateHook-->
 
 	<!--load into mission select of games, scanning for enum value. 1 level pointer with huge offset, 200,000 etc. pointer is actually near gameEnginePointer, duh.-->
@@ -4358,7 +4389,7 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xAB0F2D</Offset>
+				<Offset>0xB162E6</Offset> <!--AB0F2D-->
 			</Offsets>
 		</Version>
 
