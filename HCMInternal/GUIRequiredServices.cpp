@@ -189,6 +189,15 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 { OptionalCheatEnum::GetAggroData}
 	},
 
+				{ GUIElementEnum::display2DInfoShowRNG,
+{ OptionalCheatEnum::GetCurrentRNG}
+	},
+
+
+		{ GUIElementEnum::display2DInfoShowBSP,
+{ OptionalCheatEnum::GetCurrentBSP}
+		},
+
 				{ GUIElementEnum::display2DInfoShowNextObjectDatum,
 { OptionalCheatEnum::GetNextObjectDatum}
 	},

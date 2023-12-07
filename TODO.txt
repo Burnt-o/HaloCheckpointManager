@@ -5,7 +5,6 @@
 
 
 h2 blind w/ first person anims
-copy paste for force teleport position
 
 Free Camera issues:
 speedhack slows camera too

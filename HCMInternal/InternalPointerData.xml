@@ -4540,7 +4540,7 @@
 
 	<!--#endregion freeCamera-->
 
-	<!--just check what accesses bsp index on bsp load-->
+	<!--just check what accesses bsp index on bsp load. actually zoneset for h3+-->
 	<VersionedEntry Name="switchBSPFunction" Type="MultilevelPointer::ModuleOffset">
 
 		<Version Version="1.3272.0.0" Game="Halo1">
@@ -4562,6 +4562,84 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x67AA50</Offset>
+			</Offsets>
+		</Version>
+
+		<!--scan nw "48 8b 05 ** ** ** ** 48 85 c0 75 0c "-->
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xB3228</Offset>
+			</Offsets>
+		</Version>
+
+		<!--scan nw "48 8b 05 ** ** ** ** 48 85 c0 75 0c "-->
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xC0D24</Offset>
+			</Offsets>
+		</Version>
+
+		<!--scan nw "48 8b 05 ** ** ** ** 48 85 c0 75 0c "-->
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x353FC</Offset> <!-- 35370 or 353FC. former is crashy.-->
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x625B8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--actually zoneset for h3+-->
+	<VersionedEntry Name="currentBSP" Type="MultilevelPointer::ModuleOffset">
+
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1B860A4</Offset>
+			</Offsets>
+		</Version>
+
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xDF8D74</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x89BAE4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x8E0B90</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE30</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xE5BB50</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

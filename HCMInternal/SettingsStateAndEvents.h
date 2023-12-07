@@ -454,6 +454,13 @@ public:
 			nameof(display2DInfoShowRNG)
 		);
 
+	std::shared_ptr<Setting<bool>> display2DInfoShowBSP = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(display2DInfoShowBSP)
+		);
+
 	std::shared_ptr<Setting<bool>> display2DInfoTrackPlayer = std::make_shared<Setting<bool>>
 		(
 			true,
@@ -1080,6 +1087,7 @@ public:
 		display2DInfoShowGameTick,
 		display2DInfoShowAggro,
 		display2DInfoShowRNG,
+		display2DInfoShowBSP,
 		display2DInfoShowNextObjectDatum,
 		display2DInfoTrackPlayer,
 		display2DInfoShowPlayerViewAngle,

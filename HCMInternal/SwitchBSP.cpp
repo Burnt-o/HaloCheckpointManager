@@ -39,7 +39,7 @@ class SwitchBSPImpl : public ISwitchBSPImpl
 			int64_t newBSPIndex = settings->switchBSPIndex->GetValue();
 
 			uintptr_t pSwitchBSPFunction;
-			if (!switchBSPFunction->resolve(&pSwitchBSPFunction)) throw HCMRuntimeException("Could not resolve pointer to switchBSPFunction function");
+			if (!switchBSPFunction->resolve(&pSwitchBSPFunction)) throw HCMRuntimeException("Could not resolve pointer to switchBSPFunction function");      
 
 			typedef int64_t(__fastcall *SwitchBSPFunction_t)(int64_t newIndex);
 			SwitchBSPFunction_t switchBSPFunction_vptr = static_cast<SwitchBSPFunction_t>((void*)pSwitchBSPFunction);
@@ -50,7 +50,8 @@ class SwitchBSPImpl : public ISwitchBSPImpl
 			PLOG_VERBOSE << "useless switchBSP return: " << result; // we get garbage data here cos we're calling a subroutine. would prob need to switch to a inline hook if we cared but it doesn't really matter
 
 			// todo (maybe): get proper return (success value) and throw if failed
-			messagesGUI->addMessage(std::format("Switching BSP to {}", newBSPIndex));
+			constexpr const char* nameOfThing = (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo2) ? "BSP" : "Zone Set";
+			messagesGUI->addMessage(std::format("Switching {} to {}", nameOfThing, newBSPIndex));
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -80,7 +81,6 @@ public:
 
 
 
-
 SwitchBSP::SwitchBSP(GameState gameImpl, IDIContainer& dicon)
 {
 	switch (gameImpl)
@@ -93,21 +93,21 @@ SwitchBSP::SwitchBSP(GameState gameImpl, IDIContainer& dicon)
 			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo2>>(gameImpl, dicon);
 			break;
 
-		//case GameState::Value::Halo3:
-		//	pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo3>>(gameImpl, dicon);
-		//	break;
+		case GameState::Value::Halo3:
+			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo3>>(gameImpl, dicon);
+			break;
 
-		//case GameState::Value::Halo3ODST:
-		//	pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
-		//	break;
+		case GameState::Value::Halo3ODST:
+			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+			break;
 
-		//case GameState::Value::HaloReach:
-		//	pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
-		//	break;
+		case GameState::Value::HaloReach:
+			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
+			break;
 
-		//case GameState::Value::Halo4:
-		//	pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo4>>(gameImpl, dicon);
-		//	break;
+		case GameState::Value::Halo4:
+			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo4>>(gameImpl, dicon);
+			break;
 	default:
 		throw HCMInitException("not impl yet");
 	}

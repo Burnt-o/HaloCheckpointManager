@@ -4,6 +4,7 @@
 #include "GetAggroData.h"
 #include "GetNextObjectDatum.h"
 #include "GetCurrentRNG.h"
+#include "GetCurrentBSP.h"
 
 template <GameState::Value gameT>
 class GetGameDataAsString
@@ -52,6 +53,23 @@ public:
 
 		}
 
+		if (getCurrentBSPOptionalWeak.has_value())
+		{
+			lockOrThrow(getCurrentBSPOptionalWeak.value(), getCurrentBSP);
+			const auto currentBSP = getCurrentBSP->getCurrentBSP();
+
+			if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo2)
+			{
+				ss << "BSP Index: " << currentBSP << std::endl;
+			}
+			else
+			{
+				ss << "Zone Set: " << currentBSP << std::endl;
+			}
+
+
+		}
+
 		if (getNextObjectDatumOptionalWeak.has_value())
 		{
 			lockOrThrow(getNextObjectDatumOptionalWeak.value(), getNextObjectDatum);
@@ -77,6 +95,7 @@ public:
 	std::optional<std::weak_ptr<GetAggroData>> getAggroDataOptionalWeak;
 	std::optional<std::weak_ptr<GetNextObjectDatum>> getNextObjectDatumOptionalWeak;
 	std::optional<std::weak_ptr<GetCurrentRNG>> getCurrentRNGOptionalWeak = std::nullopt;
+	std::optional<std::weak_ptr<GetCurrentBSP>> getCurrentBSPOptionalWeak = std::nullopt;
 	bool showGameTick = false;
 };
 

@@ -559,7 +559,10 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 				case GUIElementEnum::switchBSPGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIButtonAndInt<true>>
-						(game, ToolTipCollection("Loads a different part of the map by BSP Index"), HotkeysEnum::switchBSP, "Switch BSP to", "index", settings->switchBSPIndex, settings->switchBSPEvent));
+						(game, ToolTipCollection("Loads a different part of the map by index"), HotkeysEnum::switchBSP, 
+							((game.operator GameState::Value() == GameState::Value::Halo1 || game.operator GameState::Value() == GameState::Value::Halo2) ? "Switch BSP to" : "Switch Zone Set to"), 
+							"index",
+							settings->switchBSPIndex, settings->switchBSPEvent));
 
 
 
@@ -584,6 +587,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							createNestedElement(GUIElementEnum::display2DInfoShowGameTick),
 							createNestedElement(GUIElementEnum::display2DInfoShowAggro),
 							createNestedElement(GUIElementEnum::display2DInfoShowRNG),
+							createNestedElement(GUIElementEnum::display2DInfoShowBSP),
 							createNestedElement(GUIElementEnum::display2DInfoShowNextObjectDatum),
 							createNestedElement(GUIElementEnum::display2DInfoTrackPlayer),
 							createNestedElement(GUIElementEnum::display2DInfoTrackCustomObject),
@@ -603,6 +607,13 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					case GUIElementEnum::display2DInfoShowRNG:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection(""), std::nullopt, "Show RNG seed", settings->display2DInfoShowRNG));
+
+
+					case GUIElementEnum::display2DInfoShowBSP:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection(""), std::nullopt, 
+								((game.operator GameState::Value() == GameState::Value::Halo1 || game.operator GameState::Value() == GameState::Value::Halo2) ? "Show BSP Index" : "Show Zone Set Index"),
+								settings->display2DInfoShowBSP));
 
 
 					case GUIElementEnum::display2DInfoShowNextObjectDatum:

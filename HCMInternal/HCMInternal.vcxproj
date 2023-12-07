@@ -226,6 +226,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="BottomlessClip.h" />
     <ClInclude Include="CheckpointInjectionLogger.h" />
     <ClInclude Include="EditPlayerViewAngle.h" />
+    <ClInclude Include="GetCurrentBSP.h" />
     <ClInclude Include="GetCurrentRNG.h" />
     <ClInclude Include="GUIComboEnumWithChildren.h" />
     <ClInclude Include="GUIDummyContainer.h" />
@@ -398,6 +399,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="BottomlessClip.cpp" />
     <ClCompile Include="CheckpointInjectionLogger.cpp" />
     <ClCompile Include="EditPlayerViewAngle.cpp" />
+    <ClCompile Include="GetCurrentBSP.cpp" />
     <ClCompile Include="GetCurrentRNG.cpp" />
     <ClCompile Include="SwitchBSP.cpp" />
     <ClCompile Include="ThirdPersonRendering.cpp" />

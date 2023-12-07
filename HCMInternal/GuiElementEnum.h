@@ -112,13 +112,14 @@
 			((forceLaunchForwardIgnoreZ, (ALL_SUPPORTED_GAMES)))\
 		((forceLaunchManual, (ALL_SUPPORTED_GAMES)))\
 			((forceLaunchAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
-	((switchBSPGUI, (Halo1, Halo2)))\
+	((switchBSPGUI, (ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowGameTick, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowAggro, (Halo1)))\
 			((display2DInfoShowRNG, (Halo1)))\
+			((display2DInfoShowBSP, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowNextObjectDatum, (Halo2)))\
 			((display2DInfoTrackPlayer, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerViewAngle, (ALL_SUPPORTED_GAMES)))\
