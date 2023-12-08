@@ -73,6 +73,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\</OutDir>
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)HCMExternal\bin\$(Platform)\$(Configuration)\net7.0-windows\</OutDir>
@@ -164,8 +168,16 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>xcopy /y $(ProjectDir)InternalPointerData.xml  $(OutDir)InternalPointerData.xml</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>xcopy /y $(ProjectDir)InternalPointerData.xml  $(OutDir)InternalPointerData.xml</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying internal pointer data</Message>
+      <Outputs>nonexistentfiletoforcebuildeventtoalwaysrun</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -442,8 +454,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="HotkeyRendererImpl.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <Xml Include="InternalPointerData.xml">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </Xml>
     <ClCompile Include="includes\safetyhook\safetyhook.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

@@ -288,13 +288,13 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateFOVTransform(const 
 	float scaleFactor = std::sqrt(fov) * 10.f;
 	if (GetKeyState(VK_NUMPAD1) & 0x8000)
 	{
-		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.f, 120.f);
+		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.0001f, 120.f);
 	}
 
 	// decrease
 	if (GetKeyState(VK_NUMPAD3) & 0x8000)
 	{
-		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.f, 120.f);
+		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.0001f, 120.f);
 	}
 }
 
