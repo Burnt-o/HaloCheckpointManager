@@ -4392,7 +4392,7 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xB14EC5</Offset>
+				<Offset>0xB14F0D</Offset>
 			</Offsets>
 		</Version>
 
@@ -4404,15 +4404,27 @@
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="thirdPersonRenderingFlagSetter" Type="MidhookFlagInterpreter">
+	<VersionedEntry Name="thirdPersonRenderingContextInterpreter" Type="MidhookContextInterpreter">
 		<Version Version="All" Game="Halo1">
-			<rflag>zero</rflag>
-			<value>false</value>
+			<Parameters>
+				<ValueToSet>rax</ValueToSet>
+			</Parameters>
 		</Version>
 
 		<Version Version="All" Game="Halo2">
-			<rflag>zero</rflag>
-			<value>false</value>
+			<Parameters>
+				<ValueToSet>rax</ValueToSet>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="thirdPersonRenderingValueToSet" Type="int64_t">
+		<Version Version="All" Game="Halo1">
+			<Offset>3</Offset>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<Offset>3</Offset>
 		</Version>
 	</VersionedEntry>
 

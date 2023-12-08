@@ -4,7 +4,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "ModuleHook.h"
-#include "MidhookFlagInterpreter.h"
+#include "MidhookContextInterpreter.h"
 #include "IMCCStateHook.h"
 #include "PointerManager.h"
 #include "MultilevelPointer.h"
@@ -19,12 +19,20 @@ private:
 	// main hook function
 	static void thirdPersonRenderingHookFunction(SafetyHookContext& ctx)
 	{
-		thirdPersonRenderingFlagSetter->setFlag(ctx);
+		enum class param
+		{
+			ValueToSet
+		};
+		auto* ctxInterpreter = thirdPersonRenderingContextInterpreter.get();
+
+		auto* valRef = ctxInterpreter->getParameterRef(ctx, (int)param::ValueToSet);
+		*valRef = thirdPersonRenderingValueToSet;
 	}
 
 	// hook
 	static inline std::shared_ptr<ModuleMidHook> thirdPersonRenderingHook;
-	static inline std::shared_ptr< MidhookFlagInterpreter> thirdPersonRenderingFlagSetter;
+	static inline std::shared_ptr<MidhookContextInterpreter> thirdPersonRenderingContextInterpreter;
+	static inline int thirdPersonRenderingValueToSet;
 
 public:
 	ThirdPersonRenderingImpl(GameState gameImpl, IDIContainer& dicon)
@@ -33,7 +41,8 @@ public:
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 
 		auto thirdPersonRenderingFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(thirdPersonRenderingFunction), gameImpl);
-		thirdPersonRenderingFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(thirdPersonRenderingFlagSetter), gameImpl);
+		thirdPersonRenderingContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(thirdPersonRenderingContextInterpreter), gameImpl);
+		thirdPersonRenderingValueToSet = *ptr->getData<std::shared_ptr<int64_t>>(nameof(thirdPersonRenderingValueToSet), gameImpl).get();
 		thirdPersonRenderingHook = ModuleMidHook::make(gameImpl.toModuleName(), thirdPersonRenderingFunction, thirdPersonRenderingHookFunction);
 
 	}

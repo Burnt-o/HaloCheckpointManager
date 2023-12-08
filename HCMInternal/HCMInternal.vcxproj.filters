@@ -557,9 +557,6 @@
     <ClInclude Include="GUIVec3.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="ThirdPersonRendering.h">
-      <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClInclude>
     <ClInclude Include="BlockPlayerCharacterInput.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
@@ -580,6 +577,9 @@
     </ClInclude>
     <ClInclude Include="GetCurrentBSP.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdPersonRendering.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -796,9 +796,6 @@
     <ClCompile Include="LinearSmoother.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera\Smoother</Filter>
     </ClCompile>
-    <ClCompile Include="ThirdPersonRendering.cpp">
-      <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClCompile>
     <ClCompile Include="BlockPlayerCharacterInput.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
@@ -816,6 +813,9 @@
     </ClCompile>
     <ClCompile Include="GetCurrentBSP.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdPersonRendering.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

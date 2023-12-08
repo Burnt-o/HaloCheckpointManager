@@ -10,7 +10,6 @@ Free Camera issues:
 speedhack slows camera too
 pausing game stops IsMouseInput from updatting
 Getting in vehicle (h1) fucks up camera and ui
-dying fucks up camera
 randomly crashes game
 
 
