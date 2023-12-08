@@ -17,21 +17,22 @@ private:
 
 
 	// main hook function
-	static void thirdPersonRenderingHookFunction(SafetyHookContext& ctx)
+	static __int64 thirdPersonRenderingHookFunction(int arg)
 	{
-		enum class param
+	/*	enum class param
 		{
 			ValueToSet
 		};
 		auto* ctxInterpreter = thirdPersonRenderingContextInterpreter.get();
 
 		auto* valRef = ctxInterpreter->getParameterRef(ctx, (int)param::ValueToSet);
-		*valRef = thirdPersonRenderingValueToSet;
+		*valRef = thirdPersonRenderingValueToSet;*/
+		return thirdPersonRenderingValueToSet;
 	}
 
 	// hook
-	static inline std::shared_ptr<ModuleMidHook> thirdPersonRenderingHook;
-	static inline std::shared_ptr<MidhookContextInterpreter> thirdPersonRenderingContextInterpreter;
+	static inline std::shared_ptr<ModuleInlineHook> thirdPersonRenderingHook;
+	//static inline std::shared_ptr<MidhookContextInterpreter> thirdPersonRenderingContextInterpreter;
 	static inline int thirdPersonRenderingValueToSet;
 
 public:
@@ -41,9 +42,10 @@ public:
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 
 		auto thirdPersonRenderingFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(thirdPersonRenderingFunction), gameImpl);
-		thirdPersonRenderingContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(thirdPersonRenderingContextInterpreter), gameImpl);
+		//thirdPersonRenderingContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(thirdPersonRenderingContextInterpreter), gameImpl);
 		thirdPersonRenderingValueToSet = *ptr->getData<std::shared_ptr<int64_t>>(nameof(thirdPersonRenderingValueToSet), gameImpl).get();
-		thirdPersonRenderingHook = ModuleMidHook::make(gameImpl.toModuleName(), thirdPersonRenderingFunction, thirdPersonRenderingHookFunction);
+		//thirdPersonRenderingHook = ModuleMidHook::make(gameImpl.toModuleName(), thirdPersonRenderingFunction, thirdPersonRenderingHookFunction);
+		thirdPersonRenderingHook = ModuleInlineHook::make(gameImpl.toModuleName(), thirdPersonRenderingFunction, thirdPersonRenderingHookFunction);
 
 	}
 

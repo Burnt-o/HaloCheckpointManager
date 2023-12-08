@@ -122,7 +122,7 @@ public:
 
 Speedhack::Speedhack(GameState game, IDIContainer& dicon) 
 {
-	// on implemntation covers all games, so only construct it the first time
+	// one implemntation covers all games, so only construct it the first time
 	if (!impl)
 	{
 		PLOG_DEBUG << "constructing static speedhack impl";

@@ -17,22 +17,16 @@ private:
 
 
 	// main hook function
-	static void BlockPlayerCharacterInput1HookFunction(SafetyHookContext& ctx)
+	static void BlockPlayerCharacterInputHookFunction(SafetyHookContext& ctx)
 	{
-		BlockPlayerCharacterInput1FlagSetter->setFlag(ctx);
+		BlockPlayerCharacterInputFlagSetter->setFlag(ctx);
 	}
 
-	static void BlockPlayerCharacterInput2HookFunction(SafetyHookContext& ctx)
-	{
-		BlockPlayerCharacterInput2FlagSetter->setFlag(ctx);
-	}
 
 	// hook
-	static inline std::shared_ptr<ModuleMidHook> BlockPlayerCharacterInput1Hook;
-	static inline std::shared_ptr< MidhookFlagInterpreter> BlockPlayerCharacterInput1FlagSetter;
+	static inline std::shared_ptr<ModuleMidHook> BlockPlayerCharacterInputHook;
+	static inline std::shared_ptr< MidhookFlagInterpreter> BlockPlayerCharacterInputFlagSetter;
 
-	static inline std::shared_ptr<ModuleMidHook> BlockPlayerCharacterInput2Hook;
-	static inline std::shared_ptr< MidhookFlagInterpreter> BlockPlayerCharacterInput2FlagSetter;
 
 public:
 	BlockPlayerCharacterInputImpl(GameState gameImpl, IDIContainer& dicon)
@@ -40,20 +34,17 @@ public:
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 
-		auto BlockPlayerCharacterInput1Function = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(BlockPlayerCharacterInput1Function), gameImpl);
-		BlockPlayerCharacterInput1FlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(BlockPlayerCharacterInput1FlagSetter), gameImpl);
-		BlockPlayerCharacterInput1Hook = ModuleMidHook::make(gameImpl.toModuleName(), BlockPlayerCharacterInput1Function, BlockPlayerCharacterInput1HookFunction);
+		auto BlockPlayerCharacterInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(BlockPlayerCharacterInputFunction), gameImpl);
+		BlockPlayerCharacterInputFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(BlockPlayerCharacterInputFlagSetter), gameImpl);
+		BlockPlayerCharacterInputHook = ModuleMidHook::make(gameImpl.toModuleName(), BlockPlayerCharacterInputFunction, BlockPlayerCharacterInputHookFunction);
 
-		auto BlockPlayerCharacterInput2Function = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(BlockPlayerCharacterInput2Function), gameImpl);
-		BlockPlayerCharacterInput2FlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(BlockPlayerCharacterInput2FlagSetter), gameImpl);
-		BlockPlayerCharacterInput2Hook = ModuleMidHook::make(gameImpl.toModuleName(), BlockPlayerCharacterInput2Function, BlockPlayerCharacterInput2HookFunction);
+
 	}
 
 	virtual void toggleBlockPlayerCharacterInput(bool enabled) override
 	{
 		safetyhook::ThreadFreezer threadFreezer;
-		BlockPlayerCharacterInput1Hook->setWantsToBeAttached(enabled);
-		BlockPlayerCharacterInput2Hook->setWantsToBeAttached(enabled);
+		BlockPlayerCharacterInputHook->setWantsToBeAttached(enabled);
 	}
 
 };

@@ -4,11 +4,17 @@
 #include "DIContainer.h"
 #include "IUpdateCameraTransform.h"
 
+
+class IUserCameraInputReaderImpl : public IUpdatePositionTransform, public IUpdateRotationTransform, public IUpdateFOVTransform
+{
+public:
+	virtual ~IUserCameraInputReaderImpl() = default;
+};
+
 class UserCameraInputReader : public IOptionalCheat, public IUpdatePositionTransform, public IUpdateRotationTransform, public IUpdateFOVTransform
 {
 private:
-	class UserCameraInputReaderImpl;
-	std::unique_ptr< UserCameraInputReaderImpl> pimpl; // todo; working on hooking this up to multilevel pointer to read analog inputs
+	std::unique_ptr< IUserCameraInputReaderImpl> pimpl; // todo; working on hooking this up to multilevel pointer to read analog inputs
 
 	virtual void updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform) override;
 

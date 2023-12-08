@@ -153,7 +153,7 @@ private:
 			// adjust by speedhack setting
 			{
 				lockOrThrow(speedhackWeak, speedhack);
-				frameDelta = frameDelta / speedhack->getCurrentSpeedMultiplier();
+				frameDelta = frameDelta * (1.00 / speedhack->getCurrentSpeedMultiplier());
 			}
 
 			LOG_ONCE(PLOG_DEBUG << "reading done, transforming camera");

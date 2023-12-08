@@ -8,8 +8,8 @@
 
 #include "LinearSmoother.h"
 
-
-class UserCameraInputReader::UserCameraInputReaderImpl
+template <GameState::Value gameT>
+class UserCameraInputReaderImpl : public IUserCameraInputReaderImpl
 {
 private:
 
@@ -35,14 +35,18 @@ private:
 
 	std::shared_ptr<MultilevelPointer> analogMoveLeftRight;
 	std::shared_ptr<MultilevelPointer> analogMoveForwardBack;
-	std::shared_ptr<MultilevelPointer> analogTurnLeftRight;
-	std::shared_ptr<MultilevelPointer> analogTurnUpDown;
+	std::shared_ptr<MultilevelPointer> analogTurnLeftRightMouse;
+	std::shared_ptr<MultilevelPointer> analogTurnUpDownMouse;
+	std::shared_ptr<MultilevelPointer> analogTurnLeftRightGamepad;
+	std::shared_ptr<MultilevelPointer> analogTurnUpDownGamepad;
 	std::shared_ptr<MultilevelPointer> isMouseInput;
 
 	float* cachedAnalogMoveLeftRight = nullptr;
 	float* cachedAnalogMoveForwardBack = nullptr;
-	float* cachedAnalogTurnLeftRight = nullptr;
-	float* cachedAnalogTurnUpDown = nullptr; 
+	float* cachedAnalogTurnLeftRightMouse = nullptr;
+	float* cachedAnalogTurnUpDownMouse = nullptr; 
+	float* cachedAnalogTurnLeftRightGamepad = nullptr;
+	float* cachedAnalogTurnUpDownGamepad = nullptr;
 	bool* cachedIsMouseInput = nullptr;
 
 	bool cacheInitialised = false;
@@ -55,8 +59,10 @@ private:
 
 		cachedAnalogMoveLeftRight = nullptr;
 		cachedAnalogMoveForwardBack = nullptr;
-		cachedAnalogTurnLeftRight = nullptr;
-		cachedAnalogTurnUpDown = nullptr;
+		cachedAnalogTurnLeftRightMouse = nullptr;
+		cachedAnalogTurnUpDownMouse = nullptr;
+		cachedAnalogTurnLeftRightGamepad = nullptr;
+		cachedAnalogTurnUpDownGamepad = nullptr;
 
 		try
 		{
@@ -67,9 +73,16 @@ private:
 
 			if (!analogMoveLeftRight->resolve((uintptr_t*)&cachedAnalogMoveLeftRight)) throw HCMRuntimeException(std::format("could not resolve analogMoveLeftRight: {}", MultilevelPointer::GetLastError()));
 			if (!analogMoveForwardBack->resolve((uintptr_t*)&cachedAnalogMoveForwardBack)) throw HCMRuntimeException(std::format("could not resolve analogMoveForwardBack: {}", MultilevelPointer::GetLastError()));
-			if (!analogTurnLeftRight->resolve((uintptr_t*)&cachedAnalogTurnLeftRight)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRight: {}", MultilevelPointer::GetLastError()));
-			if (!analogTurnUpDown->resolve((uintptr_t*)&cachedAnalogTurnUpDown)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDown: {}", MultilevelPointer::GetLastError()));
-			if (!isMouseInput->resolve((uintptr_t*)&cachedIsMouseInput)) throw HCMRuntimeException(std::format("could not resolve isMouseInput: {}", MultilevelPointer::GetLastError()));
+			if (!analogTurnLeftRightMouse->resolve((uintptr_t*)&cachedAnalogTurnLeftRightMouse)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRightMouse: {}", MultilevelPointer::GetLastError()));
+			if (!analogTurnUpDownMouse->resolve((uintptr_t*)&cachedAnalogTurnUpDownMouse)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDownMouse: {}", MultilevelPointer::GetLastError()));
+			if (!analogTurnLeftRightGamepad->resolve((uintptr_t*)&cachedAnalogTurnLeftRightGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRightGamepad: {}", MultilevelPointer::GetLastError()));
+			if (!analogTurnUpDownGamepad->resolve((uintptr_t*)&cachedAnalogTurnUpDownGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDownGamepad: {}", MultilevelPointer::GetLastError()));
+
+			if constexpr (gameT == GameState::Value::Halo1)
+			{
+				if (!isMouseInput->resolve((uintptr_t*)&cachedIsMouseInput)) throw HCMRuntimeException(std::format("could not resolve isMouseInput: {}", MultilevelPointer::GetLastError()));
+			}
+
 		
 			LOG_ONCE(PLOG_DEBUG << "cache resolved"); // can you tell I had an issue here
 		}
@@ -118,10 +131,15 @@ public:
 
 		analogMoveLeftRight = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogMoveLeftRight), game);
 		analogMoveForwardBack = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogMoveForwardBack), game);
-		analogTurnLeftRight = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRight), game);
-		analogTurnUpDown = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDown), game);
-		isMouseInput = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(isMouseInput), game);
+		analogTurnLeftRightMouse = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRightMouse), game);
+		analogTurnUpDownMouse = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDownMouse), game);
+		analogTurnLeftRightGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRightGamepad), game);
+		analogTurnUpDownGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDownGamepad), game);
 
+		if constexpr (gameT == GameState::Value::Halo1)
+		{
+			isMouseInput = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(isMouseInput), game);
+		}
 
 	}
 
@@ -134,8 +152,8 @@ public:
 
 
 
-
-void UserCameraInputReader::UserCameraInputReaderImpl::updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform)
+template <GameState::Value gameT>
+void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform)
 {
 	LOG_ONCE(PLOG_DEBUG << "readPositionInput");
 
@@ -184,7 +202,8 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updatePositionTransform(c
 
 }
 
-void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll)
+template <GameState::Value gameT>
+void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll)
 {
 	LOG_ONCE(PLOG_DEBUG << "readRotationInput");
 
@@ -201,18 +220,43 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(c
 	auto analogRotationSpeed = frameDelta * mRotationSpeed;
 	auto digitalRotationSpeed = frameDelta * mRotationSpeed;
 
-	if (cachedAnalogTurnLeftRight == nullptr || cachedAnalogTurnUpDown == nullptr || cachedIsMouseInput == nullptr) throw HCMRuntimeException("null cachedAnalogTurn pointers!");
+	if (cachedAnalogTurnLeftRightMouse == nullptr || cachedAnalogTurnUpDownMouse == nullptr || cachedAnalogTurnLeftRightGamepad == nullptr || cachedAnalogTurnUpDownGamepad == nullptr) throw HCMRuntimeException("null cachedAnalogTurn pointers!");
 
-	if (*cachedIsMouseInput == true)
+	float leftRightTurnAmount = 0.f;
+	float upDownTurnAmount = 0.f;
+
+
+	if constexpr (gameT == GameState::Value::Halo1)
 	{
-		analogRotationSpeed = analogRotationSpeed * (1.f / frameDelta);
+		if (cachedIsMouseInput == nullptr) throw HCMRuntimeException("null cachedIsMouseInput pointers!");
+
+		if (*cachedIsMouseInput == true)
+		{
+			analogRotationSpeed = analogRotationSpeed * (1.f / frameDelta);
+		}
+
+
+		leftRightTurnAmount = *cachedAnalogTurnLeftRightMouse;
+		upDownTurnAmount = *cachedAnalogTurnUpDownMouse;
+
+	}
+	else if constexpr (gameT == GameState::Value::Halo2)
+	{
+
+		leftRightTurnAmount = *cachedAnalogTurnLeftRightMouse * (1.f / frameDelta);
+		upDownTurnAmount = *cachedAnalogTurnUpDownMouse * (1.f / frameDelta);
+
+		leftRightTurnAmount = leftRightTurnAmount + *cachedAnalogTurnLeftRightGamepad;
+		upDownTurnAmount = upDownTurnAmount + *cachedAnalogTurnUpDownGamepad;
+
 	}
 
 
 
 
+
 	// Yaw: rotation around WORLD up
-	if (*cachedAnalogTurnLeftRight != 0.f)
+	if (leftRightTurnAmount != 0.f)
 	{
 		// some trig to make it instead pitch if camera is rolled perpindicular to horizon.
 		// when roll is zero : left yaws left. (duh)
@@ -225,14 +269,14 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(c
 		float yawProportion = std::cos(eulerRoll); // hmmm
 		float pitchProportion = std::sin(eulerRoll) * -1.f;
 
-		eulerYaw = (eulerYaw + (analogRotationSpeed * *cachedAnalogTurnLeftRight * yawProportion));
-		eulerPitch = (eulerPitch + (analogRotationSpeed * *cachedAnalogTurnLeftRight * pitchProportion));
+		eulerYaw = (eulerYaw + (analogRotationSpeed * leftRightTurnAmount * yawProportion));
+		eulerPitch = (eulerPitch + (analogRotationSpeed * leftRightTurnAmount * pitchProportion));
 	}
 
 
 
 	// Pitch: rotation around local right
-	if (*cachedAnalogTurnUpDown != 0.f)
+	if (upDownTurnAmount != 0.f)
 	{
 		// some trig to make it instead yaw if camera is rolled perpindicular to horizon.
 		// when roll is zero : up pitches up. (duh)
@@ -244,8 +288,8 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(c
 		float pitchProportion = std::cos(eulerRoll);
 		float yawProportion = std::sin(eulerRoll);
 
-		eulerPitch = (eulerPitch + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * pitchProportion));
-		eulerYaw = (eulerYaw + (analogRotationSpeed * *cachedAnalogTurnUpDown * -1.f * yawProportion));
+		eulerPitch = (eulerPitch + (analogRotationSpeed * upDownTurnAmount * -1.f * pitchProportion));
+		eulerYaw = (eulerYaw + (analogRotationSpeed * upDownTurnAmount * -1.f * yawProportion));
 
 	}
 
@@ -265,7 +309,8 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateRotationTransform(c
 
 }
 
-void UserCameraInputReader::UserCameraInputReaderImpl::updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov)
+template <GameState::Value gameT>
+void UserCameraInputReaderImpl<gameT>::updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov)
 {
 	LOG_ONCE(PLOG_DEBUG << "readFOVInput");
 
@@ -303,7 +348,34 @@ void UserCameraInputReader::UserCameraInputReaderImpl::updateFOVTransform(const 
 
 UserCameraInputReader::UserCameraInputReader(GameState game, IDIContainer& dicon)
 {
-	pimpl = std::make_unique<UserCameraInputReaderImpl>(game, dicon);
+	switch (game)
+	{
+	case GameState::Value::Halo1:
+		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo1>>(game, dicon);
+		break;
+
+	case GameState::Value::Halo2:
+		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo2>>(game, dicon);
+		break;
+
+	/*case GameState::Value::Halo3:
+		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo3>>(game, dicon);
+		break;
+
+	case GameState::Value::Halo3ODST:
+		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo3ODST>>(game, dicon);
+		break;
+
+	case GameState::Value::HaloReach:
+		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::HaloReach>>(game, dicon);
+		break;
+
+	case GameState::Value::Halo4:
+		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo4>>(game, dicon);
+		break;*/
+	default:
+		throw HCMInitException("not impl yet");
+	}
 }
 
 UserCameraInputReader::~UserCameraInputReader()

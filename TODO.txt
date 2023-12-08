@@ -6,23 +6,26 @@
 
 h2 blind w/ first person anims
 
-Free Camera issues:
-speedhack slows camera too
-pausing game stops IsMouseInput from updatting
-randomly crashes game
+Free Camera TODO:
+implement and test:
 h2
 h3
 od
 hr
 h4
 
+test coop, mp, theater
 
+current freecam issues:
+in-game hud messages (press e to enter etc) still show up (h1)
+getting hit still flashes your screen (h1)
+pausing game stops IsMouseInput from updatting (h1)
+10% chance to crash game when enabling free cam (all games)
 
-
-
-
-
-
+stuff to implement but probably after a first release:
+way to change input bindings for camera
+automation stuff (anchor to object etc)
+velocity-based interpolator (and maintain/set velocity stuff)
 
 
 3d waypoint system

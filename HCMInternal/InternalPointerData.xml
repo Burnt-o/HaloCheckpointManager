@@ -4387,7 +4387,7 @@
 
 
 	
-	<!--just check what accesses currentCameraFunctionPointer-->
+	<!--just check what accesses currentCameraFunctionPointer. inline hook. function that returns int from 0 to 3 depending on camera type.-->
 	<VersionedEntry Name="thirdPersonRenderingFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -4399,32 +4399,19 @@
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x6D4E94</Offset>
+				<Offset>0x6D4E70</Offset> <!--6E4A28-->
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="thirdPersonRenderingContextInterpreter" Type="MidhookContextInterpreter">
-		<Version Version="All" Game="Halo1">
-			<Parameters>
-				<ValueToSet>rax</ValueToSet>
-			</Parameters>
-		</Version>
-
-		<Version Version="All" Game="Halo2">
-			<Parameters>
-				<ValueToSet>rax</ValueToSet>
-			</Parameters>
-		</Version>
-	</VersionedEntry>
 
 	<VersionedEntry Name="thirdPersonRenderingValueToSet" Type="int64_t">
 		<Version Version="All" Game="Halo1">
-			<Offset>3</Offset>
+			<Offset>2</Offset>
 		</Version>
 
 		<Version Version="All" Game="Halo2">
-			<Offset>3</Offset>
+			<Offset>2</Offset>
 		</Version>
 	</VersionedEntry>
 
@@ -4436,13 +4423,7 @@
 				<!--AB0F2D B162E6-->
 			</Offsets>
 		</Version>
-		<!--<Version Version="1.3272.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0xAB0D10</Offset>
-				--><!--AB0F2D B162E6--><!--
-			</Offsets>
-		</Version>-->
+
 
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
@@ -4461,12 +4442,7 @@
 				<!--2D9B978 2D9BD88-->
 			</Offsets>
 		</Version>
-		<!--<Version Version="1.3272.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0x2D9B978</Offset> --><!--2D9B978 2D9BD88--><!--
-			</Offsets>
-		</Version>-->
+
 
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
@@ -4485,13 +4461,6 @@
 			<lookDirForward>0x20</lookDirForward>
 			<lookDirUp>0x2C</lookDirUp>
 		</Version>
-		<!--<Version Version="All" Game="Halo1">
-			<position>0x4C</position>
-			<velocity>0x84</velocity>
-			<FOV>0x68</FOV>
-			<lookDirForward>0x6C</lookDirForward>
-			<lookDirUp>0x78</lookDirUp>
-		</Version>-->
 
 		<Version Version="All" Game="Halo2">
 			<position>0x0</position>
@@ -4525,6 +4494,13 @@
 				<Offset>0x2EA28D0</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0ECC</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="analogMoveForwardBack" Type="MultilevelPointer::ModuleOffset">
@@ -4534,22 +4510,75 @@
 				<Offset>0x2EA28CC</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0EC8</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="analogTurnLeftRight" Type="MultilevelPointer::ModuleOffset">
+	<VersionedEntry Name="analogTurnLeftRightMouse" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2EA28D4</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0ED0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="analogTurnUpDown" Type="MultilevelPointer::ModuleOffset">
+	<VersionedEntry Name="analogTurnUpDownMouse" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2EA28D8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0ED4</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="analogTurnLeftRightGamepad" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2EA28D4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0ED8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="analogTurnUpDownGamepad" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2EA28D8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F0EDC</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -4561,47 +4590,42 @@
 				<Offset>0x2EA28DD</Offset>
 			</Offsets>
 		</Version>
-	</VersionedEntry>
 
-	<VersionedEntry Name="BlockPlayerCharacterInput1Function" Type="MultilevelPointer::ModuleOffset">
-		<Version Version="1.3272.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0xA99646</Offset>
+				<Offset>0x15E9190</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="BlockPlayerCharacterInput1FlagSetter" Type="MidhookFlagInterpreter">
-		<Version Version="All" Game="Halo1">
-			<rflag>zero</rflag>
-			<value>false</value>
-		</Version>
-
-		<Version Version="All" Game="Halo2">
-			<rflag>zero</rflag>
-			<value>false</value>
-		</Version>
-	</VersionedEntry>
-
-	<VersionedEntry Name="BlockPlayerCharacterInput2Function" Type="MultilevelPointer::ModuleOffset">
-		<Version Version="1.3272.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
-			<Offsets>
-				<Offset>0xA99213</Offset>
-			</Offsets>
-		</Version>
-	</VersionedEntry>
 	
-	<VersionedEntry Name="BlockPlayerCharacterInput2FlagSetter" Type="MidhookFlagInterpreter">
+	<!--scan nw float "-6.28" see what accesses-->
+	<VersionedEntry Name="BlockPlayerCharacterInputFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xA99847</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6C4D01</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="BlockPlayerCharacterInputFlagSetter" Type="MidhookFlagInterpreter">
 		<Version Version="All" Game="Halo1">
 			<rflag>zero</rflag>
-			<value>false</value>
+			<value>true</value>
 		</Version>
 
 		<Version Version="All" Game="Halo2">
 			<rflag>zero</rflag>
-			<value>false</value>
+			<value>true</value>
 		</Version>
 	</VersionedEntry>
 
