@@ -9,9 +9,12 @@ h2 blind w/ first person anims
 Free Camera issues:
 speedhack slows camera too
 pausing game stops IsMouseInput from updatting
-Getting in vehicle (h1) fucks up camera and ui
 randomly crashes game
-
+h2
+h3
+od
+hr
+h4
 
 
 

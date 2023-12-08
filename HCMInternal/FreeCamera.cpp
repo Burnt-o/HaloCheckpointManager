@@ -19,6 +19,7 @@
 #include "FreeCameraData.h"
 #include "GameCameraData.h"
 #include "CameraTransformer.h"
+#include "Speedhack.h"
 
 #include "ISmoother.h"
 #include "NullSmoother.h"
@@ -57,6 +58,7 @@ private:
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
+	std::weak_ptr<Speedhack> speedhackWeak;
 	std::shared_ptr<GetGameCameraData> getGameCameraData;
 	std::shared_ptr<UpdateGameCameraData> updateGameCameraData;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
@@ -147,6 +149,12 @@ private:
 
 			float frameDelta;
 			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
+
+			// adjust by speedhack setting
+			{
+				lockOrThrow(speedhackWeak, speedhack);
+				frameDelta = frameDelta / speedhack->getCurrentSpeedMultiplier();
+			}
 
 			LOG_ONCE(PLOG_DEBUG << "reading done, transforming camera");
 
@@ -427,6 +435,7 @@ public:
 		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
 		updateGameCameraData(resolveDependentCheat(UpdateGameCameraData)),
 		userCameraInputReader(resolveDependentCheat(UserCameraInputReader)),
+		speedhackWeak(resolveDependentCheat(Speedhack)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onFreeCameraToggleChange(n); }),
 		mThirdPersonRenderingToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraThirdPersonRendering->valueChangedEvent, [this](bool& n) { onThirdPersonRenderingChange(n); }),
 		mBlockPlayerCharacterInputToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraGameInputDisable->valueChangedEvent, [this](bool& n) { onBlockPlayerCharacterInputChange(n); }),

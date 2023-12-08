@@ -22,6 +22,7 @@ private:
 
 	// data
 	std::function<void(double)> setSpeed;
+	double currentSpeedForReading = 1.00;
 public:
 
 
@@ -38,11 +39,13 @@ public:
 			if (newToggleValue)
 			{
 				setSpeed(currentSpeedSetting);
+				currentSpeedForReading = currentSpeedSetting;
 				messagesGUI->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
 			}
 			else
 			{
 				setSpeed(1.00);
+				currentSpeedForReading = 1.00;
 				messagesGUI->addMessage(std::format("Disabling Speedhack."));
 			}
 		}
@@ -64,6 +67,7 @@ public:
 			{
 				PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
 				setSpeed(newSpeedValue);
+				currentSpeedForReading = newSpeedValue;
 				messagesGUI->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
 			}
 		}
@@ -106,6 +110,13 @@ public:
 		setSpeed(1.00);
 		PLOG_DEBUG << "~SpeedhackImpl()";
 	}
+
+
+	virtual double getCurrentSpeedMultiplier() override
+	{
+		return currentSpeedForReading;
+	}
+
 };
 
 
@@ -119,3 +130,5 @@ Speedhack::Speedhack(GameState game, IDIContainer& dicon)
 	}
 
 }
+
+double Speedhack::getCurrentSpeedMultiplier() { return impl->getCurrentSpeedMultiplier(); }

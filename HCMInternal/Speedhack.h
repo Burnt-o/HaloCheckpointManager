@@ -4,7 +4,12 @@
 #include "IOptionalCheat.h"
 #include "DIContainer.h"
 
-class ISpeedhackImpl {};
+class ISpeedhackImpl 
+{ 
+public:
+	virtual ~ISpeedhackImpl() = default;
+	virtual double getCurrentSpeedMultiplier() = 0;
+};
 
 class Speedhack : public IOptionalCheat
 {
@@ -22,6 +27,8 @@ public:
 		// kill impl
 		impl.reset();
 	}
+
+	double getCurrentSpeedMultiplier();
 
 	virtual std::string_view getName() override { return nameof(Speedhack); }
 };
