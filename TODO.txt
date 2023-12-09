@@ -8,7 +8,6 @@ h2 blind w/ first person anims
 
 Free Camera TODO:
 implement and test:
-h2
 h3
 od
 hr
@@ -17,10 +16,11 @@ h4
 test coop, mp, theater
 
 current freecam issues:
-in-game hud messages (press e to enter etc) still show up (h1)
-getting hit still flashes your screen (h1)
-pausing game stops IsMouseInput from updatting (h1)
+in-game hud messages (press e to enter etc) still show up (h1, h2)
+getting hit still flashes your screen (h2)
+pausing game stops IsMouseInput from updatting (h1) -- todo: should be a seperate flag, just scan-test 
 10% chance to crash game when enabling free cam (all games)
+dying zooms in the cam (h2)
 
 stuff to implement but probably after a first release:
 way to change input bindings for camera

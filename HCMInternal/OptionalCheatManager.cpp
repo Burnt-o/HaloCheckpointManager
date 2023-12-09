@@ -56,6 +56,7 @@
 #include "EditPlayerViewAngle.h"
 #include "SwitchBSP.h"
 #include "GetCurrentBSP.h"
+#include "DisableScreenEffects.h"
 
 #include "DIContainer.h"
 #include "map.h"

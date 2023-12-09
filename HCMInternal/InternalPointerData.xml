@@ -4392,7 +4392,7 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0xB14F0D</Offset>
+				<Offset>0xB14EA4</Offset>
 			</Offsets>
 		</Version>
 
@@ -4596,6 +4596,25 @@
 			<Offsets>
 				<Offset>0x15E9190</Offset>
 			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<!--easiest way is to use assembly to find data for a jpt screen flash, check what code accesses and go a function or two above-->
+	<VersionedEntry Name="disableScreenEffectsFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0"  Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB9F0A8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="disableScreenEffectsCode" Type="Vector" Typename="byte">
+		<!--just nop the call-->
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 

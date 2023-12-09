@@ -12,6 +12,7 @@
 #include "GetGameCameraData.h"
 #include "GetPlayerViewAngle.h"
 #include "ThirdPersonRendering.h"
+#include "DisableScreenEffects.h"
 #include "BlockPlayerCharacterInput.h"
 //#include "PlayerControlledFreeCamera.h"
 //#include "ObjectAnchoredFreeCam.h"
@@ -37,7 +38,8 @@ private:
 	// event callbacks
 	ScopedCallback <ToggleEvent> mFreeCameraToggleCallback;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
-	ScopedCallback <ToggleEvent> mThirdPersonRenderingToggleCallback;
+	ScopedCallback <ToggleEvent> mThirdPersonRenderingToggleCallback; 
+	ScopedCallback <ToggleEvent> mDisableScreenEffectsToggleCallback;
 	ScopedCallback <ToggleEvent> mBlockPlayerCharacterInputToggleCallback;
 
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionCallback;
@@ -63,6 +65,7 @@ private:
 	std::shared_ptr<UpdateGameCameraData> updateGameCameraData;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
+	std::optional<std::weak_ptr< DisableScreenEffects>> disableScreenEffectsOptionalWeak;
 	std::optional<std::weak_ptr< ThirdPersonRendering>> thirdPersonRenderingOptionalWeak;
 	std::optional<std::weak_ptr< BlockPlayerCharacterInput>> blockPlayerCharacterInputOptionalWeak;
 
@@ -200,6 +203,13 @@ private:
 				thirdPersonRendering->toggleThirdPersonRendering(settings->freeCameraThirdPersonRendering->GetValue() && newValue);
 			}
 
+			if (disableScreenEffectsOptionalWeak.has_value())
+			{
+				lockOrThrow(settingsWeak, settings);
+				lockOrThrow(disableScreenEffectsOptionalWeak.value(), disableScreenEffects);
+				disableScreenEffects->toggleDisableScreenEffects(settings->freeCameraDisableScreenEffects->GetValue() && newValue);
+			}
+
 			if (blockPlayerCharacterInputOptionalWeak.has_value())
 			{
 				lockOrThrow(settingsWeak, settings);
@@ -241,6 +251,25 @@ private:
 			{
 				lockOrThrow(thirdPersonRenderingOptionalWeak.value(), thirdPersonRendering);
 				thirdPersonRendering->toggleThirdPersonRendering(newValue);
+			}
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
+	void onDisableScreenEffectsChange(bool& newValue)
+	{
+		if (!disableScreenEffectsOptionalWeak.has_value()) return;
+
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			if (settings->freeCameraToggle->GetValue()) // only need to bother flipping if freeCamera is enabled
+			{
+				lockOrThrow(disableScreenEffectsOptionalWeak.value(), disableScreenEffects);
+				disableScreenEffects->toggleDisableScreenEffects(newValue);
 			}
 		}
 		catch (HCMRuntimeException ex)
@@ -438,6 +467,7 @@ public:
 		speedhackWeak(resolveDependentCheat(Speedhack)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onFreeCameraToggleChange(n); }),
 		mThirdPersonRenderingToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraThirdPersonRendering->valueChangedEvent, [this](bool& n) { onThirdPersonRenderingChange(n); }),
+		mDisableScreenEffectsToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraDisableScreenEffects->valueChangedEvent, [this](bool& n) { onDisableScreenEffectsChange(n); }),
 		mBlockPlayerCharacterInputToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraGameInputDisable->valueChangedEvent, [this](bool& n) { onBlockPlayerCharacterInputChange(n); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
 		userControlledPosition(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolatorLinearFactor),
@@ -469,6 +499,15 @@ public:
 		catch (HCMInitException ex)
 		{
 			PLOG_DEBUG << "failed to resolve optional dependent cheat thirdPersonRenderingOptionalWeak, error: " << ex.what();
+		}
+
+		try
+		{
+			disableScreenEffectsOptionalWeak = resolveDependentCheat(DisableScreenEffects);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_DEBUG << "failed to resolve optional dependent cheat disableScreenEffectsOptionalWeak, error: " << ex.what();
 		}
 
 		try

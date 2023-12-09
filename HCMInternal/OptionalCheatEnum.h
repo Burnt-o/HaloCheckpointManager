@@ -53,7 +53,8 @@ BlockPlayerCharacterInput,\
 GetCurrentRNG,\
 EditPlayerViewAngle,\
 SwitchBSP,\
-GetCurrentBSP
+GetCurrentBSP,\
+DisableScreenEffects
 
 
 enum class OptionalCheatEnum {

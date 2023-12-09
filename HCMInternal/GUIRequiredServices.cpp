@@ -261,6 +261,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ThirdPersonRendering}
 	},
 
+				{ GUIElementEnum::freeCameraDisableScreenEffects,
+		{OptionalCheatEnum::DisableScreenEffects}
+	},
+
 	{ GUIElementEnum::freeCameraGameInputDisable,
 {OptionalCheatEnum::BlockPlayerCharacterInput}
 	},

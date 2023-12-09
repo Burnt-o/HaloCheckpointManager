@@ -717,6 +717,13 @@ public:
 			nameof(freeCameraThirdPersonRendering)
 		);
 
+	std::shared_ptr<Setting<bool>> freeCameraDisableScreenEffects = std::make_shared<Setting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(freeCameraDisableScreenEffects)
+		);
+
 
 	std::shared_ptr<Setting<bool>> freeCameraHideMessages = std::make_shared<Setting<bool>>
 		(

@@ -581,6 +581,9 @@
     <ClInclude Include="BlockPlayerCharacterInput.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="DisableScreenEffects.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -816,6 +819,9 @@
     </ClCompile>
     <ClCompile Include="BlockPlayerCharacterInput.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="DisableScreenEffects.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

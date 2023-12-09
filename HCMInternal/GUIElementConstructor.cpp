@@ -872,6 +872,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
 								createNestedElement(GUIElementEnum::freeCameraHideMessages),
 								createNestedElement(GUIElementEnum::freeCameraThirdPersonRendering),
+								createNestedElement(GUIElementEnum::freeCameraDisableScreenEffects),
 								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraCameraInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraUserInputCameraSettings),
@@ -892,6 +893,10 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					case GUIElementEnum::freeCameraThirdPersonRendering:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection("Makes the player model render, and hides game UI (ala Blind skull)"), std::nullopt, "Third Person Rendering", settings->freeCameraThirdPersonRendering));
+
+					case GUIElementEnum::freeCameraDisableScreenEffects:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Disables screen effects like rumble or the screen flashing when player is hit"), std::nullopt, "Disable Screen Effects", settings->freeCameraDisableScreenEffects));
 
 
 					case GUIElementEnum::freeCameraGameInputDisable:
