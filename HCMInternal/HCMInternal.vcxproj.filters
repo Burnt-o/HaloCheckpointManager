@@ -584,6 +584,12 @@
     <ClInclude Include="DisableScreenEffects.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="HideWatermarkService.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HideMessagesService.h">
+      <Filter>Services\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

@@ -21,6 +21,8 @@ getting hit still flashes your screen (h2)
 pausing game stops IsMouseInput from updatting (h1) -- todo: should be a seperate flag, just scan-test 
 10% chance to crash game when enabling free cam (all games)
 dying zooms in the cam (h2)
+closing HCM when freecam on & hide-watermarks/messaages enabled causes hang
+
 
 stuff to implement but probably after a first release:
 way to change input bindings for camera

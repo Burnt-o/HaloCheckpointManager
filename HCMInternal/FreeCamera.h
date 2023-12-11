@@ -17,4 +17,6 @@ public:
 
 std::string_view getName() override { return nameof(FreeCamera); }
 
+static inline bool cameraIsFree = false;
+
 };

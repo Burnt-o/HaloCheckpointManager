@@ -42,6 +42,7 @@ private:
 	ScopedCallback <ToggleEvent> mDisableScreenEffectsToggleCallback;
 	ScopedCallback <ToggleEvent> mBlockPlayerCharacterInputToggleCallback;
 
+
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionCallback;
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionFillCurrentCallback;
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionCopyCallback;
@@ -77,7 +78,7 @@ private:
 
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
-
+	static inline std::shared_ptr<ModulePatch> freeCameraHalo2ExtraHook; // stupid halo 2 fix for FOV
 
 	// data
 	bool needToResetCamera = true;
@@ -86,6 +87,7 @@ private:
 	// event to fire on mcc state change (just set needToSetupCamera to true)
 	void onGameStateChange(const MCCState&)
 	{
+		FreeCamera::cameraIsFree = false;
 		needToResetCamera = true;
 	}
 
@@ -134,13 +136,15 @@ private:
 	{
 		try
 		{
+			FreeCamera::cameraIsFree = true;
+
 			auto gameCameraData = getGameCameraData->getGameCameraData();
 
 			// "world" absolute data. Gets transformed into final position/rotation by cameraTransformers.
 			FreeCameraData freeCameraData;
 
 			lockOrThrow(settingsWeak, settings);
-
+			
 			float targetFOVCopy = settings->freeCameraUserInputCameraBaseFOV->GetValue();
 
 
@@ -189,7 +193,7 @@ private:
 	{
 		try
 		{
-
+			FreeCamera::cameraIsFree = false;
 
 			needToResetCamera = true; 
 			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
@@ -221,6 +225,12 @@ private:
 			{
 				safetyhook::ThreadFreezer threadFreezer; 
 				setCameraDataHook->setWantsToBeAttached(newValue);
+
+				if constexpr (gameT == GameState::Value::Halo2)
+				{
+					freeCameraHalo2ExtraHook->setWantsToBeAttached(newValue);
+				}
+
 			}
 
 
@@ -228,13 +238,25 @@ private:
 			lockOrThrow(mccStateHookWeak, mccStateHook);
 			if (mccStateHook->isGameCurrentlyPlaying(gameT))
 			{
+				FreeCamera::cameraIsFree = newValue;
+
 				lockOrThrow(messagesGUIWeak, messagesGUI)
 				messagesGUI->addMessage(newValue ? "Free Camera enabled." : "Free Camera disabled.");
 			}
+
 		}
 		catch (HCMRuntimeException ex)
 		{
 			runtimeExceptions->handleMessage(ex);
+			try
+			{
+				lockOrThrow(settingsWeak, settings);
+				settings->freeCameraToggle->resetToDefaultValue();
+			}
+			catch (HCMRuntimeException ex)
+			{
+				runtimeExceptions->handleMessage(ex);
+			}
 		}
 
 	}
@@ -485,6 +507,7 @@ public:
 	
 		freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey(); }),
 		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); })
+
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerManager>().lock();
@@ -519,7 +542,13 @@ public:
 			PLOG_DEBUG << "failed to resolve optional dependent cheat blockPlayerCharacterInputOptionalWeak, error: " << ex.what();
 		}
 
-		  
+		if constexpr (gameT == GameState::Value::Halo2)
+		{
+			auto freeCameraHalo2ExtraFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(freeCameraHalo2ExtraFunction), game);
+			auto freeCameraHalo2ExtraCode = ptr->getVectorData<byte>(nameof(freeCameraHalo2ExtraCode), game);
+			freeCameraHalo2ExtraHook = ModulePatch::make(game.toModuleName(), freeCameraHalo2ExtraFunction, *freeCameraHalo2ExtraCode.get());
+
+		}
 		   
 
 	}

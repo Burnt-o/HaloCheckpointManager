@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 
+
+
 class IProvideScopedRequests
 {
 public:
@@ -8,6 +10,29 @@ public:
 	virtual void unrequestService(std::string callerID) = 0;
 	virtual ~IProvideScopedRequests() = default;
 };
+
+class GenericScopedServiceProvider : public IProvideScopedRequests
+{
+private:
+	std::set<std::string> callersRequestingService{};
+public:
+	virtual void requestService(std::string callerID) override
+	{
+		callersRequestingService.emplace(callerID);
+	}
+
+	virtual void unrequestService(std::string callerID) override
+	{
+		callersRequestingService.erase(callerID);
+	}
+
+	bool serviceIsRequested()
+	{
+		return !callersRequestingService.empty();
+	}
+
+};
+
 
 class ScopedServiceRequest
 {

@@ -245,6 +245,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUIDummyContainer.h" />
     <ClInclude Include="GUIButtonAndInt.h" />
     <ClInclude Include="GUIVec3.h" />
+    <ClInclude Include="HideMessagesService.h" />
+    <ClInclude Include="HideWatermarkService.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
     <ClInclude Include="SwitchBSP.h" />
     <ClInclude Include="ThirdPersonRendering.h" />

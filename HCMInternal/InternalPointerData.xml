@@ -4428,7 +4428,7 @@
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x6F1B5C</Offset>
+				<Offset>0x6F1B5C</Offset> <!--6F1B5C-->
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -4468,6 +4468,24 @@
 			<FOV>0x38</FOV>
 			<lookDirForward>0x20</lookDirForward>
 			<lookDirUp>0x2C</lookDirUp>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="freeCameraHalo2ExtraFunction" Type="MultilevelPointer::ModuleOffset">
+
+		<Version Version="1.3272.0.0"  Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6F1315</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="freeCameraHalo2ExtraCode" Type="Vector" Typename="byte">
+		<!--just nop the call-->
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 
@@ -4608,12 +4626,23 @@
 				<Offset>0xB9F0A8</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3272.0.0"  Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x8F5ADA</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
 	<VersionedEntry Name="disableScreenEffectsCode" Type="Vector" Typename="byte">
 		<!--just nop the call-->
 		<Version Version="1.3272.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
