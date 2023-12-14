@@ -316,12 +316,12 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 	// Roll: means rotating around local FORWARD axis.
 	if (cameraRollLeftBinding->isCurrentlyDown())
 	{
-		eulerRoll = eulerRoll + digitalRotationSpeed;
+		eulerRoll = eulerRoll + digitalRotationSpeed * -1.f;
 	}
 
 	if (cameraRollRightBinding->isCurrentlyDown())
 	{
-		eulerRoll = eulerRoll + (digitalRotationSpeed * -1.f);
+		eulerRoll = eulerRoll + (digitalRotationSpeed);
 	}
 
 
