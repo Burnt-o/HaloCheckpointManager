@@ -273,10 +273,18 @@
 		</Version>
 	</VersionedEntry>
 
+	<!--on mm scan wr "01 00 00 00 ff ff ff ff 1b" should be first result. (check by switching to gamepad)-->
 	<VersionedEntry Name="isCursorShowing" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03E3C388</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x03C8AE88</Offset>
 				<Offset>0x3FC</Offset>
 			</Offsets>
 		</Version>
