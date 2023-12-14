@@ -250,6 +250,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HideMessagesService.h" />
     <ClInclude Include="HideWatermarkService.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
+    <ClInclude Include="Lapua.h" />
     <ClInclude Include="SwitchBSP.h" />
     <ClInclude Include="ThirdPersonRendering.h" />
     <ClInclude Include="UserCameraInputReader.h" />
@@ -420,6 +421,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetCurrentBSP.cpp" />
     <ClCompile Include="GetCurrentRNG.cpp" />
     <ClCompile Include="HideHUD.cpp" />
+    <ClCompile Include="Lapua.cpp" />
     <ClCompile Include="SwitchBSP.cpp" />
     <ClCompile Include="ThirdPersonRendering.cpp" />
     <ClCompile Include="UserCameraInputReader.cpp" />

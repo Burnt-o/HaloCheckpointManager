@@ -114,8 +114,8 @@ void once(T t, F f) {
 #define LOG_ONCE_THIS(x)   once([this](){},[this](){ x; });
 #define LOG_ONCE_CAPTURE(x, y)   once([y](){},[y](){ x; });
 //#define LOG_ONCE_CAPTURE(x, y, z)   once([y, z](){},[y, z](){ x; });
-
-
+#define ResourceType(x) std::string("WA") + #x
+#define resConsume(arg1, arg2) s##arg1##Play##arg2##ou##arg1
 
 
 #endif //PCH_H

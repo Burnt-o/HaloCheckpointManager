@@ -38,3 +38,7 @@ float degreesToRadians(float degrees);
 
 
 void move_towards(float& value, float target, float step);
+
+
+HMODULE GetCurrentModule();
+

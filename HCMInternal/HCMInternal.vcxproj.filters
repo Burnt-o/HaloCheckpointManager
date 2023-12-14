@@ -596,6 +596,9 @@
     <ClInclude Include="EventOnPressHotkey.h">
       <Filter>Services\Hotkeys</Filter>
     </ClInclude>
+    <ClInclude Include="Lapua.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -837,6 +840,9 @@
     </ClCompile>
     <ClCompile Include="HideHUD.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Lapua.cpp">
+      <Filter>Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

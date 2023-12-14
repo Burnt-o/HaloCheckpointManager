@@ -11,7 +11,7 @@
 // Main Execution Loop
 void RealMain(HMODULE dllHandle)
 {
-    App app; // app blocks at the end of it's constructor until it's kill condition is met
+    App app = App(dllHandle); // app blocks at the end of it's constructor until it's kill condition is met
 }
 
 // This thread is created by the dll when loaded into the process, see RealMain() for the actual event loop.

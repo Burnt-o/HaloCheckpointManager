@@ -146,3 +146,16 @@ float degreesToRadians(float degrees)
 	constexpr float conv = (DirectX::XM_PI / 180.f);
 	return degrees * conv;
 }
+
+//https://stackoverflow.com/a/557774/23053739
+HMODULE GetCurrentModule()
+{ // NB: XP+ solution!
+	HMODULE hModule = NULL;
+	GetModuleHandleEx(
+		GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+		(LPCTSTR)GetCurrentModule,
+		&hModule);
+
+	return hModule;
+}
+
