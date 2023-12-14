@@ -412,3 +412,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 >>>>>>> Add .gitattributes and .gitignore.
+/HCMInternal/Beatrice.wav
