@@ -4813,7 +4813,7 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x2EA28DD</Offset>
+				<Offset>0x2B31C14</Offset>
 			</Offsets>
 		</Version>
 

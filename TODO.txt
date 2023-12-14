@@ -4,39 +4,25 @@
 
 
 
-h2 blind w/ first person anims
-
 Free Camera TODO:
-implement and test:
-h3
-od
-hr
-h4
-
-test coop, mp, theater
+test coop, mp for h1, h2
 
 current freecam issues:
-in-game hud messages (press e to enter etc) still show up (h1, h2)
-getting hit still flashes your screen (h2)
 pausing game stops IsMouseInput from updatting (h1) -- todo: should be a seperate flag, just scan-test 
 10% chance to crash game when enabling free cam (all games)
-dying zooms in the cam (h2)
 closing HCM when freecam on & hide-watermarks/messaages enabled causes hang
 
 
-stuff to implement but probably after a first release:
-way to change input bindings for camera
-automation stuff (anchor to object etc)
-velocity-based interpolator (and maintain/set velocity stuff)
 
 
-3d waypoint system
-3d object info overlay
-infiniteammo/bottomlessclip ptr data for non-h1 games
-skull selection
-trigger overlay
-sprint meter
-free cam
+
+
+
+
+
+
+
+
 
 
 
@@ -47,6 +33,15 @@ Fix ctrl-tab input bringing up imgui thing
 h1 rng in displayinfo
 
 
+backburner (tasks to do eventually):
+freeCamera for h3, 0d, hr, h4
+freeCamera automation stuff 
+freeCamera velocity-based interpolator (and maintain/set velocity stuff)
+3d waypoint system
+3d object info overlay
+skull selection (or at least just acrophobia toggle)
+trigger overlay
+sprint meter
 
 
 
