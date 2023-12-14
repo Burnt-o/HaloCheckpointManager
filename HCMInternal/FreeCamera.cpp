@@ -27,6 +27,7 @@
 #include "LinearSmoother.h"
 
 #include "UserCameraInputReader.h"
+#include "GlobalKill.h"
 
 template <GameState::Value gameT>  // templated so that each game gets a seperate instance of the static members
 class FreeCameraImpl : public FreeCameraImplUntemplated
@@ -35,6 +36,8 @@ private:
 	//GameState mGame;
 	static inline FreeCameraImpl<gameT>* instance = nullptr;
 	GameState gameImpl;
+
+	static inline std::atomic_bool hookIsRunning = false;
 
 	// event callbacks
 	ScopedCallback <ToggleEvent> mFreeCameraToggleCallback;
@@ -97,11 +100,14 @@ private:
 
 	static void setCameraDataHookFunction(SafetyHookContext& ctx)
 	{
+		ScopedAtomicBool lock(hookIsRunning);
+
 		if (instance == nullptr)
 		{
 			PLOG_ERROR << "null freeCameraImpl for gameState " << ((GameState)gameT).toString();
 			return;
 		}
+
 
 		instance->setCameraData();
 	
@@ -135,6 +141,9 @@ private:
 
 	void setCameraData()
 	{
+
+
+
 		try
 		{
 			FreeCamera::cameraIsFree = true;
@@ -599,6 +608,21 @@ public:
 	~FreeCameraImpl()
 	{
 		// TODO: add a safety check that hook isn't running
+		if (hookIsRunning)
+		{
+			PLOG_INFO << "Waiting for freeCamera hook to finish execution";
+			hookIsRunning.wait(true);
+		}
+
+
+		safetyhook::ThreadFreezer freezeThreads;
+
+		if (setCameraDataHook)
+			setCameraDataHook.reset();
+
+		if (freeCameraHalo2ExtraHook)
+			freeCameraHalo2ExtraHook.reset();
+
 		instance = nullptr;
 	}
 };

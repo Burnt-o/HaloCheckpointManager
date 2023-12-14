@@ -4791,7 +4791,7 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2EA28D8</Offset>
-			</Offsets>
+			</Offsets>6
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo2">

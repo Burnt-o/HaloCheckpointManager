@@ -131,4 +131,13 @@ Speedhack::Speedhack(GameState game, IDIContainer& dicon)
 
 }
 
-double Speedhack::getCurrentSpeedMultiplier() { return impl->getCurrentSpeedMultiplier(); }
+double Speedhack::getCurrentSpeedMultiplier() 
+{ 
+	if (!impl)
+	{
+		PLOG_ERROR << "getCurrentSpeedMultiplier: null impl!";
+		return 1.00;
+	}
+	return impl->getCurrentSpeedMultiplier(); 
+
+}
