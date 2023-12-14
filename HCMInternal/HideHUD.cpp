@@ -48,9 +48,12 @@ public:
 	virtual void updateService() override
 	{
 		// attach if requested
+		PLOG_VERBOSE << "HideHUDImplH1::updateService";
+		safetyhook::ThreadFreezer freezeThreads;
 		hideHUDFlagHook1->setWantsToBeAttached(serviceIsRequested());
 		hideHUDFlagHook2->setWantsToBeAttached(serviceIsRequested());
 		hideHUDFlagHook3->setWantsToBeAttached(serviceIsRequested());
+		PLOG_VERBOSE << "HideHUDImplH1::updateService DONE";
 	}
 };
 
@@ -83,7 +86,10 @@ public:
 	virtual void updateService() override
 	{
 		// attach if requested
+		PLOG_VERBOSE << "HideHUDImplH2::updateService";
+		safetyhook::ThreadFreezer freezeThreads;
 		hideHUDFlagHook1->setWantsToBeAttached(serviceIsRequested());
+		PLOG_VERBOSE << "HideHUDImplH2::updateService DONE";
 	}
 };
 

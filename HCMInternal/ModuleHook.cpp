@@ -111,7 +111,12 @@ void ModuleMidHook::attach()
 	// I don't know why they made this change (perhaps there's a good reason)
 	// but to me it appears this would cause crashes with hooks that run frequently.
 	// So we'll freeze the threads manually.
-	auto freeze = safetyhook::ThreadFreezer();
+
+	// as an aside.. I appear to be getting a rare crash around here. is attach being called before mHookFunction is necessarily created? how can I even debug for that..
+	// and is that even something I can fix? might be a safetyhook issue. how is it even possible that the func is being called if threads are frozen tho?
+
+	safetyhook::ThreadFreezer freezeThreads;
+	PLOG_VERBOSE << "threads frozen";
 	this->mMidHook = safetyhook::create_mid((void*)pOriginalFunction, this->mHookFunction);
 	PLOG_DEBUG << "mid_hook successfully attached: " << this->getAssociatedModule();
 }

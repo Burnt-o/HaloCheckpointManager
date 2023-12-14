@@ -100,6 +100,8 @@ private:
 
 	static void setCameraDataHookFunction(SafetyHookContext& ctx)
 	{
+		LOG_ONCE("setCameraDataHookFunction running for the first time")
+
 		ScopedAtomicBool lock(hookIsRunning);
 
 		if (instance == nullptr)
@@ -108,7 +110,7 @@ private:
 			return;
 		}
 
-
+		LOG_ONCE("calling instance->setCameraData()")
 		instance->setCameraData();
 	
 	}
@@ -117,7 +119,7 @@ private:
 
 	void resetCamera(GameCameraData& gameCameraData, std::shared_ptr<SettingsStateAndEvents> settings, float targetFOVCopy)
 	{
-	
+		LOG_ONCE(PLOG_VERBOSE << "resetting camera data");
 		// position
 		userControlledPosition.setPositionTransformation(*gameCameraData.position);
 
@@ -142,53 +144,69 @@ private:
 	void setCameraData()
 	{
 
-
+		LOG_ONCE(PLOG_VERBOSE << "setCameraData running for the first time");
 
 		try
 		{
 			FreeCamera::cameraIsFree = true;
 
+			LOG_ONCE(PLOG_VERBOSE << "getting game camera data");
 			auto gameCameraData = getGameCameraData->getGameCameraData();
 
 			// "world" absolute data. Gets transformed into final position/rotation by cameraTransformers.
+			LOG_ONCE(PLOG_VERBOSE << "constructing world-null camera data");
 			FreeCameraData freeCameraData;
 
 			lockOrThrow(settingsWeak, settings);
-			
-			float targetFOVCopy = settings->freeCameraUserInputCameraBaseFOV->GetValue();
 
+			LOG_ONCE(PLOG_VERBOSE << "getting base FOV from setting value");
+			float targetFOVCopy = settings->freeCameraUserInputCameraBaseFOV->GetValue();
+			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "FOV value: " << fov, fov = targetFOVCopy);
 
 			if (needToResetCamera)
 			{
+				LOG_ONCE(PLOG_VERBOSE << "Resetting camera");
 				resetCamera(gameCameraData, settings, targetFOVCopy);
 				needToResetCamera = false;
 			}
 
+			LOG_ONCE(PLOG_VERBOSE << "getting frameDelta");
 			float frameDelta;
 			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
+			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "frameDelta value: " << fd, fd = frameDelta);
+
 
 			if (frameDelta <= 0.f) throw HCMRuntimeException(std::format("non positive frame delta?! that's unpossible! {} ", frameDelta));
 
 			// adjust by speedhack setting
 			{
+				LOG_ONCE(PLOG_VERBOSE << "adjusting frameDelta by speedhack multiplier");
 				lockOrThrow(speedhackWeak, speedhack);
 				frameDelta = frameDelta * (1.00 / speedhack->getCurrentSpeedMultiplier());
+				LOG_ONCE_CAPTURE(PLOG_VERBOSE << "speedhack-adjusted frameDelta value: " << fd, fd = frameDelta);
 			}
 
-			LOG_ONCE(PLOG_DEBUG << "reading done, transforming camera");
+			LOG_ONCE(PLOG_DEBUG << "reading user inputs and applying userControlledCamera transformations");
 
 			// rotate FIRST so position updater knows which direction is "forward/up/right" etc 
 			userControlledRotation.transformRotation(freeCameraData, frameDelta);
+			LOG_ONCE(PLOG_DEBUG << "userControlledRotation.transformRotation DONE");
+
 			userControlledPosition.transformPosition(freeCameraData, frameDelta);
+			LOG_ONCE(PLOG_DEBUG << "userControlledPosition.transformPosition DONE");
+
 			userControlledFOV.transformFOV(freeCameraData, frameDelta, targetFOVCopy);
+			LOG_ONCE(PLOG_DEBUG << "userControlledFOV.transformFOV DONE");
 
 			// must be after userControlled and before any other transformers
+			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "updating FOV setting with transformed value: " << fov, fov = targetFOVCopy);
 			settings->freeCameraUserInputCameraBaseFOV->GetValue() = targetFOVCopy;
 			settings->freeCameraUserInputCameraBaseFOV->GetValueDisplay() = targetFOVCopy; 
+			LOG_ONCE(PLOG_VERBOSE << "fov setting updated");
 
-			LOG_ONCE(PLOG_DEBUG << "transforming done, updating game camera");
+			LOG_ONCE(PLOG_DEBUG << "updating game camera");
 			updateGameCameraData->updateGameCameraData(gameCameraData, freeCameraData, targetFOVCopy);
-
+			LOG_ONCE(PLOG_DEBUG << "updating game camera DONE");
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -235,8 +253,17 @@ private:
 
 			// set hooks 
 			{
+				LOG_ONCE(PLOG_VERBOSE << "freezing threads as we update setCameraDataHook");
 				safetyhook::ThreadFreezer threadFreezer; 
+
+				LOG_ONCE(PLOG_VERBOSE << "setCameraDataHook->setWantsToBeAttached()")
 				setCameraDataHook->setWantsToBeAttached(newValue);
+				LOG_ONCE(PLOG_VERBOSE << "setCameraDataHook->setWantsToBeAttached() DONE");
+				
+				if (newValue)
+				{
+					PLOG_DEBUG << "setCameraDataHook redirecting to new func at: " << std::hex << &setCameraDataHookFunction;
+				}
 
 				if constexpr (gameT == GameState::Value::Halo2)
 				{
@@ -250,7 +277,6 @@ private:
 			lockOrThrow(mccStateHookWeak, mccStateHook);
 			if (mccStateHook->isGameCurrentlyPlaying(gameT))
 			{
-				FreeCamera::cameraIsFree = newValue;
 
 				lockOrThrow(messagesGUIWeak, messagesGUI)
 				messagesGUI->addMessage(newValue ? "Free Camera enabled." : "Free Camera disabled.");
@@ -607,7 +633,7 @@ public:
 
 	~FreeCameraImpl()
 	{
-		// TODO: add a safety check that hook isn't running
+		// safety check that hook isn't running
 		if (hookIsRunning)
 		{
 			PLOG_INFO << "Waiting for freeCamera hook to finish execution";
