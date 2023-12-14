@@ -21,7 +21,7 @@ private:
 public:
 
 
-	GUIToggleWithChildren(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::string toggleText, std::shared_ptr<Setting<bool>> optionToggle, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
+	GUIToggleWithChildren(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::string toggleText, std::shared_ptr<Setting<bool>> optionToggle, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
 		: IGUIElement(implGame, hotkey, tooltip), mToggleText(toggleText), mOptionToggleWeak(optionToggle)
 	{
 		if (mToggleText.empty()) throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");

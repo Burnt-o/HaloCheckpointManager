@@ -13,7 +13,7 @@ private:
 public:
 
 
-	GUISimpleButton(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::string buttonText, std::shared_ptr<ActionEvent> eventToFire)
+	GUISimpleButton(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::string buttonText, std::shared_ptr<ActionEvent> eventToFire)
 		: IGUIElement(implGame, hotkey, tooltip), mButtonText(buttonText), mEventToFireWeak(eventToFire)
 	{
 		if (mButtonText.empty()) throw HCMInitException("Cannot have empty button text (needs label for imgui ID system, use ## for invisible labels)");

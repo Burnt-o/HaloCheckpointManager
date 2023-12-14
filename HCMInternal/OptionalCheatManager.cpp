@@ -57,6 +57,7 @@
 #include "SwitchBSP.h"
 #include "GetCurrentBSP.h"
 #include "DisableScreenEffects.h"
+#include "HideHUD.h"
 
 #include "DIContainer.h"
 #include "map.h"
@@ -78,7 +79,7 @@ private:
 	// cheats that depend on other cheats will need to access this to check if they're already initialised before attempting to init it themselves.
 	// This is the main point of ownership keeping all the optional cheats alive. 
 	std::shared_ptr<CheatCollection> cheatCollection = std::make_shared<CheatCollection>();
-	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer, RenderEvent> dicon;
+	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer, RenderEvent, HotkeyDefinitions> dicon;
 
 
 public:
@@ -93,11 +94,12 @@ public:
 		std::string dirPath,
 		std::shared_ptr<IModalDialogRenderer> modal,
 		std::shared_ptr<ControlServiceContainer> control,
-		std::shared_ptr<RenderEvent> overlayRenderEvent)
+		std::shared_ptr<RenderEvent> overlayRenderEvent,
+		std::shared_ptr<HotkeyDefinitions> hotkeyDefinitions)
 		:
 		// create a di container with the dependencies that the cheats will need
 		// remember: you need to register types as the base interface the optionalCheats will want to resolve
-		dicon(cheatConstructor, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, std::make_shared<DirPathContainer>(dirPath), modal, control, overlayRenderEvent)
+		dicon(cheatConstructor, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, std::make_shared<DirPathContainer>(dirPath), modal, control, overlayRenderEvent, hotkeyDefinitions)
 	{ 
 		
 	}
@@ -179,11 +181,12 @@ OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>
 	std::string dirPath, 
 	std::shared_ptr<IModalDialogRenderer> modal,
 	std::shared_ptr<ControlServiceContainer> control,
-	std::shared_ptr<RenderEvent> overlayRenderEvent)
+	std::shared_ptr<RenderEvent> overlayRenderEvent,
+	std::shared_ptr<HotkeyDefinitions> hotkeyDefinitions)
 	: constructorPimpl(std::make_shared<OptionalCheatConstructor>())
 
 {
-	storePimpl = std::make_shared<OptionalCheatStore>(constructorPimpl, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, overlayRenderEvent);
+	storePimpl = std::make_shared<OptionalCheatStore>(constructorPimpl, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, overlayRenderEvent, hotkeyDefinitions);
 
 	// Ah yes a cyclic dependency? But actually the storePimpl will go in as a weak ptr, and it doesn't keep it after the method finishes anyway
 	constructorPimpl->createCheats(storePimpl, reqSer, info);

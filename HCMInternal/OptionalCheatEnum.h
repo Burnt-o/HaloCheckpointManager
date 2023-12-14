@@ -54,7 +54,8 @@ GetCurrentRNG,\
 EditPlayerViewAngle,\
 SwitchBSP,\
 GetCurrentBSP,\
-DisableScreenEffects
+DisableScreenEffects,\
+HideHUD
 
 
 enum class OptionalCheatEnum {

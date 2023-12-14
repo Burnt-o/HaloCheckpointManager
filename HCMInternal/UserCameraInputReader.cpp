@@ -7,6 +7,7 @@
 #include "PointerManager.h"
 
 #include "LinearSmoother.h"
+#include "HotkeyDefinitions.h"
 
 template <GameState::Value gameT>
 class UserCameraInputReaderImpl : public IUserCameraInputReaderImpl
@@ -19,6 +20,14 @@ private:
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+
+	// hotkeys for input
+	std::shared_ptr<RebindableHotkey> cameraTranslateUpBinding;
+	std::shared_ptr<RebindableHotkey> cameraTranslateDownBinding;
+	std::shared_ptr<RebindableHotkey> cameraRollLeftBinding;
+	std::shared_ptr<RebindableHotkey> cameraRollRightBinding;
+	std::shared_ptr<RebindableHotkey> cameraFOVIncreaseBinding;
+	std::shared_ptr<RebindableHotkey> cameraFOVDecreaseBinding;
 
 
 	// callbacks
@@ -33,6 +42,7 @@ private:
 	float mRotationSpeed;
 	float mFOVSpeed;
 
+	// MCC analog input pointer data
 	std::shared_ptr<MultilevelPointer> analogMoveLeftRight;
 	std::shared_ptr<MultilevelPointer> analogMoveForwardBack;
 	std::shared_ptr<MultilevelPointer> analogTurnLeftRightMouse;
@@ -41,6 +51,7 @@ private:
 	std::shared_ptr<MultilevelPointer> analogTurnUpDownGamepad;
 	std::shared_ptr<MultilevelPointer> isMouseInput;
 
+	// cached of above
 	float* cachedAnalogMoveLeftRight = nullptr;
 	float* cachedAnalogMoveForwardBack = nullptr;
 	float* cachedAnalogTurnLeftRightMouse = nullptr;
@@ -78,7 +89,7 @@ private:
 			if (!analogTurnLeftRightGamepad->resolve((uintptr_t*)&cachedAnalogTurnLeftRightGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRightGamepad: {}", MultilevelPointer::GetLastError()));
 			if (!analogTurnUpDownGamepad->resolve((uintptr_t*)&cachedAnalogTurnUpDownGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDownGamepad: {}", MultilevelPointer::GetLastError()));
 
-			if constexpr (gameT == GameState::Value::Halo1)
+			if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo3)
 			{
 				if (!isMouseInput->resolve((uintptr_t*)&cachedIsMouseInput)) throw HCMRuntimeException(std::format("could not resolve isMouseInput: {}", MultilevelPointer::GetLastError()));
 			}
@@ -136,10 +147,19 @@ public:
 		analogTurnLeftRightGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRightGamepad), game);
 		analogTurnUpDownGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDownGamepad), game);
 
-		if constexpr (gameT == GameState::Value::Halo1)
+		if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo3)
 		{
 			isMouseInput = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(isMouseInput), game);
 		}
+
+
+		auto& hkd = dicon.Resolve < HotkeyDefinitions>().lock()->getAllRebindableHotkeys();
+		cameraTranslateUpBinding = hkd.at(RebindableHotkeyEnum::cameraTranslateUpBinding);
+		cameraTranslateDownBinding = hkd.at(RebindableHotkeyEnum::cameraTranslateDownBinding);
+		cameraRollLeftBinding = hkd.at(RebindableHotkeyEnum::cameraRollLeftBinding);
+		cameraRollRightBinding = hkd.at(RebindableHotkeyEnum::cameraRollRightBinding);
+		cameraFOVIncreaseBinding = hkd.at(RebindableHotkeyEnum::cameraFOVIncreaseBinding);
+		cameraFOVDecreaseBinding = hkd.at(RebindableHotkeyEnum::cameraFOVDecreaseBinding);
 
 	}
 
@@ -188,13 +208,13 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	}
 
 	// Up
-	if (GetKeyState(VK_SPACE) & 0x8000)
+	if (cameraTranslateUpBinding->isCurrentlyDown())
 	{
 		positionTransform = positionTransform + (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
 	}
 
 	// Down
-	if (GetKeyState(VK_CONTROL) & 0x8000)
+	if (cameraTranslateDownBinding->isCurrentlyDown())
 	{
 		positionTransform = positionTransform - (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
 	}
@@ -226,7 +246,7 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 	float upDownTurnAmount = 0.f;
 
 
-	if constexpr (gameT == GameState::Value::Halo1)
+	if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo3)
 	{
 		if (cachedIsMouseInput == nullptr) throw HCMRuntimeException("null cachedIsMouseInput pointers!");
 
@@ -294,12 +314,12 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 	}
 
 	// Roll: means rotating around local FORWARD axis.
-	if (GetKeyState('G') & 0x8000)
+	if (cameraRollLeftBinding->isCurrentlyDown())
 	{
 		eulerRoll = eulerRoll + digitalRotationSpeed;
 	}
 
-	if (GetKeyState('T') & 0x8000)
+	if (cameraRollRightBinding->isCurrentlyDown())
 	{
 		eulerRoll = eulerRoll + (digitalRotationSpeed * -1.f);
 	}
@@ -331,19 +351,19 @@ void UserCameraInputReaderImpl<gameT>::updateFOVTransform(const FreeCameraData& 
 	// we scale by power for smoother transition
 	// increase
 	float scaleFactor = std::sqrt(fov) * 10.f;
-	if (GetKeyState(VK_NUMPAD1) & 0x8000)
+	if (cameraFOVIncreaseBinding->isCurrentlyDown())
 	{
 		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.0001f, 120.f);
 	}
 
 	// decrease
-	if (GetKeyState(VK_NUMPAD3) & 0x8000)
+	if (cameraFOVDecreaseBinding->isCurrentlyDown())
 	{
 		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.0001f, 120.f);
 	}
 }
 
-
+ 
 
 
 UserCameraInputReader::UserCameraInputReader(GameState game, IDIContainer& dicon)
@@ -358,7 +378,7 @@ UserCameraInputReader::UserCameraInputReader(GameState game, IDIContainer& dicon
 		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo2>>(game, dicon);
 		break;
 
-	/*case GameState::Value::Halo3:
+	case GameState::Value::Halo3:
 		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo3>>(game, dicon);
 		break;
 
@@ -372,7 +392,7 @@ UserCameraInputReader::UserCameraInputReader(GameState game, IDIContainer& dicon
 
 	case GameState::Value::Halo4:
 		pimpl = std::make_unique<UserCameraInputReaderImpl<GameState::Value::Halo4>>(game, dicon);
-		break;*/
+		break;
 	default:
 		throw HCMInitException("not impl yet");
 	}

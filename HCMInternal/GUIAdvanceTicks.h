@@ -13,7 +13,7 @@ private:
 public:
 
 
-	GUIAdvanceTicks(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::weak_ptr<ActionEvent> eventToFire, std::weak_ptr<Setting<int>> boundInt)
+	GUIAdvanceTicks(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::weak_ptr<ActionEvent> eventToFire, std::weak_ptr<Setting<int>> boundInt)
 		: IGUIElement(implGame, hotkey, tooltip),  mEventToFireWeak(eventToFire), mBoundIntWeak(boundInt)
 	{
 		PLOG_VERBOSE << "Constructing GUIAdvanceTicks";

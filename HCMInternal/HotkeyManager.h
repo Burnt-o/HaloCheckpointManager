@@ -1,5 +1,4 @@
 #pragma once
-#include "Hotkey.h"
 #include "HotkeyDefinitions.h"
 #include "IMessagesGUI.h"
 
@@ -12,6 +11,7 @@ private:
 
 	// services
 	std::shared_ptr<HotkeyDefinitions> mHotkeyDefinitions;
+
 
 
 	// data 

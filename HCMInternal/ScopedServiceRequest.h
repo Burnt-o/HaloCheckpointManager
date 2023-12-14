@@ -11,27 +11,7 @@ public:
 	virtual ~IProvideScopedRequests() = default;
 };
 
-class GenericScopedServiceProvider : public IProvideScopedRequests
-{
-private:
-	std::set<std::string> callersRequestingService{};
-public:
-	virtual void requestService(std::string callerID) override
-	{
-		callersRequestingService.emplace(callerID);
-	}
 
-	virtual void unrequestService(std::string callerID) override
-	{
-		callersRequestingService.erase(callerID);
-	}
-
-	bool serviceIsRequested()
-	{
-		return !callersRequestingService.empty();
-	}
-
-};
 
 
 class ScopedServiceRequest
@@ -59,4 +39,41 @@ public:
 		}
 
 	}
+};
+
+
+
+
+class GenericScopedServiceProvider : public IProvideScopedRequests, public std::enable_shared_from_this<GenericScopedServiceProvider>
+{
+private:
+	std::set<std::string> callersRequestingService{};
+	virtual void requestService(std::string callerID) override
+	{
+		callersRequestingService.emplace(callerID);
+		updateService();
+	}
+
+	virtual void unrequestService(std::string callerID) override
+	{
+		callersRequestingService.erase(callerID);
+		updateService();
+	}
+
+
+public:
+
+	std::unique_ptr<ScopedServiceRequest> makeRequest(std::string callerID)
+	{
+		return std::make_unique<ScopedServiceRequest>(shared_from_this(), callerID);
+	}
+
+	bool serviceIsRequested()
+	{
+		return !callersRequestingService.empty();
+	}
+
+	virtual void updateService() = 0;
+	virtual ~GenericScopedServiceProvider() = default;
+
 };

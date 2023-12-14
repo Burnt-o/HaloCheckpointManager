@@ -17,7 +17,7 @@ private:
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
-	GUIButtonAndInt(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::string buttonText, std::string inputLabel, std::shared_ptr<Setting<int>> optionInt, std::shared_ptr<ActionEvent> eventToFire)
+	GUIButtonAndInt(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::string buttonText, std::string inputLabel, std::shared_ptr<Setting<int>> optionInt, std::shared_ptr<ActionEvent> eventToFire)
 		: IGUIElement(implGame, hotkey, tooltip), mOptionIntWeak(optionInt), mEventToFireWeak(eventToFire), mInputLabel(inputLabel), mButtonText(buttonText)
 	{
 		PLOG_VERBOSE << "Constructing GUIButtonAndInt, name: " << getName();

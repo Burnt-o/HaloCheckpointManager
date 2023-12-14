@@ -1,9 +1,12 @@
 #pragma once
 #include "pch.h"
 #include "imgui.h"
-#include "HotkeyEnum.h"
+#include "HotkeysEnum.h"
 
-class Hotkey  //represents hotkeys for keyboard, gamepad, and mouse
+
+
+
+class RebindableHotkey  //represents hotkeys for keyboard, gamepad, and mouse that can be rebound
 {
 public:
 	constexpr static inline int bindingTextLength = 9;
@@ -11,8 +14,8 @@ public:
 	friend class HotkeyManager;
 	friend class HotkeyRendererImpl;
 private:
-	std::shared_ptr<ActionEvent> mEvent;
-	HotkeysEnum mHotkeyEnum;
+
+	RebindableHotkeyEnum mHotkeyEnum;
 	std::string mBindingText; 
 	std::string mBindingTextShort;
 
@@ -34,17 +37,6 @@ private:
 	}
 
 
-
-	
-
-
-	void invokeEvent()
-	{
-		if (!mEvent.get()) PLOG_ERROR << "event not set";
-
-
-		mEvent->operator()();
-	}
 	
 
 	static std::string generateBindingText(const std::vector<std::vector<ImGuiKey>>& bindings)
@@ -109,15 +101,26 @@ private:
 
 	// functions for serialising and deserialising are defined in HotkeyManager
 
+
+	bool bindingSetDown(const std::vector<ImGuiKey>& bindingSet)
+	{
+		if (bindingSet.empty()) return false;
+
+		for (auto key : bindingSet)
+		{
+			if (!ImGui::IsKeyDown(key)) return false;
+		}
+		return true;
+	}
+
 	public:
 		std::string_view getName() const { return magic_enum::enum_name(mHotkeyEnum); } // used in serialisation.
 		std::string_view getBindingText() const { return mBindingText; } // a user facing text string of what the hotkey is currently bound to.
 		std::string_view getBindingTextShort() const { return mBindingTextShort; } // a user facing text string of what the hotkey is currently bound to.
 
 		// actionEvent is what event to fire when hotkey activated. hotkeyName is just used for (de)serialisation. Bindings default to empty (unbound). BindingText and BindingTextShort are used in the GUI.
-		explicit Hotkey(std::shared_ptr<ActionEvent> actionEvent, HotkeysEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { })
-			: mEvent(actionEvent), 
-			mHotkeyEnum(hotkeyEnum), 
+		explicit RebindableHotkey(RebindableHotkeyEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { })
+			:mHotkeyEnum(hotkeyEnum), 
 			//mBindings(std::erase_if(defaultBindings, [](const auto& bindingSet) { return bindingSet.empty(); })), // delete empty bindings (this shouldn't happen anyway)
 			mBindings(defaultBindings), // delete empty bindings (this shouldn't happen anyway)
 			mBindingText(generateBindingText(defaultBindings)), 
@@ -126,4 +129,16 @@ private:
 		}
 
 		static inline constexpr  std::vector<std::vector<ImGuiKey>> noBindings() { return { {} }; }
+
+
+		bool isCurrentlyDown()
+		{
+				for (auto& bindingSet : getBindings())
+				{
+					if (bindingSetDown(bindingSet)) return true;
+				}
+				return false;
+		}
+
 };
+

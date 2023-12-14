@@ -8,7 +8,7 @@
 class IGUIElement
 {
 protected:
-	std::optional<HotkeysEnum> mHotkey;
+	std::optional<RebindableHotkeyEnum> mHotkey;
 	float currentHeight = 0;
 	GameState mImplGame;
 	bool requiredServicesReady = true;
@@ -19,7 +19,7 @@ public:
 	float getCurrentHeight() { return this->currentHeight; }
 	virtual void render(HotkeyRenderer&) = 0;
 
-	IGUIElement(GameState implGame, std::optional<HotkeysEnum> hotkey, ToolTipCollection tooltip)
+	IGUIElement(GameState implGame, std::optional<RebindableHotkeyEnum> hotkey, ToolTipCollection tooltip)
 		: mImplGame(implGame), mHotkey(hotkey), toolTipCollection(tooltip)
 	{
 	
@@ -29,13 +29,14 @@ public:
 
 	virtual ~IGUIElement() = default;
 
-	std::optional<HotkeysEnum> getHotkey() { return mHotkey; }
+	std::optional<RebindableHotkeyEnum> getHotkey() { return mHotkey; }
 
 	void renderTooltip()
 	{
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
 		{
 			ImGui::SetTooltip(toolTipCollection.getToolTip(mImplGame).data());
+			
 		}
 	}
 };

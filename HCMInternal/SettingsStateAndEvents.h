@@ -42,6 +42,7 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraAnchorRotationToObjectPositionHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraAnchorRotationToObjectFacingHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraAnchorFOVToObjectDistanceHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> hideHUDToggleHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -673,6 +674,12 @@ public:
 			nameof(display2DInfoOutline)
 		);
 
+	std::shared_ptr<Setting<bool>> hideHUDToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(hideHUDToggle)
+		);
 
 	std::shared_ptr<Setting<SimpleMath::Vector2>> editPlayerViewAngleVec2 = std::make_shared<Setting<SimpleMath::Vector2>>
 		(

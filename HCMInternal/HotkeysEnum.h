@@ -1,6 +1,8 @@
 #pragma once
+#include "pch.h"
 
-#define ALLHOTKEYS 	\
+// hotkeys that fire an event when going from unpressed to pressed
+#define ALL_EVENTONPRESS_HOTKEYS 	\
 toggleGUI,\
 togglePause,\
 advanceTicks,\
@@ -40,11 +42,27 @@ freeCameraAnchorFOVToObjectDistance,\
 editPlayerViewAngleSet,\
 editPlayerViewAngleAdjustHorizontal,\
 editPlayerViewAngleAdjustVertical,\
-switchBSP
+switchBSP,\
+hideHUDToggle
+
+// hotkeys that do not fire an event. Usually used for continous inputs like freecamera
+#define NOEVENT_HOTKEYS \
+cameraTranslateUpBinding,\
+cameraTranslateDownBinding,\
+cameraRollLeftBinding,\
+cameraRollRightBinding,\
+cameraFOVIncreaseBinding,\
+cameraFOVDecreaseBinding
+
+// both event and non-event hotkeys are rebindable
+#define ALL_REBINDABLE_HOTKEYS ALL_EVENTONPRESS_HOTKEYS, NOEVENT_HOTKEYS
 
 
+//enum class RebindableHotkeyEnum : int {
+//	ALL_EVENTONPRESS_HOTKEYS
+//};
 
-enum class HotkeysEnum : int {
-	ALLHOTKEYS
+
+enum class RebindableHotkeyEnum : int {
+	ALL_REBINDABLE_HOTKEYS
 };
-

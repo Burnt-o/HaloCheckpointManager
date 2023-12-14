@@ -21,6 +21,7 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mFreeCameraGameInputDisableHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mFreeCameraCameraInputDisableHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle;
+	ScopedCallback<ActionEvent> mHideHUDToggleHotkeyEventCallbackHandle;
 
 public:
 	HotkeyEventsLambdas(std::shared_ptr< SettingsStateAndEvents> settings)
@@ -37,7 +38,8 @@ public:
 		mFreeCameraHotkeyCallbackHandle(settings->freeCameraHotkeyEvent, [boolsetting = settings->freeCameraToggle]() { boolsetting->flipBoolSetting(); }),
 		mFreeCameraGameInputDisableHotkeyCallbackHandle(settings->freeCameraGameInputDisableHotkeyEvent, [boolsetting = settings->freeCameraGameInputDisable]() { boolsetting->flipBoolSetting(); }),
 		mFreeCameraCameraInputDisableHotkeyCallbackHandle(settings->freeCameraCameraInputDisableHotkeyEvent, [boolsetting = settings->freeCameraCameraInputDisable]() { boolsetting->flipBoolSetting(); }),
-		mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle(settings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent, [boolsetting = settings->freeCameraUserInputCameraMaintainVelocity]() { boolsetting->flipBoolSetting(); })
+		mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle(settings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent, [boolsetting = settings->freeCameraUserInputCameraMaintainVelocity]() { boolsetting->flipBoolSetting(); }),
+		mHideHUDToggleHotkeyEventCallbackHandle(settings->hideHUDToggleHotkeyEvent, [boolsetting = settings->hideHUDToggle]() { boolsetting->flipBoolSetting(); })
 
 	{ PLOG_DEBUG << "HotkeyEvents con"; }
 

@@ -13,8 +13,8 @@
 class HotkeyManagerImpl {
 public:
 	static bool shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet);
-	static void serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent);
-	static void deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input);
+	static void serialiseHotkey(const std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node parent);
+	static void deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input);
 };
 
 
@@ -42,7 +42,7 @@ HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::sha
 		}
 		else
 		{
-			for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->allHotkeys)
+			for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllRebindableHotkeys())
 			{
 				HotkeyManagerImpl::deserialiseHotkey(hotkey, hotkeyConfig.child(hotkey->getName().data()));
 			}
@@ -58,7 +58,7 @@ HotkeyManager::~HotkeyManager()
 	PLOG_VERBOSE << "~HotkeyManager() serialising hotkeys";
 	// serialise hotkeys
 	pugi::xml_document hotkeyConfig;
-	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getHotkeys())
+	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllRebindableHotkeys())
 	{
 		HotkeyManagerImpl::serialiseHotkey(hotkey, hotkeyConfig);
 	}
@@ -84,7 +84,7 @@ void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen
 {
 	if (mDisableHotkeysForRebinding) return;
 
-	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getHotkeys())
+	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllEventOnPressHotkeys())
 	{
 		for (auto& bindingSet : hotkey->getBindings())
 		{
@@ -119,7 +119,7 @@ bool inline HotkeyManagerImpl::shouldHotkeyActivate(const std::vector<ImGuiKey>&
 	
 
 
-void HotkeyManagerImpl::serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pugi::xml_node parent)
+void HotkeyManagerImpl::serialiseHotkey(const std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node parent)
 {
 	auto mainNode = parent.append_child(hotkey->getName().data());
 
@@ -135,7 +135,7 @@ void HotkeyManagerImpl::serialiseHotkey(const std::shared_ptr<Hotkey> hotkey, pu
 
 }
 
-void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<Hotkey> hotkey, pugi::xml_node input)
+void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input)
 {
 	if (!input)
 	{

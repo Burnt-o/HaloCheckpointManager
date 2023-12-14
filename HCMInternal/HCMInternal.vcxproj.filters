@@ -193,7 +193,7 @@
     <ClInclude Include="HotkeyManager.h">
       <Filter>Services\Hotkeys</Filter>
     </ClInclude>
-    <ClInclude Include="Hotkey.h">
+    <ClInclude Include="RebindableHotkey.h">
       <Filter>Services\Hotkeys</Filter>
     </ClInclude>
     <ClInclude Include="GUIRequiredServices.h">
@@ -250,7 +250,7 @@
     <ClInclude Include="HCM_imconfig.h">
       <Filter>Global</Filter>
     </ClInclude>
-    <ClInclude Include="HotkeyEnum.h">
+    <ClInclude Include="HotkeysEnum.h">
       <Filter>Services\Hotkeys</Filter>
     </ClInclude>
     <ClInclude Include="HotkeyRenderer.h">
@@ -590,6 +590,12 @@
     <ClInclude Include="HideMessagesService.h">
       <Filter>Services\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="HideHUD.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="EventOnPressHotkey.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -828,6 +834,9 @@
     </ClCompile>
     <ClCompile Include="DisableScreenEffects.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="HideHUD.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

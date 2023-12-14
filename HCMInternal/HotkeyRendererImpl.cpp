@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-void HotkeyRendererImpl::beginHotkeyRebindDialog(std::shared_ptr<Hotkey> hotkey)
+void HotkeyRendererImpl::beginHotkeyRebindDialog(std::shared_ptr<RebindableHotkey> hotkey)
 {
 
 	PLOG_INFO << "opening new hotkey rebind dialog for " << hotkey->getName();
@@ -19,8 +19,6 @@ void HotkeyRendererImpl::beginHotkeyRebindDialog(std::shared_ptr<Hotkey> hotkey)
 		PLOG_ERROR << "WHATTT";
 	}
 
-	// and YET neither of the above are printing. but when renderHotkeyRebindDialog called
-	// mHotkeyToManipulate is null!!! why the FUCK. why The FUCK GHUAFHASUOFHAOSUHFOASUHFOAUSHF
 
 
 	hotkeyManager->setDisableHotkeysForRebinding(true);
@@ -41,10 +39,6 @@ void HotkeyRendererImpl::beginHotkeyRebindDialog(std::shared_ptr<Hotkey> hotkey)
 
 void HotkeyRendererImpl::renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize)
 {
-	// it looks like this function can't properly access members of "this"?
-
-
-
 
 	ImGui::SetNextWindowPos(screenSize / 2, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 	ImGuiID popup_id = ImHashStr("Rebind Hotkey");
@@ -65,7 +59,7 @@ void HotkeyRendererImpl::renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize
 		for (int i = 0; i < tempBindingSet.size(); i++)
 		{
 			auto& binding = tempBindingSet.at(i);
-			std::string currentBindingText = Hotkey::generateBindingTextSingle(binding);
+			std::string currentBindingText = RebindableHotkey::generateBindingTextSingle(binding);
 
 			bool notBeingEdited = i != currentSelectedBindingForEditing;
 
@@ -193,33 +187,33 @@ void HotkeyRendererImpl::renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize
 
 
 
-void HotkeyRendererImpl::renderHotkey(std::optional<HotkeysEnum> hotkeyEnum)
+void HotkeyRendererImpl::renderHotkey(std::optional<RebindableHotkeyEnum> hotkeyEnum, int pixelWidth)
 {
 
 
 	if (!hotkeyEnum.has_value())
 	{
-		ImGui::Dummy({ 93,GUIFrameHeight }); // padding
+		ImGui::Dummy({ pixelWidth + 30.f,GUIFrameHeight }); // padding
 	}
 	else
 	{
-		if (!hotkeyDefinitions->getHotkeys().contains(hotkeyEnum.value()))
+		if (!hotkeyDefinitions->getAllRebindableHotkeys().contains(hotkeyEnum.value()))
 		{
 			LOG_ONCE(PLOG_ERROR << "Error: bad hotkey passed to beginHotkeyRebindDialog");
-			ImGui::Dummy({ 93,GUIFrameHeight }); // padding
+			ImGui::Dummy({ pixelWidth + 30.f,GUIFrameHeight }); // padding
 			return;
 		}
-		auto hotkey = hotkeyDefinitions->getHotkeys().at(hotkeyEnum.value());
+		auto hotkey = hotkeyDefinitions->getAllRebindableHotkeys().at(hotkeyEnum.value());
 
 		if (!hotkey)
 		{
 			PLOG_ERROR << "how the hell did this happen fuck";
-			ImGui::Dummy({ 93,GUIFrameHeight }); // padding
+			ImGui::Dummy({ pixelWidth + 30.f,GUIFrameHeight }); // padding
 			return;
 		}
 
 		ImGui::PushID(hotkey->getName().data());
-		ImGui::BeginChild("HotkeyChild", { 63, GUIFrameHeight });
+		ImGui::BeginChild("HotkeyChild", { (float)pixelWidth, GUIFrameHeight });
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text(hotkey->getBindingTextShort().data());
 		addTooltip(std::format("{} hotkeys: {}", hotkey->getName().data(), hotkey->getBindingText().data()).c_str());

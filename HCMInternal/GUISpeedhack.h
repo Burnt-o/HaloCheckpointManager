@@ -8,7 +8,7 @@ private:
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
-	GUISpeedhack(GameState implGame, ToolTipCollection tooltip, std::optional<HotkeysEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
+	GUISpeedhack(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::shared_ptr<SettingsStateAndEvents> settings)
 		: IGUIElement(implGame, hotkey, tooltip), mSettingsWeak(settings)
 	{
 

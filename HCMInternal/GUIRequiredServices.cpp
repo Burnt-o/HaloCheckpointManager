@@ -277,6 +277,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::SwitchBSP}
 	},
 
+				{ GUIElementEnum::hideHUDToggle,
+{OptionalCheatEnum::HideHUD}
+	},
+
 
 #ifdef HCM_DEBUG
 

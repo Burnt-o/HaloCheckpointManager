@@ -151,6 +151,7 @@
 			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((hideHUDToggle, (Halo1, Halo2)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleSet, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleVec2, (ALL_SUPPORTED_GAMES)))\
@@ -160,9 +161,9 @@
 		((editPlayerViewAngleAdjustHorizontal, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleAdjustVertical, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleAdjustFactor, (ALL_SUPPORTED_GAMES)))\
-	((freeCameraToggleGUI, (ALL_SUPPORTED_GAMES)))\
-	((freeCameraSettingsSimpleSubheading, (ALL_SUPPORTED_GAMES)))\
-	((freeCameraSettingsAdvancedSubheading, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraToggleGUI, (Halo1, Halo2)))\
+	((freeCameraSettingsSimpleSubheading, (Halo1, Halo2)))\
+	((freeCameraSettingsAdvancedSubheading, (Halo1, Halo2)))\
 		((freeCameraHideWatermark, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraHideMessages, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraThirdPersonRendering, (ALL_SUPPORTED_GAMES)))\
@@ -170,7 +171,13 @@
 		((freeCameraGameInputDisable, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraCameraInputDisable, (ALL_SUPPORTED_GAMES)))\
 		((freeCameraUserInputCameraSettings, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraBindingsPopup, (ALL_SUPPORTED_GAMES)))\
+			((freeCameraUserInputCameraBindingsSubheading, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputTranslateUpBinding, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputTranslateDownBinding, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputRollLeftBinding, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputRollRightBinding, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputFOVIncreaseBinding, (ALL_SUPPORTED_GAMES)))\
+				((freeCameraUserInputFOVDecreaseBinding, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraBaseFOV, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraTranslationSpeed, (ALL_SUPPORTED_GAMES)))\
 			((freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, (ALL_SUPPORTED_GAMES)))\

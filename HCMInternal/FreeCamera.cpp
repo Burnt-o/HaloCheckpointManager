@@ -34,6 +34,7 @@ class FreeCameraImpl : public FreeCameraImplUntemplated
 private:
 	//GameState mGame;
 	static inline FreeCameraImpl<gameT>* instance = nullptr;
+	GameState gameImpl;
 
 	// event callbacks
 	ScopedCallback <ToggleEvent> mFreeCameraToggleCallback;
@@ -156,6 +157,8 @@ private:
 
 			float frameDelta;
 			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
+
+			if (frameDelta <= 0.f) throw HCMRuntimeException(std::format("non positive frame delta?! that's unpossible! {} ", frameDelta));
 
 			// adjust by speedhack setting
 			{
@@ -325,6 +328,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 
 			if (settings->freeCameraToggle->GetValue() == false)
@@ -343,12 +349,19 @@ private:
 	{
 		try 
 		{
+			PLOG_DEBUG << "onFreeCameraUserInputCameraSetPositionFillCurrent running game: " << gameImpl.toString();
+
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 
 			if (settings->freeCameraToggle->GetValue() == false)
 			{
 				throw HCMRuntimeException("Can't do that while freecam is disabled!");
 			}
+
+			// why is this getting junk data?
 
 			settings->freeCameraUserInputCameraSetPositionVec3->GetValueDisplay() = userControlledPosition.getPositionTransformation();
 			settings->freeCameraUserInputCameraSetPositionVec3->UpdateValueWithInput();
@@ -362,6 +375,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			settings->freeCameraUserInputCameraSetPositionVec3->serialiseToClipboard();
 		}
@@ -374,6 +390,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			settings->freeCameraUserInputCameraSetPositionVec3->deserialiseFromClipboard();
 		}
@@ -386,6 +405,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 
 			if (settings->freeCameraToggle->GetValue() == false)
@@ -404,6 +426,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 
 			if (settings->freeCameraToggle->GetValue() == false)
@@ -423,6 +448,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			settings->freeCameraUserInputCameraSetRotationVec3->serialiseToClipboard();
 		}
@@ -435,6 +463,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			settings->freeCameraUserInputCameraSetRotationVec3->deserialiseFromClipboard();
 		}
@@ -448,6 +479,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			float factor = settings->freeCameraUserInputCameraTranslationSpeedChangeFactor->GetValue();
 			settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() = settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() * factor;
@@ -463,6 +497,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			float factor = settings->freeCameraUserInputCameraTranslationSpeedChangeFactor->GetValue();
 			settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() = settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() / factor;
@@ -475,9 +512,14 @@ private:
 	}
 
 
+
+
+
+
 public: 
 	FreeCameraImpl(GameState game, IDIContainer& dicon)
 		:
+		gameImpl(game),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
@@ -507,6 +549,7 @@ public:
 	
 		freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey(); }),
 		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); })
+		
 
 	{
 		instance = this;

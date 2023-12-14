@@ -1,5 +1,5 @@
 #pragma once
-#include "Hotkey.h"
+#include "RebindableHotkey.h"
 #include <pugixml.hpp>
 #include "WindowsUtilities.h" // could move to cpp file
 class SerialisableSetting

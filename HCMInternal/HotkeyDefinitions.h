@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
-#include "Hotkey.h"
+#include "RebindableHotkey.h"
+#include "EventOnPressHotkey.h"
 
 #include "SettingsStateAndEvents.h"
 #include "imgui.h"
@@ -8,12 +9,38 @@
 class HotkeyDefinitions {
 public:
 
-	HotkeyDefinitions(std::shared_ptr<SettingsStateAndEvents> settings) : mSettings(settings) 
+	HotkeyDefinitions(std::shared_ptr<SettingsStateAndEvents> settings) : mSettings(settings)
 	{
 		PLOG_DEBUG << "HotkeyDefinitions constructor";
 
+		assert(rebindableOnlyCount >= 0 && "How the fuck do you have fewer rebindable hotkeys than eventonpresshotkeys?!");
 
-		assert(std::size(allHotkeys) == hotkeyEnumCount && "Bad hotkey definition count - do you have a hotkey defined for each enum entry?");
+
+
+		// need to manually setup allRebindableHotkeys since it's too much of pain to do with initializer lists
+
+		// all rebindable inclues all eventsOnPress hotkeys
+		for (auto& [key, val] : allEventOnPressHotkeys)
+		{
+			allRebindableHotkeys.insert(std::make_pair(key, val));
+		}
+
+		// add rebindable-only data
+		for (auto& [key, val] : allRebindableOnlyHotkeysData)
+		{
+			allRebindableHotkeys.insert(std::make_pair(key, val));
+		}
+
+		PLOG_VERBOSE << "std::size(allEventOnPressHotkeys) " << std::size(allEventOnPressHotkeys);
+		PLOG_VERBOSE << "allRebindableHotkeyEnumCount " << allRebindableHotkeyEnumCount;
+		PLOG_VERBOSE << "std::size(allRebindableHotkeys) " << std::size(allRebindableHotkeys);
+		PLOG_VERBOSE << "allEventOnPressHotkeyEnumCount " << allEventOnPressHotkeyEnumCount;
+		PLOG_VERBOSE << "rebindableOnlyCount " << rebindableOnlyCount;
+
+		assert(std::size(allEventOnPressHotkeys) == allEventOnPressHotkeyEnumCount && "Bad eventonpresshotkey definition count - do you have a hotkey defined for each enum entry?");
+		assert(std::size(allRebindableHotkeys) == allRebindableHotkeyEnumCount && "Bad rebindablehotkey definition count - do you have a hotkey defined for each enum entry?");
+
+
 	}
 
 	~HotkeyDefinitions()
@@ -21,186 +48,198 @@ public:
 		PLOG_DEBUG << "~HotkeyDefinitions";
 	}
 	//friend class HotkeyManager; 
-	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>& getHotkeys() { return allHotkeys; }
+	const std::map<RebindableHotkeyEnum, std::shared_ptr<EventOnPressHotkey>>& getAllEventOnPressHotkeys() { return allEventOnPressHotkeys; }
+	const std::map<RebindableHotkeyEnum, std::shared_ptr<RebindableHotkey>>& getAllRebindableHotkeys() { return allRebindableHotkeys; }
 
 private:
 	std::shared_ptr< SettingsStateAndEvents> mSettings;
 
 	typedef std::vector<std::vector<ImGuiKey>> vvk;
-#define initHotkey(enumName, hotkeyEvent, defaultBinding) \
-		{HotkeysEnum::enumName, std::make_shared<Hotkey>\
+
+#define initEventOnPressHotkey(enumName, hotkeyEvent, defaultBinding) \
+		{RebindableHotkeyEnum::enumName, std::make_shared<EventOnPressHotkey>\
 		(hotkeyEvent,\
-		HotkeysEnum::enumName,\
+		RebindableHotkeyEnum::enumName,\
 		defaultBinding) }
 
-	static constexpr inline int hotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALLHOTKEYS));
+#define initRebindableHotkey(enumName, defaultBinding) \
+		{RebindableHotkeyEnum::enumName, std::make_shared<RebindableHotkey>\
+		(RebindableHotkeyEnum::enumName,\
+		defaultBinding) }
 
-	const std::map<HotkeysEnum, std::shared_ptr<Hotkey>>::value_type allHotkeysData[hotkeyEnumCount]
+	static constexpr inline int allEventOnPressHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_EVENTONPRESS_HOTKEYS));
+	static constexpr inline int allRebindableHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_REBINDABLE_HOTKEYS));
+	static constexpr inline int rebindableOnlyCount = allRebindableHotkeyEnumCount - allEventOnPressHotkeyEnumCount;
+
+	const std::map<RebindableHotkeyEnum, std::shared_ptr<EventOnPressHotkey>>::value_type allEventOnPressHotkeysData[allEventOnPressHotkeyEnumCount]
 	{
-		// TODO: make a macro that automates this, since the names are set up good like.
-		// TODO: bind the lambda for toggle events here instead of HotkeyEventsLambdas
 
-		initHotkey(toggleGUI,
+		initEventOnPressHotkey(toggleGUI,
 		mSettings->toggleGUIHotkeyEvent,
 		vvk{{ ImGuiKey_GraveAccent }}),
 
-		initHotkey(togglePause,
+		initEventOnPressHotkey(togglePause,
 		mSettings->togglePauseHotkeyEvent,
 		vvk{{ ImGuiKey_P }}),
 
-		initHotkey(advanceTicks,
+		initEventOnPressHotkey(advanceTicks,
 		mSettings->advanceTicksEvent,
 		vvk{}),
 
-		initHotkey(forceCheckpoint,
+		initEventOnPressHotkey(forceCheckpoint,
 		mSettings->forceCheckpointEvent,
 		vvk{{ ImGuiKey_F1 }}),
 
-		initHotkey(forceRevert,
+		initEventOnPressHotkey(forceRevert,
 		mSettings->forceRevertEvent,
 		vvk{{ ImGuiKey_F2 }}),
 
-		initHotkey(forceDoubleRevert,
+		initEventOnPressHotkey(forceDoubleRevert,
 		mSettings->forceDoubleRevertEvent,
 		vvk{{ ImGuiKey_F3 }}),
 
-		initHotkey(forceCoreSave,
+		initEventOnPressHotkey(forceCoreSave,
 		mSettings->forceCoreSaveEvent,
 		vvk{}),
 
-		initHotkey(forceCoreLoad,
+		initEventOnPressHotkey(forceCoreLoad,
 		mSettings->forceCoreLoadEvent,
 		vvk{}),
 
-		initHotkey(injectCheckpoint,
+		initEventOnPressHotkey(injectCheckpoint,
 		mSettings->injectCheckpointEvent,
 		vvk{}),
 
-		initHotkey(dumpCheckpoint,
+		initEventOnPressHotkey(dumpCheckpoint,
 		mSettings->dumpCheckpointEvent,
 		vvk{}),
 
-		initHotkey(injectCore,
+		initEventOnPressHotkey(injectCore,
 		mSettings->injectCoreEvent,
 		vvk{}),
 
-		initHotkey(dumpCore,
+		initEventOnPressHotkey(dumpCore,
 		mSettings->dumpCoreEvent,
 		vvk{}),
 
-		initHotkey(speedhack,
+		initEventOnPressHotkey(speedhack,
 		mSettings->speedhackHotkeyEvent,
 		vvk{{ ImGuiKey_F4 }}),
 
-		initHotkey(invuln,
+		initEventOnPressHotkey(invuln,
 		mSettings->invulnerabilityHotkeyEvent,
 		vvk{{ ImGuiKey_F5 }}),
 
-		initHotkey(aiFreeze,
+		initEventOnPressHotkey(aiFreeze,
 		mSettings->aiFreezeHotkeyEvent,
 		vvk{}),
 
-		initHotkey(forceTeleport,
+		initEventOnPressHotkey(forceTeleport,
 		mSettings->forceTeleportEvent,
 		vvk{}),
 
-		initHotkey(forceLaunch,
+		initEventOnPressHotkey(forceLaunch,
 		mSettings->forceLaunchEvent,
 		vvk{}),
 
-		initHotkey(medusa,
+		initEventOnPressHotkey(medusa,
 		mSettings->medusaHotkeyEvent,
 		vvk{}),
 
-		initHotkey(naturalCheckpointDisable,
+		initEventOnPressHotkey(naturalCheckpointDisable,
 		mSettings->naturalCheckpointDisableHotkeyEvent,
 		vvk{}),
 
 
-		initHotkey(infiniteAmmo,
+		initEventOnPressHotkey(infiniteAmmo,
 		mSettings->infiniteAmmoHotkeyEvent,
 		vvk{}),
 
 
-		initHotkey(bottomlessClip,
+		initEventOnPressHotkey(bottomlessClip,
 		mSettings->bottomlessClipHotkeyEvent,
 		vvk{}),
 
 
-		initHotkey(display2DInfo,
+		initEventOnPressHotkey(display2DInfo,
 		mSettings->display2DInfoHotkeyEvent,
 		vvk{}),
 
-		initHotkey(freeCamera,
+		initEventOnPressHotkey(freeCamera,
 		mSettings->freeCameraHotkeyEvent,
 		vvk{}),
 
-		initHotkey(freeCameraGameInputDisable,
+		initEventOnPressHotkey(freeCameraGameInputDisable,
 		mSettings->freeCameraGameInputDisableHotkeyEvent,
 		vvk{}),
 
-		initHotkey(freeCameraCameraInputDisable,
+			initEventOnPressHotkey(freeCameraCameraInputDisable,
 		mSettings->freeCameraCameraInputDisableHotkeyEvent,
 		vvk{}),
 
-		initHotkey(freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
+			initEventOnPressHotkey(freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
 		mSettings->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
 		vvk{}),
 
-		initHotkey(freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
+			initEventOnPressHotkey(freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
 		mSettings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
 		vvk{}),
 
-		initHotkey(freeCameraUserInputCameraSetPosition,
+			initEventOnPressHotkey(freeCameraUserInputCameraSetPosition,
 		mSettings->freeCameraUserInputCameraSetPosition,
 		vvk{}),
 
-		initHotkey(freeCameraUserInputCameraSetRotation,
+			initEventOnPressHotkey(freeCameraUserInputCameraSetRotation,
 		mSettings->freeCameraUserInputCameraSetRotation,
 		vvk{}),
 
-		initHotkey(freeCameraUserInputCameraMaintainVelocity,
+			initEventOnPressHotkey(freeCameraUserInputCameraMaintainVelocity,
 		mSettings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent,
 		vvk{}),
 
-		initHotkey(freeCameraUserInputCameraSetVelocity,
+			initEventOnPressHotkey(freeCameraUserInputCameraSetVelocity,
 		mSettings->freeCameraUserInputCameraSetVelocity,
 		vvk{}),
 
-			initHotkey(freeCameraAnchorPositionToObjectPosition,
+			initEventOnPressHotkey(freeCameraAnchorPositionToObjectPosition,
 				mSettings->freeCameraAnchorPositionToObjectPositionHotkeyEvent,
 				vvk{}),
 
-			initHotkey(freeCameraAnchorPositionToObjectRotation,
+			initEventOnPressHotkey(freeCameraAnchorPositionToObjectRotation,
 				mSettings->freeCameraAnchorPositionToObjectRotationHotkeyEvent,
 				vvk{}),
 
-			initHotkey(freeCameraAnchorRotationToObjectPosition,
+			initEventOnPressHotkey(freeCameraAnchorRotationToObjectPosition,
 				mSettings->freeCameraAnchorRotationToObjectPositionHotkeyEvent,
 				vvk{}),
 
-			initHotkey(freeCameraAnchorRotationToObjectFacing,
+			initEventOnPressHotkey(freeCameraAnchorRotationToObjectFacing,
 				mSettings->freeCameraAnchorRotationToObjectFacingHotkeyEvent,
 				vvk{}),
 
-			initHotkey(freeCameraAnchorFOVToObjectDistance,
+			initEventOnPressHotkey(freeCameraAnchorFOVToObjectDistance,
 				mSettings->freeCameraAnchorFOVToObjectDistanceHotkeyEvent,
 				vvk{}),
 
-			initHotkey(editPlayerViewAngleSet,
+			initEventOnPressHotkey(editPlayerViewAngleSet,
 				mSettings->editPlayerViewAngleSet,
 				vvk{}),
 
-			initHotkey(editPlayerViewAngleAdjustHorizontal,
+			initEventOnPressHotkey(editPlayerViewAngleAdjustHorizontal,
 				mSettings->editPlayerViewAngleAdjustHorizontal,
 				vvk{}),
 
-			initHotkey(editPlayerViewAngleAdjustVertical,
+			initEventOnPressHotkey(editPlayerViewAngleAdjustVertical,
 				mSettings->editPlayerViewAngleAdjustVertical,
 				vvk{}),
 
-			initHotkey(switchBSP,
+			initEventOnPressHotkey(switchBSP,
 				mSettings->switchBSPEvent,
+				vvk{}),
+
+
+			initEventOnPressHotkey(hideHUDToggle,
+				mSettings->hideHUDToggleHotkeyEvent,
 				vvk{}),
 
 
@@ -208,8 +247,34 @@ private:
 
 	};
 
-	 std::map<HotkeysEnum, std::shared_ptr<Hotkey>> allHotkeys = std::map<HotkeysEnum, std::shared_ptr<Hotkey>>
-		(std::begin(allHotkeysData), std::end(allHotkeysData) );
+	const std::map<RebindableHotkeyEnum, std::shared_ptr<RebindableHotkey>>::value_type allRebindableOnlyHotkeysData[rebindableOnlyCount]
+	{
+
+						initRebindableHotkey(cameraTranslateUpBinding,
+			(vvk{{ ImGuiKey_Space}, { ImGuiKey_GamepadFaceDown }})),
+
+						initRebindableHotkey(cameraTranslateDownBinding,
+			(vvk{{ ImGuiKey_LeftCtrl }, { ImGuiKey_GamepadL3}})),
+
+						initRebindableHotkey(cameraRollLeftBinding,
+			(vvk{{ ImGuiKey_G }, { ImGuiKey_GamepadR1}})),
+
+						initRebindableHotkey(cameraRollRightBinding,
+			(vvk{{ ImGuiKey_T }, { ImGuiKey_GamepadL1 }})),
+
+						initRebindableHotkey(cameraFOVIncreaseBinding,
+			(vvk{{ ImGuiKey_Y }, { ImGuiKey_GamepadL2 }})),
+
+						initRebindableHotkey(cameraFOVDecreaseBinding,
+			(vvk{{ ImGuiKey_H }, { ImGuiKey_GamepadR2 }})),
+
+
+	};
+
+	 std::map<RebindableHotkeyEnum, std::shared_ptr<EventOnPressHotkey>> allEventOnPressHotkeys = std::map<RebindableHotkeyEnum, std::shared_ptr<EventOnPressHotkey>>
+		(std::begin(allEventOnPressHotkeysData), std::end(allEventOnPressHotkeysData) );
+
+	 std::map<RebindableHotkeyEnum, std::shared_ptr<RebindableHotkey>> allRebindableHotkeys; // defined in constructor
 
 	 friend class HotkeyManager;
 
