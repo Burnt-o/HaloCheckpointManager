@@ -29,7 +29,7 @@
 #include "HotkeyEventsLambdas.h"
 #include "ModalDialogRenderer.h"
 #include "ControlServiceContainer.h"
-//#include "Lapua.h"
+#include "Lapua.h"
 
 class App {
 
@@ -86,7 +86,7 @@ public:
 
      
             auto d3d = std::make_shared<D3D11Hook>(ptr); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
-            auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
+            auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent, d3d->vmtpresentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
 
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
@@ -125,7 +125,7 @@ public:
 
             auto hb = std::make_shared<HeartbeatTimer>(sharedMem, settings); PLOGV << "hb init";
 
-            //auto lap = std::make_shared<Lapua>(dllHandle); PLOGV << "lapua init";
+            auto lap = std::make_shared<Lapua>(dllHandle); PLOGV << "lapua init";
 
             d3d->beginHook();
 

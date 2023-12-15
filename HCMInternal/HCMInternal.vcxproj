@@ -519,7 +519,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <Image Include="lapua.png" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Beatrice.wav" />
+    <Media Include="lapua.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

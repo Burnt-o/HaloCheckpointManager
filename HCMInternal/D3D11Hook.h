@@ -43,7 +43,7 @@ private:
 	 //static inline std::mutex mDestructionGuard{}; // Protects against Singleton destruction while hooks are executing
 	 static inline std::atomic_bool presentHookRunning = false;
 	 // Our hook functions
-	 static DX11Present newDX11Present;
+	 static DX11Present newvmtDX11Present;
 	 static DX11ResizeBuffers newDX11ResizeBuffers;
 
 	 // For a VMT hook we need to keep track of the original functions and the VMT entry containing the function
@@ -77,6 +77,10 @@ public:
 
 	// Callback for present rendering
 	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
+
+	// Callback for vmt-guarenteed present rendering
+	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> vmtpresentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
+
 
 	// Callback for window resize
 	std::shared_ptr<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>> resizeBuffersHookEvent = std::make_shared<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>>();

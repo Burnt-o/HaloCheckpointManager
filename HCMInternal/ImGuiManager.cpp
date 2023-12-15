@@ -262,7 +262,7 @@ ImGuiManager::~ImGuiManager()
 
 
 
-void ImGuiManager::lapuaTest(SimpleMath::Vector2 ss)
+void ImGuiManager::lapua(SimpleMath::Vector2 ss)
 {
 	constexpr auto strength = 0x01FFFFFF;
 	constexpr auto zero = ImVec2(0, 0);
@@ -271,6 +271,7 @@ void ImGuiManager::lapuaTest(SimpleMath::Vector2 ss)
 
 }
 
+// might be vmt or might be inline
 void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, IDXGISwapChain* pSwapChain, ID3D11RenderTargetView* pMainRenderTargetView)
 {
 	LOG_ONCE(PLOG_DEBUG << "ImGuiManager::onPresentHookEvent running");
@@ -322,7 +323,6 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 	// invoke callback of anything that wants to render with ImGui
 
 	ImGui::PushFont(mRescalableMonospacedFont);
-	lapuaTest(screenSize);
 	BackgroundRenderEvent->operator()(screenSize); // for overlays.
 	ImGui::PopFont();
 	MidgroundRenderEvent->operator()(screenSize);
@@ -338,3 +338,61 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 }
 
 
+// guarenteed to be vmt
+void ImGuiManager::onVMTPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, IDXGISwapChain* pSwapChain, ID3D11RenderTargetView* pMainRenderTargetView)
+{
+	LOG_ONCE(PLOG_DEBUG << "ImGuiManager::onVMTPresentHookEvent running");
+	std::unique_lock<std::mutex> lock(mDestructionGuard);
+#pragma region init
+
+
+	if (!instance->m_isImguiInitialized)
+	{
+		PLOG_INFO << "Initializing ImGuiManager";
+		try
+		{
+			instance->initializeImGuiResources(pDevice, pDeviceContext, pSwapChain, pMainRenderTargetView);
+			instance->m_isImguiInitialized = true;
+		}
+		catch (HCMInitException& ex)
+		{
+			PLOG_FATAL << "Failed to initialize ImGui, info: " << std::endl
+				<< ex.what() << std::endl
+				<< "HCM will now automatically close down";
+			GlobalKill::killMe();
+			return;
+		}
+	}
+#pragma endregion init
+
+	//TODO: check if this is necessary
+	MSG msg;
+	while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+	{
+		::TranslateMessage(&msg);
+		::DispatchMessage(&msg);
+
+	}
+
+
+	// Start ImGui frame
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	GImGui->NavWindowingTarget = nullptr; // prevent navinputs altogether
+
+	// I don't 100% understand what this does, but it must be done before we try to render
+	pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, NULL);
+	auto screenSize = getScreenSize();
+
+
+	// invoke callback of anything that wants to render with ImGui
+	lapua(screenSize);
+	// Finish ImGui frame
+	ImGui::EndFrame();
+	ImGui::Render();
+
+	// Render it !
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}

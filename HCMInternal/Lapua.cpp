@@ -32,8 +32,9 @@ private:
 				if (!RESULT)
 				{
 					PLOG_DEBUG << "lapua service failure";
-					throw HCMRuntimeException("lapua service failure, see log file");
+					lapuaGood = false;
 				}
+
 			}
 			else
 			{
@@ -54,7 +55,7 @@ private:
 		HGLOBAL hRes;
 		// Find the resource. 
 
-		hResInfo = FindResourceA(HCMInternalModuleHandle, MAKEINTRESOURCEA(102), lpTypeName);
+		hResInfo = FindResourceA(HCMInternalModuleHandle, MAKEINTRESOURCEA(104), lpTypeName);
 		if (hResInfo == NULL)
 		{
 			PLOG_ERROR << "hResInfo null";

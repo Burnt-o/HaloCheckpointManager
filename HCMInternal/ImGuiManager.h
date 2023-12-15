@@ -30,8 +30,12 @@ private:
 	// D3D11Hook->presentHookEvent handle
 	ScopedCallback<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentEventCallback;
 	eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>::Handle presentEventCallbackTest;
+
+	ScopedCallback<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> vmtpresentEventCallback;
+
 	// What we run when presentHookEvent is invoked
 	void onPresentHookEvent(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*);
+	void onVMTPresentHookEvent(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*);
 
 	// initialise resources in the first onPresentHookEvent
 	void initializeImGuiResources(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*);
@@ -43,12 +47,13 @@ private:
 
 	eventpp::ScopedRemover<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> testPresentCallback;
 
-	void lapuaTest(SimpleMath::Vector2 ss);
+	void lapua(SimpleMath::Vector2 ss);
 public:
 
-	explicit ImGuiManager(std::shared_ptr<D3D11Hook> d3d, std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentEvent) 
+	explicit ImGuiManager(std::shared_ptr<D3D11Hook> d3d, std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentEvent, std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> vmtpresentEvent)
 		: m_d3d(d3d),
-		presentEventCallback(presentEvent, [this](ID3D11Device* a, ID3D11DeviceContext* b, IDXGISwapChain* c, ID3D11RenderTargetView* d) { onPresentHookEvent(a, b, c, d); })
+		presentEventCallback(presentEvent, [this](ID3D11Device* a, ID3D11DeviceContext* b, IDXGISwapChain* c, ID3D11RenderTargetView* d) { onPresentHookEvent(a, b, c, d); }),
+		vmtpresentEventCallback(presentEvent, [this](ID3D11Device* a, ID3D11DeviceContext* b, IDXGISwapChain* c, ID3D11RenderTargetView* d) { onVMTPresentHookEvent(a, b, c, d); })
 	{
 		if (instance != nullptr)
 		{

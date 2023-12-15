@@ -864,7 +864,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Beatrice.wav">
+    <Media Include="lapua.wav">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

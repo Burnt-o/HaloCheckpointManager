@@ -13,4 +13,6 @@ private:
 public:
 	Lapua(HMODULE dllHandle);
 	~Lapua();
+
+	static inline bool lapuaGood = true;
 };

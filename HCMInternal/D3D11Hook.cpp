@@ -289,9 +289,8 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 }
 
 // static 
-HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+HRESULT D3D11Hook::newvmtDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
-
 
 	ScopedAtomicBool lock(presentHookRunning);
 	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
@@ -335,6 +334,9 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	}
 	LOG_ONCE(PLOG_VERBOSE << "invoking presentHookEvent callback");
 	// Invoke the callback
+	d3d->vmtpresentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
+
+	// todo; add check if vmt rendering. do this if so, return original otherwise.
 	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
 
 	LOG_ONCE(PLOG_VERBOSE << "calling original present function");
@@ -531,7 +533,7 @@ void D3D11Hook::beginHook()
 	PLOG_DEBUG << "rewriting present pointer";
 	// Rewrite the present pointer to instead point to our newPresent
 	// Need access tho!
-	patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
+	patch_pointer(m_ppPresent, (uintptr_t)&newvmtDX11Present);
 	// resizeBuffers too
 	patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
 }
