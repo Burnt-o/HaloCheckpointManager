@@ -858,4 +858,14 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="lapua.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Beatrice.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

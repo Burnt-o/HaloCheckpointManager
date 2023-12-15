@@ -35,4 +35,6 @@ public:
 		PLOG_DEBUG << "GlobalKill::reviveMe";
 		GlobalKill::get().mKillFlag = false;
 	}
+
+	static inline HMODULE HCMInternalModuleHandle = NULL;
 };

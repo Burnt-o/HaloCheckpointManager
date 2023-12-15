@@ -29,7 +29,7 @@
 #include "HotkeyEventsLambdas.h"
 #include "ModalDialogRenderer.h"
 #include "ControlServiceContainer.h"
-#include "Lapua.h"
+//#include "Lapua.h"
 
 class App {
 
@@ -37,6 +37,8 @@ class App {
 public:
 	App(HMODULE dllHandle)
 	{
+        GlobalKill::HCMInternalModuleHandle = dllHandle;
+
         std::shared_ptr<UnhandledExceptionHandler> unhandled; // init later, but we need it to be the last thing to go out of scope
 
         // these are needed in the init exception catch block, so declared here
@@ -123,7 +125,7 @@ public:
 
             auto hb = std::make_shared<HeartbeatTimer>(sharedMem, settings); PLOGV << "hb init";
 
-            auto lap = std::make_shared<Lapua>(dllHandle); PLOGV << "lapua init";
+            //auto lap = std::make_shared<Lapua>(dllHandle); PLOGV << "lapua init";
 
             d3d->beginHook();
 
