@@ -15,4 +15,5 @@ public:
 	~Lapua();
 
 	static inline bool lapuaGood = true;
+	static inline bool lapuaGood2 = true;
 };

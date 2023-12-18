@@ -70,7 +70,7 @@ void ModuleInlineHook::attach()
 	uintptr_t pOriginalFunction;
 	if (!this->mOriginalFunction->resolve(&pOriginalFunction))
 	{
-		PLOG_ERROR << "attach failed: pOriginalFunction pointer failed to resolve";
+		PLOG_ERROR << "attach failed: pOriginalFunction pointer failed to resolve" << MultilevelPointer::GetLastError();
 		return;
 	}
 
@@ -99,7 +99,7 @@ void ModuleMidHook::attach()
 	uintptr_t pOriginalFunction;
 	if (!this->mOriginalFunction->resolve(&pOriginalFunction))
 	{
-		PLOG_ERROR << "attach failed: pOriginalFunction pointer failed to resolve";
+		PLOG_ERROR << "attach failed: pOriginalFunction pointer failed to resolve: " << MultilevelPointer::GetLastError();
 		return;
 	}
 

@@ -251,6 +251,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HideWatermarkService.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
     <ClInclude Include="Lapua.h" />
+    <ClInclude Include="Renderer2D.h" />
+    <ClInclude Include="OBSBypassManager.h" />
     <ClInclude Include="SwitchBSP.h" />
     <ClInclude Include="ThirdPersonRendering.h" />
     <ClInclude Include="UserCameraInputReader.h" />
@@ -422,6 +424,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetCurrentRNG.cpp" />
     <ClCompile Include="HideHUD.cpp" />
     <ClCompile Include="Lapua.cpp" />
+    <ClCompile Include="Renderer2D.cpp" />
     <ClCompile Include="SwitchBSP.cpp" />
     <ClCompile Include="ThirdPersonRendering.cpp" />
     <ClCompile Include="UserCameraInputReader.cpp" />
@@ -511,12 +514,15 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="dds1.bin" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HCMInternal.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="lapua.dds" />
     <Image Include="lapua.png" />
+    <Image Include="lapua2.dds" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="lapua.wav" />

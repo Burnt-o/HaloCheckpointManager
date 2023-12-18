@@ -3,100 +3,9 @@
 #include "GlobalKill.h"
 #include "ProggyVectorRegularFont.h"
 #include "imgui_internal.h"
-#define STB_IMAGE_IMPLEMENTATION
-//#define STBI_NO_STDIO
-#define STBI_ONLY_PNG
-#include "stb_image.h"
-
-// Simple helper function to load an image into a DX11 texture with common settings
-bool LoadTextureFromMemory(int ID, ID3D11Device* pDevice, ID3D11ShaderResourceView** out_srv, int* out_width, int* out_height)
-{
-
-	BOOL bRtn;
-	LPVOID lpRes;
-	HRSRC hResInfo;
-	HGLOBAL hRes;
-	// Find the resource. 
-
-	hResInfo = FindResourceA(GlobalKill::HCMInternalModuleHandle, MAKEINTRESOURCEA(ID), "PNG");
-	if (hResInfo == NULL)
-	{
-		PLOG_ERROR << "hResInfo null";
-		return false;
-	}
 
 
-	// Load the resource. 
 
-	hRes = LoadResource(GlobalKill::HCMInternalModuleHandle, hResInfo);
-	if (hRes == NULL)
-	{
-		PLOG_ERROR << "hRes null";
-		return false;
-	}
-
-
-	// Lock the resource
-	lpRes = LockResource(hRes);
-
-	if (lpRes == NULL)
-	{
-		FreeResource(hRes);
-		PLOG_ERROR << "lpRes null";
-		return false;
-	}
-
-	auto hSize = SizeofResource(GlobalKill::HCMInternalModuleHandle, hResInfo);
-
-
-	// Load from memory into a raw RGBA buffer
-	int image_width = 0;
-	int image_height = 0;
-	//unsigned char* image_data = stbi_load(filename, &image_width, &image_height, NULL, 4);
-	unsigned char* image_data = stbi_load_from_memory((stbi_uc*)lpRes, hSize, &image_width, &image_height, NULL, 4);
-
-	if (image_data == NULL)
-		return false;
-
-	// Create texture
-	D3D11_TEXTURE2D_DESC desc;
-	ZeroMemory(&desc, sizeof(desc));
-	desc.Width = image_width;
-	desc.Height = image_height;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.SampleDesc.Count = 1;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.CPUAccessFlags = 0;
-
-	ID3D11Texture2D* pTexture = NULL;
-	D3D11_SUBRESOURCE_DATA subResource;
-	subResource.pSysMem = image_data;
-	subResource.SysMemPitch = desc.Width * 4;
-	subResource.SysMemSlicePitch = 0;
-	pDevice->CreateTexture2D(&desc, &subResource, &pTexture);
-
-	// Create texture view
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	ZeroMemory(&srvDesc, sizeof(srvDesc));
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = desc.MipLevels;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	pDevice->CreateShaderResourceView(pTexture, &srvDesc, out_srv);
-	pTexture->Release();
-
-	*out_width = image_width;
-	*out_height = image_height;
-	stbi_image_free(image_data);
-
-	// Free the resource
-	FreeResource(hRes);
-
-	return true;
-}
 
 
 ImGuiManager* ImGuiManager::instance = nullptr;
@@ -112,7 +21,7 @@ LRESULT __stdcall ImGuiManager::mNewWndProc(const HWND hWnd, UINT uMsg, WPARAM w
 
 	switch (uMsg)
 	{
-		//case WM_CLOSE:
+	//case WM_CLOSE:
 	case WM_DESTROY:
 	case WM_NCDESTROY:
 		GlobalKill::killMe();
@@ -147,7 +56,6 @@ LRESULT __stdcall ImGuiManager::mNewWndProc(const HWND hWnd, UINT uMsg, WPARAM w
 
 }
 
-ID3D11ShaderResourceView* my_texture = NULL;
 void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, IDXGISwapChain* pSwapChain, ID3D11RenderTargetView* pMainRenderTargetView)
 {
 	PLOG_VERBOSE << "initializeImGuiResources";
@@ -221,12 +129,12 @@ void ImGuiManager::initializeImGuiResources(ID3D11Device* pDevice, ID3D11DeviceC
 	io.Fonts->AddFontDefault();
 	mRescalableMonospacedFont = io.Fonts->AddFontFromMemoryCompressedTTF(ProggyVectorRegularFont_compressed_data, ProggyVectorRegularFont_compressed_size, 15.f * 2);
 
-	int my_image_width = 0;
-	int my_image_height = 0;
+	//int my_image_width = 0;
+	//int my_image_height = 0;
 
-	bool ret = LoadTextureFromMemory(103, pDevice, &my_texture, &my_image_width, &my_image_height);
-	// todo; overlay bypass stuff based on return value
-	IM_ASSERT(ret);
+	//bool ret = LoadTextureFromMemory(103, pDevice, &my_texture, &my_image_width, &my_image_height);
+	//// todo; overlay bypass stuff based on return value
+	//IM_ASSERT(ret);
 
 
 }
@@ -262,14 +170,14 @@ ImGuiManager::~ImGuiManager()
 
 
 
-void ImGuiManager::lapuaTest(SimpleMath::Vector2 ss)
-{
-	constexpr auto strength = 0x01FFFFFF;
-	constexpr auto zero = ImVec2(0, 0);
-	constexpr auto one = ImVec2(1, 1);
-	ImGui::GetBackgroundDrawList()->AddImage(my_texture, zero, ss, zero, one, strength);
-
-}
+//void ImGuiManager::lapuaTest(SimpleMath::Vector2 ss)
+//{
+//	constexpr auto strength = 0x01FFFFFF;
+//	constexpr auto zero = ImVec2(0, 0);
+//	constexpr auto one = ImVec2(1, 1);
+//	ImGui::GetBackgroundDrawList()->AddImage(my_texture, zero, ss, zero, one, strength);
+//
+//}
 
 void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, IDXGISwapChain* pSwapChain, ID3D11RenderTargetView* pMainRenderTargetView)
 {
@@ -322,7 +230,7 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 	// invoke callback of anything that wants to render with ImGui
 
 	ImGui::PushFont(mRescalableMonospacedFont);
-	lapuaTest(screenSize);
+	//lapuaTest(screenSize);
 	BackgroundRenderEvent->operator()(screenSize); // for overlays.
 	ImGui::PopFont();
 	MidgroundRenderEvent->operator()(screenSize);

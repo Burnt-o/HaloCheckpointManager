@@ -97,6 +97,16 @@ IDB_PNG1                PNG                     "lapua.png"
 
 IDR_WAVE1               WAVE                    "lapua.wav"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DDS
+//
+
+IDR_DDS2                DDS                     "lapua.dds"
+
+IDR_DDS3                DDS                     "lapua2.dds"
+
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
 

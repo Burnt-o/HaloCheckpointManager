@@ -37,6 +37,27 @@
 			</Offsets>
 		</Version>
 	</VersionedEntry>
+
+
+	<!--<VersionedEntry Name="dxgiInternalPresentFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0">
+			<Module>dxgi.dll</Module>
+			<Offsets>
+				<Offset>0x15E0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>-->
+
+
+	<VersionedEntry Name="dxgiInternalPresentFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0">
+			<Module>graphics-hook64.dll</Module>
+			<Offsets>
+				<Offset>0x40EC0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
 	<!--#endregion DirectX-->
 	
 	

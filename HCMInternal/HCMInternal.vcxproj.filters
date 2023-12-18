@@ -599,6 +599,12 @@
     <ClInclude Include="Lapua.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="OBSBypassManager.h">
+      <Filter>Services\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer2D.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -844,9 +850,15 @@
     <ClCompile Include="Lapua.cpp">
       <Filter>Services</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer2D.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="dds1.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="InternalPointerData.xml">
@@ -862,6 +874,8 @@
     <Image Include="lapua.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="lapua.dds" />
+    <Image Include="lapua2.dds" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="lapua.wav">

@@ -5,6 +5,10 @@
 #include <dxgi.h>
 #pragma comment(lib, "dxgi")
 
+#include "Renderer2D.h"
+
+
+
 D3D11Hook* D3D11Hook::instance = nullptr;
 SimpleMath::Vector2 D3D11Hook::mScreenSize{1920, 1080};
 SimpleMath::Vector2 D3D11Hook::mScreenCenter{960, 540};
@@ -275,7 +279,13 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 	mScreenSize = { ((float)desc.Width), ((float)desc.Height) };
 	mScreenCenter = mScreenSize / 2;
 
+#ifdef HCM_DEBUG
+	DXGI_SWAP_CHAIN_DESC sd;
+	pSwapChain->GetDesc(&sd);
 
+	PLOG_DEBUG << "swapchain image format: " << sd.BufferDesc.Format;
+	// result: DXGI_FORMAT_R8G8B8A8_UNORM
+#endif
 
 	PLOG_INFO << "Creating render target view";
 	auto CreateRenderTargetViewResult = m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pMainRenderTargetView);
@@ -300,6 +310,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	if (!d3d)
 	{
 		PLOG_FATAL << "d3d instance was null at newDX11Present";
+		return 0;
 	}
 
 	//auto guard = d3d->shared_from_this();
@@ -333,17 +344,49 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 		}
 
 	}
-	LOG_ONCE(PLOG_VERBOSE << "invoking presentHookEvent callback");
+	LOG_ONCE(PLOG_VERBOSE << "invoking mandatoryPresentHookEvent callback");
 	// Invoke the callback
-	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
+
+
+	if (!d3d->dxgiInternalPresentHook || d3d->dxgiInternalPresentHook->isHookInstalled() == false)
+	{
+		LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via vmt");
+		d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
+	}
+	else
+	{
+		Renderer2D::render(d3d->m_pDevice, d3d->m_pDeviceContext, mScreenSize, d3d->m_pMainRenderTargetView);
+	}
+
+
 
 	LOG_ONCE(PLOG_VERBOSE << "calling original present function");
 	// Call original present
-	return d3d->m_pOriginalPresent(pSwapChain, SyncInterval, Flags);
+
+	auto hr = d3d->m_pOriginalPresent(pSwapChain, SyncInterval, Flags);
+
+	return hr;
 
 }
 
+HRESULT D3D11Hook::newDX11PresentOBSBypass(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+{
+	LOG_ONCE(PLOGV << "newDX11PresentOBSBypass");
 
+	ScopedAtomicBool lock(presentHookRunning);
+	auto d3d = instance;
+	if (!d3d)
+	{
+		PLOG_FATAL << "d3d instance was null at newDX11PresentOBSBypass";
+		return 0;
+	}
+
+	LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via inline obs bypass");
+	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
+	auto hr = d3d->dxgiInternalPresentHook->getInlineHook().call<HRESULT, IDXGISwapChain*, UINT, UINT>(pSwapChain, SyncInterval, Flags);
+
+	return hr;
+}
 
 // static
 HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
@@ -435,6 +478,9 @@ D3D11Hook::~D3D11Hook()
 		patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
 		// resizeBuffers too
 		patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
+
+		if (dxgiInternalPresentHook)
+			dxgiInternalPresentHook.reset();
 
 		PLOG_INFO << "Successfully unpatched present pointer!";
 		//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
@@ -534,4 +580,53 @@ void D3D11Hook::beginHook()
 	patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
 	// resizeBuffers too
 	patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
+}
+
+
+
+
+void D3D11Hook::setOBSBypass(bool enabled)
+{
+	PLOGV << "D3D11Hook::setOBSBypass called with value: " << enabled;
+	try
+	{
+		if (enabled)
+		{
+			if (presentHookRunning)
+			{
+				PLOG_INFO << "Waiting for presentHook to finish execution";
+				presentHookRunning.wait(true);
+			}
+
+			PLOG_INFO << "Freezing threads";
+			safetyhook::ThreadFreezer threadFreezer; // freeze threads while we create hook
+
+			lockOrThrow(pointerManagerWeak, ptr);
+			auto dxgiInternalPresentFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(dxgiInternalPresentFunction));
+
+			// starts attached
+			//dxgiInternalPresentHook = ModuleInlineHook::make(L"dxgi.dll", dxgiInternalPresentFunction, newDX11PresentOBSBypass, true);
+			dxgiInternalPresentHook = ModuleInlineHook::make(L"graphics-hook64.dll", dxgiInternalPresentFunction, newDX11PresentOBSBypass, true);
+		}
+		else
+		{
+			if (!dxgiInternalPresentHook) return; // don't need to reset if it's already reset
+
+			if (presentHookRunning)
+			{
+				PLOG_INFO << "Waiting for presentHook to finish execution";
+				presentHookRunning.wait(true);
+			}
+
+			PLOG_INFO << "Freezing threads";
+			safetyhook::ThreadFreezer threadFreezer; // freeze threads while we reset hook
+
+			dxgiInternalPresentHook.reset();
+		}
+
+	}
+	catch (HCMInitException ex)
+	{
+		throw HCMRuntimeException(ex);
+	}
 }

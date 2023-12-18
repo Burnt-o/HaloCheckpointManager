@@ -46,6 +46,9 @@ private:
 	static DX11Present newDX11Present;
 	static DX11ResizeBuffers newDX11ResizeBuffers;
 
+	static DX11Present newDX11PresentOBSBypass;
+	static DX11Present mandatoryManualRender;
+
 	// For a VMT hook we need to keep track of the original functions and the VMT entry containing the function
 	// Pointers to original functions
 	DX11Present* m_pOriginalPresent = nullptr;
@@ -55,6 +58,8 @@ private:
 	DX11ResizeBuffers** m_ppResizeBuffers = nullptr;
 
 	std::weak_ptr<PointerManager> pointerManagerWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
+
+	std::shared_ptr<ModuleInlineHook> dxgiInternalPresentHook; // for obs bypass
 
 
 	// D3D data
@@ -78,6 +83,8 @@ public:
 	// Callback for present rendering
 	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
 
+
+
 	// Callback for window resize
 	std::shared_ptr<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>> resizeBuffersHookEvent = std::make_shared<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>>();
 
@@ -92,4 +99,5 @@ public:
 
 	void beginHook();
 
+	void setOBSBypass(bool enabled);
 };

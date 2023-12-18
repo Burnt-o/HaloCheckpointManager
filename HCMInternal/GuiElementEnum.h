@@ -52,6 +52,7 @@
 		((pauseAlsoFreesCursorGUI, (ALL_GAMES_AND_MAINMENU)))\
 		((pauseAlsoBlocksInputGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((showGUIFailuresGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((OBSBypassToggleGUI, (ALL_GAMES_AND_MAINMENU)))\
 ((saveManagementHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceRevertGUI, (ALL_SUPPORTED_GAMES)))\

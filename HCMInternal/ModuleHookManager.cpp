@@ -111,7 +111,7 @@ void ModuleHookManager::postModuleLoad_UpdateHooks(std::wstring_view libPath)
 // For debugging/logging the below functions, logs only if the affected module is one of the ones we care about
 #ifdef HCM_DEBUG
 
-std::set<std::wstring> gameDLLNames{ L"halo1.dll", L"halo2.dll", L"halo3.dll", L"halo3odst.dll", L"haloreach.dll", L"halo4.dll" };
+std::set<std::wstring> gameDLLNames{ L"halo1.dll", L"halo2.dll", L"halo3.dll", L"halo3odst.dll", L"haloreach.dll", L"halo4.dll", L"graphics-hook64.dll" };
 
 #define printGameDLL(dllname) if (gameDLLNames.contains(dllname)) \
 						{	\
@@ -122,18 +122,28 @@ std::set<std::wstring> gameDLLNames{ L"halo1.dll", L"halo2.dll", L"halo3.dll", L
 
 
 
+std::wstring filenameFromFilepath(std::wstring in)
+{
+	if (in.contains('\\') == false) return in;
+
+	std::wstring out = in.substr(in.find_last_of(L"/\\") + 1);
+	return out;
+}
+
+
+
 // the hook-redirected functions
 HMODULE ModuleHookManager::newLoadLibraryA(LPCSTR lpLibFileName) {
 	auto result =mHook_LoadLibraryA.call< HMODULE, LPCSTR > (lpLibFileName);
 
-	auto wLibFileName = str_to_wstr(lpLibFileName);
+	auto newLib = filenameFromFilepath(str_to_wstr(lpLibFileName));
 
 #ifdef HCM_DEBUG
-	printGameDLL(wLibFileName)
+	printGameDLL(newLib)
 #endif
 
-	ModuleCache::addModuleToCache(wLibFileName, result);
-	postModuleLoad_UpdateHooks(wLibFileName);
+	ModuleCache::addModuleToCache(newLib, result);
+	postModuleLoad_UpdateHooks(newLib);
 
 	return result;
 }
@@ -141,12 +151,14 @@ HMODULE ModuleHookManager::newLoadLibraryA(LPCSTR lpLibFileName) {
 HMODULE ModuleHookManager::newLoadLibraryW(LPCWSTR lpLibFileName) {
 	auto result = mHook_LoadLibraryW.call<HMODULE, LPCWSTR>(lpLibFileName);
 
+	auto newLib = filenameFromFilepath(lpLibFileName);
+
 #ifdef HCM_DEBUG
-	printGameDLL(lpLibFileName)
+	printGameDLL(newLib)
 #endif
 
-	ModuleCache::addModuleToCache(lpLibFileName, result);
-	postModuleLoad_UpdateHooks(lpLibFileName);
+	ModuleCache::addModuleToCache(newLib, result);
+	postModuleLoad_UpdateHooks(newLib);
 
 	return result;
 }
@@ -154,14 +166,16 @@ HMODULE ModuleHookManager::newLoadLibraryW(LPCWSTR lpLibFileName) {
 HMODULE ModuleHookManager::newLoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags) {
 	auto result = mHook_LoadLibraryExA.call<HMODULE, LPCSTR, HANDLE, DWORD>(lpLibFileName, hFile, dwFlags);
 
-	auto wLibFileName = str_to_wstr(lpLibFileName);
+	auto newLib = filenameFromFilepath(str_to_wstr(lpLibFileName));
+
+
 
 #ifdef HCM_DEBUG
-	printGameDLL(wLibFileName)
+	printGameDLL(newLib)
 #endif
 ;
-	ModuleCache::addModuleToCache(wLibFileName, result);
-	postModuleLoad_UpdateHooks(wLibFileName);
+	ModuleCache::addModuleToCache(newLib, result);
+	postModuleLoad_UpdateHooks(newLib);
 
 	return result;
 }
@@ -169,11 +183,13 @@ HMODULE ModuleHookManager::newLoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile,
 HMODULE ModuleHookManager::newLoadLibraryExW(LPCWSTR lpLibFileName, HANDLE hFile, DWORD dwFlags) {
 	auto result = mHook_LoadLibraryExW.call<HMODULE, LPCWSTR, HANDLE, DWORD>(lpLibFileName, hFile, dwFlags);
 
+	auto newLib = filenameFromFilepath(lpLibFileName);
+
 #ifdef HCM_DEBUG
-	printGameDLL(lpLibFileName)
+	printGameDLL(newLib)
 #endif
-	ModuleCache::addModuleToCache(lpLibFileName, result);
-	postModuleLoad_UpdateHooks(lpLibFileName);
+	ModuleCache::addModuleToCache(newLib, result);
+	postModuleLoad_UpdateHooks(newLib);
 
 	return result;
 }
@@ -189,6 +205,7 @@ BOOL ModuleHookManager::newFreeLibrary(HMODULE hLibModule) {
 	auto filename = path.filename().generic_wstring();
 
 #ifdef HCM_DEBUG
+	PLOGV << "newFreeLibrary";
 	printGameDLL(filename)
 #endif
 

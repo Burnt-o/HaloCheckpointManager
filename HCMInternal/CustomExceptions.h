@@ -5,7 +5,7 @@
 
 class HCMExceptionBase : public std::exception
 {
-private:
+protected:
 	std::string message = "error message not set";
 	std::string sourceLocation;
 	std::string stackTrace;
@@ -70,7 +70,17 @@ class HCMInitException : public HCMExceptionBase { using HCMExceptionBase::HCMEx
 
 // Runtime exceptions 
 // These will always be passed to the RuntimeExceptionHandler
-class HCMRuntimeException : public HCMExceptionBase { using HCMExceptionBase::HCMExceptionBase; };
+class HCMRuntimeException : public HCMExceptionBase 
+{ 
+	using HCMExceptionBase::HCMExceptionBase; 
+public:
+	HCMRuntimeException(HCMInitException& init) // convert from init to runtime
+		: HCMExceptionBase(init.what())
+	{
+		this->sourceLocation = init.source();
+		this->stackTrace = init.trace();
+	}
+};
 
 // thrown on Serialisation/deserialisation failures
 // Also passed to RuntimeExceptionHandler

@@ -1043,7 +1043,12 @@ public:
 		);
 
 
-
+	std::shared_ptr<Setting<bool>> OBSBypassToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(OBSBypassToggle)
+		);
 
 	enum class FreeCameraObjectTrackEnum
 	{

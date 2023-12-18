@@ -147,6 +147,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						createNestedElement(GUIElementEnum::togglePauseGUI),
 						createNestedElement(GUIElementEnum::togglePauseSettingsSubheading),
 						createNestedElement(GUIElementEnum::showGUIFailuresGUI),
+						createNestedElement(GUIElementEnum::OBSBypassToggleGUI),
 						}));
 
 				case GUIElementEnum::toggleGUIHotkeyGUI:
@@ -203,6 +204,11 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 				case GUIElementEnum::showGUIFailuresGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
 						(game, ToolTipCollection("Shows a modal list of optional cheat services that failed to initialise, sorted by game"), std::nullopt, "Show optional cheat service failures", settings->showGUIFailures));
+
+				case GUIElementEnum::OBSBypassToggleGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Causes HCMs GUI to not be captured by recording software like OBS"), std::nullopt, "Bypass OBS", settings->OBSBypassToggle));
+
 
 			case GUIElementEnum::saveManagementHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

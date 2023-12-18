@@ -43,7 +43,6 @@ private:
 
 	eventpp::ScopedRemover<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> testPresentCallback;
 
-	void lapuaTest(SimpleMath::Vector2 ss);
 public:
 
 	explicit ImGuiManager(std::shared_ptr<D3D11Hook> d3d, std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentEvent)
