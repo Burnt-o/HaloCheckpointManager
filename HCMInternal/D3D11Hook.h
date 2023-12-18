@@ -14,48 +14,48 @@
 // TODO: move shit to impl so we can hind all the headers
 
 // Define the DX functions we're going to hook
- extern "C" typedef HRESULT __stdcall DX11Present(IDXGISwapChain * pSwapChain, UINT SyncInterval, UINT Flags);
- extern "C" typedef HRESULT __stdcall DX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
+extern "C" typedef HRESULT __stdcall DX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
+extern "C" typedef HRESULT __stdcall DX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
 
- //SCALAR TO ImVec4 OPERATIONS
- inline ImVec4 operator + (const ImVec4& v1, float s) { return ImVec4(v1.x + s, v1.y + s, v1.z + s, v1.w + s); }
- inline ImVec4 operator - (const ImVec4& v1, float s) { return ImVec4(v1.x - s, v1.y - s, v1.z - s, v1.w - s); }
- inline ImVec4 operator * (const ImVec4& v1, float s) { return ImVec4(v1.x * s, v1.y * s, v1.z * s, v1.w * s); }
- inline ImVec4 operator / (const ImVec4& v1, float s) { return ImVec4(v1.x / s, v1.y / s, v1.z / s, v1.w / s); }
-
-
- //ImVec2 TO ImVec4 OPERATIONS
- inline ImVec4 operator + (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w); }
- inline ImVec4 operator - (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w); }
- inline ImVec4 operator * (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w); }
- inline ImVec4 operator / (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w); }
+//SCALAR TO ImVec4 OPERATIONS
+inline ImVec4 operator + (const ImVec4& v1, float s) { return ImVec4(v1.x + s, v1.y + s, v1.z + s, v1.w + s); }
+inline ImVec4 operator - (const ImVec4& v1, float s) { return ImVec4(v1.x - s, v1.y - s, v1.z - s, v1.w - s); }
+inline ImVec4 operator * (const ImVec4& v1, float s) { return ImVec4(v1.x * s, v1.y * s, v1.z * s, v1.w * s); }
+inline ImVec4 operator / (const ImVec4& v1, float s) { return ImVec4(v1.x / s, v1.y / s, v1.z / s, v1.w / s); }
 
 
- // Singleton: on construction, attaches hooks (VMT hook so our stuff shows up in OBS etc) to the games Present and ResizeBuffers function.
- // The hooks will invoke presentHookEvent for other classes to listen to.
- // On destruction, hooks will be unattached.
+//ImVec2 TO ImVec4 OPERATIONS
+inline ImVec4 operator + (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w); }
+inline ImVec4 operator - (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w); }
+inline ImVec4 operator * (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w); }
+inline ImVec4 operator / (const ImVec4& v1, const ImVec4& v2) { return ImVec4(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w); }
 
- 
- class D3D11Hook : public std::enable_shared_from_this<D3D11Hook>
+
+// Singleton: on construction, attaches hooks (VMT hook so our stuff shows up in OBS etc) to the games Present and ResizeBuffers function.
+// The hooks will invoke presentHookEvent for other classes to listen to.
+// On destruction, hooks will be unattached.
+
+
+class D3D11Hook : public std::enable_shared_from_this<D3D11Hook>
 {
 private:
-	 static D3D11Hook* instance; 	// Private Singleton instance so static hooks/callbacks can access
-	 //static inline std::mutex mDestructionGuard{}; // Protects against Singleton destruction while hooks are executing
-	 static inline std::atomic_bool presentHookRunning = false;
-	 // Our hook functions
-	 static DX11Present newvmtDX11Present;
-	 static DX11ResizeBuffers newDX11ResizeBuffers;
+	static D3D11Hook* instance; 	// Private Singleton instance so static hooks/callbacks can access
+	//static inline std::mutex mDestructionGuard{}; // Protects against Singleton destruction while hooks are executing
+	static inline std::atomic_bool presentHookRunning = false;
+	// Our hook functions
+	static DX11Present newDX11Present;
+	static DX11ResizeBuffers newDX11ResizeBuffers;
 
-	 // For a VMT hook we need to keep track of the original functions and the VMT entry containing the function
-	 // Pointers to original functions
-	 DX11Present* m_pOriginalPresent = nullptr;
-	 DX11ResizeBuffers* m_pOriginalResizeBuffers = nullptr;
-	 // Pointers to the games pointers to original function (we redirect these to create hook)
-	 DX11Present** m_ppPresent = nullptr;
-	 DX11ResizeBuffers** m_ppResizeBuffers = nullptr;
+	// For a VMT hook we need to keep track of the original functions and the VMT entry containing the function
+	// Pointers to original functions
+	DX11Present* m_pOriginalPresent = nullptr;
+	DX11ResizeBuffers* m_pOriginalResizeBuffers = nullptr;
+	// Pointers to the games pointers to original function (we redirect these to create hook)
+	DX11Present** m_ppPresent = nullptr;
+	DX11ResizeBuffers** m_ppResizeBuffers = nullptr;
 
-	 std::weak_ptr<PointerManager> pointerManagerWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
-	
+	std::weak_ptr<PointerManager> pointerManagerWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
+
 
 	// D3D data
 	ID3D11Device* m_pDevice = nullptr;
@@ -77,10 +77,6 @@ public:
 
 	// Callback for present rendering
 	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> presentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
-
-	// Callback for vmt-guarenteed present rendering
-	std::shared_ptr<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>> vmtpresentHookEvent = std::make_shared<eventpp::CallbackList<void(ID3D11Device*, ID3D11DeviceContext*, IDXGISwapChain*, ID3D11RenderTargetView*)>>();
-
 
 	// Callback for window resize
 	std::shared_ptr<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>> resizeBuffersHookEvent = std::make_shared<eventpp::CallbackList<void(SimpleMath::Vector2 newScreenSize)>>();

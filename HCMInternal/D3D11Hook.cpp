@@ -10,8 +10,8 @@ SimpleMath::Vector2 D3D11Hook::mScreenSize{1920, 1080};
 SimpleMath::Vector2 D3D11Hook::mScreenCenter{960, 540};
 
 struct rgba {
-    float r, g, b, a;
-    rgba(float ir, float ig, float ib, float ia) : r(ir), g(ig), b(ib), a(ia) {}
+	float r, g, b, a;
+	rgba(float ir, float ig, float ib, float ia) : r(ir), g(ig), b(ib), a(ia) {}
 };
 
 
@@ -40,10 +40,10 @@ enum class IDXGISwapChainVMT {
 const std::map<D3D_DRIVER_TYPE, std::string> driverToString
 {
 	{ D3D_DRIVER_TYPE_HARDWARE, "D3D_DRIVER_TYPE_HARDWARE"},
-	{ D3D_DRIVER_TYPE_WARP, "D3D_DRIVER_TYPE_WARP"},
-	{ D3D_DRIVER_TYPE_REFERENCE, "D3D_DRIVER_TYPE_REFERENCE"},
-	{ D3D_DRIVER_TYPE_SOFTWARE, "D3D_DRIVER_TYPE_SOFTWARE"},
-	{ D3D_DRIVER_TYPE_UNKNOWN, "D3D_DRIVER_TYPE_UNKNOWN"},
+	{ D3D_DRIVER_TYPE_WARP, "D3D_DRIVER_TYPE_WARP" },
+	{ D3D_DRIVER_TYPE_REFERENCE, "D3D_DRIVER_TYPE_REFERENCE" },
+	{ D3D_DRIVER_TYPE_SOFTWARE, "D3D_DRIVER_TYPE_SOFTWARE" },
+	{ D3D_DRIVER_TYPE_UNKNOWN, "D3D_DRIVER_TYPE_UNKNOWN" },
 
 };
 
@@ -70,7 +70,7 @@ void D3D11Hook::CreateDummySwapchain(IDXGISwapChain*& pDummySwapchain, ID3D11Dev
 	sd.SampleDesc.Quality = 0;
 
 
-	
+
 	// the following attempts at D3D11CreateDeviceAndSwapChain differ in the driver_type param
 	// https://learn.microsoft.com/en-us/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_driver_type
 
@@ -193,16 +193,16 @@ void D3D11Hook::CreateDummySwapchain(IDXGISwapChain*& pDummySwapchain, ID3D11Dev
 	{
 		PLOG_INFO << "Attemtping D3D11CreateDeviceAndSwapChain with adapter: " << std::hex << adapter;
 
-			HRESULT hr = D3D11CreateDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_UNKNOWN, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION, &sd, &pDummySwapchain, &pDummyDevice, &featLevel, nullptr);
-			if (SUCCEEDED(hr))
-			{
-				PLOG_INFO << "Succesfully created dummy swapchain with " << driverToString.at(D3D_DRIVER_TYPE_UNKNOWN);
-				return;
-			}
-			else
-			{
-				logSwapChainFailure(std::format("4: failed to create dummy d3d device and swapchain with driver type {}, error: {:x}", driverToString.at(D3D_DRIVER_TYPE_UNKNOWN), (ULONG)hr));
-			}
+		HRESULT hr = D3D11CreateDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_UNKNOWN, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION, &sd, &pDummySwapchain, &pDummyDevice, &featLevel, nullptr);
+		if (SUCCEEDED(hr))
+		{
+			PLOG_INFO << "Succesfully created dummy swapchain with " << driverToString.at(D3D_DRIVER_TYPE_UNKNOWN);
+			return;
+		}
+		else
+		{
+			logSwapChainFailure(std::format("4: failed to create dummy d3d device and swapchain with driver type {}, error: {:x}", driverToString.at(D3D_DRIVER_TYPE_UNKNOWN), (ULONG)hr));
+		}
 
 	}
 
@@ -283,14 +283,15 @@ void D3D11Hook::initializeD3Ddevice(IDXGISwapChain* pSwapChain)
 	pBackBuffer->Release();
 	if (CreateRenderTargetViewResult || !m_pMainRenderTargetView) throw HCMInitException(std::format("Failed to get MainRenderTargetView, error code: {}", CreateRenderTargetViewResult));
 
-	
-	
+
+
 
 }
 
 // static 
-HRESULT D3D11Hook::newvmtDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
+
 
 	ScopedAtomicBool lock(presentHookRunning);
 	//std::unique_lock<std::mutex> lock(mDestructionGuard); // Protects against D3D11Hook singleton destruction while hooks are executing
@@ -303,7 +304,7 @@ HRESULT D3D11Hook::newvmtDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterv
 
 	//auto guard = d3d->shared_from_this();
 
-	
+
 
 
 	if (!d3d->isD3DdeviceInitialized)
@@ -330,13 +331,10 @@ HRESULT D3D11Hook::newvmtDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterv
 
 
 		}
-		
+
 	}
 	LOG_ONCE(PLOG_VERBOSE << "invoking presentHookEvent callback");
 	// Invoke the callback
-	d3d->vmtpresentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
-
-	// todo; add check if vmt rendering. do this if so, return original otherwise.
 	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
 
 	LOG_ONCE(PLOG_VERBOSE << "calling original present function");
@@ -409,7 +407,7 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 	// Grab the new windows size
 	mScreenSize = { (float)Width, (float)Height };
 	mScreenCenter = mScreenSize / 2;
-	
+
 	// fire screen resize event
 	d3d->resizeBuffersHookEvent->operator()(mScreenSize);
 
@@ -441,15 +439,15 @@ D3D11Hook::~D3D11Hook()
 		PLOG_INFO << "Successfully unpatched present pointer!";
 		//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
 	}
-		// D3D resource releasing:
-		// need to call release on the device https://learn.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3dswapchain9-getdevice
+	// D3D resource releasing:
+	// need to call release on the device https://learn.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3dswapchain9-getdevice
 
-		safe_release(m_pDevice);
-		safe_release(m_pDeviceContext);
-		safe_release(m_pMainRenderTargetView);
-	
+	safe_release(m_pDevice);
+	safe_release(m_pDeviceContext);
+	safe_release(m_pMainRenderTargetView);
+
 	instance = nullptr;
-	
+
 }
 
 
@@ -492,7 +490,7 @@ void D3D11Hook::beginHook()
 	}
 	catch (HCMRuntimeException ex)
 	{
-		PLOG_ERROR << "Failed to lock pointer Manager service somehow?! Using dummy swapchain instead (may cause crash with overlays eg RTSS): " << std::endl << ex.what();  
+		PLOG_ERROR << "Failed to lock pointer Manager service somehow?! Using dummy swapchain instead (may cause crash with overlays eg RTSS): " << std::endl << ex.what();
 	}
 
 
@@ -533,7 +531,7 @@ void D3D11Hook::beginHook()
 	PLOG_DEBUG << "rewriting present pointer";
 	// Rewrite the present pointer to instead point to our newPresent
 	// Need access tho!
-	patch_pointer(m_ppPresent, (uintptr_t)&newvmtDX11Present);
+	patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
 	// resizeBuffers too
 	patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
 }
