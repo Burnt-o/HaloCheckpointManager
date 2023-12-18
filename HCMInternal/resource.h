@@ -2,10 +2,8 @@
 // Microsoft Visual C++ generated include file.
 // Used by HCMInternal.rc
 //
-#define IDB_PNG1                        103
 #define IDR_WAVE1                       104
 #define IDR_DDS1                        105
-#define IDR_DDS2                        106
 #define IDR_DDS3                        107
 
 // Next default values for new objects

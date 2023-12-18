@@ -856,9 +856,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
-    <None Include="dds1.bin">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="InternalPointerData.xml">
@@ -871,9 +868,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="lapua.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="lapua.dds" />
     <Image Include="lapua2.dds" />
   </ItemGroup>

@@ -514,14 +514,12 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
-    <None Include="dds1.bin" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HCMInternal.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="lapua.dds" />
-    <Image Include="lapua.png" />
     <Image Include="lapua2.dds" />
   </ItemGroup>
   <ItemGroup>
