@@ -605,6 +605,9 @@
     <ClInclude Include="Renderer2D.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="OBSBypassCheck.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

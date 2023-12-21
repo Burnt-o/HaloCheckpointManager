@@ -29,6 +29,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::pauseAlsoBlocksInputGUI,
 			{OptionalCheatEnum::TogglePause, OptionalCheatEnum::ToggleBlockInput}
 	},
+		{GUIElementEnum::OBSBypassToggleGUI,
+			{OptionalCheatEnum::OBSBypassCheck}
+	},
+
 	{GUIElementEnum::forceCheckpointGUI, 
 			{OptionalCheatEnum::ForceCheckpoint} 
 	},

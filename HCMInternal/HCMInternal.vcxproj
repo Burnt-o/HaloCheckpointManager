@@ -251,6 +251,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HideWatermarkService.h" />
     <ClInclude Include="IUpdateCameraTransform.h" />
     <ClInclude Include="Lapua.h" />
+    <ClInclude Include="OBSBypassCheck.h" />
     <ClInclude Include="Renderer2D.h" />
     <ClInclude Include="OBSBypassManager.h" />
     <ClInclude Include="SwitchBSP.h" />

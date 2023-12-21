@@ -6,6 +6,7 @@
 #pragma comment(lib, "dxgi")
 
 #include "Renderer2D.h"
+#include "Lapua.h"
 
 
 
@@ -352,9 +353,11 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	{
 		LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via vmt");
 		d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
+		Lapua::shouldRun = false;
 	}
 	else
 	{
+		Lapua::shouldRun = true;
 		Renderer2D::render(d3d->m_pDevice, d3d->m_pDeviceContext, mScreenSize, d3d->m_pMainRenderTargetView);
 	}
 

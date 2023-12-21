@@ -55,7 +55,8 @@ EditPlayerViewAngle,\
 SwitchBSP,\
 GetCurrentBSP,\
 DisableScreenEffects,\
-HideHUD
+HideHUD,\
+OBSBypassCheck
 
 
 enum class OptionalCheatEnum {

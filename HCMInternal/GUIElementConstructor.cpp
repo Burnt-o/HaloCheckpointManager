@@ -207,7 +207,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 				case GUIElementEnum::OBSBypassToggleGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, ToolTipCollection("Causes HCMs GUI to not be captured by recording software like OBS"), std::nullopt, "Bypass OBS", settings->OBSBypassToggle));
+						(game, ToolTipCollection("Causes HCMs GUI to not be captured by recording software like OBS"), std::nullopt, "Bypass OBS Capture", settings->OBSBypassToggle));
 
 
 			case GUIElementEnum::saveManagementHeadingGUI:

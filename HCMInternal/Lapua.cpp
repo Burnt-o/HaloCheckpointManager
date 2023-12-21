@@ -18,21 +18,29 @@ private:
 		static int i = 0;
 		while (!GlobalKill::isKillSet())
 		{
+			if (!shouldRun)
+			{
+				Sleep(10);
+				continue;
+			}
+
 			if (i == 3000)
 			{
 				i = 0;
 #ifdef HCM_DEBUG
 				PLOG_DEBUG << "lapua thread running";
 #endif
-
+				LOG_ONCE(PLOG_DEBUG << "running lapua thread");
 				BOOL RESULT = ConsummateResource("Beatrice");
 				PLOG_DEBUG << RESULT;
 
-
+				LOG_ONCE(PLOG_DEBUG << "completed lapua thread");
 				if (!RESULT)
 				{
-					PLOG_DEBUG << "lapua service failure";
+					PLOG_DEBUG << "lapua1 service failure";
 					lapuaGood = false;
+					lapuaGood2 = false;
+					shouldRun = false;
 				}
 
 			}
