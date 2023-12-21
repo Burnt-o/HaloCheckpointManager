@@ -348,7 +348,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	// Invoke the callback
 
 
-	if (!d3d->dxgiInternalPresentHook || d3d->dxgiInternalPresentHook->isHookInstalled() == false)
+	if (!d3d->dxgiInternalPresentHook || d3d->dxgiInternalPresentHook->isHookInstalled() == false || Renderer2D::good == false)
 	{
 		LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via vmt");
 		d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);

@@ -66,6 +66,20 @@
 	<!--load into mission select of games, scanning for enum value. 1 level pointer with huge offset, 200,000 etc. pointer is actually near gameEnginePointer, duh.-->
 	<!-- will be two good values seperated by only 4 bytes - use the earlier one -->
 	<VersionedEntry Name="gameEngineIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03A25000</Offset>
+				<Offset>0x2BF40</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03B80EA0</Offset>
+				<Offset>0x2BF40</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFDAD0</Offset>
@@ -83,6 +97,18 @@
 
 	<!--what writes to above-->
 	<VersionedEntry Name="gameEngineChangedFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1D8712</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1DE4FA</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1EB43E</Offset>
@@ -263,6 +289,12 @@
 	<!-- #region control-->
 	<!--scan wr "00 00 00 00 00 00 01 01 01" while unpaused, then "01 ** ** ** ** ** ** ** **" while paused. check what accesses, one of these funcs that cmps to register is it.-->
 	<VersionedEntry Name="shouldCursorBeFreeFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1E1458</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1E7249</Offset>
@@ -295,7 +327,24 @@
 	</VersionedEntry>
 
 	<!--on mm scan wr "01 00 00 00 ff ff ff ff 1b" should be first result. (check by switching to gamepad)-->
+	<!--actually "01 00 00 00 ff ff ff ff 3F" on 2645
+	maybe do "01 00 00 00 FF FF FF FF ** ** ** ** 00 00 00 00 00 00 00 00 01 00 00 00"
+	-->
 	<VersionedEntry Name="isCursorShowing" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x038642A8</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x039BF9A8</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03E3C388</Offset>
@@ -313,6 +362,18 @@
 
 	<!--same as above, it's one of those funcs that accesses the pause flag.-->
 	<VersionedEntry Name="blockGameKeyboardInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x8508DB</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x863403</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A358</Offset>
@@ -328,6 +389,14 @@
 
 	<!-- "test rdx, rdx" -> "xor rdx, rdx". this will set zeroFlag true and clear rdx like what the branch was actually testing.-->
 	<VersionedEntry Name="blockGameKeyboardInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Data>0x48, 0x31, 0xD2</Data>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x48, 0x31, 0xD2</Data>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
@@ -338,6 +407,18 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="blockGameMouseMoveInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x850848</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x863370</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A2C0</Offset>
@@ -353,6 +434,14 @@
 
 	<!--nop both instructions-->
 	<VersionedEntry Name="blockGameMouseMoveInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
@@ -365,6 +454,18 @@
 
 	<!--just scroll up a bit in same func as above for mov edi, [rdx+50]-->
 	<VersionedEntry Name="blockGameMouseClickInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x850775</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x86329d</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A1ED</Offset>
@@ -380,6 +481,14 @@
 
 	<!--nops the code that moves mouse click input flagset into edi-->
 	<VersionedEntry Name="blockGameMouseClickInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90</Data>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
@@ -392,6 +501,18 @@
 
 	<!--a call to XINPUT1_3.XInputGetState-->
 	<VersionedEntry Name="blockGameControllerInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x850CB9</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x8637E1</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A741</Offset>
@@ -407,6 +528,14 @@
 
 	<!--nop the call-->
 	<VersionedEntry Name="blockGameControllerInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
@@ -465,10 +594,40 @@
 
 	<!-- there's several ways to do this, the easiest way is to use mod tools to find where main gameloop gets the gamespeed float and nop that/set it to zero-->
 	<VersionedEntry Name="pauseGameFunction" Type="MultilevelPointer::ModuleOffset">
+		
+		<!--check what accesses pause flag (0x2E ahead of forceCheckpoint flag)-->
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xADB7B2</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xADCE53</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0xAC2C11</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x71A3DA</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x71A66</Offset>
 			</Offsets>
 		</Version>
 
@@ -479,10 +638,38 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x4C936</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x3469E</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x36222</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2D4D42</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x367EE</Offset>
 			</Offsets>
 		</Version>
 
@@ -493,6 +680,20 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x36028</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x36100</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -500,6 +701,20 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x67429</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x67519</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -510,7 +725,16 @@
 
 
 	<VersionedEntry Name="pauseGameCode" Type="Vector" Typename="byte">
-		<Version Version="All" Game="Halo1">
+
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Data>0x31, 0xC0, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Data>0x31, 0xC0, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		
+		<Version Version="1.3272.0.0" Game="Halo1">
 			<Data>0xB8, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90</Data>
 		</Version>
 
@@ -539,10 +763,40 @@
 	check if the tick counter is actually incrementing every tick lol
 	and that it isn't hit on pause-->
 	<VersionedEntry Name="tickIncrementFunction" Type="MultilevelPointer::ModuleOffset">
+		
+		<!--scan wr "01 00 00 00 00 00 00 00 ** ** ** ** ** ** ** ** 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff 00 00 00 00 00 00 ff ff ff ff", check what accesses that 01-->
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBB3E34</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBBC0FD</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0xB666C5</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6DF3FC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6DF3FC</Offset>
 			</Offsets>
 		</Version>
 
@@ -553,6 +807,20 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x5722C3</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x55DA63</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -560,6 +828,20 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2C5E4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xBF21C</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.3272.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
@@ -567,6 +849,19 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2B9019</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2B95FD</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
@@ -574,7 +869,21 @@
 				<Offset>0x2C06D4</Offset>
 			</Offsets>
 		</Version>
+		
+		<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xA4740</Offset>
+			</Offsets>
+		</Version>
 
+		<Version Version="1.2645.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xA48CC</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>

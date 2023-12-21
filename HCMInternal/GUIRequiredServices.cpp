@@ -105,6 +105,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{GUIElementEnum::invulnGUI,
 			{OptionalCheatEnum::Invulnerability} 
 	},
+	{ GUIElementEnum::invulnerabilitySettingsSubheading,
+	{OptionalCheatEnum::Invulnerability}
+	},
 	{GUIElementEnum::aiFreezeGUI,
 			{OptionalCheatEnum::AIFreeze}
 	},
@@ -183,6 +186,15 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{ GUIElementEnum::display2DInfoToggleGUI,
 		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
 	},
+
+	{ GUIElementEnum::display2DInfoSettingsInfoSubheading,
+{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
+	},
+
+		{ GUIElementEnum::display2DInfoSettingsVisualSubheading,
+{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
+	},
+
 
 
 			{ GUIElementEnum::display2DInfoShowAggro,

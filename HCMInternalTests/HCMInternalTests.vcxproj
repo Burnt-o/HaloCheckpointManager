@@ -112,12 +112,22 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(VcpkgRoot)\installed\x64-windows-static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3d11.lib;libcurl.lib;version.lib;Ws2_32.lib;Wldap32.Lib;Crypt32.Lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CustomBuildStep>
+      <Command>xcopy /y $(SolutionDir)HCMInternal\InternalPointerData.xml  $(SolutionDir)HCMExternal\bin\x64\Debug\net7.0-windows\InternalPointerData.xml</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying internal pointer data</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>nonexistentfiletoforcebuildeventtoalwaysrun</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -168,6 +178,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <BuildStlModules>false</BuildStlModules>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -181,28 +192,46 @@
     <ClCompile Include="..\HCMInternal\AdvanceTicks.cpp" />
     <ClCompile Include="..\HCMInternal\AIFreeze.cpp" />
     <ClCompile Include="..\HCMInternal\BlockGameInput.cpp" />
+    <ClCompile Include="..\HCMInternal\BlockPlayerCharacterInput.cpp" />
+    <ClCompile Include="..\HCMInternal\BottomlessClip.cpp" />
+    <ClCompile Include="..\HCMInternal\CheckpointInjectionLogger.cpp" />
+    <ClCompile Include="..\HCMInternal\Conduit_ITCFont.cpp" />
     <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
+    <ClCompile Include="..\HCMInternal\DisableScreenEffects.cpp" />
+    <ClCompile Include="..\HCMInternal\DisplayPlayerInfo.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
+    <ClCompile Include="..\HCMInternal\EditPlayerViewAngle.cpp" />
     <ClCompile Include="..\HCMInternal\ForceLaunch.cpp" />
     <ClCompile Include="..\HCMInternal\ForceTeleport.cpp" />
+    <ClCompile Include="..\HCMInternal\FreeCamera.cpp" />
     <ClCompile Include="..\HCMInternal\FreeMCCCursor.cpp" />
     <ClCompile Include="..\HCMInternal\GameTickEventHook.cpp" />
+    <ClCompile Include="..\HCMInternal\GetAggroData.cpp" />
+    <ClCompile Include="..\HCMInternal\GetBipedsVehicleDatum.cpp" />
+    <ClCompile Include="..\HCMInternal\GetCurrentBSP.cpp" />
     <ClCompile Include="..\HCMInternal\GetCurrentDifficulty.cpp" />
     <ClCompile Include="..\HCMInternal\GetCurrentLevelCode.cpp" />
+    <ClCompile Include="..\HCMInternal\GetCurrentRNG.cpp" />
+    <ClCompile Include="..\HCMInternal\GetGameCameraData.cpp" />
     <ClCompile Include="..\HCMInternal\GetHavokAnchorPoint.cpp" />
     <ClCompile Include="..\HCMInternal\GetHavokComponent.cpp" />
     <ClCompile Include="..\HCMInternal\GetMCCVersion.cpp" />
+    <ClCompile Include="..\HCMInternal\GetNextObjectDatum.cpp" />
     <ClCompile Include="..\HCMInternal\GetObjectAddress.cpp" />
+    <ClCompile Include="..\HCMInternal\GetObjectHealth.cpp" />
     <ClCompile Include="..\HCMInternal\GetObjectPhysics.cpp" />
+    <ClCompile Include="..\HCMInternal\GetObjectTagName.cpp" />
     <ClCompile Include="..\HCMInternal\GetPlayerDatum.cpp" />
     <ClCompile Include="..\HCMInternal\GetPlayerViewAngle.cpp" />
+    <ClCompile Include="..\HCMInternal\GetTagName.cpp" />
     <ClCompile Include="..\HCMInternal\GUIElementConstructor.cpp" />
     <ClCompile Include="..\HCMInternal\GUIRequiredServices.cpp" />
     <ClCompile Include="..\HCMInternal\GUIServiceInfo.cpp" />
     <ClCompile Include="..\HCMInternal\HCMInternalGUI.cpp" />
     <ClCompile Include="..\HCMInternal\HCM_imconfig.cpp" />
     <ClCompile Include="..\HCMInternal\HeartbeatTimer.cpp" />
+    <ClCompile Include="..\HCMInternal\HideHUD.cpp" />
     <ClCompile Include="..\HCMInternal\HotkeyManager.cpp" />
     <ClCompile Include="..\HCMInternal\HotkeyRendererImpl.cpp" />
     <ClCompile Include="..\HCMInternal\ImGuiManager.cpp" />
@@ -214,7 +243,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\InfiniteAmmo.cpp" />
     <ClCompile Include="..\HCMInternal\Invulnerability.cpp" />
+    <ClCompile Include="..\HCMInternal\Lapua.cpp" />
+    <ClCompile Include="..\HCMInternal\LinearSmoother.cpp" />
     <ClCompile Include="..\HCMInternal\Logging.cpp" />
     <ClCompile Include="..\HCMInternal\MCCStateHook.cpp" />
     <ClCompile Include="..\HCMInternal\Medusa.cpp" />
@@ -229,14 +261,20 @@
     <ClCompile Include="..\HCMInternal\OptionalCheatManager.cpp" />
     <ClCompile Include="..\HCMInternal\PauseGame.cpp" />
     <ClCompile Include="..\HCMInternal\PointerManager.cpp" />
+    <ClCompile Include="..\HCMInternal\ProggyVectorRegularFont.cpp" />
+    <ClCompile Include="..\HCMInternal\Renderer2D.cpp" />
     <ClCompile Include="..\HCMInternal\RuntimeExceptionHandler.cpp" />
     <ClCompile Include="..\HCMInternal\Setting.cpp" />
     <ClCompile Include="..\HCMInternal\SettingsSerialiser.cpp" />
     <ClCompile Include="..\HCMInternal\SharedMemoryInternal.cpp" />
     <ClCompile Include="..\HCMInternal\Speedhack.cpp" />
     <ClCompile Include="..\HCMInternal\StaticHookWrapper.cpp" />
+    <ClCompile Include="..\HCMInternal\SwitchBSP.cpp" />
+    <ClCompile Include="..\HCMInternal\ThirdPersonRendering.cpp" />
     <ClCompile Include="..\HCMInternal\UnfreezeObjectPhysics.cpp" />
     <ClCompile Include="..\HCMInternal\UnhandledExceptionHandler.cpp" />
+    <ClCompile Include="..\HCMInternal\UpdateGameCameraData.cpp" />
+    <ClCompile Include="..\HCMInternal\UserCameraInputReader.cpp" />
     <ClCompile Include="..\HCMInternal\WindowsUtilities.cpp" />
     <ClCompile Include="CallbackGuardTests.cpp" />
     <ClCompile Include="DIContainerTests.cpp" />
@@ -251,8 +289,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HCMInternal\AdvanceTicks.h" />
+    <ClInclude Include="..\HCMInternal\AIFreeze.h" />
     <ClInclude Include="..\HCMInternal\App.h" />
     <ClInclude Include="..\HCMInternal\BlockGameInput.h" />
+    <ClInclude Include="..\HCMInternal\BlockPlayerCharacterInput.h" />
+    <ClInclude Include="..\HCMInternal\BottomlessClip.h" />
+    <ClInclude Include="..\HCMInternal\CameraTransformer.h" />
+    <ClInclude Include="..\HCMInternal\CheckpointInjectionLogger.h" />
+    <ClInclude Include="..\HCMInternal\Conduit_ITCFont.h" />
     <ClInclude Include="..\HCMInternal\ConsoleCommand.h" />
     <ClInclude Include="..\HCMInternal\ControlDefs.h" />
     <ClInclude Include="..\HCMInternal\ControlServiceContainer.h" />
@@ -262,10 +306,14 @@
     <ClInclude Include="..\HCMInternal\DIContainer.h" />
     <ClInclude Include="..\HCMInternal\DifficultyEnum.h" />
     <ClInclude Include="..\HCMInternal\DirPathContainer.h" />
+    <ClInclude Include="..\HCMInternal\DisableScreenEffects.h" />
+    <ClInclude Include="..\HCMInternal\DisplayPlayerInfo.h" />
     <ClInclude Include="..\HCMInternal\DumpCheckpoint.h" />
     <ClInclude Include="..\HCMInternal\DumpCore.h" />
     <ClInclude Include="..\HCMInternal\DynamicStruct.h" />
     <ClInclude Include="..\HCMInternal\DynamicStructFactory.h" />
+    <ClInclude Include="..\HCMInternal\EditPlayerViewAngle.h" />
+    <ClInclude Include="..\HCMInternal\EventOnPressHotkey.h" />
     <ClInclude Include="..\HCMInternal\ExternalInfo.h" />
     <ClInclude Include="..\HCMInternal\ForceCheckpoint.h" />
     <ClInclude Include="..\HCMInternal\ForceCoreLoad.h" />
@@ -274,22 +322,42 @@
     <ClInclude Include="..\HCMInternal\ForceLaunch.h" />
     <ClInclude Include="..\HCMInternal\ForceRevert.h" />
     <ClInclude Include="..\HCMInternal\ForceTeleport.h" />
+    <ClInclude Include="..\HCMInternal\FreeCamera.h" />
+    <ClInclude Include="..\HCMInternal\FreeCameraData.h" />
     <ClInclude Include="..\HCMInternal\FreeMCCCursor.h" />
+    <ClInclude Include="..\HCMInternal\GameCameraData.h" />
     <ClInclude Include="..\HCMInternal\GameState.h" />
     <ClInclude Include="..\HCMInternal\GameTickEventHook.h" />
+    <ClInclude Include="..\HCMInternal\GetAggroData.h" />
+    <ClInclude Include="..\HCMInternal\GetBipedsVehicleDatum.h" />
+    <ClInclude Include="..\HCMInternal\GetCurrentBSP.h" />
     <ClInclude Include="..\HCMInternal\GetCurrentDifficulty.h" />
     <ClInclude Include="..\HCMInternal\GetCurrentLevelCode.h" />
+    <ClInclude Include="..\HCMInternal\GetCurrentRNG.h" />
+    <ClInclude Include="..\HCMInternal\GetEntityDataAsString.h" />
+    <ClInclude Include="..\HCMInternal\GetGameCameraData.h" />
+    <ClInclude Include="..\HCMInternal\GetGameDataAsString.h" />
     <ClInclude Include="..\HCMInternal\GetHavokAnchorPoint.h" />
     <ClInclude Include="..\HCMInternal\GetHavokComponent.h" />
     <ClInclude Include="..\HCMInternal\GetMCCVersion.h" />
+    <ClInclude Include="..\HCMInternal\GetNextObjectDatum.h" />
     <ClInclude Include="..\HCMInternal\GetObjectAddress.h" />
     <ClInclude Include="..\HCMInternal\GetObjectAddressCLI.h" />
+    <ClInclude Include="..\HCMInternal\GetObjectHealth.h" />
     <ClInclude Include="..\HCMInternal\GetObjectPhysics.h" />
+    <ClInclude Include="..\HCMInternal\GetObjectTagName.h" />
+    <ClInclude Include="..\HCMInternal\GetPlayerDataAsString.h" />
     <ClInclude Include="..\HCMInternal\GetPlayerDatum.h" />
     <ClInclude Include="..\HCMInternal\GetPlayerViewAngle.h" />
+    <ClInclude Include="..\HCMInternal\GetTagName.h" />
     <ClInclude Include="..\HCMInternal\GlobalKill.h" />
     <ClInclude Include="..\HCMInternal\GUIAdvanceTicks.h" />
+    <ClInclude Include="..\HCMInternal\GUIButtonAndInt.h" />
+    <ClInclude Include="..\HCMInternal\GUIColourPickerAlpha.h" />
+    <ClInclude Include="..\HCMInternal\GUIComboEnum.h" />
+    <ClInclude Include="..\HCMInternal\GUIComboEnumWithChildren.h" />
     <ClInclude Include="..\HCMInternal\GUIConsoleCommand.h" />
+    <ClInclude Include="..\HCMInternal\GUIDummyContainer.h" />
     <ClInclude Include="..\HCMInternal\GUIElementConstructor.h" />
     <ClInclude Include="..\HCMInternal\GuiElementEnum.h" />
     <ClInclude Include="..\HCMInternal\GUIElementStore.h" />
@@ -300,8 +368,10 @@
     <ClInclude Include="..\HCMInternal\GUIHeading.h" />
     <ClInclude Include="..\HCMInternal\GUIHotkeyOnly.h" />
     <ClInclude Include="..\HCMInternal\GUIInputDWORD.h" />
+    <ClInclude Include="..\HCMInternal\GUIInputInt.h" />
     <ClInclude Include="..\HCMInternal\GUIInputString.h" />
     <ClInclude Include="..\HCMInternal\GUIInvulnerability.h" />
+    <ClInclude Include="..\HCMInternal\GUIMCCState.h" />
     <ClInclude Include="..\HCMInternal\GUIRadioButton.h" />
     <ClInclude Include="..\HCMInternal\GUIRadioGroup.h" />
     <ClInclude Include="..\HCMInternal\GUIRequiredServices.h" />
@@ -311,6 +381,7 @@
     <ClInclude Include="..\HCMInternal\GUISpeedhack.h" />
     <ClInclude Include="..\HCMInternal\GUISubHeading.h" />
     <ClInclude Include="..\HCMInternal\GUIToggleWithChildren.h" />
+    <ClInclude Include="..\HCMInternal\GUIVec2.h" />
     <ClInclude Include="..\HCMInternal\GUIVec3.h" />
     <ClInclude Include="..\HCMInternal\GUIVec3RelativeOrAbsolute.h" />
     <ClInclude Include="..\HCMInternal\H1PlayerStruct.h" />
@@ -319,30 +390,40 @@
     <ClInclude Include="..\HCMInternal\HCMInternalGUI.h" />
     <ClInclude Include="..\HCMInternal\HCM_imconfig.h" />
     <ClInclude Include="..\HCMInternal\HeartbeatTimer.h" />
+    <ClInclude Include="..\HCMInternal\HideHUD.h" />
     <ClInclude Include="..\HCMInternal\Hotkey.h" />
     <ClInclude Include="..\HCMInternal\HotkeyDefinitions.h" />
     <ClInclude Include="..\HCMInternal\HotkeyEnum.h" />
+    <ClInclude Include="..\HCMInternal\HotkeyEventsLambdas.h" />
     <ClInclude Include="..\HCMInternal\HotkeyManager.h" />
     <ClInclude Include="..\HCMInternal\HotkeyRenderer.h" />
     <ClInclude Include="..\HCMInternal\HotkeyRendererImpl.h" />
+    <ClInclude Include="..\HCMInternal\HotkeysEnum.h" />
     <ClInclude Include="..\HCMInternal\IAnchorPoint.h" />
     <ClInclude Include="..\HCMInternal\IGetMCCVersion.h" />
     <ClInclude Include="..\HCMInternal\IgnoreCheckpointChecksum.h" />
     <ClInclude Include="..\HCMInternal\IGUIElement.h" />
     <ClInclude Include="..\HCMInternal\IGUIRequiredServices.h" />
     <ClInclude Include="..\HCMInternal\IMakeOrGetCheat.h" />
+    <ClInclude Include="..\HCMInternal\IMCCStateHook.h" />
     <ClInclude Include="..\HCMInternal\IMessagesGUI.h" />
     <ClInclude Include="..\HCMInternal\ImGuiManager.h" />
     <ClInclude Include="..\HCMInternal\IModalDialogRenderer.h" />
     <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp" />
     <ClInclude Include="..\HCMInternal\includes\safetyhook\Zydis.h" />
+    <ClInclude Include="..\HCMInternal\InfiniteAmmo.h" />
     <ClInclude Include="..\HCMInternal\InjectCheckpoint.h" />
     <ClInclude Include="..\HCMInternal\InjectCore.h" />
     <ClInclude Include="..\HCMInternal\InjectRequirements.h" />
     <ClInclude Include="..\HCMInternal\Invulnerability.h" />
     <ClInclude Include="..\HCMInternal\InvulnerabilityImplBase.h" />
     <ClInclude Include="..\HCMInternal\IOptionalCheat.h" />
+    <ClInclude Include="..\HCMInternal\ISettingsSerialiser.h" />
     <ClInclude Include="..\HCMInternal\ISharedMemory.h" />
+    <ClInclude Include="..\HCMInternal\ISmoother.h" />
+    <ClInclude Include="..\HCMInternal\IUpdateCameraTransform.h" />
+    <ClInclude Include="..\HCMInternal\Lapua.h" />
+    <ClInclude Include="..\HCMInternal\LinearSmoother.h" />
     <ClInclude Include="..\HCMInternal\Logging.h" />
     <ClInclude Include="..\HCMInternal\map.h" />
     <ClInclude Include="..\HCMInternal\MCCState.h" />
@@ -357,14 +438,20 @@
     <ClInclude Include="..\HCMInternal\ModuleHookManager.h" />
     <ClInclude Include="..\HCMInternal\MultilevelPointer.h" />
     <ClInclude Include="..\HCMInternal\NaturalCheckpointDisable.h" />
+    <ClInclude Include="..\HCMInternal\NullSmoother.h" />
     <ClInclude Include="..\HCMInternal\ObjectTypes.h" />
+    <ClInclude Include="..\HCMInternal\OBSBypassManager.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatEnum.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatInfo.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatManager.h" />
     <ClInclude Include="..\HCMInternal\PauseGame.h" />
     <ClInclude Include="..\HCMInternal\PointerManager.h" />
+    <ClInclude Include="..\HCMInternal\ProggyVectorRegularFont.h" />
+    <ClInclude Include="..\HCMInternal\RebindableHotkey.h" />
+    <ClInclude Include="..\HCMInternal\Renderer2D.h" />
     <ClInclude Include="..\HCMInternal\resource.h" />
     <ClInclude Include="..\HCMInternal\RuntimeExceptionHandler.h" />
+    <ClInclude Include="..\HCMInternal\ScopedAtomicBool.h" />
     <ClInclude Include="..\HCMInternal\ScopedCallback.h" />
     <ClInclude Include="..\HCMInternal\ScopedServiceRequest.h" />
     <ClInclude Include="..\HCMInternal\Setting.h" />
@@ -373,12 +460,16 @@
     <ClInclude Include="..\HCMInternal\SharedMemoryInternal.h" />
     <ClInclude Include="..\HCMInternal\Speedhack.h" />
     <ClInclude Include="..\HCMInternal\StaticHookWrapper.h" />
+    <ClInclude Include="..\HCMInternal\SwitchBSP.h" />
+    <ClInclude Include="..\HCMInternal\ThirdPersonRendering.h" />
     <ClInclude Include="..\HCMInternal\ToggleBlockInput.h" />
     <ClInclude Include="..\HCMInternal\ToggleFreeCursor.h" />
     <ClInclude Include="..\HCMInternal\TogglePause.h" />
     <ClInclude Include="..\HCMInternal\ToolTipCollection.h" />
     <ClInclude Include="..\HCMInternal\UnfreezeObjectPhysics.h" />
     <ClInclude Include="..\HCMInternal\UnhandledExceptionHandler.h" />
+    <ClInclude Include="..\HCMInternal\UpdateGameCameraData.h" />
+    <ClInclude Include="..\HCMInternal\UserCameraInputReader.h" />
     <ClInclude Include="..\HCMInternal\Vec2.h" />
     <ClInclude Include="..\HCMInternal\Vec3.h" />
     <ClInclude Include="..\HCMInternal\VersionInfo.h" />
@@ -394,10 +485,18 @@
     <ClInclude Include="TestLogging.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\HCMInternal\cpp.hint" />
     <None Include="..\HCMInternal\HCMInternal.aps" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\HCMInternal\HCMInternal.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\HCMInternal\lapua.dds" />
+    <Image Include="..\HCMInternal\lapua2.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\HCMInternal\lapua.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

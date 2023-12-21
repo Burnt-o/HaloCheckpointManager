@@ -204,6 +204,87 @@
     <ClCompile Include="..\HCMInternal\NaturalCheckpointDisable.cpp">
       <Filter>HCMInternalFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\Renderer2D.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Lapua.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\HideHUD.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\DisableScreenEffects.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetCurrentBSP.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\SwitchBSP.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\EditPlayerViewAngle.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\CheckpointInjectionLogger.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetCurrentRNG.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\BlockPlayerCharacterInput.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ThirdPersonRendering.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\LinearSmoother.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\UserCameraInputReader.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\UpdateGameCameraData.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetGameCameraData.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\FreeCamera.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetNextObjectDatum.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\Conduit_ITCFont.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\ProggyVectorRegularFont.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetBipedsVehicleDatum.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetTagName.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetObjectTagName.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetObjectHealth.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\GetAggroData.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\DisplayPlayerInfo.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\InfiniteAmmo.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\BottomlessClip.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp">
@@ -632,9 +713,171 @@
     <ClInclude Include="..\HCMInternal\resource.h">
       <Filter>HCMInternalFiles</Filter>
     </ClInclude>
+    <ClInclude Include="..\HCMInternal\Renderer2D.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\OBSBypassManager.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Lapua.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\EventOnPressHotkey.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HideHUD.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DisableScreenEffects.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetCurrentBSP.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIButtonAndInt.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\SwitchBSP.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\EditPlayerViewAngle.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\CheckpointInjectionLogger.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetCurrentRNG.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\BlockPlayerCharacterInput.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ThirdPersonRendering.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIDummyContainer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIComboEnumWithChildren.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IUpdateCameraTransform.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\UserCameraInputReader.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\CameraTransformer.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\NullSmoother.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\FreeCameraData.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\UpdateGameCameraData.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\LinearSmoother.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ISmoother.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GameCameraData.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetGameCameraData.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\FreeCamera.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetNextObjectDatum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ProggyVectorRegularFont.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\Conduit_ITCFont.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetBipedsVehicleDatum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetTagName.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetObjectTagName.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetGameDataAsString.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetPlayerDataAsString.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetEntityDataAsString.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetObjectHealth.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GetAggroData.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIComboEnum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIVec2.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIInputInt.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIColourPickerAlpha.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\DisplayPlayerInfo.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\BottomlessClip.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\InfiniteAmmo.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\AIFreeze.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ScopedAtomicBool.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeyEventsLambdas.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\IMCCStateHook.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ISettingsSerialiser.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\GUIMCCState.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\HotkeysEnum.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\RebindableHotkey.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\HCMInternal\HCMInternal.aps">
+      <Filter>HCMInternalFiles</Filter>
+    </None>
+    <None Include="..\HCMInternal\cpp.hint">
       <Filter>HCMInternalFiles</Filter>
     </None>
   </ItemGroup>
@@ -642,5 +885,18 @@
     <ResourceCompile Include="..\HCMInternal\HCMInternal.rc">
       <Filter>HCMInternalFiles</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\HCMInternal\lapua2.dds">
+      <Filter>HCMInternalFiles</Filter>
+    </Image>
+    <Image Include="..\HCMInternal\lapua.dds">
+      <Filter>HCMInternalFiles</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\HCMInternal\lapua.wav">
+      <Filter>HCMInternalFiles</Filter>
+    </Media>
   </ItemGroup>
 </Project>

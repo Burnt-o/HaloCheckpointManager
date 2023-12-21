@@ -44,6 +44,14 @@
 		}
 		CheatConstructionTestHarness(int mccVersion, MCCProcessType mccProcessType)
 		{
+			/*
+			The cheat construction test harness skips Rendering hook setup and actually rendering the GUI.
+			It purely concerns itself with the actual construction of GUI cheat elements and their dependent optionalCheats,
+			making it useful primarily for checking if you remembered to include the required pointer data for each cheat for each supported MCC version.
+			(A seperate test case will be created for each GUIElement + game + mcc version combination).
+			*/
+
+
 			ready = false;
 			TestLogging log;
 			PLOG_DEBUG << "starting";
@@ -69,10 +77,13 @@
 			auto modal = std::make_shared<MockModalDialogRenderer>(); PLOGV << "modal init";
 			auto control = std::make_shared<ControlServiceContainer>(ptr);
 
+			auto hkd = std::make_shared<HotkeyDefinitions>(settings); PLOGV << "hkd init";
+			auto mockRenderEvent = std::make_shared<RenderEvent>(); // will never be fired
+
 			// set up optional cheats and optional gui elements
 			guireq = std::make_shared<GUIRequiredServices>(); PLOGV << "guireq init"; // defines the gui elements we want to build and which optional cheats they will require
 			auto cheatfail = std::make_shared<OptionalCheatInfo>(); PLOGV << "cheatfail init"; // stores info about failed optionalCheat construction (starts empty, obviously)
-			auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
+			auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, mockRenderEvent, hkd); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
 			guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty
 			guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
 			auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings, ver->getMCCProcessType()); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore
