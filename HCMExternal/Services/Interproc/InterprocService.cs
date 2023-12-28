@@ -162,16 +162,20 @@ namespace HCMExternal.Services.InterprocServiceNS
         private (string, string) getGameSFData(HaloTabEnum game)
         {
             // Not sure which of these methods is the most reliable
-            Log.Verbose("AppContext.BaseDirectory: " + AppContext.BaseDirectory
-                + "\nSystem.AppDomain.CurrentDomain.BaseDirectory: " + System.AppDomain.CurrentDomain.BaseDirectory
-                + "\nSystem.Reflection.Assembly.GetExecutingAssembly().Location: " + System.Reflection.Assembly.GetExecutingAssembly().Location
-                + "\nDirectory.GetCurrentDirectory(): " + Directory.GetCurrentDirectory()
-                );
+            //Log.Verbose("AppContext.BaseDirectory: " + AppContext.BaseDirectory
+            //    + "\nSystem.AppDomain.CurrentDomain.BaseDirectory: " + System.AppDomain.CurrentDomain.BaseDirectory
+            //    + "\nSystem.Reflection.Assembly.GetExecutingAssembly().Location: " + System.Reflection.Assembly.GetExecutingAssembly().Location
+            //    + "\nDirectory.GetCurrentDirectory(): " + Directory.GetCurrentDirectory()
+            //    );
+
+            Log.Verbose("Current directory: " + Directory.GetCurrentDirectory());
             var currentBaseDirectory = Directory.GetCurrentDirectory();
 
-            var rootFolder = currentBaseDirectory + @"Saves\" + Dictionaries.GameToRootFolderPath[game];
+            var rootFolder = currentBaseDirectory + @"\Saves\" + Dictionaries.GameToRootFolderPath[game];
             var dir = Settings.Default.LastSelectedFolder[(int)game]; // need to try catch this and return root folder on failure. 
-            
+
+            Log.Verbose("The last selected folder for game: " + game + " was " + Settings.Default.LastSelectedFolder[(int)game]);
+
             if (dir == null) // check if dir is real and exists
             {
                 Log.Error("getGameSFData: dir was null at Settings.Default.LastSelectedFolder[game] with game == " + game + ", as int: " + (int)game);
@@ -183,7 +187,7 @@ namespace HCMExternal.Services.InterprocServiceNS
                 Log.Verbose("so returning " + Dictionaries.GameToRootFolderPath[game] + ", " + rootFolder);
                 return (Dictionaries.GameToRootFolderPath[game], rootFolder);        // return Root folder if there's a problem.
             }
-            Log.Verbose("getGameSFData: returning " + Path.GetDirectoryName(dir) + ", " + dir + " for game " + game);
+            Log.Verbose("getGameSFData: returning " + Path.GetFileName(dir) + ", " + dir + " for game " + game);
             return (Path.GetFileName(dir), dir);
         }
 
@@ -213,6 +217,15 @@ namespace HCMExternal.Services.InterprocServiceNS
                     var ODsf = getGameSFData(HaloTabEnum.Halo3ODST);
                     var HRsf = getGameSFData(HaloTabEnum.HaloReach);
                     var H4sf = getGameSFData(HaloTabEnum.Halo4);
+
+                    Log.Information("Updating save folder shared memory with: \n" +
+                    H1sf.Item2 + "\n" +
+                    H2sf.Item2 + "\n" +
+                    H3sf.Item2 + "\n" +
+                    ODsf.Item2 + "\n" +
+                    HRsf.Item2 + "\n" +
+                    H4sf.Item2 + "\n"
+                );
 
                     Log.Verbose("sending new sf info");
                     var sf = CheckpointViewModel.SelectedSaveFolder;

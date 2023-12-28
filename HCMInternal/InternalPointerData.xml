@@ -1446,7 +1446,7 @@
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0xE6EDA7</Offset>
+				<Offset>0xE6FE68</Offset>
 			</Offsets>
 		</Version>
 
@@ -1932,7 +1932,7 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x01651CF0</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x400000</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -1963,7 +1963,7 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x01651CF0</Offset>
-				<Offset>0x400000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -3128,6 +3128,34 @@
 			<value>true</value>
 		</Version>
 	</VersionedEntry>
+
+<!-- fall timer invulnerability handled by seperate function for h2-->
+	<VersionedEntry Name="fallTimerInvulnerabilityFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x925C38</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="fallTimerInvulnerabilityFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="All" Game="Halo2">
+			<Parameters>
+				<unitDatum>rsi</unitDatum>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="fallTimerInvulnerabilityFunctionFlagSetter" Type="MidhookFlagInterpreter">
+		<Version Version="All" Game="Halo2">
+			<rflag>carry</rflag>
+			<value>true</value>
+		</Version>
+	</VersionedEntry>
+
+	<!-- #region invulnerability-->
+
 
 	<!--very close to print message stuff-->
 	<VersionedEntry Name="boardingText" Type="MultilevelPointer::ModuleOffset">
@@ -5300,6 +5328,7 @@
 		</Version>
 
 
+		<!--this is wrong?-->
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>

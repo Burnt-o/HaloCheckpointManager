@@ -93,10 +93,8 @@ public:
 	template<typename T>
 	bool writeData(T* dataIn, bool protectedMemory = false)
 	{
-		if (typeid(T) == typeid(std::string))
-		{
-			return false;
-		}
+		static_assert(typeid(T) != typeid(std::string) && "cannot use writeData for std::string");
+		static_assert(typeid(T) != typeid(std::wstring) && "cannot use writeData for std::wstring");
 
 		uintptr_t address;
 		if (!this->resolve(&address)) return false;
@@ -121,12 +119,15 @@ public:
 	template<typename T>
 	bool writeArrayData(T* dataIn, size_t arraySize, bool protectedMemory = false)
 	{
-		if (typeid(T) == typeid(std::string))
+		static_assert(typeid(T) != typeid(std::string) && "cannot use writeArrayData for std::string");
+		static_assert(typeid(T) != typeid(std::wstring) && "cannot use writeArrayData for std::wstring");
+
+
+		if (arraySize <= 0)
 		{
+			*SetLastErrorByRef() << std::format("Bad array size! Must be more than zero. Was: {}", arraySize) << std::endl;
 			return false;
 		}
-
-		if (arraySize <= 0) return false;
 
 		uintptr_t address;
 		if (!this->resolve(&address)) return false;
@@ -183,6 +184,7 @@ namespace MultilevelPointerSpecialisation // So we don't pollute global namespac
 	public:
 		explicit ModuleOffset(const std::wstring_view& moduleName, const std::vector<int64_t> offsets) : mModuleName(moduleName), mOffsets(offsets) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
+		std::wstring_view getModuleName() { return mModuleName; }
 	};
 
 	class Resolved : public MultilevelPointer {

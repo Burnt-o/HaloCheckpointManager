@@ -236,8 +236,10 @@ namespace HCMExternal.ViewModels
             switch (e.PropertyName)
             {
                 case nameof(SelectedGame):
+                    HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)this.SelectedGame;
                     RefreshSaveFolderTree();
                     RefreshCheckpointList();
+
                     break;
 
                 case nameof(SelectedCheckpoint):
@@ -395,7 +397,13 @@ namespace HCMExternal.ViewModels
             if (Directory.Exists(saveFolder.SaveFolderPath))
             {
                 Trace.WriteLine("valid new saveFolder, so changing internal selection and inserting into lastSelectedFolder list.");
-                Properties.Settings.Default.LastSelectedFolder.Insert((int)SelectedGame, saveFolder.SaveFolderPath);
+                Log.Verbose("New lastSelectedFolder for game " + this.SelectedGame + " is " + saveFolder.SaveFolderPath);
+
+                Properties.Settings.Default.LastSelectedFolder[(int)SelectedGame] = saveFolder.SaveFolderPath;
+               // Properties.Settings.Default.LastSelectedFolder.Insert(, saveFolder.SaveFolderPath);
+
+                Log.Verbose("This should be the same value as:" + Properties.Settings.Default.LastSelectedFolder[(int)SelectedGame]);
+
                 this.SelectedSaveFolder = saveFolder;
                 this.RefreshCheckpointList();
 

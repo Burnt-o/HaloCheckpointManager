@@ -158,6 +158,26 @@ T PointerManager::getData(std::string dataName, std::optional<GameState> game)
     {
         throw HCMInitException(std::format("Invalid type access for {}\nType was {} but {} was requested", dataName, type.name(), typeid(T).name()));
     }
+
+#ifdef HCM_DEBUG
+    if (std::is_same_v<T, std::shared_ptr<MultilevelPointer>>
+        && game != std::nullopt)
+    {
+            auto realOut = std::any_cast<std::shared_ptr<MultilevelPointer>>(impl->mAllData.at(key));
+
+            // check if is module type
+            auto moduleSpec = std::dynamic_pointer_cast<MultilevelPointerSpecialisation::ModuleOffset>(realOut);
+            if (moduleSpec)
+            {
+                PLOG_DEBUG << "verifying module type of MultilevelPointerSpecialisation::ModuleOffset for game: " << game.value().toString();
+                PLOG_DEBUG << "Module type is: " << moduleSpec->getModuleName();
+
+                if (moduleSpec->getModuleName() != game.value().toModuleName()) throw HCMInitException(std::format("MODULE NAME MISMATCH: Game was {}, but module name was {}", game.value().toString(), wstr_to_str(moduleSpec->getModuleName().data())));
+
+            }
+
+      }
+#endif
     
     return std::any_cast<T>(impl->mAllData.at(key));
 }

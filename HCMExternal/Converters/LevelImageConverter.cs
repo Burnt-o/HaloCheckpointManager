@@ -21,7 +21,7 @@ namespace HCMExternal.Converters
             if (valueString == null)
                 return "???";
 
-
+            
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.

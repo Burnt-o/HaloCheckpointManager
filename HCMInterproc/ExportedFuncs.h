@@ -44,6 +44,9 @@ extern "C"
 			PLOG_ERROR << "g_SharedMemoryExternal not initialised!";
 			return;
 		}
+
+		PLOG_VERBOSE << "assigning selectedH2FolderPath as " << SFpathH2;
+
 		g_SharedMemoryExternal->selectedH1FolderName->assign(SFnameH1);
 		g_SharedMemoryExternal->selectedH1FolderPath->assign(SFpathH1);
 

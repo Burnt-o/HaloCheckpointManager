@@ -35,11 +35,10 @@
                     <MenuItem Header="Inject" 
                         Command="{Binding Path=Parent.DataContext.Inject, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-
+                    
                     <MenuItem Header="Rename" 
                         Command="{Binding Path=Parent.DataContext.RenameCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-
 
                     <MenuItem Header="Change version data" 
                         Command="{Binding Path=Parent.DataContext.ReVersionCheckpoint, 

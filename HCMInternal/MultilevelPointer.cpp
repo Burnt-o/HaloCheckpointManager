@@ -112,14 +112,10 @@ bool MultilevelPointerSpecialisation::ModuleOffset::resolve(uintptr_t* resolvedO
 	auto moduleAddress = ModuleCache::getModuleHandle(this->mModuleName);
 	if (!moduleAddress.has_value()) 
 	{
-		*SetLastErrorByRef() << "ModuleOffset resolution failed, module not found with name: " << wstr_to_str(this->mModuleName) << std::endl;
+		*SetLastErrorByRef() << "ModuleOffset resolution failed, modulecache did not contain this MLP's module: " << wstr_to_str(this->mModuleName) << std::endl;
 		return false;
 	}
-	//PLOG_VERBOSE << "moduleAddress: " << moduleAddress.value();
-	for (int64_t offset : this->mOffsets)
-	{
-		//PLOG_VERBOSE << "offset: " << offset;
-	}
+
 
 	return dereferencePointer(moduleAddress.value(), this->mOffsets, resolvedOut);
 }

@@ -75,7 +75,7 @@ private:
 			auto currentCheckpoint = sharedMem->getInjectInfo();
 
 			if (currentCheckpoint.selectedCheckpointNull) throw HCMRuntimeException("Can't inject - no checkpoint selected!");
-			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't inject - checkpoint from wrong game! Expected: {}, Actual: {}", mImplGame.toString(), ((GameState)currentCheckpoint.selectedCheckpointGame).toString()));
+			if ((GameState)currentCheckpoint.selectedCheckpointGame != this->mImplGame) throw HCMRuntimeException(std::format("Can't inject - checkpoint from wrong game! Expected: {}, Actual: {}\n(Make sure you switch HCMExternal to the correct game tab)", mImplGame.toString(), ((GameState)currentCheckpoint.selectedCheckpointGame).toString()));
 			
 
 			//TODO: load correct level if level not aligned
@@ -181,6 +181,7 @@ private:
 			{
 				bool firstCheckpoint;
 				mDoubleRevertFlag->readData(&firstCheckpoint);
+				PLOG_DEBUG << "Double revert flag value: " << firstCheckpoint;
 				firstCheckpoint ? mCheckpointLocation1->resolve(&checkpointLoc) : mCheckpointLocation2->resolve(&checkpointLoc);
 				PLOG_DEBUG << "using checkpoint location " << (firstCheckpoint ? "A" : "B") << " @0x" << std::hex << (uint64_t)checkpointLoc;
 			}
@@ -263,9 +264,14 @@ private:
 			if (mInjectRequirements->BSP)
 			{
 				PLOG_VERBOSE << "setting BSP data";
-				std::vector<byte> currentBSPData;
-				auto err = memcpy_s(currentBSPData.data(), mBSPdata->length, (void*)(checkpointLoc + mBSPdata->offset), mBSPdata->length);
-				if (err) throw HCMRuntimeException(std::format("error copying bsp data! code: {}", err));
+
+				PLOG_VERBOSE << "mBSPdata->length " << mBSPdata->length;
+				PLOG_VERBOSE << "mBSPdata->offset " << mBSPdata->offset;
+				PLOG_VERBOSE << "checkpointLoc + mBSPdata->offset " << std::hex << (uintptr_t)(checkpointLoc + mBSPdata->offset);
+				
+				byte* rawCurrentBSPData = (byte*)(checkpointLoc + mBSPdata->offset);
+				std::vector<byte> currentBSPData (rawCurrentBSPData, rawCurrentBSPData + mBSPdata->length);
+
 				if (mInjectRequirements->singleCheckpoint)
 				{
 					mLoadedBSP1->writeArrayData(currentBSPData.data(), currentBSPData.size());
@@ -274,7 +280,21 @@ private:
 				{
 					bool firstCheckpoint;
 					mDoubleRevertFlag->readData(&firstCheckpoint);
-					firstCheckpoint ? mLoadedBSP1->writeArrayData(currentBSPData.data(), currentBSPData.size()) : mLoadedBSP2->writeArrayData(currentBSPData.data(), currentBSPData.size());
+					PLOG_VERBOSE << "firstCheckpoint? " << firstCheckpoint;
+
+					auto loadedBSPToWrite = firstCheckpoint ? mLoadedBSP1 : mLoadedBSP2;
+
+#if HCM_DEBUG
+					// attempting to debug a H2 crash
+					uintptr_t loadedBSPLoc;
+					if (!loadedBSPToWrite->resolve(&loadedBSPLoc)) throw HCMRuntimeException(std::format("Failed to resolve BSP data: {}", MultilevelPointer::GetLastError()));
+					PLOG_VERBOSE << "loadedBSPLoc: " << std::hex << loadedBSPLoc;
+					byte currentLoadedBSP;
+					if (!loadedBSPToWrite->readData(&currentLoadedBSP)) throw HCMRuntimeException(std::format("Failed to read BSP data: {}", MultilevelPointer::GetLastError()));
+					PLOG_VERBOSE << "currentLoadedBSP " << currentLoadedBSP;
+#endif
+					if (!loadedBSPToWrite->writeArrayData(currentBSPData.data(), currentBSPData.size())) throw HCMRuntimeException(std::format("Failed to write BSP data: {}", MultilevelPointer::GetLastError()));
+					PLOG_VERBOSE << "successfully set BSP data";
 				}
 			}
 
@@ -295,6 +315,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
+			PLOG_VERBOSE << "error!" << ex.what();
 			runtimeExceptions->handleMessage(ex);
 		}
 
@@ -338,7 +359,11 @@ private:
 		{
 			mBSPdata = ptr->getData< std::shared_ptr<offsetLengthPair>>("BSPdata", game);
 			mLoadedBSP1 = ptr->getData< std::shared_ptr<MultilevelPointer>>("loadedBSP1", game);
-			if (!mInjectRequirements->singleCheckpoint) 	mLoadedBSP2 = ptr->getData< std::shared_ptr<MultilevelPointer>>("loadedBSP2", game);
+			if (!mInjectRequirements->singleCheckpoint)
+			{
+				mLoadedBSP2 = ptr->getData< std::shared_ptr<MultilevelPointer>>("loadedBSP2", game);
+			}
+
 		}
 
 		try

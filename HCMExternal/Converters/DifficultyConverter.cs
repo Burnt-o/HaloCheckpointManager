@@ -25,10 +25,11 @@ namespace HCMExternal.Converters
                     { 2, "Heroic" },
                     { 3, "Legendary" },
                 };
-            
 
 
-            return (string) DifficultyMap[(int)value];
+
+            return DifficultyMap.ElementAtOrDefault((int)value).Value ?? "Invalid";
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
