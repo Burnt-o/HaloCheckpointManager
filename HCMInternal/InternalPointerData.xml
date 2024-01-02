@@ -2001,7 +2001,7 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x021BD4E0</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x970000</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -2039,7 +2039,7 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x021BD4E0</Offset>
-				<Offset>0x970000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
