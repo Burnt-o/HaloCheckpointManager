@@ -73,7 +73,7 @@ public:
 		return !callersRequestingService.empty();
 	}
 
-	virtual void updateService() = 0;
+	virtual void updateService() {} // function fired when callersRequestingService set changes
 	virtual ~GenericScopedServiceProvider() = default;
 
 };

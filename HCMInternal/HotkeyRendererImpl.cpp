@@ -21,7 +21,7 @@ void HotkeyRendererImpl::beginHotkeyRebindDialog(std::shared_ptr<RebindableHotke
 
 
 
-	hotkeyManager->setDisableHotkeysForRebinding(true);
+	hotkeyDisableRequest = hotkeyDisabler->makeRequest(nameof(HotkeyRendererImpl));
 	tempBindingSet = hotkey->getBindings();
 	currentSelectedBindingForEditing = 0;
 
@@ -168,14 +168,14 @@ void HotkeyRendererImpl::renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize
 			}
 
 
-			hotkeyManager->setDisableHotkeysForRebinding(false);
+			hotkeyDisableRequest = std::nullopt;
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine();
 
 		if (ImGui::Button("Cancel"))
 		{
-			hotkeyManager->setDisableHotkeysForRebinding(false);
+			hotkeyDisableRequest = std::nullopt;
 			ImGui::CloseCurrentPopup();
 		}
 

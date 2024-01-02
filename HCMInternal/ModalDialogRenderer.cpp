@@ -6,22 +6,38 @@
 template<typename dialogReturnType>
 class IModalDialog
 {
+private:
+	bool isOpen = false;
+	std::optional<std::unique_ptr<ScopedServiceRequest>> hotkeyDisableRequest = std::nullopt;
+	std::shared_ptr<GenericScopedServiceProvider> mHotkeyDisabler;
+
 protected:
 	std::string mDialogTitle;
-	bool isOpen = false;
 	bool needToBeginDialog = false;
 
+
 public:
-	IModalDialog(std::string dialogTitle) : mDialogTitle(dialogTitle) 
+	IModalDialog(std::string dialogTitle, std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler)
+		: mDialogTitle(dialogTitle),
+		mHotkeyDisabler(hotkeyDisabler)
 	{
 	}
 
 
 	void beginDialog() 
 	{
+		hotkeyDisableRequest = mHotkeyDisabler->makeRequest(std::format("{}:{}", nameof(IModalDialog), mDialogTitle));
 		needToBeginDialog = true; // call to openPopup needs to happen in imgui frame (ie in render())
 		isOpen = true;
 	} 
+
+	void closeDialog()
+	{
+		isOpen = false;
+		hotkeyDisableRequest = std::nullopt;
+		ImGui::CloseCurrentPopup();
+	}
+
 	dialogReturnType currentReturnValue;
 	bool isDialogOpen() { return isOpen; }
 	virtual void render() = 0;
@@ -33,7 +49,7 @@ class InjectionWarningDialog : public IModalDialog<bool>
 private:
 	std::string mText = "text not set, burnt made an oopsie";
 public:
-	InjectionWarningDialog() : IModalDialog("Injection warning") {}
+	InjectionWarningDialog(std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler) : IModalDialog("Injection warning", hotkeyDisabler) {}
 
 	void setTitle(std::string dialogTitle) { mDialogTitle = dialogTitle; }
 	void setText(std::string text) { mText = text; }
@@ -54,16 +70,14 @@ public:
 			{
 				PLOG_DEBUG << "closing InjectionWarningDialog with continue";
 				currentReturnValue = true;
-				isOpen = false;
-				ImGui::CloseCurrentPopup();
+				closeDialog();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape))
 			{
 				PLOG_DEBUG << "closing InjectionWarningDialog with Cancel";
 				currentReturnValue = false;
-				isOpen = false;
-				ImGui::CloseCurrentPopup();
+				closeDialog();
 			}
 
 			ImGui::EndPopup();
@@ -75,7 +89,7 @@ class CheckpointDumpNameDialog : public IModalDialog<std::tuple<bool, std::strin
 {
 private:
 public:
-	CheckpointDumpNameDialog() : IModalDialog("Name dumped checkpoint") {}
+	CheckpointDumpNameDialog(std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler) : IModalDialog("Name dumped checkpoint", hotkeyDisabler) {}
 
 	void setTitle(std::string dialogTitle) { mDialogTitle = dialogTitle; }
 
@@ -96,16 +110,14 @@ public:
 			{
 				PLOG_DEBUG << "closing CheckpointDumpNameDialog with Accept";
 				std::get<bool>(currentReturnValue) = true;
-				isOpen = false;
-				ImGui::CloseCurrentPopup();
+				closeDialog();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape))
 			{
 				PLOG_DEBUG << "closing CheckpointDumpNameDialog with Cancel";
 				std::get<bool>(currentReturnValue) = false;
-				isOpen = false;
-				ImGui::CloseCurrentPopup();
+				closeDialog();
 			}
 
 			ImGui::EndPopup();
@@ -120,7 +132,7 @@ private:
 	bool anyErrorsAtAll = false;
 	int totalErrors = 0;
 public:
-	FailedOptionalCheatServicesDialog() : IModalDialog("Failed optional cheat services")
+	FailedOptionalCheatServicesDialog(std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler) : IModalDialog("Failed optional cheat services", hotkeyDisabler)
 	{
 	}
 
@@ -192,15 +204,13 @@ public:
 			if (ImGui::Button("Ok"))
 			{
 				PLOG_DEBUG << "closing FailedOptionalCheatServicesDialog with Ok";
-				isOpen = false;
-				ImGui::CloseCurrentPopup();
+				closeDialog();
 			}
 
 			if (ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_Escape))
 			{
 				PLOG_DEBUG << "closing FailedOptionalCheatServicesDialog with Ok";
-				isOpen = false;
-				ImGui::CloseCurrentPopup();
+				closeDialog();
 			}
 
 			ImGui::EndPopup();
@@ -298,20 +308,24 @@ public:
 		return;
 	}
 
-	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer)
+	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler)
 		: mImGuiRenderCallbackHandle(pRenderEvent, [this](SimpleMath::Vector2 screenSize) {onImGuiRenderEvent(screenSize); }),
 		mFreeMCCCursorService(controlServiceContainer->freeMCCSCursorService),
 		mBlockGameInputService(controlServiceContainer->blockGameInputService),
-		mPauseGameService(controlServiceContainer->pauseGameService)
+		mPauseGameService(controlServiceContainer->pauseGameService),
+		checkpointDumpNameDialog(hotkeyDisabler),
+		injectionWarningDialog(hotkeyDisabler),
+		failedOptionalCheatServicesDialog(hotkeyDisabler)
 	{
 	}
 };
 
 
-ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<ActionEvent> showFailsEvent, std::shared_ptr<GUIServiceInfo> guiFailures)
-	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, controlServiceContainer)),
+ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<ActionEvent> showFailsEvent, std::shared_ptr<GUIServiceInfo> guiFailures, std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler)
+	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, controlServiceContainer, hotkeyDisabler)),
 	mGUIFailures(guiFailures),
 	mShowGUIFailuresEventCallback(showFailsEvent, [this]() {showFailedOptionalCheatServices(); })
+
 	{}
 
 ModalDialogRenderer::~ModalDialogRenderer() = default;

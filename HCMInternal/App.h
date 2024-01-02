@@ -84,7 +84,7 @@ public:
 
             // setup some optional services mainly related to controls, eg freeing the cursor, pausing the game, etc
             auto control = std::make_shared<ControlServiceContainer>(ptr);
-
+            auto hotkeyDisabler = std::make_shared< GenericScopedServiceProvider>();
      
             auto d3d = std::make_shared<D3D11Hook>(ptr); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
             auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
@@ -95,14 +95,15 @@ public:
             auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
             auto mccStateHook = std::make_shared<MCCStateHook>(ptr, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
-            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, settings->showGUIFailures, guifail); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
+            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, settings->showGUIFailures, guifail, hotkeyDisabler); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
 
             mes->setSettings(settings);
             // hotkeys
+
             auto hkd = std::make_shared<HotkeyDefinitions>(settings); PLOGV << "hkd init";
-            auto hkm = std::make_shared<HotkeyManager>(imm->ForegroundRenderEvent, hkd, mes, dirPath); PLOGV << "hkm init"; // hotkey manager doesn't render but wants to poll inputs every frame to know if keys pressed etc
+            auto hkm = std::make_shared<HotkeyManager>(imm->ForegroundRenderEvent, hkd, mes, dirPath, hotkeyDisabler); PLOGV << "hkm init"; // hotkey manager doesn't render but wants to poll inputs every frame to know if keys pressed etc
             
-            auto hkrimpl = std::make_unique<HotkeyRendererImpl>(imm->ForegroundRenderEvent, mes, hkm, hkd);
+            auto hkrimpl = std::make_unique<HotkeyRendererImpl>(imm->ForegroundRenderEvent, mes, hkm, hkd, hotkeyDisabler);
             auto hkr = std::make_shared<HotkeyRenderer>(std::move(hkrimpl)); PLOGV << "hkr init"; // render hotkeys and rebinding
             
         

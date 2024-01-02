@@ -1,7 +1,7 @@
 #pragma once
 #include "HotkeyDefinitions.h"
 #include "IMessagesGUI.h"
-
+#include "ScopedServiceRequest.h"
 
 class HotkeyManager
 {
@@ -11,12 +11,11 @@ private:
 
 	// services
 	std::shared_ptr<HotkeyDefinitions> mHotkeyDefinitions;
-
+	std::shared_ptr< GenericScopedServiceProvider> mHotkeyDisabler;
 
 
 	// data 
 	std::string mHotkeyConfigPath;
-	bool mDisableHotkeysForRebinding = false;
 	std::vector<std::thread> mFireEventThreads;
 
 	void pollInput();
@@ -24,10 +23,8 @@ private:
 
 public:
 	// Hotkey manager doesn't render, but it does want to poll for inputs every frame
-	HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath);
+	HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath, std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler);
 	~HotkeyManager();
-
-	void setDisableHotkeysForRebinding(bool val) { mDisableHotkeysForRebinding = val; };
 
 };
 
