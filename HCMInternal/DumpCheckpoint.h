@@ -60,12 +60,7 @@ private:
 
 			if (!mccStateHook->isGameCurrentlyPlaying(mImplGame)) return;
 			PLOG_DEBUG << "onDump called " << mImplGame.toString();
-			// Automatically force checkpoint beforehand if user wants that
-			if (settings->dumpCheckpointForcesSave->GetValue())
-			{
-				settings->forceCheckpointEvent->operator()();
-				Sleep(10);
-			}
+
 
 			// generate a default checkpoint name
 			SYSTEMTIME t;
@@ -83,6 +78,13 @@ private:
 
 				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
 				checkpointName = std::get<std::string>(modalReturn); // get the name the user set
+			}
+
+			// Automatically force checkpoint beforehand if user wants that
+			if (settings->dumpCheckpointForcesSave->GetValue())
+			{
+				settings->forceCheckpointEvent->operator()();
+				Sleep(10);
 			}
 
 

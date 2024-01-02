@@ -50,12 +50,7 @@ private:
 			PLOG_DEBUG << "onDump called " << mGame.toString();
 
 
-			// Automatically force coresave beforehand if user wants that
-			if (settings->dumpCoreForcesSave->GetValue())
-			{
-				settings->forceCoreSaveEvent->operator()();
-				Sleep(10);
-			}
+
 
 			// generate a default checkpoint name
 			SYSTEMTIME t;
@@ -73,6 +68,13 @@ private:
 
 				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
 				coreSaveName = std::get<std::string>(modalReturn); // get the name the user set
+			}
+
+			// Automatically force coresave beforehand if user wants that
+			if (settings->dumpCoreForcesSave->GetValue())
+			{
+				settings->forceCoreSaveEvent->operator()();
+				Sleep(10);
 			}
 			
 
