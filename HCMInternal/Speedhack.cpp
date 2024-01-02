@@ -76,7 +76,7 @@ public:
 				PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
 
 				{
-					
+					safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
 					setSpeed(newSpeedValue);
 					currentSpeedForReading = newSpeedValue;
 				}
