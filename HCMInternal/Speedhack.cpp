@@ -38,14 +38,22 @@ public:
 			PLOG_DEBUG << "(the speedhack value is: " << currentSpeedSetting << ")";
 			if (newToggleValue)
 			{
-				setSpeed(currentSpeedSetting);
-				currentSpeedForReading = currentSpeedSetting;
+				{
+					safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
+					setSpeed(currentSpeedSetting);
+					currentSpeedForReading = currentSpeedSetting;
+				}
+
 				messagesGUI->addMessage(std::format("Enabling Speedhack ({:.2f}).", currentSpeedSetting));
 			}
 			else
 			{
-				setSpeed(1.00);
-				currentSpeedForReading = 1.00;
+				{
+					safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
+					setSpeed(1.00);
+					currentSpeedForReading = 1.00;
+				}
+
 				messagesGUI->addMessage(std::format("Disabling Speedhack."));
 			}
 		}
@@ -66,8 +74,13 @@ public:
 			if (speedhackToggleSetting->GetValue())
 			{
 				PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
-				setSpeed(newSpeedValue);
-				currentSpeedForReading = newSpeedValue;
+
+				{
+					
+					setSpeed(newSpeedValue);
+					currentSpeedForReading = newSpeedValue;
+				}
+
 				messagesGUI->addMessage(std::format("Set Speedhack to {:.2f}.", newSpeedValue));
 			}
 		}
@@ -107,6 +120,7 @@ public:
 	}
 	~SpeedhackImpl()
 	{
+		safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
 		setSpeed(1.00);
 		PLOG_DEBUG << "~SpeedhackImpl()";
 	}
