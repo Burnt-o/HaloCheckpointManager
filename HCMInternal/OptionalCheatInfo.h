@@ -24,10 +24,12 @@ class OptionalCheatInfo
 private:
 	OptionalCheatInfoData emptyInfo = OptionalCheatInfoData::emptyCheat();
 	std::map<std::pair<GameState, OptionalCheatEnum>, OptionalCheatInfoData> infoMap;
+	std::mutex infoMapMutex;
 
 	friend class OptionalCheatConstructor;
 	void setInfo(std::pair<GameState, OptionalCheatEnum> gameCheatPair, OptionalCheatInfoData info)
 	{
+		std::lock_guard<std::mutex> lock(infoMapMutex); // cheat construction happens on multiple threads so need to make sure only one emplace happens at a time
 		infoMap.emplace(gameCheatPair, info);
 	}
 

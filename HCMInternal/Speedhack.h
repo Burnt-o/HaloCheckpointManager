@@ -16,7 +16,7 @@ class Speedhack : public IOptionalCheat
 private:
 	//impl. static, shared between all games
 	static inline std::unique_ptr<ISpeedhackImpl> impl;
-
+	static inline std::mutex implConstructionCheck;
 public:
 	// is this the best way to do this.. why can't we send speedhack only the dependencies it needs?
 	// also should cheats be templated instead of taking a game parameter?

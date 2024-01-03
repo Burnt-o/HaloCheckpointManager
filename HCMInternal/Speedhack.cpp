@@ -137,6 +137,7 @@ public:
 Speedhack::Speedhack(GameState game, IDIContainer& dicon) 
 {
 	// one implemntation covers all games, so only construct it the first time
+	std::lock_guard<std::mutex> lock(implConstructionCheck); // since cheat creation happens on multiple threads, we need to be careful
 	if (!impl)
 	{
 		PLOG_DEBUG << "constructing static speedhack impl";

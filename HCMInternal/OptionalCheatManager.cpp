@@ -122,7 +122,8 @@ class OptionalCheatConstructor : public IMakeOrGetCheat
 private:
 	// weak reference to the stores cheatCollection while we construct cheats
 	std::shared_ptr<CheatCollection> cheatCollection;
-
+	std::mutex cheatCollectionMutex;
+	//std::atomic_bool cheatCollectionInUse = false;
 public:
 	OptionalCheatConstructor()
 	{
@@ -137,25 +138,46 @@ public:
 
 		PLOG_DEBUG << "Looping over required services";
 		// loop over each cheat-game combo in requiredServices, pushing them into our cheatCollection as we make them (or telling info about it if failed construction)
+		
+		std::vector<std::thread> createCheatThreads;
+		
 		for (const std::pair<GameState, OptionalCheatEnum>& gameCheatPair : reqSer->getAllRequiredServices())
 		{
-			try
-			{
-				// create the cheat 
-				getOrMakeCheat(gameCheatPair, cheatStore.lock()->dicon);
-				info->setInfo(gameCheatPair, {});
-			}
-			catch (HCMInitException ex)
-			{
-				// update OptionalCheatInfoManager with failure. GUIElementManager will check this later to know what GUIElements will work or not
-				info->setInfo(gameCheatPair, { ex });
-			}
-			catch (std::bad_weak_ptr ex)
-			{
-				HCMInitException converted(std::format("std::bad_weak_ptr exception! {}", ex.what()));
-				info->setInfo(gameCheatPair, { converted });
-			}
+			auto& th = createCheatThreads.emplace_back(std::thread([gameCheatPair, cheatStore,info, this]() {
+				try
+				{
+					// create the cheat 
+					
+					getOrMakeCheat(gameCheatPair, cheatStore.lock()->dicon);
+					info->setInfo(gameCheatPair, {});
+				}
+				catch (HCMInitException ex)
+				{
+					// update OptionalCheatInfoManager with failure. GUIElementManager will check this later to know what GUIElements will work or not
+					info->setInfo(gameCheatPair, { ex });
+				}
+				catch (std::bad_weak_ptr ex)
+				{
+					HCMInitException converted(std::format("std::bad_weak_ptr exception! {}", ex.what()));
+					info->setInfo(gameCheatPair, { converted });
+				}
+				}));
+			
+
 		}
+
+		// wait for all threads to finish
+		PLOG_DEBUG << "Blocking until createCheatThreads finish execution";
+		for (auto& th : createCheatThreads)
+		{
+			if (th.joinable())
+			{
+				th.join();
+				PLOG_VERBOSE << "joining thread";
+			}
+				
+		}
+		PLOG_DEBUG << "createCheatThreads finished execution";
 
 		cheatCollection.reset();
 
@@ -199,6 +221,8 @@ OptionalCheatManager::~OptionalCheatManager() = default;
 
 std::shared_ptr< IOptionalCheat> OptionalCheatConstructor::getOrMakeCheat(const std::pair<GameState, OptionalCheatEnum>& gameCheatPair, IDIContainer& dicon)
 {
+	
+	std::shared_ptr<IOptionalCheat> outVal;
 	PLOG_VERBOSE << "Creating cheat: " << gameCheatPair.first << "::" << magic_enum::enum_name(gameCheatPair.second);
 	//std::map<std::pair<GameState, OptionalCheatEnum>, std::shared_ptr<IOptionalCheat>>
 
@@ -206,12 +230,17 @@ std::shared_ptr< IOptionalCheat> OptionalCheatConstructor::getOrMakeCheat(const 
 	// This macro is why it's crucial the OptionalCheatEnum shares the exact same name as the associated class.
 #define _PPSTUFF_MAKECASE1(_var)																\
 case OptionalCheatEnum::_var:																	\
+	cheatCollectionMutex.lock();																\
 	if(!cheatCollection->contains(gameCheatPair))												\
 	{																							\
+	cheatCollectionMutex.unlock();																\
 	std::shared_ptr<IOptionalCheat> cheat = std::make_shared<_var>(gameCheatPair.first, dicon); \
-	cheatCollection->insert(std::make_pair(gameCheatPair, cheat));									\
+	cheatCollectionMutex.lock();																\
+	cheatCollection->insert(std::make_pair(gameCheatPair, cheat));								\
 	}																							\
-return cheatCollection->at(gameCheatPair);
+	cheatCollectionMutex.unlock();																\
+	outVal = cheatCollection->at(gameCheatPair);												\
+	return outVal;	
 
 
 #define _PPSTUFF_MAKECASE2(r, d, _var)  _PPSTUFF_MAKECASE1(_var) 

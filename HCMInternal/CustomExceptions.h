@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stacktrace>
 
 
 
@@ -22,9 +22,10 @@ public:
 		const std::source_location location = std::source_location::current())
 		: message(msg), sourceLocation(std::format("@ {}::{}:{}", location.file_name(), location.function_name(), location.line()).c_str())
 	{
-		std::stringstream buffer;
-		buffer << boost::stacktrace::stacktrace();
-		stackTrace = buffer.str();
+		//std::stringstream buffer;
+		//buffer << boost::stacktrace::basic_stacktrace();
+		//stackTrace = buffer.str();
+		stackTrace = std::to_string(std::stacktrace::current());
 		MandatoryLogging();
 	}
 
@@ -32,9 +33,10 @@ public:
 		const std::source_location location = std::source_location::current())
 		: message(msg), sourceLocation(std::format("@ {}::{}:{}", location.file_name(), location.function_name(), location.line()).c_str())
 	{
-		std::stringstream buffer;
-		buffer << boost::stacktrace::stacktrace();
-		stackTrace = buffer.str();
+		//std::stringstream buffer;
+		//buffer << boost::stacktrace::basic_stacktrace();
+		//stackTrace = buffer.str();
+		stackTrace = std::to_string(std::stacktrace::current());
 		MandatoryLogging();
 	}
 
