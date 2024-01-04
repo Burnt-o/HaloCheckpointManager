@@ -1677,7 +1677,7 @@
 
 	<VersionedEntry Name="checksumIgnoreCode" Type="Vector" Typename="byte">
 		<Version Version="All" Game="Halo3">
-			<Data>0x48, 0x39, 0xC9</Data>
+			<Data>0x48, 0x31, 0xC9</Data>
 		</Version>
 
 		<Version Version="All" Game="Halo3ODST">
@@ -2389,10 +2389,16 @@
 				<Offset>0x1E29988</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<!--<Version Version="1.3272.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x203EFC8</Offset>
+			</Offsets>
+		</Version>-->
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x204ECB8</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -2422,10 +2428,16 @@
 				<Offset>0x1E39678</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<!--<Version Version="1.3272.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x204ECB8</Offset>
+			</Offsets>
+		</Version>-->
+		<Version Version="1.3272.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x203EFC8</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
