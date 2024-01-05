@@ -3921,10 +3921,12 @@
 				<Offset>0x1DD27D0</Offset>
 			</Offsets>
 		</Version>
+		<!--updated to version that doesn't break when oob. todo: do the same thing for s7/s8-->
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x1C563F0</Offset>
+				<Offset>0x01C38908</Offset>
+				<Offset>0x4</Offset>
 			</Offsets>
 		</Version>
 
