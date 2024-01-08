@@ -3925,7 +3925,7 @@
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x01C38908</Offset>
+				<Offset>0x02D9CD90</Offset>
 				<Offset>0x4</Offset>
 			</Offsets>
 		</Version>
