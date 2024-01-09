@@ -22,7 +22,7 @@ private:
 	T defaultValue; // used in case we need to reset
 	std::function<bool(T)> isInputValid;
 	std::string mOptionName;
-
+	std::mutex updateValueWithInputMutex{};
 
 public:
 
@@ -40,6 +40,8 @@ public:
 
 	void UpdateValueWithInput()
 	{
+		std::lock_guard<std::mutex> lock(updateValueWithInputMutex);
+
 		if (isInputValid(valueDisplay))
 		{
 			value = valueDisplay;
