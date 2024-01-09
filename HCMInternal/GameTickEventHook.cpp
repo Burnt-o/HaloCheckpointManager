@@ -74,6 +74,9 @@ public:
 
 GameTickEventHook::GameTickEventHook(GameState game, IDIContainer& dicon)
 {
+	std::lock_guard<std::mutex> lock(constructionMutex);
+	if (pimpl) return;
+
 	switch (game)
 	{
 	case GameState::Value::Halo1: pimpl = std::make_unique<GameTickEventHookTemplated<GameState::Value::Halo1>>(game, dicon); break;

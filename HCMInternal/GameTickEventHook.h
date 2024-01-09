@@ -14,6 +14,7 @@ public:
 	};
 private:
 	std::unique_ptr<GameTickEventHookImpl> pimpl;
+	static inline std::mutex constructionMutex;
 
 public:
 	GameTickEventHook(GameState game, IDIContainer& dicon);
