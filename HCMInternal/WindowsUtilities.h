@@ -42,3 +42,45 @@ void move_towards(float& value, float target, float step);
 
 HMODULE GetCurrentModule();
 
+// I'm sick of isBadReadPtr sucking. trying this approach instead
+// https://stackoverflow.com/a/65369674/23053739
+
+// Check memory address access
+const DWORD dwForbiddenArea = PAGE_GUARD | PAGE_NOACCESS;
+const DWORD dwReadRights = PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY;
+const DWORD dwWriteRights = PAGE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY;
+
+template<DWORD dwAccessRights>
+bool CheckAccess(const void* const pAddress, size_t nSize)
+{
+	if (!pAddress || !nSize)
+	{
+		return false;
+	}
+
+	MEMORY_BASIC_INFORMATION sMBI;
+	bool bRet = false;
+
+	UINT_PTR pCurrentAddress = UINT_PTR(pAddress);
+	UINT_PTR pEndAdress = pCurrentAddress + (nSize - 1);
+
+	do
+	{
+		ZeroMemory(&sMBI, sizeof(sMBI));
+		VirtualQuery(LPCVOID(pCurrentAddress), &sMBI, sizeof(sMBI));
+
+		bRet = (sMBI.State & MEM_COMMIT) // memory allocated and
+			&& !(sMBI.Protect & dwForbiddenArea) // access to page allowed and
+			&& (sMBI.Protect & dwAccessRights); // the required rights
+
+		pCurrentAddress = (UINT_PTR(sMBI.BaseAddress) + sMBI.RegionSize);
+	} while (bRet && pCurrentAddress <= pEndAdress);
+
+	return bRet;
+}
+
+
+
+#define IsBadWritePtr(p,n) (!CheckAccess<dwWriteRights>(p,n))
+#define IsBadReadPtr(p,n) (!CheckAccess<dwReadRights>(p,n))
+#define IsBadStringPtrW(p,n) (!CheckAccess<dwReadRights>(p,n*2))

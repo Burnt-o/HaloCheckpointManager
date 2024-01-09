@@ -122,7 +122,7 @@ bool MultilevelPointerSpecialisation::ModuleOffset::resolve(uintptr_t* resolvedO
 
 bool MultilevelPointerSpecialisation::Resolved::resolve(uintptr_t* resolvedOut) const
 {
-	if (IsBadReadPtr(this->mBaseAddress, 8))
+	if (IsBadReadPtr(this->mBaseAddress, (size_t)8))
 	{
 		*SetLastErrorByRef() << "Resolved resolution failed, bad read pointer: " << this->mBaseAddress << std::endl;
 		return false;
