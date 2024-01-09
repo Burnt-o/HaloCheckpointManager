@@ -146,29 +146,11 @@ void Renderer2D::render(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceConte
 
 
 
-
 		// https://github.com/microsoft/DirectXTK/wiki/SpriteBatch
 
 		pDeviceContext->OMSetRenderTargets(1, &m_pMainRenderTargetView, NULL);
 
 		spriteBatch->SetViewport(vp);
-
-		static float transparency = 0.1f;
-		if (GetKeyState('7') & 0x8000)
-		{
-			transparency = transparency * 1.5f;
-			PLOG_DEBUG << transparency;
-			Sleep(30);
-		}
-
-		if (GetKeyState('8') & 0x8000)
-		{
-			transparency = transparency * 0.66f;
-			PLOG_DEBUG << transparency;
-			Sleep(30);
-
-		}
-
 
 		DirectX::FXMVECTOR tintColour {1.f, 1.f, 1.f, 0.0024f};
 		spriteBatch->Begin(SpriteSortMode_Immediate, commonStates->NonPremultiplied(), nullptr, nullptr, nullptr);
