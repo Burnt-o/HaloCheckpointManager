@@ -11,19 +11,11 @@ class HideHUDImplH1 : public GenericScopedServiceProvider
 private:
 	GameState mGame;
 
-	static inline std::shared_ptr<ModuleMidHook> hideHUDFlagHook1;
-	static inline std::shared_ptr< MidhookFlagInterpreter> hideHUDFlagInterpreter1;
-	static void hideHUDFlagHookFunction1(SafetyHookContext& ctx) { hideHUDFlagInterpreter1->setFlag(ctx); }
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook1;
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook2;
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook3;
 
 
-	static inline std::shared_ptr<ModuleMidHook> hideHUDFlagHook2;
-	static inline std::shared_ptr< MidhookFlagInterpreter> hideHUDFlagInterpreter2;
-	static void hideHUDFlagHookFunction2(SafetyHookContext& ctx) { hideHUDFlagInterpreter2->setFlag(ctx); }
-
-
-	static inline std::shared_ptr<ModuleMidHook> hideHUDFlagHook3;
-	static inline std::shared_ptr< MidhookFlagInterpreter> hideHUDFlagInterpreter3;
-	static void hideHUDFlagHookFunction3(SafetyHookContext& ctx) { hideHUDFlagInterpreter3->setFlag(ctx); }
 
 public:
 	HideHUDImplH1(GameState gameImpl, IDIContainer& dicon)
@@ -32,17 +24,18 @@ public:
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 
-		auto hideHUDFlagFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDFlagFunction1), mGame);
-		hideHUDFlagInterpreter1 = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(hideHUDFlagInterpreter1), mGame);
-		hideHUDFlagHook1 = ModuleMidHook::make(GameState(mGame).toModuleName(), hideHUDFlagFunction1, hideHUDFlagHookFunction1);
+		auto hideHUDPatchFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction1), gameImpl); 
+		auto hideHUDPatchCode1 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode1), gameImpl);
+		hideHUDPatchHook1 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction1, *hideHUDPatchCode1.get());
 
-		auto hideHUDFlagFunction2 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDFlagFunction2), mGame);
-		hideHUDFlagInterpreter2 = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(hideHUDFlagInterpreter2), mGame);
-		hideHUDFlagHook2 = ModuleMidHook::make(GameState(mGame).toModuleName(), hideHUDFlagFunction2, hideHUDFlagHookFunction2);
+		auto hideHUDPatchFunction2 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction2), gameImpl);
+		auto hideHUDPatchCode2 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode2), gameImpl);
+		hideHUDPatchHook2 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction2, *hideHUDPatchCode2.get());
 
-		auto hideHUDFlagFunction3 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDFlagFunction3), mGame);
-		hideHUDFlagInterpreter3 = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(hideHUDFlagInterpreter3), mGame);
-		hideHUDFlagHook3 = ModuleMidHook::make(GameState(mGame).toModuleName(), hideHUDFlagFunction3, hideHUDFlagHookFunction3);
+		auto hideHUDPatchFunction3 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction3), gameImpl);
+		auto hideHUDPatchCode3 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode3), gameImpl);
+		hideHUDPatchHook3 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction3, *hideHUDPatchCode3.get());
+
 	}
 
 	virtual void updateService() override
@@ -50,9 +43,14 @@ public:
 		// attach if requested
 		PLOG_VERBOSE << "HideHUDImplH1::updateService";
 		safetyhook::ThreadFreezer freezeThreads;
-		hideHUDFlagHook1->setWantsToBeAttached(serviceIsRequested());
-		hideHUDFlagHook2->setWantsToBeAttached(serviceIsRequested());
-		hideHUDFlagHook3->setWantsToBeAttached(serviceIsRequested());
+		Sleep(1);
+
+
+		bool newState = serviceIsRequested();
+		safetyhook::ThreadFreezer freeze{};
+		hideHUDPatchHook1->setWantsToBeAttached(newState);
+		hideHUDPatchHook2->setWantsToBeAttached(newState);
+		hideHUDPatchHook3->setWantsToBeAttached(newState);
 		PLOG_VERBOSE << "HideHUDImplH1::updateService DONE";
 	}
 };
@@ -64,9 +62,9 @@ class HideHUDImplH2 : public GenericScopedServiceProvider
 private:
 	GameState mGame;
 
-	static inline std::shared_ptr<ModuleMidHook> hideHUDFlagHook1;
-	static inline std::shared_ptr< MidhookFlagInterpreter> hideHUDFlagInterpreter1;
-	static void hideHUDFlagHookFunction1(SafetyHookContext& ctx) { hideHUDFlagInterpreter1->setFlag(ctx); }
+
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook1;
+
 
 
 
@@ -77,9 +75,9 @@ public:
 	{
 		auto ptr = dicon.Resolve<PointerManager>().lock();
 
-		auto hideHUDFlagFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDFlagFunction1), mGame);
-		hideHUDFlagInterpreter1 = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(hideHUDFlagInterpreter1), mGame);
-		hideHUDFlagHook1 = ModuleMidHook::make(GameState(mGame).toModuleName(), hideHUDFlagFunction1, hideHUDFlagHookFunction1);
+		auto hideHUDPatchFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction1), gameImpl);
+		auto hideHUDPatchCode1 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode1), gameImpl);
+		hideHUDPatchHook1 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction1, *hideHUDPatchCode1.get());
 
 	}
 
@@ -87,8 +85,8 @@ public:
 	{
 		// attach if requested
 		PLOG_VERBOSE << "HideHUDImplH2::updateService";
-		safetyhook::ThreadFreezer freezeThreads;
-		hideHUDFlagHook1->setWantsToBeAttached(serviceIsRequested());
+		safetyhook::ThreadFreezer freezeThreads{};
+		hideHUDPatchHook1->setWantsToBeAttached(serviceIsRequested());
 		PLOG_VERBOSE << "HideHUDImplH2::updateService DONE";
 	}
 };

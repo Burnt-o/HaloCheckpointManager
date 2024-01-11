@@ -4889,6 +4889,62 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="hideHUDPatchFunction1" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB31BA7</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x829053</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="hideHUDPatchFunction2" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB12D8D</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="hideHUDPatchFunction3" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB12E6C</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="hideHUDPatchCode1" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Data>0x85</Data>
+		</Version>
+
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<Data>0x85</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="hideHUDPatchCode2" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Data>0x85</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="hideHUDPatchCode3" Type="Vector" Typename="byte">
+		<Version Version="1.3272.0.0" Game="Halo1">
+			<Data>0x75</Data>
+		</Version>
+	</VersionedEntry>
+
 
 	<!--<VersionedEntry Name="hideHUDContextFunction1" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
