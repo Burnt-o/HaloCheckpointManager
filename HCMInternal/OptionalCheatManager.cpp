@@ -124,6 +124,7 @@ private:
 	// weak reference to the stores cheatCollection while we construct cheats. We will reset this when we're done.
 	std::shared_ptr<CheatCollection> cheatCollection;
 	std::mutex cheatCollectionMutex; // so multiple threads don't access the map simultaneously
+	std::mutex cheatCollectionMutex2; // so multiple threads don't access the map simultaneously
 public:
 	OptionalCheatConstructor()
 	{
@@ -147,6 +148,7 @@ public:
 			auto& th = createCheatThreads.emplace_back(std::thread([gameCheatPair, cheatStore,info, this]() {
 				try
 				{
+					std::lock_guard<std::mutex> lock(cheatCollectionMutex2);
 					// Try to create the cheat. 
 					getOrMakeCheat(gameCheatPair, cheatStore.lock()->dicon);
 					info->setInfo(gameCheatPair, {});

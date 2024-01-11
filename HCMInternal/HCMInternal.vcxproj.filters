@@ -844,9 +844,6 @@
     <ClCompile Include="BlockPlayerCharacterInput.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="DisableScreenEffects.cpp">
-      <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClCompile>
     <ClCompile Include="HideHUD.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
@@ -855,6 +852,9 @@
     </ClCompile>
     <ClCompile Include="Renderer2D.cpp">
       <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="DisableScreenEffects.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
