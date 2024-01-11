@@ -93,7 +93,7 @@ public:
 
 					lockOrThrow(getObjectHealthOptionalWeak.value(), getObjectHealth);
 					auto health = getObjectHealth->getObjectHealth(playerAddress, playerObjectType);
-					ss << " Health: " << health << std::endl;
+					ss << " Health: " << health.value << std::endl;
 
 
 					if constexpr (gameT == GameState::Value::HaloReach || gameT == GameState::Value::Halo4)
@@ -113,7 +113,7 @@ public:
 					if (playerObjectType == CommonObjectType::Biped)
 					{
 						auto shields = getObjectHealth->getObjectShields(playerAddress, playerObjectType);
-						ss << " Shield: " << shields << std::endl;
+						ss << " Shield: " << shields.value << std::endl;
 					}
 
 					if (playerObjectType == CommonObjectType::Biped && showHealthShieldCooldown)
@@ -136,7 +136,7 @@ public:
 						if (!vehicleDatum.isNull() && getObjectAddress->isValidDatum(vehicleDatum))
 						{
 							auto vehiHealth = getObjectHealth->getObjectHealth(vehicleDatum);
-							ss << " Vehi Health: " << vehiHealth << std::endl;
+							ss << " Vehi Health: " << vehiHealth.value << std::endl;
 						}
 
 					}

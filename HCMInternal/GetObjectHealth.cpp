@@ -37,25 +37,25 @@ public:
 
 	}
 
-	float getObjectHealth(Datum entityDatum)
+	ObjectHealth* getObjectHealthMutable(Datum entityDatum)
 	{
 		lockOrThrow(getObjectAddressWeak, getObjectAddress);
 		CommonObjectType entityType;
 		auto entityAddress = getObjectAddress->getObjectAddress(entityDatum, &entityType);
-		return getObjectHealth(entityAddress, entityType);
+		return getObjectHealthMutable(entityAddress, entityType);
 	}
 
-	float getObjectHealth(uintptr_t entityAddress, CommonObjectType entityType)
+	ObjectHealth* getObjectHealthMutable(uintptr_t entityAddress, CommonObjectType entityType)
 	{
 		if (entityType == CommonObjectType::Biped)
 		{
 			bipedDataStruct->currentBaseAddress = entityAddress;
-			return *bipedDataStruct->field<float>(bipedDataFields::health);
+			return bipedDataStruct->field<ObjectHealth>(bipedDataFields::health);
 		}
 		else if (entityType == CommonObjectType::Vehicle)
 		{
 			vehicleDataStruct->currentBaseAddress = entityAddress;
-			return *vehicleDataStruct->field<float>(vehicleDataFields::health);
+			return vehicleDataStruct->field<ObjectHealth>(vehicleDataFields::health);
 		}
 		else
 		{
@@ -63,20 +63,20 @@ public:
 		}
 	}
 
-	float getObjectShields(Datum entityDatum)
+	ObjectShields* getObjectShieldsMutable(Datum entityDatum)
 	{
 		lockOrThrow(getObjectAddressWeak, getObjectAddress);
 		CommonObjectType entityType;
 		auto entityAddress = getObjectAddress->getObjectAddress(entityDatum, &entityType);
-		return getObjectHealth(entityAddress, entityType);
+		return getObjectShieldsMutable(entityAddress, entityType);
 	}
 
-	float getObjectShields(uintptr_t entityAddress, CommonObjectType entityType)
+	ObjectShields* getObjectShieldsMutable(uintptr_t entityAddress, CommonObjectType entityType)
 	{
 		if (entityType == CommonObjectType::Biped)
 		{
 			bipedDataStruct->currentBaseAddress = entityAddress;
-			return *bipedDataStruct->field<float>(bipedDataFields::shields);
+			return bipedDataStruct->field<ObjectShields>(bipedDataFields::shields);
 		}
 		else
 		{
@@ -84,20 +84,19 @@ public:
 		}
 	}
 
-
-	uint16_t getObjectShieldCooldown(Datum entityDatum)
+	uint16_t* getObjectShieldCooldown(Datum entityDatum)
 	{
 		lockOrThrow(getObjectAddressWeak, getObjectAddress);
 		CommonObjectType entityType;
 		auto entityAddress = getObjectAddress->getObjectAddress(entityDatum, &entityType);
 		return getObjectShieldCooldown(entityAddress, entityType);
 	}
-	uint16_t getObjectShieldCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped
+	uint16_t* getObjectShieldCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped
 	{
 		if (entityType == CommonObjectType::Biped)
 		{
 			bipedDataStruct->currentBaseAddress = entityAddress;
-			return *bipedDataStruct->field<uint16_t>(bipedDataFields::shieldCooldown);
+			return bipedDataStruct->field<uint16_t>(bipedDataFields::shieldCooldown);
 		}
 		else
 		{
@@ -105,14 +104,14 @@ public:
 		}
 	}
 
-	uint16_t getObjectHealthCooldown(Datum entityDatum)
+	uint16_t* getObjectHealthCooldown(Datum entityDatum)
 	{
 		lockOrThrow(getObjectAddressWeak, getObjectAddress);
 		CommonObjectType entityType;
 		auto entityAddress = getObjectAddress->getObjectAddress(entityDatum, &entityType);
 		return getObjectShieldCooldown(entityAddress, entityType);
 	}
-	uint16_t getObjectHealthCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped
+	uint16_t* getObjectHealthCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped
 	{
 		if (!healthCooldownDataStruct.has_value()) throw HCMRuntimeException("Could not resolve healthCooldownDataStruct");
 
@@ -120,7 +119,7 @@ public:
 		if (entityType == CommonObjectType::Biped)
 		{
 			healthCooldownDataStruct.value()->currentBaseAddress = entityAddress;
-			return *healthCooldownDataStruct.value()->field<uint16_t>(healthCooldownDataFields::healthCooldown);
+			return healthCooldownDataStruct.value()->field<uint16_t>(healthCooldownDataFields::healthCooldown);
 		}
 		else
 		{
@@ -143,39 +142,57 @@ GetObjectHealth::~GetObjectHealth()
 	PLOG_DEBUG << "~" << getName();
 }
 
-
-float GetObjectHealth::getObjectHealth(Datum entityDatum)
+ObjectHealth* GetObjectHealth::getObjectHealthMutable(Datum entityDatum)
 {
-	return pimpl->getObjectHealth(entityDatum);
+	return pimpl->getObjectHealthMutable(entityDatum);
 }
-float GetObjectHealth::getObjectHealth(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
+ObjectHealth* GetObjectHealth::getObjectHealthMutable(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
 {
-	return pimpl->getObjectHealth(entityAddress, entityType);
-}
-
-float GetObjectHealth::getObjectShields(Datum entityDatum)
-{
-	return pimpl->getObjectShields(entityDatum);
-}
-float GetObjectHealth::getObjectShields(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
-{
-	return pimpl->getObjectShields(entityAddress, entityType);
+	return pimpl->getObjectHealthMutable(entityAddress, entityType);
 }
 
-uint16_t GetObjectHealth::getObjectShieldCooldown(Datum entityDatum)
+ObjectShields* GetObjectHealth::getObjectShieldsMutable(Datum entityDatum)
 {
-	return pimpl->getObjectShieldCooldown(entityDatum);
+	return pimpl->getObjectShieldsMutable(entityDatum);
 }
-uint16_t GetObjectHealth::getObjectShieldCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
+ObjectShields* GetObjectHealth::getObjectShieldsMutable(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
 {
-	return pimpl->getObjectShieldCooldown(entityAddress, entityType);
+	return pimpl->getObjectShieldsMutable(entityAddress, entityType);
 }
 
-uint16_t GetObjectHealth::getObjectHealthCooldown(Datum entityDatum)
+const ObjectHealth GetObjectHealth::getObjectHealth(Datum entityDatum)
 {
-	return pimpl->getObjectHealthCooldown(entityDatum);
+	return *pimpl->getObjectHealthMutable(entityDatum);
 }
-uint16_t GetObjectHealth::getObjectHealthCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
+const ObjectHealth GetObjectHealth::getObjectHealth(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
 {
-	return pimpl->getObjectHealthCooldown(entityAddress, entityType);
+	return *pimpl->getObjectHealthMutable(entityAddress, entityType);
 }
+
+const ObjectShields GetObjectHealth::getObjectShields(Datum entityDatum)
+{
+	return *pimpl->getObjectShieldsMutable(entityDatum);
+}
+const ObjectShields GetObjectHealth::getObjectShields(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
+{
+	return *pimpl->getObjectShieldsMutable(entityAddress, entityType);
+}
+
+const uint16_t GetObjectHealth::getObjectShieldCooldown(Datum entityDatum)
+{
+	return *pimpl->getObjectShieldCooldown(entityDatum);
+}
+const uint16_t GetObjectHealth::getObjectShieldCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
+{
+	return *pimpl->getObjectShieldCooldown(entityAddress, entityType);
+}
+
+const uint16_t GetObjectHealth::getObjectHealthCooldown(Datum entityDatum)
+{
+	return *pimpl->getObjectHealthCooldown(entityDatum);
+}
+const uint16_t GetObjectHealth::getObjectHealthCooldown(uintptr_t entityAddress, CommonObjectType entityType) // must be biped or vehicle
+{
+	return *pimpl->getObjectHealthCooldown(entityAddress, entityType);
+}
+

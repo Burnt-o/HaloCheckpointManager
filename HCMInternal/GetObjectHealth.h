@@ -6,6 +6,9 @@
 #include "Datum.h"
 #include "ObjectTypes.h"
 
+// For safety, so the user doesn't mix them up
+typedef struct { float value; } ObjectHealth;
+typedef struct { float value; } ObjectShields;
 
 class GetObjectHealth : public IOptionalCheat
 {
@@ -17,17 +20,23 @@ public:
 	GetObjectHealth(GameState gameImpl, IDIContainer& dicon);
 	~GetObjectHealth();
 
-	float getObjectHealth(Datum entityDatum);
-	float getObjectHealth(uintptr_t entityAddress, CommonObjectType entityType); // must be biped or vehicle
+	const ObjectHealth getObjectHealth(Datum entityDatum);
+	const ObjectHealth getObjectHealth(uintptr_t entityAddress, CommonObjectType entityType); // must be biped or vehicle
 
-	float getObjectShields(Datum entityDatum);
-	float getObjectShields(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
+	const ObjectShields getObjectShields(Datum entityDatum);
+	const ObjectShields getObjectShields(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
 
-	uint16_t getObjectShieldCooldown(Datum entityDatum);
-	uint16_t getObjectShieldCooldown(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
+	ObjectHealth* getObjectHealthMutable(Datum entityDatum);
+	ObjectHealth* getObjectHealthMutable(uintptr_t entityAddress, CommonObjectType entityType); // must be biped or vehicle
 
-	uint16_t getObjectHealthCooldown(Datum entityDatum);
-	uint16_t getObjectHealthCooldown(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
+	ObjectShields* getObjectShieldsMutable(Datum entityDatum);
+	ObjectShields* getObjectShieldsMutable(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
+
+	const uint16_t getObjectShieldCooldown(Datum entityDatum);
+	const uint16_t getObjectShieldCooldown(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
+
+	const uint16_t getObjectHealthCooldown(Datum entityDatum);
+	const uint16_t getObjectHealthCooldown(uintptr_t entityAddress, CommonObjectType entityType); // must be biped
 
 	std::string_view getName() override { return nameof(GetObjectHealth); }
 
