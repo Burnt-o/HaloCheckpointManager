@@ -59,6 +59,7 @@
 #include "DisableScreenEffects.h"
 #include "HideHUD.h"
 #include "OBSBypassCheck.h"
+#include "SetPlayerHealth.h"
 
 #include "DIContainer.h"
 #include "map.h"

@@ -608,6 +608,9 @@
     <ClInclude Include="OBSBypassCheck.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="SetPlayerHealth.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -855,6 +858,9 @@
     </ClCompile>
     <ClCompile Include="DisableScreenEffects.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="SetPlayerHealth.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

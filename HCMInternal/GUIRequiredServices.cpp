@@ -297,6 +297,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::HideHUD}
 	},
 
+					{ GUIElementEnum::setPlayerHealthGUI,
+{OptionalCheatEnum::SetPlayerHealth}
+	},
 
 #ifdef HCM_DEBUG
 

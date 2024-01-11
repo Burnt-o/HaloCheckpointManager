@@ -114,6 +114,9 @@
 		((forceLaunchManual, (ALL_SUPPORTED_GAMES)))\
 			((forceLaunchAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
 	((switchBSPGUI, (ALL_SUPPORTED_GAMES)))\
+	((setPlayerHealthSubheadingGUI, (ALL_SUPPORTED_GAMES)))\
+		((setPlayerHealthGUI, (ALL_SUPPORTED_GAMES)))\
+		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\

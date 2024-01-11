@@ -254,6 +254,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="OBSBypassCheck.h" />
     <ClInclude Include="Renderer2D.h" />
     <ClInclude Include="OBSBypassManager.h" />
+    <ClInclude Include="SetPlayerHealth.h" />
     <ClInclude Include="SwitchBSP.h" />
     <ClInclude Include="ThirdPersonRendering.h" />
     <ClInclude Include="UserCameraInputReader.h" />
@@ -426,6 +427,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="HideHUD.cpp" />
     <ClCompile Include="Lapua.cpp" />
     <ClCompile Include="Renderer2D.cpp" />
+    <ClCompile Include="SetPlayerHealth.cpp" />
     <ClCompile Include="SwitchBSP.cpp" />
     <ClCompile Include="ThirdPersonRendering.cpp" />
     <ClCompile Include="UserCameraInputReader.cpp" />

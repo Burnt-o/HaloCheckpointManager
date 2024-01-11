@@ -43,7 +43,8 @@ editPlayerViewAngleSet,\
 editPlayerViewAngleAdjustHorizontal,\
 editPlayerViewAngleAdjustVertical,\
 switchBSP,\
-hideHUDToggle
+hideHUDToggle,\
+setPlayerHealth
 
 // hotkeys that do not fire an event. Usually used for continous inputs like freecamera
 #define NOEVENT_HOTKEYS \

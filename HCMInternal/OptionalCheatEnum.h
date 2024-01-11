@@ -56,7 +56,8 @@ SwitchBSP,\
 GetCurrentBSP,\
 DisableScreenEffects,\
 HideHUD,\
-OBSBypassCheck
+OBSBypassCheck,\
+SetPlayerHealth
 
 
 enum class OptionalCheatEnum {

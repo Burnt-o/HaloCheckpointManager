@@ -43,6 +43,7 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraAnchorRotationToObjectFacingHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraAnchorFOVToObjectDistanceHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> hideHUDToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> setPlayerHealthEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -1050,6 +1051,13 @@ public:
 			nameof(OBSBypassToggle)
 		);
 
+	std::shared_ptr<Setting<SimpleMath::Vector2>> setPlayerHealthVec2 = std::make_shared<Setting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2(1.f, 1.f), // full health, full shields
+			[](SimpleMath::Vector2 in) { return (in.x >= 0.f) && (in.x <= 1.f) && (in.y >= 0.f) && (in.y <= 1.f); }, // 0 to 1 inclusive
+			nameof(setPlayerHealthVec2)
+		);
+
 	enum class FreeCameraObjectTrackEnum
 	{
 		Player,
@@ -1183,6 +1191,7 @@ public:
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor,
 		switchBSPIndex,
+		setPlayerHealthVec2
 
 	};
 };

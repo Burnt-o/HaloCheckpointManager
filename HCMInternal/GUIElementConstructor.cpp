@@ -376,6 +376,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							createNestedElement(GUIElementEnum::forceLaunchGUI),
 							createNestedElement(GUIElementEnum::forceLaunchSettingsSubheading),
 							createNestedElement(GUIElementEnum::switchBSPGUI),
+							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -569,6 +570,29 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							((game.operator GameState::Value() == GameState::Value::Halo1 || game.operator GameState::Value() == GameState::Value::Halo2) ? "Switch BSP to" : "Switch Zone Set to"), 
 							"index",
 							settings->switchBSPIndex, settings->switchBSPEvent));
+
+				case GUIElementEnum::setPlayerHealthSubheadingGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Directly set the players health and shields"), "Set Player Health", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::setPlayerHealthGUI),
+							createNestedElement(GUIElementEnum::setPlayerHealthValueGUI),
+							},
+							0.f));
+
+				case GUIElementEnum::setPlayerHealthGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+						(game, ToolTipCollection("Directly set the players health and shields"), RebindableHotkeyEnum::setPlayerHealth,
+							"Set Player Health",
+							settings->setPlayerHealthEvent));
+
+				case GUIElementEnum::setPlayerHealthValueGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<true, false, 3>>
+						(game, ToolTipCollection("Directly set the players health and shields"),
+							 "setPlayerHealthValue",
+							settings->setPlayerHealthVec2,
+							"Health ##setPlayerHealthValue",
+							"Shields##setPlayerHealthValue"));
 
 
 

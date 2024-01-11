@@ -201,48 +201,52 @@ private:
 		mSettings->freeCameraUserInputCameraSetVelocity,
 		vvk{}),
 
-			initEventOnPressHotkey(freeCameraAnchorPositionToObjectPosition,
-				mSettings->freeCameraAnchorPositionToObjectPositionHotkeyEvent,
-				vvk{}),
+		initEventOnPressHotkey(freeCameraAnchorPositionToObjectPosition,
+			mSettings->freeCameraAnchorPositionToObjectPositionHotkeyEvent,
+			vvk{}),
 
-			initEventOnPressHotkey(freeCameraAnchorPositionToObjectRotation,
-				mSettings->freeCameraAnchorPositionToObjectRotationHotkeyEvent,
-				vvk{}),
+		initEventOnPressHotkey(freeCameraAnchorPositionToObjectRotation,
+			mSettings->freeCameraAnchorPositionToObjectRotationHotkeyEvent,
+			vvk{}),
 
-			initEventOnPressHotkey(freeCameraAnchorRotationToObjectPosition,
-				mSettings->freeCameraAnchorRotationToObjectPositionHotkeyEvent,
-				vvk{}),
+		initEventOnPressHotkey(freeCameraAnchorRotationToObjectPosition,
+			mSettings->freeCameraAnchorRotationToObjectPositionHotkeyEvent,
+			vvk{}),
 
-			initEventOnPressHotkey(freeCameraAnchorRotationToObjectFacing,
-				mSettings->freeCameraAnchorRotationToObjectFacingHotkeyEvent,
-				vvk{}),
+		initEventOnPressHotkey(freeCameraAnchorRotationToObjectFacing,
+			mSettings->freeCameraAnchorRotationToObjectFacingHotkeyEvent,
+			vvk{}),
 
-			initEventOnPressHotkey(freeCameraAnchorFOVToObjectDistance,
-				mSettings->freeCameraAnchorFOVToObjectDistanceHotkeyEvent,
-				vvk{}),
+		initEventOnPressHotkey(freeCameraAnchorFOVToObjectDistance,
+			mSettings->freeCameraAnchorFOVToObjectDistanceHotkeyEvent,
+			vvk{}),
 
-			initEventOnPressHotkey(editPlayerViewAngleSet,
-				mSettings->editPlayerViewAngleSet,
-				vvk{}),
+		initEventOnPressHotkey(editPlayerViewAngleSet,
+			mSettings->editPlayerViewAngleSet,
+			vvk{}),
 
-			initEventOnPressHotkey(editPlayerViewAngleAdjustHorizontal,
-				mSettings->editPlayerViewAngleAdjustHorizontal,
-				vvk{}),
+		initEventOnPressHotkey(editPlayerViewAngleAdjustHorizontal,
+			mSettings->editPlayerViewAngleAdjustHorizontal,
+			vvk{}),
 
-			initEventOnPressHotkey(editPlayerViewAngleAdjustVertical,
-				mSettings->editPlayerViewAngleAdjustVertical,
-				vvk{}),
+		initEventOnPressHotkey(editPlayerViewAngleAdjustVertical,
+			mSettings->editPlayerViewAngleAdjustVertical,
+			vvk{}),
 
-			initEventOnPressHotkey(switchBSP,
-				mSettings->switchBSPEvent,
-				vvk{}),
-
-
-			initEventOnPressHotkey(hideHUDToggle,
-				mSettings->hideHUDToggleHotkeyEvent,
-				vvk{}),
+		initEventOnPressHotkey(switchBSP,
+			mSettings->switchBSPEvent,
+			vvk{}),
 
 
+		initEventOnPressHotkey(hideHUDToggle,
+			mSettings->hideHUDToggleHotkeyEvent,
+			vvk{}),
+
+
+
+		initEventOnPressHotkey(setPlayerHealth,
+		mSettings->setPlayerHealthEvent,
+		vvk{}),
 
 
 	};
