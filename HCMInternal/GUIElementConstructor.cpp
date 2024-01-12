@@ -381,7 +381,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 
 				case GUIElementEnum::speedhackGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISpeedhack>
-						(game, ToolTipCollection("Multiply the games clock speed by this value (1 = normal speed)"), RebindableHotkeyEnum::speedhack, settings));
+						(game, ToolTipCollection("Multiply the games clock speed by this value (1 = normal speed). \nFor non-stuttery framerates at low speedhack values, make sure you're running MCC with uncapped framerate."), RebindableHotkeyEnum::speedhack, settings));
 
 				case GUIElementEnum::invulnGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInvulnerability>
