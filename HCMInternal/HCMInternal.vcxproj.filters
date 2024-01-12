@@ -611,6 +611,9 @@
     <ClInclude Include="SetPlayerHealth.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="CarrierBumpAnalyser.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -860,6 +863,9 @@
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
     <ClCompile Include="SetPlayerHealth.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="CarrierBumpAnalyser.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>

@@ -236,6 +236,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="BlockGameInput.h" />
     <ClInclude Include="BlockPlayerCharacterInput.h" />
     <ClInclude Include="BottomlessClip.h" />
+    <ClInclude Include="CarrierBumpAnalyser.h" />
     <ClInclude Include="CheckpointInjectionLogger.h" />
     <ClInclude Include="DisableScreenEffects.h" />
     <ClInclude Include="EditPlayerViewAngle.h" />
@@ -419,6 +420,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="BlockGameInput.cpp" />
     <ClCompile Include="BlockPlayerCharacterInput.cpp" />
     <ClCompile Include="BottomlessClip.cpp" />
+    <ClCompile Include="CarrierBumpAnalyser.cpp" />
     <ClCompile Include="CheckpointInjectionLogger.cpp" />
     <ClCompile Include="DisableScreenEffects.cpp" />
     <ClCompile Include="EditPlayerViewAngle.cpp" />

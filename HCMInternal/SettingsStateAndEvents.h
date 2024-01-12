@@ -1058,6 +1058,13 @@ public:
 			nameof(setPlayerHealthVec2)
 		);
 
+	std::shared_ptr<Setting<bool>> carrierBumpAnalyserToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(carrierBumpAnalyserToggle)
+		);
+
 	enum class FreeCameraObjectTrackEnum
 	{
 		Player,
