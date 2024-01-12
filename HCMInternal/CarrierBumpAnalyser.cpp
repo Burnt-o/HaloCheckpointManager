@@ -91,7 +91,7 @@ struct SessionInformation
 		for (unsigned short i = 0; auto& runInfo : runInfoCollection)
 		{
 			i++;
-			file << i << std::endl << runInfo.deserialise() << std::endl << std::endl;
+			file << i << std::endl << runInfo.serialise() << std::endl << std::endl;
 		}
 
 	}
@@ -122,6 +122,10 @@ private:
 
 	void reset()
 	{
+		// TODO
+		// revert to checkpoint (the user will have to make an appropiate checkpoint beforehand. The checkpoint will need the carrier to already be landed and not moving, just about to explode, as well as chief standing perfectly still)
+
+		// reset current run info
 		currentRun = {};
 	}
 
@@ -174,7 +178,6 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr< GetPlayerDatum> getPlayerDatumWeak;
-	std::optional<std::weak_ptr<GetPlayerViewAngle>> getPlayerViewAngleWeak;
 	std::weak_ptr< GetObjectPhysics> getObjectPhysicsWeak;
 	std::weak_ptr<GameTickEventHook> gameTickEventHookWeak;
 	std::weak_ptr<PauseGame> pauseServiceWeak;
@@ -269,7 +272,8 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getPlayerDatumWeak(resolveDependentCheat(GetPlayerDatum)),
 		getObjectPhysicsWeak(resolveDependentCheat(GetObjectPhysics)),
-		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
+		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook)),
+		forceRevertWeak(resolveDependentCheat(ForceRevert))
 	{
 		if (game != (GameState)GameState::Value::Halo1) throw HCMInitException("Only for h1");
 
