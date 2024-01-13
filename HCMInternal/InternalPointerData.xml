@@ -1213,7 +1213,7 @@
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
-				<Offset>0x2936D1B</Offset>
+				<Offset>0x293DE2B</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
