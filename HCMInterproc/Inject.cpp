@@ -209,13 +209,13 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 
 	// Get the address of our own Kernel32's loadLibrary (it will be the same in the target process because Kernel32 is loaded in the same virtual memory in all processes)
 	auto loadLibraryAddr = GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
-	if (!loadLibraryAddr) throw std::exception("Couldn't find addr of loadLibraryA");
+	if (!loadLibraryAddr) throw std::exception(std::format("Couldn't find addr of loadLibraryA, error code: {}", GetLastError()).c_str());
 
 
 
 	// Allocate some memory on the target process, enough to store the filepath of the DLL
 	auto pathAlloc = VirtualAllocEx(mcc.get(), 0, dllFilePath.size(), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	if (!pathAlloc) throw std::exception("Failed to allocate memory in MCC for dll path");
+	if (!pathAlloc) throw std::exception(std::format("Failed to allocate memory in MCC for dll path, error code: {}", GetLastError()).c_str());
 
 	// Write the dll filepath string to allocated memory
 	DWORD oldProtect;
@@ -235,7 +235,7 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 	PLOG_DEBUG << "Calling createRemoteThread";
 	// Create a thread to call LoadLibraryA with pathAlloc as parameter
 	auto tHandle = CreateRemoteThread(mcc.get(), NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(loadLibraryAddr), pathAlloc, NULL, NULL);
-	if (!tHandle) throw std::exception("Couldn't create loadLibrary thread in mcc");
+	if (!tHandle) throw std::exception(std::format("Couldn't create loadLibrary thread in mcc, error code: {}", GetLastError()).c_str());
 
 	// Check if thread completed successfully
 	auto waitResult = WaitForSingleObject(tHandle, 3000);
