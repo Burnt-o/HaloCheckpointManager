@@ -2000,8 +2000,8 @@
 		<Version Version="1.3272.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x021BD4E0</Offset>
-				<Offset>0x970000</Offset>
+				<Offset>0x021BD4F0</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
