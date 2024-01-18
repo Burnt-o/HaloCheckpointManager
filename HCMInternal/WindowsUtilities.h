@@ -69,6 +69,7 @@ bool CheckAccess(const void* const pAddress, size_t nSize)
 		ZeroMemory(&sMBI, sizeof(sMBI));
 		VirtualQuery(LPCVOID(pCurrentAddress), &sMBI, sizeof(sMBI));
 
+		// THIS HERE IS SLOW AS FUCK
 		bRet = (sMBI.State & MEM_COMMIT) // memory allocated and
 			&& !(sMBI.Protect & dwForbiddenArea) // access to page allowed and
 			&& (sMBI.Protect & dwAccessRights); // the required rights
@@ -81,6 +82,8 @@ bool CheckAccess(const void* const pAddress, size_t nSize)
 
 
 
-#define IsBadWritePtr(p,n) (!CheckAccess<dwWriteRights>(p,n))
-#define IsBadReadPtr(p,n) (!CheckAccess<dwReadRights>(p,n))
-#define IsBadStringPtrW(p,n) (!CheckAccess<dwReadRights>(p,n*2))
+
+// Turns out this is extremely unperformant
+//#define IsBadWritePtr(p,n) (!CheckAccess<dwWriteRights>(p,n))
+//#define IsBadReadPtr(p,n) (!CheckAccess<dwReadRights>(p,n))
+//#define IsBadStringPtrW(p,n) (!CheckAccess<dwReadRights>(p,n*2))
