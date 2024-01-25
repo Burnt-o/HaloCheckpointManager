@@ -35,10 +35,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
             string proposedFolder = SelectedSaveFolder.ParentPath + "\\" + userInput;
             Log.Verbose("proposed folder: " + proposedFolder);
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
-            if (Directory.Exists(proposedFolder)) throw new InvalidOperationException("Failed to rename savefolder; was your new name valid and unique?");
+            if (Directory.Exists(proposedFolder)) throw new InvalidOperationException("Failed to rename savefolder; directory by that name already exists");
 
 
-                Directory.Move(SelectedSaveFolder.SaveFolderPath, proposedFolder);
+                Directory.Move(SelectedSaveFolder.SaveFolderPath, proposedFolder); // will throw if user chose an illegal name
 
 
 

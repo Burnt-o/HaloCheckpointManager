@@ -117,7 +117,7 @@ private:
 			std::copy(std::begin(versionString), std::end(versionString), std::end(checkpointData) - 10);
 
 			// setup file stream and write
-			std::ofstream dumpFile(dumpPath, std::ios::binary);
+			std::ofstream dumpFile(str_to_wstr(dumpPath), std::ios::binary); // convert to wstr to handle unicode characters like 'á' etc
 			dumpFile.exceptions(std::ofstream::badbit); // we want exceptions
 
 			if (!dumpFile) throw HCMRuntimeException(std::format("Could not create file at location: {},\nare there naughty characters in your core save name?", dumpPath));
