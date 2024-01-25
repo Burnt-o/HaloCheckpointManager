@@ -85,7 +85,7 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> switchBSPEvent = std::make_shared<ActionEvent>();
-
+	std::shared_ptr<ActionEvent> forceFutureCheckpointFillEvent = std::make_shared<ActionEvent>();
 
 	// settings
 	std::shared_ptr<Setting<bool>> GUIWindowOpen = std::make_shared<Setting<bool>>
@@ -234,6 +234,20 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(autonameCoresaves)
+		);
+
+	std::shared_ptr<Setting<bool>> forceFutureCheckpointToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(forceFutureCheckpointToggle)
+		);
+
+	std::shared_ptr<Setting<int>> forceFutureCheckpointTick = std::make_shared<Setting<int>>
+		(
+			1000,
+			[](int in) { return in >= 0; },
+			nameof(forceFutureCheckpointTick)
 		);
 
 	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
@@ -1095,6 +1109,7 @@ public:
 			injectCoreDifficultyCheck,
 		autonameCoresaves,
 		dumpCoreForcesSave,
+		forceFutureCheckpointTick,
 		invulnerabilityNPCToggle, 
 		speedhackSetting, 
 		GUIShowingFreesCursor, 

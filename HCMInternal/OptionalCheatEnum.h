@@ -17,6 +17,7 @@ InjectCheckpoint,\
 DumpCheckpoint,\
 InjectCore,\
 DumpCore,\
+ForceFutureCheckpoint,\
 Speedhack,\
 Invulnerability,\
 GetCurrentDifficulty,\

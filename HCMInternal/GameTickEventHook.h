@@ -11,6 +11,7 @@ public:
 	public:
 		virtual ~GameTickEventHookImpl() = default;
 		virtual std::shared_ptr<eventpp::CallbackList<void(int)>> getGameTickEvent() = 0;
+		virtual int getCurrentGameTick() = 0;
 	};
 private:
 	std::unique_ptr<GameTickEventHookImpl> pimpl;
@@ -20,6 +21,7 @@ public:
 	GameTickEventHook(GameState game, IDIContainer& dicon);
 	~GameTickEventHook();
 	std::shared_ptr<eventpp::CallbackList<void(int)>> getGameTickEvent();
+	int getCurrentGameTick();
 
 	std::string_view getName() override { return nameof(GameTickEventHook); }
 };

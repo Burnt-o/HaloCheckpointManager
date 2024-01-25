@@ -228,6 +228,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							createNestedElement(GUIElementEnum::dumpCoreGUI),
 							createNestedElement(GUIElementEnum::dumpCoreSettingsSubheading),
 							createNestedElement(GUIElementEnum::naturalCheckpointDisableGUI),
+							createNestedElement(GUIElementEnum::forceFutureCheckpointGUI),
 						}));
 
 				case GUIElementEnum::forceCheckpointGUI:
@@ -359,6 +360,29 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 				case GUIElementEnum::naturalCheckpointDisableGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 						(game, ToolTipCollection("Disables naturally occuring checkpoints (will break cutscenes)"), RebindableHotkeyEnum::naturalCheckpointDisable, "Disable Natural Checkpoints", settings->naturalCheckpointDisable));
+
+				case GUIElementEnum::forceFutureCheckpointGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Useful for forcing checkpoints in coop, as to avoid a desync both players need to force a checkpoint on the exact same game tick"), "Force Future Checkpoint (co-op)", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::forceFutureCheckpointToggle),
+							createNestedElement(GUIElementEnum::forceFutureCheckpointTick),
+							createNestedElement(GUIElementEnum::forceFutureCheckpointFill)
+							}));
+
+				case GUIElementEnum::forceFutureCheckpointToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("When ticked, HCM will force a checkpoint on the below tick"), std::nullopt, "Force future checkpoint", settings->forceFutureCheckpointToggle));
+
+				case GUIElementEnum::forceFutureCheckpointTick:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						(game, ToolTipCollection("Which tick to force a checkpoint on (make sure you use the same value as your coop partner)"), "on tick:", settings->forceFutureCheckpointTick));
+
+				case GUIElementEnum::forceFutureCheckpointFill:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Sets the tick for 5 seconds from now, giving you enough time to communicate with your coop partner which tick to use"), std::nullopt, "Set for 5s from now", settings->forceFutureCheckpointFillEvent));
+
+					
 
 			case GUIElementEnum::cheatsHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

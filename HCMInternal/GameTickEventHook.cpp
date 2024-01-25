@@ -23,16 +23,7 @@ private:
 	{
 		if (!instance) { PLOG_ERROR << "null GameTickEventHookTemplated instance"; return; }
 		ScopedAtomicBool lock(gameTickHookRunning);
-		int tickCount;
-		if (!instance->tickCounter->readData(&tickCount))
-		{
-			LOG_ONCE(PLOG_ERROR << "tickIncrementHookFunction failed to resolve tickCounter");
-			instance->gameTickEvent->operator()(0);
-		}
-		else
-		{
-			instance->gameTickEvent->operator()(tickCount);
-		}
+		instance->gameTickEvent->operator()(instance->getCurrentGameTick());
 
 	}
 
@@ -53,6 +44,22 @@ public:
 	{
 		tickIncrementHook->setWantsToBeAttached(true);
 		return gameTickEvent;
+	}
+
+	virtual int getCurrentGameTick() override
+	{
+		if (!instance) { PLOG_ERROR << "null GameTickEventHookTemplated instance"; return 0; }
+		int tickCount;
+		if (!instance->tickCounter->readData(&tickCount))
+		{
+			LOG_ONCE_CAPTURE(PLOG_ERROR << "getCurrentGameTick failed to resolve tickCounter, impl:" << game, game = instance->mGame.toString());
+			LOG_ONCE_CAPTURE(PLOG_ERROR << " error: " << error, error = MultilevelPointer::GetLastError());
+			return 0;
+		}
+		else
+		{
+			return tickCount;
+		}
 	}
 
 	~GameTickEventHookTemplated()
@@ -95,3 +102,5 @@ GameTickEventHook::~GameTickEventHook()
 }
 
 std::shared_ptr<eventpp::CallbackList<void(int)>> GameTickEventHook::getGameTickEvent() { return pimpl->getGameTickEvent();  }
+
+int GameTickEventHook::getCurrentGameTick() { return pimpl->getCurrentGameTick(); }

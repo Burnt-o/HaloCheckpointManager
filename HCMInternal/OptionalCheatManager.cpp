@@ -26,6 +26,7 @@
 #include "GetCurrentDifficulty.h"
 #include "IgnoreCheckpointChecksum.h"
 #include "AdvanceTicks.h"
+#include "ForceFutureCheckpoint.h"
 #include "GameTickEventHook.h"
 #include "ForceTeleport.h"
 #include "ForceLaunch.h"

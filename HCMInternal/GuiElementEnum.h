@@ -81,6 +81,10 @@
 		((dumpCoreForcesSave, (Halo1)))\
 	((dumpCoreGUI, (Halo1)))\
 	((naturalCheckpointDisableGUI, (ALL_SUPPORTED_GAMES)))\
+	((forceFutureCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
+		((forceFutureCheckpointToggle, (ALL_SUPPORTED_GAMES)))\
+		((forceFutureCheckpointTick, (ALL_SUPPORTED_GAMES)))\
+		((forceFutureCheckpointFill, (ALL_SUPPORTED_GAMES)))\
 ((cheatsHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((speedhackGUI, (ALL_SUPPORTED_GAMES)))\
 	((invulnGUI, (ALL_SUPPORTED_GAMES)))\
