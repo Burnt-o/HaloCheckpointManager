@@ -19,6 +19,22 @@
 	<!-- These pointers are NOT required. If HCMInternal doesn't have them, it will resolve present and resizeBuffers VMT entries using a dummy swapchain.
 	But it prefers to resolve them this way since dummy swapchains can cause crashes when using rivatuner and etc-->
 	<VersionedEntry Name="pppPresent" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03A285C0</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+			
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+			
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FB1CC8</Offset>
@@ -26,9 +42,33 @@
 				<Offset>0x40</Offset>
 			</Offsets>
 		</Version>
+	
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x3E00348</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="pppResizeBuffers" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03A285C0</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+			
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+			
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FB1CC8</Offset>
@@ -36,20 +76,34 @@
 				<Offset>0x68</Offset>
 			</Offsets>
 		</Version>
+	
+		<Version Version="1.3272.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x3E00348</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
-	<!--<VersionedEntry Name="dxgiInternalPresentFunction" Type="MultilevelPointer::ModuleOffset">
-		<Version Version="1.3272.0.0">
-			<Module>dxgi.dll</Module>
+	<VersionedEntry Name="dxgiInternalPresentFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0">
+			<Module>graphics-hook64.dll</Module>
 			<Offsets>
-				<Offset>0x15E0</Offset>
+				<Offset>0x40EC0</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
-	</VersionedEntry>-->
-
-
-	<VersionedEntry Name="dxgiInternalPresentFunction" Type="MultilevelPointer::ModuleOffset">
+			
+		<Version Version="1.2645.0.0">
+			<Module>graphics-hook64.dll</Module>
+			<Offsets>
+				<Offset>0x40EC0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+			
 		<Version Version="1.3272.0.0">
 			<Module>graphics-hook64.dll</Module>
 			<Offsets>
