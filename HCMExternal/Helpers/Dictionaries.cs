@@ -17,8 +17,25 @@ namespace HCMExternal.Helpers.DictionariesNS
         Halo4 = 5,
     }
 
+
+
     public static class Dictionaries
     {
+
+        public static int HaloTabEnumToInternalIndex(HaloTabEnum tabEnum)
+        {
+            switch (tabEnum)
+            {
+                case HaloTabEnum.Halo1: return 0;
+                case HaloTabEnum.Halo2: return 1;
+                case HaloTabEnum.Halo3: return 2;
+                case HaloTabEnum.Halo3ODST: return 5;
+                case HaloTabEnum.HaloReach: return 6;
+                case HaloTabEnum.Halo4: return 3;
+                default: return 0;
+            }
+        }
+
 
         public static readonly Dictionary<HaloTabEnum, string> GameToRootFolderPath = new()
         {
