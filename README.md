@@ -1,10 +1,23 @@
 # HaloCheckpointManager
 *A practice tool for [Halo: The Master Chief Collection](https://store.steampowered.com/app/976730/Halo_The_Master_Chief_Collection/)*
 
-This is a work in progress rewrite of HCM. The goal is to move all of the cheat implementation from HCMExternal to HCMInternal. And generally simplifly/cleanup code. 
-The role of HCMExternal will be exclusively to view and manage your checkpoint library, and to inject HCMInternal.dll into MCC. Everything else will be handled by HCMInternal.
+---**Download**---  
+From the [Releases page.](https://github.com/Burnt-o/HaloCheckpointManager/releases)  
 
-**Building from source**: To build the source yourself you'll need the following libraries from vcpkg.
+---**Features**---
+* Back up (dump) to file the games checkpoints, so you can inject them again at any later time. 
+* UI for managing your checkpoint collection (ordering, sorting, renaming etc).
+* Single-player cheats to help you practice and route the games, such as
+   * Force custom checkpoints & back them up
+   * Invincibility
+   * Speedhack (both slow-down and fast-forward)
+   * Block the games natural checkpoints
+   * Teleport and Launch the player
+   * And more (specific games have different features)
+ * Support for multiple downpatched versions of MCC - Season 7 (2448), Season 8 (2645), and of course current patch.
+
+---**Building from source**--- 
+To build the source yourself, I recommended that you use the latest Visual Studio. You'll also need the following libraries: (it'll be easiest to grab them from vcpkg)
 
     plog:x64-windows
     plog:x64-windows-static
