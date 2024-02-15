@@ -194,6 +194,7 @@
     <ClCompile Include="..\HCMInternal\BlockGameInput.cpp" />
     <ClCompile Include="..\HCMInternal\BlockPlayerCharacterInput.cpp" />
     <ClCompile Include="..\HCMInternal\BottomlessClip.cpp" />
+    <ClCompile Include="..\HCMInternal\CarrierBumpAnalyser.cpp" />
     <ClCompile Include="..\HCMInternal\CheckpointInjectionLogger.cpp" />
     <ClCompile Include="..\HCMInternal\Conduit_ITCFont.cpp" />
     <ClCompile Include="..\HCMInternal\D3D11Hook.cpp" />
@@ -202,6 +203,7 @@
     <ClCompile Include="..\HCMInternal\DynamicStruct.cpp" />
     <ClCompile Include="..\HCMInternal\DynamicStructFactory.cpp" />
     <ClCompile Include="..\HCMInternal\EditPlayerViewAngle.cpp" />
+    <ClCompile Include="..\HCMInternal\ForceFutureCheckpoint.cpp" />
     <ClCompile Include="..\HCMInternal\ForceLaunch.cpp" />
     <ClCompile Include="..\HCMInternal\ForceTeleport.cpp" />
     <ClCompile Include="..\HCMInternal\FreeCamera.cpp" />
@@ -264,6 +266,7 @@
     <ClCompile Include="..\HCMInternal\ProggyVectorRegularFont.cpp" />
     <ClCompile Include="..\HCMInternal\Renderer2D.cpp" />
     <ClCompile Include="..\HCMInternal\RuntimeExceptionHandler.cpp" />
+    <ClCompile Include="..\HCMInternal\SetPlayerHealth.cpp" />
     <ClCompile Include="..\HCMInternal\Setting.cpp" />
     <ClCompile Include="..\HCMInternal\SettingsSerialiser.cpp" />
     <ClCompile Include="..\HCMInternal\SharedMemoryInternal.cpp" />
@@ -295,6 +298,7 @@
     <ClInclude Include="..\HCMInternal\BlockPlayerCharacterInput.h" />
     <ClInclude Include="..\HCMInternal\BottomlessClip.h" />
     <ClInclude Include="..\HCMInternal\CameraTransformer.h" />
+    <ClInclude Include="..\HCMInternal\CarrierBumpAnalyser.h" />
     <ClInclude Include="..\HCMInternal\CheckpointInjectionLogger.h" />
     <ClInclude Include="..\HCMInternal\Conduit_ITCFont.h" />
     <ClInclude Include="..\HCMInternal\ConsoleCommand.h" />
@@ -319,6 +323,7 @@
     <ClInclude Include="..\HCMInternal\ForceCoreLoad.h" />
     <ClInclude Include="..\HCMInternal\ForceCoreSave.h" />
     <ClInclude Include="..\HCMInternal\ForceDoubleRevert.h" />
+    <ClInclude Include="..\HCMInternal\ForceFutureCheckpoint.h" />
     <ClInclude Include="..\HCMInternal\ForceLaunch.h" />
     <ClInclude Include="..\HCMInternal\ForceRevert.h" />
     <ClInclude Include="..\HCMInternal\ForceTeleport.h" />
@@ -440,6 +445,7 @@
     <ClInclude Include="..\HCMInternal\NaturalCheckpointDisable.h" />
     <ClInclude Include="..\HCMInternal\NullSmoother.h" />
     <ClInclude Include="..\HCMInternal\ObjectTypes.h" />
+    <ClInclude Include="..\HCMInternal\OBSBypassCheck.h" />
     <ClInclude Include="..\HCMInternal\OBSBypassManager.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatEnum.h" />
     <ClInclude Include="..\HCMInternal\OptionalCheatInfo.h" />
@@ -454,6 +460,7 @@
     <ClInclude Include="..\HCMInternal\ScopedAtomicBool.h" />
     <ClInclude Include="..\HCMInternal\ScopedCallback.h" />
     <ClInclude Include="..\HCMInternal\ScopedServiceRequest.h" />
+    <ClInclude Include="..\HCMInternal\SetPlayerHealth.h" />
     <ClInclude Include="..\HCMInternal\Setting.h" />
     <ClInclude Include="..\HCMInternal\SettingsSerialiser.h" />
     <ClInclude Include="..\HCMInternal\SettingsStateAndEvents.h" />

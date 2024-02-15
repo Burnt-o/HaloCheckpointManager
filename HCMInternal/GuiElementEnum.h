@@ -2,43 +2,22 @@
 #include "pch.h"
 #include <boost\preprocessor.hpp>
 
-//#define ALL_SUPPORTED_GAMES (Halo1)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4)
-//
-//#define ALLGUIELEMENTS 	\
-//((controlHeadingGUI)ALL_SUPPORTED_GAMES)\
-//((saveManagementHeadingGUI)ALL_SUPPORTED_GAMES)\
-//	((forceCheckpointGUI)ALL_SUPPORTED_GAMES)\
-//	((forceRevertGUI)ALL_SUPPORTED_GAMES)\
-//	((forceDoubleRevertGUI)(Halo2)(Halo3)(Halo3ODST)(HaloReach)(Halo4))\
-//	((forceCoreSaveGUI)(Halo1))\
-//	((forceCoreLoadGUI)(Halo1))\
-//	((injectCheckpointGUI)ALL_SUPPORTED_GAMES)\
-//	((dumpCheckpointGUI)ALL_SUPPORTED_GAMES)\
-//	((injectCoreGUI)(Halo1))\
-//	((dumpCoreGUI)(Halo1))\
-//((cheatsHeadingGUI)ALL_SUPPORTED_GAMES)\
-//	((speedhackGUI)ALL_SUPPORTED_GAMES)\
-//	((invulnGUI)ALL_SUPPORTED_GAMES)\
-//	((invulnNPCGUI)ALL_SUPPORTED_GAMES)\
-//	((aiFreezeGUI)ALL_SUPPORTED_GAMES) \
-//	((consoleCommandGUI)(Halo1)) \
-//((overlaysHeadingGUI)ALL_SUPPORTED_GAMES)\
-//((cameraHeadingGUI)ALL_SUPPORTED_GAMES)\
-//((theaterHeadingGUI)(Halo3)(Halo3ODST)(HaloReach)(Halo4))\
-//
 
-// game sets
+
+// game set tuples
 #define ALL_SUPPORTED_GAMES Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
+#define FREE_CAMERA_SUPPORT Halo1, Halo2
 
 
 // interpolator macro for freecamera
 #define defFreeCameraInterpolator(name)\
-((freeCamera##name##Interpolator, (ALL_SUPPORTED_GAMES)))\
-((freeCamera##name##InterpolatorLinearFactor, (ALL_SUPPORTED_GAMES)))
+((freeCamera##name##Interpolator, (FREE_CAMERA_SUPPORT)))\
+((freeCamera##name##InterpolatorLinearFactor, (FREE_CAMERA_SUPPORT)))
 
 
 // A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that guielement
+// Indentation is cosmetic but indicates hiearchy of elements
 #define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((controlHeadingGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((toggleGUIHotkeyGUI, (ALL_GAMES_AND_MAINMENU)))\
@@ -159,7 +138,7 @@
 			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
-	((hideHUDToggle, (Halo1, Halo2)))\
+	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleSet, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleVec2, (ALL_SUPPORTED_GAMES)))\
@@ -169,71 +148,45 @@
 		((editPlayerViewAngleAdjustHorizontal, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleAdjustVertical, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleAdjustFactor, (ALL_SUPPORTED_GAMES)))\
-	((freeCameraToggleGUI, (Halo1, Halo2)))\
-	((freeCameraSettingsSimpleSubheading, (Halo1, Halo2)))\
-	((freeCameraSettingsAdvancedSubheading, (Halo1, Halo2)))\
-		((freeCameraHideWatermark, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraHideMessages, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraThirdPersonRendering, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraDisableScreenEffects, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraGameInputDisable, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraCameraInputDisable, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraUserInputCameraSettings, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraBindingsSubheading, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputTranslateUpBinding, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputTranslateDownBinding, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputRollLeftBinding, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputRollRightBinding, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputFOVIncreaseBinding, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputFOVDecreaseBinding, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraBaseFOV, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraTranslationSpeed, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraTranslationSpeedChangeFactor, (ALL_SUPPORTED_GAMES)))\
+	((freeCameraToggleGUI, (FREE_CAMERA_SUPPORT)))\
+	((freeCameraSettingsSimpleSubheading, (FREE_CAMERA_SUPPORT)))\
+	((freeCameraSettingsAdvancedSubheading, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraHideWatermark, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraHideMessages, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraThirdPersonRendering, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraDisableScreenEffects, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraGameInputDisable, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraCameraInputDisable, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraUserInputCameraSettings, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraBindingsSubheading, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputTranslateUpBinding, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputTranslateDownBinding, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputRollLeftBinding, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputRollRightBinding, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputFOVIncreaseBinding, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputFOVDecreaseBinding, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraBaseFOV, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraTranslationSpeed, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraTranslationSpeedChangeFactor, (FREE_CAMERA_SUPPORT)))\
 			defFreeCameraInterpolator(UserInputCameraTranslation)\
-			((freeCameraUserInputCameraRotationSpeed, (ALL_SUPPORTED_GAMES)))\
+			((freeCameraUserInputCameraRotationSpeed, (FREE_CAMERA_SUPPORT)))\
 			defFreeCameraInterpolator(UserInputCameraRotation)\
-			((freeCameraUserInputCameraFOVSpeed, (ALL_SUPPORTED_GAMES)))\
+			((freeCameraUserInputCameraFOVSpeed, (FREE_CAMERA_SUPPORT)))\
 			defFreeCameraInterpolator(UserInputCameraFOV)\
-			((freeCameraUserInputCameraSetPosition, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraSetPositionChildren, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetPositionVec3, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetPositionFillCurrent, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetPositionCopy, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetPositionPaste, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraSetRotation, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraSetRotationChildren, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetRotationVec3, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetRotationFillCurrent, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetRotationCopy, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetRotationPaste, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraUserInputCameraMaintainVelocity, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetVelocity, (ALL_SUPPORTED_GAMES)))\
-				((freeCameraUserInputCameraSetVelocityChildren, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraUserInputCameraSetVelocityVec3, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraUserInputCameraSetVelocityFillCurrent, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraUserInputCameraSetVelocityCopy, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraUserInputCameraSetVelocityPaste, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraAnchorPositionToObjectPosition, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum, (ALL_SUPPORTED_GAMES)))\
-			defFreeCameraInterpolator(AnchorPositionToObjectPositionTranslation)\
-			((freeCameraAnchorPositionToObjectRotation, (ALL_SUPPORTED_GAMES)))\
-		((freeCameraAnchorRotationToObjectPosition, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3, (ALL_SUPPORTED_GAMES)))\
-			defFreeCameraInterpolator(AnchorRotationToObjectPositionRotation)\
-		((freeCameraAnchorRotationToObjectFacing, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum, (ALL_SUPPORTED_GAMES)))\
-			defFreeCameraInterpolator(AnchorRotationToObjectFacingRotation)\
-		((freeCameraAnchorFOVToObjectDistance, (ALL_SUPPORTED_GAMES)))\
-			((freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum, (ALL_SUPPORTED_GAMES)))\
-					((freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3, (ALL_SUPPORTED_GAMES)))\
-			defFreeCameraInterpolator(AnchorFOVToObjectDistanceFOV)\
+			((freeCameraUserInputCameraSetPosition, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraSetPositionChildren, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetPositionVec3, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetPositionFillCurrent, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetPositionCopy, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetPositionPaste, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraSetRotation, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraSetRotationChildren, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetRotationVec3, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetRotationFillCurrent, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetRotationCopy, (FREE_CAMERA_SUPPORT)))\
+				((freeCameraUserInputCameraSetRotationPaste, (FREE_CAMERA_SUPPORT)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))
 
 

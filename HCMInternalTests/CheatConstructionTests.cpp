@@ -102,8 +102,9 @@ TEST_CLASS(MCCVerSteam##MCC_VERSION)\
 	TEST_MCC_VERSION_STEAM(2448); // Season 7
 	TEST_MCC_VERSION_STEAM(2645); // Season 8
 	//TEST_MCC_VERSION_STEAM(3073); // I don't think anyone actually runs on 3073 so ceebs
-	TEST_MCC_VERSION_STEAM(3272); // Current patch
-	TEST_MCC_VERSION_WINSTORE(3272); // Current patch
+	TEST_MCC_VERSION_STEAM(3272); // old patch we were on for most of 2024
+	TEST_MCC_VERSION_STEAM(3385); // Current patch
+	TEST_MCC_VERSION_WINSTORE(3385); // Current patch
 
 
 

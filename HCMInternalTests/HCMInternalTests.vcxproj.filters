@@ -285,6 +285,15 @@
     <ClCompile Include="..\HCMInternal\BottomlessClip.cpp">
       <Filter>HCMInternalFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\HCMInternal\ForceFutureCheckpoint.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\CarrierBumpAnalyser.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HCMInternal\SetPlayerHealth.cpp">
+      <Filter>HCMInternalFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HCMInternal\includes\safetyhook\safetyhook.hpp">
@@ -870,6 +879,18 @@
       <Filter>HCMInternalFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\HCMInternal\RebindableHotkey.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\ForceFutureCheckpoint.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\CarrierBumpAnalyser.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\SetPlayerHealth.h">
+      <Filter>HCMInternalFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HCMInternal\OBSBypassCheck.h">
       <Filter>HCMInternalFiles</Filter>
     </ClInclude>
   </ItemGroup>

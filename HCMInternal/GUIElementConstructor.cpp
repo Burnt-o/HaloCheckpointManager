@@ -1182,6 +1182,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
 									(game, ToolTipCollection("Paste in a Rotation from the clipboard"), std::nullopt, "Paste from Clipboard##freeCameraUserInputCameraSetRotationPaste", settings->freeCameraUserInputCameraSetRotationPaste));
 
+								/* // Unfinished free camera features
 
 						case GUIElementEnum::freeCameraUserInputCameraMaintainVelocity:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, true>>
@@ -1402,7 +1403,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor:
 								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor", settings->freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor));
-
+*/
 				
 
 			case GUIElementEnum::theaterHeadingGUI:
