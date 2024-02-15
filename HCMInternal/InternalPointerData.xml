@@ -52,9 +52,9 @@
 			</Offsets>
 		</Version>
 	
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E00348</Offset>
+				<Offset>0x3DFF348</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x40</Offset>
 			</Offsets>
@@ -94,9 +94,9 @@
 			</Offsets>
 		</Version>
 	
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E00348</Offset>
+				<Offset>0x3DFF348</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x68</Offset>
 			</Offsets>
@@ -173,9 +173,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x03E4C060</Offset>
+				<Offset>0x03E4B060</Offset> <!--03E4C060 old-->
 				<Offset>0x2BFC8</Offset>
 			</Offsets>
 		</Version>
@@ -209,9 +209,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x1E643A</Offset>
+				<Offset>0x1E66DA</Offset> <!--old 1E643A-->
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -239,9 +239,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E4C034</Offset>
+				<Offset>0x3E4B034</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -269,7 +269,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x3E4C045</Offset>
 			</Offsets>
@@ -308,9 +308,9 @@
 				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E4CA78</Offset>
+				<Offset>0x3E4CA68</Offset>
 				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
@@ -342,9 +342,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x1E594E</Offset>
+				<Offset>0x1E5BE5</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -372,9 +372,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x48DC26</Offset>
+				<Offset>0x48DD76</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -402,9 +402,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x1E6271</Offset>
+				<Offset>0x1E6511</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -436,9 +436,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x1EFF99</Offset>
+				<Offset>0x1F0239</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -488,9 +488,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x03C8AE88</Offset>
+				<Offset>0x03C89E88</Offset>
 				<Offset>0x3FC</Offset>
 			</Offsets>
 		</Version>
@@ -524,9 +524,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x85E080</Offset>
+				<Offset>0x85E230</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -549,7 +549,7 @@
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
 	</VersionedEntry>
@@ -580,9 +580,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x85DFE8</Offset>
+				<Offset>0x85E198</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -605,7 +605,7 @@
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 		
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 		
@@ -639,9 +639,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x85DF15</Offset>
+				<Offset>0x85E0C5</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -664,7 +664,7 @@
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -695,9 +695,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x85E469</Offset>
+				<Offset>0x85E619</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -720,7 +720,7 @@
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -934,6 +934,12 @@
 				<Offset>0x610A6</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x610A6</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -1139,6 +1145,12 @@
 				<Offset>0x9A6E2</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x9A6E2</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!--confirm that it works on all levels. runs in cutscenes. reverts on all reverts.-->
@@ -1219,6 +1231,12 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x487C670</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x487C670</Offset>
@@ -1400,6 +1418,12 @@
 				<Offset>0x293DE2F</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x293DE2F</Offset>
+			</Offsets>
+		</Version>
 
 	</VersionedEntry>
 	<!-- #endregion forceCheckpointFlag-->
@@ -1556,6 +1580,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x293DE2B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x293DE2B</Offset>
@@ -1719,6 +1749,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x27C5FFC</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x27C5FFC</Offset>
@@ -1943,6 +1979,12 @@
 				<Offset>0x2AFF81f</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2AFF81f</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 	<!--#endregion currentLevelCode-->
 	
@@ -1962,9 +2004,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E4CA78</Offset>
+				<Offset>0x3E4BA68</Offset>
 				<Offset>0x9C</Offset>
 			</Offsets>
 		</Version>
@@ -2122,6 +2164,12 @@
 				<Offset>0x5378B</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x5378B</Offset>
+			</Offsets>
+		</Version>
 
 	</VersionedEntry>
 
@@ -2213,6 +2261,12 @@
 		</Version>
 		
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x194C3A</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x194C3A</Offset>
@@ -2364,6 +2418,9 @@
 			<Offset>0xAE5000</Offset>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Offset>0xAE6000</Offset>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Offset>0xAE6000</Offset>
 		</Version>
 	</VersionedEntry>
@@ -2767,6 +2824,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x02AE2A50</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="checkpointLocation2" Type="MultilevelPointer::ModuleOffset">
@@ -2799,6 +2863,13 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x02AE2A50</Offset>
+				<Offset>0xAF0000</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x02AE2A50</Offset>
@@ -3600,6 +3671,12 @@
 				<Length>4</Length>
 			</PreserveLocation>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<PreserveLocation>
+				<Offset>0x5981D0</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+		</Version>
 	</VersionedEntry>
 	<!-- #endregion preserveLocations-->
 	<!-- #endregion SaveManagement-->
@@ -3793,6 +3870,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x6475C0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x6475C0</Offset>
@@ -4040,6 +4123,12 @@
 				<Offset>0x30FA620</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x30FA620</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!--very close to print message stuff-->
@@ -4173,6 +4262,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x30FA6E8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x30FA6E8</Offset>
@@ -4348,6 +4443,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x018013D0</Offset>
+				<Offset>0x170</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x018013D0</Offset>
@@ -4658,6 +4760,12 @@
 				<Offset>0x5DA428</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x5DA428</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 	<!-- #endregion getObjectAddress-->
 
@@ -4726,6 +4834,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x10BE8E0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x10BE8E0</Offset>
@@ -4851,6 +4966,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Offsets>
+				<Offset>0x30</Offset>
+				<Offset>0x40</Offset>
+				<Offset>0x1C0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Offsets>
 				<Offset>0x30</Offset>
 				<Offset>0x40</Offset>
@@ -5037,6 +5159,13 @@
 				<Offset>0xA4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x01187F4C</Offset>
+				<Offset>0xA4</Offset>
+			</Offsets>
+		</Version>
 		
 	</VersionedEntry>
 	<!-- #endregion playerDatum-->
@@ -5119,6 +5248,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x016E2C9C</Offset>
+				<Offset>0x39C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x016E2C9C</Offset>
@@ -5570,6 +5706,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x28BCCB0</Offset>
+				<Offset>0x2F0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 	
 	
@@ -5635,6 +5779,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x028FDDB8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x028FDDB8</Offset>
@@ -5708,6 +5859,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x028BCCB0</Offset>
+				<Offset>0x1E0C8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x028BCCB0</Offset>
@@ -5808,6 +5966,12 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x70B414</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x70B414</Offset>
@@ -5942,9 +6106,9 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" ProcessType="WinStore">
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x03E4C048</Offset>
+				<Offset>0x03E4B048</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -6843,6 +7007,12 @@
 				<Offset>0x625B8</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x625B8</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<!--actually zoneset for h3+-->
@@ -6915,6 +7085,12 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xE5BB50</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0xE5BB50</Offset>
