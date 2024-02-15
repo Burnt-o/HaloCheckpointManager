@@ -569,8 +569,8 @@ void D3D11Hook::beginHook()
 
 		// Don't need the dummy device anymore
 		// it appears that releasing these can cause the game to crash when using RivaTuner.
-		safe_release(pDummySwapchain);
-		safe_release(pDummyDevice);
+		//safe_release(pDummySwapchain);
+		//safe_release(pDummyDevice);
 	}
 
 
