@@ -907,6 +907,12 @@
 				<Offset>0x3438D</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x3438D</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -1106,6 +1112,12 @@
 				<Offset>0x2C06D4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2C06D4</Offset>
+			</Offsets>
+		</Version>
 		
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -1192,6 +1204,13 @@
 
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
+				<Offset>0x174</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019D2230</Offset>
@@ -1356,6 +1375,12 @@
 				<Offset>0x263eb2e</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263eb2e</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -1506,6 +1531,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263EB2B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x263EB2B</Offset>
@@ -1663,6 +1694,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x24FB76C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x24FB76C</Offset>
@@ -1881,6 +1918,12 @@
 				<Offset>0x2A1F587</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2A1F587</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -2054,6 +2097,12 @@
 				<Offset>0x204B3</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x204B3</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -2151,6 +2200,12 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x166292</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x166292</Offset>
@@ -2288,6 +2343,9 @@
 			<Offset>0xA60000</Offset>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Offset>0xA60000</Offset>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Offset>0xA60000</Offset>
 		</Version>
 	</VersionedEntry>
@@ -2626,6 +2684,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x027BF2A0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="checkpointLocation2" Type="MultilevelPointer::ModuleOffset">
@@ -2654,6 +2719,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x027BF2C0</Offset>
+				<Offset>0xA60000</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x027BF2A0</Offset>
 				<Offset>0xA60000</Offset>
 			</Offsets>
 		</Version>
@@ -3092,6 +3164,10 @@
 			<offset>0x1EC10</offset>
 			<length>20</length>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<offset>0x1EC10</offset>
+			<length>20</length>
+		</Version>
 	</VersionedEntry>
 	<!-- #endregion SHAdata-->
 
@@ -3487,6 +3563,16 @@
 				<Length>16</Length>
 			</PreserveLocation>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<PreserveLocation>
+				<Offset>0x5E3E74</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5DF5F0</Offset>
+				<Length>16</Length>
+			</PreserveLocation>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="preserveLocations" Type="preserveLocations">
@@ -3681,6 +3767,12 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4DD0DD</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x4DD0DD</Offset>
@@ -3922,6 +4014,13 @@
 				<Offset>0x9B0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
+				<Offset>0x9B0</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -4047,6 +4146,13 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019D2230</Offset>
+				<Offset>0x880</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019D2230</Offset>
@@ -4227,6 +4333,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x016ACCE4</Offset>
+				<Offset>0xC8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x016ACCE4</Offset>
@@ -4519,6 +4632,12 @@
 				<Offset>0x4739C4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4739C4</Offset>
+			</Offsets>
+		</Version>
 
 		<!--scan nw "65 48 8b 04 25 58 00 00 00 8b d1 41 b9 18 00"-->
 		<Version Version="1.2448.0.0" Game="Halo4">
@@ -4592,6 +4711,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xC51A38</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xC51A38</Offset>
@@ -4710,6 +4836,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Offsets>
+				<Offset>0x30</Offset>
+				<Offset>0x40</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Offsets>
 				<Offset>0x30</Offset>
 				<Offset>0x40</Offset>
@@ -4873,6 +5006,13 @@
 				<Offset>0x28</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015E26A0</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
 
 		<!--a few options for pointers here-->
 		<!--scan nw "70 89 b3 a4 00 00 00" check what acc on restart-->
@@ -4964,6 +5104,13 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015E26A8</Offset>
+				<Offset>0x294</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x015E26A8</Offset>
@@ -5405,6 +5552,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25bdab0</Offset>
+				<Offset>0x2F8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 
 		<!--actually index table header-->
 		<Version Version="1.3272.0.0" Game="Halo4">
@@ -5471,6 +5626,13 @@
 				<Offset>0x10000</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDAB0</Offset>
+				<Offset>0x10000</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -5531,6 +5693,13 @@
 
 	<VersionedEntry Name="stringMetaTableOffset" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDAA0</Offset>
+				<Offset>0xA0C0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x025BDAA0</Offset>
@@ -5626,6 +5795,12 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x68EE08</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x68EE08</Offset>
@@ -6652,7 +6827,13 @@
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
-				<Offset>0x353FC</Offset> <!-- 35370 or 353FC. former is crashy.-->
+				<Offset>0x353FC</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x353FC</Offset>
 			</Offsets>
 		</Version>
 
@@ -6721,6 +6902,12 @@
 		</Version>
 
 		<Version Version="1.3272.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE30</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xAFBE30</Offset>
