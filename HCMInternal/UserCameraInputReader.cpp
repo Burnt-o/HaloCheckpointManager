@@ -195,16 +195,21 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	// Note: for this code to work properly, the freeCameraData lookDirs must be already updated this frame. 
 	// In other words, call readRotationInput & transformRotations BEFORE reading position input, so that this code knows which way is "forward" when you press W, etc.
 
-	// Forward/back
-	if (*cachedAnalogMoveForwardBack != 0.f)
+	// Horizontal input
+	if (*cachedAnalogMoveForwardBack != 0.f || *cachedAnalogMoveLeftRight != 0.f)
 	{
-		positionTransform = positionTransform + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * *cachedAnalogMoveForwardBack);
-	}
+		// To normalise inputs, what we need to do is map a square of input ranges [-1,1][-1,1] to a unit circle.
+		// https://www.xarg.org/2017/07/how-to-map-a-square-to-a-circle/
+		float x = *cachedAnalogMoveForwardBack;
+		float y = *cachedAnalogMoveLeftRight;
 
-	// Left/Right
-	if (*cachedAnalogMoveLeftRight != 0.f)
-	{
-		positionTransform = positionTransform + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * *cachedAnalogMoveLeftRight);
+		auto normalisedForwardBack = x * std::sqrtf(1 - y * y / 2);
+		auto normalisedLeftRight = y * std::sqrt(1 - x * x / 2);
+
+		// Forward/back
+		positionTransform = positionTransform + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * normalisedForwardBack);
+		// Left/Right
+		positionTransform = positionTransform + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * normalisedLeftRight);
 	}
 
 	// Up
