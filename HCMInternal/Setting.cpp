@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Setting.h"
+#include "WaypointList.h"
 
 void Setting<bool>::deserialise(pugi::xml_node input)
 {
@@ -126,6 +127,11 @@ void Setting<SimpleMath::Vector4>::deserialise(pugi::xml_node input)
 	UpdateValueWithInput();
 }
 
+void Setting<WaypointList>::deserialise(pugi::xml_node input)
+{
+	valueDisplay = WaypointList(input);
+	UpdateValueWithInput();
+}
 
 
 

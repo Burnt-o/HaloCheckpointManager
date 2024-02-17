@@ -45,7 +45,7 @@ public:
 		if (cacheValid == false)
 		{
 			uintptr_t cameraDataPointerResolved;
-			if (!cameraDataPointer->resolve(&cameraDataPointerResolved)) throw HCMRuntimeException("Failed to resolve cameraDataPointer");
+			if (!cameraDataPointer->resolve(&cameraDataPointerResolved)) throw HCMRuntimeException(std::format("Failed to resolve cameraDataPointer: ", MultilevelPointer::GetLastError()));
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "cameraDataPointerResolved: " << std::hex << rs, rs = cameraDataPointerResolved);
 

@@ -1421,6 +1421,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
+						createNestedElement(GUIElementEnum::waypoint3DGUI),
 						}));
 
 
@@ -1433,7 +1434,9 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
-
+				case GUIElementEnum::waypoint3DGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Toggles 3D waypoints"), std::nullopt, "3D Waypoints", settings->waypoint3DToggle));
 #endif
 
 

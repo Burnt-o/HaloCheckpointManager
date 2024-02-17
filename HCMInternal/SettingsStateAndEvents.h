@@ -2,6 +2,7 @@
 #include "Setting.h"
 #include "ISettingsSerialiser.h"
 #include "GUIServiceInfo.h"
+#include "WaypointList.h"
 
 class SettingsStateAndEvents
 {
@@ -1077,6 +1078,20 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(carrierBumpAnalyserToggle)
+		);
+
+	std::shared_ptr<Setting<bool>> waypoint3DToggle = std::make_shared<Setting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(waypoint3DToggle)
+		);
+
+	std::shared_ptr<Setting<WaypointList>> waypoint3DList = std::make_shared<Setting<WaypointList>>
+		(
+			WaypointList{}, // starts empty
+			[](WaypointList in) { return true; },
+			nameof(waypoint3DList)
 		);
 
 	enum class FreeCameraObjectTrackEnum

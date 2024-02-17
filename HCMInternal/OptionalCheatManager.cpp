@@ -61,6 +61,8 @@
 #include "HideHUD.h"
 #include "OBSBypassCheck.h"
 #include "SetPlayerHealth.h"
+#include "Waypoint3D.h"
+#include "Render3DEventProvider.h"
 
 #include "DIContainer.h"
 #include "map.h"

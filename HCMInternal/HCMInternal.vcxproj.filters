@@ -65,6 +65,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\Camera\Smoother">
       <UniqueIdentifier>{fc84e771-a284-4a7b-9a81-f51257e0b992}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\3D">
+      <UniqueIdentifier>{cd1cd030-f535-41e8-b94a-facc6adcd96f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -617,6 +620,21 @@
     <ClInclude Include="ForceFutureCheckpoint.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="Waypoint3D.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="WaypointList.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Render3DEventProvider.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer3DImpl.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderer3D.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -873,6 +891,18 @@
     </ClCompile>
     <ClCompile Include="ForceFutureCheckpoint.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="Waypoint3D.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Render3DEventProvider.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer3DImpl.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointList.cpp">
+      <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

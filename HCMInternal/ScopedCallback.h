@@ -108,12 +108,13 @@ public:
 		PLOG_DEBUG << "scoped callback removed";
 	}
 
-
+	// copy is banned
 	ScopedCallback(const ScopedCallback& that) = delete;
 	ScopedCallback& operator=(const ScopedCallback& that) = delete;
 
+	// move is fine
 	ScopedCallback(ScopedCallback&& that) = default;
-	ScopedCallback& operator=(ScopedCallback&& that) = delete;
+	ScopedCallback& operator=(ScopedCallback&& that) = default;
 
 
 };

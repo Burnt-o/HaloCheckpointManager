@@ -58,7 +58,9 @@ GetCurrentBSP,\
 DisableScreenEffects,\
 HideHUD,\
 OBSBypassCheck,\
-SetPlayerHealth
+SetPlayerHealth,\
+Waypoint3D,\
+Render3DEventProvider
 
 
 enum class OptionalCheatEnum {

@@ -230,6 +230,11 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IRenderer3D.h" />
+    <ClInclude Include="Render3DEventProvider.h" />
+    <ClInclude Include="Renderer3DImpl.h" />
+    <ClInclude Include="WaypointList.h" />
+    <ClInclude Include="Waypoint3D.h" />
     <ClInclude Include="AdvanceTicks.h" />
     <ClInclude Include="AIFreeze.h" />
     <ClInclude Include="App.h" />
@@ -416,6 +421,11 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Render3DEventProvider.cpp" />
+    <ClCompile Include="Renderer3DImpl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Waypoint3D.cpp" />
     <ClCompile Include="AdvanceTicks.cpp" />
     <ClCompile Include="AIFreeze.cpp" />
     <ClCompile Include="BlockGameInput.cpp" />
@@ -517,6 +527,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="UnfreezeObjectPhysics.cpp" />
     <ClCompile Include="UnhandledExceptionHandler.cpp" />
     <ClCompile Include="UpdateGameCameraData.cpp" />
+    <ClCompile Include="WaypointList.cpp" />
     <ClCompile Include="WindowsUtilities.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -316,6 +316,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ConsoleCommand}
 	},
 
+		{ GUIElementEnum::waypoint3DGUI,
+{OptionalCheatEnum::Waypoint3D}
+		},
+
 #endif
 
 };
