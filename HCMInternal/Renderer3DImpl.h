@@ -16,6 +16,7 @@ class Renderer3DImpl : public IRenderer3D
 {
 private:
 	// data
+	SimpleMath::Vector3 cameraPosition;
 	DirectX::SimpleMath::Matrix viewMatrix;
 	DirectX::SimpleMath::Matrix projectionMatrix;
 	SimpleMath::Vector2 screenSize;
@@ -28,11 +29,13 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// funcs
-	SimpleMath::Vector3 worldToScreen(SimpleMath::Vector3 world);
 	virtual void updateCameraData(const SimpleMath::Vector2& screensize);
 	friend class Render3DEventProvider;
 public:
-	virtual void draw3DText(const std::string& text, const SimpleMath::Vector3& targetPosition, const SimpleMath::Vector4& textColor);
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
+
+	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 world) override;
+	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
+
 };
