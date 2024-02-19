@@ -27,12 +27,12 @@
 #include "GetEntityDataAsString.h"
 
 #include "ProggyVectorRegularFont.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
+//#include "imgui_impl_dx11.h"
+//#include "imgui_impl_win32.h"
 #include "GlobalKill.h"
 
 
-
+#include "Render2DHelpers.h"
 
 
 
@@ -153,62 +153,24 @@ private:
 					throw HCMRuntimeException(std::format("Invalid enum value for Display2DInfoAnchorEnum: ", settings->display2DInfoAnchorCorner->GetValue()));
 			}
 
-			//std::vector<std::string_view> stringsToRender;
-			//stringsToRender.push_back(getGameDataAsString.getDataString(useDataA));
-			//if (currentlyTrackingPlayer) stringsToRender.push_back(getPlayerDataAsString.getDataString(useDataA));
-			//if (currentlyTrackingCustomObject) stringsToRender.push_back(getEntityDataAsString.getDataString(useDataA));
-
 			auto windowFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize;
 
 			auto fontColour = ImGui::ColorConvertFloat4ToU32(settings->display2DInfoFontColour->GetValue());
 
-			// https://github.com/ocornut/imgui/issues/6037#issuecomment-1368377977
-			// this call is submitting to implicit debug window. How can I change font scale OUTSIDE of a window?
 			
-			ImFont* currentFont = ImGui::GetFont();
 			float fontScale = fontSize / (15.f * 2.f);
-			currentFont->Scale = fontScale;
-			ImGui::PushFont(currentFont);
-
 
 			std::string* stringToRender = useDataA ? &dataStringA : &dataStringB;
 
 			if (settings->display2DInfoOutline->GetValue())
 			{
-				for (int i = 0; i < 9; i++)
-				{
-					auto outlineColour = ImGui::ColorConvertFloat4ToU32({ 0.f, 0.f, 0.f, 0.8f }); // black
-					SimpleMath::Vector2 textPos;
-
-					switch (i)
-					{
-					case 0: textPos = { displayInfoScreenPosition.x - fontScale, displayInfoScreenPosition.y - fontScale }; break;
-					case 1: textPos = { displayInfoScreenPosition.x                , displayInfoScreenPosition.y - fontScale }; break;
-					case 2: textPos = { displayInfoScreenPosition.x + fontScale, displayInfoScreenPosition.y - fontScale }; break;
-
-					case 3: textPos = { displayInfoScreenPosition.x - fontScale, displayInfoScreenPosition.y + fontScale }; break;
-					case 4: textPos = { displayInfoScreenPosition.x                , displayInfoScreenPosition.y + fontScale }; break;
-					case 5: textPos = { displayInfoScreenPosition.x + fontScale, displayInfoScreenPosition.y + fontScale }; break;
-
-					case 6: textPos = { displayInfoScreenPosition.x - fontScale, displayInfoScreenPosition.y }; break;
-					case 7: textPos = { displayInfoScreenPosition.x + fontScale, displayInfoScreenPosition.y }; break;
-
-
-					case 8: textPos = displayInfoScreenPosition; break;
-						
-					}
-
-					auto* colourToRender = i == 8 ? &fontColour : &outlineColour;
-
-					ImGui::GetBackgroundDrawList()->AddText(textPos, *colourToRender, stringToRender->c_str());
-				}
+				Render2D::drawOutlinedText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
 			}
 			else
 			{
-					ImGui::GetBackgroundDrawList()->AddText(displayInfoScreenPosition, fontColour, stringToRender->c_str());
+				Render2D::drawText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
 			}
 
-			ImGui::PopFont();
 
 
 
