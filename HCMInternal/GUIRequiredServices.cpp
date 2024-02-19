@@ -317,7 +317,7 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	},
 
 		{ GUIElementEnum::waypoint3DGUI,
-{OptionalCheatEnum::Waypoint3D}
+{OptionalCheatEnum::Waypoint3D, OptionalCheatEnum::MeasurePlayerDistanceToObject} // todo: MeasurePlayerDistanceToObject should only be required for relavent options
 		},
 
 #endif

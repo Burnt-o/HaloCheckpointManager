@@ -635,6 +635,12 @@
     <ClInclude Include="IRenderer3D.h">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClInclude>
+    <ClInclude Include="Render2DHelpers.h">
+      <Filter>Services\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MeasurePlayerDistanceToObject.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -903,6 +909,12 @@
     </ClCompile>
     <ClCompile Include="WaypointList.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Render2DHelpers.cpp">
+      <Filter>Services\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MeasurePlayerDistanceToObject.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -231,6 +231,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IRenderer3D.h" />
+    <ClInclude Include="MeasurePlayerDistanceToObject.h" />
+    <ClInclude Include="Render2DHelpers.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="WaypointList.h" />
@@ -421,6 +423,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
+    <ClCompile Include="Render2DHelpers.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
     <ClCompile Include="Renderer3DImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

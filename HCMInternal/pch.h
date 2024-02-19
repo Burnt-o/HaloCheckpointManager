@@ -98,10 +98,12 @@ using namespace DirectX;
 #include "ScopedCallback.h"
 #include "ScopedAtomicBool.h"
 
+// Some gui constant definitions
 constexpr int GUIFrameHeight = 19;
 constexpr int GUISpacing = 4;
 constexpr int GUIFrameHeightWithSpacing = GUIFrameHeight + GUISpacing;
 
+// for logging
 template <typename T, typename F>
 void once(T t, F f) {
     static bool first = true;
@@ -118,4 +120,14 @@ void once(T t, F f) {
 #define resConsume(arg1, arg2) s##arg1##Play##arg2##ou##arg1
 
 
+#define FAR_CLIP_3D 10000.f
+
+// it's a RECT but single-precision
+struct RECTF
+{
+    float left, top, right, bottom;
+};
+
 #endif //PCH_H
+
+

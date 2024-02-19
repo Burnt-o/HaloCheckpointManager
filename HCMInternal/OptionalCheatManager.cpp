@@ -63,6 +63,7 @@
 #include "SetPlayerHealth.h"
 #include "Waypoint3D.h"
 #include "Render3DEventProvider.h"
+#include "MeasurePlayerDistanceToObject.h"
 
 #include "DIContainer.h"
 #include "map.h"

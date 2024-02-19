@@ -60,7 +60,8 @@ HideHUD,\
 OBSBypassCheck,\
 SetPlayerHealth,\
 Waypoint3D,\
-Render3DEventProvider
+Render3DEventProvider,\
+MeasurePlayerDistanceToObject
 
 
 enum class OptionalCheatEnum {

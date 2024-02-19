@@ -33,7 +33,7 @@ struct WaypointList {
 #ifdef HCM_DEBUG
 	WaypointList()
 	{
-		list = { Waypoint{{14.502594, -95.079605, -73.226936}, true, "debugLabel"} }; // add single test waypoint at keyes start
+		list = { Waypoint{{14.671300, -95.203300, -73.22693634}, true, "Hello World!"} }; // add single test waypoint at keyes start
 	}
 #else
 	WaypointList() = default; // list starts empty

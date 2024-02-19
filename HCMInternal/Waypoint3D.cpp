@@ -7,6 +7,12 @@
 #include "IMCCStateHook.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
+#include "Render2DHelpers.h"
+#include "MeasurePlayerDistanceToObject.h"
+
+
+// TODO: turning on display2dinfo fucks with the font
+
 
 
 template<GameState::Value mGame>
@@ -14,7 +20,8 @@ class Waypoint3DImpl : public Waypoint3DUntemplated {
 
 private:
 	// callbacks
-	std::optional<ScopedCallback<Render3DEvent>> mRenderEventCallback;
+	std::unique_ptr<ScopedCallback<Render3DEvent>> mRenderEventCallback;
+	std::atomic_bool renderingMutex = false;
 	ScopedCallback<ToggleEvent> mWaypoint3DToggleEventCallback;
 	ScopedCallback<eventpp::CallbackList<void(WaypointList&)>> mWaypointListChangedCallback;
 
@@ -25,6 +32,7 @@ private:
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+	std::optional<std::weak_ptr<MeasurePlayerDistanceToObject>> measurePlayerDistanceToObjectOptionalWeak;
 
 	WaypointList waypointListInternal; // copy of the setting for thread safety.
 	std::mutex waypointListInternalMutex; // locked while above is updated. locked by onRenderEvent while in use.
@@ -42,7 +50,11 @@ private:
 		lockOrThrow(mccStateHookWeak, mccStateHook);
 		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false)
 		{
-			mRenderEventCallback = std::nullopt;
+			if (renderingMutex)
+			{
+				renderingMutex.wait(true);
+			}
+			mRenderEventCallback.reset();
 			return;
 		}
 
@@ -57,7 +69,7 @@ private:
 
 
 				lockOrThrow(render3DEventProviderWeak, render3DEventProvider);
-				mRenderEventCallback = std::move(ScopedCallback<Render3DEvent>(render3DEventProvider->render3DEvent, [this](IRenderer3D* n) {onRenderEvent(n); }));
+				mRenderEventCallback = std::make_unique<ScopedCallback<Render3DEvent>>(render3DEventProvider->render3DEvent, [this](IRenderer3D* n) {onRenderEvent(n); });
 
 			}
 			catch (HCMRuntimeException ex)
@@ -68,7 +80,11 @@ private:
 		}
 		else
 		{
-			mRenderEventCallback = std::nullopt;
+			if (renderingMutex)
+			{
+				renderingMutex.wait(true);
+			}
+			mRenderEventCallback.reset();
 		}
 
 	}
@@ -76,15 +92,103 @@ private:
 	// new frame, render
 	void onRenderEvent(IRenderer3D* renderer)
 	{
+		ScopedAtomicBool lockRender(renderingMutex);
 		LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
-		constexpr SimpleMath::Vector4 textColor{0, 1, 0, 1}; // green
+		uint32_t textColor = 0xFF00FF00; // green. TODO: let user set desired colour.
+		constexpr int distancePrecision = 3; // TODO: let user set.
+		constexpr float fontBaseScale = 1.f; // TODO: let user set.
 
-		std::scoped_lock<std::mutex> lock(waypointListInternalMutex);
 
-		// for initial testing, we'll just draw "hello world" at each waypoint.
+		std::optional<std::shared_ptr<MeasurePlayerDistanceToObject>> measurePlayerDistanceToObjectLocked;
+
+		if (measurePlayerDistanceToObjectOptionalWeak.has_value())
+		{
+			measurePlayerDistanceToObjectLocked = measurePlayerDistanceToObjectOptionalWeak.value().lock();
+
+
+			if (!measurePlayerDistanceToObjectLocked.value())
+			{
+				measurePlayerDistanceToObjectLocked = std::nullopt;
+			}
+
+		}
+
+
+
+
+
+
+		
+		std::scoped_lock<std::mutex> lockWaypointList(waypointListInternalMutex);
 		for (auto& waypoint : waypointListInternal.list)
 		{
-			renderer->draw3DText("Hello World!", waypoint.position, textColor);
+			auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
+			if (screenPosition.z < 0 || screenPosition.z > 1) continue; // clipped
+
+
+			if (waypoint.label.has_value())
+			{
+				LOG_ONCE(PLOG_DEBUG << "rendering waypoint label");
+				float fontDistanceScale = fontBaseScale * Render2D::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+
+				// draw main label text
+				RECTF labelTextRect = Render2D::drawCenteredOutlinedText(waypoint.label.value(), {screenPosition.x, screenPosition.y}, textColor, fontDistanceScale);
+
+				// also draw distance measurement, rendering it BELOW the label text.
+				if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
+				{
+					LOG_ONCE(PLOG_DEBUG << "also rendering distance measure");
+					auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+					if (distance.has_value())
+					{
+						// text drawn BELOW label text with (fontscale * 3px) vertical padding. 
+						Render2D::drawCenteredOutlinedText(
+							std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
+							{ screenPosition.x, labelTextRect.bottom + (fontDistanceScale * 3.f) }, 
+							textColor, 
+							fontDistanceScale);
+					}
+					else
+					{
+						Render2D::drawCenteredOutlinedText(
+							"Measurement Error", 
+							{ screenPosition.x + (labelTextRect.right - labelTextRect.left), labelTextRect.bottom + 5.f }, 
+							textColor,
+							fontDistanceScale);
+					}
+
+				}
+			}
+			else
+			{
+				LOG_ONCE(PLOG_DEBUG << "rendering distance measure only");
+				// Only draw distance measurement. Draws distance text directly on screen position since there's no label to place it below.
+
+				if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
+				{
+					float fontDistanceScale = fontBaseScale * Render2D::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+
+					auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+					if (distance.has_value())
+					{
+						Render2D::drawCenteredOutlinedText(
+							std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
+							{ screenPosition.x, screenPosition.y }, 
+							textColor, 
+							fontDistanceScale);
+					}
+					else
+					{
+						Render2D::drawCenteredOutlinedText(
+							"Measurement Error", 
+							{ screenPosition.x, screenPosition.y }, 
+							textColor, 
+							fontDistanceScale);
+					}
+
+				}
+			}
+			
 		}
 
 	}
@@ -100,6 +204,14 @@ public:
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>())
 	{
 		// TODO: add callback to mccstate change, removing render callback when it happens.
+		try
+		{
+			measurePlayerDistanceToObjectOptionalWeak = resolveDependentCheat(MeasurePlayerDistanceToObject);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "failed to resolve measurePlayerDistanceToObject service: " << ex.what();
+		}
 	}
 };
 
