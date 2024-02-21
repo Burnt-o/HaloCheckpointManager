@@ -271,7 +271,7 @@
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E4C045</Offset>
+				<Offset>0x3E4B045</Offset> <!--old 3E4C045-->
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -310,7 +310,7 @@
 		</Version>
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
-				<Offset>0x3E4CA68</Offset>
+				<Offset>0x3E4BA68</Offset> <!-- old 3E4CA68-->
 				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>

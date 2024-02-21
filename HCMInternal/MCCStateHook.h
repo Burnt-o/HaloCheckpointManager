@@ -104,6 +104,7 @@ public:
 	{
 		PLOG_VERBOSE << "checking if game is currently playing: " << gameToCheck.toString();
 		PLOG_VERBOSE << "actual game currently playing: " << currentMCCState.currentGameState.toString();
+		PLOG_VERBOSE << "current playstate: " << magic_enum::enum_name(currentMCCState.currentPlayState);
 		return (currentMCCState.currentGameState == gameToCheck) && (currentMCCState.currentPlayState == PlayState::Ingame); 
 	}
 
