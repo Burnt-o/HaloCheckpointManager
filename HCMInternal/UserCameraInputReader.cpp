@@ -195,35 +195,33 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	// Note: for this code to work properly, the freeCameraData lookDirs must be already updated this frame. 
 	// In other words, call readRotationInput & transformRotations BEFORE reading position input, so that this code knows which way is "forward" when you press W, etc.
 
-	// Horizontal input
-	if (*cachedAnalogMoveForwardBack != 0.f || *cachedAnalogMoveLeftRight != 0.f)
+	// Any inputs this frame?
+	if (*cachedAnalogMoveForwardBack != 0.f || *cachedAnalogMoveLeftRight != 0.f || cameraTranslateUpBinding->isCurrentlyDown() || cameraTranslateDownBinding->isCurrentlyDown())
 	{
-		// To normalise inputs, what we need to do is map a square of input ranges [-1,1][-1,1] to a unit circle.
-		// https://www.xarg.org/2017/07/how-to-map-a-square-to-a-circle/
-		float x = *cachedAnalogMoveForwardBack;
-		float y = *cachedAnalogMoveLeftRight;
+		// To normalise inputs, what we need to do is map a unit cube of inputs [-1...1] to a unit sphere.
+		float xCube = *cachedAnalogMoveForwardBack;
+		float yCube = *cachedAnalogMoveLeftRight;
+		float zCube = cameraTranslateUpBinding->isCurrentlyDown() ? 1.f : (cameraTranslateDownBinding->isCurrentlyDown() ? -1.f : 0.f);
 
-		auto normalisedForwardBack = x * std::sqrtf(1 - y * y / 2);
-		auto normalisedLeftRight = y * std::sqrt(1 - x * x / 2);
+		//https://mathproofs.blogspot.com/2005/07/mapping-cube-to-sphere.html?m=1
+		// precalc squared values
+		float xCubeSquared = xCube * xCube;
+		float yCubeSquared = yCube * yCube;
+		float zCubeSquared = zCube * zCube;
+
+		// map to sphere
+		auto xSphere = xCube * std::sqrtf(1 - (yCubeSquared / 2) - (zCubeSquared / 2) + ((yCubeSquared + zCubeSquared) / 3));
+		auto ySphere = yCube * std::sqrtf(1 - (zCubeSquared / 2) - (xCubeSquared / 2) + ((zCubeSquared + xCubeSquared) / 3));
+		auto zSphere = zCube * std::sqrtf(1 - (xCubeSquared / 2) - (yCubeSquared / 2) + ((xCubeSquared + yCubeSquared) / 3));
 
 		// Forward/back
-		positionTransform = positionTransform + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * normalisedForwardBack);
+		positionTransform = positionTransform + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * xSphere);
 		// Left/Right
-		positionTransform = positionTransform + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * normalisedLeftRight);
+		positionTransform = positionTransform + (freeCameraData.currentlookDirRight * cameraTranslationSpeed * ySphere);
+		// Up/Down
+		positionTransform = positionTransform + (freeCameraData.currentlookDirUp * cameraTranslationSpeed * zSphere);
 	}
 
-	// Up
-	if (cameraTranslateUpBinding->isCurrentlyDown())
-	{
-		positionTransform = positionTransform + (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
-	}
-
-	// Down
-	if (cameraTranslateDownBinding->isCurrentlyDown())
-	{
-		positionTransform = positionTransform - (freeCameraData.currentlookDirUp * cameraTranslationSpeed);
-	}
-	
 
 }
 
