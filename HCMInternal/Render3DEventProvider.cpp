@@ -5,18 +5,21 @@
 
 
 
-void Render3DEventProvider::onForegroundRenderEvent(const SimpleMath::Vector2& screensize)
+void Render3DEventProvider::onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView)
 {
 	// only fire 3D renderer event if anyone is actually subscribed to it - because updating the camera data is expensive
 	if (render3DEvent.get()->empty() == false) 
 	{
-		p3DRenderer->updateCameraData(screensize);
-		render3DEvent->operator()(p3DRenderer.get());
+		if (p3DRenderer->updateCameraData(pDevice, pDeviceContext, screenSize, pMainRenderTargetView))
+		{
+			render3DEvent->operator()(p3DRenderer.get());
+		}
+		
 	}
 }
 
 Render3DEventProvider::Render3DEventProvider(GameState gameImpl, IDIContainer& dicon)
-	: foregroundRenderEventCallback(dicon.Resolve<RenderEvent>().lock(), [this](SimpleMath::Vector2 ss) { onForegroundRenderEvent(ss); })
+	: directXRenderEventCallback(dicon.Resolve<DirectXRenderEvent>().lock(), [this](ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) { onDirectXRenderEvent(pDevice, pDeviceContext, screenSize, pMainRenderTargetView); })
 {
 	switch (gameImpl)
 	{

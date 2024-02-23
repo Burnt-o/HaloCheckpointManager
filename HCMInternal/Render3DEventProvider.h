@@ -4,7 +4,7 @@
 #include "GameState.h"
 #include "DIContainer.h"
 #include "IRenderer3D.h"
-
+#include "DirectXRenderEvent.h"
 
 
 
@@ -15,8 +15,8 @@
 
 class Render3DEventProvider : public IOptionalCheat {
 private:
-	ScopedCallback<RenderEvent> foregroundRenderEventCallback; // fired by ImGuiManager
-	void onForegroundRenderEvent(const SimpleMath::Vector2& screensize);
+	ScopedCallback<DirectXRenderEvent> directXRenderEventCallback; // fired by ImGuiManager
+	void onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView);
 
 	std::unique_ptr<IRenderer3D> p3DRenderer;
 public:

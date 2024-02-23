@@ -7,11 +7,10 @@
 #include "IMCCStateHook.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
-#include "Render2DHelpers.h"
 #include "MeasurePlayerDistanceToObject.h"
+#include "RenderTextHelper.h"
 
-
-// TODO: turning on display2dinfo fucks with the font
+// TODO: scale font/sprite size by screen size (actually should I?)
 
 
 
@@ -92,26 +91,29 @@ private:
 	// new frame, render
 	void onRenderEvent(IRenderer3D* renderer)
 	{
-		ScopedAtomicBool lockRender(renderingMutex);
-		LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
-		uint32_t textColor = 0xFF00FF00; // green. TODO: let user set desired colour.
-		constexpr int distancePrecision = 3; // TODO: let user set.
-		constexpr float fontBaseScale = 1.f; // TODO: let user set.
-
-
-		std::optional<std::shared_ptr<MeasurePlayerDistanceToObject>> measurePlayerDistanceToObjectLocked;
-
-		if (measurePlayerDistanceToObjectOptionalWeak.has_value())
+		try // some renderer funcs (sprite drawing) can throw HCMRuntime exceptions
 		{
-			measurePlayerDistanceToObjectLocked = measurePlayerDistanceToObjectOptionalWeak.value().lock();
+	
+			ScopedAtomicBool lockRender(renderingMutex);
+			LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
+			uint32_t textColor = 0xFF00FF00; // green. TODO: let user set desired colour.
+			constexpr int distancePrecision = 3; // TODO: let user set.
+			constexpr float fontBaseScale = 1.f; // TODO: let user set.
 
 
-			if (!measurePlayerDistanceToObjectLocked.value())
+			std::optional<std::shared_ptr<MeasurePlayerDistanceToObject>> measurePlayerDistanceToObjectLocked;
+
+			if (measurePlayerDistanceToObjectOptionalWeak.has_value())
 			{
-				measurePlayerDistanceToObjectLocked = std::nullopt;
-			}
+				measurePlayerDistanceToObjectLocked = measurePlayerDistanceToObjectOptionalWeak.value().lock();
 
-		}
+
+				if (!measurePlayerDistanceToObjectLocked.value())
+				{
+					measurePlayerDistanceToObjectLocked = std::nullopt;
+				}
+
+			}
 
 
 
@@ -119,78 +121,86 @@ private:
 
 
 		
-		std::scoped_lock<std::mutex> lockWaypointList(waypointListInternalMutex);
-		for (auto& waypoint : waypointListInternal.list)
-		{
-			auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
-			if (screenPosition.z < 0 || screenPosition.z > 1) continue; // clipped
-
-
-			if (waypoint.label.has_value())
+			std::scoped_lock<std::mutex> lockWaypointList(waypointListInternalMutex);
+			for (auto& waypoint : waypointListInternal.list)
 			{
-				LOG_ONCE(PLOG_DEBUG << "rendering waypoint label");
-				float fontDistanceScale = fontBaseScale * Render2D::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
+				if (screenPosition.z < 0 || screenPosition.z > 1) continue; // clipped
 
-				// draw main label text
-				RECTF labelTextRect = Render2D::drawCenteredOutlinedText(waypoint.label.value(), {screenPosition.x, screenPosition.y}, textColor, fontDistanceScale);
+				// render sprite
+				renderer->drawCenteredSprite(110, { screenPosition.x, screenPosition.y }, 1.f);
 
-				// also draw distance measurement, rendering it BELOW the label text.
-				if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
+				// render label + distance measure
+				if (waypoint.label.has_value())
 				{
-					LOG_ONCE(PLOG_DEBUG << "also rendering distance measure");
-					auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
-					if (distance.has_value())
-					{
-						// text drawn BELOW label text with (fontscale * 3px) vertical padding. 
-						Render2D::drawCenteredOutlinedText(
-							std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
-							{ screenPosition.x, labelTextRect.bottom + (fontDistanceScale * 3.f) }, 
-							textColor, 
-							fontDistanceScale);
-					}
-					else
-					{
-						Render2D::drawCenteredOutlinedText(
-							"Measurement Error", 
-							{ screenPosition.x + (labelTextRect.right - labelTextRect.left), labelTextRect.bottom + 5.f }, 
-							textColor,
-							fontDistanceScale);
-					}
+					LOG_ONCE(PLOG_DEBUG << "rendering waypoint label");
+					float fontDistanceScale = fontBaseScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
 
+					// draw main label text
+					RECTF labelTextRect = RenderTextHelper::drawCenteredOutlinedText(waypoint.label.value(), {screenPosition.x, screenPosition.y}, textColor, fontDistanceScale);
+
+					// also draw distance measurement, rendering it BELOW the label text.
+					if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
+					{
+						LOG_ONCE(PLOG_DEBUG << "also rendering distance measure");
+						auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+						if (distance.has_value())
+						{
+							// text drawn BELOW label text with (fontscale * 3px) vertical padding. 
+							RenderTextHelper::drawCenteredOutlinedText(
+								std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
+								{ screenPosition.x, labelTextRect.bottom + (fontDistanceScale * 3.f) }, 
+								textColor, 
+								fontDistanceScale);
+						}
+						else
+						{
+							RenderTextHelper::drawCenteredOutlinedText(
+								"Measurement Error", 
+								{ screenPosition.x + (labelTextRect.right - labelTextRect.left), labelTextRect.bottom + 5.f }, 
+								textColor,
+								fontDistanceScale);
+						}
+
+					}
 				}
-			}
-			else
-			{
-				LOG_ONCE(PLOG_DEBUG << "rendering distance measure only");
-				// Only draw distance measurement. Draws distance text directly on screen position since there's no label to place it below.
-
-				if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
+				else // render distance measure
 				{
-					float fontDistanceScale = fontBaseScale * Render2D::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+					LOG_ONCE(PLOG_DEBUG << "rendering distance measure only");
+					// Only draw distance measurement. Draws distance text directly on screen position since there's no label to place it below.
 
-					auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
-					if (distance.has_value())
+					if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
 					{
-						Render2D::drawCenteredOutlinedText(
-							std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
-							{ screenPosition.x, screenPosition.y }, 
-							textColor, 
-							fontDistanceScale);
-					}
-					else
-					{
-						Render2D::drawCenteredOutlinedText(
-							"Measurement Error", 
-							{ screenPosition.x, screenPosition.y }, 
-							textColor, 
-							fontDistanceScale);
-					}
+						float fontDistanceScale = fontBaseScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
 
+						auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+						if (distance.has_value())
+						{
+							RenderTextHelper::drawCenteredOutlinedText(
+								std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
+								{ screenPosition.x, screenPosition.y }, 
+								textColor, 
+								fontDistanceScale);
+						}
+						else
+						{
+							RenderTextHelper::drawCenteredOutlinedText(
+								"Measurement Error", 
+								{ screenPosition.x, screenPosition.y }, 
+								textColor, 
+								fontDistanceScale);
+						}
+
+					}
 				}
-			}
 			
+			}
 		}
-
+		catch (HCMRuntimeException ex)
+		{
+			PLOG_ERROR << "rendering error (probably sprites): " << ex.what();
+			runtimeExceptions->handleMessage(ex);
+		}
 	}
 
 public:

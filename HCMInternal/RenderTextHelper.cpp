@@ -1,8 +1,10 @@
 #include "pch.h"
-#include "Render2DHelpers.h"
+#include "RenderTextHelper.h"
+#include "directxtk\SimpleMath.h"
 #include "imgui.h"
+#include "ScopedImFontScaler.h"
 
-namespace Render2D
+namespace RenderTextHelper
 {
 
 
@@ -26,11 +28,11 @@ namespace Render2D
 		// To achieve this, we'll do a different scaling, then remap from the range we know it must be due to the earlier clamping
 
 		// scaling func must have the property of "reversing" the input
-		auto scalingFunc = [](float input) -> float 
-		{ 
-			
+		auto scalingFunc = [](float input) -> float
+		{
+
 			return 1.f / (input);
-		
+
 		};
 
 		zdistance = scalingFunc(zdistance);
@@ -45,30 +47,27 @@ namespace Render2D
 
 	}
 
+
 	RECTF drawText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale)
 	{
-		ImFont* currentFont = ImGui::GetFont();
-		currentFont->Scale = fontScale;
-		ImGui::PushFont(currentFont);
+
+		ScopedImFontScaler setFont{ fontScale };
 
 		auto textSize = ImGui::CalcTextSize(textString.c_str());
 		ImGui::GetBackgroundDrawList()->AddText(textPos, textColor, textString.c_str());
 
-		ImGui::PopFont();
 		return RECTF(textPos.x, textPos.y, textPos.x + textSize.x, textPos.y + textSize.y);
 	}
 
+
 	RECTF drawCenteredText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale)
 	{
-		ImFont* currentFont = ImGui::GetFont();
-		currentFont->Scale = fontScale;
-		ImGui::PushFont(currentFont);
+		ScopedImFontScaler setFont{ fontScale };
 
 		auto textSize = ImGui::CalcTextSize(textString.c_str());
 		auto centeredTextPos = SimpleMath::Vector2(textPos.x - (textSize.x / 2), textPos.y - (textSize.y / 2));
 		ImGui::GetBackgroundDrawList()->AddText(centeredTextPos, textColor, textString.c_str());
 
-		ImGui::PopFont();
 		return RECTF(centeredTextPos.x, centeredTextPos.y, centeredTextPos.x + textSize.x, centeredTextPos.y + textSize.y);
 	}
 
@@ -77,6 +76,7 @@ namespace Render2D
 
 	RECTF drawOutlinedText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale, const float& outlineSize, const uint32_t& outlineColor)
 	{
+		ScopedImFontScaler setFont{ fontScale };
 
 		SimpleMath::Vector2 outlineTextPos;
 		float outlineOffset = fontScale * outlineSize;
@@ -102,7 +102,8 @@ namespace Render2D
 			}
 
 			auto& colorToRender = i == 8 ? textColor : outlineColor;
-			drawText(textString, outlineTextPos, colorToRender, fontScale);
+			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.c_str());
+
 		}
 
 		return RECTF(textPos.x - outlineOffset, textPos.y - outlineOffset, textPos.x + textSize.x + outlineOffset, textPos.y + textSize.y + outlineOffset);
@@ -112,6 +113,7 @@ namespace Render2D
 
 	RECTF drawCenteredOutlinedText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale, const float& outlineSize, const uint32_t& outlineColor)
 	{
+		ScopedImFontScaler setFont{ fontScale };
 
 		SimpleMath::Vector2 outlineTextPos;
 		float outlineOffset = fontScale * outlineSize;
@@ -138,13 +140,10 @@ namespace Render2D
 			}
 
 			auto& colorToRender = i == 8 ? textColor : outlineColor;
-			drawText(textString, outlineTextPos, colorToRender, fontScale);
+			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.c_str());
 		}
 
 		return RECTF(centeredTextPos.x - outlineOffset, centeredTextPos.y - outlineOffset, centeredTextPos.x + textSize.x + outlineOffset, centeredTextPos.y + textSize.y + outlineOffset);
 
 	}
-
-	
-
 }

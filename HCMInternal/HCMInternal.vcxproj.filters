@@ -635,11 +635,20 @@
     <ClInclude Include="IRenderer3D.h">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Render2DHelpers.h">
-      <Filter>Services\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="MeasurePlayerDistanceToObject.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRenderEvent.h">
+      <Filter>Services\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteResource.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTextHelper.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopedImFontScaler.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -910,15 +919,27 @@
     <ClCompile Include="WaypointList.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Render2DHelpers.cpp">
-      <Filter>Services\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer3DImpl_Sprites.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteResource.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTextHelper.cpp">
+      <Filter>Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="dds2.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="InternalPointerData.xml">
@@ -933,6 +954,10 @@
   <ItemGroup>
     <Image Include="lapua.dds" />
     <Image Include="lapua2.dds" />
+    <Image Include="Waypoint3DReticle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Waypoint3DReticle.dds" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="lapua.wav">

@@ -116,7 +116,7 @@ public:
             // set up optional cheats and optional gui elements
             auto guireq = std::make_shared<GUIRequiredServices>(); PLOGV << "guireq init"; // defines the gui elements we want to build and which optional cheats they will require
             auto cheatfail = std::make_shared<OptionalCheatInfo>(); PLOGV << "cheatfail init"; // stores info about failed optionalCheat construction (starts empty, obviously)
-            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, imm->BackgroundRenderEvent, hkd); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
+            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, imm->BackgroundRenderEvent, imm->ForegroundDirectXRenderEvent, hkd); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
 
             auto guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings, ver->getMCCProcessType()); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore

@@ -230,11 +230,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
-    <ClInclude Include="Render2DHelpers.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
+    <ClInclude Include="RenderTextHelper.h" />
+    <ClInclude Include="ScopedImFontScaler.h" />
+    <ClInclude Include="SpriteResource.h" />
     <ClInclude Include="WaypointList.h" />
     <ClInclude Include="Waypoint3D.h" />
     <ClInclude Include="AdvanceTicks.h" />
@@ -424,11 +427,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
-    <ClCompile Include="Render2DHelpers.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
     <ClCompile Include="Renderer3DImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Renderer3DImpl_Sprites.cpp" />
+    <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
+    <ClCompile Include="RenderTextHelper.cpp" />
+    <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="Waypoint3D.cpp" />
     <ClCompile Include="AdvanceTicks.cpp" />
     <ClCompile Include="AIFreeze.cpp" />
@@ -536,6 +542,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="dds2.bin" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HCMInternal.rc" />
@@ -543,6 +550,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <Image Include="lapua.dds" />
     <Image Include="lapua2.dds" />
+    <Image Include="Waypoint3DReticle.dds" />
+    <Image Include="Waypoint3DReticle.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="lapua.wav" />

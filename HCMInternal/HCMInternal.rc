@@ -97,6 +97,8 @@ IDR_WAVE1               WAVE                    "lapua.wav"
 
 IDR_DDS3                DDS                     "lapua2.dds"
 
+IDR_DDS2                DDS                     "Waypoint3DReticle.dds"
+
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
 

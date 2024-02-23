@@ -11,6 +11,7 @@
 #include "ControlServiceContainer.h"
 #include "IMakeOrGetCheat.h"
 #include "HotkeyDefinitions.h"
+#include "DirectXRenderEvent.h"
 // constructs and stores optionalcheats, updating OptionalCheatInfoManager as it constructs
 
 class OptionalCheatConstructor;
@@ -38,6 +39,7 @@ public:
 		std::shared_ptr<IModalDialogRenderer> modal,
 		std::shared_ptr<ControlServiceContainer> control,
 		std::shared_ptr<RenderEvent> overlayRenderEvent,
+		std::shared_ptr<DirectXRenderEvent> foregroundDirectXRenderEvent,
 		std::shared_ptr<HotkeyDefinitions> hotkeyDefinitions);
 	;
 	~OptionalCheatManager();

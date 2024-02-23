@@ -7,6 +7,7 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_stdlib.h"
 #include "MultilevelPointer.h"
+#include "DirectXRenderEvent.h"
 // todo move stuff to impl
 
 // Singleton: on construction, just subscribes to D3D11Hook's presentHookEvent. 
@@ -70,7 +71,7 @@ public:
 	std::shared_ptr<RenderEvent> BackgroundRenderEvent = std::make_shared<RenderEvent>(); // for overlays
 	std::shared_ptr<RenderEvent> MidgroundRenderEvent = std::make_shared<RenderEvent>(); // for main gui / messages
 	std::shared_ptr<RenderEvent> ForegroundRenderEvent = std::make_shared<RenderEvent>(); // for modal dialogues / popups
-
+	std::shared_ptr<DirectXRenderEvent> ForegroundDirectXRenderEvent = std::make_shared<DirectXRenderEvent>(); // for modal dialogues / popups
 
 
 	// Banned operations for singleton

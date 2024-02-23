@@ -32,7 +32,7 @@
 #include "GlobalKill.h"
 
 
-#include "Render2DHelpers.h"
+#include "RenderTextHelper.h"
 
 
 
@@ -164,11 +164,11 @@ private:
 
 			if (settings->display2DInfoOutline->GetValue())
 			{
-				Render2D::drawOutlinedText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
+				RenderTextHelper::drawOutlinedText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
 			}
 			else
 			{
-				Render2D::drawText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
+				RenderTextHelper::drawText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
 			}
 
 
