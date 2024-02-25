@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCMExternal.Views"
+        xmlns:control="clr-namespace:HCMExternal.Views.Controls"
              xmlns:cnv="clr-namespace:HCMExternal.Converters"
         xmlns:commands="clr-namespace:HCMExternal.ViewModels.Commands"
         xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
@@ -23,7 +24,7 @@
     </Window.Resources>
 
     <Grid>
-
+        <control:StatusBarView  DataContext="{Binding Path=StatusBar}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"/>
         <TabControl SelectedIndex="{Binding Path=CheckpointViewModel.SelectedGame, Converter={StaticResource EnumConverter}, 
                               Mode=TwoWay}"  >
 

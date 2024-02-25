@@ -57,6 +57,7 @@ namespace HCMExternal
             serviceCollection.AddSingleton<CheckpointViewModel>();
             serviceCollection.AddSingleton<MainViewModel>();
 
+
             // Services
             serviceCollection.AddSingleton<MCCStateService>();
             serviceCollection.AddSingleton<CheckpointService>();
@@ -65,7 +66,7 @@ namespace HCMExternal
 
 
 
-
+            serviceCollection.AddSingleton<StatusBar>();
 
 
 

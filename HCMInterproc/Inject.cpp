@@ -81,7 +81,6 @@ bool SetupInternal(char* errorMessage, int errorMessageCapacity)
 			PLOG_INFO << "Confirmed that MCC contains HCMInternal!";
 		}
 
-		throw InjectionException("success lol");
 		return true;
 
 	}

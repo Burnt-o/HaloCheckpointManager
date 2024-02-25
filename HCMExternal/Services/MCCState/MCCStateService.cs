@@ -41,7 +41,9 @@ namespace HCMExternal.Services.MCCStateServiceNS
         }
 
         public static event Action AttachEvent = delegate { Log.Information("Firing AttachEvent"); };
+        public static event Action AttachInProgressEvent = delegate { Log.Information("Firing AttachInProgressEvent"); };
         public static event Action DetachEvent = delegate { Log.Information("Firing DetachEvent"); };
+        public static event Action AttachErrorEvent = delegate { Log.Information("Firing AttachErrorEvent"); };
 
         public void beginAttaching()
         {
@@ -95,11 +97,16 @@ namespace HCMExternal.Services.MCCStateServiceNS
             CheckMCCStatus();
         }
 
+        private bool giveUpInjecting = false;
+        private string lastInjectionError = "no error";
         private readonly object AttachLock = new object();
         private bool TryAttach(string procName)
         {
+
+
             lock (AttachLock)
             {
+                if (giveUpInjecting) return false;
                 try
                 {
                     foreach (Process process in Process.GetProcesses())
@@ -111,6 +118,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             Log.Verbose("Found MCC, trying attach");
                             Log.Verbose("MCC age: " + (DateTime.Now - process.StartTime));
                             if (DateTime.Now - process.StartTime < TimeSpan.FromSeconds(3)) continue;
+                            AttachInProgressEvent();
 
                             var internalInjectResult = InterprocService.Setup();
                             if (internalInjectResult.Item1)
@@ -124,7 +132,9 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             }
                             else
                             {
-                                MessageBox.Show("HCM failed to inject its internal module into the game! \nMore info in log files. Error: \n" + internalInjectResult.Item2);
+                                AttachErrorEvent();
+                                lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in log files. Error: \n" + internalInjectResult.Item2 + "\n\nRetry injection?";
+                                ShowInjectionError();
                                 return false;
                             }
 
@@ -138,6 +148,25 @@ namespace HCMExternal.Services.MCCStateServiceNS
                     return false;
                 }
             }
+        }
+
+        public void ShowInjectionError()
+        {
+            var result = MessageBox.Show(lastInjectionError, "HCM Internal Error!", MessageBoxButton.YesNo, MessageBoxImage.Error);
+            if (result == MessageBoxResult.No)
+            {
+                // User doesn't want to retry injection
+                giveUpInjecting = true;
+            }
+            else
+            {
+                giveUpInjecting = false;
+            }
+        }
+
+        public void unGiveUpInjection() // if the user gave up on failed injecting, can call this by clicking status button to un-giveup
+        {
+            giveUpInjecting = false;
         }
 
 
