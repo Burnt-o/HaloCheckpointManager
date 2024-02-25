@@ -34,8 +34,12 @@ HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::sha
 	}
 	else // deseralise saved bindings
 	{
+		PLOG_DEBUG << "Found hotkey file at path: " << mHotkeyConfigPath << ", parsing xml document";
 		pugi::xml_document hotkeyConfig;
 		pugi::xml_parse_result result = hotkeyConfig.load_file(mHotkeyConfigPath.c_str());
+
+
+
 		if (!result)
 		{
 			messagesGUI->addMessage(std::format("Error parsing hotkey file: {}. \nUsing default bindings.", result.description()));
@@ -43,6 +47,11 @@ HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::sha
 		}
 		else
 		{
+			PLOG_INFO << "Successfully parsed hotkeyConfig xml document";
+			std::stringstream ss;
+			hotkeyConfig.print(ss);
+			PLOG_VERBOSE << "Hotkey file contents: " << std::endl << ss.str();
+
 			for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllRebindableHotkeys())
 			{
 				HotkeyManagerImpl::deserialiseHotkey(hotkey, hotkeyConfig.child(hotkey->getName().data()));
@@ -56,17 +65,27 @@ HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::sha
 
 HotkeyManager::~HotkeyManager()
 {
-	PLOG_VERBOSE << "~HotkeyManager() serialising hotkeys";
+	PLOG_VERBOSE << "~HotkeyManager() serialising " << mHotkeyDefinitions->getAllRebindableHotkeys().size() << " hotkeys";
 	// serialise hotkeys
 	pugi::xml_document hotkeyConfig;
+	
 	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllRebindableHotkeys())
 	{
 		HotkeyManagerImpl::serialiseHotkey(hotkey, hotkeyConfig);
 	}
 
+	std::stringstream ss;
+	hotkeyConfig.print(ss);
+	PLOG_VERBOSE << "hotkeyConfig document contents: " << std::endl << ss.str();
+
+	PLOG_DEBUG << "Saving hotkeys to path: " << mHotkeyConfigPath;
 	if (!hotkeyConfig.save_file(mHotkeyConfigPath.c_str()))
 	{
 		PLOG_ERROR << "Error saving hotkeyConfig to " << mHotkeyConfigPath;
+	}
+	else
+	{
+		PLOG_INFO << "Successfully saved hotkey file!";
 	}
 
 	for (auto& thread : mFireEventThreads)
