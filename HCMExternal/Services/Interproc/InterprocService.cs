@@ -66,7 +66,7 @@ namespace HCMExternal.Services.InterprocServiceNS
 
 
 
-        [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal();
+        [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal(StringBuilder str, int len);
 
         public InterprocService(CheckpointViewModel checkpointViewModel)
         {
@@ -244,9 +244,10 @@ namespace HCMExternal.Services.InterprocServiceNS
         }
 
 
-        public bool Setup()
+        public (bool, string) Setup()
         {
-            return SetupInternal();
+            StringBuilder sb = new StringBuilder();
+            return (SetupInternal(sb, sb.Capacity), sb.ToString());
         }
 
 

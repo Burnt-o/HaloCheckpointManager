@@ -67,13 +67,6 @@ RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Ve
 	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with bottom: " << bottom, bottom = surfacef.bottom);
 
 
-	/*
-	This draw call is currently failing at SpriteBatch->Draw->RenderBatch->GetTextureSize->GetResource.
-	This implies that our resource isn't existing?
-	spriteToDraw.getTextureView() definitely isn't null. 
-	*/
-
-
 	this->spriteBatch->Draw(pSpriteToDraw->getTextureView(), RECT{std::lroundf(surfacef.left), std::lroundf(surfacef.top), std::lroundf(surfacef.right), std::lroundf(surfacef.bottom)});
 
 	this->spriteBatch->End();

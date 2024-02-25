@@ -61,7 +61,6 @@ namespace HCMExternal.Services.MCCStateServiceNS
                 {
                     if (TryAttach(procName))
                     {
-
                         return MCCProcess;
                     }
                 }
@@ -111,8 +110,10 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             // We don't want to inject while MCC is booting up since LoadLibrary is occupied
                             Log.Verbose("Found MCC, trying attach");
                             Log.Verbose("MCC age: " + (DateTime.Now - process.StartTime));
-                            if (DateTime.Now - process.StartTime < TimeSpan.FromSeconds(3)) continue; 
-                            if (InterprocService.Setup())
+                            if (DateTime.Now - process.StartTime < TimeSpan.FromSeconds(3)) continue;
+
+                            var internalInjectResult = InterprocService.Setup();
+                            if (internalInjectResult.Item1)
                             {
                                 MCCProcess = process;
                                 MCCProcess.Disposed += MCCProcess_Exited;
@@ -123,9 +124,7 @@ namespace HCMExternal.Services.MCCStateServiceNS
                             }
                             else
                             {
-
-                                // TODO: tell user something went wrong
-                                MessageBox.Show("Something went wrong injecting internal.. not sure what");
+                                MessageBox.Show("HCM failed to inject its internal module into the game! \nMore info in log files. Error: \n" + internalInjectResult.Item2);
                                 return false;
                             }
 
