@@ -38,12 +38,18 @@ namespace HCMExternal.Services.MCCStateServiceNS
         {
             InterprocService = ips;
             checkMCCStatusLoop.Elapsed += new ElapsedEventHandler(CheckMCCStatusLoop);
+            ShowErrorEvent += ShowInjectionError;
         }
 
+        // fired by us
         public static event Action AttachEvent = delegate { Log.Information("Firing AttachEvent"); };
         public static event Action AttachInProgressEvent = delegate { Log.Information("Firing AttachInProgressEvent"); };
         public static event Action DetachEvent = delegate { Log.Information("Firing DetachEvent"); };
         public static event Action AttachErrorEvent = delegate { Log.Information("Firing AttachErrorEvent"); };
+
+        // fired at us
+        public static event Action ShowErrorEvent = delegate { Log.Information("Firing ShowErrorEvent"); };
+        public static void FireShowErrorEvent() { ShowErrorEvent(); }
 
         public void beginAttaching()
         {
@@ -152,6 +158,8 @@ namespace HCMExternal.Services.MCCStateServiceNS
 
         public void ShowInjectionError()
         {
+            if (MCCProcess != null) return;
+
             var result = MessageBox.Show(lastInjectionError, "HCM Internal Error!", MessageBoxButton.YesNo, MessageBoxImage.Error);
             if (result == MessageBoxResult.No)
             {
@@ -163,12 +171,6 @@ namespace HCMExternal.Services.MCCStateServiceNS
                 giveUpInjecting = false;
             }
         }
-
-        public void unGiveUpInjection() // if the user gave up on failed injecting, can call this by clicking status button to un-giveup
-        {
-            giveUpInjecting = false;
-        }
-
 
         private void MCCProcess_Exited(object? sender, EventArgs e)
         {

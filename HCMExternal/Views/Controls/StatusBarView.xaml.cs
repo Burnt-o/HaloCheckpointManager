@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HCMExternal.Services.MCCStateServiceNS;
 
 namespace HCMExternal.Views.Controls
 {
@@ -25,9 +26,5 @@ namespace HCMExternal.Views.Controls
             InitializeComponent();
         }
 
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
     }
 }

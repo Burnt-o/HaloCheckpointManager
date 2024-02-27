@@ -76,6 +76,8 @@ public:
        //curl_global_init(CURL_GLOBAL_DEFAULT);
         try
         {
+
+            throw HCMInitException("Fake error for testing");
             // some very important services
             ModuleCache::initialize(); PLOGV << "moduleCache init"; // static singleton still.. blah
             auto mhm = std::make_unique<ModuleHookManager>(); PLOGV << "mhm init"; // is a static singleton still.. blah 

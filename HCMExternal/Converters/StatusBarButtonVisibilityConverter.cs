@@ -4,30 +4,35 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using HCMExternal.ViewModels;
 
 namespace HCMExternal.Converters
 {
-    internal class StatusBarTextConverter : IValueConverter
+    internal class StatusBarButtonVisibilityConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
             if (value == null || !(value is StatusBarState))
-                return ("UI Error " + (value == null) + (value is StatusBarState));
+                return (Visibility.Hidden);
 
 
 
             switch ((StatusBarState)value)
             {
-                case StatusBarState.MCCProcessNotFound: return "MCC process not found.";
-                case StatusBarState.InjectionSucceeded: return "Internal connected.";
-                case StatusBarState.InjectionInProgress: return "Internal injecting...";
-                case StatusBarState.InjectionFailed: return "Error injecting!";
-                default: return "UI Error (default)";
+                case StatusBarState.InjectionFailed: return Visibility.Visible;
+
+                default: // fall thru
+                case StatusBarState.MCCProcessNotFound: 
+                case StatusBarState.InjectionSucceeded: 
+                case StatusBarState.InjectionInProgress: 
+                    return Visibility.Hidden;
+
+               
             }
 
 

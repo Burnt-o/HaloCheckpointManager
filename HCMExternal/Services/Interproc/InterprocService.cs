@@ -246,7 +246,7 @@ namespace HCMExternal.Services.InterprocServiceNS
 
         public (bool, string) Setup()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(1000);
             return (SetupInternal(sb, sb.Capacity), sb.ToString());
         }
 

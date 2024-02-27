@@ -10,14 +10,33 @@
              xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
              d:DataContext="{d:DesignInstance viewModels:StatusBar}"
              >
-    <Grid MouseDown="Grid_MouseDown" Width="180" Height="35">
+    <Grid Width="180" Height="35">
         <Grid.Resources>
             <cnv:StatusBarColorConverter x:Key="StatusBarColorConverter" />
             <cnv:StatusBarTextConverter x:Key="StatusBarTextConverter" />
+            <cnv:StatusBarButtonVisibilityConverter x:Key="StatusBarButtonVisibilityConverter" />
+
+
         </Grid.Resources>
 
-        <!-- Draws a circle with a blue interior and a black outline. -->
-        <Grid>
+
+        <Grid >
+
+            <!--Button to show error message (only visible when in error state thanks to styling)-->
+            <Button
+            Visibility="{Binding Path=currentState, Converter={StaticResource StatusBarButtonVisibilityConverter}}"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,3,3,0"
+            Width="40"
+            Height="17"
+            Padding="0,-1,0,0"
+            Content="Show"
+            Command="{Binding Path=ShowErrorCommand}"
+            
+            />
+
+            <!-- Draws a circle with a coloured or empty interior (indicating state) and a black outline. -->
             <Ellipse
 
             Fill="{Binding Path=currentState, Converter={StaticResource StatusBarColorConverter}}"
@@ -33,11 +52,14 @@
      /> 
         </Grid>
        
+        <!--label to right of circle-->
         <Label 
             Margin="15, -1, 0, 0"
             Content="{Binding Path=currentState, Converter={StaticResource StatusBarTextConverter}}"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
                />
+
+
     </Grid>
 </UserControl>
