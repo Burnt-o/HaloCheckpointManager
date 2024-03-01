@@ -2071,6 +2071,33 @@
 
 	<!-- #region ignoreCheckpointChecksum-->
 	<VersionedEntry Name="checksumCheckFunction" Type="MultilevelPointer::ModuleOffset">
+
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAEA6FE</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAEC12E</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xACDE53</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6AF69D</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2448.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -2174,6 +2201,14 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="checksumIgnoreCode" Type="Vector" Typename="byte">
+		<Version Version="All" Game="Halo1">
+			<Data>0x39, 0xC0, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<Data>0x39, 0xC0, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
 		<Version Version="All" Game="Halo3">
 			<Data>0x48, 0x31, 0xC9</Data>
 		</Version>
@@ -2983,7 +3018,7 @@
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x159FC30</Offset>
+				<Offset>0x15A1560</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -3017,7 +3052,7 @@
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x15A1560</Offset>
+				<Offset>0x159FC30</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
