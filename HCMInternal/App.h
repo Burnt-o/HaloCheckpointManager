@@ -156,7 +156,7 @@ public:
             if (modalFailureWindowThread.joinable())
                 modalFailureWindowThread.join();
 
-            sharedMem->setStatusFlag(HCMInternalStatus::Error);
+            sharedMem->setStatusFlag(HCMInternalStatus::Shutdown);
         }
         catch (HCMInitException& ex) // mandatory services that fail to init will be caught here
         {

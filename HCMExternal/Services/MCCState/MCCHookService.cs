@@ -78,6 +78,7 @@ namespace HCMExternal.Services.MCCHookService
             Initialising = 0,
             AllGood = 1,
             Error = 2,
+            Shutdown = 3,
         }
 
 
@@ -192,6 +193,14 @@ namespace HCMExternal.Services.MCCHookService
                         lastInjectionError = "HCMInternal had an exception - see MCC window (or HCMInternal.log) for more details";
                         AdvanceStateMachine(MCCHookStateEnum.InternalException);
                         //ShowHCMInternalErrorDialog(); // Not necessary to show - HCMInternal has it's own dialog
+                        return;
+                    }
+
+                    if (currentInternalStateSuccess == InternalStatusFlag.Shutdown)
+                    {
+                        MCCHookState.MCCProcess?.WaitForExit(3000);
+                        AdvanceStateMachine(MCCHookStateEnum.MCCNotFound);
+                        return;
                     }
                     break;
 

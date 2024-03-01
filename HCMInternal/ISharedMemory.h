@@ -7,6 +7,7 @@ enum HCMInternalStatus
 	Initialising = 0,
 	AllGood = 1,
 	Error = 2,
+	Shutdown = 3,
 };
 
 class ISharedMemory
