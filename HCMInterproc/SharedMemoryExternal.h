@@ -12,6 +12,14 @@ using Alloc = bip::allocator<T, bip::managed_shared_memory::segment_manager>;
 using shm_string = bip::basic_string<char, std::char_traits<char>, Alloc<char>>;
 
 
+enum class HCMInternalStatus
+{
+	Initialising = 0,
+	AllGood = 1,
+	Error = 2,
+};
+
+
 class SharedMemoryExternal
 {
 
@@ -48,6 +56,9 @@ public:
 	bool* injectCommandQueued;
 
 
+
+
+
 	SharedMemoryExternal(bool CPnullData, 
 		int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,
 		const char* SFnameH1, const char* SFpathH1,
@@ -58,6 +69,11 @@ public:
 		const char* SFnameH4, const char* SFpathH4);
 
 
+
+
+	int* HCMInternalStatusFlag;
+
 };
+
 
 extern std::unique_ptr<SharedMemoryExternal> g_SharedMemoryExternal; // starts uninit, created by exportedFunction initSharedMemory

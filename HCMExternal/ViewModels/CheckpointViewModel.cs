@@ -23,7 +23,7 @@ using System.IO;
 using System.ComponentModel;
 using Serilog.Core;
 using Serilog;
-using HCMExternal.Services.MCCStateServiceNS;
+using HCMExternal.ViewModels;
 using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Services.InterprocServiceNS;
 using System.Threading;
@@ -112,7 +112,7 @@ namespace HCMExternal.ViewModels
 
         private readonly SynchronizationContext _syncContext;
         private CheckpointService CheckpointServices { get; init; }
-        public CheckpointViewModel(CheckpointService cs)
+        public CheckpointViewModel(CheckpointService cs, MCCHookStateViewModel hookStateVM)
         {
             _syncContext = SynchronizationContext.Current;
             Log.Verbose("CheckpointViewModel constructing");
@@ -134,13 +134,17 @@ namespace HCMExternal.ViewModels
             view.CustomSort = new SortCheckpointsByLastWriteTime();
 
 
-            //Subscribe to AttachEvent so we can tell CheckpointModel to refreshList w/ new version guess on checkpoint files
-            MCCStateService.AttachEvent += () =>
+            // Subscribe to changes in hookstate so we can tell CheckpointModel to refreshList w/ new version guess on checkpoint files
+            hookStateVM.State.PropertyChanged += (o, i) =>
             {
-                HCMExternal.App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+                if (i.PropertyName == nameof(MCCHookState.MCCVersion)) // we only care about changes in currently attached mcc version
                 {
-                    RefreshCheckpointList();
-                });
+                    HCMExternal.App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+                    {
+                        RefreshCheckpointList();
+                    });
+                }
+               
             };
 
 

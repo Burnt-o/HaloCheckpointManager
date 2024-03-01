@@ -41,6 +41,12 @@ bool SetupInternal(char* errorMessage, int errorMessageCapacity)
 			throw InjectionException("g_SharedMemoryExternal not initialised!");
 		}
 
+		if (!g_SharedMemoryExternal->HCMInternalStatusFlag)
+		{
+			throw InjectionException("g_SharedMemoryExternal->HCMInternalStatusFlag was null!");
+		}
+
+		*g_SharedMemoryExternal->HCMInternalStatusFlag = (int)HCMInternalStatus::Initialising;
 
 		CHAR buffer[MAX_PATH] = { 0 };
 		GetModuleFileNameA(NULL, buffer, MAX_PATH);

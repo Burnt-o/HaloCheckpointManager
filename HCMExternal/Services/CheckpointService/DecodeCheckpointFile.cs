@@ -7,7 +7,6 @@ using System.IO;
 using System.Diagnostics;
 using HCMExternal.Models;
 using HCMExternal.Helpers.DictionariesNS;
-using HCMExternal.Services.MCCStateServiceNS;
 using Serilog;
 
 namespace HCMExternal.Services.CheckpointServiceNS
@@ -70,9 +69,9 @@ namespace HCMExternal.Services.CheckpointServiceNS
                         {
                             checkpointVersion = checkpointVersionGuess;
                         }
-                        else if (MCCStateService.MCCProcess != null && MCCStateService.MCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
+                        else if (MCCHookStateViewModel.State.MCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
                         {
-                            checkpointVersionGuess = MCCStateService.MCCVersion.FileVersion;
+                            checkpointVersionGuess = MCCHookStateViewModel.State.MCCVersion.FileVersion;
                             Log.Verbose("setting ver string to current attached version: " + checkpointVersionGuess);
                         }
                         else if (this.DataPointersService.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git

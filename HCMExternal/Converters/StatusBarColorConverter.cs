@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
+using HCMExternal.Models;
 using HCMExternal.ViewModels;
+using Serilog;
 
 namespace HCMExternal.Converters
 {
@@ -16,17 +18,29 @@ namespace HCMExternal.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
-            if (value == null || !(value is StatusBarState))
+            if (value == null || !(value is MCCHookStateEnum))
                 return Brushes.Transparent;
 
+            Log.Verbose("Converting status bar colour " + ((MCCHookStateEnum)value).ToString());
 
-
-            switch ((StatusBarState)value)
+            switch ((MCCHookStateEnum)value)
             {
-                case StatusBarState.MCCProcessNotFound: return Brushes.Transparent;
-                case StatusBarState.InjectionSucceeded: return Brushes.LightGreen;
-                case StatusBarState.InjectionInProgress: return Brushes.Yellow;
-                case StatusBarState.InjectionFailed: return Brushes.Red;
+                case MCCHookStateEnum.MCCNotFound: 
+                    return Brushes.Transparent;
+
+                case MCCHookStateEnum.InternalInjecting: 
+                case MCCHookStateEnum.InternalInitialising: 
+                    return Brushes.Yellow;
+
+                case MCCHookStateEnum.InternalSuccess: 
+                    return Brushes.LightGreen;
+
+                case MCCHookStateEnum.InternalInjectError: 
+                case MCCHookStateEnum.InternalException:
+                case MCCHookStateEnum.MCCAccessError:
+                case MCCHookStateEnum.MCCEACError:
+                    return Brushes.Red;
+
                 default: return Brushes.Transparent;
             }
 

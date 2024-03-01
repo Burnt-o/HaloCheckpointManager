@@ -27,6 +27,7 @@ public:
 			if (!pdirPath) throw HCMInitException("Could not access HCMDirPath");
 
 			HCMDirPath = *pdirPath;
+			instance = this;
 		}
 		catch (bip::interprocess_exception ex)
 		{
@@ -34,10 +35,24 @@ public:
 		}
 
 	}
+	~SharedMemoryInternal()
+	{
+		instance = nullptr;
+	}
 
 	virtual SelectedCheckpointData getInjectInfo() override;
 	virtual SelectedFolderData getDumpInfo(GameState game) override;
 	virtual bool getAndClearInjectQueue() override;
+	virtual void setStatusFlag(HCMInternalStatus in) noexcept override;
 	std::string HCMDirPath;
+
+	// setStatusFlag but static for access by UnhandledExceptionHandler in emergencies
+	static void UnhandledExceptionSetStatusErrorFlag()
+	{
+		if (instance) instance->setStatusFlag(HCMInternalStatus::Error);
+	}
+private:
+	static inline SharedMemoryInternal* instance = nullptr;
+	
 };
 

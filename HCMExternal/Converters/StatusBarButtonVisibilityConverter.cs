@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using HCMExternal.Models;
 using HCMExternal.ViewModels;
 
 namespace HCMExternal.Converters
@@ -17,19 +18,24 @@ namespace HCMExternal.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
-            if (value == null || !(value is StatusBarState))
+            if (value == null || !(value is MCCHookStateEnum))
                 return (Visibility.Hidden);
 
 
 
-            switch ((StatusBarState)value)
+            switch ((MCCHookStateEnum)value)
             {
-                case StatusBarState.InjectionFailed: return Visibility.Visible;
+                case MCCHookStateEnum.InternalInjectError:
+                case MCCHookStateEnum.InternalException:
+                case MCCHookStateEnum.MCCAccessError:
+                case MCCHookStateEnum.MCCEACError:
+                    return Visibility.Visible;
 
-                default: // fall thru
-                case StatusBarState.MCCProcessNotFound: 
-                case StatusBarState.InjectionSucceeded: 
-                case StatusBarState.InjectionInProgress: 
+                default:
+                case MCCHookStateEnum.MCCNotFound: 
+                case MCCHookStateEnum.InternalInjecting: 
+                case MCCHookStateEnum.InternalInitialising: 
+                case MCCHookStateEnum.InternalSuccess:
                     return Visibility.Hidden;
 
                

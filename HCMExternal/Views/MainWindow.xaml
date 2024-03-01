@@ -99,7 +99,7 @@
 
     </TabControl>
 
-        <control:StatusBarView  DataContext="{Binding Path=StatusBar}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"/>
+        <control:StatusBarView  DataContext="{Binding Path=MCCHookStateViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"/>
     </Grid>
 
 </Window>

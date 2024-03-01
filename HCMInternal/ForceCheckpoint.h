@@ -36,7 +36,7 @@ private:
 	// primary event callback
 	void onForceCheckpoint()
 	{
-		
+
 		try
 		{
 			lockOrThrow(mccStateHookWeak, mccStateHook);

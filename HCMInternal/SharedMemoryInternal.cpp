@@ -94,6 +94,19 @@ SelectedFolderData SharedMemoryInternal::getDumpInfo(GameState game)
 
 }
 
+void SharedMemoryInternal::setStatusFlag(HCMInternalStatus in) noexcept
+{
+	auto* HCMInternalStatusFlag = segment.find<int>("HCMInternalStatusFlag").first;
+
+	if (!HCMInternalStatusFlag)
+	{
+		PLOG_ERROR << "HCMInternalStatusFlag was null";
+		return;
+	}
+
+	*HCMInternalStatusFlag = (int)in;
+}
+
 
 bool SharedMemoryInternal::getAndClearInjectQueue()
 {

@@ -9,13 +9,13 @@ namespace HCMExternal.ViewModels
 
         public CheckpointViewModel CheckpointViewModel { get; init; }
 
-        public StatusBar StatusBar { get; init; }
+        public MCCHookStateViewModel MCCHookStateViewModel { get; init; }
 
-        public MainViewModel(CheckpointViewModel checkpointViewModel, StatusBar statusBar) 
+        public MainViewModel(CheckpointViewModel checkpointViewModel, MCCHookStateViewModel hookState) 
         {
             Log.Verbose("MainViewModel constructing");
             this.CheckpointViewModel = checkpointViewModel;
-            this.StatusBar = statusBar;
+            this.MCCHookStateViewModel = hookState;
         }
 
     }

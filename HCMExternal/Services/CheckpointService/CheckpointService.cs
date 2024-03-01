@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HCMExternal.Services.DataPointersServiceNS;
-using HCMExternal.Services.MCCStateServiceNS;
+using HCMExternal.ViewModels;
 
 
 namespace HCMExternal.Services.CheckpointServiceNS
@@ -16,10 +16,12 @@ namespace HCMExternal.Services.CheckpointServiceNS
     public partial class CheckpointService
     {
         public DataPointersService DataPointersService { get; init; }
-        //public InternalServices InternalServices { get; init; }
-        public CheckpointService(DataPointersService dps) // TODO: Will need internalService for inject/dump
+        public MCCHookStateViewModel MCCHookStateViewModel { get; init; }
+
+        public CheckpointService(DataPointersService dps, MCCHookStateViewModel hookVM) 
         {
             DataPointersService = dps;
+            MCCHookStateViewModel = hookVM;
         }
 
 

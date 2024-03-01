@@ -54,6 +54,7 @@ public:
         try
         {
             sharedMem = std::make_shared<SharedMemoryInternal>();
+            sharedMem->setStatusFlag(HCMInternalStatus::Initialising);
         }
         catch(HCMInitException ex)
         {
@@ -76,8 +77,6 @@ public:
        //curl_global_init(CURL_GLOBAL_DEFAULT);
         try
         {
-
-            throw HCMInitException("Fake error for testing");
             // some very important services
             ModuleCache::initialize(); PLOGV << "moduleCache init"; // static singleton still.. blah
             auto mhm = std::make_unique<ModuleHookManager>(); PLOGV << "mhm init"; // is a static singleton still.. blah 
@@ -146,6 +145,7 @@ public:
                 modalFailureWindowThread.detach();
             }
 
+            sharedMem->setStatusFlag(HCMInternalStatus::AllGood);
 
             // We live in this loop 99% of the time
             while (!GlobalKill::isKillSet()) {
@@ -156,6 +156,7 @@ public:
             if (modalFailureWindowThread.joinable())
                 modalFailureWindowThread.join();
 
+            sharedMem->setStatusFlag(HCMInternalStatus::Error);
         }
         catch (HCMInitException& ex) // mandatory services that fail to init will be caught here
         {
@@ -164,6 +165,8 @@ public:
             oss << "\n\nHCMInternal failed initializing: " << ex.what() << std::endl
                 << "Please send Burnt the log file located at: " << std::endl << logging->GetLogFileDestination();
             PLOG_FATAL << oss.str();
+
+            sharedMem->setStatusFlag(HCMInternalStatus::Error);
 
             int msgboxID = MessageBoxA(
                 NULL,

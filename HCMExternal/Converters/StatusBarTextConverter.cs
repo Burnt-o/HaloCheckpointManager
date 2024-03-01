@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
+using HCMExternal.Models;
 using HCMExternal.ViewModels;
 
 namespace HCMExternal.Converters
@@ -16,18 +17,22 @@ namespace HCMExternal.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
-            if (value == null || !(value is StatusBarState))
-                return ("UI Error " + (value == null) + (value is StatusBarState));
+            if (value == null || !(value is MCCHookStateEnum))
+                return ("UI Error " + (value == null) + (value is MCCHookStateEnum));
 
 
 
-            switch ((StatusBarState)value)
+            switch ((MCCHookStateEnum)value)
             {
-                case StatusBarState.MCCProcessNotFound: return "MCC process not found.";
-                case StatusBarState.InjectionSucceeded: return "Internal connected.";
-                case StatusBarState.InjectionInProgress: return "Internal injecting...";
-                case StatusBarState.InjectionFailed: return "Error injecting!";
-                default: return "UI Error (default)";
+                case MCCHookStateEnum.MCCNotFound:          return "MCC process not found.";
+                case MCCHookStateEnum.InternalInjecting:    return "Internal Injecting..";
+                case MCCHookStateEnum.InternalInjectError:  return "Error injecting!";
+                case MCCHookStateEnum.InternalInitialising: return "Internal Initialising";
+                case MCCHookStateEnum.InternalException:    return "Internal Exception!";
+                case MCCHookStateEnum.InternalSuccess:      return "Internal connected.";
+                case MCCHookStateEnum.MCCAccessError:       return "Access error!";
+                case MCCHookStateEnum.MCCEACError:          return "Anti-cheat error!";
+                default:                                    return "UI Error (default)";
             }
 
 

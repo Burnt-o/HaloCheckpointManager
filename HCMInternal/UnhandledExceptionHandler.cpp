@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "UnhandledExceptionHandler.h"
+#include "SharedMemoryInternal.h"
+
 
 void UnhandledExceptionHandler::make_minidump(EXCEPTION_POINTERS* e)
 {
@@ -43,6 +45,8 @@ void UnhandledExceptionHandler::make_minidump(EXCEPTION_POINTERS* e)
 
 	PLOG_FATAL << "Dumped crash information to " << dumpFilePath;
 	CloseHandle(hFile);
+
+	SharedMemoryInternal::UnhandledExceptionSetStatusErrorFlag();
 
 	int msgboxID = MessageBoxA(
 		NULL,

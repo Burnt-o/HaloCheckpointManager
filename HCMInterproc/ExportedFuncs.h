@@ -5,6 +5,23 @@
 extern "C"
 {
 
+	__declspec(dllexport) extern int getHCMInternalStatusFlag()
+	{
+		if (!g_SharedMemoryExternal.get())
+		{
+			PLOG_ERROR << "g_SharedMemoryExternal not initialised!";
+			return (int)HCMInternalStatus::Error;
+		}
+
+		if (!g_SharedMemoryExternal->HCMInternalStatusFlag)
+		{
+			PLOG_ERROR << "g_SharedMemoryExternal->HCMInternalStatusFlag was null!";
+			return (int)HCMInternalStatus::Error;
+		}
+		return *g_SharedMemoryExternal->HCMInternalStatusFlag;
+	}
+
+
 	__declspec(dllexport) extern void queueInjectCommand()
 	{
 		if (!g_SharedMemoryExternal.get())

@@ -41,6 +41,7 @@ SharedMemoryExternal::SharedMemoryExternal(bool CPnullData,
 		HCMdirPath->assign(getOwnProcessDirectory().c_str());
 
 		injectCommandQueued = segment.construct<bool>("injectCommandQueued")(false);
+		HCMInternalStatusFlag = segment.construct<int>("HCMInternalStatusFlag")((int)HCMInternalStatus::Initialising);
 
 		// selectedCheckpointInfo
 		selectedCheckpointNull = segment.construct<bool>("selectedCheckpointNull")(CPnullData);
@@ -102,5 +103,6 @@ SharedMemoryExternal::SharedMemoryExternal(bool CPnullData,
 	}
 
 }
+
 
 std::unique_ptr<SharedMemoryExternal> g_SharedMemoryExternal;
