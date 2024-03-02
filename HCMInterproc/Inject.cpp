@@ -36,8 +36,6 @@ bool SetupInternal(char* errorMessage, int errorMessageCapacity)
 	try
 	{
 
-		throw InjectionException("Fake error for testing");
-
 		if (!g_SharedMemoryExternal.get())
 		{
 			throw InjectionException("g_SharedMemoryExternal not initialised!");
