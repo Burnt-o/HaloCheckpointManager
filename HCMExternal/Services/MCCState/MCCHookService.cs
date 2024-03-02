@@ -33,17 +33,20 @@ namespace HCMExternal.Services.MCCHookService
         // injected service
         private InterprocService mInterprocService { get; init; }
         private MCCHookStateViewModel mMCCHookStateViewModel { get; init; }
+        private ErrorDialogViewModel mErrorDialogViewModel { get; init; }
 
         // Timer to loop State machine
         private System.Threading.Timer StateMachineLoopTimer;
 
 
         // Constructor
-        public MCCHookService(InterprocService ips, MCCHookStateViewModel vm)
+        public MCCHookService(InterprocService ips, MCCHookStateViewModel vm, ErrorDialogViewModel errorDialogVM)
         {
             mInterprocService = ips;
             mMCCHookStateViewModel = vm;
-            mMCCHookStateViewModel.ShowErrorEvent += () => { ShowHCMInternalErrorDialog(); };
+            vm.ShowErrorEvent += ShowHCMInternalErrorDialog;
+            
+            mErrorDialogViewModel = errorDialogVM;
 
             // Timer does not start immediately; only when BeginStateMachineLoop is called.
             StateMachineLoopTimer = new System.Threading.Timer(StateMachineLoopEventHandler, null, System.Threading.Timeout.Infinite, 1000);
@@ -141,7 +144,7 @@ namespace HCMExternal.Services.MCCHookService
 
                 case MCCHookStateEnum.InternalInjecting:
                     (bool successFlag, string errorString) injectionResult = mInterprocService.Setup();
-                    lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in log files. Error: \n" + injectionResult.errorString; // errorString null if successful inject
+                    
 
                     if (injectionResult.successFlag)
                     {
@@ -150,7 +153,8 @@ namespace HCMExternal.Services.MCCHookService
                     else
                     {
                         AdvanceStateMachine(MCCHookStateEnum.InternalInjectError);
-                        //ShowHCMInternalErrorDialog(); // Not necessary to show - HCMInternal has it's own dialog
+                        lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + injectionResult.errorString;
+                        ShowHCMInternalErrorDialog(); 
                     }
                     break;
 
@@ -232,8 +236,9 @@ namespace HCMExternal.Services.MCCHookService
         // Dialog tells user about the error and askes them if they want to retry injection
         public void ShowHCMInternalErrorDialog()
         {
-            var result = MessageBox.Show(lastInjectionError + "\n\nRetry injection?", "HCM Internal Error!", MessageBoxButton.YesNo, MessageBoxImage.Error);
-            if (result == MessageBoxResult.No)
+            Log.Verbose("ShowHCMInternalErrorDialog");
+            var result = mErrorDialogViewModel.RaiseShowErrorDialogEvent(lastInjectionError);
+            if (result == false)
             {
                 // User doesn't want to retry injection, do nothing
             }

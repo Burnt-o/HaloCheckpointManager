@@ -65,7 +65,8 @@ namespace HCMExternal
             serviceCollection.AddSingleton<InterprocService>();
 
 
-
+            serviceCollection.AddSingleton<ErrorDialogViewModel>();
+            serviceCollection.AddSingleton<ErrorDialogView>();
             serviceCollection.AddSingleton<MCCHookStateViewModel>();
 
 
@@ -157,6 +158,9 @@ namespace HCMExternal
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
             mainWindow.Title = "HaloCheckpointManager " + (this.CurrentHCMVersion.Length > 4 ? this.CurrentHCMVersion.Substring(0, 5) : this.CurrentHCMVersion);
             mainWindow.Show();
+
+            //var errorDialog = _serviceProvider.GetService<ErrorDialogView>();
+            //errorDialog.DataContext = _serviceProvider.GetService<ErrorDialogViewModel>();
 
             // Tell MCCHookService to begin trying to hook to MCC
             var mcchook = _serviceProvider.GetService<MCCHookService>();
