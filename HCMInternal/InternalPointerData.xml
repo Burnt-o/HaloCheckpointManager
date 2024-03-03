@@ -2510,7 +2510,7 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x01443588</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x3FE000</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
@@ -2548,7 +2548,7 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x01443588</Offset>
-				<Offset>0x3FE000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
@@ -2994,7 +2994,7 @@
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0xE1FB18</Offset>
+				<Offset>0xE21468</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
@@ -3028,7 +3028,7 @@
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0xE21468</Offset>
+				<Offset>0xE1FB18</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
