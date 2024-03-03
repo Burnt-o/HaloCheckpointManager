@@ -1,5 +1,5 @@
 #pragma once
-#include "rpc\msgpack.hpp"
+
 
 
 // These two structs are used by the inject/dump checkpoint/core implementation 
@@ -30,7 +30,7 @@ struct SelectedCheckpointDataExternal // what checkpoint to inject from HCMExter
 	char selectedCheckpointLevelCode[260];
 	char selectedCheckpointGameVersion[260];
 	int selectedCheckpointDifficulty = 0;
-	MSGPACK_DEFINE_ARRAY(selectedCheckpointNull, selectedCheckpointGame, selectedCheckpointName, selectedCheckpointFilePath, selectedCheckpointLevelCode, selectedCheckpointGameVersion, selectedCheckpointDifficulty);
+
 	
 	operator SelectedCheckpointData () {
 		return SelectedCheckpointData{ selectedCheckpointNull, selectedCheckpointGame, selectedCheckpointName, selectedCheckpointFilePath, selectedCheckpointLevelCode, selectedCheckpointGameVersion, selectedCheckpointDifficulty };
@@ -43,7 +43,6 @@ struct SelectedFolderDataExternal // what saveFolder to dump to
 {
 	char selectedFolderName[260];
 	char selectedFolderPath[260];
-	MSGPACK_DEFINE_ARRAY(selectedFolderName, selectedFolderPath);
 
 	operator SelectedFolderData () {
 		return SelectedFolderData{ selectedFolderName, selectedFolderPath };

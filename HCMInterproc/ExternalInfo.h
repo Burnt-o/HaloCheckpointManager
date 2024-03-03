@@ -1,5 +1,4 @@
 #pragma once
-#include "rpc\msgpack.hpp"
 struct SelectedCheckpointDataExternal // used by interproc to get info about what checkpoint to inject from HCMExternal
 {
 	bool selectedCheckpointNull = true;

@@ -19,14 +19,14 @@ From the [Releases page.](https://github.com/Burnt-o/HaloCheckpointManager/relea
 ---**Building from source**--- 
 To build the source yourself, I recommended that you use the latest Visual Studio. You'll also need the following libraries: (it'll be easiest to grab them from vcpkg)
 
+Install [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?source=recommendations&pivots=shell-cmd), then run the following commands:
+
     plog:x64-windows
     plog:x64-windows-static
     eventpp:x64-windows-static
     imgui[dx11-binding,win32-binding]:x64-windows-static
     pugixml:x64-windows-static
     curl[non-http,schannel,ssl,sspi]:x64-windows-static
-    rpclib:x64-windows
-    rpclib:x64-windows-static
     boost-stacktrace:x64-windows-static
     boost-algorithm:x64-windows-static
     boost-iostreams:x64-windows-static
