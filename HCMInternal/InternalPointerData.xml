@@ -2537,8 +2537,8 @@
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x01651CF0</Offset>
-				<Offset>0x400000</Offset>
+				<Offset>0x01651D00</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
