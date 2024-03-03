@@ -43,7 +43,7 @@ void throwOnDuplicateName(pugi::xml_document& doc)
 void SettingsSerialiser::serialise(std::vector<std::shared_ptr<SerialisableSetting>>& allSerialisableOptions)
 {
 	std::string filePath = mDirPath + configFileName.data();
-
+	PLOG_DEBUG << "Saving settings to filepath: " << filePath;
 	try
 	{
 		pugi::xml_document doc;
@@ -57,11 +57,15 @@ void SettingsSerialiser::serialise(std::vector<std::shared_ptr<SerialisableSetti
 		}
 
 
-		throwOnDuplicateName(doc); // rules are allowed to be duplicate names since you can have multiple of the same type
+		throwOnDuplicateName(doc); 
 
 		if (!doc.save_file(filePath.c_str()))
 		{
 			PLOG_ERROR << "Error saving config to " << filePath;
+		}
+		else
+		{
+			PLOG_DEBUG << "Successfully saved settings to filepath: " << filePath;
 		}
 	}
 	catch (HCMSerialisationException& ex)
@@ -73,11 +77,11 @@ void SettingsSerialiser::serialise(std::vector<std::shared_ptr<SerialisableSetti
 void SettingsSerialiser::deserialise(std::vector<std::shared_ptr<SerialisableSetting>>& allSerialisableOptions)
 {
 	std::string filePath = mDirPath + configFileName.data();
-		
+	PLOG_DEBUG << "filePath to find setting serialisation file: " << filePath;
 	pugi::xml_document doc;
 			
 	pugi::xml_parse_result result = doc.load_file(filePath.c_str());
-
+	PLOG_DEBUG << "setting file parse result: " << (result.operator bool() ? "true" : "false");
 	if (result)
 	{
 		try
@@ -89,6 +93,7 @@ void SettingsSerialiser::deserialise(std::vector<std::shared_ptr<SerialisableSet
 				PLOG_VERBOSE << "Deserialising setting: " << option->getOptionName();
 				auto optionXML = optionArray.child(option->getOptionName().c_str());
 				if (optionXML.type() == pugi::node_null) throw HCMSerialisationException(std::format("Setting deserialisation failed: Could not find Option node {}", option->getOptionName()));
+				PLOG_VERBOSE << "with value: [" << optionXML.text() << "]";
 				option->deserialise(optionXML);
 			}
 		}
@@ -99,6 +104,7 @@ void SettingsSerialiser::deserialise(std::vector<std::shared_ptr<SerialisableSet
 	}
 	else
 	{
+		PLOG_ERROR << "Error parsing settings file";
 		std::string resultString = result.description();
 		if (resultString == "File was not found")
 		{

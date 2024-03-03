@@ -5,9 +5,9 @@
 void Setting<bool>::deserialise(pugi::xml_node input)
 {
 	valueDisplay = input.text().as_bool();
-	PLOG_DEBUG << "true?1 " << valueDisplay;
+	PLOG_DEBUG << "Deserialised bool value: " << (valueDisplay ? "True" : "False");
 	UpdateValueWithInput();
-	PLOG_DEBUG << "true?2 " << value;
+	if (value != valueDisplay) PLOG_ERROR << "Value didn't match after UpdateValueWithInput()!";
 }
 
 void Setting<std::string>::deserialise(pugi::xml_node input)
