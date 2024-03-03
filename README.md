@@ -16,24 +16,42 @@ From the [Releases page.](https://github.com/Burnt-o/HaloCheckpointManager/relea
    * And more (specific games have different features)
  * Support for multiple downpatched versions of MCC - Season 7 (2448), Season 8 (2645), and of course current patch.
 
----**Building from source**--- 
-To build the source yourself, I recommended that you use the latest Visual Studio. You'll also need the following libraries: (it'll be easiest to grab them from vcpkg)
+---**Building from source**---   
+To build the source yourself, grab the latest version of [Visual Studio](https://visualstudio.microsoft.com/) and the following workloads/components:  
+ * .NET desktop development (and .NET 7.0 runtime)  
+ * Desktop development with C++  
+ * Windows 10 SDK (or higher)
+    
+You'll also need several C++ libraries for HCMInternal and HCMInterproc to compile. It'll be easiest to install them using vcpkg.
+       
+[Install vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?source=recommendations&pivots=shell-cmd) by:   
+cloning the vcpkg repository to some new folder (you'll probably need a few dozen gigs of space free),  
+running the bootstrap script,   
+adding vcpkg to your system path variable,  
+and running "vcpkg integrate install" to integrate it with your Visual Studio.  
 
-Install [vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?source=recommendations&pivots=shell-cmd), then run the following commands:
+Then run the following commands one at a time:
 
-    plog:x64-windows
-    plog:x64-windows-static
-    eventpp:x64-windows-static
-    imgui[dx11-binding,win32-binding]:x64-windows-static
-    pugixml:x64-windows-static
-    curl[non-http,schannel,ssl,sspi]:x64-windows-static
-    boost-stacktrace:x64-windows-static
-    boost-algorithm:x64-windows-static
-    boost-iostreams:x64-windows-static
-    boost-assign:x64-windows-static
-    boost-bimap:x64-windows-static
-    magic-enum:x64-windows-static
-    directxtk:x64-windows-static
+vcpkg install plog:x64-windows  
+vcpkg install boost-interprocess:x64-windows
+vcpkg install openssl:x64-windows-static
+vcpkg install ms-gsl:x64-windows-static
+vcpkg install plog:x64-windows-static  
+vcpkg install eventpp:x64-windows-static  
+vcpkg install imgui[dx11-binding,win32-binding]:x64-windows-static  
+vcpkg install pugixml:x64-windows-static  
+vcpkg install curl[non-http,schannel,ssl,sspi]:x64-windows-static  
+vcpkg install boost-stacktrace:x64-windows-static  
+vcpkg install boost-algorithm:x64-windows-static  
+vcpkg install boost-iostreams:x64-windows-static  
+vcpkg install boost-assign:x64-windows-static  
+vcpkg install boost-bimap:x64-windows-static  
+vcpkg install boost-interprocess:x64-windows-static  
+vcpkg install magic-enum:x64-windows-static  
+vcpkg install directxtk:x64-windows-static  
 
+This project also makes heavy use of the amazing SafetyHook by cursey. You can think of it as like "Microsoft Detours but if it didn't suck". I've included the release I'm using in this repository so you shouldn't need to worry about it.
 
-This project also makes heavy use of the amazing SafetyHook by cursey. You can think of it as like "Microsoft Detours but if it didn't suck". I've included the release I'm using in the solution files. You'll also need the Windows 10 SDK.
+After successfully building all projects (besides HCMInternalTests, that doesn't matter), make sure to rebuild the entire solution to ensure all build events fire correctly.
+
+Known build issue: Your build events may fail to copy over certain files to the correct directory due to macro issues: fix this by adjusting the build event macros for each project to make sure they're outputting to HCMExternal's binary output directory.

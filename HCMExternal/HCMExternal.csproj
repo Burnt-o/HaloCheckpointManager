@@ -441,14 +441,15 @@
 	<PropertyGroup>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<ApplicationIcon>HCM.ico</ApplicationIcon>
+		<BaseOutputPath></BaseOutputPath>
 	</PropertyGroup>
 	
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-	  <Exec Command="powershell -ExecutionPolicy RemoteSigned $(SolutionDir)updateVersionInfo.ps1 -SolutionDir $(SolutionDir) -VersionInfo $(VersionPrefix)&#xD;&#xA; " />
+	  <Exec Command="powershell -ExecutionPolicy RemoteSigned $(SolutionDir)updateVersionInfo.ps1 -SolutionDir $(SolutionDir) -VersionInfo $(VersionPrefix) || set errorlevel=0&#xD;&#xA; " />
 	</Target>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="copy $(TargetDir)$(MSBuildProjectName).exe $(TargetDir)HaloCheckpointManager.exe /Y&#xD;&#xA;copy $(ProjectDir)ExternalPointerData.xml  $(OutDir)ExternalPointerData.xml /Y" />
+	  <Exec Command="copy $(TargetDir)$(MSBuildProjectName).exe $(TargetDir)HaloCheckpointManager.exe /Y || set errorlevel=0 &#xD;&#xA;copy $(ProjectDir)ExternalPointerData.xml  $(OutDir)ExternalPointerData.xml /Y || set errorlevel=0" />
 	</Target>
 
 </Project>

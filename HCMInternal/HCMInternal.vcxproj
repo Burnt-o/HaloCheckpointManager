@@ -172,7 +172,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       </Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>xcopy /y $(ProjectDir)InternalPointerData.xml  $(OutDir)InternalPointerData.xml</Command>
+      <Command>xcopy /y $(ProjectDir)InternalPointerData.xml  $(OutDir)InternalPointerData.xml || set errorlevel=0</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Copying internal pointer data</Message>
