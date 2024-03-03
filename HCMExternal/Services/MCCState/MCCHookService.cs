@@ -92,7 +92,8 @@ namespace HCMExternal.Services.MCCHookService
             switch (MCCHookState.State)
             {
                 case MCCHookStateEnum.MCCNotFound:
-                    
+
+
                     if (AnticheatIsEnabled())
                     {
                         lastInjectionError = "HCM detected EasyAntiCheat running - you must run MCC with easy anti-cheat disabled.";
@@ -105,8 +106,23 @@ namespace HCMExternal.Services.MCCHookService
                     if (MCCHookState.MCCProcess == null) // failed, try again next time
                         break;
 
+                    if (MCCExitedTooRecently())
+                    {
+                        Log.Debug("MCC exited too recently, bailing");
+                        MCCHookState.MCCProcess = null;
+                        break;
+                    }
+
                     try
                     {
+                        // safety check that the process isn't actually closed
+                        if (MCCHookState.MCCProcess.HasExited) // this property can give access denied ex, hence being in try-catch
+                        {
+                            Log.Debug("Found MCC process but it had already exited, bailing");
+                            MCCHookState.MCCProcess = null;
+                            break;
+                        }
+
                         MCCHookState.MCCVersion = MCCHookState.MCCProcess.MainModule?.FileVersionInfo;
                     }
                     catch (Exception ex)
@@ -125,7 +141,7 @@ namespace HCMExternal.Services.MCCHookService
                         Log.Information("MCC process exited!");
                         MCCHookState.MCCVersion = null;
                         MCCHookState.MCCProcess = null;
-
+                        _lastMCCExit = DateTime.Now;
                         AdvanceStateMachine(MCCHookStateEnum.MCCNotFound);
                         return;
                     };
@@ -202,7 +218,7 @@ namespace HCMExternal.Services.MCCHookService
 
                     if (currentInternalStateSuccess == InternalStatusFlag.Shutdown)
                     {
-                        MCCHookState.MCCProcess?.WaitForExit(3000);
+                        _lastMCCExit = DateTime.Now;
                         AdvanceStateMachine(MCCHookStateEnum.MCCNotFound);
                         return;
                     }
@@ -306,6 +322,13 @@ namespace HCMExternal.Services.MCCHookService
             return false;
         }
 
+        // HCM can inadvertently try to inject on a closing MCC without this check. Safety buffer of 3s.
+        private DateTime _lastMCCExit = DateTime.MinValue;
+        private bool MCCExitedTooRecently()
+        {
+            Log.Verbose("MCC last exit time was " + (DateTime.Now - _lastMCCExit) + " seconds ago");
+            return (DateTime.Now - _lastMCCExit) < TimeSpan.FromSeconds(6);
+        }
 
 
     }
