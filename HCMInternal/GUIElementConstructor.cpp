@@ -203,8 +203,15 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							(game, ToolTipCollection("Makes this pause feature also free MCC's cursor"), std::nullopt, "Pause also frees cursor", settings->pauseAlsoFreesCursor));
 
 				case GUIElementEnum::showGUIFailuresGUI:
+#ifdef HCM_DEBUG
+#else
+					static_assert(false, "Need to fix showGUIFailuresGUI, nothing is listening to the event atm");
+#endif
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
 						(game, ToolTipCollection("Shows a modal list of optional cheat services that failed to initialise, sorted by game"), std::nullopt, "Show optional cheat service failures", settings->showGUIFailures));
+
+					
+
 
 				case GUIElementEnum::OBSBypassToggleGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
