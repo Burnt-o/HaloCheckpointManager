@@ -86,7 +86,7 @@ private:
 	// This collection is the central owner keeping all the optional cheats alive until HCM shuts down. 
 		// Once the OptionalCheatManager goes out of scope in App.h, the OptionalCheatStore destructor will be called, this cheatCollection will be reset, and thus all the IOptionalCheats will in turn have their destructors called etc etc
 	std::shared_ptr<CheatCollection> cheatCollection = std::make_shared<CheatCollection>();
-	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, IModalDialogRenderer, ControlServiceContainer, RenderEvent, DirectXRenderEvent, HotkeyDefinitions> dicon;
+	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, ModalDialogRenderer, ControlServiceContainer, RenderEvent, DirectXRenderEvent, HotkeyDefinitions> dicon;
 
 
 public:
@@ -99,7 +99,7 @@ public:
 		std::shared_ptr<IMessagesGUI> mes,
 		std::shared_ptr<RuntimeExceptionHandler> exp,
 		std::string dirPath,
-		std::shared_ptr<IModalDialogRenderer> modal,
+		std::shared_ptr<ModalDialogRenderer> modal,
 		std::shared_ptr<ControlServiceContainer> control,
 		std::shared_ptr<RenderEvent> overlayRenderEvent,
 		std::shared_ptr<DirectXRenderEvent> foregroundDirectXRenderEvent,
@@ -212,7 +212,7 @@ OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>
 	std::shared_ptr<IMessagesGUI> mes, 
 	std::shared_ptr<RuntimeExceptionHandler> exp, 
 	std::string dirPath, 
-	std::shared_ptr<IModalDialogRenderer> modal,
+	std::shared_ptr<ModalDialogRenderer> modal,
 	std::shared_ptr<ControlServiceContainer> control,
 	std::shared_ptr<RenderEvent> overlayRenderEvent,
 	std::shared_ptr<DirectXRenderEvent> foregroundDirectXRenderEvent,

@@ -2,7 +2,7 @@
 #include "D3D11Hook.h"
 #include "Lapua.h"
 #include "RuntimeExceptionHandler.h"
-#include "Setting.h"
+#include "BinarySetting.h"
 
 
 class OBSBypassManager
@@ -14,7 +14,7 @@ private:
 	std::weak_ptr<D3D11Hook> d3d11HookWeak;
 
 	ScopedCallback<ToggleEvent> OBSBypassToggleEventCallback;
-	std::shared_ptr<Setting<bool>> OBSBypassToggle;
+	std::shared_ptr<BinarySetting<bool>> OBSBypassToggle;
 
 	void onOBSBypassToggleEvent(bool& newValue)
 	{
@@ -46,7 +46,7 @@ private:
 
 
 public:
-	OBSBypassManager(std::weak_ptr<D3D11Hook> d3d11Hook, std::shared_ptr<Setting<bool>> toggle, std::shared_ptr<RuntimeExceptionHandler> exp)
+	OBSBypassManager(std::weak_ptr<D3D11Hook> d3d11Hook, std::shared_ptr<BinarySetting<bool>> toggle, std::shared_ptr<RuntimeExceptionHandler> exp)
 		:
 		d3d11HookWeak(d3d11Hook),
 		OBSBypassToggle(toggle),

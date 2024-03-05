@@ -15,7 +15,8 @@
 #include "boost\iostreams\device\mapped_file.hpp"
 #include "openssl\sha.h"
 #include "GetCurrentLevelCode.h"
-#include "IModalDialogRenderer.h"
+#include "ModalDialogRenderer.h"
+#include "ModalDialogFactory.h"
 #include "IMakeOrGetCheat.h"
 #include "IGetMCCVersion.h"
 #include "GetCurrentDifficulty.h"
@@ -49,7 +50,7 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::weak_ptr<ISharedMemory> sharedMemWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
-	std::weak_ptr<IModalDialogRenderer> modalDialogsWeak;
+	std::weak_ptr<ModalDialogRenderer> modalDialogsWeak;
 	std::weak_ptr<IGetMCCVersion> getMCCVerWeak;
 	std::optional<std::weak_ptr<GetCurrentLevelCode>> levelCodeOptionalWeak;
 	std::optional<std::weak_ptr<GetCurrentDifficulty>> difficultyOptionalWeak;
@@ -91,12 +92,13 @@ private:
 					if (levelCode->getCurrentLevelCode().substr(0, 3) != currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3))
 					{
 						// no match! warn the user. This is a blocking call until they choose an option.
-						auto continueWithInject = modalDialogs->showInjectionWarningDialog("Injection: incorrect level warning!", std::format(
+
+						auto continueWithInject = modalDialogs->showReturningDialog(ModalDialogFactory::makeInjectionWarningDialog("Injection: incorrect level warning!", std::format(
 							"Warning! The checkpoint you are injecting appears to be from a different level than the one you are currently playing\n{}\nCheckpoint level: {}\nCurrent level: {}",
 							"If this is the case, the game will probably crash. Continue anyway?",
 							currentCheckpoint.selectedCheckpointLevelCode.substr(0, 3),
 							levelCode->getCurrentLevelCode().substr(0, 3)
-						));
+						)));
 
 						if (!continueWithInject) return;
 					}
@@ -116,12 +118,12 @@ private:
 				if (getMCCVer->getMCCVersionAsString() != currentCheckpoint.selectedCheckpointGameVersion && currentCheckpoint.selectedCheckpointGameVersion.size() == 10)
 				{
 					// no match! warn the user. This is a blocking call until they choose an option.
-					auto continueWithInject = modalDialogs->showInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
+					auto continueWithInject = modalDialogs->showReturningDialog(ModalDialogFactory::makeInjectionWarningDialog("Injection: incorrect game version warning!", std::format(
 						"Warning! The checkpoint you are injecting appears to be from a different version of MCC than the one you are currently playing\n{}\nCheckpoint MCC ver: {}\nCurrent MCC ver: {}",
 						"Checkpoints from different versions sometimes are, and sometimes aren't, compatible with eachother. Continue anyway?",
 						currentCheckpoint.selectedCheckpointGameVersion,
 						getMCCVer->getMCCVersionAsString()
-					));
+					)));
 
 					if (!continueWithInject) return;
 				}
@@ -136,12 +138,12 @@ private:
 				if (difficulty->getCurrentDifficulty() != (DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty)
 				{
 					// no match! warn the user. This is a blocking call until they choose an option.
-					auto continueWithInject = modalDialogs->showInjectionWarningDialog("Injection: mismatched difficulty warning!", std::format(
+					auto continueWithInject = modalDialogs->showReturningDialog(ModalDialogFactory::makeInjectionWarningDialog("Injection: mismatched difficulty warning!", std::format(
 						"Warning! The checkpoint you are injecting appears to have been played on a different difficulty than the one you are currently playing\n{}\nCheckpoint Difficulty: {}\nCurrent Difficulty: {}",
 						"Injecting a checkpoint from a different difficulty can sometimes crash the game, and always messes up your pause menu interface. \nContinue anyway?",
 						magic_enum::enum_name((DifficultyEnum)currentCheckpoint.selectedCheckpointDifficulty),
 						magic_enum::enum_name(difficulty->getCurrentDifficulty())
-					));
+					)));
 
 					if (!continueWithInject) return;
 				}
@@ -329,7 +331,7 @@ private:
 			runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()), 
 			sharedMemWeak(dicon.Resolve<ISharedMemory>()),
 			settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
-			modalDialogsWeak(dicon.Resolve<IModalDialogRenderer>()),
+			modalDialogsWeak(dicon.Resolve<ModalDialogRenderer>()),
 			getMCCVerWeak(dicon.Resolve<IGetMCCVersion>()),
 			checkpointInjectionLogger(dicon.Resolve<DirPathContainer>().lock()->dirPath)
 		{

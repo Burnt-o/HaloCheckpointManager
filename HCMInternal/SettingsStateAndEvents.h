@@ -1,5 +1,6 @@
 #pragma once
-#include "Setting.h"
+#include "UnarySetting.h"
+#include "BinarySetting.h"
 #include "ISettingsSerialiser.h"
 #include "GUIServiceInfo.h"
 #include "WaypointList.h"
@@ -88,15 +89,20 @@ public:
 	std::shared_ptr<ActionEvent> switchBSPEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceFutureCheckpointFillEvent = std::make_shared<ActionEvent>();
 
+	// waypoint events (delete, edit)
+	std::shared_ptr<WaypointAndListEvent> deleteWaypointEvent = std::make_shared<WaypointAndListEvent>();
+	std::shared_ptr<WaypointAndListEvent> editWaypointEvent = std::make_shared<WaypointAndListEvent>();
+	std::shared_ptr<WaypointListEvent> addWaypointEvent = std::make_shared<WaypointListEvent>();
+
 	// settings
-	std::shared_ptr<Setting<bool>> GUIWindowOpen = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> GUIWindowOpen = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(GUIWindowOpen)
 		);
 
-	std::shared_ptr<Setting<bool>> GUIShowingFreesCursor = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> GUIShowingFreesCursor = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -104,161 +110,161 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> GUIShowingBlocksInput = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> GUIShowingBlocksInput = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(GUIShowingBlocksInput)
 		);
 
-	std::shared_ptr<Setting<bool>> GUIShowingPausesGame = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> GUIShowingPausesGame = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(GUIShowingPausesGame)
 		);
 
-	std::shared_ptr<Setting<bool>> togglePause = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> togglePause = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(togglePause)
 		);
 
-	std::shared_ptr<Setting<bool>> pauseAlsoBlocksInput = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> pauseAlsoBlocksInput = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(pauseAlsoBlocksInput)
 		);
 
-	std::shared_ptr<Setting<bool>> pauseAlsoFreesCursor = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> pauseAlsoFreesCursor = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(pauseAlsoFreesCursor)
 		);
 
-	std::shared_ptr<Setting<int>> advanceTicksCount = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> advanceTicksCount = std::make_shared<BinarySetting<int>>
 		(
 			1,
 			[](int in) { return in > 0; }, // must be positive
 			nameof(advanceTicksCount)
 		);
 
-	std::shared_ptr<Setting<bool>> injectionIgnoresChecksum = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectionIgnoresChecksum = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectionIgnoresChecksum)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCheckpointForcesRevert = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCheckpointForcesRevert = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCheckpointForcesRevert)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCheckpointLevelCheck = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCheckpointLevelCheck = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCheckpointLevelCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCheckpointVersionCheck = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCheckpointVersionCheck = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCheckpointVersionCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCheckpointDifficultyCheck = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCheckpointDifficultyCheck = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCheckpointDifficultyCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> autonameCheckpoints = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> autonameCheckpoints = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(autonameCheckpoints)
 		);
 
-	std::shared_ptr<Setting<bool>> dumpCheckpointForcesSave = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> dumpCheckpointForcesSave = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(dumpCheckpointForcesSave)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCoreForcesRevert = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCoreForcesRevert = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCoreForcesRevert)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCoreLevelCheck = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCoreLevelCheck = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCoreLevelCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCoreVersionCheck = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCoreVersionCheck = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCoreVersionCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> injectCoreDifficultyCheck = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> injectCoreDifficultyCheck = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(injectCoreDifficultyCheck)
 		);
 
-	std::shared_ptr<Setting<bool>> dumpCoreForcesSave = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> dumpCoreForcesSave = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(dumpCoreForcesSave)
 		);
 
-	std::shared_ptr<Setting<bool>> autonameCoresaves = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> autonameCoresaves = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(autonameCoresaves)
 		);
 
-	std::shared_ptr<Setting<bool>> forceFutureCheckpointToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceFutureCheckpointToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(forceFutureCheckpointToggle)
 		);
 
-	std::shared_ptr<Setting<int>> forceFutureCheckpointTick = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> forceFutureCheckpointTick = std::make_shared<BinarySetting<int>>
 		(
 			1000,
 			[](int in) { return in >= 0; },
 			nameof(forceFutureCheckpointTick)
 		);
 
-	std::shared_ptr<Setting<bool>> speedhackToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> speedhackToggle = std::make_shared<BinarySetting<bool>>
 	(
 		false,
 		[](bool in) { return true; },
 		nameof(speedhackToggle)
 	);
 
-	std::shared_ptr<Setting<double>> speedhackSetting = std::make_shared<Setting<double>>
+	std::shared_ptr<BinarySetting<double>> speedhackSetting = std::make_shared<BinarySetting<double>>
 	(
 		10.f,
 		[](float in) { return in > 0; }, // must be positive
@@ -266,35 +272,35 @@ public:
 	);
 
 
-	std::shared_ptr<Setting<bool>> invulnerabilityToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> invulnerabilityToggle = std::make_shared<BinarySetting<bool>>
 	(
 		false,
 		[](bool in) { return true; },
 		nameof(invulnerabilityToggle)
 	);
 
-	std::shared_ptr<Setting<bool>> invulnerabilityNPCToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> invulnerabilityNPCToggle = std::make_shared<BinarySetting<bool>>
 	(
 		false,
 		[](bool in) { return true; },
 		nameof(invulnerabilityNPCToggle)
 	);
 
-	std::shared_ptr<Setting<bool>> aiFreezeToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> aiFreezeToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(aiFreezeToggle)
 		);
 
-	std::shared_ptr<Setting<bool>> medusaToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> medusaToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(medusaToggle)
 		);
 
-	std::shared_ptr<Setting<std::string>> consoleCommandString = std::make_shared<Setting<std::string>>
+	std::shared_ptr<BinarySetting<std::string>> consoleCommandString = std::make_shared<BinarySetting<std::string>>
 		(
 			"game_revert",
 			[](std::string in) { return true; },
@@ -302,21 +308,21 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<uint32_t>> getObjectAddressDWORD = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> getObjectAddressDWORD = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADBEEF,
 			[](uint32_t in) { return true; },
 			nameof(getObjectAddressDWORD)
 		);
 
-	std::shared_ptr<Setting<bool>> forceTeleportApplyToPlayer = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceTeleportApplyToPlayer = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(forceTeleportApplyToPlayer)
 		);
 
-	std::shared_ptr<Setting<uint32_t>> forceTeleportCustomObject = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> forceTeleportCustomObject = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADBEEF,
 			[](uint32_t in) { return true; },
@@ -324,21 +330,21 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> forceTeleportAbsoluteVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> forceTeleportAbsoluteVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(forceTeleportAbsoluteVec3)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> forceTeleportRelativeVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> forceTeleportRelativeVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(forceTeleportRelativeVec3)
 		);
 
-	std::shared_ptr<Setting<bool>> forceTeleportForward = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceTeleportForward = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -347,7 +353,7 @@ public:
 
 
 
-	std::shared_ptr<Setting<bool>> forceTeleportForwardIgnoreZ = std::make_shared<Setting<bool>> // ignore vertical component of players look angle
+	std::shared_ptr<BinarySetting<bool>> forceTeleportForwardIgnoreZ = std::make_shared<BinarySetting<bool>> // ignore vertical component of players look angle
 		(
 			false,
 			[](bool in) { return true; },
@@ -356,35 +362,35 @@ public:
 
 
 
-	std::shared_ptr<Setting<bool>> forceTeleportManual = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceTeleportManual = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(forceTeleportManual)
 		);
 
-	std::shared_ptr<Setting<bool>> forceLaunchApplyToPlayer = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceLaunchApplyToPlayer = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(forceLaunchApplyToPlayer)
 		);
 
-	std::shared_ptr<Setting<uint32_t>> forceLaunchCustomObject = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> forceLaunchCustomObject = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADB33F,
 			[](uint32_t in) { return true; },
 			nameof(forceLaunchCustomObject)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> forceLaunchAbsoluteVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> forceLaunchAbsoluteVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 0.f, 0.f, 5.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(forceLaunchAbsoluteVec3)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> forceLaunchRelativeVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> forceLaunchRelativeVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 0.5f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
@@ -392,21 +398,21 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> forceLaunchForward = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceLaunchForward = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(forceLaunchForward)
 		);
 
-	std::shared_ptr<Setting<bool>> forceLaunchForwardIgnoreZ = std::make_shared<Setting<bool>> // ignore vertical component of players look angle
+	std::shared_ptr<BinarySetting<bool>> forceLaunchForwardIgnoreZ = std::make_shared<BinarySetting<bool>> // ignore vertical component of players look angle
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(forceLaunchForwardIgnoreZ)
 		);
 
-	std::shared_ptr<Setting<bool>> forceLaunchManual = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> forceLaunchManual = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
@@ -415,77 +421,77 @@ public:
 
 
 
-	std::shared_ptr<Setting<bool>> naturalCheckpointDisable = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> naturalCheckpointDisable = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(naturalCheckpointDisable)
 		);
 
-	std::shared_ptr<Setting<bool>> infiniteAmmoToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> infiniteAmmoToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(infiniteAmmoToggle)
 		);
 
-	std::shared_ptr<Setting<bool>> bottomlessClipToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> bottomlessClipToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(bottomlessClipToggle)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(display2DInfoToggle)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowGameTick = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowGameTick = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowGameTick)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowNextObjectDatum = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowNextObjectDatum = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowNextObjectDatum)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowAggro = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowAggro = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowAggro)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowRNG = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowRNG = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowRNG)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowBSP = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowBSP = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowBSP)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoTrackPlayer = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoTrackPlayer = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoTrackPlayer)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerViewAngle= std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerViewAngle= std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -496,42 +502,42 @@ public:
 
 
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerPosition = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerPosition = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowPlayerPosition)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerVelocity = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerVelocity = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowPlayerVelocity)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerVelocityAbs = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerVelocityAbs = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowPlayerVelocityAbs)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerVelocityXY = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerVelocityXY = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowPlayerVelocityXY)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerVelocityXYZ = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerVelocityXYZ = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowPlayerVelocityXYZ)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerHealth = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerHealth = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -539,14 +545,14 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerRechargeCooldown = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerRechargeCooldown = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowPlayerRechargeCooldown)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowPlayerVehicleHealth = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerVehicleHealth = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -555,28 +561,28 @@ public:
 
 
 
-	std::shared_ptr<Setting<bool>> display2DInfoTrackCustomObject = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoTrackCustomObject = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(display2DInfoTrackCustomObject)
 		);
 
-	std::shared_ptr<Setting<uint32_t>> display2DInfoCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> display2DInfoCustomObjectDatum = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADB33F,
 			[](uint32_t in) { return true; },
 			nameof(display2DInfoCustomObjectDatum)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityObjectType = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityObjectType = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityObjectType)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityTagName = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityTagName = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -584,56 +590,56 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityPosition = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityPosition = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityPosition)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityVelocity = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityVelocity = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityVelocity)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityVelocityAbs = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityVelocityAbs = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityVelocityAbs)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityVelocityXY = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityVelocityXY = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityVelocityXY)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityVelocityXYZ = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityVelocityXYZ = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityVelocityXYZ)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityHealth = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityHealth = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityHealth)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityRechargeCooldown = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityRechargeCooldown = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(display2DInfoShowEntityRechargeCooldown)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoShowEntityVehicleHealth = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowEntityVehicleHealth = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -648,63 +654,63 @@ public:
 		BottomLeft
 	};
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> display2DInfoAnchorCorner = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> display2DInfoAnchorCorner = std::make_shared<BinarySetting<int>>
 		(
 			2, // 0 is top left, 1 is top right, 2 is bottom right, 3 is bottom left
 			[](int in) { return in >= 0 && in <= 3; }, // within enum range
 			nameof(display2DInfoAnchorCorner)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector2>> display2DInfoScreenOffset = std::make_shared<Setting<SimpleMath::Vector2>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> display2DInfoScreenOffset = std::make_shared<BinarySetting<SimpleMath::Vector2>>
 		(
 			SimpleMath::Vector2{400, 400},
 			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
 			nameof(display2DInfoScreenOffset)
 		);
 
-	std::shared_ptr<Setting<int>> display2DInfoFontSize = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> display2DInfoFontSize = std::make_shared<BinarySetting<int>>
 		(
 			16, 
 			[](int in) { return in > 0 ; },
 			nameof(display2DInfoFontSize)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector4>> display2DInfoFontColour = std::make_shared<Setting<SimpleMath::Vector4>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> display2DInfoFontColour = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
 			SimpleMath::Vector4{1.00f, 0.60f, 0.25f, 1.00f}, // a nice orange colour that matches the rest of the gui
 			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
 			nameof(display2DInfoFontColour)
 		);
 
-	std::shared_ptr<Setting<int>> display2DInfoFloatPrecision = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> display2DInfoFloatPrecision = std::make_shared<BinarySetting<int>>
 		(
 			6,
 			[](int in) { return in >= 0; },
 			nameof(display2DInfoFloatPrecision)
 		);
 
-	std::shared_ptr<Setting<bool>> display2DInfoOutline = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> display2DInfoOutline = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(display2DInfoOutline)
 		);
 
-	std::shared_ptr<Setting<bool>> hideHUDToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> hideHUDToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(hideHUDToggle)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector2>> editPlayerViewAngleVec2 = std::make_shared<Setting<SimpleMath::Vector2>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> editPlayerViewAngleVec2 = std::make_shared<BinarySetting<SimpleMath::Vector2>>
 		(
 			SimpleMath::Vector2(4.20, 0.69), // gottem
 			[](SimpleMath::Vector2 in) { return (in.x >= 0.f) && (in.x < DirectX::XM_2PI) && (in.y < DirectX::XM_PIDIV2) && (in.y > (DirectX::XM_PIDIV2 * -1.f)); }, // x (yaw) must be from 0 to 6.14, y (pitch) must be from -1.57 to 1.57
 			nameof(editPlayerViewAngleVec2)
 		);
 
-	std::shared_ptr<Setting<float>> editPlayerViewAngleAdjustFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> editPlayerViewAngleAdjustFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.1f,
 			[](float in) { return true; },
@@ -719,28 +725,28 @@ public:
 	};
 
 
-	std::shared_ptr<Setting<bool>> freeCameraToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(freeCameraToggle)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraHideWatermark = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraHideWatermark = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(freeCameraHideWatermark)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraThirdPersonRendering = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraThirdPersonRendering = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(freeCameraThirdPersonRendering)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraDisableScreenEffects = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraDisableScreenEffects = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
@@ -748,63 +754,63 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> freeCameraHideMessages = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraHideMessages = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(freeCameraHideMessages)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraGameInputDisable = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraGameInputDisable = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
 			nameof(freeCameraGameInputDisable)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraCameraInputDisable = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraCameraInputDisable = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(freeCameraCameraInputDisable)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraTranslationSpeedChangeFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraTranslationSpeedChangeFactor = std::make_shared<BinarySetting<float>>
 		(
 			1.5f,
 			[](float in) { return in > 1.f; }, // 
 			nameof(freeCameraUserInputCameraTranslationSpeedChangeFactor)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraUserInputCameraSetPositionVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> freeCameraUserInputCameraSetPositionVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(freeCameraUserInputCameraSetPositionVec3)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraUserInputCameraSetRotationVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> freeCameraUserInputCameraSetRotationVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(freeCameraUserInputCameraSetRotationVec3)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraUserInputCameraMaintainVelocity = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraUserInputCameraMaintainVelocity = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(freeCameraUserInputCameraMaintainVelocity)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraUserInputCameraSetVelocityVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> freeCameraUserInputCameraSetVelocityVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 5.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(freeCameraUserInputCameraSetVelocityVec3)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraBaseFOV = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraBaseFOV = std::make_shared<BinarySetting<float>>
 		(
 			90.f,
 			[](float in) { return in > 0.f && in <= 120.f; }, 
@@ -812,7 +818,7 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraTranslationSpeed = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraTranslationSpeed = std::make_shared<BinarySetting<float>>
 		(
 			3.f,
 			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
@@ -820,14 +826,14 @@ public:
 		);
 	
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraUserInputCameraTranslationInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraUserInputCameraTranslationInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraUserInputCameraTranslationInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraTranslationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraTranslationInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
@@ -835,7 +841,7 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraRotationSpeed = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraRotationSpeed = std::make_shared<BinarySetting<float>>
 		(
 			3.f,
 			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
@@ -843,14 +849,14 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraUserInputCameraRotationInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraUserInputCameraRotationInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraUserInputCameraRotationInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraRotationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraRotationInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
@@ -859,7 +865,7 @@ public:
 
 
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraFOVSpeed = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraFOVSpeed = std::make_shared<BinarySetting<float>>
 		(
 			1.f,
 			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
@@ -867,21 +873,21 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraUserInputCameraFOVInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraUserInputCameraFOVInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraUserInputCameraFOVInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraUserInputCameraFOVInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraFOVInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
 			nameof(freeCameraUserInputCameraFOVInterpolatorLinearFactor)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraAnchorPositionToObjectPosition = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraAnchorPositionToObjectPosition = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
@@ -889,14 +895,14 @@ public:
 		);
 
 		// actually an enum but stored as int
-		std::shared_ptr<Setting<int>> freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup = std::make_shared<Setting<int>>
+		std::shared_ptr<BinarySetting<int>> freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
 			(
 				0, // 0 player, 1 is custom object
 				[](int in) { return in >= 0 && in <= 1; }, // within enum range
 				nameof(freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup)
 			);
 
-	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADBEEF,
 			[](uint32_t in) { return true; },
@@ -904,14 +910,14 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorPositionToObjectPositionTranslationInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorPositionToObjectPositionTranslationInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraAnchorPositionToObjectPositionTranslationInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
@@ -919,14 +925,14 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> freeCameraAnchorPositionToObjectRotation = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraAnchorPositionToObjectRotation = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(freeCameraAnchorPositionToObjectRotation)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraAnchorRotationToObjectPosition = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraAnchorRotationToObjectPosition = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
@@ -934,21 +940,21 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
 		(
 			0, // 0 player, 1 is custom object, 2 is absolute position
 			[](int in) { return in >= 0 && in <= 2; }, // within enum range
 			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup)
 		);
 
-	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADBEEF,
 			[](uint32_t in) { return true; },
 			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackCustomObjectDatum)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
@@ -956,21 +962,21 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectPositionRotationInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectPositionRotationInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraAnchorRotationToObjectPositionRotationInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
 			nameof(freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraAnchorRotationToObjectFacing = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraAnchorRotationToObjectFacing = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
@@ -978,14 +984,14 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
 		(
 			0, // 0 player, 1 is custom object
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup)
 		);
 
-	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADBEEF,
 			[](uint32_t in) { return true; },
@@ -993,21 +999,21 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorRotationToObjectFacingRotationInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectFacingRotationInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraAnchorRotationToObjectFacingRotationInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
 			nameof(freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor)
 		);
 
-	std::shared_ptr<Setting<bool>> freeCameraAnchorFOVToObjectDistance = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> freeCameraAnchorFOVToObjectDistance = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
@@ -1015,21 +1021,21 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
 		(
 			0, // 0 player, 1 is custom object, 2 is absolute position
 			[](int in) { return in >= 0 && in <= 2; }, // within enum range
 			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup)
 		);
 
-	std::shared_ptr<Setting<uint32_t>> freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum = std::make_shared<Setting<uint32_t>>
+	std::shared_ptr<BinarySetting<uint32_t>> freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum = std::make_shared<BinarySetting<uint32_t>>
 		(
 			0xDEADBEEF,
 			[](uint32_t in) { return true; },
 			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackCustomObjectDatum)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector3>> freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3 = std::make_shared<Setting<SimpleMath::Vector3>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3 = std::make_shared<BinarySetting<SimpleMath::Vector3>>
 		(
 			SimpleMath::Vector3{ 0.f, 0.f, 0.f },
 			[](SimpleMath::Vector3 in) { return true; },
@@ -1037,21 +1043,21 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<Setting<int>> freeCameraAnchorFOVToObjectDistanceFOVInterpolator = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> freeCameraAnchorFOVToObjectDistanceFOVInterpolator = std::make_shared<BinarySetting<int>>
 		(
 			1, // 0 none, 1 is proportional
 			[](int in) { return in >= 0 && in <= 1; }, // within enum range
 			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolator)
 		);
 
-	std::shared_ptr<Setting<float>> freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor = std::make_shared<Setting<float>>
+	std::shared_ptr<BinarySetting<float>> freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor = std::make_shared<BinarySetting<float>>
 		(
 			0.06f,
 			[](float in) { return in > 0.f && in <= 1.f; },
 			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor)
 		);
 
-	std::shared_ptr<Setting<int>> switchBSPIndex = std::make_shared<Setting<int>>
+	std::shared_ptr<BinarySetting<int>> switchBSPIndex = std::make_shared<BinarySetting<int>>
 		(
 			0,
 			[](int in) { return true; },
@@ -1059,38 +1065,37 @@ public:
 		);
 
 
-	std::shared_ptr<Setting<bool>> OBSBypassToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> OBSBypassToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(OBSBypassToggle)
 		);
 
-	std::shared_ptr<Setting<SimpleMath::Vector2>> setPlayerHealthVec2 = std::make_shared<Setting<SimpleMath::Vector2>>
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> setPlayerHealthVec2 = std::make_shared<BinarySetting<SimpleMath::Vector2>>
 		(
 			SimpleMath::Vector2(1.f, 1.f), // full health, full shields
 			[](SimpleMath::Vector2 in) { return (in.x >= 0.f) && (in.x <= 1.f) && (in.y >= 0.f) && (in.y <= 1.f); }, // 0 to 1 inclusive
 			nameof(setPlayerHealthVec2)
 		);
 
-	std::shared_ptr<Setting<bool>> carrierBumpAnalyserToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> carrierBumpAnalyserToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(carrierBumpAnalyserToggle)
 		);
 
-	std::shared_ptr<Setting<bool>> waypoint3DToggle = std::make_shared<Setting<bool>>
+	std::shared_ptr<BinarySetting<bool>> waypoint3DToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
 			nameof(waypoint3DToggle)
 		);
 
-	std::shared_ptr<Setting<WaypointList>> waypoint3DList = std::make_shared<Setting<WaypointList>>
+	std::shared_ptr<UnarySetting<WaypointList>> waypoint3DList = std::make_shared<UnarySetting<WaypointList>>
 		(
-			WaypointList{}, // starts empty
-			[](WaypointList in) { return true; },
+			WaypointList(), // default constructed
 			nameof(waypoint3DList)
 		);
 

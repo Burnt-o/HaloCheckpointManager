@@ -135,7 +135,7 @@ public:
 	}
 
 
-	RotationTransformer(std::shared_ptr<IUpdateRotationTransform> rotUpate, std::shared_ptr<Setting<int>> currentInterpolationType, std::shared_ptr<Setting<float>> currentLinearInterpolationFactor)
+	RotationTransformer(std::shared_ptr<IUpdateRotationTransform> rotUpate, std::shared_ptr<BinarySetting<int>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
 		: 
 		rotationUpdater(std::move(rotUpate)),
 		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](int& n) { onInterpolationTypeChanged(n); }),
@@ -238,7 +238,7 @@ public:
 	}
 
 
-	PositionTransformer (std::shared_ptr<IUpdatePositionTransform> posUpdate, std::shared_ptr<Setting<int>> currentInterpolationType, std::shared_ptr<Setting<float>> currentLinearInterpolationFactor)
+	PositionTransformer (std::shared_ptr<IUpdatePositionTransform> posUpdate, std::shared_ptr<BinarySetting<int>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
 		: positionUpdater(std::move(posUpdate)),
 		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](int& n) { onInterpolationTypeChanged(n); }),
 		currentLinearInterpolationFactorChangedCallback(currentLinearInterpolationFactor->valueChangedEvent, [this](float& n) { onLinearInterpolationFactorChanged(n); }),
@@ -332,7 +332,7 @@ public:
 		currentFOV = newValue;
 	}
 
-	FOVTransformer(std::shared_ptr<IUpdateFOVTransform> fovUpate, std::shared_ptr<Setting<int>> currentInterpolationType, std::shared_ptr<Setting<float>> currentLinearInterpolationFactor)
+	FOVTransformer(std::shared_ptr<IUpdateFOVTransform> fovUpate, std::shared_ptr<BinarySetting<int>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
 		:
 		fovUpdater(std::move(fovUpate)),
 		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](int& n) { onInterpolationTypeChanged(n); }),

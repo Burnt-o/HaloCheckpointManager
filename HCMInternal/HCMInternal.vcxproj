@@ -230,14 +230,23 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
+    <ClInclude Include="EditOrAddWaypointDialog.h" />
+    <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GUIWaypointList.h" />
+    <ClInclude Include="IModalDialog.h" />
+    <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
+    <ClInclude Include="ModalDialogFactory.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
     <ClInclude Include="ScopedImFontScaler.h" />
+    <ClInclude Include="SerialisableSetting.h" />
     <ClInclude Include="SpriteResource.h" />
+    <ClInclude Include="UnarySetting.h" />
     <ClInclude Include="WaypointList.h" />
     <ClInclude Include="Waypoint3D.h" />
     <ClInclude Include="AdvanceTicks.h" />
@@ -332,7 +341,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IMakeOrGetCheat.h" />
     <ClInclude Include="IMCCStateHook.h" />
     <ClInclude Include="IMessagesGUI.h" />
-    <ClInclude Include="IModalDialogRenderer.h" />
     <ClInclude Include="InfiniteAmmo.h" />
     <ClInclude Include="ISettingsSerialiser.h" />
     <ClInclude Include="ISharedMemory.h" />
@@ -407,7 +415,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ModuleHook.h" />
     <ClInclude Include="ModuleHookManager.h" />
     <ClInclude Include="MultilevelPointer.h" />
-    <ClInclude Include="Setting.h" />
+    <ClInclude Include="BinarySetting.h" />
     <ClInclude Include="OptionalCheatInfo.h" />
     <ClInclude Include="OptionalCheatManager.h" />
     <ClInclude Include="OptionalCheatEnum.h" />
@@ -427,6 +435,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
+    <ClCompile Include="ModalDialogFactory.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
     <ClCompile Include="Renderer3DImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -435,6 +444,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
     <ClCompile Include="RenderTextHelper.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
+    <ClCompile Include="UnarySetting.cpp" />
     <ClCompile Include="Waypoint3D.cpp" />
     <ClCompile Include="AdvanceTicks.cpp" />
     <ClCompile Include="AIFreeze.cpp" />
@@ -520,7 +530,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="NaturalCheckpointDisable.cpp" />
     <ClCompile Include="PauseGame.cpp" />
     <ClCompile Include="ProggyVectorRegularFont.cpp" />
-    <ClCompile Include="Setting.cpp" />
+    <ClCompile Include="BinarySetting.cpp" />
     <ClCompile Include="OptionalCheatManager.cpp" />
     <ClCompile Include="SettingsSerialiser.cpp" />
     <ClCompile Include="pch.cpp">

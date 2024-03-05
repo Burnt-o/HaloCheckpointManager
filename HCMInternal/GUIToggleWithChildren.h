@@ -15,13 +15,13 @@ class GUIToggleWithChildren : public IGUIElement {
 
 private:
 	std::string mToggleText;
-	std::weak_ptr<Setting<bool>> mOptionToggleWeak;
+	std::weak_ptr<BinarySetting<bool>> mOptionToggleWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
 	std::vector<std::shared_ptr<IGUIElement>> mChildElements;
 public:
 
 
-	GUIToggleWithChildren(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::string toggleText, std::shared_ptr<Setting<bool>> optionToggle, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
+	GUIToggleWithChildren(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::string toggleText, std::shared_ptr<BinarySetting<bool>> optionToggle, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
 		: IGUIElement(implGame, hotkey, tooltip), mToggleText(toggleText), mOptionToggleWeak(optionToggle)
 	{
 		if (mToggleText.empty()) throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");

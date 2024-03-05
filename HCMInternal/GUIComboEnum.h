@@ -7,14 +7,14 @@ class GUIComboEnum : public IGUIElement {
 
 private:
 	std::string mLabelText;
-	std::weak_ptr<Setting<int>> mOptionEnumWeak;
+	std::weak_ptr<BinarySetting<int>> mOptionEnumWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
 	static constexpr std::array<std::string_view, magic_enum::enum_count<E>()> itemLabels = magic_enum::enum_names<E>();
 	std::string itemLabelsMashedTogether;
 public:
 
 
-	GUIComboEnum(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<int>> optionEnum)
+	GUIComboEnum(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<int>> optionEnum)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionEnumWeak(optionEnum)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");

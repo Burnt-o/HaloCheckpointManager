@@ -8,12 +8,12 @@
 //	std::string mLabelText;
 //	std::shared_ptr<ActionEvent> mEventToFire;
 //	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
-//	std::weak_ptr<Setting<std::string>> mCommandStringWeak;
+//	std::weak_ptr<BinarySetting<std::string>> mCommandStringWeak;
 //	std::vector<std::thread> mFireEventThreads;
 //
 //public:
 //
-//	GUIConsoleCommand(GameState implGame, std::string labelText, std::weak_ptr<Setting<std::string>> commandString, std::shared_ptr<ActionEvent> eventToFire)
+//	GUIConsoleCommand(GameState implGame, std::string labelText, std::weak_ptr<BinarySetting<std::string>> commandString, std::shared_ptr<ActionEvent> eventToFire)
 //		: IGUIElement(implGame, std::nullopt), mCommandStringWeak(commandString), mEventToFire(eventToFire), mLabelText(labelText)
 //	{
 //		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");

@@ -12,7 +12,7 @@
 #include "PointerManager.h"
 #include "IMessagesGUI.h"
 #include "RuntimeExceptionHandler.h"
-#include "IModalDialogRenderer.h"
+#include "ModalDialogRenderer.h"
 
 class DumpCore : public IOptionalCheat
 {
@@ -29,7 +29,7 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::weak_ptr<IGetMCCVersion> getMCCVerWeak;
 	std::weak_ptr<ISharedMemory> sharedMemWeak;
-	std::weak_ptr<IModalDialogRenderer> modalDialogsWeak;
+	std::weak_ptr<ModalDialogRenderer> modalDialogsWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 
 	// primary event callback
@@ -63,7 +63,7 @@ private:
 			if (settings->autonameCoresaves->GetValue() == false)
 			{
 				PLOG_DEBUG << "calling blocking func showSaveDumpNameDialog";
-				auto modalReturn = modalDialogs->showSaveDumpNameDialog("Name dumped core save", coreSaveName); // this is a blocking call
+				auto modalReturn = modalDialogs->showReturningDialog((ModalDialogFactory::makeCheckpointDumpNameDialog("Name dumped core save", coreSaveName))); // this is a blocking call
 				PLOG_DEBUG << "showSaveDumpNameDialog returned! ";
 
 				if (!std::get<bool>(modalReturn)) { PLOG_DEBUG << "User cancelled dump"; return; } // user cancelled dump
@@ -152,7 +152,7 @@ public:
 		sharedMemWeak(dicon.Resolve<ISharedMemory>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		modalDialogsWeak(dicon.Resolve<IModalDialogRenderer>()),
+		modalDialogsWeak(dicon.Resolve<ModalDialogRenderer>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 	{
 	}

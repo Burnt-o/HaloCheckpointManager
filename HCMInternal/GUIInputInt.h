@@ -6,12 +6,12 @@ class GUIInputInt : public IGUIElement {
 
 private:
 	std::string mLabelText;
-	std::weak_ptr<Setting<int>> mOptionIntWeak;
+	std::weak_ptr<BinarySetting<int>> mOptionIntWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
 public:
 
 
-	GUIInputInt(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<int>> optionInt)
+	GUIInputInt(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<int>> optionInt)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionIntWeak(optionInt)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");

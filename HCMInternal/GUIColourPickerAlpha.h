@@ -6,13 +6,13 @@ class GUIColourPickerAlpha : public IGUIElement {
 
 private:
 	std::string mLabelText;
-	std::weak_ptr<Setting<SimpleMath::Vector4>> mOptionVec4Weak;
+	std::weak_ptr<BinarySetting<SimpleMath::Vector4>> mOptionVec4Weak;
 	std::vector<std::thread> mUpdateSettingThreads;
 
 public:
 
 
-	GUIColourPickerAlpha(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<SimpleMath::Vector4>> optionVec4)
+	GUIColourPickerAlpha(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<SimpleMath::Vector4>> optionVec4)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionVec4Weak(optionVec4)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty vec4 label (needs label for imgui ID system, use ## for invisible labels)");

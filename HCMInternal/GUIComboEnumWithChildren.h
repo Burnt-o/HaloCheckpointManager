@@ -7,7 +7,7 @@ class GUIComboEnumWithChildren : public IGUIElement {
 
 private:
 	std::string mLabelText;
-	std::weak_ptr<Setting<int>> mOptionEnumWeak;
+	std::weak_ptr<BinarySetting<int>> mOptionEnumWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
 	static constexpr std::array<std::string_view, magic_enum::enum_count<E>()> itemLabels = magic_enum::enum_names<E>();
 	std::string itemLabelsMashedTogether;
@@ -17,7 +17,7 @@ private:
 public:
 
 
-	GUIComboEnumWithChildren(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<int>> optionEnum, std::vector<std::vector<std::optional<std::shared_ptr<IGUIElement>>>> childElementsPerItem, float leftMargin = 20.f)
+	GUIComboEnumWithChildren(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<int>> optionEnum, std::vector<std::vector<std::optional<std::shared_ptr<IGUIElement>>>> childElementsPerItem, float leftMargin = 20.f)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionEnumWeak(optionEnum), mLeftMargin(leftMargin)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");

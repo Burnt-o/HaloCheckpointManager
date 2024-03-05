@@ -8,12 +8,12 @@ class GUIAdvanceTicks : public IGUIElement {
 
 private:
 	std::weak_ptr<ActionEvent> mEventToFireWeak;
-	std::weak_ptr<Setting<int>> mBoundIntWeak;
+	std::weak_ptr<BinarySetting<int>> mBoundIntWeak;
 	std::vector<std::thread> mFireEventThreads;
 public:
 
 
-	GUIAdvanceTicks(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::weak_ptr<ActionEvent> eventToFire, std::weak_ptr<Setting<int>> boundInt)
+	GUIAdvanceTicks(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::weak_ptr<ActionEvent> eventToFire, std::weak_ptr<BinarySetting<int>> boundInt)
 		: IGUIElement(implGame, hotkey, tooltip),  mEventToFireWeak(eventToFire), mBoundIntWeak(boundInt)
 	{
 		PLOG_VERBOSE << "Constructing GUIAdvanceTicks";

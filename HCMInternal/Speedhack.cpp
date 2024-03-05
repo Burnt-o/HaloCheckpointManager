@@ -16,8 +16,8 @@ private:
 
 	// injected services
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
-	std::weak_ptr<Setting<double>> speedhackValueSettingWeak;
-	std::weak_ptr<Setting<bool>> speedhackToggleSettingWeak;
+	std::weak_ptr<BinarySetting<double>> speedhackValueSettingWeak;
+	std::weak_ptr<BinarySetting<bool>> speedhackToggleSettingWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// data

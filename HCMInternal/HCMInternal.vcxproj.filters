@@ -68,6 +68,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\3D">
       <UniqueIdentifier>{cd1cd030-f535-41e8-b94a-facc6adcd96f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\GUI\ModalDialogs">
+      <UniqueIdentifier>{81ff9a9b-365d-4e9d-96b9-12e59d6880b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -107,9 +110,6 @@
       <Filter>Services</Filter>
     </ClInclude>
     <ClInclude Include="ModuleHook.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Setting.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="MultilevelPointer.h">
@@ -382,9 +382,6 @@
     <ClInclude Include="GetCurrentLevelCode.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
-    <ClInclude Include="IModalDialogRenderer.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="GetCurrentDifficulty.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
@@ -399,9 +396,6 @@
     </ClInclude>
     <ClInclude Include="GUIAdvanceTicks.h">
       <Filter>Services\GUI\GUIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="ModalDialogRenderer.h">
-      <Filter>Services\GUI</Filter>
     </ClInclude>
     <ClInclude Include="GameTickEventHook.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
@@ -650,6 +644,39 @@
     <ClInclude Include="ScopedImFontScaler.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="GUIWaypointList.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ModalDialogRenderer.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckpointDumpNameDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="IModalDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="InjectionWarningDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="FailedOptionalCheatServicesDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="EditOrAddWaypointDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="ModalDialogFactory.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialisableSetting.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="BinarySetting.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="UnarySetting.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -680,9 +707,6 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="ModuleHook.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Setting.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="MultilevelPointer.cpp">
@@ -780,9 +804,6 @@
     </ClCompile>
     <ClCompile Include="AdvanceTicks.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClCompile>
-    <ClCompile Include="ModalDialogRenderer.cpp">
-      <Filter>Services\GUI</Filter>
     </ClCompile>
     <ClCompile Include="GameTickEventHook.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
@@ -933,6 +954,18 @@
     </ClCompile>
     <ClCompile Include="RenderTextHelper.cpp">
       <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ModalDialogRenderer.cpp">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="ModalDialogFactory.cpp">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="BinarySetting.cpp">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="UnarySetting.cpp">
+      <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

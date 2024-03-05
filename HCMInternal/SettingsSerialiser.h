@@ -1,7 +1,7 @@
 #pragma once
 #include "RuntimeExceptionHandler.h"
 #include "IMessagesGUI.h"
-#include "Setting.h"
+#include "BinarySetting.h"
 #include "ISettingsSerialiser.h"
 class SettingsSerialiser : public ISettingsSerialiser
 {

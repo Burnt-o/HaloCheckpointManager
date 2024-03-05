@@ -9,13 +9,13 @@ class GUIInputDWORD : public IGUIElement
 private:
 	std::string mLabelText;
 	std::string mHotkeyButtonLabelId = std::format("..###{}", getName());
-	std::weak_ptr<Setting<uint32_t>> mOptionDWORDWeak;
+	std::weak_ptr<BinarySetting<uint32_t>> mOptionDWORDWeak;
 	std::optional<std::shared_ptr<ActionEvent>> mEventToFire;
 	std::vector<std::thread> mFireEventThreads;
 
 public:
 
-	GUIInputDWORD(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::weak_ptr<Setting<uint32_t>> optionDWORD, std::optional<std::shared_ptr<ActionEvent>> eventToFire = std::nullopt)
+	GUIInputDWORD(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::weak_ptr<BinarySetting<uint32_t>> optionDWORD, std::optional<std::shared_ptr<ActionEvent>> eventToFire = std::nullopt)
 		: IGUIElement(implGame, std::nullopt, tooltip), mOptionDWORDWeak(optionDWORD), mLabelText(labelText), mEventToFire(eventToFire)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");

@@ -28,6 +28,7 @@
 #include "GUIVec3.h"
 #include "GUIVec2.h"
 #include "GUIButtonAndInt.h"
+#include "GUIWaypointList.h"
 
 
 
@@ -1421,7 +1422,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
-						createNestedElement(GUIElementEnum::waypoint3DGUI),
+						createNestedElement(GUIElementEnum::waypoint3DGUIToggle),
+						createNestedElement(GUIElementEnum::waypoint3DGUIList),
 						}));
 
 
@@ -1434,9 +1436,14 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
-				case GUIElementEnum::waypoint3DGUI:
+				case GUIElementEnum::waypoint3DGUIToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection("Toggles 3D waypoints"), std::nullopt, "3D Waypoints", settings->waypoint3DToggle));
+						(game, ToolTipCollection("Toggles 3D waypoints"), std::nullopt, "Custom Waypoints", settings->waypoint3DToggle));
+
+
+				case GUIElementEnum::waypoint3DGUIList:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWaypointList<false>>
+						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent));
 #endif
 
 

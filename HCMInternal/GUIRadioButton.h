@@ -9,10 +9,10 @@ private:
 	std::vector<std::shared_ptr<IGUIElement>> mChildElements;
 public:
 
-	std::weak_ptr<Setting<bool>> mBoundOption;
+	std::weak_ptr<BinarySetting<bool>> mBoundOption;
 
 
-	GUIRadioButton(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> mHotkey, std::string headingText,  std::weak_ptr<Setting<bool>> boundOption, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
+	GUIRadioButton(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> mHotkey, std::string headingText,  std::weak_ptr<BinarySetting<bool>> boundOption, std::vector<std::optional<std::shared_ptr<IGUIElement>>> childElements)
 		: IGUIElement(implGame, mHotkey, tooltip), mHeadingText(headingText), mBoundOption(boundOption)
 	{
 		PLOG_VERBOSE << "Constructing GUIRadioButton, name: " << getName();

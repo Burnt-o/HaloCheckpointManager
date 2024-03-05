@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "RuntimeExceptionHandler.h"
 
-#include "Setting.h"
+#include "BinarySetting.h"
 #include "HCMInternalGUI.h"
 #include "MessagesGUI.h"
 

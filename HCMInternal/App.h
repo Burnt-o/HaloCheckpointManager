@@ -31,7 +31,7 @@
 #include "ControlServiceContainer.h"
 #include "Lapua.h"
 #include "OBSBypassManager.h"
-
+#include "ModalDialogFactory.h"
 class App {
 
 
@@ -96,7 +96,7 @@ public:
             auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
             auto mccStateHook = std::make_shared<MCCStateHook>(ptr, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
-            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, settings->showGUIFailures, guifail, hotkeyDisabler); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
+            auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, hotkeyDisabler); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
 
             mes->setSettings(settings);
             // hotkeys
@@ -141,7 +141,7 @@ public:
             if (!guifail->getFailureMessagesMap().empty())
             {
                 PLOG_DEBUG << "creating showFailedOptionalCheatServices modal dialog ";
-                modalFailureWindowThread = std::thread{ ([modal = modal]() { Sleep(500); modal->showFailedOptionalCheatServices(); }) };
+                modalFailureWindowThread = std::thread{ ([modal = modal, guifail]() { Sleep(500); modal->showVoidDialog(ModalDialogFactory::makeFailedOptionalCheatServicesDialog(guifail)); }) };
                 modalFailureWindowThread.detach();
             }
 

@@ -13,10 +13,10 @@ void Waypoint::serialise(pugi::xml_node wpnode) const
 
 	wpnode.append_child("showDistance").text().set(showDistance);
 
-	if (label.has_value())
-	{
-		wpnode.append_child("label").text().set(label.value().c_str());
-	}
+	wpnode.append_child("enabled").text().set(enabled);
+
+	wpnode.append_child("label").text().set(label.c_str());
+
 
 
 }
@@ -24,7 +24,11 @@ void Waypoint::serialise(pugi::xml_node wpnode) const
 // deserialisation constructor
 Waypoint::Waypoint(pugi::xml_node input)
 {
-	//TODO
+#ifdef HCM_DEBUG
+	throw E_NOTIMPL;
+#else
+	static_assert(false, "IMPLEMENT WAYPOINT (DE)SERIALISATION");
+#endif
 }
 
 
@@ -49,5 +53,9 @@ std::ostream& operator<<(std::ostream& os, const WaypointList& dt)
 	// deserialisation constructor
 WaypointList::WaypointList(pugi::xml_node input)
 {
-	// TODO
+#ifdef HCM_DEBUG
+	throw E_NOTIMPL;
+#else
+	static_assert(false, "IMPLEMENT WAYPOINT (DE)SERIALISATION");
+#endif
 }

@@ -194,7 +194,8 @@
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((waypoint3DGUI, (ALL_SUPPORTED_GAMES)))
+	((waypoint3DGUIToggle, (ALL_SUPPORTED_GAMES)))\
+	((waypoint3DGUIList, (ALL_SUPPORTED_GAMES)))
 
 
 #ifdef HCM_DEBUG

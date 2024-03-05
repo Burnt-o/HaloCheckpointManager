@@ -7,7 +7,7 @@ class GUIVec3 : public IGUIElement {
 
 private:
 	std::string mLabelText;
-	std::weak_ptr<Setting<SimpleMath::Vector3>> mOptionVec3Weak;
+	std::weak_ptr<BinarySetting<SimpleMath::Vector3>> mOptionVec3Weak;
 	std::vector<std::thread> mUpdateSettingThreads;
 
 	std::string mxLabel;
@@ -18,7 +18,7 @@ private:
 public:
 
 
-	GUIVec3(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<Setting<SimpleMath::Vector3>> optionVec3, std::string xLabel = "x", std::string yLabel = "y", std::string zLabel = "z")
+	GUIVec3(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<SimpleMath::Vector3>> optionVec3, std::string xLabel = "x", std::string yLabel = "y", std::string zLabel = "z")
 		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionVec3Weak(optionVec3), mxLabel(xLabel), myLabel(yLabel), mzLabel(zLabel)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty vec3 label (needs label for imgui ID system, use ## for invisible labels)");

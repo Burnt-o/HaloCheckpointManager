@@ -1,20 +1,9 @@
 #pragma once
-#include "RebindableHotkey.h"
-#include <pugixml.hpp>
-#include "WindowsUtilities.h" // could move to cpp file
-class SerialisableSetting
-{
-private:
-	bool mIsIncludedInClipboard;
-public:
-	virtual void serialise(pugi::xml_node parent) = 0;
-	virtual void deserialise(pugi::xml_node input) = 0;
-	virtual std::string getOptionName() = 0;
-	explicit SerialisableSetting() {}
-};
+#include "SerialisableSetting.h"
+#include "imgui.h"
 
 template <typename T>
-class Setting : public SerialisableSetting
+class BinarySetting : public SerialisableSetting
 {
 private:
 	T value;
@@ -31,7 +20,7 @@ public:
 	//	: isInputValid(inputValidator), value(defaultValue), valueDisplay(defaultValue), mOptionName(optionName)
 	//{}
 
-	explicit Setting(T defaultValue, std::function<bool(T)> inputValidator, std::string optionName)
+	explicit BinarySetting(T defaultValue, std::function<bool(T)> inputValidator, std::string optionName)
 		: isInputValid(inputValidator), value(defaultValue), valueDisplay(defaultValue), mOptionName(optionName)
 	{}
 
@@ -121,6 +110,6 @@ public:
 };
 
 template<>
-void Setting<bool>::flipBoolSetting(); // only defined for bool
+void BinarySetting<bool>::flipBoolSetting(); // only defined for bool
 
 
