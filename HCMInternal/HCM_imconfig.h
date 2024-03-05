@@ -30,6 +30,12 @@ std::string vec3ToString(const SimpleMath::Vector3& vec, int decimalPrecision = 
 
 std::string vec4ToString(const SimpleMath::Vector4& vec, int decimalPrecision = 6);
 
+SimpleMath::Vector2 vec2FromString(const std::string& str);
+
+SimpleMath::Vector3 vec3FromString(const std::string& str);
+
+SimpleMath::Vector4 vec4FromString(const std::string& str);
+
 namespace plog
 {
     Record& operator<<(Record& record, const SimpleMath::Vector2& vec);

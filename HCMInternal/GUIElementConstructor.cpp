@@ -635,6 +635,8 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							createNestedElement(GUIElementEnum::display2DInfoToggleGUI),
 							createNestedElement(GUIElementEnum::display2DInfoSettingsInfoSubheading),
 							createNestedElement(GUIElementEnum::display2DInfoSettingsVisualSubheading),
+							createNestedElement(GUIElementEnum::waypoint3DGUIToggle),
+							createNestedElement(GUIElementEnum::waypoint3DGUISettings),
 						}));
 
 
@@ -841,7 +843,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 							(game, ToolTipCollection(""),  "Info Font Size", settings->display2DInfoFontSize));
 
 					case GUIElementEnum::display2DInfoFontColour:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 							(game, ToolTipCollection(""),  "Colour#2dinfo", settings->display2DInfoFontColour));
 
 					case GUIElementEnum::display2DInfoFloatPrecision:
@@ -852,6 +854,66 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection("Adds a black outline to text (has a small negative performance impact)"), std::nullopt, "Info Font Outline", settings->display2DInfoOutline));
 
+				case GUIElementEnum::waypoint3DGUIToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Toggles 3D waypoints"), RebindableHotkeyEnum::toggleWaypoint3D, "Custom Waypoints", settings->waypoint3DToggle));
+
+				case GUIElementEnum::waypoint3DGUISettings:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Custom Waypoint Settings"), "Custom Waypoint Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::waypoint3DGUIRenderRangeToggle),
+							createNestedElement(GUIElementEnum::waypoint3DGUIRenderRangeInput),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalSpriteColor),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalSpriteScale),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalLabelColor),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalLabelScale),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistanceColor),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistanceScale),
+							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistancePrecision),
+							createNestedElement(GUIElementEnum::waypoint3DGUIList),
+							}));
+
+				case GUIElementEnum::waypoint3DGUIRenderRangeToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Toggles disabling rendering of waypoints that are too far away"), std::nullopt, "Render Range Filter", settings->waypoint3DRenderRangeToggle));
+
+				case GUIElementEnum::waypoint3DGUIRenderRangeInput:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						(game, ToolTipCollection("How far away (game units) does a waypoint need to be before disabling rendering?"), "Render Range", settings->waypoint3DRenderRangeInput));
+
+				case GUIElementEnum::waypoint3DGUIGlobalSpriteColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+						(game, ToolTipCollection("Color to apply to waypoint sprite"), "Global Sprite Color", settings->waypoint3DGlobalSpriteColor));
+
+				case GUIElementEnum::waypoint3DGUIGlobalSpriteScale:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						(game, ToolTipCollection("Scaling factor of waypoint sprite"), "Global Sprite Scale", settings->waypoint3DGlobalSpriteScale));
+
+				case GUIElementEnum::waypoint3DGUIGlobalLabelColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+						(game, ToolTipCollection("Color to apply to waypoint label"), "Global Label Color", settings->waypoint3DGlobalLabelColor));
+
+				case GUIElementEnum::waypoint3DGUIGlobalLabelScale:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						(game, ToolTipCollection("Scaling factor of waypoint label"), "Global Label Scale", settings->waypoint3DGlobalLabelScale));
+
+				case GUIElementEnum::waypoint3DGUIGlobalDistanceColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+						(game, ToolTipCollection("Color to apply to waypoint distance text"), "Global Distance Color", settings->waypoint3DGlobalDistanceColor));
+
+				case GUIElementEnum::waypoint3DGUIGlobalDistanceScale:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						(game, ToolTipCollection("Scaling factor of waypoint distance text"), "Global Distance Scale", settings->waypoint3DGlobalDistanceScale));
+
+				case GUIElementEnum::waypoint3DGUIGlobalDistancePrecision:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						(game, ToolTipCollection("Decimal precision of waypoint distance text"), "Global Distance Precision", settings->waypoint3DGlobalDistancePrecision));
+
+
+				case GUIElementEnum::waypoint3DGUIList:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWaypointList<false>>
+						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent));
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
@@ -1429,8 +1491,6 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
-						createNestedElement(GUIElementEnum::waypoint3DGUIToggle),
-						createNestedElement(GUIElementEnum::waypoint3DGUIList),
 						}));
 
 
@@ -1443,14 +1503,7 @@ return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
-				case GUIElementEnum::waypoint3DGUIToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection("Toggles 3D waypoints"), std::nullopt, "Custom Waypoints", settings->waypoint3DToggle));
 
-
-				case GUIElementEnum::waypoint3DGUIList:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWaypointList<false>>
-						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent));
 #endif
 
 

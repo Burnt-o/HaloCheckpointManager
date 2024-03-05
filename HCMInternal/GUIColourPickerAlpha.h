@@ -2,13 +2,16 @@
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
 
+template<bool showInputs>
 class GUIColourPickerAlpha : public IGUIElement {
 
 private:
 	std::string mLabelText;
 	std::weak_ptr<BinarySetting<SimpleMath::Vector4>> mOptionVec4Weak;
 	std::vector<std::thread> mUpdateSettingThreads;
-
+	const ImGuiColorEditFlags editFlags = showInputs ? 
+		(ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_NoDragDrop) :
+		(ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_NoDragDrop | ImGuiColorEditFlags_NoInputs);
 public:
 
 
@@ -38,7 +41,7 @@ public:
 		}
 
 
-			if (ImGui::ColorEdit4(mLabelText.c_str(), &mOptionVec4->GetValueDisplay().x, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_NoDragDrop))
+			if (ImGui::ColorEdit4(mLabelText.c_str(), &mOptionVec4->GetValueDisplay().x, editFlags))
 			{
 				PLOG_VERBOSE << "GUIColourPickerAlpha (" << getName() << ") firing toggle event, new value: " << mOptionVec4->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec4]() { optionToggle->UpdateValueWithInput(); }));

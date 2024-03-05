@@ -248,6 +248,10 @@ private:
 		mSettings->setPlayerHealthEvent,
 		vvk{}),
 
+		initEventOnPressHotkey(toggleWaypoint3D,
+		mSettings->toggleWaypoint3DHotkeyEvent,
+		vvk{}),
+
 
 	};
 

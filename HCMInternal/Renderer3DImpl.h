@@ -49,7 +49,7 @@ private:
 
 	// funcs
 	virtual bool updateCameraData(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView);
-	RECTF drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, bool shouldCenter);
+	RECTF drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter);
 	friend class Render3DEventProvider;
 public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
@@ -57,8 +57,8 @@ public:
 
 	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 world) override;
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
-	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale) override;
-	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale) override;
+	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
+	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 
 
 };

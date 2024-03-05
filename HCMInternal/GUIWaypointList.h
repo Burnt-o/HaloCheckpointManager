@@ -57,49 +57,43 @@ public:
 
 
 		constexpr ImGuiTreeNodeFlags treeFlags = startsOpen ? ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_FramePadding;
-		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), treeFlags);
+
 		renderTooltip();
 		DEBUG_GUI_HEIGHT;
-		if (headingOpen)
+
+		if (waypointListPtr->GetValue().listInUse)
 		{
-			if (waypointListPtr->GetValue().listInUse)
-			{
-				waypointListPtr->GetValue().listInUse.wait(true);
-			}
-			ScopedAtomicBool lock(waypointListPtr->GetValue().listInUse);
-			auto& waypointList = waypointListPtr->GetValue();
+			waypointListPtr->GetValue().listInUse.wait(true);
+		}
+		ScopedAtomicBool lock(waypointListPtr->GetValue().listInUse);
+		auto& waypointList = waypointListPtr->GetValue();
 
-			currentHeight = GUIFrameHeightWithSpacing;
-			for (auto& waypoint : waypointList.list)
-			{
-				currentHeight += GUIFrameHeightWithSpacing;
-				renderWaypoint(waypoint, waypointList);
-			}
-
-
-			// draw add button
+		currentHeight = GUIFrameHeightWithSpacing;
+		for (auto& waypoint : waypointList.list)
+		{
 			currentHeight += GUIFrameHeightWithSpacing;
-			if (ImGui::Button("Add Waypoint##GUIWaypointList"))
+			renderWaypoint(waypoint, waypointList);
+		}
+
+
+		// draw add button
+		currentHeight += GUIFrameHeightWithSpacing;
+		if (ImGui::Button("Add Waypoint##GUIWaypointList"))
+		{
+			PLOG_VERBOSE << "GUIWaypointList firing add event";
+			auto mEventToFire = mAddEventWeak.lock();
+			if (!mEventToFire)
 			{
-				PLOG_VERBOSE << "GUIWaypointList firing add event";
-				auto mEventToFire = mAddEventWeak.lock();
-				if (!mEventToFire)
-				{
-					PLOG_ERROR << "bad mAddEventWeak weakptr when rendering " << getName();
-					return;
-				}
-
-				auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypointList]() {mEvent->operator()(waypointList); }));
-				newThread.detach();
-
+				PLOG_ERROR << "bad mAddEventWeak weakptr when rendering " << getName();
+				return;
 			}
 
-			ImGui::TreePop();
+			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypointList]() {mEvent->operator()(waypointList); }));
+			newThread.detach();
+
 		}
-		else
-		{
-			currentHeight = GUIFrameHeightWithSpacing;
-		}
+
+			
 		ImGui::EndChild();
 
 
@@ -113,7 +107,7 @@ public:
 		ImGui::SameLine();
 
 		// draw "Enabled" textbox
-		if (ImGui::Checkbox(std::format("##{}",uid).c_str(), &waypoint.enabled))
+		if (ImGui::Checkbox(std::format("##{}",uid).c_str(), &waypoint.waypointEnabled))
 		{
 			PLOG_VERBOSE << "waypoint list toggling enabled flag";
 		}

@@ -12,7 +12,7 @@ void Renderer3DImpl<mGame>::constructSpriteResource(int resourceID)
 }
 
 template<GameState::Value mGame>
-RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, bool shouldCenter)
+RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter)
 {
 	if (this->spriteResourceCache.contains(spriteResourceID) == false)
 	{
@@ -47,44 +47,37 @@ RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Ve
 
 	this->spriteBatch->Begin(SpriteSortMode_Immediate, this->commonStates->NonPremultiplied(), nullptr, nullptr, nullptr);
 
-	// where and how big to draw the sprite
-	RECTF surfacef;
-	if (shouldCenter)
-	{
-		float halfSpriteWidth = pSpriteToDraw->getWidth() / 2.f;
-		float halfSpriteHeight = pSpriteToDraw->getHeight() / 2.f;
-		surfacef = { screenPosition.x - halfSpriteWidth, screenPosition.y - halfSpriteHeight, screenPosition.x + halfSpriteWidth, screenPosition.y + halfSpriteHeight };
-	}
-	else
-	{
-		surfacef = { screenPosition.x, screenPosition.y, screenPosition.x + pSpriteToDraw->getWidth(), screenPosition.y + pSpriteToDraw->getHeight()};
-	}
-	
+
 	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with ID: " << id, id = spriteResourceID);
-	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with left: " << left, left = surfacef.left);
-	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with top: " << top, top = surfacef.top);
-	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with right: " << right, right = surfacef.right);
-	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with bottom: " << bottom, bottom = surfacef.bottom);
+	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with left: " << left, left = screenPosition.x);
+	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with top: " << top, top = screenPosition.y);
 
 
-	this->spriteBatch->Draw(pSpriteToDraw->getTextureView(), RECT{std::lroundf(surfacef.left), std::lroundf(surfacef.top), std::lroundf(surfacef.right), std::lroundf(surfacef.bottom)});
+	SimpleMath::Vector2 origin = shouldCenter ? (SimpleMath::Vector2{ pSpriteToDraw->getWidth() / 2.f, pSpriteToDraw->getHeight() / 2.f}) : (SimpleMath::Vector2{0, 0});
+
+	this->spriteBatch->Draw(pSpriteToDraw->getTextureView(), screenPosition, NULL, spriteColor, 0.f, origin, spriteScale);
 
 	this->spriteBatch->End();
 
-	return surfacef;
+
+	return { screenPosition.x, screenPosition.y, screenPosition.x + (pSpriteToDraw->getWidth() * spriteScale), screenPosition.y + (pSpriteToDraw->getHeight() * spriteScale) };
+
+
+
+
 }
 
 
 template<GameState::Value mGame>
-RECTF Renderer3DImpl<mGame>::drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale)
+RECTF Renderer3DImpl<mGame>::drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor)
 {
-	return drawSpriteImpl(spriteResourceID, screenPosition, spriteScale, false);
+	return drawSpriteImpl(spriteResourceID, screenPosition, spriteScale, spriteColor, false);
 }
 
 template<GameState::Value mGame>
-RECTF Renderer3DImpl<mGame>::drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale)
+RECTF Renderer3DImpl<mGame>::drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor)
 {
-	return drawSpriteImpl(spriteResourceID, screenPosition, spriteScale, true);
+	return drawSpriteImpl(spriteResourceID, screenPosition, spriteScale, spriteColor, true);
 }
 
 

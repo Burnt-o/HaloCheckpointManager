@@ -137,6 +137,18 @@
 			((display2DInfoFontColour, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
+	((waypoint3DGUIToggle, (ALL_SUPPORTED_GAMES)))\
+	((waypoint3DGUISettings, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIRenderRangeToggle, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIRenderRangeInput, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalSpriteColor, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalSpriteScale, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalLabelColor, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalLabelScale, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalDistanceColor, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalDistanceScale, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIGlobalDistancePrecision, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIList, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
@@ -193,9 +205,8 @@
 #define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
-	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((waypoint3DGUIToggle, (ALL_SUPPORTED_GAMES)))\
-	((waypoint3DGUIList, (ALL_SUPPORTED_GAMES)))
+	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))
+
 
 
 #ifdef HCM_DEBUG

@@ -31,8 +31,8 @@
 	}
 
 	std::shared_ptr<IModalDialogReturner<std::optional<Waypoint>>> ModalDialogFactory::makeEditOrAddWaypointDialog
-	(std::string dialogTitle, Waypoint defaultWaypoint, std::optional<SimpleMath::Vector3> playerPosition, bool canMeasureDistance)
+	(std::shared_ptr<RuntimeExceptionHandler> runtimeExceptionHandler, std::string dialogTitle, Waypoint defaultWaypoint, std::optional<SimpleMath::Vector3> playerPosition, bool canMeasureDistance)
 	{
 		PLOG_VERBOSE << "factory creating EditOrAddWaypointDialog";
-		return std::make_unique<EditOrAddWaypointDialog>(dialogTitle, defaultWaypoint, playerPosition, canMeasureDistance);
+		return std::make_unique<EditOrAddWaypointDialog>(runtimeExceptionHandler, dialogTitle, defaultWaypoint, playerPosition, canMeasureDistance);
 	}

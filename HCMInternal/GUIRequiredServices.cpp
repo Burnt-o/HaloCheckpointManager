@@ -307,6 +307,14 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::SetPlayerHealth}
 	},
 
+			{ GUIElementEnum::waypoint3DGUIToggle,
+{OptionalCheatEnum::Waypoint3D}
+			},
+
+			{ GUIElementEnum::waypoint3DGUIList,
+{OptionalCheatEnum::Waypoint3D}
+			},
+
 #ifdef HCM_DEBUG
 
 	{ GUIElementEnum::getObjectAddressGUI,
@@ -316,13 +324,7 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ConsoleCommand}
 	},
 
-		{ GUIElementEnum::waypoint3DGUIToggle,
-{OptionalCheatEnum::Waypoint3D} 
-		},
 
-				{ GUIElementEnum::waypoint3DGUIList,
-{OptionalCheatEnum::Waypoint3D}
-				},
 
 #endif
 

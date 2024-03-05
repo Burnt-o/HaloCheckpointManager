@@ -80,7 +80,7 @@ private:
 
 
 			lockOrThrow(modalDialogsWeak, modalDialogs);
-			auto maybeNewWaypoint = modalDialogs->showReturningDialog(ModalDialogFactory::makeEditOrAddWaypointDialog("Edit waypoint", wp, getPlayerPositionForDialog(), measurePlayerDistanceToObjectOptionalWeak.has_value()));
+			auto maybeNewWaypoint = modalDialogs->showReturningDialog(ModalDialogFactory::makeEditOrAddWaypointDialog(runtimeExceptions, "Edit waypoint", wp, getPlayerPositionForDialog(), measurePlayerDistanceToObjectOptionalWeak.has_value()));
 			
 			if (maybeNewWaypoint.has_value())
 			{
@@ -133,10 +133,28 @@ private:
 			lockOrThrow(mccStateHookWeak, mccStateHook);
 			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 
-			Waypoint defaultWaypoint = Waypoint({ 0,0,0 }, true, "label goes here", true);
+			auto defaultPosition = SimpleMath::Vector3{ 0,0,0 };
+			try
+			{
+				if (getPlayerDatumOptionalWeak.has_value() && getObjectPhysicsOptionalWeak.has_value())
+				{
+					lockOrThrow(getPlayerDatumOptionalWeak.value(), getPlayerDatum);
+					lockOrThrow(getObjectPhysicsOptionalWeak.value(), getObjectPhysics);
+					defaultPosition = *getObjectPhysics->getObjectPosition(getPlayerDatum->getPlayerDatum());
+				}
+				PLOG_ERROR << "error getting player position for new waypoint, continuing with 0,0,0";
+			}
+			catch (HCMRuntimeException ex)
+			{
+				ex.prepend("error getting player position for new waypoint, continuing with 0,0,0");
+				PLOG_ERROR << ex.what();
+			}
+
+
+			Waypoint defaultWaypoint = Waypoint(defaultPosition);
 
 			lockOrThrow(modalDialogsWeak, modalDialogs);
-			auto maybeNewWaypoint = modalDialogs->showReturningDialog(ModalDialogFactory::makeEditOrAddWaypointDialog("Add waypoint", defaultWaypoint, getPlayerPositionForDialog(), measurePlayerDistanceToObjectOptionalWeak.has_value()));
+			auto maybeNewWaypoint = modalDialogs->showReturningDialog(ModalDialogFactory::makeEditOrAddWaypointDialog(runtimeExceptions, "Add waypoint", defaultWaypoint, getPlayerPositionForDialog(), measurePlayerDistanceToObjectOptionalWeak.has_value()));
 
 			if (maybeNewWaypoint.has_value())
 			{
@@ -205,9 +223,8 @@ private:
 	
 			ScopedAtomicBool lockRender(renderingMutex);
 			LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
-			uint32_t textColor = 0xFF00FF00; // green. TODO: let user set desired colour.
 			constexpr int distancePrecision = 3; // TODO: let user set.
-			constexpr float fontBaseScale = 1.f; // TODO: let user set.
+
 
 
 			std::optional<std::shared_ptr<MeasurePlayerDistanceToObject>> measurePlayerDistanceToObjectLocked;
@@ -245,80 +262,102 @@ private:
 				PLOG_DEBUG << "lockedWaypointList.size(): " << lockedWaypointList.size();
 			}
 #endif
+
 		
 			for (auto& waypoint : lockedWaypointList)
 			{
-				if (waypoint.enabled == false) continue;
+				if (waypoint.waypointEnabled == false) continue;
 
 				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
 				if (screenPosition.z < 0 || screenPosition.z > 1) continue; // clipped
 
-				// render sprite
-				renderer->drawCenteredSprite(110, { screenPosition.x, screenPosition.y }, 1.f);
+				// test if filtered by render range
+				std::optional<float> distanceToCamera = std::nullopt; // optional so we can potentially reuse it later in distance measure text
+				if (measurePlayerDistanceToObjectLocked.has_value() && settings->waypoint3DRenderRangeToggle->GetValue())
+				{
+					distanceToCamera = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+					if (distanceToCamera.value() > settings->waypoint3DRenderRangeInput->GetValue()) continue; // beyond render range
+				}
 
-				// render label + distance measure
-				if (waypoint.label.empty() == false)
+				float renderVerticalOffset = 0.f;
+				constexpr float verticalpadding = 10.f;
+
+				// render sprite
+				if (waypoint.showSprite)
+				{
+					LOG_ONCE(PLOG_DEBUG << "rendering waypoint sprite");
+
+					auto& spriteScale = waypoint.spriteScaleUseGlobal ? settings->waypoint3DGlobalSpriteScale->GetValue() : waypoint.spriteScale;
+					auto& spriteColor = waypoint.spriteColorUseGlobal ? settings->waypoint3DGlobalSpriteColor->GetValue() : waypoint.spriteColor;
+
+					auto drawnRect = renderer->drawCenteredSprite(110, { screenPosition.x, screenPosition.y }, spriteScale, spriteColor);
+					
+					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * spriteScale));
+				}
+
+
+				//  render label
+				if (waypoint.showLabel && waypoint.label.empty() == false)
 				{
 					LOG_ONCE(PLOG_DEBUG << "rendering waypoint label");
-					float fontDistanceScale = fontBaseScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+
+					auto& labelScale = waypoint.labelScaleUseGlobal ? settings->waypoint3DGlobalLabelScale->GetValue() : waypoint.labelScale;
+					auto& labelColor = waypoint.labelColorUseGlobal ? settings->waypoint3DGlobalLabelColor->GetValue() : waypoint.labelColor;
+
+#ifdef HCM_DEBUG
+					if (GetKeyState('6') & 0x8000)
+					{
+						PLOG_DEBUG << "waypoint.labelColorUseGlobal: " << (waypoint.labelColorUseGlobal ? "true" : "false");
+					}
+#endif
+
+					float labelfontDistanceScale = labelScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
 
 					// draw main label text
-					RECTF labelTextRect = RenderTextHelper::drawCenteredOutlinedText(waypoint.label, {screenPosition.x, screenPosition.y}, textColor, fontDistanceScale);
-
-					// also draw distance measurement, rendering it BELOW the label text.
-					if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
-					{
-						LOG_ONCE(PLOG_DEBUG << "also rendering distance measure");
-						auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
-						if (distance.has_value())
-						{
-							// text drawn BELOW label text with (fontscale * 3px) vertical padding. 
-							RenderTextHelper::drawCenteredOutlinedText(
-								std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
-								{ screenPosition.x, labelTextRect.bottom + (fontDistanceScale * 3.f) }, 
-								textColor, 
-								fontDistanceScale);
-						}
-						else
-						{
-							RenderTextHelper::drawCenteredOutlinedText(
-								"Measurement Error", 
-								{ screenPosition.x + (labelTextRect.right - labelTextRect.left), labelTextRect.bottom + 5.f }, 
-								textColor,
-								fontDistanceScale);
-						}
-
-					}
+					auto drawnRect = RenderTextHelper::drawCenteredOutlinedText(
+						waypoint.label, 
+						{screenPosition.x, screenPosition.y + renderVerticalOffset}, 
+						ImGui::ColorConvertFloat4ToU32(labelColor), 
+						labelfontDistanceScale);
+					
+					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * labelScale));
 				}
-				else // render distance measure
+
+
+
+				// render distance measure
+				if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
 				{
 					LOG_ONCE(PLOG_DEBUG << "rendering distance measure only");
-					// Only draw distance measurement. Draws distance text directly on screen position since there's no label to place it below.
 
-					if (waypoint.showDistance && measurePlayerDistanceToObjectLocked.has_value())
+					auto& distanceScale = waypoint.distanceScaleUseGlobal ? settings->waypoint3DGlobalDistanceScale->GetValue() : waypoint.distanceScale;
+					auto& distanceColor = waypoint.distanceColorUseGlobal ? settings->waypoint3DGlobalDistanceColor->GetValue() : waypoint.distanceColor;
+
+					float distancefontDistanceScale = distanceScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+
+					// reuse distance from render range test, if we did it
+					auto distance = distanceToCamera.has_value() ? distanceToCamera.value() : measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+					if (distance.has_value())
 					{
-						float fontDistanceScale = fontBaseScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
+						auto distancePrecision = waypoint.distancePrecisionUseGlobal ? settings->waypoint3DGlobalDistancePrecision->GetValue() : waypoint.distancePrecision;
 
-						auto distance = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
-						if (distance.has_value())
-						{
-							RenderTextHelper::drawCenteredOutlinedText(
-								std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
-								{ screenPosition.x, screenPosition.y }, 
-								textColor, 
-								fontDistanceScale);
-						}
-						else
-						{
-							RenderTextHelper::drawCenteredOutlinedText(
-								"Measurement Error", 
-								{ screenPosition.x, screenPosition.y }, 
-								textColor, 
-								fontDistanceScale);
-						}
-
+						RenderTextHelper::drawCenteredOutlinedText(
+							std::format("{} units", to_string_with_precision(distance.value(), distancePrecision)), 
+							{ screenPosition.x, screenPosition.y + renderVerticalOffset }, 
+							ImGui::ColorConvertFloat4ToU32(distanceColor),
+							distancefontDistanceScale);
 					}
+					else
+					{
+						RenderTextHelper::drawCenteredOutlinedText(
+							"Measurement Error", 
+							{ screenPosition.x, screenPosition.y + renderVerticalOffset }, 
+							ImGui::ColorConvertFloat4ToU32(distanceColor),
+							distancefontDistanceScale);
+					}
+
 				}
+				
 			
 			}
 		}

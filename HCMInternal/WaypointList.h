@@ -8,13 +8,28 @@
 struct Waypoint {
 	// data
 	SimpleMath::Vector3 position;
-	bool showDistance;
-	std::string label;
-	bool enabled;
+	std::string label = "unlabeled";
+	bool waypointEnabled = true;
+	bool showSprite = true;
+	bool showLabel = true;
+	bool showDistance = true;
+	bool spriteColorUseGlobal = true;
+	bool spriteScaleUseGlobal = true;
+	bool labelColorUseGlobal = true;
+	bool labelScaleUseGlobal = true;
+	bool distanceColorUseGlobal = true;
+	bool distanceScaleUseGlobal = true;
+	bool distancePrecisionUseGlobal = true;
+	SimpleMath::Vector4 spriteColor = {1.f, 0.5f, 0.f, 1.f}; // orange
+	SimpleMath::Vector4 labelColor = { 0.f, 1.f, 0.f, 1.f }; // green
+	SimpleMath::Vector4 distanceColor = { 0.f, 1.f, 0.f, 1.f }; // green
+	float spriteScale = 1.f;
+	float labelScale = 1.f;
+	float distanceScale = 1.f;
+	int distancePrecision = 3;
 
-
-	Waypoint(SimpleMath::Vector3 pos, bool showDis, std::string lab, bool startEnabled)
-		: position(pos), showDistance(showDis), label(lab), enabled(startEnabled)
+	Waypoint(SimpleMath::Vector3 pos)
+		: position(pos)
 	{}
 
 
@@ -39,7 +54,7 @@ public:
 #ifdef HCM_DEBUG
 	WaypointList()
 	{
-		list = { Waypoint{{14.671300, -95.203300, -73.22693634}, true, "Hello World!", true} }; // add single test waypoint at keyes start
+		list = { Waypoint{{14.671300, -95.203300, -73.22693634}} }; // add single test waypoint at keyes start
 	}
 #else
 	WaypointList() = default; // list starts empty

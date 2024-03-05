@@ -46,6 +46,7 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraAnchorFOVToObjectDistanceHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> hideHUDToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> setPlayerHealthEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> toggleWaypoint3DHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -1091,6 +1092,70 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(waypoint3DToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> waypoint3DRenderRangeToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(waypoint3DRenderRangeToggle)
+		);
+
+	std::shared_ptr<BinarySetting<float>> waypoint3DRenderRangeInput = std::make_shared<BinarySetting<float>>
+		(
+			100.f,
+			[](float in) { return in > 0.f; },
+			nameof(waypoint3DRenderRangeInput)
+		);
+
+	std::shared_ptr<BinarySetting<float>> waypoint3DGlobalSpriteScale = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in > 0.f; },
+			nameof(waypoint3DGlobalSpriteScale)
+		);
+
+	std::shared_ptr<BinarySetting<float>> waypoint3DGlobalLabelScale = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in > 0.f; },
+			nameof(waypoint3DGlobalLabelScale)
+		);
+
+	std::shared_ptr<BinarySetting<float>> waypoint3DGlobalDistanceScale = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in > 0.f; },
+			nameof(waypoint3DGlobalDistanceScale)
+		);
+
+	std::shared_ptr<BinarySetting<int>> waypoint3DGlobalDistancePrecision = std::make_shared<BinarySetting<int>>
+		(
+			3,
+			[](int in) { return in > 0; },
+			nameof(waypoint3DGlobalDistancePrecision)
+		);
+
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> waypoint3DGlobalSpriteColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{1.f, 0.5f, 0.f, 1.f}, // orange
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(waypoint3DGlobalSpriteColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> waypoint3DGlobalLabelColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{ 0.f, 1.f, 0.f, 1.f }, // green
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(waypoint3DGlobalLabelColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> waypoint3DGlobalDistanceColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{ 0.f, 1.f, 0.f, 1.f }, // green
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(waypoint3DGlobalDistanceColor)
 		);
 
 	std::shared_ptr<UnarySetting<WaypointList>> waypoint3DList = std::make_shared<UnarySetting<WaypointList>>

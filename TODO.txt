@@ -9,33 +9,17 @@ compiler warning pass
 linter pass
 
 
+** FIX SHOW OPTIONAL CHEAT FAILURES BUTTON**
+
 Waypoint3D:
- * Add waypoint options for 
-	* Show Sprite
-	* Show Label
-	* Sprite Colour (or global)
-	* Sprite Scale (or global)
-	* Label Colour (or global)
-	* Label Scale (or global)
-	* Distance Colour (or global)
-	* Distance Scale (or global)
-	* Copy to clipboard
-	* Paste from clipboard
- * Make add waypoint default to filling with current player position
- * WaypointList gui:
-	* no longer it's own subheading, put inside a settings subheading
-	* Add global options for Sprite/Label/Distance Colour/Scale
-	* Add render distance filter (and how many filtered)
+	* Add "Waypoint List" label at top of list 
+	* Show how many waypoints are filtered by the render filter
 	* Add index before each waypoint (pad to 3 char - who's gonna use more than 999 waypoints?)
-	* Copy list to clipboard
-	* Paste list from clipboard
-	* Button to offset waypoint render position by camera height when in first person (need a service to measure this lmao)
- * Add hotkey for waypoint toggle
- * Finish waypoint deserialisation
- * Change default sprite to something less fucking ugly
- * Offset Label/Distance text by sprite height
-
-
+	* toggle/functionality to offset waypoint render position by camera height when in first person (need a service to measure this lmao)
+	* Finish waypoint deserialisation
+	* Add camera data for non h1/h2 game
+	* Waypoints z depth issues: they just render in order in list when ideally they'd be ordered by distance
+	* Setup GUIRequiredServices for rest of waypoint GUI elements
 
 
 
