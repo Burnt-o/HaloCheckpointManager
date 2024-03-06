@@ -29,6 +29,7 @@
 #include "GUIVec2.h"
 #include "GUIButtonAndInt.h"
 #include "GUIWaypointList.h"
+#include "GUITogglePointer.h"
 
 
 
@@ -109,30 +110,6 @@ private:
 #define createNestedElement(elementEnum) createGUIElementAndStoreResult(elementEnum, game, guireq, fail, info, settings) // optional nested element, recursively calls this function
 
 
-
-
-			/*
-			 
-Helper "macro" for making free Camera interpolator cases. I could've written this as a real macro, in fact I did initially, but realised pretty soon that it would've been an ABSOLUTE nightmare to debug issues with.
-So instead I just find&replace on below text with ZZname and YYtype.
-
-
-case GUIElementEnum::freeCameraZZnameYYtypeInterpolator:
-return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<FreeCameraInterpolationTypesEnum>>
-	(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), std::nullopt, "YYtype Interpolation Style##ZZname"  settings->freeCameraZZnameYYtypeInterpolator,
-			vectorOfHeaderChildElements
-			{
-				headerChildElements{},
-				headerChildElements{createNestedElement(GUIElementEnum::freeCameraZZnameYYtypeInterpolatorLinearFactor)}
-			}
-			));
-
-case GUIElementEnum::freeCameraZZnameYYtypeInterpolatorLinearFactor:
-return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-	(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), std::nullopt, "Snap Factor##ZZnameYYtype", settings->freeCameraZZnameYYtypeInterpolatorLinearFactor));
-			
-			
-			*/
 
 
 			// ALL GUI ELEMENTS MUST HAVE A CASE HERE, TOP LEVEL OR NOT

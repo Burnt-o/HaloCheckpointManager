@@ -4,6 +4,8 @@
 #include "ISettingsSerialiser.h"
 #include "GUIServiceInfo.h"
 #include "WaypointList.h"
+#include "PointerSetting.h"
+#include "PointerManager.h" // TODO: only need this for PointerSettings, replace with PointerSettingFactory later
 
 class SettingsStateAndEvents
 {
@@ -11,14 +13,19 @@ private:
 	std::shared_ptr<ISettingsSerialiser> mSerialiser;
 
 public:
-	SettingsStateAndEvents(std::shared_ptr<ISettingsSerialiser> serialiser)
-		: mSerialiser(serialiser)
+	SettingsStateAndEvents(std::shared_ptr<ISettingsSerialiser> serialiser, std::shared_ptr<PointerManager> pointerManager)
+		: mSerialiser(serialiser),
+		// Construct pointerSettings
+		acrophobiaSkullPointerSetting(std::make_shared<PointerSetting<bool>>("acrophobiaSkullPointerSetting", pointerManager,
+			std::vector<GameState>{ GameState::Value::Halo1 }))
 	{ 
+		// deserialise (load) serialisable options
 		mSerialiser->deserialise(allSerialisableOptions); 
-	
+
 	}
 	~SettingsStateAndEvents() {
 		PLOG_DEBUG << "~SettingsStateAndEvents()";
+		// serialise (save) serialisable options
 		mSerialiser->serialise(allSerialisableOptions); 
 	};
 
@@ -1301,5 +1308,10 @@ public:
 		setPlayerHealthVec2
 
 	};
+
+
+	// pointerSettings
+	// gsl::not_null to make sure you don't forget to go construct them in the SettingsStateAndEvents constructor
+	gsl::not_null<std::shared_ptr<PointerSetting<bool>>> acrophobiaSkullPointerSetting;
 };
 

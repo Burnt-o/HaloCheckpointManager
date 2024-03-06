@@ -234,12 +234,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GUITogglePointer.h" />
     <ClInclude Include="GUIWaypointList.h" />
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
     <ClInclude Include="ModalDialogFactory.h" />
+    <ClInclude Include="PointerSetting.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
@@ -436,6 +438,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
+    <ClCompile Include="PointerSetting.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
     <ClCompile Include="Renderer3DImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

@@ -677,6 +677,12 @@
     <ClInclude Include="UnarySetting.h">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClInclude>
+    <ClInclude Include="PointerSetting.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITogglePointer.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -965,6 +971,9 @@
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
     <ClCompile Include="UnarySetting.cpp">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="PointerSetting.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
   </ItemGroup>
