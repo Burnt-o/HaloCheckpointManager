@@ -22,7 +22,28 @@ Waypoint3D:
 	* Setup GUIRequiredServices for rest of waypoint GUI elements
 
 
-
+Skull Selector:
+	* Create a new kind of Setting, PointerSyncedSetting
+		* instead of the value being in our control, it reads off a multilevel pointer of game memory
+			* Constructor is passed a string of pointer name, and ref to PointerManager. Creates internal impl of itself for each gamestate. 
+			* (SettingsStateAndEvents will now need ref to PointerManager but thats fine).
+			* Constructor failure sets impl std::optional<MultilevelPointer> to std::nullopt, and sets an impl "last error" string (private, with const get accessor). 
+				* Constructor DOES NOT THROW
+			* When GUIElementConstructor constructs the GUIElement, passing it in the PointerSyncedSetting, the GUIElement constructor itself checks if the PointerSyncedSetting->thisGameImpl->std::optional<MultilevelPointer> is nullopt 
+								(via bool accessor ofc, it shouldn't know about pointer internals).
+				* If it is nullopt, GUIElement constructor throws HCMInitException, prepending the "last error" string.
+		* PointerSyncedSetting<T> provides get and set funcs for the data
+			* Get returns std::optional<T> (in case of multilevel pointer failure, or constructor failure that was somehow ignored)
+			* Set returns bool for success (GUI ought to confirm Get is not std::nullopt before doing Set but no biggie if not)
+		* No serialisation.
+	* Then I just need to RE all the flags and bits.
+		* Speaking of bits: should I bother making a MultiLevelPointer extension for representing a byte+bit address (as opposed to usual byte only)?
+			* There are a couple of previously implemented things I could update to use this.
+			* Makes maintaining the InternalPointerData.xml simpler.
+			* Also makes using the pointer much simpler.
+	* GUI should include some obvious warnings about
+		* Performance maybe sucking while rendering the toggles (er, need to check if it does indeed suck or not. Maybe it's fine)
+		* Checkpoint stores/loads skull state
 
 
 
@@ -38,7 +59,7 @@ freeCamera for h3, 0d, hr, h4
 freeCamera automation stuff 
 freeCamera velocity-based interpolator (and maintain/set velocity stuff)
 3d object info overlay
-skull selection (or at least just acrophobia toggle)
+
 trigger overlay
 sprint meter
 
