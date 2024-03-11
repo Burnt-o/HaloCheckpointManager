@@ -230,6 +230,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BitBool.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />

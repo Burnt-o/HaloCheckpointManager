@@ -6,9 +6,9 @@
 
 
 
-
 // base class
 class MultilevelPointer {
+
 private:
 
 	// Common to all multilevel_pointers
@@ -25,6 +25,7 @@ protected:
 		mLastError.str("");
 		return &mLastError;
 	}
+
 
 public:
 
@@ -152,6 +153,9 @@ public:
 
 	}
 
+	bitOffsetT mBitOffset;
+	const bitOffsetT getBitOffset() { return mBitOffset; }
+	MultilevelPointer(bitOffsetT bitOffset) : mBitOffset(bitOffset) {}
 };
 
 
@@ -161,9 +165,11 @@ namespace MultilevelPointerSpecialisation // So we don't pollute global namespac
 	private:
 		const std::vector<int64_t> mOffsets;
 		static void* mEXEAddress;
+
 	public:
-		explicit ExeOffset(const std::vector<int64_t> offsets) : mOffsets(offsets) {}
+		explicit ExeOffset(const std::vector<int64_t> offsets, bitOffsetT bitOffset = 0) : mOffsets(offsets), MultilevelPointer(bitOffset) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
+		const bitOffsetT getBitOffset() { return mBitOffset; }
 	};
 
 	class BaseOffset : public MultilevelPointer {
@@ -171,10 +177,11 @@ namespace MultilevelPointerSpecialisation // So we don't pollute global namespac
 		const std::vector<int64_t> mOffsets;
 		void* mBaseAddress;
 	public:
-		explicit BaseOffset(void* const& baseAddress, const std::vector<int64_t> offsets) : mBaseAddress(baseAddress), mOffsets(offsets) {}
+		explicit BaseOffset(void* const& baseAddress, const std::vector<int64_t> offsets, bitOffsetT bitOffset = 0) : mBaseAddress(baseAddress), mOffsets(offsets), MultilevelPointer(bitOffset) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
 		void updateBaseAddress(void* const& baseAddress);
 		void updateBaseAddress(uintptr_t const& baseAddress) { return updateBaseAddress((void*)baseAddress); }
+		const bitOffsetT getBitOffset() { return mBitOffset; }
 	};
 
 	class ModuleOffset : public MultilevelPointer {
@@ -182,17 +189,19 @@ namespace MultilevelPointerSpecialisation // So we don't pollute global namespac
 		const std::wstring mModuleName;
 		const std::vector<int64_t> mOffsets;
 	public:
-		explicit ModuleOffset(const std::wstring_view& moduleName, const std::vector<int64_t> offsets) : mModuleName(moduleName), mOffsets(offsets) {}
+		explicit ModuleOffset(const std::wstring_view& moduleName, const std::vector<int64_t> offsets, bitOffsetT bitOffset = 0) : mModuleName(moduleName), mOffsets(offsets), MultilevelPointer(bitOffset) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
 		std::wstring_view getModuleName() { return mModuleName; }
+		const bitOffsetT getBitOffset() { return mBitOffset; }
 	};
 
 	class Resolved : public MultilevelPointer {
 	private:
 		const void* mBaseAddress;
 	public:
-		explicit Resolved(void* const& baseAddress) : mBaseAddress(baseAddress) {}
+		explicit Resolved(void* const& baseAddress, bitOffsetT bitOffset = 0) : mBaseAddress(baseAddress), MultilevelPointer(bitOffset) {}
 		bool MultilevelPointer::resolve(uintptr_t* resolvedOut) const override;
+		const bitOffsetT getBitOffset() { return mBitOffset; }
 	};
 
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
 #include "PointerManager.h"
+#include "BitBool.h"
 
 // TODO: hide inclusion of PointerManager (need factory pattern)
 // Though to be honest I'm surprised I managed to get the templated virtual pimpl stuff to work so maybe I shouldn't push it
@@ -31,6 +32,7 @@ public:
 		virtual const std::optional<valueType> getCopy() = 0;
 		virtual std::optional<valueType*> getRef() = 0;
 		virtual bool set(valueType value) = 0;
+		virtual std::optional<BitBool> getBitBool() = 0;
 		virtual std::string_view getLastError() = 0;
 	};
 
@@ -48,6 +50,8 @@ public:
 	const std::optional<valueType> getCopy(GameState gameImpl); // returns copy
 	std::optional<valueType*> getRef(GameState gameImpl); // returns mutable pointer
 	bool set(GameState gameImpl, valueType value); // returns whether successfully set
+	std::optional<BitBool> getBitBool(GameState gameImpl); // ignores valueType, returns as BitBool
     std::string_view getLastError(GameState gameImpl); // if constructor fails, set returns false, or getRef/getCopy return nullopt, getLastError will explain why
 	std::string_view getOptionName();
+
 };

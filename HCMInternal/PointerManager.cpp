@@ -606,14 +606,15 @@ std::vector<int64_t> getOffsetsFromXML(pugi::xml_node versionEntry)
 
 void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_node versionEntry, std::string entryType, DataKey dKey)
 {
-    
+    bitOffsetT bitOffset = versionEntry.child("BitOffset").text().as_int(0); // defaults to zero if "BitOffset" not present
+
 
     std::shared_ptr<MultilevelPointer> result;
     if (entryType == "MultilevelPointer::ExeOffset")
     {
         PLOG_DEBUG << "exeOffset";
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = std::make_shared<MultilevelPointerSpecialisation::ExeOffset>(offsets);
+        result = std::make_shared<MultilevelPointerSpecialisation::ExeOffset>(offsets, bitOffset);
 
     }
     else if (entryType == "MultilevelPointer::ModuleOffset")
@@ -621,7 +622,7 @@ void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_
         PLOG_DEBUG << "moduleOffset";
         std::string moduleString = versionEntry.child("Module").text().get();
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = std::make_shared < MultilevelPointerSpecialisation::ModuleOffset>(str_to_wstr(moduleString), offsets);
+        result = std::make_shared < MultilevelPointerSpecialisation::ModuleOffset>(str_to_wstr(moduleString), offsets, bitOffset);
 
         if (dKey._Get_rest()._Myfirst._Val.has_value() && dKey._Get_rest()._Myfirst._Val.value().toModuleName() != str_to_wstr(moduleString))
         {
@@ -634,7 +635,7 @@ void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_
     {
         PLOG_DEBUG << "baseOffset";
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = std::make_shared < MultilevelPointerSpecialisation::BaseOffset>(nullptr, offsets);
+        result = std::make_shared < MultilevelPointerSpecialisation::BaseOffset>(nullptr, offsets, bitOffset);
 
     }
     else

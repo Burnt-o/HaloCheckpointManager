@@ -128,6 +128,8 @@ struct RECTF
     float left, top, right, bottom;
 };
 
+typedef uint8_t bitOffsetT; // TODO: add constraint to this (0-7)
+
 #endif //PCH_H
 
 

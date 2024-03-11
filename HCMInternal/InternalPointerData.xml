@@ -7133,4 +7133,16 @@
 		</Version>
 	</VersionedEntry>
 
+
+	<VersionedEntry Name="acrophobiaSkullPointerSetting" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1C421D7</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+
+	</VersionedEntry>
+	
 </root>

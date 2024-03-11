@@ -32,6 +32,10 @@ public:
 				return std::nullopt;
 			}
 		}
+		else
+		{
+			return std::nullopt;
+		}
 	}
 	virtual bool set(valueType value) override
 	{
@@ -44,6 +48,26 @@ public:
 		else
 		{
 			return false;
+		}
+	}
+	virtual std::optional<BitBool> getBitBool()
+	{
+		if (successfullyConstructed())
+		{
+			uintptr_t resolvedOut;
+			if (pointerToData.value()->resolve(&resolvedOut))
+			{
+				return BitBool(resolvedOut, pointerToData.value()->getBitOffset());
+			}
+			else
+			{
+				lastError = MultilevelPointer::GetLastError();
+				return std::nullopt;
+			}
+		}
+		else
+		{
+			return std::nullopt;
 		}
 	}
 	virtual std::string_view getLastError() override
@@ -130,6 +154,16 @@ std::string_view PointerSetting<valueType>::getOptionName()
 {
 	return optionName;
 }
+
+template <typename valueType>
+std::optional<BitBool> PointerSetting<valueType>::getBitBool(GameState gameImpl)
+{
+	if (pimplMap.contains(gameImpl))
+		return pimplMap.at(gameImpl)->getBitBool();
+	else
+		return std::nullopt;
+}
+
 
 // explicit template instantiation
 template class PointerSetting<bool>;

@@ -1468,6 +1468,7 @@ private:
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
+						createNestedElement(GUIElementEnum::acrophobiaGUI),
 						}));
 
 
@@ -1479,6 +1480,10 @@ private:
 				case GUIElementEnum::getObjectAddressGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
+
+				case GUIElementEnum::acrophobiaGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUITogglePointer<true, true>>
+						(game, ToolTipCollection(""), std::nullopt, "Acro test", settings->acrophobiaSkullPointerSetting));
 
 
 #endif

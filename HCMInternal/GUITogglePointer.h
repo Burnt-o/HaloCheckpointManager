@@ -1,8 +1,8 @@
 #pragma once
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
-
-template< bool shouldRenderHotkey>
+#include "BitBool.h"
+template< bool shouldRenderHotkey, bool isBitOffset>
 class GUITogglePointer : public IGUIElement {
 
 private:
@@ -15,9 +15,13 @@ public:
 	GUITogglePointer(GameState implGame, ToolTipCollection tooltip, std::optional<RebindableHotkeyEnum> hotkey, std::string toggleText, std::shared_ptr<PointerSetting<bool>> optionTogglePointer)
 		: IGUIElement(implGame, hotkey, tooltip), mToggleText(toggleText), mOptionTogglePointerWeak(optionTogglePointer)
 	{
-		if (mToggleText.empty()) throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");
+		if (mOptionTogglePointerWeak.lock()->successfullyConstructed(implGame) == false)
+			throw HCMInitException(std::format("Could not construct {}: {}", getName(), mOptionTogglePointerWeak.lock()->getLastError(implGame)));
+		if (mToggleText.empty()) 
+			throw HCMInitException("Cannot have empty toggle text (needs label for imgui ID system, use ## for invisible labels)");
+
 		PLOG_VERBOSE << "Constructing GUITogglePointer, name: " << getName();
-		PLOG_DEBUG << "mOptionTogglePointer.getOptionName: " << std::hex << mOptionToggleWeak.lock()->getOptionName();
+		PLOG_DEBUG << "mOptionTogglePointer.getOptionName: " << std::hex << mOptionTogglePointerWeak.lock()->getOptionName();
 		this->currentHeight = GUIFrameHeightWithSpacing;
 	}
 
@@ -38,15 +42,38 @@ public:
 			ImGui::SameLine();
 		}
 
-		auto resolvedDataPointer = mOptionTogglePointer->getRef(mImplGame);
-		if (resolvedDataPointer = std::nullopt)
+		if constexpr (isBitOffset)
 		{
-			ImGui::Text(std::format("{} error: {}", mToggleText, mOptionTogglePointer->getLastError()));
+			auto bitBool = mOptionTogglePointer->getBitBool(mImplGame);
+			if (bitBool == std::nullopt)
+			{
+				ImGui::Text(std::format("{} error: {}", mToggleText, mOptionTogglePointer->getLastError(mImplGame)).c_str());
+			}
+			else
+			{
+				bool tempValue = bitBool.value().operator const bool();
+				if (ImGui::Checkbox(mToggleText.c_str(), &tempValue))
+				{
+					bitBool.value().set(tempValue);
+				}
+
+			}
+
 		}
 		else
 		{
-			ImGui::Checkbox(mToggleText.c_str(), resolvedDataPointer.value());
+			auto resolvedDataPointer = mOptionTogglePointer->getRef(mImplGame);
+			if (resolvedDataPointer == std::nullopt)
+			{
+				ImGui::Text(std::format("{} error: {}", mToggleText, mOptionTogglePointer->getLastError(mImplGame)).c_str());
+			}
+			else
+			{
+				ImGui::Checkbox(mToggleText.c_str(), resolvedDataPointer.value());
+			}
 		}
+
+
 
 		renderTooltip();
 		DEBUG_GUI_HEIGHT;
