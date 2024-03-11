@@ -159,7 +159,7 @@ namespace HCMExternal.Services.MCCHookService
                     break;
 
                 case MCCHookStateEnum.InternalInjecting:
-                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup();
+                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((UInt32)MCCHookState.MCCProcess?.Id);
                     
 
                     if (injectionResult.successFlag)

@@ -20,7 +20,6 @@ public:
 // Forward declaration
 
 
-DWORD findMCCProcessID();
 void InjectModule(DWORD pid, std::string dllFilePath);
 bool processContainsModule(DWORD pid, std::wstring moduleName);
 
@@ -30,7 +29,7 @@ constexpr WCHAR wdllChars[] = L"HCMInternal.dll";
 
 
 
-bool SetupInternal(char* errorMessage, int errorMessageCapacity)
+bool SetupInternal(DWORD mccPID, char* errorMessage, int errorMessageCapacity)
 {
 	PLOG_DEBUG << "SetupInternal running";
 	try
@@ -68,11 +67,9 @@ bool SetupInternal(char* errorMessage, int errorMessageCapacity)
 
 		PLOG_DEBUG << "Found HCMInternal.dll at " << dllFilePath;
 
-		// find mcc process (loop if we can't find it)
-		DWORD mccPID = findMCCProcessID();
-		if (!mccPID) throw InjectionException("Could not find MCC process!");
+		if (!mccPID) throw InjectionException("Was passed null mcc process ID!");
 
-		PLOG_INFO << "Found MCC process! ID: 0x" << std::hex << mccPID;
+		PLOG_INFO << "Given MCC process ID: 0x" << std::hex << mccPID;
 
 		InjectModule(mccPID, dllFilePath);
 		
@@ -97,50 +94,6 @@ bool SetupInternal(char* errorMessage, int errorMessageCapacity)
 		return false;
 	}
 
-}
-
-
-
-
-
-
-
-
-DWORD findMCCProcessID()
-{
-	constexpr std::array targetProcessNames{ L"MCC-Win64-Shipping.exe", L"MCCWinStore-Win64-Shipping.exe" };
-
-	// Get a snapshot of running processes
-	HandlePtr hSnap(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL));
-
-	// Success check on the snapshot tool.
-	if (hSnap.get() == INVALID_HANDLE_VALUE) {
-		throw InjectionException(std::format("Failed to get snapshot of running processes: {}", GetLastError()).c_str());
-	}
-
-	// PROCESSENTRY32 is used to open and get information about a running process..
-	PROCESSENTRY32 entry;
-	entry.dwSize = sizeof(PROCESSENTRY32);
-
-	// If a first process exist (there are running processes), iterate through
-	// all running processes.
-	if (Process32First(hSnap.get(), &entry)) {
-		do
-		{
-			for (auto targetProcName : targetProcessNames)
-			{
-				// If the current process entry is the target process, return its ID (ignore case)
-				if (_wcsicmp(entry.szExeFile, targetProcName) == 0)
-				{
-					return entry.th32ProcessID;
-				}
-			}
-
-		} while (Process32Next(hSnap.get(), &entry));        // Move on to the next running process.
-	}
-
-
-	return 0;
 }
 
 
