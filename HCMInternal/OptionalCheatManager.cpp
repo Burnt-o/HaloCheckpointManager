@@ -64,6 +64,7 @@
 #include "Waypoint3D.h"
 #include "Render3DEventProvider.h"
 #include "MeasurePlayerDistanceToObject.h"
+#include "SkullToggler.h"
 
 #include "DIContainer.h"
 #include "map.h"

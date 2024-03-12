@@ -1,13 +1,13 @@
 #pragma once
 #include "pch.h"
 
-class BitBool
+class BitBoolPointer
 {
 private:
 	uintptr_t mpData;
 	bitOffsetT mBitOffset;
 public:
-	BitBool(uintptr_t pData, bitOffsetT bitOffset) : mpData(pData), mBitOffset(bitOffset) {}
+	BitBoolPointer(uintptr_t pData, bitOffsetT bitOffset) : mpData(pData), mBitOffset(bitOffset) {}
 	explicit operator bool const()
 	{
 		return ((*(byte*)mpData) >> mBitOffset) & 1;
@@ -20,4 +20,10 @@ public:
 		else
 			*(byte*)mpData = *(byte*)mpData & ~(1 << mBitOffset);
 	}
+
+	void updateAddress(uintptr_t pData)
+	{
+		mpData = pData;
+	}
+
 };

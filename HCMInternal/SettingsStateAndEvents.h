@@ -4,8 +4,8 @@
 #include "ISettingsSerialiser.h"
 #include "GUIServiceInfo.h"
 #include "WaypointList.h"
-#include "PointerSetting.h"
-#include "PointerManager.h" // TODO: only need this for PointerSettings, replace with PointerSettingFactory later
+#include "SkullEnum.h"
+#include "BitBoolPointer.h"
 
 class SettingsStateAndEvents
 {
@@ -13,11 +13,8 @@ private:
 	std::shared_ptr<ISettingsSerialiser> mSerialiser;
 
 public:
-	SettingsStateAndEvents(std::shared_ptr<ISettingsSerialiser> serialiser, std::shared_ptr<PointerManager> pointerManager)
-		: mSerialiser(serialiser),
-		// Construct pointerSettings
-		acrophobiaSkullPointerSetting(std::make_shared<PointerSetting<bool>>("acrophobiaSkullPointerSetting", pointerManager,
-			std::vector<GameState>{ GameState::Value::Halo1 }))
+	SettingsStateAndEvents(std::shared_ptr<ISettingsSerialiser> serialiser)
+		: mSerialiser(serialiser)
 	{ 
 		// deserialise (load) serialisable options
 		mSerialiser->deserialise(allSerialisableOptions); 
@@ -101,6 +98,17 @@ public:
 	std::shared_ptr<WaypointAndListEvent> deleteWaypointEvent = std::make_shared<WaypointAndListEvent>();
 	std::shared_ptr<WaypointAndListEvent> editWaypointEvent = std::make_shared<WaypointAndListEvent>();
 	std::shared_ptr<WaypointListEvent> addWaypointEvent = std::make_shared<WaypointListEvent>();
+
+
+	// skulls
+	std::shared_ptr<eventpp::CallbackList<void(GameState)>> updateSkullBitBoolCollectionEvent = std::make_shared<eventpp::CallbackList<void(GameState)>>(); // called by GUI to tell SkullToggler to update pointer data
+	std::map<SkullEnum, BitBoolPointer> skullBitBoolCollection; // pointer data is cached and updated on MCC gamestate change
+	std::atomic_bool skullBitBoolCollectionInUse = false; // locked while cache is being updated or in use by gui
+
+
+	// hotkeys for each skull
+	// TODO
+
 
 	// settings
 	std::shared_ptr<BinarySetting<bool>> GUIWindowOpen = std::make_shared<BinarySetting<bool>>
@@ -1310,8 +1318,5 @@ public:
 	};
 
 
-	// pointerSettings
-	// gsl::not_null to make sure you don't forget to go construct them in the SettingsStateAndEvents constructor
-	gsl::not_null<std::shared_ptr<PointerSetting<bool>>> acrophobiaSkullPointerSetting;
 };
 

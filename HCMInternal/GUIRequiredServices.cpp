@@ -315,6 +315,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::Waypoint3D}
 			},
 
+		{ GUIElementEnum::skullToggleGUI,
+{OptionalCheatEnum::SkullToggler}
+		},
+
 #ifdef HCM_DEBUG
 
 	{ GUIElementEnum::getObjectAddressGUI,

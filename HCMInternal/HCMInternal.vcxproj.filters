@@ -71,6 +71,9 @@
     <Filter Include="Services\GUI\ModalDialogs">
       <UniqueIdentifier>{81ff9a9b-365d-4e9d-96b9-12e59d6880b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\Skulls">
+      <UniqueIdentifier>{3736243c-8af8-4c62-825e-52c84c5f52dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -677,14 +680,17 @@
     <ClInclude Include="UnarySetting.h">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClInclude>
-    <ClInclude Include="PointerSetting.h">
-      <Filter>Services\SettingsStateAndEvents</Filter>
+    <ClInclude Include="BitBoolPointer.h">
+      <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="GUITogglePointer.h">
+    <ClInclude Include="GUISkullToggle.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="BitBool.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="SkullEnum.h">
+      <Filter>Services\OptionalCheats\Implementations\Skulls</Filter>
+    </ClInclude>
+    <ClInclude Include="SkullToggler.h">
+      <Filter>Services\OptionalCheats\Implementations\Skulls</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -976,8 +982,8 @@
     <ClCompile Include="UnarySetting.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
-    <ClCompile Include="PointerSetting.cpp">
-      <Filter>Services\SettingsStateAndEvents</Filter>
+    <ClCompile Include="SkullToggler.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Skulls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

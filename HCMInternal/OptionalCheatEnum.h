@@ -61,7 +61,8 @@ OBSBypassCheck,\
 SetPlayerHealth,\
 Waypoint3D,\
 Render3DEventProvider,\
-MeasurePlayerDistanceToObject
+MeasurePlayerDistanceToObject,\
+SkullToggler
 
 
 enum class OptionalCheatEnum {

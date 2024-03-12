@@ -100,6 +100,7 @@
 	((setPlayerHealthSubheadingGUI, (ALL_SUPPORTED_GAMES)))\
 		((setPlayerHealthGUI, (ALL_SUPPORTED_GAMES)))\
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
+	((skullToggleGUI, (ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
@@ -205,8 +206,7 @@
 #define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
-	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((acrophobiaGUI, (Halo1)))
+	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))
 
 
 

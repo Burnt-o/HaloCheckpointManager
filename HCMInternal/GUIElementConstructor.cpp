@@ -29,7 +29,7 @@
 #include "GUIVec2.h"
 #include "GUIButtonAndInt.h"
 #include "GUIWaypointList.h"
-#include "GUITogglePointer.h"
+#include "GUISkullToggle.h"
 
 
 
@@ -386,6 +386,7 @@ private:
 							createNestedElement(GUIElementEnum::forceLaunchSettingsSubheading),
 							createNestedElement(GUIElementEnum::switchBSPGUI),
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
+							createNestedElement(GUIElementEnum::skullToggleGUI),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -602,6 +603,12 @@ private:
 							settings->setPlayerHealthVec2,
 							"Health ##setPlayerHealthValue",
 							"Shields##setPlayerHealthValue"));
+
+				case GUIElementEnum::skullToggleGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISkullToggle<false>>
+						(game, ToolTipCollection("Set skull state. Note that skull state is saved/loaded by checkpoints"),
+							"Skull Toggles",
+							settings));
 
 
 
@@ -1468,7 +1475,6 @@ private:
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
-						createNestedElement(GUIElementEnum::acrophobiaGUI),
 						}));
 
 
@@ -1480,10 +1486,6 @@ private:
 				case GUIElementEnum::getObjectAddressGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
-
-				case GUIElementEnum::acrophobiaGUI:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUITogglePointer<true, true>>
-						(game, ToolTipCollection(""), std::nullopt, "Acro test", settings->acrophobiaSkullPointerSetting));
 
 
 #endif
