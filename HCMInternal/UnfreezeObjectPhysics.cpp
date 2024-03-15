@@ -24,7 +24,7 @@ public:
 		:
 		getObjectAddressWeak(resolveDependentCheat(GetObjectAddress))
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		bipedDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
 		freezeFlagBit = *ptr->getData<std::shared_ptr<int64_t>>(nameof(freezeFlagBit), game).get();

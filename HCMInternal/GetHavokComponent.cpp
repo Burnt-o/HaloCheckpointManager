@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetHavokComponent.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MultilevelPointer.h"
 #include "IMCCStateHook.h"
 #include "DynamicStructFactory.h"
@@ -37,7 +37,7 @@ public:
 		: mGame(game),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); })
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		havokComponentMetaTableHeader = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(havokComponentMetaTableHeader), game);
 		havokComponentMetaStride = *ptr->getData<std::shared_ptr<int64_t>>(nameof(havokComponentMetaStride), game).get();
 		havokComponentMetaTableHeaderData = DynamicStructFactory::make<havokComponentMetaTableHeaderFields>(ptr, game);

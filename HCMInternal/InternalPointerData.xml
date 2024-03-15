@@ -7231,7 +7231,7 @@
 	
 	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo1">
-			<Base>skullAcrophobiaPointer</Base> <!--pointer won't be constructed if PointerManager can't find game+version combo of base-->
+			<Base>skullAcrophobiaPointer</Base> <!--pointer won't be constructed if PointerDataStore can't find game+version combo of base-->
 			<LastOffsetAdjustment>-0xE</LastOffsetAdjustment> <!--optional, can be neg. Adjusts last offset only-->
 		</Version>
 	</VersionedEntry>

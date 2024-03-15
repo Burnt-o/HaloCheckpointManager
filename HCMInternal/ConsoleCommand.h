@@ -5,7 +5,7 @@
 #include "DIContainer.h"
 #include "IMCCStateHook.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
@@ -88,7 +88,7 @@ public:
 
 	{
 		PLOG_VERBOSE << "constructing ConsoleCommand OptionalCheat for game: " << mGame.toString();
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		gameEnginePointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameEnginePointer));
 		sendCommandPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(sendCommandPointer), mGame);
 	}

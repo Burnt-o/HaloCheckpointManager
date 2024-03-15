@@ -226,8 +226,8 @@ void D3D11Hook::CreateDummySwapchain(IDXGISwapChain*& pDummySwapchain, ID3D11Dev
 }
 
 
-D3D11Hook::D3D11Hook(std::weak_ptr<PointerManager> pointerManager)
-	: pointerManagerWeak(pointerManager)
+D3D11Hook::D3D11Hook(std::weak_ptr<PointerDataStore> pointerDataStore)
+	: pointerDataStoreWeak(pointerDataStore)
 {
 
 	if (instance != nullptr)
@@ -512,7 +512,7 @@ void D3D11Hook::beginHook()
 
 	try
 	{
-		lockOrThrow(pointerManagerWeak, ptr);
+		lockOrThrow(pointerDataStoreWeak, ptr);
 
 		uintptr_t ppPresent;
 		uintptr_t ppResizeBuffers;
@@ -604,7 +604,7 @@ void D3D11Hook::setOBSBypass(bool enabled)
 			PLOG_INFO << "Freezing threads";
 			safetyhook::ThreadFreezer threadFreezer; // freeze threads while we create hook
 
-			lockOrThrow(pointerManagerWeak, ptr);
+			lockOrThrow(pointerDataStoreWeak, ptr);
 			auto dxgiInternalPresentFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(dxgiInternalPresentFunction));
 
 			// starts attached

@@ -2,7 +2,7 @@
 #include "ModuleHookManager.h"
 #include "MultilevelPointer.h"
 #include "GameState.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "RuntimeExceptionHandler.h"
 #include "MCCState.h"
 #include "IMCCStateHook.h"
@@ -41,7 +41,7 @@ private:
 	std::shared_ptr<eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedEvent = std::make_shared<eventpp::CallbackList<void(const MCCState&)>>();
 public:
 
-	explicit MCCStateHook(std::shared_ptr<PointerManager> ptrMan, std::shared_ptr<RuntimeExceptionHandler> exp)
+	explicit MCCStateHook(std::shared_ptr<PointerDataStore> ptrMan, std::shared_ptr<RuntimeExceptionHandler> exp)
 		: runtimeExceptions(exp),
 		currentMCCState(GameState::Value::Halo1, PlayState::MainMenu, LevelID::_map_id_halo1_pillar_of_autumn)
 	{

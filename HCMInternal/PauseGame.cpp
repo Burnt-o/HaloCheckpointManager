@@ -22,7 +22,7 @@ private:
 public:
 	std::map<GameState, HCMInitException> serviceFailures;
 
-	PauseGameImpl(std::shared_ptr<PointerManager> ptr)
+	PauseGameImpl(std::shared_ptr<PointerDataStore> ptr)
 	{
 		if (instance) throw HCMInitException("Cannot have more than one PauseGameImpl");
 
@@ -159,7 +159,7 @@ public:
 
 
 
-PauseGame::PauseGame(std::shared_ptr<PointerManager> ptr)
+PauseGame::PauseGame(std::shared_ptr<PointerDataStore> ptr)
 	: pimpl(std::make_shared< PauseGameImpl>(ptr)),
 	 overridePimpl(std::make_shared< OverridePauseGameImpl>(pimpl))
 

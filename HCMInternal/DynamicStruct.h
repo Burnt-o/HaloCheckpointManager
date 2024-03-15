@@ -1,9 +1,5 @@
 #pragma once
 
-// this might be more of a complicated macro than a class?
-// actually maybe more of an interface that defines what clients can DO with any given struct ..
-// ah bout what about accessing the fields? by.. enum? 
-// template by enum class?
 
 
 

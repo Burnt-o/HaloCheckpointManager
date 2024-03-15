@@ -7,7 +7,7 @@
 #include "MidhookContextInterpreter.h"
 #include "MidhookFlagInterpreter.h"
 #include "IMCCStateHook.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MultilevelPointer.h"
 #include "safetyhook.hpp"
 #include "IMakeOrGetCheat.h"
@@ -51,7 +51,7 @@ public:
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>())
 		
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		auto thirdPersonRenderingFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(thirdPersonRenderingFunction), game);
 		thirdPersonRenderingValueToSet = *ptr->getData<std::shared_ptr<int64_t>>(nameof(thirdPersonRenderingValueToSet), game).get();
@@ -123,7 +123,7 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		auto thirdPersonRenderingFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(thirdPersonRenderingFunction), game);
 		thirdPersonRenderingFlagInterpreter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(thirdPersonRenderingFlagInterpreter), game);
@@ -189,7 +189,7 @@ public:
 //	ThirdPersonRenderingContextImpl(GameState gameImpl, IDIContainer& dicon)
 //
 //	{
-//		auto ptr = dicon.Resolve<PointerManager>().lock();
+//		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 //
 //		auto thirdPersonRenderingFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(thirdPersonRenderingFunction), gameImpl);
 //		thirdPersonRenderingContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(thirdPersonRenderingContextInterpreter), gameImpl);

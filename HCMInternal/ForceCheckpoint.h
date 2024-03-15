@@ -5,7 +5,7 @@
 #include "DIContainer.h"
 #include "IMCCStateHook.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
@@ -68,7 +68,7 @@ public:
 		
 	{
 		PLOG_VERBOSE << "constructing ForceCheckpoint OptionalCheat for game: " << mGame.toString();
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		forceCheckpointFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>("forceCheckpointFlag", mGame);
 	}
 

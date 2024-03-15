@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetCurrentRNG.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class GetCurrentRNG::GetCurrentRNGImpl
 {
 private:
@@ -11,7 +11,7 @@ private:
 public:
 	GetCurrentRNGImpl(GameState game, IDIContainer& dicon)
 	{
-		currentRNG = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentRNG), game);
+		currentRNG = dicon.Resolve<PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentRNG), game);
 	}
 
 	DWORD getCurrentRNG()

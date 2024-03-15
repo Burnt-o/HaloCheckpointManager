@@ -3,7 +3,7 @@
 #include "GameState.h"
 #include "SettingsStateAndEvents.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "IMessagesGUI.h"
 #include "IOptionalCheat.h"
 #include "DIContainer.h"
@@ -335,7 +335,7 @@ private:
 			getMCCVerWeak(dicon.Resolve<IGetMCCVersion>()),
 			checkpointInjectionLogger(dicon.Resolve<DirPathContainer>().lock()->dirPath)
 		{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		mInjectRequirements = ptr->getData<std::shared_ptr<InjectRequirements>>("injectRequirements", game);
 		mCheckpointLength = ptr->getData< std::shared_ptr<int64_t>>("checkpointLength", game);

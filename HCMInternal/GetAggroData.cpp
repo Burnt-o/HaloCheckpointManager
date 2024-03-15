@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetAggroData.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 class GetAggroData::GetAggroDataImpl
 {
@@ -16,7 +16,7 @@ private:
 public:
 	GetAggroDataImpl(GameState gameImpl, IDIContainer& dicon)
 	{
-		auto ptr = dicon.Resolve < PointerManager>().lock();
+		auto ptr = dicon.Resolve < PointerDataStore>().lock();
 		aggroLevel = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(aggroLevel), gameImpl);
 		aggroDecayTimer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(aggroDecayTimer), gameImpl);
 		playerHasAggro = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(playerHasAggro), gameImpl);

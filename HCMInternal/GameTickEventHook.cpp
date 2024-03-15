@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GameTickEventHook.h"
 #include "ModuleHook.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 
 
@@ -31,7 +31,7 @@ public:
 	GameTickEventHookTemplated(GameState game, IDIContainer& dicon) : mGame(game)
 	{
 		if (instance) throw HCMInitException("Cannot have more than one GameTickEventHookTemplated per game");
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto tickIncrementFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickIncrementFunction), game);
 		tickCounter = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickCounter), game);
 		tickIncrementHook = ModuleMidHook::make(game.toModuleName(), tickIncrementFunction, tickIncrementHookFunction); 

@@ -87,13 +87,13 @@ private:
 	// This collection is the central owner keeping all the optional cheats alive until HCM shuts down. 
 		// Once the OptionalCheatManager goes out of scope in App.h, the OptionalCheatStore destructor will be called, this cheatCollection will be reset, and thus all the IOptionalCheats will in turn have their destructors called etc etc
 	std::shared_ptr<CheatCollection> cheatCollection = std::make_shared<CheatCollection>();
-	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerManager, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, ModalDialogRenderer, ControlServiceContainer, RenderEvent, DirectXRenderEvent, HotkeyDefinitions> dicon;
+	DIContainer<IMakeOrGetCheat, SettingsStateAndEvents, PointerDataStore, IGetMCCVersion, IMCCStateHook, ISharedMemory, IMessagesGUI, RuntimeExceptionHandler, DirPathContainer, ModalDialogRenderer, ControlServiceContainer, RenderEvent, DirectXRenderEvent, HotkeyDefinitions> dicon;
 
 
 public:
 	OptionalCheatStore(std::shared_ptr<IMakeOrGetCheat> cheatConstructor, 
 		std::shared_ptr<SettingsStateAndEvents> settings,
-		std::shared_ptr<PointerManager> ptr,
+		std::shared_ptr<PointerDataStore> ptr,
 		std::shared_ptr<IGetMCCVersion> ver,
 		std::shared_ptr<IMCCStateHook> mccStateHook,
 		std::shared_ptr<ISharedMemory> sharedMem,
@@ -206,7 +206,7 @@ public:
 OptionalCheatManager::OptionalCheatManager(std::shared_ptr<IGUIRequiredServices> reqSer, std::shared_ptr<OptionalCheatInfo> info,
 	/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
 	std::shared_ptr<SettingsStateAndEvents> settings,
-	std::shared_ptr<PointerManager> ptr, 
+	std::shared_ptr<PointerDataStore> ptr, 
 	std::shared_ptr<IGetMCCVersion> ver, 
 	std::shared_ptr<IMCCStateHook> mccStateHook, 
 	std::shared_ptr<ISharedMemory> sharedMem, 

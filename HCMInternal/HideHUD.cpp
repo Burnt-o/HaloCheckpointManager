@@ -3,7 +3,7 @@
 #include "ModuleHook.h"
 #include "MidhookFlagInterpreter.h"
 #include "SettingsStateAndEvents.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 template <GameState::Value gameT>
 class HideHUDImplH1 : public GenericScopedServiceProvider
@@ -22,7 +22,7 @@ public:
 		:
 		mGame(gameImpl)
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		auto hideHUDPatchFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction1), gameImpl); 
 		auto hideHUDPatchCode1 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode1), gameImpl);
@@ -73,7 +73,7 @@ public:
 		:
 		mGame(gameImpl)
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		auto hideHUDPatchFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction1), gameImpl);
 		auto hideHUDPatchCode1 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode1), gameImpl);

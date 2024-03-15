@@ -4,12 +4,12 @@
 #include "DIContainer.h"
 #include "MultilevelPointer.h"
 #include "InjectRequirements.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "ISharedMemory.h"
 #include "IMCCStateHook.h"
 #include "GetMCCVersion.h"
 #include "IMessagesGUI.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MultilevelPointer.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
@@ -164,7 +164,7 @@ public:
 		modalDialogsWeak(dicon.Resolve<ModalDialogRenderer>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		mInjectRequirements = ptr->getData<std::shared_ptr<InjectRequirements>>("injectRequirements", game);
 		mCheckpointLength = ptr->getData< std::shared_ptr<int64_t>>("checkpointLength", game);
 		mCheckpointLocation1 = ptr->getData< std::shared_ptr<MultilevelPointer>>("checkpointLocation1", game);

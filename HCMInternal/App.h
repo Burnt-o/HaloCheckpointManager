@@ -5,7 +5,9 @@
 #include "ModuleHookManager.h"
 #include "D3D11Hook.h"
 #include "ImGuiManager.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
+#include "PointerDataParser.h"
+#include "PointerDataGetter.h"
 #include "HCMInternalGUI.h"
 #include "MessagesGUI.h"
 #include "MCCStateHook.h"
@@ -81,20 +83,29 @@ public:
             ModuleCache::initialize(); PLOGV << "moduleCache init"; // static singleton still.. blah
             auto mhm = std::make_unique<ModuleHookManager>(); PLOGV << "mhm init"; // is a static singleton still.. blah 
             auto ver = std::make_shared<GetMCCVersion>(); PLOGV << "ver init";// gets the version of MCC that we're currently injected into
-            auto ptr = std::make_shared<PointerManager>(ver, dirPath); PLOGV << "ptr init"; // retrieves data from github page for MultilevelPointers and other game-version-specific data
+
+            auto ptrStore = std::make_shared<PointerDataStore>(); PLOGV << "ptrStore init"; // stores dynamic (version & game specific) pointer data
+            {
+                // latest data is pulled from github page
+                std::string pointerXMLData = PointerDataGetter::getXMLDocument(dirPath);
+                auto ptrParse = std::make_shared<PointerDataParser>(ver, ptrStore, pointerXMLData); PLOGV << "ptrParse init";
+                ptrParse->parse(); // parse & load everything up into the ptrStore
+            }
+
+
 
             // setup some optional services mainly related to controls, eg freeing the cursor, pausing the game, etc
-            auto control = std::make_shared<ControlServiceContainer>(ptr);
+            auto control = std::make_shared<ControlServiceContainer>(ptrStore);
             auto hotkeyDisabler = std::make_shared< GenericScopedServiceProvider>();
      
-            auto d3d = std::make_shared<D3D11Hook>(ptr); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
+            auto d3d = std::make_shared<D3D11Hook>(ptrStore); PLOGV << "d3d init"; // hooks d3d11 Present and ResizeBuffers
             auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
 
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
             auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
             auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
-            auto mccStateHook = std::make_shared<MCCStateHook>(ptr, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
+            auto mccStateHook = std::make_shared<MCCStateHook>(ptrStore, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
             auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, hotkeyDisabler); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
 
@@ -109,7 +120,7 @@ public:
             
         
             // set up rendering
-            auto isCursorShowingPtr = ptr->getData<std::shared_ptr<MultilevelPointer>>("isCursorShowing");
+            auto isCursorShowingPtr = ptrStore->getData<std::shared_ptr<MultilevelPointer>>("isCursorShowing");
             uintptr_t isCursorShowingResolved;
             if (!isCursorShowingPtr->resolve(&isCursorShowingResolved)) throw HCMInitException(std::format("Could not resolve isCursorShowing: {}", MultilevelPointer::GetLastError()));
 
@@ -117,7 +128,7 @@ public:
             // set up optional cheats and optional gui elements
             auto guireq = std::make_shared<GUIRequiredServices>(); PLOGV << "guireq init"; // defines the gui elements we want to build and which optional cheats they will require
             auto cheatfail = std::make_shared<OptionalCheatInfo>(); PLOGV << "cheatfail init"; // stores info about failed optionalCheat construction (starts empty, obviously)
-            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptr, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, imm->BackgroundRenderEvent, imm->ForegroundDirectXRenderEvent, hkd); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
+            auto optionalCheats = std::make_shared<OptionalCheatManager>(guireq, cheatfail, settings, ptrStore, ver, mccStateHook, sharedMem, mes, exp, dirPath, modal, control, imm->BackgroundRenderEvent, imm->ForegroundDirectXRenderEvent, hkd); PLOGV << "optionalCheats init"; // constructs and stores required optional cheats. Needs a lot of dependencies, cheats will only keep what they need.
 
             auto guistore = std::make_shared<GUIElementStore>(); PLOGV << "guistore init"; // collection starts empty, populated later by GUIElementConstructor
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings, ver->getMCCProcessType()); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore

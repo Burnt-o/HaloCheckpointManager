@@ -1,6 +1,6 @@
 #pragma once
 #include "ScopedServiceRequest.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class PauseGame
 {
 public:
@@ -11,7 +11,7 @@ private:
 	std::shared_ptr< OverridePauseGameImpl> overridePimpl;
 public:
 
-	PauseGame(std::shared_ptr<PointerManager> ptr);
+	PauseGame(std::shared_ptr<PointerDataStore> ptr);
 	~PauseGame();
 
 	std::map<GameState, HCMInitException>& getServiceFailures();

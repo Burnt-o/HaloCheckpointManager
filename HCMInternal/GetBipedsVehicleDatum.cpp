@@ -20,7 +20,7 @@ public:
 	{
 		getObjectAddressWeak = resolveDependentCheat(GetObjectAddress);
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		bipedDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
 	}
 

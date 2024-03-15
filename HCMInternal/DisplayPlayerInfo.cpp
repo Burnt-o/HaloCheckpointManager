@@ -5,7 +5,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "GameTickEventHook.h"
 #include "IMakeOrGetCheat.h"
 #include "GetPlayerDatum.h"

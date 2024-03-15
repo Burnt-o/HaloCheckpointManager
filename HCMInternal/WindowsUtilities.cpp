@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "WindowsUtilities.h"
+#include "curl/curl.h" // for downloadToFile
 
 std::wstring str_to_wstr(const std::string str)
 {
@@ -167,3 +168,86 @@ float remapf(float value, float istart, float istop, float ostart, float ostop)
 }
 
 
+#pragma region libcurl helpers
+// write the data into a `std::string` rather than to a file.
+std::size_t write_data(void* buf, std::size_t size, std::size_t nmemb,
+	void* userp)
+{
+	if (auto sp = static_cast<std::string*>(userp))
+	{
+		sp->append(static_cast<char*>(buf), size * nmemb);
+		return size * nmemb;
+	}
+
+	return 0;
+}
+
+// A deleter to use in the smart pointer for automatic cleanup
+struct curl_dter {
+	void operator()(CURL* curl) const
+	{
+		if (curl) curl_easy_cleanup(curl);
+	}
+};
+
+// A smart pointer to automatically clean up out CURL session
+using curl_uptr = std::unique_ptr<CURL, curl_dter>;
+#pragma endregion //libcurl helpers
+
+void downloadFileTo(std::string_view url, std::string_view pathToFile)
+{
+
+	auto curl = curl_uptr(curl_easy_init());
+	// Download from the intertubes
+	std::string fileContents;
+	if (curl)
+	{
+		curl_easy_setopt(curl.get(), CURLOPT_URL, url.data()); // curl is a c library, needs c strings
+		curl_easy_setopt(curl.get(), CURLOPT_FOLLOWLOCATION, 1L);
+		curl_easy_setopt(curl.get(), CURLOPT_WRITEFUNCTION, write_data);
+		curl_easy_setopt(curl.get(), CURLOPT_WRITEDATA, &fileContents);
+
+		CURLcode ec;
+		if ((ec = curl_easy_perform(curl.get())) != CURLE_OK)
+			throw HCMInitException(std::format("Failed to file from url:\n{}\nError: {}", url, curl_easy_strerror(ec)));
+
+	}
+	else
+	{
+		throw HCMInitException(("Failed to init curl service!"));
+	}
+
+	// Write to local file
+	std::ofstream outFile(pathToFile.data());
+	if (outFile.is_open())
+	{
+		outFile << fileContents;
+		outFile.close();
+		PLOG_INFO << "local file written!";
+		return;
+	}
+	else
+	{
+		std::stringstream er;
+		er << "Failed to write local file after downloading: " << GetLastError() << std::endl << "at: " << pathToFile;
+		throw HCMInitException(er.str().c_str());
+	}
+}
+
+
+std::string readFileContents(std::string_view pathToFile)
+{
+	std::ifstream inFile(pathToFile.data());
+	if (inFile.is_open())
+	{
+		std::stringstream buffer;
+		buffer << inFile.rdbuf();
+		inFile.close();
+		return buffer.str();
+	}
+	else
+	{
+		throw HCMInitException(std::format("Failed to read file contents at {} with error: {}", pathToFile, GetLastError()));
+	}
+
+}

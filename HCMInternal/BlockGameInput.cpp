@@ -21,7 +21,7 @@ private:
 
 
 public:
-	BlockGameInputImpl(std::shared_ptr<PointerManager> ptr)
+	BlockGameInputImpl(std::shared_ptr<PointerDataStore> ptr)
 	{
 		if (instance) throw HCMInitException("Cannot have more than one BlockGameInputImpl");
 
@@ -91,7 +91,7 @@ public:
 
 
 
-BlockGameInput::BlockGameInput(std::shared_ptr<PointerManager> ptr)
+BlockGameInput::BlockGameInput(std::shared_ptr<PointerDataStore> ptr)
 	: pimpl(std::make_shared< BlockGameInputImpl>(ptr)) {}
 
 BlockGameInput::~BlockGameInput() = default;

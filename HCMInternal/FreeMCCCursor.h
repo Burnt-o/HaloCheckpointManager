@@ -1,6 +1,6 @@
 #pragma once
 #include "ScopedServiceRequest.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class FreeMCCCursor
 {
 public:
@@ -9,7 +9,7 @@ private:
 	std::shared_ptr< FreeMCCCursorImpl> pimpl;
 public:
 
-	FreeMCCCursor(std::shared_ptr<PointerManager> ptr);
+	FreeMCCCursor(std::shared_ptr<PointerDataStore> ptr);
 	~FreeMCCCursor();
 
 

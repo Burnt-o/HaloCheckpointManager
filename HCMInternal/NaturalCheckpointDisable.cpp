@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "NaturalCheckpointDisable.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "ModuleHook.h"
 #include "IMCCStateHook.h"
 #include "IMessagesGUI.h"
@@ -60,7 +60,7 @@ public:
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto naturalCheckpointDisableFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(naturalCheckpointDisableFunction), mGame);
 		auto naturalCheckpointDisableCode = ptr->getVectorData<byte>(nameof(naturalCheckpointDisableCode), mGame);
 		naturalCheckpointDisablePatch = ModulePatch::make(game.toModuleName(), naturalCheckpointDisableFunction, *naturalCheckpointDisableCode.get());

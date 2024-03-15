@@ -22,7 +22,7 @@ public:
 		getObjectAddressWeak(resolveDependentCheat(GetObjectAddress)),
 		getTagNameWeak(resolveDependentCheat(GetTagName))
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		commonObjectDataStruct = DynamicStructFactory::make<commonObjectDataFields>(ptr, game);
 	}
 

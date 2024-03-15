@@ -100,3 +100,8 @@ std::string to_string_with_precision(const T a_value, const int n)
 	out << std::fixed << a_value;
 	return std::move(out).str();
 }
+
+// downloads text content of url to local file. Throws HCMInit on fail
+void downloadFileTo(std::string_view url, std::string_view pathToFile);
+
+std::string readFileContents(std::string_view pathToFile);

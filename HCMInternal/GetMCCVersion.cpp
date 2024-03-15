@@ -56,3 +56,8 @@ MCCProcessType GetMCCVersion::evalVersionType()
         throw HCMInitException(std::format("MCC process had the wrong name!: {}", mccName));
     }
 }
+
+std::string GetMCCVersion::processToString(MCCProcessType in)
+{
+    return in == MCCProcessType::Steam ? "Steam" : "WinStore";
+}

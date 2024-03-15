@@ -4,7 +4,7 @@
 #include "RuntimeExceptionHandler.h"
 #include "IMCCStateHook.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 #include "LinearSmoother.h"
 #include "HotkeyDefinitions.h"
@@ -138,7 +138,7 @@ public:
 		mFOVSpeed = settings->freeCameraUserInputCameraFOVSpeed->GetValue();
 
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		analogMoveLeftRight = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogMoveLeftRight), game);
 		analogMoveForwardBack = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogMoveForwardBack), game);

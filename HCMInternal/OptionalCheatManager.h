@@ -6,7 +6,7 @@
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
 #include "ISharedMemory.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "ModalDialogRenderer.h"
 #include "ControlServiceContainer.h"
 #include "IMakeOrGetCheat.h"
@@ -29,7 +29,7 @@ public:
 	OptionalCheatManager(std::shared_ptr<IGUIRequiredServices>, std::shared_ptr<OptionalCheatInfo>,  
 		/* rest is cheat construction stuff that will get stuffed into a DIContainer later*/
 		std::shared_ptr<SettingsStateAndEvents>, 
-		std::shared_ptr<PointerManager>, 
+		std::shared_ptr<PointerDataStore>, 
 		std::shared_ptr<IGetMCCVersion>, 
 		std::shared_ptr<IMCCStateHook>, 
 		std::shared_ptr<ISharedMemory>, 

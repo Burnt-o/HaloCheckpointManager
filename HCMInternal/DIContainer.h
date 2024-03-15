@@ -6,25 +6,25 @@
 // This is NOT static/singletonized.
 // use like: 
 	// -- main --
-	// DIContainer<IPointerManager, ICheatManager> appdi{ std::make_shared<PointerManagerImpl>, std::make_shared<CheatManagerImpl> };
+	// DIContainer<IPointerDataStore, ICheatManager> appdi{ std::make_shared<PointerDataStoreImpl>, std::make_shared<CheatManagerImpl> };
 	// SomeObjectNeedingDependencies(appdi);
 	// SomeObjectNeedingFewerDependencies(appdi);
 	// 
 	// 
 	//  -- header for SomeObjectNeedingDependencies --
-	// #include "IPointerManager.h"
+	// #include "IPointerDataStore.h"
 	// #include "ICheatManager.h"
 	// SomeObjectNeedingDependencies(IDIContainer& di)
 	// {
-	// mPointerManager = di.resolve<IPointerManager>();
-	// mCheatManager = di.resolve<IPointerManager>();
+	// mPointerDataStore = di.resolve<IPointerDataStore>();
+	// mCheatManager = di.resolve<IPointerDataStore>();
 	// }
 	// 
 	// 	//  -- header for SomeObjectNeedingFewerDependencies --
-	// #include "IPointerManager.h"
+	// #include "IPointerDataStore.h"
 	// SomeObjectNeedingFewerDependencies(IDIContainer& di)
 	// {
-	// mPointerManager = di.resolve<IPointerManager>();
+	// mPointerDataStore = di.resolve<IPointerDataStore>();
 	// }
 	// 
 	// --

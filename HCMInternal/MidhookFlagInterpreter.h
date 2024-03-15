@@ -55,6 +55,6 @@ public:
 		}
 	}
 
-	friend class PointerManager;
-	friend class PointerManagerImpl;
+	friend class PointerDataStore;
+	friend class PointerDataStoreImpl;
 };

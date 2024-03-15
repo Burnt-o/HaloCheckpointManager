@@ -1,7 +1,7 @@
 #pragma once
 #include "ModuleHook.h"
 #include "ModuleHookManager.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 // imgui
 #include "imgui.h"
@@ -57,7 +57,7 @@ private:
 	DX11Present** m_ppPresent = nullptr;
 	DX11ResizeBuffers** m_ppResizeBuffers = nullptr;
 
-	std::weak_ptr<PointerManager> pointerManagerWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
+	std::weak_ptr<PointerDataStore> pointerDataStoreWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
 
 	std::shared_ptr<ModuleInlineHook> dxgiInternalPresentHook; // for obs bypass
 
@@ -76,7 +76,7 @@ private:
 
 public:
 
-	explicit D3D11Hook(std::weak_ptr<PointerManager> pointerManager);
+	explicit D3D11Hook(std::weak_ptr<PointerDataStore> pointerDataStore);
 	~D3D11Hook();
 
 

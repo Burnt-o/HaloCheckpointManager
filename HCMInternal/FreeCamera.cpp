@@ -6,7 +6,7 @@
 #include "SettingsStateAndEvents.h"
 #include "ModuleHook.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MidhookFlagInterpreter.h"
 #include "IMakeOrGetCheat.h"
 #include "GetGameCameraData.h"
@@ -589,7 +589,7 @@ public:
 
 	{
 		instance = this;
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		frameDeltaPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(frameDeltaPointer), game);
 		auto setCameraDataFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(setCameraDataFunction), game);
 		setCameraDataHook = ModuleMidHook::make(game.toModuleName(), setCameraDataFunction, setCameraDataHookFunction);

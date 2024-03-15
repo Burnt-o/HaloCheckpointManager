@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetCurrentDifficulty.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class GetCurrentDifficulty::GetCurrentDifficultyImpl
 {
 private:
@@ -11,7 +11,7 @@ private:
 public:
 	GetCurrentDifficultyImpl(GameState game, IDIContainer& dicon)
 	{
-		currentDifficulty = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentDifficulty), game);
+		currentDifficulty = dicon.Resolve<PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentDifficulty), game);
 	}
 
 	DifficultyEnum getCurrentDifficulty()

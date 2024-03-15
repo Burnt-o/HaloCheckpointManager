@@ -8,7 +8,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "TogglePause.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "GameTickEventHook.h"
 #include "IMakeOrGetCheat.h"
 // 2 valid options for implementation:

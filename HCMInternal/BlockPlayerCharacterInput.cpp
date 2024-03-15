@@ -6,7 +6,7 @@
 #include "ModuleHook.h"
 #include "MidhookFlagInterpreter.h"
 #include "IMCCStateHook.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MultilevelPointer.h"
 #include "safetyhook.hpp"
 
@@ -32,7 +32,7 @@ public:
 	BlockPlayerCharacterInputImpl(GameState gameImpl, IDIContainer& dicon)
 
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		auto BlockPlayerCharacterInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(BlockPlayerCharacterInputFunction), gameImpl);
 		BlockPlayerCharacterInputFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(BlockPlayerCharacterInputFlagSetter), gameImpl);

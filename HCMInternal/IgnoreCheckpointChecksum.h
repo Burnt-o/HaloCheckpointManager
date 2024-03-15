@@ -6,7 +6,7 @@
 #include "SettingsStateAndEvents.h"
 #include "ModuleHook.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "IMCCStateHook.h"
 
 class IgnoreCheckpointChecksum : public IOptionalCheat
@@ -61,7 +61,7 @@ public:
 		mGame(gameImpl),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto checksumCheckFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(checksumCheckFunction), mGame);
 
 		PLOG_DEBUG << "getting checksumIgnoreCode";

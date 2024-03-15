@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetPlayerDatum.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class SimpleGetPlayerDatum : public GetPlayerDatum::IGetPlayerDatumImpl
 {
 private:
@@ -13,7 +13,7 @@ private:
 public:
 	SimpleGetPlayerDatum(GameState game, IDIContainer& dicon) : mGame(game)
 	{
-		playerDatumPointer = dicon.Resolve< PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>("playerDatum", mGame);
+		playerDatumPointer = dicon.Resolve< PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>("playerDatum", mGame);
 	}
 
 	virtual Datum getPlayerDatum() override

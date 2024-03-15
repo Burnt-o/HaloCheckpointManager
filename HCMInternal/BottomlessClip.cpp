@@ -5,7 +5,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 template <GameState::Value gameT>
 class BottomlessClipImplSetFlag : public IBottomlessClipImpl
@@ -61,7 +61,7 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		bottomlessClipFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(bottomlessClipFlag), mGame);
 	}
 

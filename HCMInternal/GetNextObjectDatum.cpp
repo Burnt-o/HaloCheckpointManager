@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetNextObjectDatum.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 class GetNextObjectDatum::GetNextObjectDatumImpl
 {
@@ -15,7 +15,7 @@ private:
 public:
 	GetNextObjectDatumImpl(GameState game, IDIContainer& dicon)
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		nextObjectSalt = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(nextObjectSalt), game);
 		nextObjectIndex = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(nextObjectIndex), game);
 	}

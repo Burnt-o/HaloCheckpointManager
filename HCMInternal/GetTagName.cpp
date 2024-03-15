@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetTagName.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "DynamicStructFactory.h"
 #include "IMCCStateHook.h"
 
@@ -58,7 +58,7 @@ public:
 		expectedMagic.chars[1] = 'g';
 		expectedMagic.chars[0] = 's';
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		tagElementDataStruct = DynamicStructFactory::makeStrideable<tagElementDataFields>(ptr, game);
 		metaHeaderDataStruct = DynamicStructFactory::make<metaHeaderDataFields>(ptr, game);
@@ -176,7 +176,7 @@ public:
 		expectedMagic.chars[1] = 'g'; 
 		expectedMagic.chars[0] = 's';
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		metaHeaderDataStruct = DynamicStructFactory::make<metaHeaderDataFields>(ptr, game);
 		metaHeaderAddress = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(metaHeaderAddress), game);
@@ -264,7 +264,7 @@ public:
 		expectedMagic.chars[1] = 'g';
 		expectedMagic.chars[0] = 's';
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		metaHeaderDataStruct = DynamicStructFactory::make<metaHeaderDataFields>(ptr, game);
 		metaHeaderAddress = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(metaHeaderAddress), game);

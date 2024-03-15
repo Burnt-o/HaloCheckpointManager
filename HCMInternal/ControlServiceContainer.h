@@ -1,5 +1,5 @@
 #pragma once
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "FreeMCCCursor.h"
 #include "BlockGameInput.h"
 #include "PauseGame.h"
@@ -17,7 +17,7 @@ public:
 	std::optional<std::shared_ptr<PauseGame>> pauseGameService = std::nullopt;
 	std::optional<HCMInitException> pauseGameServiceFailure = std::nullopt;
 
-	ControlServiceContainer(std::shared_ptr<PointerManager> ptr)
+	ControlServiceContainer(std::shared_ptr<PointerDataStore> ptr)
 	{
 		try
 		{

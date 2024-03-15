@@ -6,7 +6,7 @@
 #include "ModuleHook.h"
 #include "MidhookFlagInterpreter.h"
 #include "SettingsStateAndEvents.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MultilevelPointer.h"
 
 template<GameState::Value mGame>
@@ -69,7 +69,7 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		mMedusaToggleCallbackHandle(dicon.Resolve< SettingsStateAndEvents>().lock()->medusaToggle->valueChangedEvent, [this](bool& n) {onToggleChange(n); })
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto medusaFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(medusaFunction), gameImpl);
 		medusaFunctionFlagSetter = ptr->getData< std::shared_ptr< MidhookFlagInterpreter>>(nameof(medusaFunctionFlagSetter), gameImpl);
 		medusaHook = ModuleMidHook::make(gameImpl.toModuleName(), medusaFunction, medusaHookFunction);

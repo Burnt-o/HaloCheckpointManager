@@ -24,7 +24,7 @@ public:
 	GetObjectHealthImpl(GameState game, IDIContainer& dicon)
 	{
 		getObjectAddressWeak = resolveDependentCheat(GetObjectAddress);
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		bipedDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
 		vehicleDataStruct = DynamicStructFactory::make<vehicleDataFields>(ptr, game);
 

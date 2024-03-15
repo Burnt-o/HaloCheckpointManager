@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetCurrentBSP.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 class GetCurrentBSP::GetCurrentBSPImpl
 {
@@ -12,7 +12,7 @@ private:
 public:
 	GetCurrentBSPImpl(GameState game, IDIContainer& dicon)
 	{
-		currentBSP = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentBSP), game);
+		currentBSP = dicon.Resolve<PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentBSP), game);
 	}
 
 	DWORD getCurrentBSP()

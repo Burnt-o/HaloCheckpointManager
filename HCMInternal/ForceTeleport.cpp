@@ -3,7 +3,7 @@
 #include "SettingsStateAndEvents.h"
 #include "MultilevelPointer.h"
 #include "MidhookContextInterpreter.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "SettingsStateAndEvents.h"
 #include "Datum.h"
 #include "RuntimeExceptionHandler.h"

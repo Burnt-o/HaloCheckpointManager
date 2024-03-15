@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GetHavokAnchorPoint.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "DynamicStructFactory.h"
 #include "ModuleHook.h"
 #include "GetHavokComponent.h"
@@ -22,7 +22,7 @@ public:
 	GetHavokAnchorPointImpl(GameState game, IDIContainer& dicon)
 		: mGame(game)
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
 		getHavokComponentWeak = resolveDependentCheat(GetHavokComponent);
 		havokAnchorPointResolver = ptr->getData<std::shared_ptr<MultilevelPointerSpecialisation::BaseOffset>>(nameof(havokAnchorPointResolver), game);

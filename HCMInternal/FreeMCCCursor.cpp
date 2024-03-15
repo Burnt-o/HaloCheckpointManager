@@ -21,7 +21,7 @@ private:
 	}
 
 public:
-	FreeMCCCursorImpl(std::shared_ptr<PointerManager> ptr)
+	FreeMCCCursorImpl(std::shared_ptr<PointerDataStore> ptr)
 	{
 		if (instance) throw HCMInitException("Cannot have more than one FreeMCCCursorImpl");
 
@@ -64,7 +64,7 @@ public:
 
 
 
-FreeMCCCursor::FreeMCCCursor(std::shared_ptr<PointerManager> ptr)
+FreeMCCCursor::FreeMCCCursor(std::shared_ptr<PointerDataStore> ptr)
 	: pimpl(std::make_shared< FreeMCCCursorImpl>(ptr)) {}
 
 FreeMCCCursor::~FreeMCCCursor() = default;

@@ -28,7 +28,7 @@ public:
 		getObjectAddressWeak = resolveDependentCheat(GetObjectAddress);
 		getBipedsVehicleDatumWeak = resolveDependentCheat(GetBipedsVehicleDatum);
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
 
 	}
@@ -161,7 +161,7 @@ public:
 		getHavokAnchorPointWeak = resolveDependentCheat(GetHavokAnchorPoint);
 		getBipedsVehicleDatumWeak = resolveDependentCheat(GetBipedsVehicleDatum);
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
 		havokAnchorPointDataStruct = DynamicStructFactory::make<havokAnchorDataFields>(ptr, game);
 	}
@@ -286,7 +286,7 @@ public:
 		getBipedsVehicleDatumWeak = resolveDependentCheat(GetBipedsVehicleDatum);
 		getHavokAnchorPointWeak = resolveDependentCheat(GetHavokAnchorPoint);
 
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		physicsObjectDataStruct = DynamicStructFactory::make<physicsObjectDataFields>(ptr, game);
 		havokAnchorPointDataStruct = DynamicStructFactory::make<havokAnchorDataFields>(ptr, game);
 

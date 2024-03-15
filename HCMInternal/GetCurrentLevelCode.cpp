@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetCurrentLevelCode.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class GetCurrentLevelCode::GetCurrentLevelCodeImpl
 {
 private:
@@ -11,7 +11,7 @@ private:
 public:
 	GetCurrentLevelCodeImpl(GameState game, IDIContainer& dicon)
 	{
-		currentLevelCode = dicon.Resolve<PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentLevelCode), game);
+		currentLevelCode = dicon.Resolve<PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(currentLevelCode), game);
 	}
 
 	std::string getCurrentLevelCode()

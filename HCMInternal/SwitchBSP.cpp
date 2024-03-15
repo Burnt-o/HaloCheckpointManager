@@ -4,7 +4,7 @@
 #include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 #include "MultilevelPointer.h"
 
 template <GameState::Value gameT>
@@ -72,7 +72,7 @@ public:
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		switchBSPFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(switchBSPFunction), mGame);
 	}
 };

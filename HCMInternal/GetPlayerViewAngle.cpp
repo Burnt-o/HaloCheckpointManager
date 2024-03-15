@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GetPlayerViewAngle.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 
 class GetPlayerViewAngleImpl : public GetPlayerViewAngle::IGetPlayerViewAngleImpl
@@ -15,7 +15,7 @@ private:
 public:
 	GetPlayerViewAngleImpl(GameState game, IDIContainer& dicon) : mGame(game)
 	{
-		playerViewAngle = dicon.Resolve< PointerManager>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(playerViewAngle), mGame);
+		playerViewAngle = dicon.Resolve< PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(playerViewAngle), mGame);
 	}
 
 	virtual const SimpleMath::Vector2 getPlayerViewAngle() override

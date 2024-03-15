@@ -242,6 +242,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
     <ClInclude Include="ModalDialogFactory.h" />
+    <ClInclude Include="PointerDataGetter.h" />
+    <ClInclude Include="PointerDataParser.h" />
+    <ClInclude Include="PointerDataParserInstantiators.h" />
+    <ClInclude Include="PointerDataStore.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
@@ -440,6 +444,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
+    <ClCompile Include="PointerDataGetter.cpp" />
+    <ClCompile Include="PointerDataParser.cpp" />
+    <ClCompile Include="PointerDataStore.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
     <ClCompile Include="Renderer3DImpl.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

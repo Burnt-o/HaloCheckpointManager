@@ -32,7 +32,7 @@ public:
 		else return GameStateStringBiMap.left.at(value);
 	}
 
-	static GameState fromString(const std::string val) // from string (used in pointerManager to parse xml)
+	static GameState fromString(const std::string val) // from string (used in pointerDataParser to parse xml)
 	{
 		auto it = GameStateStringBiMap.right.find(val);
 		if (it == GameStateStringBiMap.right.end()) throw HCMInitException(std::format("Bad GameState string value: {}", val));

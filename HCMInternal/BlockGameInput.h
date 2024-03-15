@@ -1,6 +1,6 @@
 #pragma once
 #include "ScopedServiceRequest.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 class BlockGameInput
 {
 public:
@@ -9,7 +9,7 @@ private:
 	std::shared_ptr< BlockGameInputImpl> pimpl;
 public:
 
-	BlockGameInput(std::shared_ptr<PointerManager> ptr);
+	BlockGameInput(std::shared_ptr<PointerDataStore> ptr);
 	~BlockGameInput();
 
 

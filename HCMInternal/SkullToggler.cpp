@@ -7,7 +7,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
 #include "MultilevelPointer.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 template <GameState::Value gameT>
 class SkullTogglerImpl : public ISkullTogglerImpl
@@ -135,7 +135,7 @@ public:
 			{SkullEnum::Acrophobia, {GameState::Value::Halo1, GameState::Value::Halo2, GameState::Value::Halo3, GameState::Value::Halo3ODST, GameState::Value::HaloReach, GameState::Value::Halo4, }},
 		};
 
-		auto pointerManager = dicon.Resolve<PointerManager>().lock();
+		auto pointerDataStore = dicon.Resolve<PointerDataStore>().lock();
 		for (auto& [skullEnum, supportedGameCollection] : skullEnumToSupportedGames)
 		{
 			if (supportedGameCollection.contains(gameImpl))
@@ -143,7 +143,7 @@ public:
 				std::string pointerName = std::format("skull{}Pointer", magic_enum::enum_name(skullEnum));
 				try
 				{
-					auto pointer = pointerManager->getData<std::shared_ptr<MultilevelPointer>>(pointerName, gameImpl);
+					auto pointer = pointerDataStore->getData<std::shared_ptr<MultilevelPointer>>(pointerName, gameImpl);
 					skullDataPointers.emplace(skullEnum, pointer);
 				}
 				catch(HCMInitException ex)

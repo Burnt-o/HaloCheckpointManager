@@ -1,20 +1,23 @@
 #pragma once
 #include "DynamicStruct.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
+
+
+typedef std::map<std::string, int> DynStructOffsetInfo; 
 
 // intellisense fucking HATES this thing lmao
 
-// Creates DynamicStructs, resolving the necessary data from PointerManager using the name of the provided fieldEnum template
+// Creates DynamicStructs, resolving the necessary data from PointerDataStore using the name of the provided fieldEnum template
 class DynamicStructFactory
 {
 public:
 	template<typename fieldEnum>
-	static std::shared_ptr<DynamicStruct<fieldEnum>> make(std::shared_ptr<PointerManager> ptr, std::optional<GameState> game = std::nullopt)
+	static std::shared_ptr<DynamicStruct<fieldEnum>> make(std::shared_ptr<PointerDataStore> ptr, std::optional<GameState> game = std::nullopt)
 	{
 		// make an uninitialized dynamic struct of the type associated with the fieldEnum
 		std::shared_ptr<DynamicStruct<fieldEnum>> outDynStruct = std::make_shared<DynamicStruct<fieldEnum>>();
 
-		// fiendEnum to string. for looking up data from pointerManager (and logging)
+		// fiendEnum to string. for looking up data from pointerDataStore (and logging)
 		std::string enumClassName = magic_enum::enum_type_name<fieldEnum>().data();
 
 		PLOG_DEBUG << "Constructing DynamicStruct for fieldEnum: " << enumClassName;
@@ -40,12 +43,12 @@ public:
 	}
 
 	template<typename fieldEnum>
-	static std::shared_ptr<StrideableDynamicStruct<fieldEnum>> makeStrideable(std::shared_ptr<PointerManager> ptr, std::optional<GameState> game = std::nullopt)
+	static std::shared_ptr<StrideableDynamicStruct<fieldEnum>> makeStrideable(std::shared_ptr<PointerDataStore> ptr, std::optional<GameState> game = std::nullopt)
 	{
 		// make an uninitialized dynamic struct of the type associated with the fieldEnum
 		std::shared_ptr<StrideableDynamicStruct<fieldEnum>> outDynStruct = std::make_shared<StrideableDynamicStruct<fieldEnum>>();
 
-		// fiendEnum to string. for looking up data from pointerManager (and logging)
+		// fiendEnum to string. for looking up data from pointerDataStore (and logging)
 		std::string enumClassName = magic_enum::enum_type_name<fieldEnum>().data();
 
 		PLOG_DEBUG << "Constructing DynamicStruct for fieldEnum: " << enumClassName;

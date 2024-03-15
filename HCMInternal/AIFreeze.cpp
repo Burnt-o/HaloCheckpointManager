@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "AIFreeze.h"
-#include "PointerManager.h"
+#include "PointerDataStore.h"
 
 template<GameState::Value mGame>
 class AIFreezeImpl : public AIFreezeImplUntemplated {
@@ -61,7 +61,7 @@ public:
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
-		auto ptr = dicon.Resolve<PointerManager>().lock();
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto aiFreezeFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(aiFreezeFunction), mGame);
 		aiFreezeFunctionFlagSetter = ptr->getData<std::shared_ptr<MidhookFlagInterpreter>>(nameof(aiFreezeFunctionFlagSetter), mGame);
 		aiFreezeHook = ModuleMidHook::make( GameState(mGame).toModuleName(), aiFreezeFunction, aiFreezeHookFunction);
