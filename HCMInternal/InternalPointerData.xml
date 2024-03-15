@@ -7135,6 +7135,20 @@
 
 
 	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1AD4887</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x1ADB94F</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
@@ -7143,6 +7157,92 @@
 			<BitOffset>0</BitOffset>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E61DA</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x14C3B92</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01CB15C8</Offset>
+				<Offset>0x10539</Offset>
+			</Offsets>
+			<BitOffset>5</BitOffset>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x01D91E68</Offset>
+				<Offset>0x10799</Offset>
+			</Offsets>
+			<BitOffset>5</BitOffset>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01C64548</Offset>
+				<Offset>0x104C1</Offset>
+			</Offsets>
+			<BitOffset>5</BitOffset>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01FA5568</Offset>
+				<Offset>0x10721</Offset>
+			</Offsets>
+			<BitOffset>5</BitOffset>
+		</Version>
+
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01C64548</Offset>
+				<Offset>0x104C1</Offset>
+			</Offsets>
+			<BitOffset>5</BitOffset>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01FA5568</Offset>
+				<Offset>0x10721</Offset>
+			</Offsets>
+			<BitOffset>5</BitOffset>
+		</Version>
+		
+		
+		<!--TODO: current patch, h4-->
+
 	</VersionedEntry>
+
+	
+	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullAcrophobiaPointer</Base> <!--pointer won't be constructed if PointerManager can't find game+version combo of base-->
+			<LastOffsetAdjustment>-0xE</LastOffsetAdjustment> <!--optional, can be neg. Adjusts last offset only-->
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBandanaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullAcrophobiaPointer</Base>
+			<LastOffsetAdjustment>-0x11</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+
 	
 </root>

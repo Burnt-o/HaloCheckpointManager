@@ -603,18 +603,23 @@ std::vector<int64_t> getOffsetsFromXML(pugi::xml_node versionEntry)
 
 }
 
+enum class MultilevelPointerType {
+    ExeOffset,
+    ModuleOffset,
+    BaseOffset,
+    Invalid
+};
 
-void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_node versionEntry, std::string entryType, DataKey dKey)
+typedef std::tuple<MultilevelPointerType, std::vector<int64_t>, std::string, bitOffsetT> MLPConstructionArgs;
+MLPConstructionArgs getConstructionArgs(pugi::xml_node versionEntry, std::string entryType)
 {
     bitOffsetT bitOffset = versionEntry.child("BitOffset").text().as_int(0); // defaults to zero if "BitOffset" not present
 
-
-    std::shared_ptr<MultilevelPointer> result;
     if (entryType == "MultilevelPointer::ExeOffset")
     {
         PLOG_DEBUG << "exeOffset";
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = std::make_shared<MultilevelPointerSpecialisation::ExeOffset>(offsets, bitOffset);
+        return MLPConstructionArgs(MultilevelPointerType::ExeOffset, offsets, "", bitOffset);
 
     }
     else if (entryType == "MultilevelPointer::ModuleOffset")
@@ -622,29 +627,209 @@ void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_
         PLOG_DEBUG << "moduleOffset";
         std::string moduleString = versionEntry.child("Module").text().get();
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = std::make_shared < MultilevelPointerSpecialisation::ModuleOffset>(str_to_wstr(moduleString), offsets, bitOffset);
 
-        if (dKey._Get_rest()._Myfirst._Val.has_value() && dKey._Get_rest()._Myfirst._Val.value().toModuleName() != str_to_wstr(moduleString))
-        {
-            PLOG_ERROR << "Module name did not match version entry game type! This is probably a typo on Burnts part: observed: " 
-                << moduleString << ", expected: " << dKey._Get_rest()._Myfirst._Val.value().toModuleName() << ", entryName: " << dKey._Myfirst._Val;
-        }
+        //if (dKey._Get_rest()._Myfirst._Val.has_value() && dKey._Get_rest()._Myfirst._Val.value().toModuleName() != str_to_wstr(moduleString))
+        //{
+        //    PLOG_ERROR << "Module name did not match version entry game type! This is probably a typo on Burnts part: observed: "
+        //        << moduleString << ", expected: " << dKey._Get_rest()._Myfirst._Val.value().toModuleName() << ", entryName: " << dKey._Myfirst._Val;
+        //}
+
+        return MLPConstructionArgs(MultilevelPointerType::ModuleOffset, offsets, moduleString, bitOffset);
 
     }
     else if (entryType == "MultilevelPointer::BaseOffset")
     {
         PLOG_DEBUG << "baseOffset";
         auto offsets = getOffsetsFromXML(versionEntry);
-        result = std::make_shared < MultilevelPointerSpecialisation::BaseOffset>(nullptr, offsets, bitOffset);
-
+        return MLPConstructionArgs(MultilevelPointerType::BaseOffset, offsets, "", bitOffset);
     }
     else
     {
         PLOG_ERROR << "INVALID MULTILEVEL POINTER TYPE: " << entryType;
+        return MLPConstructionArgs(MultilevelPointerType::Invalid, {}, "", bitOffset);
+    }
+}
+
+
+void PointerManager::PointerManagerImpl::instantiateMultilevelPointer(pugi::xml_node versionEntry, std::string entryType, DataKey dKey)
+{
+    MLPConstructionArgs constructionArgs;
+    if (entryType == "MultilevelPointer::Derived")
+    {
+        PLOG_VERBOSE << "constructing MultilevelPointer::Derived";
+
+        // what's the name of the base MLP we're deriving from?
+        std::string baseName = versionEntry.child("Base").text().get();
+        auto baseMLP = versionEntry.root().first_child().find_child_by_attribute("Name", baseName.c_str()); // search the document to find it
+        if (baseMLP == NULL)
+        {
+            PLOG_ERROR << "No base MLP existed by name " << baseName;
+            return;
+        }
+
+        // filter base MLP to correct version/processType/game
+        auto baseMLPVersionedEntry = baseMLP.find_child([this, derivedNode = versionEntry](pugi::xml_node baseNode)
+            {
+                PLOG_VERBOSE << "checking version";
+                // version valid? 
+
+                if (strcmp(baseNode.attribute("Version").value(), m_getMCCver->getMCCVersionAsString().data()) != 0 && (strcmp(baseNode.attribute("Version").value(), "All") != 0)) // We only want the versionEntries of the current MCC version
+                {
+                    return false;
+                }
+
+                PLOG_VERBOSE << "checking process";
+                // process type valid?
+                if (baseNode.attribute("ProcessType").empty() == false)
+                {
+                    std::string processTypeString = baseNode.attribute("ProcessType").as_string();
+                    constexpr std::string_view steamString = "Steam";
+                    constexpr std::string_view winString = "WinStore";
+
+                    if (
+                        (m_getMCCver->getMCCProcessType() == MCCProcessType::Steam && strcmp(processTypeString.c_str(), steamString.data()) != 0)
+                        || (m_getMCCver->getMCCProcessType() == MCCProcessType::WinStore && strcmp(processTypeString.c_str(), winString.data()) != 0)
+                        )
+                    {
+                        return false;
+                    }
+                }
+
+                PLOG_VERBOSE << "checking game";
+                if (baseNode.attribute("Game").empty() == false)
+                {
+                    PLOG_VERBOSE << "baseNode.attribute(Game).value()" << baseNode.attribute("Game").value();
+                    PLOG_VERBOSE << "derivedNode.attribute(Game).value()" << derivedNode.attribute("Game").value();
+
+                    if (strcmp(baseNode.attribute("Game").value(), derivedNode.attribute("Game").value()) != 0)
+                        return false;
+                }
+
+                return true;
+            });
+
+        if (baseMLPVersionedEntry == NULL)
+        {
+            PLOG_ERROR << "Could not find matching base version entry";
+            return;
+        }
+
+        // pass base MLP over to getConstructionArgs
+        std::string baseEntryType = baseMLP.attribute("Type").value(); // Convert to std::string
+        constructionArgs = getConstructionArgs(baseMLPVersionedEntry, baseEntryType);
+#ifdef HCM_DEBUG
+        std::stringstream ss;
+        baseMLPVersionedEntry.print(ss);
+        PLOG_VERBOSE << "baseMLPVersionedEntry: " << std::endl << ss.str();
+        PLOG_VERBOSE << "baseEntryType: " << std::endl << baseEntryType;
+#endif
+
+
+        // loop over entries and apply adjustments/overrides
+        for (auto adjustmentXML = versionEntry.first_child(); adjustmentXML; adjustmentXML = adjustmentXML.next_sibling())
+        {
+            std::string adjustmentXMLNameString = adjustmentXML.name();
+            PLOG_VERBOSE << "interpreting derived entry: " << adjustmentXML.name();
+            if (adjustmentXMLNameString == "IndexedOffsetAdjustment")
+            {
+                std::string offsetIndexString = adjustmentXML.child("Index").text().get();
+                int offsetIndex = stringToInt(offsetIndexString);
+
+                std::string offsetAdjustmentString = adjustmentXML.child("Adjustment").text().get();
+                int offsetAdjustment = stringToInt(offsetAdjustmentString);
+
+                // pad offsets to necessary size
+                while (std::get<std::vector<int64_t>>(constructionArgs).size() < (offsetIndex + 1))
+                {
+                    std::get<std::vector<int64_t>>(constructionArgs).emplace_back(0);
+                }
+
+                // apply adjustment at index
+                std::get<std::vector<int64_t>>(constructionArgs).at(offsetIndex) = std::get<std::vector<int64_t>>(constructionArgs).at(offsetIndex) + offsetAdjustment;
+            }
+            else if (adjustmentXMLNameString == "IndexedOffsetOverride")
+            {
+                std::string offsetIndexString = adjustmentXML.child("Index").text().get();
+                int offsetIndex = stringToInt(offsetIndexString);
+
+                std::string offsetOverrideString = adjustmentXML.child("Override").text().get();
+                int offsetOverride = stringToInt(offsetOverrideString);
+
+                // pad offsets to necessary size
+                while (std::get<std::vector<int64_t>>(constructionArgs).size() < (offsetIndex + 1))
+                {
+                    std::get<std::vector<int64_t>>(constructionArgs).emplace_back(0);
+                }
+
+                // apply override at index
+                std::get<std::vector<int64_t>>(constructionArgs).at(offsetIndex) = offsetOverride;
+            }
+            else if (adjustmentXMLNameString == "LastOffsetAdjustment")
+            {
+                PLOG_VERBOSE << "LastOffsetAdjustment: ";
+                std::string offsetAdjustmentString = adjustmentXML.text().get();
+                int offsetAdjustment = stringToInt(offsetAdjustmentString);
+                PLOG_VERBOSE << offsetAdjustment;
+
+                // apply override at last entry in offset vector
+                PLOG_VERBOSE << "prev value: " << std::get<std::vector<int64_t>>(constructionArgs).back();
+                std::get<std::vector<int64_t>>(constructionArgs).back() = std::get<std::vector<int64_t>>(constructionArgs).back() + offsetAdjustment;
+                PLOG_VERBOSE << "new value: " << std::get<std::vector<int64_t>>(constructionArgs).back();
+            }
+            else if (adjustmentXMLNameString == "BitOffsetAdjustment")
+            {
+                std::string bitOffsetAdjustmentStr = adjustmentXML.child("Adjustment").text().get();
+                int bitOffsetAdjustment = stringToInt(bitOffsetAdjustmentStr);
+
+                // apply adjustment
+                std::get<bitOffsetT>(constructionArgs) = std::get<bitOffsetT>(constructionArgs) + bitOffsetAdjustment;
+            }
+            else if (adjustmentXMLNameString == "BitOffsetOverride")
+            {
+                std::string bitOffsetOverrideStr = adjustmentXML.child("Override").text().get();
+                int bitOffsetOverride = stringToInt(bitOffsetOverrideStr);
+
+                // apply override
+                std::get<bitOffsetT>(constructionArgs) = bitOffsetOverride;
+            }
+        }
+
+    }
+    else
+    {
+        constructionArgs = getConstructionArgs(versionEntry, entryType);
+#ifdef HCM_DEBUG
+        std::stringstream ss;
+        versionEntry.print(ss);
+        PLOG_VERBOSE << "versionEntry: " << std::endl << ss.str();
+        PLOG_VERBOSE << "entryType: " << std::endl << entryType;
+#endif
+    }
+
+
+    auto mlpType = std::get<MultilevelPointerType>(constructionArgs);
+    std::shared_ptr<MultilevelPointer> result;
+    switch (mlpType) // construction switch
+    {
+    case MultilevelPointerType::ExeOffset:
+        result = std::make_shared<MultilevelPointerSpecialisation::ExeOffset>(std::get<std::vector<int64_t>>(constructionArgs), std::get<bitOffsetT>(constructionArgs));
+        break;
+
+    case MultilevelPointerType::ModuleOffset:
+        result = std::make_shared<MultilevelPointerSpecialisation::ModuleOffset>(str_to_wstr(std::get<std::string>(constructionArgs)), std::get<std::vector<int64_t>>(constructionArgs), std::get<bitOffsetT>(constructionArgs));
+        break;
+
+    case MultilevelPointerType::BaseOffset:
+        result = std::make_shared<MultilevelPointerSpecialisation::BaseOffset>(nullptr, std::get<std::vector<int64_t>>(constructionArgs), std::get<bitOffsetT>(constructionArgs));
+        break;
+
+    case MultilevelPointerType::Invalid:
+        PLOG_ERROR << "Invalid multilevelpointer type for entry " << dKey._Myfirst._Val << ": " << entryType;
         return;
     }
 
-    PLOG_DEBUG << entryType << "added to map : " << dKey._Myfirst._Val;
+
+    PLOG_DEBUG << entryType << " added to map: " << dKey._Myfirst._Val;
     mAllData.try_emplace(dKey, result);
 
 }
