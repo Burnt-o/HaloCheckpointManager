@@ -140,6 +140,7 @@
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 	((waypoint3DGUIToggle, (ALL_SUPPORTED_GAMES)))\
 	((waypoint3DGUISettings, (ALL_SUPPORTED_GAMES)))\
+		((waypoint3DGUIClampToggle, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIRenderRangeToggle, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIRenderRangeInput, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalSpriteColor, (ALL_SUPPORTED_GAMES)))\

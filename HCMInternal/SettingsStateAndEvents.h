@@ -1146,6 +1146,13 @@ public:
 			nameof(waypoint3DToggle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> waypoint3DClampToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(waypoint3DClampToggle)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> waypoint3DRenderRangeToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,

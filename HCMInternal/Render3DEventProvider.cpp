@@ -7,6 +7,9 @@
 
 void Render3DEventProvider::onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView)
 {
+
+	ScopedAtomicBool lock(currentlyRendering);
+
 	// only fire 3D renderer event if anyone is actually subscribed to it - because updating the camera data is expensive
 	if (render3DEvent.get()->empty() == false) 
 	{
@@ -62,5 +65,12 @@ Render3DEventProvider::Render3DEventProvider(GameState gameImpl, IDIContainer& d
 
 Render3DEventProvider::~Render3DEventProvider()
 {
+	if (currentlyRendering)
+	{
+		currentlyRendering.wait(true);
+	}
+	// quickly manually kill the callback before it gets called again
+	directXRenderEventCallback.removeCallback();
+
 	PLOG_VERBOSE << "~" << getName();
 }

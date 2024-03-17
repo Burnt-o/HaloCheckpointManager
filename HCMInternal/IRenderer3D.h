@@ -9,7 +9,7 @@ private:
 	friend class Render3DEventProvider;
 public:
 	// returns where on the screen a world point should appear
-	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition) = 0;
+	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition, bool shouldClamp = false, float clampBorderRatio = 0.f) = 0;
 
 	// returns cameras distance to a world point
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) = 0;

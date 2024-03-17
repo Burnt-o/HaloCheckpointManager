@@ -268,8 +268,19 @@ private:
 			{
 				if (waypoint.waypointEnabled == false) continue;
 
-				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
-				if (screenPosition.z < 0 || screenPosition.z > 1) continue; // clipped
+
+				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position, settings->waypoint3DClampToggle->GetValue());
+
+
+				if (settings->waypoint3DClampToggle->GetValue() ==false)
+				{
+					if (screenPosition.z < 0 || screenPosition.z > 1)
+					{
+						// not clamping, and position is clipped (off-screen). so let's skip rendering.
+						continue;
+					}
+		
+				}
 
 				// test if filtered by render range
 				if (measurePlayerDistanceToObjectLocked.has_value() && settings->waypoint3DRenderRangeToggle->GetValue())
@@ -303,6 +314,7 @@ private:
 					auto& labelScale = waypoint.labelScaleUseGlobal ? settings->waypoint3DGlobalLabelScale->GetValue() : waypoint.labelScale;
 					auto& labelColor = waypoint.labelColorUseGlobal ? settings->waypoint3DGlobalLabelColor->GetValue() : waypoint.labelColor;
 
+
 #ifdef HCM_DEBUG
 					if (GetKeyState('6') & 0x8000)
 					{
@@ -319,7 +331,7 @@ private:
 						ImGui::ColorConvertFloat4ToU32(labelColor), 
 						labelfontDistanceScale);
 					
-					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * labelScale));
+					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * labelfontDistanceScale));
 				}
 
 

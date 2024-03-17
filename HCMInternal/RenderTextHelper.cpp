@@ -14,7 +14,7 @@ namespace RenderTextHelper
 		constexpr float nearClampDistance = 0.5f; // distance at which text reaches its maximum size
 		constexpr float farClampDistance = 100.f; // distance at which text reaches its minimum size
 		constexpr float nearClampScale = 4.f; // the maximum scale of text when you are at nearClampDistance and closer
-		constexpr float farClampScale = 0.5f; // the minimum sclae of text when you are at farClampDistance and further
+		constexpr float farClampScale = 0.75f; // the minimum sclae of text when you are at farClampDistance and further
 
 
 		// clamp by world units
@@ -42,7 +42,8 @@ namespace RenderTextHelper
 		constexpr float zmax = scalingFunc(nearClampDistance);
 
 		// remap
-		return remapf(zdistance, zmin, zmax, farClampScale, nearClampScale);
+		return remapf(zdistance, zmin, zmax, farClampScale, nearClampScale) * 2; // times two cos the base value was a lil low
+					// TODO: get rid of the times two and just do a relative to screen size thing in waypoint3D
 
 
 	}

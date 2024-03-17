@@ -5,7 +5,7 @@
 
 
 template<GameState::Value mGame>
-SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath::Vector3 world)
+SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath::Vector3 world, bool shouldClamp, float clampBorderRatio)
 {
 	LOG_ONCE(PLOG_VERBOSE << "world to screen");
 	auto worldPos = SimpleMath::Vector4::Transform({ world.x, world.y, world.z, 1.f },
@@ -21,6 +21,9 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 
 	clipSpace = clipSpace / clipSpace.w;
 
+
+
+
 	// convert from clipSpace (-1..+1) to screenSpace (0..Width, 0..Height)
 	auto out = SimpleMath::Vector3
 	(
@@ -29,6 +32,36 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 		clipSpace.z
 	);
 
+
+
+	if (shouldClamp)
+	{
+		// https://github.com/OBalfaqih/Unity-Tutorials/blob/master/Unity%20Tutorials/WaypointMarker/Scripts/MissionWaypoint.cs#L35
+
+		float edgeBorder = (this->screenSize.x + this->screenSize.y) / 2.f * clampBorderRatio;
+		float minX = edgeBorder;
+		float maxX = this->screenSize.x - edgeBorder;
+		float minY = edgeBorder;
+		float maxY = this->screenSize.y - edgeBorder;
+
+		SimpleMath::Vector3 targetDir = world - this->cameraPosition;
+		float dot = targetDir.Dot(this->cameraDirection);
+		if (dot < 0)
+		{
+			if (out.x < (this->screenSize.x / 2)) 	// Check if the target is on the left side of the screen
+			{
+				out.x = maxX; // Place it on the right (Since it's behind the player, it's the opposite)
+			}
+			else
+			{
+				out.x = minX; // Place it on the left side
+			}
+		}
+		
+		// clamp to screen
+		out.x = std::clamp(out.x, minX, maxX);
+		out.y = std::clamp(out.y, minY, maxY);
+	}
 
 
 #ifdef HCM_DEBUG
@@ -56,11 +89,12 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		lockOrThrow(getGameCameraDataWeak, getGameCameraData);
 		auto cameraData = getGameCameraData->getGameCameraData();
 		this->cameraPosition = *cameraData.position;
+		this->cameraDirection = *cameraData.lookDirForward;
 		float aspectRatio = screenSizeIn.x / screenSizeIn.y; // aspect ratio is width div height!
 		float verticalFov = *cameraData.FOV * (screenSizeIn.y / screenSizeIn.x); // convert camera horizontal fov to vertical. height div width!
 
 		this->projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(verticalFov, aspectRatio, 0.001f, FAR_CLIP_3D);
-		auto lookAt = this->cameraPosition + *cameraData.lookDirForward;
+		auto lookAt = this->cameraPosition + this->cameraDirection;
 		this->viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(this->cameraPosition, lookAt, *cameraData.lookDirUp);
 		this->pDevice = pDevice;
 		this->pDeviceContext = pDeviceContext;
@@ -80,6 +114,7 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		return false;
 	}
 }
+
 
 
 // explicit template instantiation

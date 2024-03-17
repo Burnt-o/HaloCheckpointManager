@@ -17,6 +17,7 @@ class Render3DEventProvider : public IOptionalCheat {
 private:
 	ScopedCallback<DirectXRenderEvent> directXRenderEventCallback; // fired by ImGuiManager
 	void onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView);
+	std::atomic_bool currentlyRendering = false; // locked by above event and waited for by this classes destructer
 
 	std::unique_ptr<IRenderer3D> p3DRenderer;
 public:

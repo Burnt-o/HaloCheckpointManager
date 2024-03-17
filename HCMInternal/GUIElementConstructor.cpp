@@ -846,6 +846,7 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Custom Waypoint Settings"), "Custom Waypoint Settings", headerChildElements
 							{
+							createNestedElement(GUIElementEnum::waypoint3DGUIClampToggle),
 							createNestedElement(GUIElementEnum::waypoint3DGUIRenderRangeToggle),
 							createNestedElement(GUIElementEnum::waypoint3DGUIRenderRangeInput),
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalSpriteColor),
@@ -857,6 +858,12 @@ private:
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistancePrecision),
 							createNestedElement(GUIElementEnum::waypoint3DGUIList),
 							}));
+
+
+				case GUIElementEnum::waypoint3DGUIClampToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Clamps waypoints to the edge of the screen when you turn away from them"), std::nullopt, "Clamp to Screen", settings->waypoint3DClampToggle));
+
 
 				case GUIElementEnum::waypoint3DGUIRenderRangeToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
