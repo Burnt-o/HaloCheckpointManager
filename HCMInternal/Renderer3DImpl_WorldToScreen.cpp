@@ -2,6 +2,47 @@
 #include "Renderer3DImpl.h"
 #include "directxtk\SimpleMath.h"
 
+// https://docs.google.com/document/d/1QXaMTPOpLmJP_YWYV_U3g1eMG50cd595fd0_-B3_Ebk/edit
+template<GameState::Value mGame>
+float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth, float screenHeight)
+{
+	enum class FILMType
+	{
+		H16ML9,
+		H4ML3,
+	};
+
+	constexpr FILMType mFilmType =
+		(mGame == GameState::Value::Halo1) ? FILMType::H16ML9 : // confirmed
+		(mGame == GameState::Value::Halo2) ? FILMType::H4ML3 :
+		(mGame == GameState::Value::Halo3) ? FILMType::H16ML9 :
+		(mGame == GameState::Value::Halo3ODST) ? FILMType::H16ML9 :
+		(mGame == GameState::Value::HaloReach) ? FILMType::H16ML9 :
+		(mGame == GameState::Value::Halo4) ? FILMType::H16ML9 :
+		FILMType::H16ML9; // unpossible
+
+
+
+	if constexpr (mGame == GameState::Value::Halo1)
+	{
+
+		float verticalFOVIn169 = 2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (1080 / 1920.f));
+		float actualHorizontal = 2 * std::atan(std::tan(verticalFOVIn169 / 2) * (screenWidth / screenHeight));
+
+		return 2 * std::atan(std::tan(actualHorizontal / 2) * (screenHeight / screenWidth));
+	}
+	else if constexpr (mGame == GameState::Value::Halo2)
+	{
+
+		float tempValue = 2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (screenHeight / screenWidth));
+		return tempValue;
+	}
+	else
+	{
+		throw HCMRuntimeException("not impl yet");
+	}
+}
+
 
 
 template<GameState::Value mGame>
@@ -91,7 +132,8 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->cameraPosition = *cameraData.position;
 		this->cameraDirection = *cameraData.lookDirForward;
 		float aspectRatio = screenSizeIn.x / screenSizeIn.y; // aspect ratio is width div height!
-		float verticalFov = *cameraData.FOV * (screenSizeIn.y / screenSizeIn.x); // convert camera horizontal fov to vertical. height div width!
+
+		float verticalFov = horizontalFOVToVerticalFOV<mGame>(*cameraData.FOV, screenSizeIn.x, screenSizeIn.y);
 
 		this->projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(verticalFov, aspectRatio, 0.001f, FAR_CLIP_3D);
 		auto lookAt = this->cameraPosition + this->cameraDirection;
