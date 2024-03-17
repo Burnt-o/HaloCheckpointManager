@@ -55,7 +55,11 @@ public:
 #ifdef HCM_DEBUG
 	WaypointList()
 	{
-		list = { Waypoint{{14.671300, -95.203300, -73.22693634}} }; // add single test waypoint at keyes start
+		list = { 
+			Waypoint{{14.671300, -95.203300, -73.22693634}}, // H1: test wp at keyes start
+			Waypoint{{60.491402, -9.17941, 7.6300197 }}, // H2: test wp at start of cairo
+		}; 
+
 	}
 #else
 	WaypointList() = default; // list starts empty

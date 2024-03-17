@@ -23,9 +23,9 @@ float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth,
 
 
 
-	if constexpr (mGame == GameState::Value::Halo1)
+	if constexpr (mGame == GameState::Value::Halo1) 
 	{
-
+		// very close to perfect
 		float verticalFOVIn169 = 2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (1080 / 1920.f));
 		float actualHorizontal = 2 * std::atan(std::tan(verticalFOVIn169 / 2) * (screenWidth / screenHeight));
 
@@ -33,9 +33,8 @@ float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth,
 	}
 	else if constexpr (mGame == GameState::Value::Halo2)
 	{
-
-		float tempValue = 2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (screenHeight / screenWidth));
-		return tempValue;
+		// fairly close to perfect
+		return  2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (screenWidth / screenHeight));
 	}
 	else
 	{
@@ -96,6 +95,15 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 			else
 			{
 				out.x = minX; // Place it on the left side
+			}
+
+			if (out.y < (this->screenSize.y / 2)) 	// Check if the target is on the top side of the screen
+			{
+				out.y = maxY; // Place it on the bottom (Since it's behind the player, it's the opposite)
+			}
+			else
+			{
+				out.y = minY; // Place it on the top
 			}
 		}
 		
