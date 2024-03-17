@@ -18,7 +18,7 @@ private:
 
 
 public:
-	std::optional<float> measure(SimpleMath::Vector3 worldPos)
+	std::optional<float> measure(SimpleMath::Vector3 worldPos, bool measureHorizontalOnly)
 	{
 		try
 		{
@@ -31,8 +31,16 @@ public:
 
 			lockOrThrow(getObjectPhysicsWeak, getObjectPhysics);
 			auto playerPosition = getObjectPhysics->getObjectPosition(playerDatum);
+			
+			if (measureHorizontalOnly)
+			{
+				return SimpleMath::Vector2::Distance({ worldPos.x, worldPos.y }, { playerPosition->x, playerPosition->y });
+			}
+			else
+			{
+				return SimpleMath::Vector3::Distance(worldPos, *playerPosition);
+			}
 
-			return SimpleMath::Vector3::Distance(worldPos, *playerPosition);
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -41,7 +49,7 @@ public:
 		}
 
 	}
-	std::optional<float> measure(Datum objectDatum)
+	std::optional<float> measure(Datum objectDatum, bool measureHorizontalOnly)
 	{
 		try
 		{
@@ -53,7 +61,7 @@ public:
 			lockOrThrow(getObjectPhysicsWeak, getObjectPhysics);
 			auto objectPosition = getObjectPhysics->getObjectPosition(objectDatum);
 
-			return measure(*objectPosition);
+			return measure(*objectPosition, measureHorizontalOnly);
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -85,5 +93,5 @@ MeasurePlayerDistanceToObject::~MeasurePlayerDistanceToObject()
 	PLOG_VERBOSE << "~" << getName();
 }
 
-std::optional<float> MeasurePlayerDistanceToObject::measure(SimpleMath::Vector3 worldPos) { return pimpl->measure(worldPos); }
-std::optional<float> MeasurePlayerDistanceToObject::measure(Datum objectDatum) { return pimpl->measure(objectDatum); }
+std::optional<float> MeasurePlayerDistanceToObject::measure(SimpleMath::Vector3 worldPos, bool measureHorizontalOnly) { return pimpl->measure(worldPos, measureHorizontalOnly); }
+std::optional<float> MeasurePlayerDistanceToObject::measure(Datum objectDatum, bool measureHorizontalOnly) { return pimpl->measure(objectDatum, measureHorizontalOnly); }

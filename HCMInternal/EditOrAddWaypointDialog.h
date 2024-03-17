@@ -131,6 +131,7 @@ public:
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
 
 			ImGui::BeginDisabled(workingWaypoint.showDistance == false);
+			ImGui::Checkbox("Measure Horizontal Only", &workingWaypoint.measureHorizontalOnly);
 			renderGlobalOption(workingWaypoint.distanceColorUseGlobal, workingWaypoint.distanceColor, "Distance Text Color");
 			renderGlobalOption(workingWaypoint.distanceScaleUseGlobal, workingWaypoint.distanceScale, "Distance Text Scale");
 			renderGlobalOption(workingWaypoint.distancePrecisionUseGlobal, workingWaypoint.distancePrecision, "Distance Text Precision");

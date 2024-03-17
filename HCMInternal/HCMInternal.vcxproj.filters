@@ -620,9 +620,6 @@
     <ClInclude Include="Waypoint3D.h">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClInclude>
-    <ClInclude Include="WaypointList.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="Render3DEventProvider.h">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClInclude>
@@ -703,6 +700,9 @@
     </ClInclude>
     <ClInclude Include="PointerDataParserInstantiators.h">
       <Filter>Services\PointerData</Filter>
+    </ClInclude>
+    <ClInclude Include="WaypointList.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -961,9 +961,6 @@
     <ClCompile Include="Renderer3DImpl.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
-    <ClCompile Include="WaypointList.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
@@ -1002,6 +999,9 @@
     </ClCompile>
     <ClCompile Include="PointerDataStore.cpp">
       <Filter>Services\PointerData</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointList.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

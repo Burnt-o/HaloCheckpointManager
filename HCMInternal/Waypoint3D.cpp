@@ -272,11 +272,10 @@ private:
 				if (screenPosition.z < 0 || screenPosition.z > 1) continue; // clipped
 
 				// test if filtered by render range
-				std::optional<float> distanceToCamera = std::nullopt; // optional so we can potentially reuse it later in distance measure text
 				if (measurePlayerDistanceToObjectLocked.has_value() && settings->waypoint3DRenderRangeToggle->GetValue())
 				{
-					distanceToCamera = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
-					if (distanceToCamera.value() > settings->waypoint3DRenderRangeInput->GetValue()) continue; // beyond render range
+					auto distanceToCamera = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+					if (distanceToCamera.has_value() && distanceToCamera.value() > settings->waypoint3DRenderRangeInput->GetValue()) continue; // beyond render range
 				}
 
 				float renderVerticalOffset = 0.f;
@@ -335,8 +334,7 @@ private:
 
 					float distancefontDistanceScale = distanceScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
 
-					// reuse distance from render range test, if we did it
-					auto distance = distanceToCamera.has_value() ? distanceToCamera.value() : measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
+					auto distance =  measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position, waypoint.measureHorizontalOnly);
 					if (distance.has_value())
 					{
 						auto distancePrecision = waypoint.distancePrecisionUseGlobal ? settings->waypoint3DGlobalDistancePrecision->GetValue() : waypoint.distancePrecision;

@@ -17,8 +17,8 @@ public:
 	~MeasurePlayerDistanceToObject();
 
 	// returns std::nullopt if player or object datum is invalid
-	std::optional<float> measure(SimpleMath::Vector3 worldPos);
-	std::optional<float> measure(Datum objectDatum);
+	std::optional<float> measure(SimpleMath::Vector3 worldPos, bool measureHorizontalOnly = false);
+	std::optional<float> measure(Datum objectDatum, bool measureHorizontalOnly = false);
 
 	std::string_view getName() override { return nameof(MeasurePlayerDistanceToObject); }
 

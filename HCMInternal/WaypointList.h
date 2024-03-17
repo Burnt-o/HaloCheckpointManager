@@ -13,6 +13,7 @@ struct Waypoint {
 	bool showSprite = true;
 	bool showLabel = true;
 	bool showDistance = true;
+	bool measureHorizontalOnly = false;
 	bool spriteColorUseGlobal = true;
 	bool spriteScaleUseGlobal = true;
 	bool labelColorUseGlobal = true;
