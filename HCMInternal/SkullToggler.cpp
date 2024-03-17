@@ -9,12 +9,12 @@
 #include "MultilevelPointer.h"
 #include "PointerDataStore.h"
 
-template <GameState::Value gameT>
 class SkullTogglerImpl : public ISkullTogglerImpl
 {
 private:
-	// main store requested by GUI. protected by atomic bool
 
+	// game
+	GameState mGame;
 
 	// cache stuff
 	bool cacheValid = false;
@@ -23,6 +23,46 @@ private:
 	// event callbacks
 	ScopedCallback<eventpp::CallbackList<void (GameState)>> updateSkullBitBoolCollectionEventCallback;
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
+
+	// hotkey callbacks
+	ScopedCallback<ActionEvent> skullAngerToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullAssassinsToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullBlackEyeToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullBlindToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullCatchToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullEyePatchToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullFamineToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullFogToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullForeignToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullIronToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullJackedToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullMasterblasterToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullMythicToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullRecessionToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullSoAngryToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullStreakingToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullSwarmToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullThatsJustWrongToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullTheyComeBackToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullThunderstormToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullTiltToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullToughLuckToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullBandannaToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullBondedPairToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullBoomToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullCowbellToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullEnvyToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullFeatherToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullGhostToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullGruntBirthdayPartyToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullGruntFuneralToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullIWHBYDToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullMalfunctionToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullPinataToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullProphetBirthdayPartyToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullScarabToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullSputnikToggleHotkeyEventCallback;
+	ScopedCallback<ActionEvent> skullAcrophobiaToggleHotkeyEventCallback;
 
 	// injected services
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
@@ -34,7 +74,7 @@ private:
 	// called by skull toggle gui before it wants to use the skullBitBoolCollection
 	void onUpdateSkullBitBoolCollectionEvent(GameState game)
 	{
-		if (game.operator GameState::Value() != gameT) return; // not our game, not our problem
+		if (game != mGame) return; // not our game, not our problem
 
 		if (cacheValid == true)
 		{
@@ -83,15 +123,99 @@ private:
 	}
 
 
+
+	void onHotkeyToggle(SkullEnum whichSkullToFlip)
+	{
+		try
+		{
+			PLOG_DEBUG << "SkullTogglerImpl::onHotkeyToggle";
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+			PLOG_DEBUG << "SkullTogglerImpl::onHotkeyToggle has correct game";
+
+			if (skullDataPointers.contains(whichSkullToFlip) == false) return;
+			PLOG_DEBUG << "SkullTogglerImpl::onHotkeyToggle has that pointer data";
+
+			
+			onUpdateSkullBitBoolCollectionEvent(mGame);
+			lockOrThrow(settingsWeak, settings);
+
+			if (settings->skullBitBoolCollectionInUse) // wait atomic bool
+			{
+				settings->skullBitBoolCollectionInUse.wait(true);
+			}
+			ScopedAtomicBool lock(settings->skullBitBoolCollectionInUse); // lock atomic bool
+			if (settings->skullBitBoolCollection.contains(whichSkullToFlip) == false) throw HCMRuntimeException(std::format("Couldn't resolve skull pointer for {}", magic_enum::enum_name(whichSkullToFlip)));
+			auto& bitBoolPointer = settings->skullBitBoolCollection.at(whichSkullToFlip);
+
+			bool previousValue = bitBoolPointer.operator const bool();
+			PLOG_DEBUG << "SkullTogglerImpl::onHotkeyToggle flipping value from " << (previousValue ? "true" : "false") << " to " << (previousValue ? "false" : "true");
+			bitBoolPointer.set(!previousValue); // flip value
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
+	}
+
+
+
 public:
 	SkullTogglerImpl(GameState gameImpl, IDIContainer& dicon)
 		: 
+		mGame(gameImpl),
 		updateSkullBitBoolCollectionEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->updateSkullBitBoolCollectionEvent, [this](GameState g) { onUpdateSkullBitBoolCollectionEvent(g); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); })
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
+
+		// scoped callbacks for all the goddamn skull hotkeys lol
+		skullAngerToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullAngerToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Anger); }),
+		skullAssassinsToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullAssassinsToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Assassins); }),
+		skullBlackEyeToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullBlackEyeToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::BlackEye); }),
+		skullBlindToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullBlindToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Blind); }),
+		skullCatchToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullCatchToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Catch); }),
+		skullEyePatchToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullEyePatchToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::EyePatch); }),
+		skullFamineToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullFamineToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Famine); }),
+		skullFogToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullFogToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Fog); }),
+		skullForeignToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullForeignToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Foreign); }),
+		skullIronToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullIronToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Iron); }),
+		skullJackedToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullJackedToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Jacked); }),
+		skullMasterblasterToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullMasterblasterToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Masterblaster); }),
+		skullMythicToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullMythicToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Mythic); }),
+		skullRecessionToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullRecessionToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Recession); }),
+		skullSoAngryToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullSoAngryToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::SoAngry); }),
+		skullStreakingToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullStreakingToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Streaking); }),
+		skullSwarmToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullSwarmToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Swarm); }),
+		skullThatsJustWrongToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullThatsJustWrongToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::ThatsJustWrong); }),
+		skullTheyComeBackToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullTheyComeBackToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::TheyComeBack); }),
+		skullThunderstormToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullThunderstormToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Thunderstorm); }),
+		skullTiltToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullTiltToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Tilt); }),
+		skullToughLuckToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullToughLuckToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::ToughLuck); }),
+		skullBandannaToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullBandannaToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Bandanna); }),
+		skullBondedPairToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullBondedPairToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::BondedPair); }),
+		skullBoomToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullBoomToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Boom); }),
+		skullCowbellToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullCowbellToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Cowbell); }),
+		skullEnvyToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullEnvyToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Envy); }),
+		skullFeatherToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullFeatherToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Feather); }),
+		skullGhostToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullGhostToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Ghost); }),
+		skullGruntBirthdayPartyToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullGruntBirthdayPartyToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::GruntBirthdayParty); }),
+		skullGruntFuneralToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullGruntFuneralToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::GruntFuneral); }),
+		skullIWHBYDToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullIWHBYDToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::IWHBYD); }),
+		skullMalfunctionToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullMalfunctionToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Malfunction); }),
+		skullPinataToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullPinataToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Pinata); }),
+		skullProphetBirthdayPartyToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullProphetBirthdayPartyToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::ProphetBirthdayParty); }),
+		skullScarabToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullScarabToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Scarab); }),
+		skullSputnikToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullSputnikToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Sputnik); }),
+		skullAcrophobiaToggleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->skullAcrophobiaToggleHotkeyEvent, [this]() { onHotkeyToggle(SkullEnum::Acrophobia); })
+
+
+
+
 	{
 		std::map < SkullEnum, std::set<GameState::Value>> skullEnumToSupportedGames =
 		{
@@ -166,20 +290,7 @@ public:
 
 SkullToggler::SkullToggler(GameState gameImpl, IDIContainer& dicon)
 {
-	switch (gameImpl)
-	{
-	case GameState::Value::Halo1:
-		pimpl = std::make_unique<SkullTogglerImpl<GameState::Value::Halo1>>(gameImpl, dicon);
-		break;
-
-	case GameState::Value::Halo2:
-		pimpl = std::make_unique<SkullTogglerImpl<GameState::Value::Halo2>>(gameImpl, dicon);
-		break;
-
-
-	default:
-		throw HCMInitException("not impl yet");
-	}
+	pimpl = std::make_unique<SkullTogglerImpl>(gameImpl, dicon);
 }
 
 SkullToggler::~SkullToggler() = default;

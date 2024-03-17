@@ -430,7 +430,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SettingsSerialiser.h" />
     <ClInclude Include="SettingsStateAndEvents.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PointerManager.h" />
     <ClInclude Include="RuntimeExceptionHandler.h" />
     <ClInclude Include="Speedhack.h" />
     <ClInclude Include="ToolTipCollection.h" />
@@ -551,7 +550,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PointerManager.cpp" />
     <ClCompile Include="RuntimeExceptionHandler.cpp" />
     <ClCompile Include="SharedMemoryInternal.cpp" />
     <ClCompile Include="LinearSmoother.cpp" />

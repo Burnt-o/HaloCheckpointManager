@@ -67,8 +67,9 @@ private:
 		(RebindableHotkeyEnum::enumName,\
 		defaultBinding) }
 
-	static constexpr inline int allEventOnPressHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_EVENTONPRESS_HOTKEYS));
-	static constexpr inline int allRebindableHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_REBINDABLE_HOTKEYS));
+	// have to split up the counting here since BOOST_PP_TUPLE_SIZE can only count up to 64
+	static constexpr inline int allEventOnPressHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_EVENTONPRESS_HOTKEYS)) + BOOST_PP_TUPLE_SIZE((SKULL_HOTKEYS));
+	static constexpr inline int allRebindableHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_EVENTONPRESS_HOTKEYS)) + BOOST_PP_TUPLE_SIZE((NOEVENT_HOTKEYS)) + BOOST_PP_TUPLE_SIZE((SKULL_HOTKEYS));
 	static constexpr inline int rebindableOnlyCount = allRebindableHotkeyEnumCount - allEventOnPressHotkeyEnumCount;
 
 	const std::map<RebindableHotkeyEnum, std::shared_ptr<EventOnPressHotkey>>::value_type allEventOnPressHotkeysData[allEventOnPressHotkeyEnumCount]
@@ -250,6 +251,161 @@ private:
 
 		initEventOnPressHotkey(toggleWaypoint3D,
 		mSettings->toggleWaypoint3DHotkeyEvent,
+		vvk{}),
+
+
+
+		/// skullllllllls
+		initEventOnPressHotkey(skullAngerHotkey,
+		mSettings->skullAngerToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullAssassinsHotkey,
+		mSettings->skullAssassinsToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullBlackEyeHotkey,
+		mSettings->skullBlackEyeToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullBlindHotkey,
+		mSettings->skullBlindToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullCatchHotkey,
+		mSettings->skullCatchToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullEyePatchHotkey,
+		mSettings->skullEyePatchToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullFamineHotkey,
+		mSettings->skullFamineToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullFogHotkey,
+		mSettings->skullFogToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullForeignHotkey,
+		mSettings->skullForeignToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullIronHotkey,
+		mSettings->skullIronToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullJackedHotkey,
+		mSettings->skullJackedToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullMasterblasterHotkey,
+		mSettings->skullMasterblasterToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullMythicHotkey,
+		mSettings->skullMythicToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullRecessionHotkey,
+		mSettings->skullRecessionToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullSoAngryHotkey,
+		mSettings->skullSoAngryToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullStreakingHotkey,
+		mSettings->skullStreakingToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullSwarmHotkey,
+		mSettings->skullSwarmToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullThatsJustWrongHotkey,
+		mSettings->skullThatsJustWrongToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullTheyComeBackHotkey,
+		mSettings->skullTheyComeBackToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullThunderstormHotkey,
+		mSettings->skullThunderstormToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullTiltHotkey,
+		mSettings->skullTiltToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullToughLuckHotkey,
+		mSettings->skullToughLuckToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullBandannaHotkey,
+		mSettings->skullBandannaToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullBondedPairHotkey,
+		mSettings->skullBondedPairToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullBoomHotkey,
+		mSettings->skullBoomToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullCowbellHotkey,
+		mSettings->skullCowbellToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullEnvyHotkey,
+		mSettings->skullEnvyToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullFeatherHotkey,
+		mSettings->skullFeatherToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullGhostHotkey,
+		mSettings->skullGhostToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullGruntBirthdayPartyHotkey,
+		mSettings->skullGruntBirthdayPartyToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullGruntFuneralHotkey,
+		mSettings->skullGruntFuneralToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullIWHBYDHotkey,
+		mSettings->skullIWHBYDToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullMalfunctionHotkey,
+		mSettings->skullMalfunctionToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullPinataHotkey,
+		mSettings->skullPinataToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullProphetBirthdayPartyHotkey,
+		mSettings->skullProphetBirthdayPartyToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullScarabHotkey,
+		mSettings->skullScarabToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullSputnikHotkey,
+		mSettings->skullSputnikToggleHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(skullAcrophobiaHotkey,
+		mSettings->skullAcrophobiaToggleHotkeyEvent,
 		vvk{}),
 
 

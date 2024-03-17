@@ -107,7 +107,44 @@ public:
 
 
 	// hotkeys for each skull
-	// TODO
+	std::shared_ptr<ActionEvent> skullAngerToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullAssassinsToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullBlackEyeToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullBlindToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullCatchToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullEyePatchToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullFamineToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullFogToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullForeignToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullIronToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullJackedToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullMasterblasterToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullMythicToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullRecessionToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullSoAngryToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullStreakingToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullSwarmToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullThatsJustWrongToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullTheyComeBackToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullThunderstormToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullTiltToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullToughLuckToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullBandannaToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullBondedPairToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullBoomToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullCowbellToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullEnvyToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullFeatherToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullGhostToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullGruntBirthdayPartyToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullGruntFuneralToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullIWHBYDToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullMalfunctionToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullPinataToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullProphetBirthdayPartyToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullScarabToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullSputnikToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> skullAcrophobiaToggleHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// settings

@@ -692,9 +692,6 @@
     <ClInclude Include="SkullToggler.h">
       <Filter>Services\OptionalCheats\Implementations\Skulls</Filter>
     </ClInclude>
-    <ClInclude Include="PointerManager.h">
-      <Filter>Services\PointerData</Filter>
-    </ClInclude>
     <ClInclude Include="PointerDataStore.h">
       <Filter>Services\PointerData</Filter>
     </ClInclude>
@@ -996,9 +993,6 @@
     </ClCompile>
     <ClCompile Include="SkullToggler.cpp">
       <Filter>Services\OptionalCheats\Implementations\Skulls</Filter>
-    </ClCompile>
-    <ClCompile Include="PointerManager.cpp">
-      <Filter>Services\PointerData</Filter>
     </ClCompile>
     <ClCompile Include="PointerDataGetter.cpp">
       <Filter>Services\PointerData</Filter>
