@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Renderer3DImpl.h"
-
+#include "PointerDataStore.h"
 
 /*
 
@@ -21,9 +21,17 @@ for the rest of the implementation
 	 mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 	 messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 	 runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-	 getGameCameraDataWeak(resolveDependentCheat(GetGameCameraData))
- {
-	 //TODO
+	 getGameCameraDataWeak(resolveDependentCheat(GetGameCameraData)),
+	 mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); })
+{
+	 try
+	 {
+		 verticalFOVPointer = dicon.Resolve< PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(verticalFOVPointer), game);
+	 }
+	 catch (HCMInitException ex)
+	 {
+		 PLOG_ERROR << "Could not resolve verticalFOVPointer, that's okay we'll just use some bad math to guess it. Error: " << ex.what();
+	 }
  }
 
  template<GameState::Value mGame>
@@ -40,6 +48,34 @@ for the rest of the implementation
  }
 
 
+ // cache verticalFOV if we have it
+ template<GameState::Value mGame>
+ void  Renderer3DImpl<mGame>::onGameStateChanged(const MCCState& newMCCState)
+ {
+	 PLOG_DEBUG << "updating Renderer3DImpl vertical FOV cache for " << ((GameState)mGame).toString();
+	 pVerticalFOVCached = nullptr;
+	 try
+	 {
+		 lockOrThrow(mccStateHookWeak, mccStateHook);
+		 if (mccStateHook->isGameCurrentlyPlaying(mGame) && verticalFOVPointer.has_value())
+		 {
+			 uintptr_t ptr;
+			 if (verticalFOVPointer.value()->resolve(&ptr))
+			 {
+				 pVerticalFOVCached = (float*)ptr;
+			 }
+			 else
+			 {
+				 PLOG_ERROR << "error caching vertical FOV pointer: " << MultilevelPointer::GetLastError();
+			 }
+		 }
+	 }
+	 catch (HCMRuntimeException ex)
+	 {
+		 PLOG_ERROR << "error caching vertical FOV pointer: " << ex.what();
+	 }
+
+ }
 
 
  // explicit template instantiation

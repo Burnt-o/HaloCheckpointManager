@@ -62,6 +62,8 @@ public:
 			cacheValid = true;
 		}
 
+		if (IsBadReadPtr((void*)cachedCameraData->position, 12)) throw HCMRuntimeException(std::format("Bad read at {}", (uintptr_t)cachedCameraData->position));
+
 		return *cachedCameraData.get();
 	}
 };

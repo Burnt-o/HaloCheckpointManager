@@ -7,7 +7,7 @@
 
 void Render3DEventProvider::onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView)
 {
-
+	if (gameIsValid == false) return;
 	ScopedAtomicBool lock(currentlyRendering);
 
 	// only fire 3D renderer event if anyone is actually subscribed to it - because updating the camera data is expensive
@@ -31,8 +31,12 @@ void Render3DEventProvider::onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11De
 }
 
 Render3DEventProvider::Render3DEventProvider(GameState gameImpl, IDIContainer& dicon)
-	: directXRenderEventCallback(dicon.Resolve<DirectXRenderEvent>().lock(), [this](ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) { onDirectXRenderEvent(pDevice, pDeviceContext, screenSize, pMainRenderTargetView); })
+	: mGame(gameImpl),
+	gameIsValid(dicon.Resolve<IMCCStateHook>().lock()->isGameCurrentlyPlaying(gameImpl)),
+	mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); }),
+	directXRenderEventCallback(dicon.Resolve<DirectXRenderEvent>().lock(), [this](ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) { onDirectXRenderEvent(pDevice, pDeviceContext, screenSize, pMainRenderTargetView); })
 {
+
 	switch (gameImpl)
 	{
 	case GameState::Value::Halo1:
@@ -61,6 +65,12 @@ Render3DEventProvider::Render3DEventProvider(GameState gameImpl, IDIContainer& d
 	default:
 		throw HCMInitException("not impl yet");
 	}
+}
+
+void Render3DEventProvider::onGameStateChanged(const MCCState& newMCCState)
+{
+	gameIsValid = (newMCCState.currentPlayState == PlayState::Ingame && newMCCState.currentGameState == mGame);
+	PLOG_DEBUG << "updating game validity to " << (gameIsValid ? "true" : "false");
 }
 
 Render3DEventProvider::~Render3DEventProvider()

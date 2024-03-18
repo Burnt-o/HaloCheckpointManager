@@ -86,6 +86,7 @@ public:
 		auto ourObjectHeader = objectMetaDataTable_cached + (objectHeaderStride * entityDatum.index);
 
 		// first two bytes at object header are the salt.. confirm they match
+		if (IsBadReadPtr((void*)ourObjectHeader, 2)) throw HCMRuntimeException(std::format("Bad read at {}", ourObjectHeader));
 		return (*(uint16_t*)ourObjectHeader == entityDatum.salt);
 
 	}

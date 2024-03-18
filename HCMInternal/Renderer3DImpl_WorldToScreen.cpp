@@ -34,7 +34,7 @@ float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth,
 	else if constexpr (mGame == GameState::Value::Halo2)
 	{
 		// fairly close to perfect
-		return  2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (screenWidth / screenHeight));
+		return  2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (screenHeight / screenWidth));
 	}
 	else
 	{
@@ -133,19 +133,54 @@ float Renderer3DImpl<mGame>::cameraDistanceToWorldPoint(SimpleMath::Vector3 worl
 template<GameState::Value mGame>
 bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSizeIn, ID3D11RenderTargetView* pMainRenderTargetView)
 {
+	// TODO: currently having some safety issues - specifically if the user quits to main menu in the middle of this function being called, 
+	// various bad things will happen (mostly bad ptr reads but that means a crash). Not sure what the best way to guard against this is. 
+	// Problem is that the order of MCCStateChanged func calls are random as far as we're concerned, 
+	// so RenderImpl might recieve it either BEFORE or AFTER a consumer (ie Waypoint3D) recieves it. 
+
 	try
 	{
 		lockOrThrow(getGameCameraDataWeak, getGameCameraData);
+		
 		auto cameraData = getGameCameraData->getGameCameraData();
+		// importantly we quickly copy off in case of game quit-out
 		this->cameraPosition = *cameraData.position;
 		this->cameraDirection = *cameraData.lookDirForward;
+		this->cameraUp = *cameraData.lookDirUp;
+
+
 		float aspectRatio = screenSizeIn.x / screenSizeIn.y; // aspect ratio is width div height!
 
-		float verticalFov = horizontalFOVToVerticalFOV<mGame>(*cameraData.FOV, screenSizeIn.x, screenSizeIn.y);
+		
+		float verticalFov; 
+		if (this->pVerticalFOVCached != nullptr)
+		{
+			if (IsBadReadPtr(this->pVerticalFOVCached, 4))
+				throw HCMRuntimeException(std::format("Bad pVerticalFOVCached read at: {}", (uintptr_t)this->pVerticalFOVCached));
+			verticalFov = *this->pVerticalFOVCached;
+		}
+		else
+		{
+			verticalFov = horizontalFOVToVerticalFOV<mGame>(*cameraData.FOV, screenSizeIn.x, screenSizeIn.y);
+		} 
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pVerticalFOVCached: " << cached, cached = (uintptr_t)this->pVerticalFOVCached);
+
+		if (XMScalarNearEqual(verticalFov, 0.0f, 0.00001f * 2.0f))
+			throw HCMRuntimeException(std::format("Bad vertical FOV value: {}", verticalFov));
+
+#ifdef HCM_DEBUG
+		if (GetKeyState('5') & 0x8000)
+		{
+			PLOG_VERBOSE << "horizontalFov: " << *cameraData.FOV;
+			PLOG_VERBOSE << "verticalFov: " << verticalFov;
+			PLOG_VERBOSE << "pCameraData->horizontalFov: " << std::hex << (uintptr_t)cameraData.FOV;
+		}
+#endif
+
 
 		this->projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(verticalFov, aspectRatio, 0.001f, FAR_CLIP_3D);
 		auto lookAt = this->cameraPosition + this->cameraDirection;
-		this->viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(this->cameraPosition, lookAt, *cameraData.lookDirUp);
+		this->viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(this->cameraPosition, lookAt, this->cameraUp);
 		this->pDevice = pDevice;
 		this->pDeviceContext = pDeviceContext;
 		this->pMainRenderTargetView = pMainRenderTargetView;

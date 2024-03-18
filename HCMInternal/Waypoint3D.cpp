@@ -29,8 +29,9 @@ private:
 	ScopedCallback<WaypointAndListEvent> mEditWaypointEventCallback;
 	ScopedCallback<WaypointAndListEvent> mDeleteWaypointEventCallback;
 	ScopedCallback<WaypointListEvent> mAddWaypointEventCallback;
+	
 
-
+	bool gameValid = false;
 
 	// injectedservices
 	std::weak_ptr<Render3DEventProvider> render3DEventProviderWeak;
@@ -215,12 +216,13 @@ private:
 
 	}
 
+
+
 	// new frame, render
 	void onRenderEvent(IRenderer3D* renderer)
 	{
-		try // some renderer funcs (sprite drawing) can throw HCMRuntime exceptions
+		try // renderer funcs can throw HCMRuntime exceptions
 		{
-	
 			ScopedAtomicBool lockRender(renderingMutex);
 			LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
 			constexpr int distancePrecision = 3; // TODO: let user set.
@@ -373,7 +375,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			PLOG_ERROR << "rendering error (probably sprites): " << ex.what();
+			PLOG_ERROR << "rendering error: " << ex.what();
 			runtimeExceptions->handleMessage(ex);
 		}
 	}
@@ -390,6 +392,7 @@ public:
 		mDeleteWaypointEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->deleteWaypointEvent, [this](Waypoint& wp, WaypointList& wplist) {onDeleteWaypointEvent(wp, wplist); }),
 		mAddWaypointEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->addWaypointEvent, [this](WaypointList& wplist) {onAddWaypointEvent(wplist); }),
 		modalDialogsWeak(dicon.Resolve<ModalDialogRenderer>())
+		
 	{
 		// TODO: add callback to mccstate change, removing render callback when it happens.
 		try
@@ -418,6 +421,9 @@ public:
 		{
 			PLOG_ERROR << "failed to resolve getObjectPhysicsOptionalWeak service: " << ex.what();
 		}
+
+		
+		gameValid = mccStateHookWeak.lock()->isGameCurrentlyPlaying(mGame);
 	}
 };
 

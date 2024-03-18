@@ -102,9 +102,14 @@ public:
 	virtual const MCCState& getCurrentMCCState() override { return currentMCCState; }
 	virtual bool isGameCurrentlyPlaying(GameState gameToCheck) override
 	{
+		bool out = (currentMCCState.currentGameState == gameToCheck) && (currentMCCState.currentPlayState == PlayState::Ingame);
 		PLOG_VERBOSE << "checking if game is currently playing: " << gameToCheck.toString();
 		PLOG_VERBOSE << "actual game currently playing: " << currentMCCState.currentGameState.toString();
 		PLOG_VERBOSE << "current playstate: " << magic_enum::enum_name(currentMCCState.currentPlayState);
+		PLOG_VERBOSE << "so the answer is: " << (out ? "true" : "false");
+
+
+		PLOG_VERBOSE << "called by: " << std::to_string(std::stacktrace::current().at(1));
 		return (currentMCCState.currentGameState == gameToCheck) && (currentMCCState.currentPlayState == PlayState::Ingame); 
 	}
 

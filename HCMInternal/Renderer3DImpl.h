@@ -14,7 +14,7 @@
 #include "directxtk\SpriteBatch.h"
 #include "directxtk\DDSTextureLoader.h"
 #include "directxtk\CommonStates.h"
-
+#include "MultilevelPointer.h"
 // impl in .cpp
 template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
@@ -23,6 +23,7 @@ private:
 	// data
 	SimpleMath::Vector3 cameraPosition;
 	SimpleMath::Vector3 cameraDirection;
+	SimpleMath::Vector3 cameraUp;
 	DirectX::SimpleMath::Matrix viewMatrix;
 	DirectX::SimpleMath::Matrix projectionMatrix;
 	SimpleMath::Vector2 screenSize;
@@ -33,6 +34,12 @@ private:
 	std::unique_ptr<SpriteBatch> spriteBatch; // gets remade by constructSpriteResource to update sprite atlas
 	std::unique_ptr<CommonStates> commonStates;
 
+	std::optional<std::shared_ptr<MultilevelPointer>> verticalFOVPointer;
+	float* pVerticalFOVCached;
+
+	// just for caching verticalFOV, if we have it
+	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
+	void onGameStateChanged(const MCCState& newMCCState);
 
 	// map of loaded resource IDs to their respective spriteResource.
 	// If drawSprite is passed an ID not in this map, will call loadSpriteResource to try to load it and add to the map.
