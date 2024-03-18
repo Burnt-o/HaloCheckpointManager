@@ -63,7 +63,7 @@ bool SetupInternal(DWORD mccPID, char* errorMessage, int errorMessageCapacity)
 		if (inFile.is_open())
 			inFile.close();
 		else
-			throw InjectionException(std::format("Could not find or read {}.dll! Error: {}", dllName, GetLastError()).c_str());
+			throw InjectionException(std::format("Could not find or read {}.dll! Error: {}", dllName, GetErrorMessage(GetLastError())).c_str());
 
 		PLOG_DEBUG << "Found HCMInternal.dll at " << dllFilePath;
 
@@ -111,7 +111,7 @@ bool processContainsModule(DWORD pid, std::wstring moduleName)
 	HandlePtr mcc(OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, TRUE, pid));
 	if (!mcc)
 	{
-		PLOG_ERROR << (std::format("InjectCEER: Couldn't open MCC with EnumProcessModules permissions: {}", GetLastError()).c_str());
+		PLOG_ERROR << (std::format("InjectCEER: Couldn't open MCC with EnumProcessModules permissions: {}", GetErrorMessage(GetLastError())).c_str());
 		return false;
 	}
 
@@ -132,20 +132,20 @@ bool processContainsModule(DWORD pid, std::wstring moduleName)
 				}
 				else
 				{
-					PLOG_ERROR << "GetModuleInformation failed with error code: " << GetLastError();
+					PLOG_ERROR << "GetModuleInformation failed with error code: " << GetErrorMessage(GetLastError());
 					return false;
 				}
 			}
 			else
 			{
-				PLOG_ERROR << "GetModuleBaseName failed with error code: " << GetLastError();
+				PLOG_ERROR << "GetModuleBaseName failed with error code: " << GetErrorMessage(GetLastError());
 				return false;
 			}
 		}
 	}
 	else
 	{
-		PLOG_ERROR << "EnumProcessModules failed with error code: " << GetLastError();
+		PLOG_ERROR << "EnumProcessModules failed with error code: " << GetErrorMessage(GetLastError());
 		return false;
 	}
 
@@ -158,37 +158,37 @@ bool processContainsModule(DWORD pid, std::wstring moduleName)
 void InjectModule(DWORD pid, std::string dllFilePath)
 {
 	HandlePtr mcc(OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, TRUE, pid));
-	if (!mcc) throw InjectionException(std::format("CEER didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, HCM needs to be run as admin too.\nNerdy details: InjectCEER: Couldn't open MCC with createRemoteThread permissions: {}", GetLastError()).c_str());
+	if (!mcc) throw InjectionException(std::format("CEER didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, HCM needs to be run as admin too.\nNerdy details: InjectCEER: Couldn't open MCC with createRemoteThread permissions: {}", GetErrorMessage(GetLastError())).c_str());
 
 	// Get the address of our own Kernel32's loadLibrary (it will be the same in the target process because Kernel32 is loaded in the same virtual memory in all processes)
 	auto loadLibraryAddr = GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
-	if (!loadLibraryAddr) throw InjectionException(std::format("Couldn't find addr of loadLibraryA, error code: {}", GetLastError()).c_str());
+	if (!loadLibraryAddr) throw InjectionException(std::format("Couldn't find addr of loadLibraryA, error code: {}", GetErrorMessage(GetLastError())).c_str());
 
 
 
 	// Allocate some memory on the target process, enough to store the filepath of the DLL
 	auto pathAlloc = VirtualAllocEx(mcc.get(), 0, dllFilePath.size(), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	if (!pathAlloc) throw InjectionException(std::format("Failed to allocate memory in MCC for dll path, error code: {}", GetLastError()).c_str());
+	if (!pathAlloc) throw InjectionException(std::format("Failed to allocate memory in MCC for dll path, error code: {}", GetErrorMessage(GetLastError())).c_str());
 
 	// Write the dll filepath string to allocated memory
 	DWORD oldProtect;
 	DWORD dontcare;
 	size_t bytesWritten;
 	if (!VirtualProtectEx(mcc.get(), pathAlloc, dllFilePath.size(), PAGE_READWRITE, &oldProtect))
-		throw InjectionException(std::format("Failed to unprotect pathAlloc: {}", GetLastError()).c_str());
+		throw InjectionException(std::format("Failed to unprotect pathAlloc: {}", GetErrorMessage(GetLastError())).c_str());
 	if (!WriteProcessMemory(mcc.get(), pathAlloc, dllFilePath.c_str(), dllFilePath.size(), &bytesWritten))
-		throw InjectionException(std::format("Failed to write pathAlloc: {}", GetLastError()).c_str());
+		throw InjectionException(std::format("Failed to write pathAlloc: {}", GetErrorMessage(GetLastError())).c_str());
 	if (!VirtualProtectEx(mcc.get(), pathAlloc, dllFilePath.size(), oldProtect, &dontcare))
-		throw InjectionException(std::format("Failed to reprotect pathAlloc: {}", GetLastError()).c_str());
+		throw InjectionException(std::format("Failed to reprotect pathAlloc: {}", GetErrorMessage(GetLastError())).c_str());
 	if (bytesWritten != dllFilePath.size())
-		throw InjectionException(std::format("Failed to completely write pathAlloc: {}", GetLastError()).c_str());
+		throw InjectionException(std::format("Failed to completely write pathAlloc: {}", GetErrorMessage(GetLastError())).c_str());
 
 	PLOG_DEBUG << "Wrote path " << dllFilePath << "to MCC allocated memory at 0x" << std::hex << pathAlloc << "(0x" << bytesWritten << " bytes written)";
 
 	PLOG_DEBUG << "Calling createRemoteThread";
 	// Create a thread to call LoadLibraryA with pathAlloc as parameter
 	auto tHandle = CreateRemoteThread(mcc.get(), NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(loadLibraryAddr), pathAlloc, NULL, NULL);
-	if (!tHandle) throw InjectionException(std::format("Couldn't create loadLibrary thread in mcc, error code: {}", GetLastError()).c_str());
+	if (!tHandle) throw InjectionException(std::format("Couldn't create loadLibrary thread in mcc, error code: {}", GetErrorMessage(GetLastError())).c_str());
 
 	// Check if thread completed successfully
 	auto waitResult = WaitForSingleObject(tHandle, 3000);
@@ -208,7 +208,7 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 	// Get thread exit code 
 	DWORD exitCode;
 	GetExitCodeThread(tHandle, &exitCode);
-	if (exitCode == 0) throw InjectionException(std::format("LoadLibraryA failed: {}", GetLastError()).c_str());
+	if (exitCode == 0) throw InjectionException(std::format("LoadLibraryA failed: {}", GetErrorMessage(GetLastError())).c_str());
 
 	PLOG_DEBUG << "Remote thread exit code: 0x" << std::hex << exitCode;
 
