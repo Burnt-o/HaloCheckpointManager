@@ -109,6 +109,9 @@ public:
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
             auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, hotkeyDisabler); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
 
+            // connect showFailedOptionalServices button to modal dialog
+            auto showGUIFailuresCallback = ScopedCallback<ActionEvent>(settings->showGUIFailures, [modal, guifail]() {modal->showVoidDialog(ModalDialogFactory::makeFailedOptionalCheatServicesDialog(guifail)); });
+
             mes->setSettings(settings);
             // hotkeys
 
