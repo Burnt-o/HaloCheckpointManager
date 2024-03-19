@@ -195,7 +195,7 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 	}
 	catch (HCMRuntimeException ex)
 	{
-		runtimeExceptions->handleMessage(ex);
+		runtimeExceptions->handleSilent(ex);
 		return false;
 	}
 }

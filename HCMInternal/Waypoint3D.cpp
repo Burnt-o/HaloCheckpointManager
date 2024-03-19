@@ -196,7 +196,7 @@ private:
 			{
 
 				lockOrThrow(render3DEventProviderWeak, render3DEventProvider);
-				mRenderEventCallback = std::make_unique<ScopedCallback<Render3DEvent>>(render3DEventProvider->render3DEvent, [this](IRenderer3D* n) {onRenderEvent(n); });
+				mRenderEventCallback = std::make_unique<ScopedCallback<Render3DEvent>>(render3DEventProvider->render3DEvent, [this](GameState g, IRenderer3D* n) {onRenderEvent(g, n); });
 
 			}
 			catch (HCMRuntimeException ex)
@@ -219,8 +219,10 @@ private:
 
 
 	// new frame, render
-	void onRenderEvent(IRenderer3D* renderer)
+	void onRenderEvent(GameState game, IRenderer3D* renderer)
 	{
+		if (game.operator GameState::Value() != mGame) return;
+
 		try // renderer funcs can throw HCMRuntime exceptions
 		{
 			ScopedAtomicBool lockRender(renderingMutex);

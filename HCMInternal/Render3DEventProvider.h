@@ -8,7 +8,7 @@
 #include "IMCCStateHook.h"
 
 
-#define Render3DEvent eventpp::CallbackList<void(IRenderer3D*)>
+#define Render3DEvent eventpp::CallbackList<void(GameState, IRenderer3D*)>
 
 // Fires a 3DRender event once per frame, passing a IRenderer3D by ref to subscribers.
 // Will not fire event if the event has no subscribers (skips expensive camera calculations).
@@ -29,7 +29,7 @@ private:
 public:
 
 	// Consumers should avoid subscribing to the render3DEvent unless they actually need to (since event provider will skip expensively updating camera data every frame IF no one is subscribed)
-	std::shared_ptr<Render3DEvent> render3DEvent = std::make_shared<eventpp::CallbackList<void(IRenderer3D*)>>();
+	std::shared_ptr<Render3DEvent> render3DEvent = std::make_shared<Render3DEvent>();
 	Render3DEventProvider(GameState game, IDIContainer& dicon);
 	~Render3DEventProvider();
 

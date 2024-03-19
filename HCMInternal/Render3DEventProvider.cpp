@@ -24,7 +24,7 @@ void Render3DEventProvider::onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11De
 
 		if (p3DRenderer->updateCameraData(pDevice, pDeviceContext, screenSize, pMainRenderTargetView))
 		{
-			render3DEvent->operator()(p3DRenderer.get());
+			render3DEvent->operator()(mGame, p3DRenderer.get());
 		}
 		
 	}
