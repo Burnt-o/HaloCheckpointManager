@@ -59,6 +59,11 @@ public:
 		this->message = std::string(pre + this->message);
 	}
 
+	void append(std::string app)
+	{
+		this->message = std::string(this->message + app);
+	}
+
 };
 
 

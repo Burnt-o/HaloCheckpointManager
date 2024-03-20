@@ -6,26 +6,10 @@
 template<GameState::Value mGame>
 float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth, float screenHeight)
 {
-	enum class FILMType
-	{
-		H16ML9,
-		H4ML3,
-	};
-
-	constexpr FILMType mFilmType =
-		(mGame == GameState::Value::Halo1) ? FILMType::H16ML9 : // confirmed
-		(mGame == GameState::Value::Halo2) ? FILMType::H4ML3 :
-		(mGame == GameState::Value::Halo3) ? FILMType::H16ML9 :
-		(mGame == GameState::Value::Halo3ODST) ? FILMType::H16ML9 :
-		(mGame == GameState::Value::HaloReach) ? FILMType::H16ML9 :
-		(mGame == GameState::Value::Halo4) ? FILMType::H16ML9 :
-		FILMType::H16ML9; // unpossible
-
-
 
 	if constexpr (mGame == GameState::Value::Halo1) 
 	{
-		// very close to perfect
+		// very close to perfect. this is essentially H16ML9 from above documentation
 		float verticalFOVIn169 = 2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (1080 / 1920.f));
 		float actualHorizontal = 2 * std::atan(std::tan(verticalFOVIn169 / 2) * (screenWidth / screenHeight));
 
@@ -38,7 +22,7 @@ float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth,
 	}
 	else
 	{
-		throw HCMRuntimeException("not impl yet");
+		return  2 * std::atan(std::tan(horizontalFOVMeasured / 2) * (screenHeight / screenWidth));
 	}
 }
 
@@ -195,7 +179,17 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 	}
 	catch (HCMRuntimeException ex)
 	{
-		runtimeExceptions->handleSilent(ex);
+		if (this->haveShownError == false)
+		{
+			this->haveShownError = true;
+			ex.append("\nSuppressing further errors");
+			runtimeExceptions->handleMessage(ex);
+		}
+		else
+		{
+			runtimeExceptions->handleSilent(ex);
+		}
+
 		return false;
 	}
 }

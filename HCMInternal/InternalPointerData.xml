@@ -6494,18 +6494,10 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
-			<!--<Offsets>
-				<Offset>0x0125BAA4</Offset>
-				<Offset>0xF8</Offset>
-			</Offsets>-->
-			<!--<Offsets>
-				<Offset>0x0125BAA4</Offset>
-				<Offset>0x74</Offset>
-			</Offsets>-->
 			<Offsets>
-				<Offset>0x01BCBAB4</Offset>
+				<Offset>0x0125BAA4</Offset>
 				<Offset>0x824</Offset>
 			</Offsets>
 		</Version>
@@ -6567,6 +6559,13 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x1996714</Offset>
+			</Offsets>
+		</Version>
+	
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x2D2E6B0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

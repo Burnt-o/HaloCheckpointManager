@@ -91,11 +91,12 @@ public:
 		if (headingOpen)
 		{
 
-			currentHeight = GUIFrameHeightWithSpacing;
+			currentHeight = GUIFrameHeightWithSpacing * 2;
+
 
 			// tell optional cheat service to update bit bools
 			mSettings->updateSkullBitBoolCollectionEvent->operator()(mImplGame);
-
+			ImGui::Text("Note: skull state is saved/loaded by checkpoints");
 			
 			if (mSettings->skullBitBoolCollectionInUse) // await update if necessary
 			{

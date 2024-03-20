@@ -21,6 +21,7 @@ class Renderer3DImpl : public IRenderer3D
 {
 private:
 	// data
+	bool haveShownError = false; // prevents updateGameCamera from spamming messages. resets to false on gamestate change.
 	SimpleMath::Vector3 cameraPosition;
 	SimpleMath::Vector3 cameraDirection;
 	SimpleMath::Vector3 cameraUp;

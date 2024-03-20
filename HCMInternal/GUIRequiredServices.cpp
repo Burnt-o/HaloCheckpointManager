@@ -311,9 +311,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::Waypoint3D}
 			},
 
-			{ GUIElementEnum::waypoint3DGUIList,
+			{ GUIElementEnum::waypoint3DGUISettings,
 {OptionalCheatEnum::Waypoint3D}
 			},
+
 
 		{ GUIElementEnum::skullToggleGUI,
 {OptionalCheatEnum::SkullToggler}

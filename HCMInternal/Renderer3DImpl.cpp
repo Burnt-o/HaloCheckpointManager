@@ -32,6 +32,9 @@ for the rest of the implementation
 	 {
 		 PLOG_ERROR << "Could not resolve verticalFOVPointer, that's okay we'll just use some bad math to guess it. Error: " << ex.what();
 	 }
+
+	 // update vfov cache if already in game
+	 onGameStateChanged(mccStateHookWeak.lock()->getCurrentMCCState());
  }
 
  template<GameState::Value mGame>
@@ -54,6 +57,7 @@ for the rest of the implementation
  {
 	 PLOG_DEBUG << "updating Renderer3DImpl vertical FOV cache for " << ((GameState)mGame).toString();
 	 pVerticalFOVCached = nullptr;
+	 haveShownError = false;
 	 try
 	 {
 		 lockOrThrow(mccStateHookWeak, mccStateHook);
