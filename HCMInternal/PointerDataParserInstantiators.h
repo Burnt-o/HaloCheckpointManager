@@ -194,7 +194,7 @@ void PointerDataParser::instantiateMultilevelPointer(VersionEntry versionEntry)
             }
             else if (adjustmentXMLNameString == "BitOffsetAdjustment")
             {
-                std::string bitOffsetAdjustmentStr = adjustmentXML.child("Adjustment").text().get();
+                std::string bitOffsetAdjustmentStr = adjustmentXML.text().get();
                 int bitOffsetAdjustment = stringToInt(bitOffsetAdjustmentStr);
 
                 // apply adjustment
@@ -202,7 +202,7 @@ void PointerDataParser::instantiateMultilevelPointer(VersionEntry versionEntry)
             }
             else if (adjustmentXMLNameString == "BitOffsetOverride")
             {
-                std::string bitOffsetOverrideStr = adjustmentXML.child("Override").text().get();
+                std::string bitOffsetOverrideStr = adjustmentXML.text().get();
                 int bitOffsetOverride = stringToInt(bitOffsetOverrideStr);
 
                 // apply override

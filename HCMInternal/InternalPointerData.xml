@@ -6554,7 +6554,25 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--movss [rdi+FC], xmm9-->
+
+	<VersionedEntry Name="verticalFOVPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2D9CB08</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x1996714</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+		<!--movss [rdi+FC], xmm9-->
 	<VersionedEntry Name="freeCameraHalo2ExtraFunction" Type="MultilevelPointer::ModuleOffset">
 
 		<Version Version="1.3272.0.0"  Game="Halo2">
@@ -7134,25 +7152,26 @@
 	</VersionedEntry>
 
 
-	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::ModuleOffset">
+	<!--all games have the iron skull so just gonna use that as my base-->
+	<VersionedEntry Name="skullIronPointer" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x1AD4887</Offset>
+				<Offset>0x1AD4869</Offset>
 			</Offsets>
 			<BitOffset>0</BitOffset>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x1ADB94F</Offset>
+				<Offset>0x1ADB931</Offset>
 			</Offsets>
 			<BitOffset>0</BitOffset>
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
-				<Offset>0x1C421D7</Offset>
+				<Offset>0x1C421B9</Offset>
 			</Offsets>
 			<BitOffset>0</BitOffset>
 		</Version>
@@ -7160,14 +7179,21 @@
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x13E61DA</Offset>
+				<Offset>0x13E61c3</Offset>
 			</Offsets>
 			<BitOffset>0</BitOffset>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x14C3B92</Offset>
+				<Offset>0x14C3B7B</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15F15fb</Offset>
 			</Offsets>
 			<BitOffset>0</BitOffset>
 		</Version>
@@ -7176,73 +7202,1170 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01CB15C8</Offset>
-				<Offset>0x10539</Offset>
+				<Offset>0x1054C</Offset>
+				<!--need to double check this-->
 			</Offsets>
-			<BitOffset>5</BitOffset>
+			<BitOffset>0</BitOffset>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01D91E68</Offset>
-				<Offset>0x10799</Offset>
+				<Offset>0x107AC</Offset> 
 			</Offsets>
-			<BitOffset>5</BitOffset>
+			<BitOffset>0</BitOffset>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x202F288</Offset>
+				<Offset>0xFDEC</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
 		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x01C64548</Offset>
-				<Offset>0x104C1</Offset>
+				<Offset>0x104c4</Offset>
 			</Offsets>
-			<BitOffset>5</BitOffset>
+			<BitOffset>0</BitOffset>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x01FA5568</Offset>
-				<Offset>0x10721</Offset>
+				<Offset>0x10724</Offset>
 			</Offsets>
-			<BitOffset>5</BitOffset>
+			<BitOffset>0</BitOffset>
 		</Version>
-
-		<Version Version="1.2448.0.0" Game="Halo3ODST">
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
-				<Offset>0x01C64548</Offset>
-				<Offset>0x104C1</Offset>
+				<Offset>0x02075498</Offset>
+				<Offset>0xFD74</Offset>
 			</Offsets>
-			<BitOffset>5</BitOffset>
+			<BitOffset>0</BitOffset>
 		</Version>
-		<Version Version="1.2645.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
-				<Offset>0x01FA5568</Offset>
-				<Offset>0x10721</Offset>
-			</Offsets>
-			<BitOffset>5</BitOffset>
-		</Version>
-		
-		
-		<!--TODO: current patch, h4-->
 
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x024FB660</Offset>
+				<Offset>0x1ED20</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x027C5EF0</Offset>
+				<Offset>0x2D1EC</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+		
+
+	</VersionedEntry>
+
+
+	<!--#region Halo 1 Skull Offsets-->
+	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>2</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>3</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntFuneralPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullForeignPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>5</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullEyePatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>6</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullRecessionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>7</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMalfunctionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>8</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>9</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>10</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullPinataPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>11</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>13</LastOffsetAdjustment> <!-- skip one -->
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBoomPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>14</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>16</LastOffsetAdjustment> <!-- skip one -->
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullGhostPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>17</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>19</LastOffsetAdjustment> <!-- skip one -->
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSputnikPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>20</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullAngerPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>21</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>22</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThatsJustWrongPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>23</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>30</LastOffsetAdjustment> <!-- skip 6-->
+		</Version>
+	</VersionedEntry>
+	<!--#endregion-->
+
+
+	<!--#region Halo 2 Skull Offsets-->
+
+	<!--TODO: several of these are wrong-->
+	
+	<VersionedEntry Name="skullEnvyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0xB</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0xA</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullAssassinPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x9</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x8</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x7</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x6</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x5</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGhostPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x4</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x3</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x2</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSputnikPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-0x1</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+	
+	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullAngerPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>2</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThatsJustWrongPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>3</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBoomPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>5</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullEyePatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>6</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>7</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntFuneralPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>8</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullPinataPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>9</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullRecessionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>10</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMalfunctionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>11</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullStreakingPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>12</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullJackedPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>13</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullScarabPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>14</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSwarmPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>15</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFeatherPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>16</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBondedPairPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>17</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMasterblasterPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>18</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSoAngryPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>19</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullProphetBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>20</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTheyComeBackPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>21</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo2">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>22</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
+	<!--#endregion-->
+	
+	
+	<!--#region Halo 3 + ODST (they're just copy pasted)-->
+
+	<VersionedEntry Name="skullAngerPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-6</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-6</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBondedPairPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullBoomPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullEyePatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullForeignPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGhostPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullJackedPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMalfunctionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMasterblasterPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullPinataPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullRecessionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSoAngryPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSwarmPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThatsJustWrongPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTheyComeBackPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTiltPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCowbellPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+
+	<VersionedEntry Name="skullAngerPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-6</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-6</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBondedPairPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullBoomPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullEyePatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullForeignPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGhostPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-5</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullJackedPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMalfunctionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMasterblasterPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullPinataPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullRecessionPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSoAngryPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-4</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullSwarmPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThatsJustWrongPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTheyComeBackPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>-3</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTiltPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCowbellPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo3ODST">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>4</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<!--#endregion-->
+
+<!--#region reach + halo4 skull offsets (copy pasted)-->
+	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>2</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>5</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTiltPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCowbellPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="HaloReach">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
 	</VersionedEntry>
 
 	
+	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>2</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>5</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>1</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>6</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullTiltPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>0</LastOffsetAdjustment>
+			<BitOffsetOverride>7</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>0</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
 	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
-		<Version Version="All" Game="Halo1">
-			<Base>skullAcrophobiaPointer</Base> <!--pointer won't be constructed if PointerDataStore can't find game+version combo of base-->
-			<LastOffsetAdjustment>-0xE</LastOffsetAdjustment> <!--optional, can be neg. Adjusts last offset only-->
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>2</BitOffsetOverride>
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="skullBandanaPointer" Type="MultilevelPointer::Derived">
-		<Version Version="All" Game="Halo1">
-			<Base>skullAcrophobiaPointer</Base>
-			<LastOffsetAdjustment>-0x11</LastOffsetAdjustment>
+	<VersionedEntry Name="skullCowbellPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>3</BitOffsetOverride>
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>4</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo4">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>1</LastOffsetAdjustment>
+			<BitOffsetOverride>5</BitOffsetOverride>
+		</Version>
+	</VersionedEntry>
+
+	
+<!--#endregion-->
 
 	
 </root>
