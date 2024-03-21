@@ -6517,6 +6517,14 @@
 				<Offset>0x80C</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x01B1E658</Offset>
+				<Offset>0x89C</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -6560,6 +6568,14 @@
 			<lookDirForward>0x28</lookDirForward>
 			<lookDirUp>0x34</lookDirUp>
 		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<position>0x0</position>
+			<velocity>0x40</velocity>
+			<FOV>0x24</FOV>
+			<lookDirForward>0x28</lookDirForward>
+			<lookDirUp>0x34</lookDirUp>
+		</Version>
 	</VersionedEntry>
 
 
@@ -6596,6 +6612,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xC9FB88</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x10DAF88</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
