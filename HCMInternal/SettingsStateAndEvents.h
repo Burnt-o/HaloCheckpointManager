@@ -1357,7 +1357,18 @@ public:
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor,
 		switchBSPIndex,
-		setPlayerHealthVec2
+		setPlayerHealthVec2,
+		waypoint3DClampToggle,
+		waypoint3DRenderRangeToggle,
+		waypoint3DRenderRangeInput,
+		waypoint3DGlobalSpriteScale,
+		waypoint3DGlobalLabelScale,
+		waypoint3DGlobalDistanceScale,
+		waypoint3DGlobalDistancePrecision,
+		waypoint3DGlobalSpriteColor,
+		waypoint3DGlobalLabelColor,
+		waypoint3DGlobalDistanceColor,
+		waypoint3DList
 
 	};
 

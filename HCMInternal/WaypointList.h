@@ -7,7 +7,7 @@
 // represents a 3d waypoint
 struct Waypoint {
 	// data
-	SimpleMath::Vector3 position;
+	SimpleMath::Vector3 position = SimpleMath::Vector3{ 0, 0, 0 };
 	std::string label = "unlabeled";
 	bool waypointEnabled = true;
 	bool showSprite = true;

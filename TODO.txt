@@ -14,8 +14,6 @@ TODO:
 * Improve waypoint3d gui 
 	* list to own subheading
 	* add index
-* waypoint clamping to seperate func
-	* transperency when clamped
 * Fix h2 skulls
 * Add odst/reach/h4 camera data
 * change defaults for waypoint text/sprite colour
