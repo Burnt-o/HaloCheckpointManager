@@ -616,6 +616,7 @@ private:
 							createNestedElement(GUIElementEnum::display2DInfoSettingsInfoSubheading),
 							createNestedElement(GUIElementEnum::display2DInfoSettingsVisualSubheading),
 							createNestedElement(GUIElementEnum::waypoint3DGUIToggle),
+							createNestedElement(GUIElementEnum::waypoint3DGUIList),
 							createNestedElement(GUIElementEnum::waypoint3DGUISettings),
 						}));
 
@@ -838,6 +839,11 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 						(game, ToolTipCollection("Toggles 3D waypoints"), RebindableHotkeyEnum::toggleWaypoint3D, "Custom Waypoints", settings->waypoint3DToggle));
 
+				case GUIElementEnum::waypoint3DGUIList:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWaypointList<false>>
+						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent));
+
+
 				case GUIElementEnum::waypoint3DGUISettings:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Custom Waypoint Settings"), "Custom Waypoint Settings", headerChildElements
@@ -852,55 +858,51 @@ private:
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistanceColor),
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistanceScale),
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalDistancePrecision),
-							createNestedElement(GUIElementEnum::waypoint3DGUIList),
 							}));
 
 
-				case GUIElementEnum::waypoint3DGUIClampToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, ToolTipCollection("Clamps waypoints to the edge of the screen when you turn away from them"), std::nullopt, "Clamp to Screen", settings->waypoint3DClampToggle));
+					case GUIElementEnum::waypoint3DGUIClampToggle:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Clamps waypoints to the edge of the screen when you turn away from them"), std::nullopt, "Clamp to Screen", settings->waypoint3DClampToggle));
 
 
-				case GUIElementEnum::waypoint3DGUIRenderRangeToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, ToolTipCollection("Toggles disabling rendering of waypoints that are too far away"), std::nullopt, "Render Range Filter", settings->waypoint3DRenderRangeToggle));
+					case GUIElementEnum::waypoint3DGUIRenderRangeToggle:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Toggles disabling rendering of waypoints that are too far away"), std::nullopt, "Render Range Filter", settings->waypoint3DRenderRangeToggle));
 
-				case GUIElementEnum::waypoint3DGUIRenderRangeInput:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-						(game, ToolTipCollection("How far away (game units) does a waypoint need to be before disabling rendering?"), "Render Range", settings->waypoint3DRenderRangeInput));
+					case GUIElementEnum::waypoint3DGUIRenderRangeInput:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							(game, ToolTipCollection("How far away (game units) does a waypoint need to be before disabling rendering?"), "Render Range", settings->waypoint3DRenderRangeInput));
 
-				case GUIElementEnum::waypoint3DGUIGlobalSpriteColor:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
-						(game, ToolTipCollection("Color to apply to waypoint sprite"), "Global Sprite Color", settings->waypoint3DGlobalSpriteColor));
+					case GUIElementEnum::waypoint3DGUIGlobalSpriteColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+							(game, ToolTipCollection("Color to apply to waypoint sprite"), "Global Sprite Color", settings->waypoint3DGlobalSpriteColor));
 
-				case GUIElementEnum::waypoint3DGUIGlobalSpriteScale:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-						(game, ToolTipCollection("Scaling factor of waypoint sprite"), "Global Sprite Scale", settings->waypoint3DGlobalSpriteScale));
+					case GUIElementEnum::waypoint3DGUIGlobalSpriteScale:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							(game, ToolTipCollection("Scaling factor of waypoint sprite"), "Global Sprite Scale", settings->waypoint3DGlobalSpriteScale));
 
-				case GUIElementEnum::waypoint3DGUIGlobalLabelColor:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
-						(game, ToolTipCollection("Color to apply to waypoint label"), "Global Label Color", settings->waypoint3DGlobalLabelColor));
+					case GUIElementEnum::waypoint3DGUIGlobalLabelColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+							(game, ToolTipCollection("Color to apply to waypoint label"), "Global Label Color", settings->waypoint3DGlobalLabelColor));
 
-				case GUIElementEnum::waypoint3DGUIGlobalLabelScale:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-						(game, ToolTipCollection("Scaling factor of waypoint label"), "Global Label Scale", settings->waypoint3DGlobalLabelScale));
+					case GUIElementEnum::waypoint3DGUIGlobalLabelScale:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							(game, ToolTipCollection("Scaling factor of waypoint label"), "Global Label Scale", settings->waypoint3DGlobalLabelScale));
 
-				case GUIElementEnum::waypoint3DGUIGlobalDistanceColor:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
-						(game, ToolTipCollection("Color to apply to waypoint distance text"), "Global Distance Color", settings->waypoint3DGlobalDistanceColor));
+					case GUIElementEnum::waypoint3DGUIGlobalDistanceColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+							(game, ToolTipCollection("Color to apply to waypoint distance text"), "Global Distance Color", settings->waypoint3DGlobalDistanceColor));
 
-				case GUIElementEnum::waypoint3DGUIGlobalDistanceScale:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-						(game, ToolTipCollection("Scaling factor of waypoint distance text"), "Global Distance Scale", settings->waypoint3DGlobalDistanceScale));
+					case GUIElementEnum::waypoint3DGUIGlobalDistanceScale:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							(game, ToolTipCollection("Scaling factor of waypoint distance text"), "Global Distance Scale", settings->waypoint3DGlobalDistanceScale));
 
-				case GUIElementEnum::waypoint3DGUIGlobalDistancePrecision:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
-						(game, ToolTipCollection("Decimal precision of waypoint distance text"), "Global Distance Precision", settings->waypoint3DGlobalDistancePrecision));
+					case GUIElementEnum::waypoint3DGUIGlobalDistancePrecision:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+							(game, ToolTipCollection("Decimal precision of waypoint distance text"), "Global Distance Precision", settings->waypoint3DGlobalDistancePrecision));
 
 
-				case GUIElementEnum::waypoint3DGUIList:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWaypointList<false>>
-						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent));
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

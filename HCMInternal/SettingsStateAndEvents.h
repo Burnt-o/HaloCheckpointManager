@@ -1198,7 +1198,7 @@ public:
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> waypoint3DGlobalSpriteColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{1.f, 0.5f, 0.f, 1.f}, // orange
+			SimpleMath::Vector4{ 0.f, 1.f, 0.f, 1.f }, // green
 			[](SimpleMath::Vector4 in) { return true; },
 			nameof(waypoint3DGlobalSpriteColor)
 		);

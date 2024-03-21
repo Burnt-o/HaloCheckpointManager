@@ -141,18 +141,18 @@ public:
 
 
 		// Copy to clipboard button
-		if (ImGui::Button("Copy to Clipboard"))
+		if (ImGui::Button("Copy Waypoint to Clipboard"))
 		{
 			pugi::xml_document doc;
-			pugi::xml_node node = doc.append_child("");
+			pugi::xml_node node = doc.append_child("waypoint");
 			workingWaypoint.serialise(node);
 			std::ostringstream ss;
-			node.first_child().print(ss);
+			node.print(ss);
 			ImGui::SetClipboardText(ss.str().c_str());
 		}
 	
 		// Paste from clipboard button
-		if (ImGui::Button("Paste from Clipboard"))
+		if (ImGui::Button("Paste Waypoint from Clipboard"))
 		{
 			try
 			{

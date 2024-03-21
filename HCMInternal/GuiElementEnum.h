@@ -139,6 +139,7 @@
 			((display2DInfoFloatPrecision, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoOutline, (ALL_SUPPORTED_GAMES)))\
 	((waypoint3DGUIToggle, (ALL_SUPPORTED_GAMES)))\
+	((waypoint3DGUIList, (ALL_SUPPORTED_GAMES)))\
 	((waypoint3DGUISettings, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIClampToggle, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIRenderRangeToggle, (ALL_SUPPORTED_GAMES)))\
@@ -150,7 +151,6 @@
 		((waypoint3DGUIGlobalDistanceColor, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalDistanceScale, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalDistancePrecision, (ALL_SUPPORTED_GAMES)))\
-		((waypoint3DGUIList, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\

@@ -51,59 +51,83 @@ public:
 			return;
 		}
 
-		
+		ImGui::Dummy({ mLeftMargin, GUIFrameHeight }); // left margin
+		ImGui::SameLine();
 
 		ImGui::BeginChild(mHeadingText.c_str(), { 500 - mLeftMargin, currentHeight - GUISpacing });
 
 
 		constexpr ImGuiTreeNodeFlags treeFlags = startsOpen ? ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_FramePadding;
-
+		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), treeFlags);
 		renderTooltip();
-		DEBUG_GUI_HEIGHT;
-
-		if (waypointListPtr->GetValue().listInUse)
-		{
-			waypointListPtr->GetValue().listInUse.wait(true);
-		}
-		ScopedAtomicBool lock(waypointListPtr->GetValue().listInUse);
-		auto& waypointList = waypointListPtr->GetValue();
 
 		currentHeight = GUIFrameHeightWithSpacing;
-		for (auto& waypoint : waypointList.list)
-		{
-			currentHeight += GUIFrameHeightWithSpacing;
-			renderWaypoint(waypoint, waypointList);
-		}
 
-
-		// draw add button
-		currentHeight += GUIFrameHeightWithSpacing;
-		if (ImGui::Button("Add Waypoint##GUIWaypointList"))
+		if (headingOpen)
 		{
-			PLOG_VERBOSE << "GUIWaypointList firing add event";
-			auto mEventToFire = mAddEventWeak.lock();
-			if (!mEventToFire)
+			if (waypointListPtr->GetValue().listInUse)
 			{
-				PLOG_ERROR << "bad mAddEventWeak weakptr when rendering " << getName();
-				return;
+				waypointListPtr->GetValue().listInUse.wait(true);
+			}
+			ScopedAtomicBool lock(waypointListPtr->GetValue().listInUse);
+			auto& waypointList = waypointListPtr->GetValue();
+
+			// draw add button
+			if (ImGui::Button("Add New Waypoint##GUIWaypointList"))
+			{
+				PLOG_VERBOSE << "GUIWaypointList firing add event";
+				auto mEventToFire = mAddEventWeak.lock();
+				if (!mEventToFire)
+				{
+					PLOG_ERROR << "bad mAddEventWeak weakptr when rendering " << getName();
+					return;
+				}
+
+				auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypointList]() {mEvent->operator()(waypointList); }));
+				newThread.detach();
+			}
+			currentHeight += GUIFrameHeightWithSpacing;
+
+			// draw waypoint list
+			ImGui::BeginTable("WaypointTable", 1, ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuterH | ImGuiTableFlags_BordersOuterV);
+			currentHeight += GUISpacing;
+			if (waypointList.list.empty())
+			{
+				ImGui::TableNextColumn();
+				currentHeight += GUIFrameHeightWithSpacing;
+				ImGui::Dummy({ mLeftMargin, GUIFrameHeight }); // left margin
+				ImGui::SameLine();
+				ImGui::AlignTextToFramePadding();
+				ImGui::Text("No waypoints yet!");
+			}
+			else
+			{
+				int waypointIndex = 0;
+				for (auto& waypoint : waypointList.list)
+				{
+					ImGui::TableNextColumn();
+					currentHeight += GUIFrameHeightWithSpacing;
+					renderWaypoint(waypoint, waypointList, waypointIndex);
+					waypointIndex++;
+				}
 			}
 
-			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypointList]() {mEvent->operator()(waypointList); }));
-			newThread.detach();
+			ImGui::EndTable();
 
+			ImGui::TreePop();
 		}
 
-			
 		ImGui::EndChild();
 
 
 	}
 
-	void renderWaypoint(Waypoint& waypoint, WaypointList& waypointList)
+	void renderWaypoint(Waypoint& waypoint, WaypointList& waypointList, int waypointIndex)
 	{
 		std::string uid = std::format("{}", (uintptr_t)& waypoint); // use waypoint pointer as unique imgui id
 
-		ImGui::Dummy({ mLeftMargin, GUIFrameHeight }); // left margin
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text(std::format("{}", waypointIndex).c_str());
 		ImGui::SameLine();
 
 		// draw "Enabled" textbox

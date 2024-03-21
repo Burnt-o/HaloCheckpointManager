@@ -46,10 +46,9 @@ public:
 		headingOpen = ImGui::TreeNodeEx(mHeadingText.c_str(), treeFlags);
 		renderTooltip();
 		DEBUG_GUI_HEIGHT;
+		currentHeight = GUIFrameHeightWithSpacing;
 		if (headingOpen)
 		{
-
-			currentHeight = GUIFrameHeightWithSpacing;
 			for (auto& element : mChildElements)
 			{
 				auto thisElementHeight = element->getCurrentHeight();
@@ -60,13 +59,9 @@ public:
 				element->render(hotkeyRenderer);
 			}
 
-
 			ImGui::TreePop();
 		}
-		else
-		{
-			currentHeight = GUIFrameHeightWithSpacing;
-		}
+
 		ImGui::EndChild();
 
 

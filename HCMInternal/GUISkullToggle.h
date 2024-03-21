@@ -120,7 +120,7 @@ public:
 				currentHeight += GUIFrameHeightWithSpacing; // little extra height to account for table padding
 				currentHeight += checkBoxElementHeight * std::ceil(mSettings->skullBitBoolCollection.size() / 2.f); // add height for amount of rows (skulls / 2 rounded up)
 
-				ImGui::BeginTable("skullTable", 2); // return value is whether or not it's clipped
+				ImGui::BeginTable("skullTable", 2, ImGuiTableFlags_RowBg); // return value is whether or not it's clipped
 
 				// render each available skull toggle 
 				for (auto& [skullEnumKey, bitBoolPointer] : mSettings->skullBitBoolCollection)
