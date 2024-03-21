@@ -165,6 +165,7 @@
 	((freeCameraToggleGUI, (FREE_CAMERA_SUPPORT)))\
 	((freeCameraSettingsSimpleSubheading, (FREE_CAMERA_SUPPORT)))\
 	((freeCameraSettingsAdvancedSubheading, (FREE_CAMERA_SUPPORT)))\
+		((freeCameraTeleportToCamera, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraHideWatermark, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraHideMessages, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraThirdPersonRendering, (FREE_CAMERA_SUPPORT)))\

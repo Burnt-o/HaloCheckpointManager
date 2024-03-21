@@ -170,8 +170,12 @@ private:
 		mSettings->freeCameraHotkeyEvent,
 		vvk{}),
 
-		initEventOnPressHotkey(freeCameraGameInputDisable,
+				initEventOnPressHotkey(freeCameraTeleportToCameraHotkey,
 		mSettings->freeCameraGameInputDisableHotkeyEvent,
+		vvk{}),
+
+		initEventOnPressHotkey(freeCameraGameInputDisable,
+		mSettings->freeCameraTeleportToCameraEvent,
 		vvk{}),
 
 			initEventOnPressHotkey(freeCameraCameraInputDisable,

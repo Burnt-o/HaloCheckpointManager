@@ -28,6 +28,7 @@
 
 #include "UserCameraInputReader.h"
 #include "GlobalKill.h"
+#include "ForceTeleport.h"
 
 template <GameState::Value gameT>  // templated so that each game gets a seperate instance of the static members
 class FreeCameraImpl : public FreeCameraImplUntemplated
@@ -46,6 +47,7 @@ private:
 	ScopedCallback <ToggleEvent> mDisableScreenEffectsToggleCallback;
 	ScopedCallback <ToggleEvent> mBlockPlayerCharacterInputToggleCallback;
 
+	ScopedCallback <ActionEvent> freeCameraTeleportToCameraCallback;
 
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionCallback;
 	ScopedCallback <ActionEvent> freeCameraUserInputCameraSetPositionFillCurrentCallback;
@@ -73,6 +75,8 @@ private:
 	std::optional<std::weak_ptr< DisableScreenEffects>> disableScreenEffectsOptionalWeak;
 	std::optional<std::weak_ptr< ThirdPersonRendering>> thirdPersonRenderingOptionalWeak;
 	std::optional<std::weak_ptr< BlockPlayerCharacterInput>> blockPlayerCharacterInputOptionalWeak;
+
+	std::optional<std::weak_ptr<ForceTeleport>> forceTeleportOptionalWeak;
 
 
 	std::shared_ptr<UserCameraInputReader> userCameraInputReader;
@@ -547,7 +551,39 @@ private:
 		}
 	}
 
+	void onFreeCameraTeleportToCameraCallback()
+	{
+		try
+		{
 
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
+
+			lockOrThrow(settingsWeak, settings);
+
+			if (settings->freeCameraToggle->GetValue() == false)
+			{
+				throw HCMRuntimeException("Can't do that while freecam is disabled!");
+			}
+
+			if (forceTeleportOptionalWeak.has_value() == false)
+			{
+				throw HCMRuntimeException("Could not resolve force teleport service!");
+			}
+
+			lockOrThrow(forceTeleportOptionalWeak.value(), forceTeleport);
+
+
+			auto cameraPosition = userControlledPosition.getPositionTransformation();
+			forceTeleport->teleportPlayerTo(cameraPosition);
+
+
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
 
 
 
@@ -584,8 +620,8 @@ public:
 		freeCameraUserInputCameraSetRotationPasteCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetRotationPaste, [this]() { onFreeCameraUserInputCameraSetRotationPaste(); }),
 	
 		freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey(); }),
-		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); })
-		
+		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); }),
+		freeCameraTeleportToCameraCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->freeCameraTeleportToCameraEvent, [this]() {onFreeCameraTeleportToCameraCallback(); })
 
 	{
 		instance = this;
@@ -619,6 +655,15 @@ public:
 		catch (HCMInitException ex)
 		{
 			PLOG_DEBUG << "failed to resolve optional dependent cheat blockPlayerCharacterInputOptionalWeak, error: " << ex.what();
+		}
+
+		try
+		{
+			forceTeleportOptionalWeak = resolveDependentCheat(ForceTeleport);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_DEBUG << "failed to resolve optional dependent cheat forceTeleportOptionalWeak, error: " << ex.what();
 		}
 
 		if constexpr (gameT == GameState::Value::Halo2)

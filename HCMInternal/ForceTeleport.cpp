@@ -154,7 +154,8 @@ private:
 			runtimeExceptions->handleMessage(ex);
 		}
 	}
-
+	void teleportObjectToAbsolute(SimpleMath::Vector3 coords, Datum entityToTeleport); // throws HCMRuntimes
+	void teleportObjectRelativeToPlayer(SimpleMath::Vector3 coords, Datum entityToTeleport); // throws HCMRuntimes
 
 public:
 	ForceTeleportSimple(GameState game, IDIContainer& dicon)
@@ -180,18 +181,22 @@ public:
 			PLOG_ERROR << "Could not resolve getPlayerViewAngleWeak: " << ex.what();
 		}
 
-		//try
-		//{
-		//	unfreezeObjectPhysicsWeak = resolveDependentCheat(UnfreezeObjectPhysics);
-		//}
-		//catch (HCMInitException ex)
-		//{
-		//	PLOG_ERROR << "Could not resolve unfreezeObjectPhysicsWeak: " << ex.what();
-		//}
 	}
 
-	void teleportObjectToAbsolute(SimpleMath::Vector3 coords, Datum entityToTeleport); // throws HCMRuntimes
-	void teleportObjectRelativeToPlayer(SimpleMath::Vector3 coords, Datum entityToTeleport); // throws HCMRuntimes
+
+
+
+	virtual void teleportPlayerTo(SimpleMath::Vector3 position) override
+	{
+		lockOrThrow(getPlayerDatumWeak, getPlayerDatum);
+		auto playerDatum = getPlayerDatum->getPlayerDatum();
+		if (playerDatum.isNull()) throw HCMRuntimeException("Null player datum!");
+		teleportObjectToAbsolute(position, playerDatum);
+	}
+	virtual void teleportEntityTo(SimpleMath::Vector3 position, Datum entityDatum) override
+	{
+		teleportObjectToAbsolute(position, entityDatum);
+	}
 };
 
 
@@ -309,3 +314,7 @@ void ForceTeleportSimple::teleportObjectRelativeToPlayer(SimpleMath::Vector3 coo
 
 }
 
+
+
+void ForceTeleport::teleportPlayerTo(SimpleMath::Vector3 position) { return pimpl->teleportPlayerTo(position); }
+void ForceTeleport::teleportEntityTo(SimpleMath::Vector3 position, Datum entityDatum) { return pimpl->teleportEntityTo(position, entityDatum); }

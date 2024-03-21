@@ -981,6 +981,7 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Simple settings for Free Camera"), "Free Camera Simple Settings", headerChildElements
 							{
+								createNestedElement(GUIElementEnum::freeCameraTeleportToCamera),
 								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraCameraInputDisable),
 								createNestedElement(GUIElementEnum::freeCameraUserInputCameraBindingsSubheading),
@@ -997,6 +998,7 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Advanced settings for Free Camera"), "Free Camera Advanced Settings", headerChildElements
 							{
+								createNestedElement(GUIElementEnum::freeCameraTeleportToCamera),
 								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
 								createNestedElement(GUIElementEnum::freeCameraHideMessages),
 								createNestedElement(GUIElementEnum::freeCameraThirdPersonRendering),
@@ -1009,6 +1011,11 @@ private:
 								//createNestedElement(GUIElementEnum::freeCameraAnchorRotationToObjectFacing),
 								//createNestedElement(GUIElementEnum::freeCameraAnchorFOVToObjectDistance),
 							}));
+
+					case GUIElementEnum::freeCameraTeleportToCamera:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Teleports the player to the cameras position"), RebindableHotkeyEnum::freeCameraTeleportToCameraHotkey, "Teleport to Camera", settings->freeCameraTeleportToCameraEvent));
+
 
 					case GUIElementEnum::freeCameraHideWatermark:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>

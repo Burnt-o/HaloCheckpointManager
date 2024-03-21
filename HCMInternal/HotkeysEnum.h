@@ -26,6 +26,7 @@ infiniteAmmo,\
 bottomlessClip,\
 display2DInfo,\
 freeCamera,\
+freeCameraTeleportToCameraHotkey,\
 freeCameraGameInputDisable,\
 freeCameraCameraInputDisable,\
 freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,\

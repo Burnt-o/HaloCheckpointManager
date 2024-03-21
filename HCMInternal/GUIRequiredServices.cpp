@@ -271,6 +271,11 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::FreeCamera}
 	},
 
+			{ GUIElementEnum::freeCameraTeleportToCamera,
+{OptionalCheatEnum::FreeCamera, OptionalCheatEnum::ForceTeleport}
+	},
+
+
 			{ GUIElementEnum::freeCameraSettingsSimpleSubheading,
 {OptionalCheatEnum::FreeCamera}
 	},
