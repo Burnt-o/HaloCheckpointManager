@@ -7554,105 +7554,105 @@
 	<VersionedEntry Name="skullGruntFuneralPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>8</LastOffsetAdjustment>
+			<LastOffsetAdjustment>9</LastOffsetAdjustment> <!--skip one-->
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullPinataPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>9</LastOffsetAdjustment>
+			<LastOffsetAdjustment>10</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullRecessionPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>10</LastOffsetAdjustment>
+			<LastOffsetAdjustment>11</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullMalfunctionPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>11</LastOffsetAdjustment>
+			<LastOffsetAdjustment>12</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullStreakingPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>12</LastOffsetAdjustment>
+			<LastOffsetAdjustment>13</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullJackedPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>13</LastOffsetAdjustment>
+			<LastOffsetAdjustment>14</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullScarabPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>14</LastOffsetAdjustment>
+			<LastOffsetAdjustment>15</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullSwarmPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>15</LastOffsetAdjustment>
+			<LastOffsetAdjustment>16</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullFeatherPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>16</LastOffsetAdjustment>
+			<LastOffsetAdjustment>17</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullBondedPairPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>17</LastOffsetAdjustment>
+			<LastOffsetAdjustment>18</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullMasterblasterPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>18</LastOffsetAdjustment>
+			<LastOffsetAdjustment>19</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullSoAngryPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>19</LastOffsetAdjustment>
+			<LastOffsetAdjustment>20</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullProphetBirthdayPartyPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>20</LastOffsetAdjustment>
+			<LastOffsetAdjustment>21</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullTheyComeBackPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>21</LastOffsetAdjustment>
+			<LastOffsetAdjustment>22</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>22</LastOffsetAdjustment>
+			<LastOffsetAdjustment>23</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 	<!--#endregion-->
