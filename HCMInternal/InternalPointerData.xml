@@ -6501,6 +6501,14 @@
 				<Offset>0x824</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01C3197C</Offset>
+				<Offset>0x8CC</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -6521,26 +6529,18 @@
 			<lookDirUp>0x2C</lookDirUp>
 		</Version>
 
-		<!--<Version Version="All" Game="Halo3">
-			<position>0x0</position>
-			<velocity>0x74</velocity>
-			<FOV>0x24</FOV>
-			<lookDirForward>0x28</lookDirForward>
-			<lookDirUp>0x34</lookDirUp>
-		</Version>-->
-
-		<!--<Version Version="All" Game="Halo3">
-			<position>0x0</position>
-			<velocity>0x40</velocity>
-			<FOV>0x24</FOV>
-			<lookDirForward>0x28</lookDirForward>
-			<lookDirUp>0x34</lookDirUp>
-		</Version>-->
-
 		<Version Version="All" Game="Halo3">
 			<position>0x0</position>
 			<velocity>0x10</velocity>
 			<FOV>0x40</FOV>
+			<lookDirForward>0x28</lookDirForward>
+			<lookDirUp>0x34</lookDirUp>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<position>0x0</position>
+			<velocity>0x10</velocity>
+			<FOV>0x24</FOV>
 			<lookDirForward>0x28</lookDirForward>
 			<lookDirUp>0x34</lookDirUp>
 		</Version>
@@ -6566,6 +6566,13 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2D2E6B0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2D735C0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

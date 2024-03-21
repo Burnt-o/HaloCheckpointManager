@@ -177,12 +177,28 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			throw HCMRuntimeException(std::format("Bad vertical FOV value: {}", verticalFov));
 
 #ifdef HCM_DEBUG
+		static float adjustFactor = 1.f;
+
+		if (GetKeyState('3') & 0x8000)
+		{
+			adjustFactor += 0.001f;
+		}
+		if (GetKeyState('4') & 0x8000)
+		{
+			adjustFactor -= 0.001f;
+		}
+
 		if (GetKeyState('5') & 0x8000)
 		{
 			PLOG_VERBOSE << "horizontalFov: " << *cameraData.FOV;
 			PLOG_VERBOSE << "verticalFov: " << verticalFov;
+			PLOG_VERBOSE << "adjustedFov: " << (verticalFov * adjustFactor);
 			PLOG_VERBOSE << "pCameraData->horizontalFov: " << std::hex << (uintptr_t)cameraData.FOV;
+			PLOG_VERBOSE << "adjustFactor: " << adjustFactor;
 		}
+
+
+		verticalFov = verticalFov * adjustFactor;
 #endif
 
 
