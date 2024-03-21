@@ -26,10 +26,71 @@ float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth,
 	}
 }
 
+template<GameState::Value mGame>
+IRenderer3D::AppliedClamp Renderer3DImpl<mGame>::clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& world, float clampBorderRatio)
+{
+	// https://github.com/OBalfaqih/Unity-Tutorials/blob/master/Unity%20Tutorials/WaypointMarker/Scripts/MissionWaypoint.cs#L35
+
+	float edgeBorder = (this->screenSize.x + this->screenSize.y) / 2.f * clampBorderRatio;
+	float minX = edgeBorder;
+	float maxX = this->screenSize.x - edgeBorder;
+	float minY = edgeBorder;
+	float maxY = this->screenSize.y - edgeBorder;
+
+	SimpleMath::Vector3 targetDir = world - this->cameraPosition;
+	float dot = targetDir.Dot(this->cameraDirection);
+	if (dot < 0)
+	{
+		if (screenPositionOut.x < (this->screenSize.x / 2)) 	// Check if the target is on the left side of the screen
+		{
+			screenPositionOut.x = maxX; // Place it on the right (Since it's behind the player, it's the opposite)
+		}
+		else
+		{
+			screenPositionOut.x = minX; // Place it on the left side
+		}
+
+		if (screenPositionOut.y < (this->screenSize.y / 2)) 	// Check if the target is on the top side of the screen
+		{
+			screenPositionOut.y = maxY; // Place it on the bottom (Since it's behind the player, it's the opposite)
+		}
+		else
+		{
+			screenPositionOut.y = minY; // Place it on the top
+		}
+	}
+
+	// clamp to screen
+	screenPositionOut.x = std::clamp(screenPositionOut.x, minX, maxX);
+	screenPositionOut.y = std::clamp(screenPositionOut.y, minY, maxY);
+
+	if (screenPositionOut.x == minX) 
+	{
+		return AppliedClamp::Left;
+	}
+	else if (screenPositionOut.x == maxX)
+	{
+		return AppliedClamp::Right;
+	}
+	else if (screenPositionOut.y == minY)
+	{
+		return AppliedClamp::Top;
+	}
+	else if (screenPositionOut.y == maxY)
+	{
+		return AppliedClamp::Bottom;
+	}
+	else
+	{
+		return AppliedClamp::None;
+	}
+
+}
+
 
 
 template<GameState::Value mGame>
-SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath::Vector3 world, bool shouldClamp, float clampBorderRatio)
+SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath::Vector3 world)
 {
 	LOG_ONCE(PLOG_VERBOSE << "world to screen");
 	auto worldPos = SimpleMath::Vector4::Transform({ world.x, world.y, world.z, 1.f },
@@ -58,43 +119,6 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 
 
 
-	if (shouldClamp)
-	{
-		// https://github.com/OBalfaqih/Unity-Tutorials/blob/master/Unity%20Tutorials/WaypointMarker/Scripts/MissionWaypoint.cs#L35
-
-		float edgeBorder = (this->screenSize.x + this->screenSize.y) / 2.f * clampBorderRatio;
-		float minX = edgeBorder;
-		float maxX = this->screenSize.x - edgeBorder;
-		float minY = edgeBorder;
-		float maxY = this->screenSize.y - edgeBorder;
-
-		SimpleMath::Vector3 targetDir = world - this->cameraPosition;
-		float dot = targetDir.Dot(this->cameraDirection);
-		if (dot < 0)
-		{
-			if (out.x < (this->screenSize.x / 2)) 	// Check if the target is on the left side of the screen
-			{
-				out.x = maxX; // Place it on the right (Since it's behind the player, it's the opposite)
-			}
-			else
-			{
-				out.x = minX; // Place it on the left side
-			}
-
-			if (out.y < (this->screenSize.y / 2)) 	// Check if the target is on the top side of the screen
-			{
-				out.y = maxY; // Place it on the bottom (Since it's behind the player, it's the opposite)
-			}
-			else
-			{
-				out.y = minY; // Place it on the top
-			}
-		}
-		
-		// clamp to screen
-		out.x = std::clamp(out.x, minX, maxX);
-		out.y = std::clamp(out.y, minY, maxY);
-	}
 
 
 #ifdef HCM_DEBUG

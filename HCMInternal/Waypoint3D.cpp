@@ -267,16 +267,16 @@ private:
 			}
 #endif
 
-		
+			bool shouldClamp = settings->waypoint3DClampToggle->GetValue();
 			for (auto& waypoint : lockedWaypointList)
 			{
 				if (waypoint.waypointEnabled == false) continue;
 
 
-				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position, settings->waypoint3DClampToggle->GetValue());
+				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
 
-
-				if (settings->waypoint3DClampToggle->GetValue() ==false)
+				bool isClamped = false; // clamped waypoints will have transparency halved
+				if (shouldClamp == false)
 				{
 					if (screenPosition.z < 0 || screenPosition.z > 1)
 					{
@@ -284,6 +284,11 @@ private:
 						continue;
 					}
 		
+				}
+				else
+				{
+					// clamp it
+					isClamped = renderer->clampScreenPositionToEdge(screenPosition, waypoint.position) != IRenderer3D::AppliedClamp::None;
 				}
 
 				// test if filtered by render range
@@ -301,8 +306,10 @@ private:
 				{
 					LOG_ONCE(PLOG_DEBUG << "rendering waypoint sprite");
 
-					auto& spriteScale = waypoint.spriteScaleUseGlobal ? settings->waypoint3DGlobalSpriteScale->GetValue() : waypoint.spriteScale;
-					auto& spriteColor = waypoint.spriteColorUseGlobal ? settings->waypoint3DGlobalSpriteColor->GetValue() : waypoint.spriteColor;
+					auto spriteScale = waypoint.spriteScaleUseGlobal ? settings->waypoint3DGlobalSpriteScale->GetValue() : waypoint.spriteScale;
+					auto spriteColor = waypoint.spriteColorUseGlobal ? settings->waypoint3DGlobalSpriteColor->GetValue() : waypoint.spriteColor;
+
+					if (isClamped) spriteColor.w = spriteColor.w * 0.5f; // half transparency of clamped waypoints
 
 					auto drawnRect = renderer->drawCenteredSprite(110, { screenPosition.x, screenPosition.y }, spriteScale, spriteColor);
 					
@@ -315,9 +322,10 @@ private:
 				{
 					LOG_ONCE(PLOG_DEBUG << "rendering waypoint label");
 
-					auto& labelScale = waypoint.labelScaleUseGlobal ? settings->waypoint3DGlobalLabelScale->GetValue() : waypoint.labelScale;
-					auto& labelColor = waypoint.labelColorUseGlobal ? settings->waypoint3DGlobalLabelColor->GetValue() : waypoint.labelColor;
+					auto labelScale = waypoint.labelScaleUseGlobal ? settings->waypoint3DGlobalLabelScale->GetValue() : waypoint.labelScale;
+					auto labelColor = waypoint.labelColorUseGlobal ? settings->waypoint3DGlobalLabelColor->GetValue() : waypoint.labelColor;
 
+					if (isClamped) labelColor.w = labelColor.w * 0.5f; // half transparency of clamped waypoints
 
 #ifdef HCM_DEBUG
 					if (GetKeyState('6') & 0x8000)
@@ -345,8 +353,10 @@ private:
 				{
 					LOG_ONCE(PLOG_DEBUG << "rendering distance measure only");
 
-					auto& distanceScale = waypoint.distanceScaleUseGlobal ? settings->waypoint3DGlobalDistanceScale->GetValue() : waypoint.distanceScale;
-					auto& distanceColor = waypoint.distanceColorUseGlobal ? settings->waypoint3DGlobalDistanceColor->GetValue() : waypoint.distanceColor;
+					auto distanceScale = waypoint.distanceScaleUseGlobal ? settings->waypoint3DGlobalDistanceScale->GetValue() : waypoint.distanceScale;
+					auto distanceColor = waypoint.distanceColorUseGlobal ? settings->waypoint3DGlobalDistanceColor->GetValue() : waypoint.distanceColor;
+
+					if (isClamped) distanceColor.w = distanceColor.w * 0.5f; // half transparency of clamped waypoints
 
 					float distancefontDistanceScale = distanceScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(waypoint.position));
 

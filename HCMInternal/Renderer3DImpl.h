@@ -64,7 +64,8 @@ public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
 
-	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 world, bool shouldClamp, float clampBorderRatio) override;
+	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 world) override;
+	virtual IRenderer3D::AppliedClamp clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition, float clampBorderRatio) override;
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
