@@ -26,88 +26,56 @@ float horizontalFOVToVerticalFOV(float horizontalFOVMeasured, float screenWidth,
 	}
 }
 
+
 template<GameState::Value mGame>
-IRenderer3D::AppliedClamp Renderer3DImpl<mGame>::clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& world, float clampBorderRatio)
+bool Renderer3DImpl<mGame>::pointOnScreen(const SimpleMath::Vector3& worldPointPosition)
 {
-	// https://github.com/OBalfaqih/Unity-Tutorials/blob/master/Unity%20Tutorials/WaypointMarker/Scripts/MissionWaypoint.cs#L35
+	return this->frustumViewWorld.Contains(worldPointPosition) != DirectX::ContainmentType::DISJOINT;
+}
 
-	float edgeBorder = (this->screenSize.x + this->screenSize.y) / 2.f * clampBorderRatio;
-	float minX = edgeBorder;
-	float maxX = this->screenSize.x - edgeBorder;
-	float minY = edgeBorder;
-	float maxY = this->screenSize.y - edgeBorder;
+template<GameState::Value mGame>
+bool Renderer3DImpl<mGame>::clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition)
+{
+	if (pointOnScreen(worldPointPosition)) return false;
 
-	SimpleMath::Vector3 targetDir = world - this->cameraPosition;
-	float dot = targetDir.Dot(this->cameraDirection);
-	if (dot < 0)
+	 //check frustrum for interesection with line from world pos to camera pos
+	SimpleMath::Vector3 worldToCameraDir = this->cameraPosition + this->cameraDirection - worldPointPosition;
+	float intersectionDistance;
+	if (this->frustumViewWorld.Intersects(worldPointPosition, worldToCameraDir, intersectionDistance))
 	{
-		if (screenPositionOut.x < (this->screenSize.x / 2)) 	// Check if the target is on the left side of the screen
-		{
-			screenPositionOut.x = maxX; // Place it on the right (Since it's behind the player, it's the opposite)
-		}
-		else
-		{
-			screenPositionOut.x = minX; // Place it on the left side
-		}
-
-		if (screenPositionOut.y < (this->screenSize.y / 2)) 	// Check if the target is on the top side of the screen
-		{
-			screenPositionOut.y = maxY; // Place it on the bottom (Since it's behind the player, it's the opposite)
-		}
-		else
-		{
-			screenPositionOut.y = minY; // Place it on the top
-		}
-	}
-
-	// clamp to screen
-	screenPositionOut.x = std::clamp(screenPositionOut.x, minX, maxX);
-	screenPositionOut.y = std::clamp(screenPositionOut.y, minY, maxY);
-
-	if (screenPositionOut.x == minX) 
-	{
-		return AppliedClamp::Left;
-	}
-	else if (screenPositionOut.x == maxX)
-	{
-		return AppliedClamp::Right;
-	}
-	else if (screenPositionOut.y == minY)
-	{
-		return AppliedClamp::Top;
-	}
-	else if (screenPositionOut.y == maxY)
-	{
-		return AppliedClamp::Bottom;
+		// find where the ray touches the frustrum
+		auto clampedWorldPosition = worldPointPosition + (worldToCameraDir * intersectionDistance);
+		// that's the new screen position
+		screenPositionOut = worldPointToScreenPosition(clampedWorldPosition);
+		return true;
 	}
 	else
 	{
-		return AppliedClamp::None;
+		// this *shouldn't* happen;
+		LOG_ONCE(PLOG_ERROR << "point off screen but not interesecting with frustrum - weird");
+		return false;
 	}
+
 
 }
 
 
 
 template<GameState::Value mGame>
-SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath::Vector3 world)
+SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition)
 {
 	LOG_ONCE(PLOG_VERBOSE << "world to screen");
-	auto worldPos = SimpleMath::Vector4::Transform({ world.x, world.y, world.z, 1.f },
+	auto worldPosTransformed = SimpleMath::Vector4::Transform({ worldPointPosition.x, worldPointPosition.y, worldPointPosition.z, 1.f },
 		SimpleMath::Matrix::CreateWorld(
 			SimpleMath::Vector3::Zero,
 			SimpleMath::Vector3::Forward,
 			SimpleMath::Vector3::Up
 		));
 
-	auto clipSpace = SimpleMath::Vector4::Transform(worldPos, (this->viewMatrix * this->projectionMatrix));
+	auto clipSpace = SimpleMath::Vector4::Transform(worldPosTransformed, viewProjectionMatrix);
 
 	// result above is actually in homogenous space, divide all components by w to get clipspace.
-
 	clipSpace = clipSpace / clipSpace.w;
-
-
-
 
 	// convert from clipSpace (-1..+1) to screenSpace (0..Width, 0..Height)
 	auto out = SimpleMath::Vector3
@@ -117,18 +85,6 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 		clipSpace.z
 	);
 
-
-
-
-
-#ifdef HCM_DEBUG
-	if (GetKeyState('9') & 0x8000)
-	{
-		PLOG_VERBOSE << "world to screen outputting: " << out;
-	}
-#endif
-
-	LOG_ONCE_CAPTURE(PLOG_VERBOSE << "world to screen outputting: " << ss, ss = out);
 	return out;
 }
 
@@ -205,10 +161,17 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(verticalFov, aspectRatio, 0.001f, FAR_CLIP_3D);
 		auto lookAt = this->cameraPosition + this->cameraDirection;
 		this->viewMatrix = DirectX::SimpleMath::Matrix::CreateLookAt(this->cameraPosition, lookAt, this->cameraUp);
+		this->viewProjectionMatrix = (viewMatrix * projectionMatrix);
 		this->pDevice = pDevice;
 		this->pDeviceContext = pDeviceContext;
 		this->pMainRenderTargetView = pMainRenderTargetView;
 		this->screenSize = screenSizeIn;
+		this->screenCenter = { screenSize.x / 2.f, screenSize.y / 2.f };
+
+		this->frustumViewWorld.CreateFromMatrix(this->frustumViewWorld, this->projectionMatrix, true); // frustrum in view space
+		this->frustumViewWorld.Transform(this->frustumViewWorld, this->viewMatrix.Invert()); // now in world space
+		//std::swap(this->frustumViewWorld.Near, this->frustumViewWorld.Far); 		// I have no idea why I have to do this
+
 
 		if (this->init == false)
 		{

@@ -20,6 +20,12 @@ template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
 {
 private:
+	struct CameraFrustrum
+	{
+		SimpleMath::Plane nearFrustrum, farFrustrum, leftFrustrum, rightFrustrum, topFrustrum, bottomFrustrum;
+	};
+
+
 	// data
 	bool haveShownError = false; // prevents updateGameCamera from spamming messages. resets to false on gamestate change.
 	SimpleMath::Vector3 cameraPosition;
@@ -27,7 +33,10 @@ private:
 	SimpleMath::Vector3 cameraUp;
 	DirectX::SimpleMath::Matrix viewMatrix;
 	DirectX::SimpleMath::Matrix projectionMatrix;
+	DirectX::SimpleMath::Matrix viewProjectionMatrix;
 	SimpleMath::Vector2 screenSize;
+	SimpleMath::Vector2 screenCenter;
+	DirectX::BoundingFrustum frustumViewWorld;
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
@@ -64,10 +73,11 @@ public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
 
-	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 world) override;
-	virtual IRenderer3D::AppliedClamp clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition, float clampBorderRatio) override;
+	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition) override;
+	virtual bool clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition) override;
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
+	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
 
 };

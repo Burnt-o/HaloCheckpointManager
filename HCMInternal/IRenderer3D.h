@@ -13,22 +13,15 @@ public:
 
 	// returns cameras distance to a world point
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) = 0;
-
+	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) = 0;
 
 	// RECTF return is the screen position min and max of the drawn item.
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = {1.f, 0.5f, 0.f, 1.f}) = 0;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = { 1.f, 0.5f, 0.f, 1.f }) = 0;
 
-	enum class AppliedClamp
-	{
-		None,
-		Left,
-		Right,
-		Top,
-		Bottom,
-	};
 
-	virtual AppliedClamp clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition, float clampBorderRatio = 0.f) = 0;
+
+	virtual bool clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition) = 0;
 };
 
 // impl in Renderer3DImpl.h

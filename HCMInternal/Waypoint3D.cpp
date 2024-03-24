@@ -272,23 +272,19 @@ private:
 			{
 				if (waypoint.waypointEnabled == false) continue;
 
+				if (!shouldClamp && !renderer->pointOnScreen(waypoint.position))
+				{
+					// not clamping, and position is clipped (off-screen). so let's skip rendering.
+					continue;
+				}
 
 				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
 
 				bool isClamped = false; // clamped waypoints will have transparency halved
-				if (shouldClamp == false)
-				{
-					if (screenPosition.z < 0 || screenPosition.z > 1)
-					{
-						// not clamping, and position is clipped (off-screen). so let's skip rendering.
-						continue;
-					}
-		
-				}
-				else
+				if (shouldClamp)
 				{
 					// clamp it
-					isClamped = renderer->clampScreenPositionToEdge(screenPosition, waypoint.position) != IRenderer3D::AppliedClamp::None;
+					isClamped = renderer->clampScreenPositionToEdge(screenPosition, waypoint.position);
 				}
 
 				// test if filtered by render range
