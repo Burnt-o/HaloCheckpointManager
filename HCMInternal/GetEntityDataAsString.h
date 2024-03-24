@@ -75,15 +75,13 @@ public:
 
 					if (velocityXY)
 					{
-						float XYMagnitude = (std::fabsf(currentVelocity->x) + std::fabsf(currentVelocity->y));
-						XYMagnitude = XYMagnitude > 0.f ? std::sqrtf(XYMagnitude) : XYMagnitude;
+						float XYMagnitude = std::sqrtf(std::pow(currentVelocity->x, 2) + std::pow(currentVelocity->y, 2));
 						ss << "  XY:  " << XYMagnitude << std::endl;
 					}
 
 					if (velocityXYZ)
 					{
-						float XYZMagnitude = (std::fabsf(currentVelocity->x) + std::fabsf(currentVelocity->y) + std::fabsf(currentVelocity->z));
-						XYZMagnitude = XYZMagnitude > 0.f ? std::sqrtf(XYZMagnitude) : XYZMagnitude;
+						float XYZMagnitude = std::sqrtf(std::pow(currentVelocity->x, 2) + std::pow(currentVelocity->y, 2) + std::pow(currentVelocity->z, 2));
 						ss << "  XYZ: " << XYZMagnitude << std::endl;
 					}
 
