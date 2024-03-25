@@ -83,11 +83,25 @@ std::ostream& operator<<(std::ostream& os, const WaypointList& dt)
 
 
 
-
-
-	// deserialisation constructor
-WaypointList::WaypointList(pugi::xml_node input)
+void WaypointList::setListFromString(const std::string& str)
 {
+	// parse str as xml
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_string(str.c_str());
+	if (result)
+	{
+		setListFromXML(doc);
+	}
+	else
+	{
+		throw HCMSerialisationException(std::format("error parsing waypointList str to xml: {} @ {}", result.description(), result.offset));
+	}
+}
+
+
+void WaypointList::setListFromXML(pugi::xml_node input)
+{
+
 	// god this is so dumb and hacky. For some reason pugi doesn't want to parse the &lt; escape chars properly
 	// so we have to manually substitute it then reinterpret it as a xml node again
 
@@ -108,6 +122,7 @@ WaypointList::WaypointList(pugi::xml_node input)
 
 	if (result)
 	{
+		list.clear();
 		// for each <waypoint> node, add it to the waypoint list using waypoint deserialisation constructor.
 		for (auto waypointNode = parsedLocalDoc.first_child().first_child(); waypointNode; waypointNode = waypointNode.next_sibling())
 		{
@@ -124,8 +139,14 @@ WaypointList::WaypointList(pugi::xml_node input)
 	}
 	else
 	{
-		PLOG_ERROR << "error parsing waypointList xml: " << result.description() << " @" << result.offset;
+		throw HCMSerialisationException(std::format("error parsing waypointList xml: {} @ {}",result.description(), result.offset));
 	}
 
-	
+}
+
+
+	// deserialisation constructor
+WaypointList::WaypointList(pugi::xml_node input)
+{
+	setListFromXML(input);
 }

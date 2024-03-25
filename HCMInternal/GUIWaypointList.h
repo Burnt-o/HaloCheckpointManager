@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "IGUIElement.h"
-
+#include "RuntimeExceptionHandler.h"
 /* Lists the waypoints of the 3D waypoint utility.
 Each waypoint shows:
 * Enabled toggle
@@ -19,6 +19,7 @@ private:
 	std::weak_ptr<WaypointAndListEvent> mEditEventWeak;
 	std::weak_ptr<WaypointAndListEvent> mDeleteEventWeak;
 	std::weak_ptr<WaypointListEvent> mAddEventWeak;
+	std::shared_ptr<RuntimeExceptionHandler> mRuntimeExceptions;
 	bool hasElements;
 	bool headingOpen = false;
 	float mLeftMargin;
@@ -30,9 +31,10 @@ public:
 		std::shared_ptr<WaypointAndListEvent> editEvent,
 		std::shared_ptr<WaypointAndListEvent> deleteEvent,
 		std::shared_ptr<WaypointListEvent> addEvent,
+		std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions,
 		float leftMargin = 20.f)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLeftMargin(leftMargin), waypointListWeak(waypointList),
-		mEditEventWeak(editEvent), mDeleteEventWeak(deleteEvent), mAddEventWeak(addEvent)
+		mEditEventWeak(editEvent), mDeleteEventWeak(deleteEvent), mAddEventWeak(addEvent), mRuntimeExceptions(runtimeExceptions)
 	{
 		PLOG_VERBOSE << "Constructing GUIWaypointList, name: " << getName();
 
@@ -85,6 +87,36 @@ public:
 
 				auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypointList]() {mEvent->operator()(waypointList); }));
 				newThread.detach();
+			}
+			currentHeight += GUIFrameHeightWithSpacing;
+
+			// draw copy list to clipboard button
+			if (ImGui::Button("Copy Waypoint List##GUIWaypointList"))
+			{
+				PLOG_VERBOSE << "GUIWaypointList copying";
+				std::stringstream ss;
+				ss << "<waypoint3DList>\n";
+				ss << waypointList;
+				ss << "</waypoint3DList>";
+				ImGui::SetClipboardText(ss.str().c_str());
+			}
+			currentHeight += GUIFrameHeightWithSpacing;
+
+			// draw paste list from clipboard button
+			if (ImGui::Button("Paste Waypoint List##GUIWaypointList"))
+			{
+				try
+				{
+					PLOG_VERBOSE << "GUIWaypointList pasting";
+					std::string clipboard = ImGui::GetClipboardText();
+					waypointList.setListFromString(clipboard);
+				}
+				catch (HCMSerialisationException ex)
+				{
+					ex.prepend("Failed pasting waypoint list: \n");
+					mRuntimeExceptions->handleMessage(ex);
+				}
+
 			}
 			currentHeight += GUIFrameHeightWithSpacing;
 

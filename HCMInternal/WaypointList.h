@@ -47,7 +47,7 @@ struct Waypoint {
 struct WaypointList {
 	// data
 private:
-
+	void setListFromXML(pugi::xml_node input);
 public:
 	std::vector<Waypoint> list = {}; // for the love of GOD, lock the atomic bool before reading/writing
 	std::atomic_bool listInUse = false;
@@ -71,6 +71,7 @@ public:
 
 	// deserialisation constructor
 	WaypointList(pugi::xml_node input);
+	void setListFromString(const std::string& str);
 
 	// move constructor.. avoid using this where possible
 	WaypointList(WaypointList&& other)

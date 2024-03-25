@@ -5,6 +5,7 @@
 #include "GUIServiceInfo.h"
 #include "SettingsStateAndEvents.h"
 #include "IGetMCCVersion.h"
+#include "RuntimeExceptionHandler.h"
 class GUIElementConstructor
 {
 private:
@@ -12,7 +13,7 @@ private:
 	std::unique_ptr< GUIElementConstructorImpl> pimpl;
 
 public:
-	GUIElementConstructor(std::shared_ptr<IGUIRequiredServices>, std::shared_ptr<OptionalCheatInfo>, std::shared_ptr<GUIElementStore>, std::shared_ptr<GUIServiceInfo>, std::shared_ptr<SettingsStateAndEvents>, MCCProcessType);
+	GUIElementConstructor(std::shared_ptr<IGUIRequiredServices>, std::shared_ptr<OptionalCheatInfo>, std::shared_ptr<GUIElementStore>, std::shared_ptr<GUIServiceInfo>, std::shared_ptr<SettingsStateAndEvents>, MCCProcessType, std::shared_ptr<RuntimeExceptionHandler>);
 	~GUIElementConstructor();
 };
 

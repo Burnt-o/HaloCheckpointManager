@@ -42,14 +42,14 @@ class GUIElementConstructor::GUIElementConstructorImpl {
 private:
 	std::set<std::pair<GUIElementEnum, GameState::Value>> cacheFailedServices;
 
-	std::optional<std::shared_ptr<IGUIElement>> createGUIElementAndStoreResult(GUIElementEnum guielementenum, GameState game, std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings)
+	std::optional<std::shared_ptr<IGUIElement>> createGUIElementAndStoreResult(GUIElementEnum guielementenum, GameState game, std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, std::shared_ptr<RuntimeExceptionHandler> exp)
 	{
-		auto res = createGUIElement(guielementenum, game, guireq, fail, info, settings);
+		auto res = createGUIElement(guielementenum, game, guireq, fail, info, settings, exp);
 		if (res.has_value()) mStore->mapOfSuccessfullyConstructedGUIElements.at(game).insert(guielementenum);
 		return res;
 	}
 
-	std::optional<std::shared_ptr<IGUIElement>> createGUIElement(GUIElementEnum guielementenum, GameState game, std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings)
+	std::optional<std::shared_ptr<IGUIElement>> createGUIElement(GUIElementEnum guielementenum, GameState game, std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, std::shared_ptr<RuntimeExceptionHandler> exp)
 	{
 		if (!guireq->getSupportedGamesPerGUIElement().contains(guielementenum)) throw HCMInitException("getSupportedGamesPerGUIElement missing element, how did that even happen?");
 		if (!guireq->getSupportedGamesPerGUIElement().at(guielementenum).contains(game))
@@ -107,7 +107,7 @@ private:
 
 			typedef  std::vector<std::optional<std::shared_ptr<IGUIElement>>> headerChildElements;
 			typedef  std::vector<std::vector<std::optional<std::shared_ptr<IGUIElement>>>> vectorOfHeaderChildElements;
-#define createNestedElement(elementEnum) createGUIElementAndStoreResult(elementEnum, game, guireq, fail, info, settings) // optional nested element, recursively calls this function
+#define createNestedElement(elementEnum) createGUIElementAndStoreResult(elementEnum, game, guireq, fail, info, settings, exp) // optional nested element, recursively calls this function
 
 
 
@@ -841,7 +841,7 @@ private:
 
 				case GUIElementEnum::waypoint3DGUIList:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIWaypointList<false>>
-						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent));
+						(game, ToolTipCollection("List of 3D Waypoints"), settings->waypoint3DList, settings->editWaypointEvent, settings->deleteWaypointEvent, settings->addWaypointEvent, exp));
 
 
 				case GUIElementEnum::waypoint3DGUISettings:
@@ -1525,7 +1525,7 @@ private:
 	MCCProcessType mProcType;
 
 public:
-	GUIElementConstructorImpl(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, MCCProcessType procType)
+	GUIElementConstructorImpl(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, MCCProcessType procType, std::shared_ptr<RuntimeExceptionHandler> exp)
 		: mStore(store), mProcType(procType)
 	{
 		// Create all top level GUI elements. Each one will recursively create it's nested elements, if it has any.
@@ -1533,7 +1533,7 @@ public:
 		{
 
 
-			auto x = createGUIElementAndStoreResult(element, game, guireq, fail, info, settings);
+			auto x = createGUIElementAndStoreResult(element, game, guireq, fail, info, settings, exp);
 			if (x.has_value())
 			{
 				store->getTopLevelGUIElementsMutable().at(game).push_back(x.value());
@@ -1547,5 +1547,5 @@ public:
 
 
 
-GUIElementConstructor::GUIElementConstructor(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, MCCProcessType procType) : pimpl(std::make_unique<GUIElementConstructorImpl>(guireq, fail, store, info, settings, procType)) {}
+GUIElementConstructor::GUIElementConstructor(std::shared_ptr<IGUIRequiredServices> guireq, std::shared_ptr<OptionalCheatInfo> fail, std::shared_ptr<GUIElementStore> store, std::shared_ptr<GUIServiceInfo> info, std::shared_ptr<SettingsStateAndEvents> settings, MCCProcessType procType, std::shared_ptr<RuntimeExceptionHandler> exp) : pimpl(std::make_unique<GUIElementConstructorImpl>(guireq, fail, store, info, settings, procType, exp)) {}
 GUIElementConstructor::~GUIElementConstructor() = default;
