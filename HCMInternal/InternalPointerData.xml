@@ -280,8 +280,8 @@
 	<VersionedEntry Name="levelIndicator" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x3A253A0</Offset>
-				<Offset>0x78</Offset>
+				<Offset>0x03A253A0</Offset>
+				<Offset>0x68</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" ProcessType="Steam">
@@ -1019,7 +1019,7 @@
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0x6DF3FC</Offset>
+				<Offset>0x6DF5CC</Offset>
 			</Offsets>
 		</Version>
 
@@ -1166,6 +1166,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2B6F5E4</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE22F40</Offset>
 			</Offsets>
 		</Version>
 
@@ -1991,6 +1998,12 @@
 	<!--#region currentDifficulty-->
 	<!--gameIndicator (old shitty one) +0x9C-->
 	<VersionedEntry Name="currentDifficulty" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03A253A0</Offset>
+				<Offset>0x6C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFE4D8</Offset>
@@ -2091,6 +2104,13 @@
 			</Offsets>
 		</Version>
 
+				<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x86E339</Offset>
+			</Offsets>
+		</Version>
+			
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -2240,6 +2260,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0xAC5098</Offset>
+			</Offsets>
+		</Version>
+		
+				<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x69D4B8</Offset>
 			</Offsets>
 		</Version>
 
@@ -3731,7 +3758,13 @@
 				<Offset>0xCCFFCB</Offset>
 			</Offsets>
 		</Version>
-
+		
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x667982</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -3990,13 +4023,19 @@
 
 <!-- fall timer invulnerability handled by seperate function for h2-->
 	<VersionedEntry Name="fallTimerInvulnerabilityFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x92D408</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x925C38</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.3385.0.0" Game="Halo2"> <!--unchecked-->
+		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x925C68</Offset>
@@ -4416,6 +4455,13 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x016A96A0</Offset>
+				<Offset>0x58</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -4510,7 +4556,14 @@
 				<Offset>0x34</Offset>
 			</Offsets>
 		</Version>
-
+		
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x016A96B8</Offset>
+				<Offset>0x48</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -4529,6 +4582,14 @@
 
 	<!--I should really just use a dynStruct on the object table header here but ehh-->
 	<VersionedEntry Name="nextObjectSalt" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x016A96A0</Offset>
+				<Offset>0x44</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -4547,6 +4608,13 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="nextObjectIndex" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x016A96A0</Offset>
+				<Offset>0x38</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -4807,6 +4875,13 @@
 	<!-- #region getHavokData-->
 	<VersionedEntry Name="havokComponentMetaTableHeader" Type="MultilevelPointer::ModuleOffset">
 		<!-- ah be careful with the pointers here... one of them is sometimes off by 8 bytes-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x01433EC0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -4938,6 +5013,14 @@
 	
 	<!--how to get from a havokComponentMeta element to the anchor point-->
 	<VersionedEntry Name="havokAnchorPointResolver" Type="MultilevelPointer::BaseOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Offsets>
+				<Offset>0x70</Offset>
+				<Offset>0x40</Offset>
+				<Offset>0x68</Offset>
+				<Offset>0x80</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Offsets>
 				<Offset>0x70</Offset>
@@ -5222,6 +5305,14 @@
 			</Offsets>
 		</Version>
 
+		<!--6.254431725 metro start-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x013E6198</Offset>
+				<Offset>0x38</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -5320,7 +5411,15 @@
 			<velocity>0x24</velocity>
 		</Version>
 
-		<Version Version="All" Game="Halo2">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<freezeFlag>0xC9</freezeFlag>
+			<havokComponentDatum>0xBC</havokComponentDatum>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo2">
+			<freezeFlag>0xC1</freezeFlag>
+			<havokComponentDatum>0xB4</havokComponentDatum>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo2">
 			<freezeFlag>0xC1</freezeFlag>
 			<havokComponentDatum>0xB4</havokComponentDatum>
 		</Version>
@@ -5400,7 +5499,17 @@
 			<isAirborneFlag>0x4D8</isAirborneFlag>
 		</Version>
 
-		<Version Version="All" Game="Halo2"> <!--confirmed 2448, 2645, 3272-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<currentVehicleDatum>0x1C</currentVehicleDatum>
+			<!--these pos/vel are the non-havok physics versions (aka the ghost hitbox?)-->
+			<position>0x6C</position>
+			<velocity>0x90</velocity>
+			<health>0xF4</health>
+			<shields>0xF8</shields>
+			<shieldCooldown>0x10C</shieldCooldown>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2"> 
 			<currentVehicleDatum>0x14</currentVehicleDatum>
 			<!--these pos/vel are the non-havok physics versions (aka the ghost hitbox?)-->
 			<position>0x64</position>
@@ -5666,6 +5775,13 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x00DA61A0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -5753,6 +5869,12 @@
 	
 	
 	<VersionedEntry Name="stringTable" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE7A5D0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -5830,6 +5952,12 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="stringMetaTable" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE64DD0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -5947,6 +6075,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x63412C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6066,6 +6200,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E61A3</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6094,6 +6234,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E61AA</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6170,6 +6316,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6EF6F0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6227,6 +6379,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x837B62</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6333,6 +6491,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x837B63</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6385,6 +6549,9 @@
 			<Data>0x85</Data>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Data>0x85</Data>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Data>0x85</Data>
 		</Version>
@@ -6443,7 +6610,12 @@
 			</Offsets>
 		</Version>
 
-
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x73CB7C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6480,7 +6652,12 @@
 			</Offsets>
 		</Version>
 
-
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x1436A18</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6586,7 +6763,13 @@
 				<Offset>0x2D9CB08</Offset>
 			</Offsets>
 		</Version>
-		
+
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x184CEF4</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6627,6 +6810,12 @@
 		<!--movss [rdi+FC], xmm9-->
 	<VersionedEntry Name="freeCameraHalo2ExtraFunction" Type="MultilevelPointer::ModuleOffset">
 
+		<Version Version="1.2448.0.0"  Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x73C30B</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0"  Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6644,6 +6833,9 @@
 
 	<VersionedEntry Name="freeCameraHalo2ExtraCode" Type="Vector" Typename="byte">
 		<!--just nop the call-->
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
@@ -6666,6 +6858,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13DF710</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6701,6 +6899,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E5E84</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6736,6 +6940,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E5E80</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6771,6 +6981,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E5E88</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6806,6 +7022,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E5E8C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6841,6 +7063,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E5E90</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6876,13 +7104,18 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13E5E94</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x15F0EDC</Offset>
 			</Offsets>
 		</Version>
-
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6912,13 +7145,18 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x13DE730</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x15E9190</Offset>
 			</Offsets>
 		</Version>
-
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6950,6 +7188,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0"  Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x8FD28D</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0"  Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6974,6 +7218,9 @@
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
@@ -6998,6 +7245,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x70AE41</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -7136,7 +7389,12 @@
 			</Offsets>
 		</Version>
 
-
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xCD7D74</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
