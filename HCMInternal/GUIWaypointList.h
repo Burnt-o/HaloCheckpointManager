@@ -88,6 +88,7 @@ public:
 				auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypointList]() {mEvent->operator()(waypointList); }));
 				newThread.detach();
 			}
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Add a new waypoint to the waypoint list"); }
 			currentHeight += GUIFrameHeightWithSpacing;
 
 			// draw copy list to clipboard button
@@ -100,6 +101,7 @@ public:
 				ss << "</waypoint3DList>";
 				ImGui::SetClipboardText(ss.str().c_str());
 			}
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Copy the entire waypoint list to the clipboard"); }
 			currentHeight += GUIFrameHeightWithSpacing;
 
 			// draw paste list from clipboard button
@@ -118,6 +120,7 @@ public:
 				}
 
 			}
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Paste a waypoint list from the clipboard"); }
 			currentHeight += GUIFrameHeightWithSpacing;
 
 			// draw waypoint list
@@ -167,7 +170,7 @@ public:
 		{
 			PLOG_VERBOSE << "waypoint list toggling enabled flag";
 		}
-
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Whether this waypoint is enabled (visible) or not."); }
 
 
 		// draw edit button
@@ -185,6 +188,8 @@ public:
 			auto& newThread = mFireEventThreads.emplace_back(std::thread([mEvent = mEventToFire, &waypoint,&waypointList]() {mEvent->operator()(waypoint, waypointList); }));
 			newThread.detach();
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Open the edit dialog with more settings for this specific waypoint"); }
+
 
 		// draw delete button
 		ImGui::SameLine();
@@ -202,6 +207,8 @@ public:
 			newThread.detach();
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Deletes this waypoint from the waypoint list"); }
+
 
 		// draw label text
 		ImGui::SameLine();

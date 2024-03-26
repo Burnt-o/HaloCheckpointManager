@@ -24,13 +24,13 @@ public:
 	void renderGlobalOption(bool& useGlobal, SimpleMath::Vector4& customColor, std::string optionName)
 	{
 		ImGui::Checkbox(std::format("Use Global {}", optionName).c_str(), &useGlobal);
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("Use the global setting for {} or customise it per waypoint", optionName).c_str()); }
 
 		{
 			ImGui::BeginDisabled(useGlobal);
 
 			ImGui::ColorEdit4(std::format("{}", optionName).c_str(), &customColor.x, editFlags);
-			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("What colour should {} for this waypoint be?", optionName).c_str()); }
 
 			ImGui::EndDisabled();
 		}
@@ -39,14 +39,14 @@ public:
 	void renderGlobalOption(bool& useGlobal, float customScale, std::string optionName)
 	{
 		ImGui::Checkbox(std::format("Use Global {}", optionName).c_str(), &useGlobal);
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("Use the global setting for {} or customise it per waypoint", optionName).c_str()); }
 
 		{
 			ImGui::BeginDisabled(useGlobal);
 
 			ImGui::SetNextItemWidth(100.f);
 			ImGui::InputFloat(std::format("{}", optionName).c_str(), &customScale);
-			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("What scale (size) should {} for this waypoint be?", optionName).c_str()); }
 
 			ImGui::EndDisabled();
 		}
@@ -55,14 +55,14 @@ public:
 	void renderGlobalOption(bool& useGlobal, int customPrecision, std::string optionName)
 	{
 		ImGui::Checkbox(std::format("Use Global {}", optionName).c_str(), &useGlobal);
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("Use the global setting for {} or customise it per waypoint", optionName).c_str()); }
 
 		{
 			ImGui::BeginDisabled(useGlobal);
 
 			ImGui::SetNextItemWidth(100.f);
 			ImGui::InputInt(std::format("{}", optionName).c_str(), &customPrecision);
-			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("How precise (ie how many decimal points) should the decimal digit be?"); }
 
 			ImGui::EndDisabled();
 		}
@@ -81,15 +81,12 @@ public:
 
 		ImGui::SetNextItemWidth(100);
 		ImGui::InputFloat("x position", &workingWaypoint.position.x, 0, 0, "%.6f");
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
 
 		ImGui::SetNextItemWidth(100);
 		ImGui::InputFloat("y position", &workingWaypoint.position.y, 0, 0, "%.6f");
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
 
 		ImGui::SetNextItemWidth(100);
 		ImGui::InputFloat("z position", &workingWaypoint.position.z, 0, 0, "%.6f");
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
 
 		if (mPlayerPosition.has_value())
 		{
@@ -103,11 +100,11 @@ public:
 		ImGui::InputText("Label", &workingWaypoint.label);
 
 		ImGui::Checkbox("Enabled", &workingWaypoint.waypointEnabled);
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Whether this waypoint is enabled (visible) or not."); }
 
 		{
 			ImGui::Checkbox("Show Sprite", &workingWaypoint.showSprite);
-			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Whether to show the crosshair sprite for this waypoint"); }
 
 			ImGui::BeginDisabled(workingWaypoint.showSprite == false);
 			renderGlobalOption(workingWaypoint.spriteColorUseGlobal, workingWaypoint.spriteColor, "Sprite Color");
@@ -117,7 +114,7 @@ public:
 
 		{
 			ImGui::Checkbox("Show Label", &workingWaypoint.showLabel);
-			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Whether to show the label (name) of this waypoint"); }
 
 			ImGui::BeginDisabled(workingWaypoint.showLabel == false);
 			renderGlobalOption(workingWaypoint.labelColorUseGlobal, workingWaypoint.labelColor, "Label Text Color");
@@ -128,7 +125,7 @@ public:
 		if (mCanMeasureDistance) // requires optional services that might fail
 		{
 			ImGui::Checkbox("Show Distance Measure", &workingWaypoint.showDistance);
-			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("todo"); }
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip("Whether to show the distance measurement between the player and the waypoint"); }
 
 			ImGui::BeginDisabled(workingWaypoint.showDistance == false);
 			ImGui::Checkbox("Measure Horizontal Only", &workingWaypoint.measureHorizontalOnly);
