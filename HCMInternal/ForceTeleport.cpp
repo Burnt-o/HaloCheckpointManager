@@ -42,6 +42,7 @@ private:
 
 	void onForceTeleportEvent()
 	{
+		bool teleportingPlayer = true;
 		try
 		{
 			lockOrThrow(mccStateHookWeak, mccStateHook);
@@ -57,6 +58,7 @@ private:
 			}
 			else
 			{
+				teleportingPlayer = false;
 				datumToTeleport = settings->forceTeleportCustomObject->GetValue();
 			}
 			PLOG_INFO << "Teleporting object with datum: " << datumToTeleport;
@@ -82,6 +84,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
+			ex.prepend((teleportingPlayer ? "Error teleporting player: " : "Error teleporting custom object"));
 			runtimeExceptions->handleMessage(ex);
 		}
 

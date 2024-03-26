@@ -39,6 +39,7 @@ private:
 
 	void onForceLaunchEvent()
 	{
+		bool launchingPlayer = true;
 		try
 		{
 			lockOrThrow(mccStateHookWeak, mccStateHook);
@@ -54,6 +55,7 @@ private:
 			}
 			else
 			{
+				launchingPlayer = false;
 				datumToLaunch = settings->forceLaunchCustomObject->GetValue();
 			}
 			PLOG_INFO << "Launching object with datum: " << datumToLaunch;
@@ -79,6 +81,7 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
+			ex.prepend((launchingPlayer ? "Error launching player: " : "Error launching custom object: "));
 			runtimeExceptions->handleMessage(ex);
 		}
 
