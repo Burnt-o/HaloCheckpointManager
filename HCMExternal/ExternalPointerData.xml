@@ -3,7 +3,7 @@
 <Root>
 	<!--If current HCM version isn't one of these, the user will be prompted that an update is available-->
 <LatestHCMVersions>
-	<Entry>3.0.8.0</Entry>
+	<Entry>3.0.9.0</Entry>
 </LatestHCMVersions>
 
 	<!--If the current HCM is one of these, HCM will refuse to start and the user will be prompted to update-->
