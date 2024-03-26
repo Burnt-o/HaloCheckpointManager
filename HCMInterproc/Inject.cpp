@@ -233,7 +233,7 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 	try
 	{
 
-		constexpr DWORD desiredMCCAccess = PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ;
+		DWORD desiredMCCAccess = PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ;
 		HandlePtr mcc(OpenProcess(desiredMCCAccess, FALSE, pid));
 		if (!mcc) throw InjectionException(std::format("HCM didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, HCM needs to be run as admin too.\nNerdy details: {}", GetErrorMessage(GetLastError())).c_str());
 
@@ -253,7 +253,8 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 				PLOG_INFO << "VirtualAllocEx failed with error: " << GetErrorMessage(GetLastError());
 				PLOG_INFO << "Re-attempting with high permissions";
 
-				mcc = HandlePtr(OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
+				desiredMCCAccess = PROCESS_ALL_ACCESS;
+				mcc = HandlePtr(OpenProcess(desiredMCCAccess, FALSE, pid));
 				if (!mcc) throw InjectionException(std::format("CEER didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, HCM needs to be run as admin too.\nNerdy details: InjectCEER: Couldn't open MCC with createRemoteThread permissions: {}", GetErrorMessage(GetLastError())).c_str());
 
 				pathAlloc = VirtualAllocEx(mcc.get(), 0, dllFilePath.size(), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
@@ -316,10 +317,8 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 			{
 				DWORD grantedMCCAccess = checkActualHandlePermissions(mcc.get());
 
-				// need to do a saturating subtraction to see what rights are missing, if any. (prevent underflow if we were granted MORE permissions than explicitly desired)
-				// https://stackoverflow.com/questions/33481295/saturating-subtract-add-for-unsigned-bytes
-				DWORD missingRights = desiredMCCAccess - grantedMCCAccess;
-				missingRights &= -(missingRights <= desiredMCCAccess);
+				// we want to know what bits are set in desired that AREN'T set in granted. Bitwise subtraction.
+				DWORD missingRights = desiredMCCAccess & ~grantedMCCAccess;
 
 				if (missingRights != 0)
 				{
