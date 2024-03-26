@@ -63,28 +63,33 @@ private:
 			}
 			PLOG_INFO << "Teleporting object with datum: " << datumToTeleport;
 
+			// test for manual vs relative settings being in an invalid state (neither enabled or both enabled)
+			// In a valid state, xor ing the values will return true.
+			// If state invalid, we'll just set it to relative and display a message saying we fixed it.
+			if ((settings->forceTeleportManual->GetValue() ^ settings->forceTeleportForward->GetValue()) == false)
+			{
+				settings->forceTeleportManual->GetValueDisplay() = false;
+				settings->forceTeleportManual->UpdateValueWithInput();
+				settings->forceTeleportForward->GetValueDisplay() = true;
+				settings->forceTeleportForward->UpdateValueWithInput();
+				lockOrThrow(messagesGUIWeak, messagesGUI);
+				messagesGUI->addMessage("Force Teleport radio button was in invalid state. \nHCM has set it to a valid state (relative)");
+			}
+
+
 			if (settings->forceTeleportManual->GetValue())
 			{
 				teleportObjectToAbsolute(settings->forceTeleportAbsoluteVec3->GetValue(), datumToTeleport);
 			}
-			else if (settings->forceTeleportForward->GetValue())
+			else 
 			{
 				teleportObjectRelativeToPlayer(settings->forceTeleportRelativeVec3->GetValue(), datumToTeleport);
 			}
-			else
-			{
-				throw HCMRuntimeException("forceTeleport settings were in an invalid state (neither enabled), try deleting HCMInternalConfig then restarting HCM");
-			}
-			
 
-			if (settings->forceTeleportForward->GetValue() && settings->forceTeleportManual->GetValue())
-			{
-				throw HCMRuntimeException("forceTeleport settings were in an invalid state (both enabled), try deleting HCMInternalConfig then restarting HCM");
-			}
 		}
 		catch (HCMRuntimeException ex)
 		{
-			ex.prepend((teleportingPlayer ? "Error teleporting player: " : "Error teleporting custom object"));
+			ex.prepend((teleportingPlayer ? "Error teleporting player: " : "Error teleporting custom object: "));
 			runtimeExceptions->handleMessage(ex);
 		}
 
