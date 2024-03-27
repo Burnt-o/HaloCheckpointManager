@@ -269,43 +269,65 @@ namespace HCMExternal.Services.MCCHookService
         {
             try
             {
-             string[] MCCProcessNames = { "MCC-Win64-Shipping", "MCC-Win64-Winstore-Shipping", "MCCWinstore-Win64-Shipping" };
 
-                foreach (string procName in MCCProcessNames)
+                bool isCorrectProcessName(string actualProcessName)
                 {
-                    foreach (Process process in Process.GetProcesses())
+                    string[] MCCProcessNames = { "MCC-Win64-Shipping", "MCC-Win64-Winstore-Shipping", "MCCWinstore-Win64-Shipping" };
+                    foreach (string desiredProcessName in MCCProcessNames)
                     {
-                        if (String.Equals(process.ProcessName, procName,
-                         StringComparison.OrdinalIgnoreCase) && !process.HasExited)
-                        {
-                            // We don't want to inject while MCC is booting up since LoadLibrary is occupied
-                            Log.Verbose("Found MCC");
-                            TimeSpan MCCProcessAge = DateTime.Now - process.StartTime;
-                            Log.Verbose("MCC age: " + MCCProcessAge);
-                            if (MCCProcessAge < TimeSpan.FromSeconds(3))
-                            {
-                                // We don't want to attach on young MCC because of weird issues with LoadLibrary if it's called from multiple threads (within the same process) at once
-                                // TODO: Make this less dumb than just picking 3 seconds since some peoples computers are slower/faster than that.
-                                Log.Verbose("MCC process too young: " + MCCProcessAge);
-                                continue;
-                            }
-                            else
-                            {
-                                Log.Verbose("Found mature MCC process, PID: " + process.Id + ", Name: " + process.ProcessName + ", Age: " + MCCProcessAge);
-                                return process;
-                            }
+                        if (String.Equals(actualProcessName, desiredProcessName, StringComparison.OrdinalIgnoreCase))
+                            return true;
+                    }
+                    return false;
+                }
 
 
-                        }
+                //Process? mostRecentMCCProcess = Process.GetProcesses()
+                //    .Where(process => isCorrectProcessName(process.ProcessName) && process.HasExited == false)
+                //    .OrderByDescending(process => process.StartTime) // we don't want old zombie processes
+                //    .DefaultIfEmpty(null)
+                //    .FirstOrDefault();
+
+                // Could do this in one big linq expression but we want to be able to debug/log for access violations at each step of the way
+                Log.Debug("Getting all processes on computer");
+                var allProcesses = Process.GetProcesses();
+
+                Log.Debug("Filtering to MCC process names");
+                var mccProcesses = allProcesses.Where(process => isCorrectProcessName(process.ProcessName));
+
+                Log.Debug("Filtering exited processes");
+                mccProcesses = mccProcesses.Where(process => process.HasExited == false);
+
+                Log.Debug("Sorting mcc processes by age");
+                mccProcesses = mccProcesses.OrderByDescending(process => process.StartTime);
+                Log.Verbose("Total mcc process count: " + mccProcesses.Count());
+
+                Log.Debug("Grabbing most recent mcc process or null");
+                Process? mostRecentMCCProcess = mccProcesses.DefaultIfEmpty(null).First();
+
+
+                if (mostRecentMCCProcess != null)
+                {
+                    // We don't want to inject while MCC is booting up since LoadLibrary is occupied
+                    Log.Verbose("Found MCC");
+                    TimeSpan MCCProcessAge = DateTime.Now - mostRecentMCCProcess.StartTime;
+                    Log.Verbose("MCC age: " + MCCProcessAge);
+                    if (MCCProcessAge < TimeSpan.FromSeconds(3))
+                    {
+                        // We don't want to attach on young MCC because of weird issues with LoadLibrary if it's called from multiple threads (within the same process) at once
+                        // TODO: Make this less dumb than just picking 3 seconds since some peoples computers are slower/faster than that.
+                        Log.Verbose("MCC process too young: " + MCCProcessAge);
+                        return null;
                     }
                 }
+
+                return mostRecentMCCProcess;
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error("Error getting MCC process: " + ex.Message + "\nStacktrace:\n" + ex.StackTrace);
                 return null;
             }
-            return null;
         }
 
         // Just check process list for EasyAntiCheat
@@ -326,6 +348,8 @@ namespace HCMExternal.Services.MCCHookService
         private DateTime _lastMCCExit = DateTime.MinValue;
         private bool MCCExitedTooRecently()
         {
+            if (_lastMCCExit == DateTime.MinValue) return false;
+
             Log.Verbose("MCC last exit time was " + (DateTime.Now - _lastMCCExit) + " seconds ago");
             return (DateTime.Now - _lastMCCExit) < TimeSpan.FromSeconds(6);
         }
