@@ -1224,6 +1224,13 @@ public:
 			nameof(waypoint3DList)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(triggerOverlayToggle)
+		);
+
 	enum class FreeCameraObjectTrackEnum
 	{
 		Player,

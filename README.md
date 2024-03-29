@@ -50,6 +50,7 @@ vcpkg install boost-interprocess:x64-windows-static
 vcpkg install magic-enum:x64-windows-static  
 vcpkg install directxtk:x64-windows-static  
 
+
 This project also makes heavy use of the amazing SafetyHook by cursey. You can think of it as like "Microsoft Detours but if it didn't suck". I've included the release I'm using in this repository so you shouldn't need to worry about it.
 
 After successfully building all projects (besides HCMInternalTests, that doesn't matter), make sure to rebuild the entire solution to ensure all build events fire correctly.

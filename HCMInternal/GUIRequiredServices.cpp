@@ -338,7 +338,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ConsoleCommand}
 	},
 
-
+		{ GUIElementEnum::triggerOverlayToggle,
+		{OptionalCheatEnum::TriggerOverlay}
+	},
 
 #endif
 

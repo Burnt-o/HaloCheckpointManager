@@ -62,7 +62,10 @@ SetPlayerHealth,\
 Waypoint3D,\
 Render3DEventProvider,\
 MeasurePlayerDistanceToObject,\
-SkullToggler
+SkullToggler,\
+TriggerOverlay,\
+GetTriggerData,\
+UpdateTriggerLastChecked
 
 
 enum class OptionalCheatEnum {

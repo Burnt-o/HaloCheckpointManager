@@ -65,6 +65,9 @@
 #include "Render3DEventProvider.h"
 #include "MeasurePlayerDistanceToObject.h"
 #include "SkullToggler.h"
+#include "TriggerOverlay.h"
+#include "GetTriggerData.h"
+#include "UpdateTriggerLastChecked.h"
 
 #include "DIContainer.h"
 #include "map.h"

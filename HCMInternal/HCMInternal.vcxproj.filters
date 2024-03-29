@@ -77,6 +77,12 @@
     <Filter Include="Services\PointerData">
       <UniqueIdentifier>{3edcd80b-8a9c-4b7a-a3c6-1d2c522c6662}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\3D\Waypoint">
+      <UniqueIdentifier>{e748bfcf-5484-4838-9ceb-6989448f2ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\3D\Trigger">
+      <UniqueIdentifier>{0f426aa6-70fa-45b4-b531-6866b9476161}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -617,9 +623,6 @@
     <ClInclude Include="ForceFutureCheckpoint.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="Waypoint3D.h">
-      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Render3DEventProvider.h">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClInclude>
@@ -701,8 +704,26 @@
     <ClInclude Include="PointerDataParserInstantiators.h">
       <Filter>Services\PointerData</Filter>
     </ClInclude>
+    <ClInclude Include="Waypoint3D.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Waypoint</Filter>
+    </ClInclude>
     <ClInclude Include="WaypointList.h">
-      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+      <Filter>Services\OptionalCheats\Implementations\3D\Waypoint</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerOverlay.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="GetTriggerData.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateTriggerLastChecked.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerData.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerModel.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -952,9 +973,6 @@
     <ClCompile Include="ForceFutureCheckpoint.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="Waypoint3D.cpp">
-      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
-    </ClCompile>
     <ClCompile Include="Render3DEventProvider.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
@@ -1000,8 +1018,20 @@
     <ClCompile Include="PointerDataStore.cpp">
       <Filter>Services\PointerData</Filter>
     </ClCompile>
+    <ClCompile Include="Waypoint3D.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Waypoint</Filter>
+    </ClCompile>
     <ClCompile Include="WaypointList.cpp">
-      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+      <Filter>Services\OptionalCheats\Implementations\3D\Waypoint</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerOverlay.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="GetTriggerData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateTriggerLastChecked.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

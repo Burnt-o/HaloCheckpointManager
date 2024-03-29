@@ -1487,6 +1487,7 @@ private:
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
+						createNestedElement(GUIElementEnum::triggerOverlayToggle),
 						}));
 
 
@@ -1499,6 +1500,9 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
+				case GUIElementEnum::triggerOverlayToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Disables game inputs while freecam active"), std::nullopt, "Trigger Overlay", settings->triggerOverlayToggle));
 
 #endif
 

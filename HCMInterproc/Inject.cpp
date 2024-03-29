@@ -249,21 +249,7 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 			auto pathAlloc = VirtualAllocEx(mcc.get(), 0, dllFilePath.size(), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 			if (!pathAlloc)
 			{
-				// attempt to open mcc with even more permissions
-				PLOG_INFO << "VirtualAllocEx failed with error: " << GetErrorMessage(GetLastError());
-				PLOG_INFO << "Re-attempting with high permissions";
-
-				desiredMCCAccess = PROCESS_ALL_ACCESS;
-				mcc = HandlePtr(OpenProcess(desiredMCCAccess, FALSE, pid));
-				if (!mcc) throw InjectionException(std::format("CEER didn't have appropiate permissions to modify MCC. If MCC or steam are running as admin, HCM needs to be run as admin too.\nNerdy details: InjectCEER: Couldn't open MCC with createRemoteThread permissions: {}", GetErrorMessage(GetLastError())).c_str());
-
-				pathAlloc = VirtualAllocEx(mcc.get(), 0, dllFilePath.size(), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-
-				if (!pathAlloc)
-				{
-					throw InjectionException(std::format("Failed to allocate memory in MCC for dll path, error code: {}", GetErrorMessage(GetLastError())).c_str());
-				}
-
+				throw InjectionException(std::format("Failed to allocate memory in MCC for dll path, error code: {}", GetErrorMessage(GetLastError())).c_str());
 			}
 			// Write the dll filepath string to allocated memory
 			DWORD oldProtect;

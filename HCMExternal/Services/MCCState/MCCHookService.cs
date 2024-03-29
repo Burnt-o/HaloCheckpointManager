@@ -239,6 +239,7 @@ namespace HCMExternal.Services.MCCHookService
         public void ShowHCMInternalErrorDialog()
         {
             Log.Verbose("ShowHCMInternalErrorDialog");
+            Log.Error(lastInjectionError ?? "null error");
             var result = mErrorDialogViewModel.RaiseShowErrorDialogEvent(lastInjectionError);
             if (result == false)
             {
