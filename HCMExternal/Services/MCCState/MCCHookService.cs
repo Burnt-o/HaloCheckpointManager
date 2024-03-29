@@ -10,6 +10,8 @@ using System.Runtime.CompilerServices;
 using Serilog;
 using System.Windows;
 using HCMExternal.ViewModels;
+using NtApiDotNet;
+using System.IO;
 
 namespace HCMExternal.Services.MCCHookService
 {
@@ -29,6 +31,7 @@ namespace HCMExternal.Services.MCCHookService
 
         // last injection error
         private string? lastInjectionError;
+        private bool debugPrivilegeEnabled = false;
 
         // injected service
         private InterprocService mInterprocService { get; init; }
@@ -50,6 +53,9 @@ namespace HCMExternal.Services.MCCHookService
 
             // Timer does not start immediately; only when BeginStateMachineLoop is called.
             StateMachineLoopTimer = new System.Threading.Timer(StateMachineLoopEventHandler, null, System.Threading.Timeout.Infinite, 1000);
+
+            debugPrivilegeEnabled = NtToken.EnableDebugPrivilege();
+            Log.Information("Debug privilege: " + debugPrivilegeEnabled);
         }
 
         // starts timer, called at end of application startup
@@ -84,6 +90,7 @@ namespace HCMExternal.Services.MCCHookService
             Shutdown = 3,
         }
 
+        private StringWriter _mccAccessInfo = new();
 
 
         // main loop parsing MCCHookState and advancing the state machine
@@ -106,45 +113,21 @@ namespace HCMExternal.Services.MCCHookService
                     if (MCCHookState.MCCProcess == null) // failed, try again next time
                         break;
 
-                    if (MCCExitedTooRecently())
-                    {
-                        Log.Debug("MCC exited too recently, bailing");
-                        MCCHookState.MCCProcess = null;
-                        break;
-                    }
 
                     try
                     {
-                        // safety check that the process isn't actually closed
-                        if (MCCHookState.MCCProcess.HasExited) // this property can give access denied ex, hence being in try-catch
-                        {
-                            Log.Debug("Found MCC process but it had already exited, bailing");
-                            MCCHookState.MCCProcess = null;
-                            break;
-                        }
-
-                        MCCHookState.MCCVersion = MCCHookState.MCCProcess.MainModule?.FileVersionInfo;
+                        Log.Verbose("Getting mcc version information from filepath: " 
+                            + MCCHookState.MCCProcess.GetImageFilePath(false) 
+                            );
+                        MCCHookState.MCCVersion = FileVersionInfo.GetVersionInfo(MCCHookState.MCCProcess.GetImageFilePath(false));
                     }
-                    catch (Exception ex)
+                    catch (FileNotFoundException ex)
                     {
-                        lastInjectionError = "HCM failed to access the MCC process\nIf Steam/MCC is running as admin, then HCM must be run as admin too.\n(But better to run both as non-admin)\nNerdy details:\n" + ex.Message;
-                        AdvanceStateMachine(MCCHookStateEnum.MCCAccessError);
-                        ShowHCMInternalErrorDialog();
-                        return;
+                        Log.Error("Could not get file version info of MCC, proceeding anyway. Error: \n" 
+                            + ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
                     }
 
-
-                    // Subscribe to process exit (to reset state back to MCCNotFound)
-                    MCCHookState.MCCProcess.EnableRaisingEvents = true;
-                    MCCHookState.MCCProcess.Exited += (o, i) =>
-                    {
-                        Log.Information("MCC process exited!");
-                        MCCHookState.MCCVersion = null;
-                        MCCHookState.MCCProcess = null;
-                        _lastMCCExit = DateTime.Now;
-                        AdvanceStateMachine(MCCHookStateEnum.MCCNotFound);
-                        return;
-                    };
+                    logAccessInformation(MCCHookState.MCCProcess, _mccAccessInfo);
 
 
                     AdvanceStateMachine(MCCHookStateEnum.InternalInjecting); // advance to next state (inject HCMInternal)
@@ -159,7 +142,7 @@ namespace HCMExternal.Services.MCCHookService
                     break;
 
                 case MCCHookStateEnum.InternalInjecting:
-                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((UInt32)MCCHookState.MCCProcess?.Id);
+                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((UInt32)MCCHookState.MCCProcess?.ProcessId);
                     
 
                     if (injectionResult.successFlag)
@@ -169,7 +152,8 @@ namespace HCMExternal.Services.MCCHookService
                     else
                     {
                         AdvanceStateMachine(MCCHookStateEnum.InternalInjectError);
-                        lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + injectionResult.errorString;
+                        lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + injectionResult.errorString
+                            + "\nAccess Rights Debugging: \n" + _mccAccessInfo;
                         ShowHCMInternalErrorDialog(); 
                     }
                     break;
@@ -216,12 +200,14 @@ namespace HCMExternal.Services.MCCHookService
                         return;
                     }
 
-                    if (currentInternalStateSuccess == InternalStatusFlag.Shutdown)
+                    if (currentInternalStateSuccess == InternalStatusFlag.Shutdown || (MCCHookState.MCCProcess == null || MCCHookState.MCCProcess.IsDeleting))
                     {
                         _lastMCCExit = DateTime.Now;
                         AdvanceStateMachine(MCCHookStateEnum.MCCNotFound);
                         return;
                     }
+
+
                     break;
 
             }
@@ -264,64 +250,65 @@ namespace HCMExternal.Services.MCCHookService
             }
         }
 
-
-        private Process? GetMCCProcess()
+        private NtProcess? GetMCCProcess()
         {
             try
             {
 
-                bool isCorrectProcessName(string actualProcessName)
+                bool filterToValidMCC(NtProcess process)
                 {
-                    string[] MCCProcessNames = { "MCC-Win64-Shipping", "MCC-Win64-Winstore-Shipping", "MCCWinstore-Win64-Shipping" };
+                    string[] MCCProcessNames = { "MCC-Win64-Shipping.exe", "MCC-Win64-Winstore-Shipping.exe", "MCCWinstore-Win64-Shipping.exe" };
                     foreach (string desiredProcessName in MCCProcessNames)
                     {
-                        if (String.Equals(actualProcessName, desiredProcessName, StringComparison.OrdinalIgnoreCase))
+
+     
+                        
+                        if (String.Equals(process.Name, desiredProcessName, StringComparison.OrdinalIgnoreCase)) // must be mcc
+                        {
+                            if (process.IsDeleting)
+                            {
+                                Log.Debug("Skipping zombie (or terminating) MCC at process ID: " + process.ProcessId);
+                                continue;
+                            }
+
+                            if (DateTime.Now - process.CreateTime < TimeSpan.FromSeconds(3))
+                            {
+                                // We don't want to attach on young MCC because of weird issues with LoadLibrary if it's called from multiple threads (within the same process) at once
+                                // TODO: Make this less dumb than just picking 3 seconds since some peoples computers are slower/faster than that.
+                                Log.Verbose("Skipping super young mcc at id " + process.ProcessId + ", age: " + (DateTime.Now - process.CreateTime));
+                                continue;
+                            }
+
+                            if (MCCExitedTooRecently())
+                                continue;
+
                             return true;
+                        }
                     }
                     return false;
                 }
 
 
-                //Process? mostRecentMCCProcess = Process.GetProcesses()
-                //    .Where(process => isCorrectProcessName(process.ProcessName) && process.HasExited == false)
-                //    .OrderByDescending(process => process.StartTime) // we don't want old zombie processes
-                //    .DefaultIfEmpty(null)
-                //    .FirstOrDefault();
-
-                // Could do this in one big linq expression but we want to be able to debug/log for access violations at each step of the way
-                Log.Debug("Getting all processes on computer");
-                var allProcesses = Process.GetProcesses();
-
-                Log.Debug("Filtering to MCC process names");
-                var mccProcesses = allProcesses.Where(process => isCorrectProcessName(process.ProcessName));
-
-                Log.Debug("Filtering exited processes");
-                mccProcesses = mccProcesses.Where(process => process.HasExited == false);
-
-                Log.Debug("Sorting mcc processes by age");
-                mccProcesses = mccProcesses.OrderByDescending(process => process.StartTime);
-                Log.Verbose("Total mcc process count: " + mccProcesses.Count());
-
-                Log.Debug("Grabbing most recent mcc process or null");
-                Process? mostRecentMCCProcess = mccProcesses.DefaultIfEmpty(null).First();
+                var validMCCprocesses = NtProcess.GetProcesses(ProcessAccessRights.QueryLimitedInformation).Where(filterToValidMCC);
 
 
-                if (mostRecentMCCProcess != null)
+                if (validMCCprocesses.Any())
                 {
-                    // We don't want to inject while MCC is booting up since LoadLibrary is occupied
-                    Log.Verbose("Found MCC");
-                    TimeSpan MCCProcessAge = DateTime.Now - mostRecentMCCProcess.StartTime;
-                    Log.Verbose("MCC age: " + MCCProcessAge);
-                    if (MCCProcessAge < TimeSpan.FromSeconds(3))
+                    if (validMCCprocesses.Count() == 1)
                     {
-                        // We don't want to attach on young MCC because of weird issues with LoadLibrary if it's called from multiple threads (within the same process) at once
-                        // TODO: Make this less dumb than just picking 3 seconds since some peoples computers are slower/faster than that.
-                        Log.Verbose("MCC process too young: " + MCCProcessAge);
-                        return null;
+                        return validMCCprocesses.First();
+                    }
+                    else // more than one, so we want to sort by creation date and grab the youngest.
+                    {
+                        return validMCCprocesses.OrderByDescending(process => process.CreateTime).First();
                     }
                 }
-
-                return mostRecentMCCProcess;
+                else
+                {
+                    Log.Verbose("No process found");
+                    return null;
+                }
+  
             }
             catch (Exception ex)
             {
@@ -344,16 +331,47 @@ namespace HCMExternal.Services.MCCHookService
             return false;
         }
 
-        // HCM can inadvertently try to inject on a closing MCC without this check. Safety buffer of 3s.
-        private DateTime _lastMCCExit = DateTime.MinValue;
+        // Just logs stuff about the MCC process that might help diagnose Access Denied issues
+        private void logAccessInformation(NtProcess mccHandle, TextWriter writer)
+        {
+            try
+            {
+
+                writer.WriteLine("hcm Debug privilege enabled: " + debugPrivilegeEnabled);
+                writer.WriteLine("MCC Protected: " + mccHandle.Protected);
+                writer.WriteLine("MCC Protected Access: " + NtProcess.TestProtectedAccess(NtProcess.Current, mccHandle));
+                writer.WriteLine("MCC Protection.Level: " + mccHandle.Protection.Level);
+                writer.WriteLine("MCC Protection.Audit: " + mccHandle.Protection.Audit);
+
+                var mccIntegrity = mccHandle.GetIntegrityLevel(false);
+                var hcmIntegrity = NtProcess.Current.GetIntegrityLevel(false);
+
+                writer.WriteLine("hcm IntegrityLevel: " + (hcmIntegrity.IsSuccess ? hcmIntegrity.Result : "Could not read integrity level"));
+                writer.WriteLine("MCC IntegrityLevel: " + (mccIntegrity.IsSuccess ? mccIntegrity.Result : "Could not read integrity level"));
+
+                var mccHandleReadControl = NtProcess.Open(mccHandle.ProcessId, ProcessAccessRights.ReadControl, false);
+                if (mccHandleReadControl.IsSuccess)
+                    writer.WriteLine("MCC maximum access: " + mccHandleReadControl.Result.GetMaximumAccess());
+                else
+                    writer.WriteLine("Could not check MCC maximum access: " + mccHandleReadControl.Status);
+
+                
+            }
+            catch (NtException ex)
+            {
+                writer.WriteLine("error logging access information: " + ex.Message + "\n" + ex.StackTrace);
+            }
+
+        }
+
+        private DateTime? _lastMCCExit = null;
         private bool MCCExitedTooRecently()
         {
-            if (_lastMCCExit == DateTime.MinValue) return false;
+            if (_lastMCCExit == null) return false;
 
             Log.Verbose("MCC last exit time was " + (DateTime.Now - _lastMCCExit) + " seconds ago");
             return (DateTime.Now - _lastMCCExit) < TimeSpan.FromSeconds(6);
         }
-
 
     }
 }

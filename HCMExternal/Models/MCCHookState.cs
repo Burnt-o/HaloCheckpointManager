@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using NtApiDotNet;
 
 namespace HCMExternal.Models
 {
@@ -41,9 +42,9 @@ namespace HCMExternal.Models
 
 
 
-        // Handle to MCC process. Null if no MCC.
-        private Process? _MCCProcess = null;
-        public Process? MCCProcess
+        // Handle to valid MCC process with PROCESS_QUERY_LIMITED_INFORMATION
+        private NtProcess? _MCCProcess = null;
+        public NtProcess? MCCProcess
         {
             get { return _MCCProcess; }
              set { _MCCProcess = value; OnPropertyChanged(); }
