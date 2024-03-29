@@ -7729,13 +7729,19 @@
 			<LastOffsetAdjustment>30</LastOffsetAdjustment> <!-- skip 6-->
 		</Version>
 	</VersionedEntry>
+
+	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
+		<Version Version="All" Game="Halo1">
+			<Base>skullIronPointer</Base>
+			<LastOffsetAdjustment>31</LastOffsetAdjustment>
+		</Version>
+	</VersionedEntry>
 	<!--#endregion-->
 
 
 	<!--#region Halo 2 Skull Offsets-->
 
-	<!--TODO: several of these are wrong-->
-	
+
 	<VersionedEntry Name="skullEnvyPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
