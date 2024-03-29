@@ -197,6 +197,98 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 	}
 }
 
+SimpleMath::Vector2 get2DScreenPos(std::pair<SimpleMath::Vector3, bool>& in)
+{
+	return { in.first.x, in.first.y };
+}
+
+template<GameState::Value mGame>
+void Renderer3DImpl<mGame>::renderTriggerModel(TriggerModel& model)
+{
+	SimpleMath::Vector3 cornersWorldPos [8];
+	model.box.GetCorners(cornersWorldPos);
+	// TODO: cache getCorners result since it recalculates each time (probably no biggie tho)
+	// TODO: check if bounding box intersects with view frustrum for clipping
+
+	// bool = visible
+	SimpleMath::Vector2 cornersScreenPos[8];
+	bool cornersVisible[8];
+
+	for (int i = 0; i < 8; i++)
+	{
+		auto screenPos = worldPointToScreenPosition(cornersWorldPos[i]);
+		cornersScreenPos[i] = { screenPos.x, screenPos.y };
+		//auto clamped = clampScreenPositionToEdge(screenPos, cornersWorldPos[i]);
+		cornersVisible[i] = pointOnScreen(cornersWorldPos[i]);
+	}
+
+	
+	
+	
+
+	//XMGLOBALCONST XMVECTORF32 g_BoxOffset[8] =
+	//{
+	//	{ { { -1.0f, -1.0f,  1.0f, 0.0f } } }, 0 0 1	0
+	//	{ { {  1.0f, -1.0f,  1.0f, 0.0f } } }, 1 0 1	1
+	//	{ { {  1.0f,  1.0f,  1.0f, 0.0f } } }, 1 1 1	2
+	//	{ { { -1.0f,  1.0f,  1.0f, 0.0f } } }, 0 1 1	3
+	//	{ { { -1.0f, -1.0f, -1.0f, 0.0f } } }, 0 0 0	4
+	//	{ { {  1.0f, -1.0f, -1.0f, 0.0f } } }, 1 0 0	5
+	//	{ { {  1.0f,  1.0f, -1.0f, 0.0f } } }, 1 1 0	6
+	//	{ { { -1.0f,  1.0f, -1.0f, 0.0f } } }, 0 1 0	7
+	//};
+
+
+
+
+	ImU32 filledColor = 0xFF0000A0;
+	ImU32 outlineColor = 0xFF0000FF;
+
+	// TODO: check if any point of a face is visible before rendering.
+	// But how to handle case where face is visible but one of the points is behind camera?
+	// maybe we need worldToScreen to automatically flip points that are behind the camera. Will need to update clampToScreenEdge to remove that logic.
+
+	// near face
+	ImGui::GetForegroundDrawList()->AddQuadFilled(cornersScreenPos[0], cornersScreenPos[1], cornersScreenPos[2], cornersScreenPos[3], filledColor);
+
+
+	// far face
+	ImGui::GetForegroundDrawList()->AddQuadFilled(cornersScreenPos[4], cornersScreenPos[5], cornersScreenPos[6], cornersScreenPos[7], filledColor);
+
+
+	// uhhhh hope I got these right
+	ImGui::GetForegroundDrawList()->AddQuadFilled(cornersScreenPos[0], cornersScreenPos[1], cornersScreenPos[5], cornersScreenPos[4], filledColor);
+
+	ImGui::GetForegroundDrawList()->AddQuadFilled(cornersScreenPos[0], cornersScreenPos[3], cornersScreenPos[7], cornersScreenPos[4], filledColor);
+
+	ImGui::GetForegroundDrawList()->AddQuadFilled(cornersScreenPos[1], cornersScreenPos[2], cornersScreenPos[6], cornersScreenPos[5], filledColor);
+
+	ImGui::GetForegroundDrawList()->AddQuadFilled(cornersScreenPos[2], cornersScreenPos[3], cornersScreenPos[7], cornersScreenPos[6], filledColor);
+		
+	// outline the cube with lines
+#define drawLinePairIfVisible(p1, p2) if (cornersVisible[p1] || cornersVisible[p2]) { ImGui::GetForegroundDrawList()->AddLine(cornersScreenPos[p1], cornersScreenPos[p2], outlineColor);}
+
+	// near
+	drawLinePairIfVisible(0, 1);
+	drawLinePairIfVisible(1, 2);
+	drawLinePairIfVisible(2, 3);
+	drawLinePairIfVisible(3, 0);
+
+	// far
+	drawLinePairIfVisible(4, 5);
+	drawLinePairIfVisible(5, 6);
+	drawLinePairIfVisible(6, 7);
+	drawLinePairIfVisible(7, 4);
+
+	// connect
+	drawLinePairIfVisible(0, 4);
+	drawLinePairIfVisible(1, 5);
+	drawLinePairIfVisible(2, 6);
+	drawLinePairIfVisible(3, 7);
+
+
+
+}
 
 
 // explicit template instantiation

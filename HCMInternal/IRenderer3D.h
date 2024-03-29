@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "SpriteResource.h"
-
+#include "TriggerModel.h"
 // interface provides 3d rendering functions
 class IRenderer3D {
 private:
@@ -19,7 +19,7 @@ public:
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = {1.f, 0.5f, 0.f, 1.f}) = 0;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = { 1.f, 0.5f, 0.f, 1.f }) = 0;
 
-
+	virtual void renderTriggerModel(TriggerModel& model) = 0;
 
 	virtual bool clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition) = 0;
 };

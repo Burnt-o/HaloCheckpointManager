@@ -79,5 +79,6 @@ public:
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
+	virtual void renderTriggerModel(TriggerModel& model) override;
 
 };

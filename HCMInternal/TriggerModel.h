@@ -4,8 +4,10 @@
 
 struct TriggerModel
 {
-	std::array<SimpleMath::Vector3, 8> vertices; 		// point order: http://people.eecs.berkeley.edu/~jfc/cs174lecs/lec11/Image127.gif
-	TriggerModel(std::array<SimpleMath::Vector3, 8>& in) : vertices(in) {}
+
+	DirectX::BoundingOrientedBox box;
+	TriggerModel(SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up)
+		: box(position, extents, SimpleMath::Quaternion::LookRotation(forward, up)) {}
 	TriggerModel() {}
 	
 	

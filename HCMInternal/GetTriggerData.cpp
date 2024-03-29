@@ -14,7 +14,7 @@ private:
 	void updateTriggerData()
 	{
 		triggerData.clear();
-		triggerData.emplace (0, TriggerData{{14.671300, -95.203300, -73.22693634}, 1.f } ); // test trigger at keyes start
+		triggerData.emplace(0, TriggerData("box", TriggerModel({14.671300, -95.203300, -73.22693634 }, {1, 1, 1}, SimpleMath::Vector3::Forward, SimpleMath::Vector3::Up))); // test trigger at keyes start
 	
 		// TODO: get the real data
 	}

@@ -86,8 +86,10 @@ private:
 			{
 				LOG_ONCE(PLOG_DEBUG << "aye2");
 				// TODO: render trigger data
-				auto cornerPos = renderer->worldPointToScreenPosition(triggerData.model.vertices[0]);
-				RenderTextHelper::drawCenteredOutlinedText("triggerOrigin", { cornerPos.x, cornerPos.y }, 0xFFFFFFFF, 1.f);
+				auto centerPos = renderer->worldPointToScreenPosition(triggerData.model.box.Center);
+				RenderTextHelper::drawCenteredOutlinedText("triggerCenter", { centerPos.x, centerPos.y }, 0xFFFFFFFF, 1.f);
+
+				renderer->renderTriggerModel(triggerData.model);
 			}
 
 		}
