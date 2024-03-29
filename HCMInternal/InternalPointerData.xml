@@ -7726,14 +7726,14 @@
 	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo1">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>30</LastOffsetAdjustment> <!-- skip 6-->
+			<LastOffsetAdjustment>29</LastOffsetAdjustment> <!-- skip 5-->
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo1">
 			<Base>skullIronPointer</Base>
-			<LastOffsetAdjustment>31</LastOffsetAdjustment>
+			<LastOffsetAdjustment>30</LastOffsetAdjustment>
 		</Version>
 	</VersionedEntry>
 	<!--#endregion-->
