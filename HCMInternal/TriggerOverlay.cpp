@@ -81,15 +81,9 @@ private:
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
 			auto& allTriggersData = getTriggerData->getTriggerData();
 
-			LOG_ONCE(PLOG_DEBUG << "aye");
 			for (auto& [triggerPointer, triggerData] : allTriggersData)
 			{
-				LOG_ONCE(PLOG_DEBUG << "aye2");
-				// TODO: render trigger data
-				auto centerPos = renderer->worldPointToScreenPosition(triggerData.model.box.Center);
-				RenderTextHelper::drawCenteredOutlinedText("triggerCenter", { centerPos.x, centerPos.y }, 0xFFFFFFFF, 1.f);
-
-				renderer->renderTriggerModel(triggerData.model, 0xA00000FF, 0xF00000FF);
+				renderer->renderTriggerModel(triggerData.model, 0x700000FF, 0xF00000FF);
 			}
 
 		}

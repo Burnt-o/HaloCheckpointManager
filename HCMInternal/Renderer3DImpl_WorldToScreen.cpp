@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Renderer3DImpl.h"
 #include "directxtk\SimpleMath.h"
+#include "closestPointOnPlanarFaceToPoint.h"
+
+
 
 float measurePlanePointDistance(const SimpleMath::Plane& plane, const SimpleMath::Vector3& point)
 {
@@ -74,37 +77,33 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPositionClamped(Sim
 	}
 
 
-	// Measure the distance of the line from the worldPointPosition to the closest edge of the cameraFrustum.
-	// First get the direction of this line. (the "(this->cameraDirection * 0.0001f)" is to avoid getting near-clipped)
-	SimpleMath::Vector3 worldToCameraDir = this->cameraPosition + (this->cameraDirection * 0.0001f) - worldPointPosition;
-	float intersectionDistance;
-	if (this->frustumViewWorld.Intersects(worldPointPosition, worldToCameraDir, intersectionDistance)) // Then measure the distance to the frustum (should always return true)
-	{
-		// We want the closest point on the cameraFrustum to the worldPointPosition, so just multiply the direction by the distance and add to the initial position.
-		auto clampedWorldPosition = worldPointPosition + (worldToCameraDir * intersectionDistance);
-
-		// Get the screen position of that point
-		auto out = worldPointToScreenPosition(clampedWorldPosition, false);
-
-		if (screenEdgeOffset == 0) 
-			return out;
-
-		// Need to adjust screen space position by parameter screenEdgeOffset.
-		// Have to determine which of the 4 frustrum side planes is closest to the initial world position.
 		enum class sideDirection{ left, right, bottom, top};
-		typedef std::pair<sideDirection, float> sideAndDistance;
+		typedef std::tuple<sideDirection, SimpleMath::Vector3, float> sideAndClosestPointAndDistance;
 
-		std::array<sideAndDistance, 4> sideDistanceMeasurements =
+		// get closest point to each face
+		std::array<sideAndClosestPointAndDistance, 4> closestSidePoints =
 		{
-			sideAndDistance(sideDirection::left, measurePlanePointDistance(this->frustumViewWorldPlanes.leftFrustum, worldPointPosition)),
-			sideAndDistance(sideDirection::right, measurePlanePointDistance(this->frustumViewWorldPlanes.rightFrustum, worldPointPosition)),
-			sideAndDistance(sideDirection::bottom, measurePlanePointDistance(this->frustumViewWorldPlanes.bottomFrustum, worldPointPosition)),
-			sideAndDistance(sideDirection::top, measurePlanePointDistance(this->frustumViewWorldPlanes.topFrustum, worldPointPosition))
+			sideAndClosestPointAndDistance(sideDirection::left, closestPointOnPlanarFaceToPoint(this->frustumViewWorldSideFaces.leftFrustum, this->frustumViewWorldSidePlanes.leftFrustum, worldPointPosition), 0),
+			sideAndClosestPointAndDistance(sideDirection::right, closestPointOnPlanarFaceToPoint(this->frustumViewWorldSideFaces.rightFrustum, this->frustumViewWorldSidePlanes.rightFrustum, worldPointPosition), 0),
+			sideAndClosestPointAndDistance(sideDirection::bottom, closestPointOnPlanarFaceToPoint(this->frustumViewWorldSideFaces.bottomFrustum,this->frustumViewWorldSidePlanes.bottomFrustum, worldPointPosition), 0),
+			sideAndClosestPointAndDistance(sideDirection::top, closestPointOnPlanarFaceToPoint(this->frustumViewWorldSideFaces.topFrustum, this->frustumViewWorldSidePlanes.topFrustum,  worldPointPosition), 0)
 		};
 
-		// switch on the smallest element in above measurement array and offset screen position accordingly.
-		auto least = std::min_element(std::begin(sideDistanceMeasurements), std::end(sideDistanceMeasurements), [](const auto& a, const auto& b) { return a.second < b.second; });
-		switch (least->first)
+		// measure distance
+		for (sideAndClosestPointAndDistance& side : closestSidePoints)
+		{
+			std::get<float>(side) = SimpleMath::Vector3::Distance(std::get<SimpleMath::Vector3>(side), worldPointPosition);
+		}
+
+		auto closest = std::min_element(std::begin(closestSidePoints), std::end(closestSidePoints), [](const auto& a, const auto& b) { return std::get<float>(a) < std::get<float>(b); });
+
+
+		auto out = worldPointToScreenPosition(std::get<SimpleMath::Vector3>(*closest), false);
+
+		if (screenEdgeOffset == 0)
+			return out;
+
+		switch (std::get<sideDirection>(*closest))
 		{
 		case sideDirection::left:
 			out.x += screenEdgeOffset;
@@ -126,13 +125,6 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPositionClamped(Sim
 		return out;
 
 
-	}
-	else
-	{
-		// this should never happen if I've done my math right.
-		LOG_ONCE(PLOG_ERROR << "point off screen but not interesecting with frustrum - weird");
-		return worldPointToScreenPosition(worldPointPosition, true);
-	}
 
 }
 
@@ -154,14 +146,24 @@ void Renderer3DImpl<mGame>::renderTriggerModel(TriggerModel& model, uint32_t fil
 	// Calculate screen positions.
 	for (int i = 0; i < 8; i++)
 	{
-		model.cornersScreenPosition[i] = worldPointToScreenPositionClamped(model.corners[i], -20, nullptr);
+		if ((model.corners[i] - this->cameraPosition).Dot(this->cameraDirection) < 0) // if behind
+			model.cornersScreenPosition[i] = worldPointToScreenPositionClamped(model.corners[i], 0, nullptr); // clamp it
+		else
+			model.cornersScreenPosition[i] = worldPointToScreenPosition(model.corners[i], false); 
 	}
+
+
+	/*
+	TODO: fix the remaining glitchyness. for some reason worldPointToScreenPositionClamped is flipping things that are behind the screen.
+	
+	*/
 	
 #define v3tv2(x) static_cast<SimpleMath::Vector2>(x)
 
+#define isFaceVisible(p1, p2, p3, p4) this->frustumViewWorld.Intersects(SimpleMath::Plane(model.corners[p1], model.corners[p2], model.corners[p3]))
 
 	// Draw the 6 faces of the trigger model.
-#define drawFace(p1, p2, p3, p4) ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(model.cornersScreenPosition[p1]), v3tv2(model.cornersScreenPosition[p2]), v3tv2(model.cornersScreenPosition[p3]), v3tv2(model.cornersScreenPosition[p4]), fillColor);
+#define drawFace(p1, p2, p3, p4) { ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(model.cornersScreenPosition[p1]), v3tv2(model.cornersScreenPosition[p2]), v3tv2(model.cornersScreenPosition[p3]), v3tv2(model.cornersScreenPosition[p4]), fillColor); }
 
 	drawFace(0, 1, 2, 3);
 	drawFace(4, 5, 6, 7);

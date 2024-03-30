@@ -105,8 +105,29 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 
 		this->frustumViewWorld.CreateFromMatrix(this->frustumViewWorld, this->projectionMatrix, true); // frustrum in view space
 		this->frustumViewWorld.Transform(this->frustumViewWorld, this->viewMatrix.Invert()); // now in world space
-		this->frustumViewWorld.GetPlanes((DirectX::XMVECTOR*)&frustumViewWorldPlanes.nearFrustum, (DirectX::XMVECTOR*)&frustumViewWorldPlanes.farFrustum, (DirectX::XMVECTOR*)&frustumViewWorldPlanes.rightFrustum, (DirectX::XMVECTOR*)&frustumViewWorldPlanes.leftFrustum, (DirectX::XMVECTOR*)&frustumViewWorldPlanes.topFrustum, (DirectX::XMVECTOR*)&frustumViewWorldPlanes.bottomFrustum);
-		//std::swap(this->frustumViewWorld.Near, this->frustumViewWorld.Far); 		// I have no idea why I have to do this
+
+		std::array<SimpleMath::Vector3, 8> frustumCorners;
+		this->frustumViewWorld.GetCorners(frustumCorners.data());
+
+		this->frustumViewWorld.GetPlanes(nullptr, nullptr, (DirectX::XMVECTOR*) & frustumViewWorldSidePlanes.rightFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.leftFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.topFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.bottomFrustum);
+
+		/*
+		XMGLOBALCONST XMVECTORF32 g_BoxOffset[8] =
+		{
+			{ { { -1.0f, -1.0f,  1.0f, 0.0f } } },	001		0
+			{ { {  1.0f, -1.0f,  1.0f, 0.0f } } },	101		1
+			{ { {  1.0f,  1.0f,  1.0f, 0.0f } } },	111		2
+			{ { { -1.0f,  1.0f,  1.0f, 0.0f } } },	011		3
+			{ { { -1.0f, -1.0f, -1.0f, 0.0f } } },	000		4
+			{ { {  1.0f, -1.0f, -1.0f, 0.0f } } },	100		5
+			{ { {  1.0f,  1.0f, -1.0f, 0.0f } } },	110		6
+			{ { { -1.0f,  1.0f, -1.0f, 0.0f } } },	010		7
+		};
+		*/
+		this->frustumViewWorldSideFaces.bottomFrustum	= { frustumCorners[4], frustumCorners[5], frustumCorners[6], frustumCorners[7] };
+		this->frustumViewWorldSideFaces.topFrustum		= { frustumCorners[0], frustumCorners[1], frustumCorners[2], frustumCorners[3] };
+		this->frustumViewWorldSideFaces.leftFrustum		= { frustumCorners[4], frustumCorners[5], frustumCorners[1], frustumCorners[0] };
+		this->frustumViewWorldSideFaces.rightFrustum	= { frustumCorners[2], frustumCorners[3], frustumCorners[7], frustumCorners[6] };
 
 
 		if (this->init == false)
@@ -114,6 +135,11 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			initialise();
 			this->init = true;
 		}
+
+
+
+
+
 		return true;
 	}
 	catch (HCMRuntimeException ex)

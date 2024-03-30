@@ -725,6 +725,9 @@
     <ClInclude Include="TriggerModel.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="closestPointOnPlanarFaceToPoint.h">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1034,6 +1037,9 @@
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="Renderer3DImpl_updateCameraData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="cloestPlaneOnPlanarFaceToPoint.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
   </ItemGroup>

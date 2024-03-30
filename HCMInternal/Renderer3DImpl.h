@@ -20,9 +20,14 @@ template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
 {
 private:
-	struct CameraFrustum
+	struct CameraFrustumSideFaces
 	{
-		SimpleMath::Plane nearFrustum, farFrustum, leftFrustum, rightFrustum, topFrustum, bottomFrustum;
+		std::array<SimpleMath::Vector3, 4> leftFrustum, rightFrustum, topFrustum, bottomFrustum;
+	};
+
+	struct CameraFrustumSidePlanes
+	{
+		SimpleMath::Plane leftFrustum, rightFrustum, topFrustum, bottomFrustum;
 	};
 
 
@@ -37,7 +42,8 @@ private:
 	SimpleMath::Vector2 screenSize;
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
-	CameraFrustum frustumViewWorldPlanes;
+	CameraFrustumSideFaces frustumViewWorldSideFaces;
+	CameraFrustumSidePlanes frustumViewWorldSidePlanes;
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
