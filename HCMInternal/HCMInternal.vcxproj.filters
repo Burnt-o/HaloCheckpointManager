@@ -1033,6 +1033,9 @@
     <ClCompile Include="UpdateTriggerLastChecked.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer3DImpl_updateCameraData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

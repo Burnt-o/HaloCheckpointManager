@@ -9,6 +9,7 @@ See:
 Renderer3DImpl_WorldToScreen.cpp
 Renderer3DImpl_Text.cpp
 Renderer3DImpl_Sprites.cpp
+Renderer3DImpl_updateGameCamera.cpp
 
 for the rest of the implementation
 

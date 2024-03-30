@@ -89,7 +89,7 @@ private:
 				auto centerPos = renderer->worldPointToScreenPosition(triggerData.model.box.Center);
 				RenderTextHelper::drawCenteredOutlinedText("triggerCenter", { centerPos.x, centerPos.y }, 0xFFFFFFFF, 1.f);
 
-				renderer->renderTriggerModel(triggerData.model);
+				renderer->renderTriggerModel(triggerData.model, 0xA00000FF, 0xF00000FF);
 			}
 
 		}

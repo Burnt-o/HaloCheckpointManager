@@ -267,24 +267,17 @@ private:
 			}
 #endif
 
-			bool shouldClamp = settings->waypoint3DClampToggle->GetValue();
 			for (auto& waypoint : lockedWaypointList)
 			{
 				if (waypoint.waypointEnabled == false) continue;
 
-				if (!shouldClamp && !renderer->pointOnScreen(waypoint.position))
+				bool isClamped;
+				auto screenPosition = renderer->worldPointToScreenPositionClamped(waypoint.position, 0, &isClamped);
+
+				if (isClamped && !settings->waypoint3DClampToggle->GetValue())
 				{
-					// not clamping, and position is clipped (off-screen). so let's skip rendering.
+					// point is offscreen and user doesn't want clamping: cull.
 					continue;
-				}
-
-				auto screenPosition = renderer->worldPointToScreenPosition(waypoint.position);
-
-				bool isClamped = false; // clamped waypoints will have transparency halved
-				if (shouldClamp)
-				{
-					// clamp it
-					isClamped = renderer->clampScreenPositionToEdge(screenPosition, waypoint.position);
 				}
 
 				// test if filtered by render range

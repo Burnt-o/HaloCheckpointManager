@@ -20,9 +20,9 @@ template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
 {
 private:
-	struct CameraFrustrum
+	struct CameraFrustum
 	{
-		SimpleMath::Plane nearFrustrum, farFrustrum, leftFrustrum, rightFrustrum, topFrustrum, bottomFrustrum;
+		SimpleMath::Plane nearFrustum, farFrustum, leftFrustum, rightFrustum, topFrustum, bottomFrustum;
 	};
 
 
@@ -37,6 +37,7 @@ private:
 	SimpleMath::Vector2 screenSize;
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
+	CameraFrustum frustumViewWorldPlanes;
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
@@ -66,19 +67,19 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// funcs
-	virtual bool updateCameraData(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView);
+	virtual bool updateCameraData(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) override;
 	RECTF drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter);
 	friend class Render3DEventProvider;
 public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
 
-	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition) override;
-	virtual bool clampScreenPositionToEdge(SimpleMath::Vector3& screenPositionOut, SimpleMath::Vector3& worldPointPosition) override;
+	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition, bool shouldFlipBehind) override;
+	virtual SimpleMath::Vector3 worldPointToScreenPositionClamped(SimpleMath::Vector3 worldPointPosition, int screenEdgeOffset, bool* appliedClamp) override;
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
-	virtual void renderTriggerModel(TriggerModel& model) override;
+	virtual void renderTriggerModel(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) override;
 
 };
