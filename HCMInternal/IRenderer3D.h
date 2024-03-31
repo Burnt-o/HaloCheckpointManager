@@ -79,4 +79,14 @@ public:
 	/// <param name="outlineColor">What colour will outline the edges of the trigger volume.</param>
 	virtual void renderTriggerModel(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) = 0;
 
+#ifdef HCM_DEBUG
+	/// <summary>
+	/// Renders a trigger model to the screen. Ignores given fillColor, instead giving each face a seperate colour.
+	/// </summary>
+	/// <param name="model">The trigger model to draw.</param>
+	/// <param name="fillColor">Ignored.</param>
+	/// <param name="outlineColor">What colour will outline the edges of the trigger volume.</param>
+	virtual void renderTriggerModelSortedDebug(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) = 0;
+#endif
+
 };

@@ -50,7 +50,6 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 
 		float aspectRatio = screenSizeIn.x / screenSizeIn.y; // aspect ratio is width div height!
 
-
 		float verticalFov;
 		if (this->pVerticalFOVCached != nullptr)
 		{
@@ -67,30 +66,6 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		if (XMScalarNearEqual(verticalFov, 0.0f, 0.00001f * 2.0f))
 			throw HCMRuntimeException(std::format("Bad vertical FOV value: {}", verticalFov));
 
-#ifdef HCM_DEBUG
-		static float adjustFactor = 1.f;
-
-		if (GetKeyState('3') & 0x8000)
-		{
-			adjustFactor += 0.001f;
-		}
-		if (GetKeyState('4') & 0x8000)
-		{
-			adjustFactor -= 0.001f;
-		}
-
-		if (GetKeyState('5') & 0x8000)
-		{
-			PLOG_VERBOSE << "horizontalFov: " << *cameraData.FOV;
-			PLOG_VERBOSE << "verticalFov: " << verticalFov;
-			PLOG_VERBOSE << "adjustedFov: " << (verticalFov * adjustFactor);
-			PLOG_VERBOSE << "pCameraData->horizontalFov: " << std::hex << (uintptr_t)cameraData.FOV;
-			PLOG_VERBOSE << "adjustFactor: " << adjustFactor;
-		}
-
-
-		verticalFov = verticalFov * adjustFactor;
-#endif
 
 
 		this->projectionMatrix = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(verticalFov, aspectRatio, 0.001f, FAR_CLIP_3D);
@@ -103,27 +78,18 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->screenSize = screenSizeIn;
 		this->screenCenter = { screenSize.x / 2.f, screenSize.y / 2.f };
 
+
 		this->frustumViewWorld.CreateFromMatrix(this->frustumViewWorld, this->projectionMatrix, true); // frustrum in view space
 		this->frustumViewWorld.Transform(this->frustumViewWorld, this->viewMatrix.Invert()); // now in world space
+		this->frustumViewWorld.Transform(this->frustumViewWorldBackwards, SimpleMath::Matrix::CreateFromAxisAngle(this->cameraUp, DirectX::XM_PI)) ; // get the frustum but facing backwards so we can check for wrapparounds
 
 		std::array<SimpleMath::Vector3, 8> frustumCorners;
 		this->frustumViewWorld.GetCorners(frustumCorners.data());
 
 		this->frustumViewWorld.GetPlanes(nullptr, nullptr, (DirectX::XMVECTOR*) & frustumViewWorldSidePlanes.rightFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.leftFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.topFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.bottomFrustum);
 
-		/*
-		XMGLOBALCONST XMVECTORF32 g_BoxOffset[8] =
-		{
-			{ { { -1.0f, -1.0f,  1.0f, 0.0f } } },	001		0
-			{ { {  1.0f, -1.0f,  1.0f, 0.0f } } },	101		1
-			{ { {  1.0f,  1.0f,  1.0f, 0.0f } } },	111		2
-			{ { { -1.0f,  1.0f,  1.0f, 0.0f } } },	011		3
-			{ { { -1.0f, -1.0f, -1.0f, 0.0f } } },	000		4
-			{ { {  1.0f, -1.0f, -1.0f, 0.0f } } },	100		5
-			{ { {  1.0f,  1.0f, -1.0f, 0.0f } } },	110		6
-			{ { { -1.0f,  1.0f, -1.0f, 0.0f } } },	010		7
-		};
-		*/
+
+		// magic numbers derived from DirectX::g_BoxOffset
 		this->frustumViewWorldSideFaces.bottomFrustum	= { frustumCorners[4], frustumCorners[5], frustumCorners[6], frustumCorners[7] };
 		this->frustumViewWorldSideFaces.topFrustum		= { frustumCorners[0], frustumCorners[1], frustumCorners[2], frustumCorners[3] };
 		this->frustumViewWorldSideFaces.leftFrustum		= { frustumCorners[4], frustumCorners[5], frustumCorners[1], frustumCorners[0] };

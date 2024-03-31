@@ -30,6 +30,10 @@ private:
 		SimpleMath::Plane leftFrustum, rightFrustum, topFrustum, bottomFrustum;
 	};
 
+	struct CameraFrustumSideTris
+	{
+		std::array<SimpleMath::Vector3, 3> leftFrustum1, leftFrustum2, rightFrustum1, rightFrustum2, topFrustum1, topFrustum2, bottomFrustum1, bottomFrustum2;
+	};
 
 	// data
 	bool haveShownError = false; // prevents updateGameCamera from spamming messages. resets to false on gamestate change.
@@ -42,8 +46,10 @@ private:
 	SimpleMath::Vector2 screenSize;
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
+	DirectX::BoundingFrustum frustumViewWorldBackwards;
 	CameraFrustumSideFaces frustumViewWorldSideFaces;
 	CameraFrustumSidePlanes frustumViewWorldSidePlanes;
+	CameraFrustumSideTris frustumViewWorldSideTris;
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
@@ -87,5 +93,9 @@ public:
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
 	virtual void renderTriggerModel(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) override;
+
+#ifdef HCM_DEBUG
+	virtual void renderTriggerModelSortedDebug(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) override;
+#endif
 
 };

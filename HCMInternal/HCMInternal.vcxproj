@@ -133,7 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;$(ProjectDir)includes\geometric-tools</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -189,7 +189,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;$(ProjectDir)includes\geometric-tools</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -232,7 +232,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
-    <ClInclude Include="closestPointOnPlanarFaceToPoint.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
@@ -447,7 +446,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cloestPlaneOnPlanarFaceToPoint.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
