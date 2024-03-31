@@ -2,8 +2,130 @@
 #include "Renderer3DImpl.h"
 #include "directxtk\SimpleMath.h"
 
-//#include "Mathematics\DistPointTriangle.h"
+#define v3tv2(x) static_cast<SimpleMath::Vector2>(x)
 
+template<GameState::Value mGame>
+std::vector<SimpleMath::Vector3> Renderer3DImpl<mGame>::faceClippedToFrustum(const faceView& face)
+{
+	static_assert(false, "TODO: faceClippedToFrustum");
+	//return { {0,0,0} };
+}
+
+template<GameState::Value mGame>
+std::array<VertexInfo, 2> Renderer3DImpl<mGame>::edgeClippedToFrustum(const edgeView& edge)
+{
+	static_assert(false, "TODO: edgeClippedToFrustum");
+	//return {};
+}
+
+
+template<GameState::Value mGame>
+void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color) 
+{
+	// Test if all of the points are inside the camera frustum
+	if (std::all_of(face.begin(), face.end(), [this](const VertexInfo* v) { return this->frustumViewWorld.Contains(v->worldPosition); }))
+	{
+		// then we don't need to do anything fancy, render the square!
+		ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(face[0]->screenPosition), v3tv2(face[1]->screenPosition), v3tv2(face[2]->screenPosition), v3tv2(face[3]->screenPosition), color);
+	}
+
+	// uh oh, at least one of the vertexes lies outside the frustum! We'll need to construct a new planar polygon that is the intersection of the original face AND the view frustum.
+	// This new polygon may have between 3 and 8 vertices.
+
+	// get the clipped polygon
+	auto newPolygon = faceClippedToFrustum(face); 
+
+
+	// calculate the new screen positions of this polygon
+	std::vector<ImVec2> newPolygonScreenPositions;
+	for (auto& v : newPolygon)
+	{
+		newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(v, false)));
+	}
+
+	// draw it!
+	ImGui::GetForegroundDrawList()->AddConvexPolyFilled(newPolygonScreenPositions.data(), newPolygonScreenPositions.size(), color);
+
+}
+
+
+template<GameState::Value mGame>
+void  Renderer3DImpl<mGame>::renderEdge(const edgeView& edge, uint32_t color)
+{
+	// Test if all of the points are inside the camera frustum
+	if (std::all_of(edge.begin(), edge.end(), [this](const VertexInfo* v) { return this->frustumViewWorld.Contains(v->worldPosition); }))
+	{
+		// then we don't need to do anything fancy, render the line!
+		ImGui::GetForegroundDrawList()->AddLine(v3tv2(edge[0]->screenPosition), v3tv2(edge[1]->screenPosition), color);
+	}
+
+	//  uh oh, at least one of the vertexes lies outside the frustum! We'll need to construct a new line that is the intersection of the original edge AND the view frustum.
+	// This new line will of course be a segment of the original line.
+
+	// get the clipped line
+	auto newLine = edgeClippedToFrustum(edge);
+
+	// calulate the new lines screen positions
+	std::array<ImVec2, 2> newLineScreenPositions = {
+		v3tv2(worldPointToScreenPosition(newLine[0].worldPosition, false)),
+		v3tv2(worldPointToScreenPosition(newLine[1].worldPosition, false)),
+	};
+
+	// draw it!
+	ImGui::GetForegroundDrawList()->AddLine(newLineScreenPositions[0], newLineScreenPositions[1], color);
+
+}
+
+template<GameState::Value mGame>
+bool Renderer3DImpl<mGame>::pointBehindCamera(const SimpleMath::Vector3& point)
+{
+	return (point - this->cameraPosition).Dot(this->cameraDirection) < 0;
+}
+
+void clampScreenPosition(SimpleMath::Vector3& screenPosition, const SimpleMath::Vector2& screenCenter, bool reverse = false)
+{
+	// Need to align unclampedScreenPos to center of screen
+	screenPosition.x -= screenCenter.x;
+	screenPosition.y -= screenCenter.y;
+
+	// find angle between centre of screen and the unclamped screen pos.
+	float screenPosAngle = std::atan2f(screenPosition.y, screenPosition.x);
+
+	if (reverse)
+		screenPosAngle = std::fmodf(screenPosAngle + DirectX::XM_2PI, DirectX::XM_2PI) - DirectX::XM_PI;
+
+	float screenPosSlope = std::tanf(screenPosAngle);
+
+
+
+	// line equation stuff. 
+	if (screenPosition.x > 0)
+	{
+		// screenPosition is off the the right of the screen. New screen position needs to be at x-max., with y position y = mx.
+		screenPosition = SimpleMath::Vector3(screenCenter.x, screenCenter.x * screenPosSlope, screenPosition.z);
+	}
+	else
+	{
+		screenPosition = SimpleMath::Vector3(-screenCenter.x, -screenCenter.x * screenPosSlope, screenPosition.z);
+	}
+
+	if (screenPosition.y > screenCenter.y)
+	{
+		screenPosition = SimpleMath::Vector3(screenCenter.y / screenPosSlope, screenCenter.y, screenPosition.z);
+	}
+	else if (screenPosition.y < -screenCenter.y) // might need to times screenCenter.y by two.
+	{
+		screenPosition = SimpleMath::Vector3(-screenCenter.y / screenPosSlope, -screenCenter.y, screenPosition.z);
+	}
+
+	// bring screenPos back to it's original reference 
+	screenPosition.x += screenCenter.x;
+	screenPosition.y += screenCenter.y;
+
+	DEBUG_KEY_LOG('8', PLOG_DEBUG << "post clamp screen pos: " << screenPosition; );
+
+
+}
 
 
 float measurePlanePointDistance(const SimpleMath::Plane& plane, const SimpleMath::Vector3& point)
@@ -38,15 +160,17 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 	// result above is actually in homogenous space, divide all components by w to get clipspace.
 	clipSpace = clipSpace / clipSpace.w;
 
-
-	if (shouldFlipBehind)
+	if (pointBehindCamera(worldPointPosition))
 	{
-		// points behind camera need to have their clipSpace mirrored back the otherdirection
-		if ((worldPointPosition - this->cameraPosition).Dot(this->cameraDirection) < 0)
-		{
+		// points in semisphere behind camera need to have their clipSpace mirrored back the other direction
 			clipSpace.x *= -1.f;
 			clipSpace.y *= -1.f;
-		}
+
+			/* TODO: I think the glitchyness I'm dealing with stems from here. 
+				This math is not correct.. somehow.. 
+				Maybe this needs to happen in homogenous space? 
+			*/
+
 	}
 	
 	// convert from clipSpace (-1..+1) to screenSpace (0..Width, 0..Height)
@@ -57,22 +181,11 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 		clipSpace.z
 	);
 
-
-
-#ifdef HCM_DEBUG
-// TODO: output points that lay far outside the screen boundary on the y axis do not have quite the correct x position. 
-// Specifically, the more outside the y bounds they are, the more their position becomes too close to the center of the screen than it ought to be.
-// The problem is probably in our clipspace -> screenSpace conversion, surely ? I've double checked online and it should be exactly correct.
-// Maybe it's a float precision error as certain values get close to 0 / infinity (ie clipSpace.w being close to zero would be bad).
-// But why is it only affecting x axis?
-
-	// ACTUALLY the issue is with points BEHIND the camera. they're wrapping around. That's the issue. I need points that wrap around to terminate at the screen bounds ? idk
-
-
-#endif
-
 	return out;
 }
+
+
+
 
 template<GameState::Value mGame>
 SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPositionClamped(SimpleMath::Vector3 worldPointPosition , int screenEdgeOffset , bool* appliedClamp)
@@ -92,40 +205,7 @@ https://github.com/jinincarnate/off-screen-indicator/blob/master/Off%20Screen%20
 	// else, need to clamp.
 	if (appliedClamp) *appliedClamp = true;
 
-	// Need to align unclampedScreenPos to center of screen
-	screenPosition.x -= this->screenCenter.x;
-	screenPosition.y -= this->screenCenter.y;
-
-	// find angle between centre of screen and the unclamped screen pos.
-	float screenPosAngle = std::atan2f(screenPosition.y, screenPosition.x);
-	float screenPosSlope = std::tanf(screenPosAngle);
-
-	// line equation stuff. 
-	if (screenPosition.x > 0)
-	{
-		// screenPosition is off the the right of the screen. New screen position needs to be at x-max., with y position y = mx.
-		screenPosition = SimpleMath::Vector3(this->screenCenter.x, this->screenCenter.x * screenPosSlope, screenPosition.z);
-	}
-	else
-	{
-		screenPosition = SimpleMath::Vector3(-this->screenCenter.x, -this->screenCenter.x * screenPosSlope, screenPosition.z);
-	}
-
-	if (screenPosition.y > this->screenCenter.y)
-	{
-		screenPosition = SimpleMath::Vector3(this->screenCenter.y / screenPosSlope, this->screenCenter.y, screenPosition.z);
-	}
-	else if (screenPosition.y < -this->screenSize.y)
-	{
-		screenPosition = SimpleMath::Vector3(-this->screenCenter.y / screenPosSlope, -this->screenCenter.y, screenPosition.z);
-	}
-
-	// bring screenPos back to it's original reference 
-	screenPosition.x += this->screenCenter.x;
-	screenPosition.y += this->screenCenter.y;
-
-	DEBUG_KEY_LOG('8', PLOG_DEBUG << "post clamp screen pos: " << screenPosition; );
-
+	clampScreenPosition(screenPosition, this->screenCenter);
 	return screenPosition;
 
 }
@@ -147,45 +227,20 @@ void Renderer3DImpl<mGame>::renderTriggerModel(TriggerModel& model, uint32_t fil
 	// Calculate screen positions.
 	for (int i = 0; i < 8; i++)
 	{
-		model.cornersScreenPosition[i] = worldPointToScreenPosition(model.corners[i], true);
+		model.vertices[i].screenPosition = worldPointToScreenPosition(model.vertices[i].worldPosition, false);
 	}
 
-	
-#define v3tv2(x) static_cast<SimpleMath::Vector2>(x)
+	// Render faces
+	for (auto& f : model.faceViews)
+	{
+		renderFace(f, fillColor);
+	}
 
-
-	// Draw the 6 faces of the trigger model. If not culled.
-#define wrapsAround(p1, p2, p3, p4) frustumViewWorldBackwards.Intersects(model.corners[p1], model.corners[p2], model.corners[p3]) || frustumViewWorldBackwards.Intersects(model.corners[p1], model.corners[p3], model.corners[p4])
-#define drawFace(p1, p2, p3, p4) if (!wrapsAround(p1, p2, p3 ,p4)) { ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(model.cornersScreenPosition[p1]), v3tv2(model.cornersScreenPosition[p2]), v3tv2(model.cornersScreenPosition[p3]), v3tv2(model.cornersScreenPosition[p4]), fillColor); }
-
-	// magic numbers derived from DirectX::g_BoxOffset
-	drawFace(0, 1, 2, 3);
-	drawFace(4, 5, 6, 7);
-	drawFace(0, 1, 5, 4);
-	drawFace(0, 3, 7, 4);
-	drawFace(1, 2, 6, 5);
-	drawFace(2, 3, 7, 6);
-
-	// Draw the 12 line segments connecting each vertexes to make a highlighted outline.
-#define drawLine(p1, p2) ImGui::GetForegroundDrawList()->AddLine(v3tv2(model.cornersScreenPosition[p1]), v3tv2(model.cornersScreenPosition[p2]), outlineColor);
-
-	// near face
-	drawLine(0, 1)
-	drawLine(1, 2)
-	drawLine(2, 3)
-	drawLine(3, 0)
-		
-	// far face
-	drawLine(4, 5)
-	drawLine(5, 6)
-	drawLine(6, 7)
-	drawLine(7, 4)
-		
-	// connect the near and far faces
-	drawLine(0, 4)
-	drawLine(1, 5)
-	drawLine(2, 6)
-	drawLine(3, 7)
+	// Render edges
+	for (auto& e : model.edgeViews)
+	{
+		renderEdge(e, outlineColor);
+	}
 
 
 }
@@ -196,79 +251,52 @@ template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::renderTriggerModelSortedDebug(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor)
 {
 
+
 	// Cull if none of the trigger is visible.
 	if (this->frustumViewWorld.Contains(model.box) == false) return;
 
 	// Calculate screen positions.
 	for (int i = 0; i < 8; i++)
 	{
-		model.cornersScreenPosition[i] = worldPointToScreenPosition(model.corners[i], true);
+		model.vertices[i].screenPosition = worldPointToScreenPosition(model.vertices[i].worldPosition, false);
 	}
 
-#define v3tv2(x) static_cast<SimpleMath::Vector2>(x)
+	// Order faces by world distance from camera. And assign each one a color.
+	typedef std::tuple<faceView&, float, uint32_t> sortedFaceView;
+	std::array<sortedFaceView, 6> sortedFaceViews = {
+		sortedFaceView(model.faceViews[0], 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
+		sortedFaceView(model.faceViews[1], 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
+		sortedFaceView(model.faceViews[2], 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
+		sortedFaceView(model.faceViews[3], 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
+		sortedFaceView(model.faceViews[4], 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
+		sortedFaceView(model.faceViews[5], 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
+			};
 
-	// Draw the 6 faces of the trigger model. If not culled.
-#define wrapsAround(p1, p2, p3, p4) frustumViewWorldBackwards.Intersects(model.corners[p1], model.corners[p2], model.corners[p3]) || frustumViewWorldBackwards.Intersects(model.corners[p1], model.corners[p3], model.corners[p4])
-#define drawFace(p1, p2, p3, p4, color) if (!wrapsAround(p1, p2, p3 ,p4)) { ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(model.cornersScreenPosition[p1]), v3tv2(model.cornersScreenPosition[p2]), v3tv2(model.cornersScreenPosition[p3]), v3tv2(model.cornersScreenPosition[p4]), color); }
-
-	// hm. order matters if faces are different colours. The closest thing needs to get drawn last. Can i just sort faces by distance to center point?
-
-	// array of indexes into model.corners/model.cornersScreenPosition
-	typedef std::array<int, 4> face;
-
-	// face, distance to face, colour to draw that face.
-	typedef std::tuple<face, float, uint32_t> faceInfo;
-
-	// magic numbers derived from DirectX::g_BoxOffset
-	std::array<faceInfo, 6 > faces = {
-	faceInfo(face{ 0, 1, 2, 3 }, 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))),
-	faceInfo(face{ 4, 5, 6, 7 }, 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 0.f, 1.f))),
-	faceInfo(face{ 0, 1, 5, 4 }, 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 1.f, 1.f))),
-	faceInfo(face{ 0, 3, 7, 4 }, 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 0.f, 1.f))),
-	faceInfo(face{ 1, 2, 6, 5 }, 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 1.f, 1.f))),
-	faceInfo(face{ 2, 3, 7, 6 }, 0.f, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 1.f, 1.f))),
-	};
-
-	// measure distance to center of each face
-	for (auto& f : faces)
+	// Measure the world distance from camera:
+	for (auto& fv : sortedFaceViews)
 	{
-		auto centerPosition = (model.corners[std::get<face>(f)[0]] + model.corners[std::get<face>(f)[1]] + model.corners[std::get<face>(f)[2]] + model.corners[std::get<face>(f)[3]]) / 4.f;
-		std::get<float>(f) = SimpleMath::Vector3::DistanceSquared(this->cameraPosition, centerPosition);
+		// Center position of face is just all 4 vertexes added up and div by 4.
+		auto centerPositionOfFace = std::get<faceView&>(fv)[0]->worldPosition + std::get<faceView&>(fv)[1]->worldPosition + std::get<faceView&>(fv)[2]->worldPosition + std::get<faceView&>(fv)[3]->worldPosition;
+		centerPositionOfFace /= 4;
+		std::get<float>(fv) = SimpleMath::Vector3::DistanceSquared(this->cameraPosition, centerPositionOfFace);
 	}
 
-	// sort by distance
-	std::sort(faces.begin(), faces.end(), [](const auto& a, const auto& b) { return std::get<float>(a) > std::get<float>(b); });
-
-#define drawSortedFace(index) drawFace(std::get<face>(faces.at(index))[0], std::get<face>(faces.at(index))[1], std::get<face>(faces.at(index))[2], std::get<face>(faces.at(index))[3], std::get<uint32_t>(faces.at(index)));
-
-	drawSortedFace(0);
-	drawSortedFace(1);
-	drawSortedFace(2);
-	drawSortedFace(3);
-	drawSortedFace(4);
-	drawSortedFace(5);
+	// Sort by distance
+	std::sort(sortedFaceViews.begin(), sortedFaceViews.end(), [](const auto& a, const auto& b) { return std::get<float>(a) > std::get<float>(b); });
 
 
-	// Draw the 12 line segments connecting each vertexes to make a highlighted outline.
-#define drawLine(p1, p2) ImGui::GetForegroundDrawList()->AddLine(v3tv2(model.cornersScreenPosition[p1]), v3tv2(model.cornersScreenPosition[p2]), outlineColor);
+	// Render faces (sorted)
+	for (auto& sf : sortedFaceViews)
+	{
+		renderFace(std::get<faceView&>(sf), std::get<uint32_t>(sf));
+	}
 
-	// near face
-	drawLine(0, 1)
-		drawLine(1, 2)
-		drawLine(2, 3)
-		drawLine(3, 0)
+	// Render edges (not sorted)
+	for (auto& e : model.edgeViews)
+	{
+		renderEdge(e, outlineColor);
+	}
 
-		// far face
-		drawLine(4, 5)
-		drawLine(5, 6)
-		drawLine(6, 7)
-		drawLine(7, 4)
-
-		// connect the near and far faces
-		drawLine(0, 4)
-		drawLine(1, 5)
-		drawLine(2, 6)
-		drawLine(3, 7)
 
 }
 #endif

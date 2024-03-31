@@ -15,6 +15,7 @@
 #include "directxtk\DDSTextureLoader.h"
 #include "directxtk\CommonStates.h"
 #include "MultilevelPointer.h"
+
 // impl in .cpp
 template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
@@ -82,6 +83,16 @@ private:
 	virtual bool updateCameraData(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) override;
 	RECTF drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter);
 	friend class Render3DEventProvider;
+
+
+	bool pointBehindCamera(const SimpleMath::Vector3& point);
+	std::vector<SimpleMath::Vector3> faceClippedToFrustum(const faceView& face);
+	void renderFace(const faceView& face, uint32_t color);
+
+	std::array<VertexInfo, 2> edgeClippedToFrustum(const edgeView& edge);
+	void renderEdge(const edgeView& edge, uint32_t color);
+
+
 public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
