@@ -11,8 +11,11 @@ private:
 	std::map<TriggerPointer, TriggerData> triggerData;
 	bool triggerDataCached = false;
 
+	// TODO: add callback to MCCStateChanged, set cached to false.
+
 	void updateTriggerData()
 	{
+		PLOG_DEBUG << "updating trigger data!";
 		triggerData.clear();
 		triggerData.emplace(0, TriggerData("box", TriggerModel({14.671300, -95.203300, -73.22693634 }, {0.2, 0.2, 0.2}, SimpleMath::Vector3::Forward, SimpleMath::Vector3::Up))); // test trigger at keyes start
 	
@@ -28,7 +31,11 @@ public:
 	virtual std::map<TriggerPointer, TriggerData>& getTriggerData() override
 	{
 		if (triggerDataCached == false)
+		{
 			updateTriggerData();
+			triggerDataCached = true;
+		}
+			
 
 		return triggerData;
 	}

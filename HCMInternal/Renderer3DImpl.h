@@ -50,6 +50,7 @@ private:
 	DirectX::BoundingFrustum frustumViewWorldBackwards;
 	CameraFrustumSideFaces frustumViewWorldSideFaces;
 	CameraFrustumSidePlanes frustumViewWorldSidePlanes;
+	std::array<SimpleMath::Plane, 6> frustumViewWorldPlanes;
 	CameraFrustumSideTris frustumViewWorldSideTris;
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
@@ -86,10 +87,10 @@ private:
 
 
 	bool pointBehindCamera(const SimpleMath::Vector3& point);
-	std::vector<SimpleMath::Vector3> faceClippedToFrustum(const faceView& face);
-	void renderFace(const faceView& face, uint32_t color);
+	std::array<SimpleMath::Vector3, 8> clipFaceToFrustum(const faceView& face);
+	void renderFace(const faceView& face, uint32_t color, bool debugVertices = false);
 
-	std::array<VertexInfo, 2> edgeClippedToFrustum(const edgeView& edge);
+	std::pair<SimpleMath::Vector3, SimpleMath::Vector3> clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end);
 	void renderEdge(const edgeView& edge, uint32_t color);
 
 

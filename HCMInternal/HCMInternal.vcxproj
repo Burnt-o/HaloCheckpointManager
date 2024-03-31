@@ -453,6 +453,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="PointerDataParser.cpp" />
     <ClCompile Include="PointerDataStore.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
+    <ClCompile Include="Renderer3DImpl_RenderTriggers.cpp" />
     <ClCompile Include="Renderer3DImpl_updateCameraData.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
