@@ -140,6 +140,48 @@ float Renderer3DImpl<mGame>::cameraDistanceToWorldPoint(SimpleMath::Vector3 worl
 }
 
 
+#ifdef HCM_DEBUG
+template<GameState::Value mGame>
+void Renderer3DImpl<mGame>::renderDebugFrustumFaces(int face)
+{
+	std::array<std::array<SimpleMath::Vector3, 4>, 6> faceScreenCoords;
+	for (int i = 0; i < 6; i++)
+	{
+		faceScreenCoords[i][0] = worldPointToScreenPosition(debugFrustumViewWorldFaces.value()[i][0], false);
+		faceScreenCoords[i][1] = worldPointToScreenPosition(debugFrustumViewWorldFaces.value()[i][1], false);
+		faceScreenCoords[i][2] = worldPointToScreenPosition(debugFrustumViewWorldFaces.value()[i][2], false);
+		faceScreenCoords[i][3] = worldPointToScreenPosition(debugFrustumViewWorldFaces.value()[i][3], false);
+	}
+
+	std::map<int, uint32_t> faceToColor =
+	{
+		{0, ImGui::ColorConvertFloat4ToU32({1.f, 0.f, 0.f, 0.1f})},
+		{1, ImGui::ColorConvertFloat4ToU32({0.f, 1.f, 0.f, 0.1f})},
+		{2, ImGui::ColorConvertFloat4ToU32({0.f, 0.f, 1.f, 0.1f})},
+		{3, ImGui::ColorConvertFloat4ToU32({1.f, 1.f, 0.f, 0.1f})},
+		{4, ImGui::ColorConvertFloat4ToU32({1.f, 0.f, 1.f, 0.1f})},
+		{5, ImGui::ColorConvertFloat4ToU32({0.f, 1.f, 1.f, 0.1f})},
+	};
+
+#define v3tv2(x) static_cast<SimpleMath::Vector2>(x)
+
+	if (face == -1)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(faceScreenCoords[i][0]), v3tv2(faceScreenCoords[i][1]), v3tv2(faceScreenCoords[i][2]), v3tv2(faceScreenCoords[i][3]), faceToColor.at(i));
+		}
+	}
+	else
+	{
+		ImGui::GetForegroundDrawList()->AddQuadFilled(v3tv2(faceScreenCoords[face][0]), v3tv2(faceScreenCoords[face][1]), v3tv2(faceScreenCoords[face][2]), v3tv2(faceScreenCoords[face][3]), faceToColor.at(face));
+	}
+
+
+}
+#endif
+
+
 
 // explicit template instantiation
 template class Renderer3DImpl<GameState::Value::Halo1>;

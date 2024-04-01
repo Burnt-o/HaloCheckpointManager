@@ -5,6 +5,84 @@
 
 //#include "Mathematics\IntrSegment3Triangle3.h"
 
+// infinite line and infinite plane
+std::optional<SimpleMath::Vector3> linePlaneIntersection(SimpleMath::Plane& plane, const SimpleMath::Vector3& p1, const SimpleMath::Vector3& p2)
+{
+	//https://stackoverflow.com/questions/7168484/3d-line-segment-and-plane-intersection
+	//https://stackoverflow.com/questions/34892197/how-calc-intersection-plane-and-line-unity3d
+
+	//auto lineDirection = p2 - p1;
+	//
+	//auto alignment = plane.DotNormal(lineDirection);
+	//if (alignment == 0.f) // no intersection: the line is parallel to the plane
+	//{
+	//	return std::nullopt;
+	//}
+	//auto d = plane.DotNormal(somePointOnPlane - p1);
+
+	//auto x = (d - plane.DotNormal(p1)) / (alignment);
+
+	//lineDirection.Normalize();
+
+	//return p1 + (lineDirection * x);
+
+
+
+	SimpleMath::Ray ray(p1, p2 - p1);
+	float distance;
+	if (ray.Intersects(plane, distance) == false)
+	{
+
+		// test the ray going the other direction
+
+		SimpleMath::Ray bRay(p2, p1 - p2);
+		if (bRay.Intersects(plane, distance) == false)
+		{
+			return std::nullopt;
+		}
+		else
+		{
+			PLOG_DEBUG << "INTERESTINGGGG";
+			return (bRay.position + (bRay.direction * distance * -1.f));
+		}
+	}
+
+	// is this not giving a valid position? I don't fucking understand
+	//SimpleMath::Vector3 rayDirectionNormal;
+	//ray.direction.Normalize(rayDirectionNormal);
+	return (ray.position + (ray.direction * distance));
+
+	/*
+	const XMVECTOR p = XMLoadFloat4(&plane);
+	const XMVECTOR dir = XMVectorSubtract(XMLoadFloat3(&p2), XMLoadFloat3(&p1));
+
+	const XMVECTOR nd = XMPlaneDotNormal(p, dir);
+	float Dist;
+	bool intersect;
+	if (XMVector3LessOrEqual(XMVectorAbs(nd), g_RayEpsilon))
+	{
+		return std::nullopt;
+	}
+	else
+	{
+		// t = -(dot(n,origin) + D) / dot(n,dir)
+		const XMVECTOR pos = XMLoadFloat3(&p1);
+		XMVECTOR v = XMPlaneDotNormal(p, pos);
+		v = XMVectorAdd(v, XMVectorSplatW(p));
+		v = XMVectorDivide(v, nd);
+		Dist = -XMVectorGetX(v);
+		
+		return XMVectorAdd(XMVectorScale(dir, Dist), XMLoadFloat3(&p1));
+	}
+	*/
+
+
+// what is the fucking units of distance?
+
+	// do we need to test twice; once for reach ray direction?
+}
+
+
 bool worldPointAisBetweenBC(const SimpleMath::Vector3& a, const SimpleMath::Vector3& b, const SimpleMath::Vector3& c)
 {
 	float distanceBC = SimpleMath::Vector3::DistanceSquared(b, c);
@@ -18,6 +96,9 @@ template<GameState::Value mGame>
 std::vector<SimpleMath::Vector3> Renderer3DImpl<mGame>::clipFaceToFrustum(const faceView& face)
 {
 	// Construct 4 line segments from the face, feed them to edge clippedToFrustum
+
+	// are we sending the vertexes in the wrong order? does the order matter?
+
 	std::array<std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>>, 4> lineSegments = {
 	 clipLineSegmentToFrustum(face[0]->worldPosition, face[1]->worldPosition),
 	 clipLineSegmentToFrustum(face[1]->worldPosition, face[2]->worldPosition),
@@ -42,7 +123,6 @@ template<GameState::Value mGame>
 std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImpl<mGame>::clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end)
 {
 
-
 	/*
 	Clips a line segment to only the portion contained inside the view frustum.
 	A line segment may have 0, 1, or 2 intersections with the view frustum. 
@@ -50,6 +130,14 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 	*/
 
 
+
+
+	if (start == end)
+	{
+		PLOG_ERROR << "what the fuck";
+	}
+
+	//
 	bool startInside = pointOnScreen(start);
 	bool endInside = pointOnScreen(end);
 
@@ -65,7 +153,9 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 	std::optional<SimpleMath::Vector3> intersectionPoint1;
 	std::optional<SimpleMath::Vector3> intersectionPoint2;
 
-	for (auto& frustumFace : this->frustumViewWorldFaces)
+	int debugIntersectionCount = 0;
+
+	for (auto& frustumPlane : this->frustumViewWorldPlanes) //(auto& frustumFace : this->frustumViewWorldFaces)
 	{
 		/*
 		First, check if the infinite line describes by the line-segment intersects with the infinite plane described by the frustum face.
@@ -73,44 +163,65 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 		If so, check if the intersection point lies on the finite frustum face.
 		*/
 
-		auto frustumPlane = DirectX::XMPlaneFromPoints(frustumFace[0], frustumFace[1], frustumFace[2]);
-		auto linePoint1 = DirectX::XMVECTOR{ start.x, start.y, start.z, 0.f };
-		auto linePoint2 = DirectX::XMVECTOR{end.x, end.y, end.z, 0.f};
-
-
-		PLOG_DEBUG << frustumFace[0];
-		PLOG_DEBUG << frustumFace[1];
-		PLOG_DEBUG << frustumFace[2];
+		//SimpleMath::Plane frustumPlane (frustumFace[0], frustumFace[1], frustumFace[2]);
 
 		// XMPlaneIntersectLine sets all components of vector to NAN if there is no intersection (Ie line is pefectly parralel to plane)
-		SimpleMath::Vector3 intersectionPoint = DirectX::XMPlaneIntersectLine(frustumPlane, linePoint1, linePoint2);
-		if (std::isnan(intersectionPoint.x))
+			// are we sending the vertexes in the wrong order? does the order matter?
+		auto intersectionPoint = linePlaneIntersection(frustumPlane, start, end);
+		//PLOG_DEBUG << intersectionPoint.x << ", isNan: " << std::isnan(intersectionPoint.x) ;
+		if (intersectionPoint.has_value() == false)
 		{
-			PLOG_ERROR << "this should rarely if ever happen";
+			//PLOG_ERROR << "this should rarely if ever happen"; // the chances of the line being perfectly parallel to a plane..
 			// BOY this is sure happening a lot
 			// like a LOT. wtf.
+			// like seriously wtf is wrong with my code. or with XMPlaneIntersectLine.
 			continue;
 		}
 
+		//PLOG_DEBUG << "testing for real intersection";
 
-		if (
-			worldPointAisBetweenBC(intersectionPoint, start, end) // Does the intersection point lie on the line segment? ps this only works cause the line segment is colinear to the infinite line.
-			&& worldPointAisBetweenBC(intersectionPoint, frustumFace[0], frustumFace[2]) // Is the intersection point between both the diagonals of the frustum face?
-			&& worldPointAisBetweenBC(intersectionPoint, frustumFace[1], frustumFace[3]) // ps this only works because the face is coplaner to the infinite plane
-			)
+		auto AB = SimpleMath::Vector3::Distance(start, end);
+		auto AP = SimpleMath::Vector3::Distance(intersectionPoint.value(), start);
+		auto PB = SimpleMath::Vector3::Distance(intersectionPoint.value(), end);
+
+		bool pointOnLine = (AB >= AP && AB >= PB);
+
+		if ( worldPointAisBetweenBC(intersectionPoint.value(), start, end) == false)
 		{
-			PLOG_INFO << "YOOOOOOOOOOOOO";
-			// Then we have a real intersection
-			if (intersectionPoint1.has_value() == false) // is this the first intersection we've found?
-			{
-				intersectionPoint1 = intersectionPoint;
-			}
-			else  // it must be the second intersection point we've found
-			{
-				intersectionPoint2 = intersectionPoint;
-				break; // we can't have more than two intersection points; bail out of the loop.
-			}
+			//PLOG_VERBOSE << "Failed first test";
+			// it's always this first test that fails. is linePlaneIntersection spitting out garbage values?
+			// is worldPointAisBetweenBC wrong?
+			// I suspect it's the former but I have no fucking idea why
+			continue;
 		}
+
+		/*if (worldPointAisBetweenBC(intersectionPoint.value(), frustumFace[0], frustumFace[2]) == false)
+		{
+			PLOG_VERBOSE << "Failed second test";
+			continue;
+		}
+
+		if (worldPointAisBetweenBC(intersectionPoint.value(), frustumFace[1], frustumFace[3]) == false)
+		{
+			PLOG_VERBOSE << "Failed third test";
+			continue;
+		}*/
+
+		//PLOG_DEBUG << "passed tests!";
+
+		// Then we have a real intersection
+		if (intersectionPoint1.has_value() == false) // is this the first intersection we've found?
+		{
+			intersectionPoint1 = intersectionPoint.value();
+			debugIntersectionCount++;
+		}
+		else  // it must be the second intersection point we've found
+		{
+			intersectionPoint2 = intersectionPoint.value();
+			debugIntersectionCount++;
+			break; // we can't have more than two intersection points; bail out of the loop.
+		}
+
 	}
 
 	int intersectionCount = 0;
@@ -119,13 +230,16 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 	if (intersectionPoint2.has_value())
 		intersectionCount++;
 
+	//PLOG_DEBUG << "intersectionCount: " << intersectionCount;
+	//PLOG_DEBUG << "debugIntersectionCount: " << debugIntersectionCount;
+
 	if (intersectionCount == 0)
 	{
 		// No intersections; the line segment must lie entirely outside the view frustum, so there's no valid line to return.
 		//assert(startInside == false && endInside == false);
 		if (startInside || endInside)
 		{
-			//PLOG_ERROR << "no intersectiosn but a point was inside the frustum";
+			PLOG_ERROR << "no intersections but a point was inside the frustum?!";
 		}
 		return std::nullopt;
 	}
@@ -139,12 +253,16 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 		else
 		{
 			//assert(endInside);
-			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(end, intersectionPoint1.value());
+			if (endInside == false)
+				PLOG_ERROR << "end wasn't inside?!";
+			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), end);
 		}
 	}
 	else // two intersections
 	{
 		//assert(startInside == false && endInside == false);
+		if (startInside || endInside)
+			PLOG_ERROR << "one of the points was inside?!";
 		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), intersectionPoint2.value());
 	}
 

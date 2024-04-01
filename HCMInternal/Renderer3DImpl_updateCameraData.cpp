@@ -105,6 +105,41 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->frustumViewWorldFaces[5] = { frustumCorners[2], frustumCorners[6], frustumCorners[5], frustumCorners[1] }; // right
 
 
+#ifdef HCM_DEBUG
+		if (GetKeyState('7') & 0x8000)
+		{
+			debugFrustumViewWorldFaces = frustumViewWorldFaces;
+		}
+
+		if (GetKeyState('8') & 0x8000 && debugFrustumViewWorldFaces.has_value())
+		{
+			renderDebugFrustumFaces();
+		}
+
+		if (GetKeyState('9') & 0x8000 && debugFrustumViewWorldFaces.has_value())
+		{
+			static int faceToRender = 0;
+			static int holdForFrames = 0;
+			renderDebugFrustumFaces(faceToRender);
+
+			
+			if (holdForFrames == 0)
+			{
+				faceToRender = (faceToRender + 1) % 6;
+			}
+			holdForFrames = (holdForFrames + 1) % 30;
+			
+		}
+
+
+#endif
+
+
+
+
+
+
+
 		if (this->init == false)
 		{
 			initialise();
