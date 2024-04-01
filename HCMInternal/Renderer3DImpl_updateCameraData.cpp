@@ -83,19 +83,26 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->frustumViewWorld.Transform(this->frustumViewWorld, this->viewMatrix.Invert()); // now in world space
 		this->frustumViewWorld.Transform(this->frustumViewWorldBackwards, SimpleMath::Matrix::CreateFromAxisAngle(this->cameraUp, DirectX::XM_PI)) ; // get the frustum but facing backwards so we can check for wrapparounds
 
-		std::array<SimpleMath::Vector3, 8> frustumCorners;
+		std::array<XMFLOAT3, 8> frustumCorners;
 		this->frustumViewWorld.GetCorners(frustumCorners.data());
+
 
 		this->frustumViewWorld.GetPlanes(nullptr, nullptr, (DirectX::XMVECTOR*) & frustumViewWorldSidePlanes.rightFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.leftFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.topFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.bottomFrustum);
 
 		this->frustumViewWorld.GetPlanes((DirectX::XMVECTOR*)&frustumViewWorldPlanes[0], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[1], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[2], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[3], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[4], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[5]);
 
 
-		// magic numbers derived from DirectX::g_BoxOffset
-		this->frustumViewWorldSideFaces.bottomFrustum	= { frustumCorners[4], frustumCorners[5], frustumCorners[6], frustumCorners[7] };
-		this->frustumViewWorldSideFaces.topFrustum		= { frustumCorners[0], frustumCorners[1], frustumCorners[2], frustumCorners[3] };
-		this->frustumViewWorldSideFaces.leftFrustum		= { frustumCorners[4], frustumCorners[5], frustumCorners[1], frustumCorners[0] };
-		this->frustumViewWorldSideFaces.rightFrustum	= { frustumCorners[2], frustumCorners[3], frustumCorners[7], frustumCorners[6] };
+		//     Near    Far
+		//    0----1  4----5
+		//    |    |  |    |
+		//    |    |  |    |
+		//    3----2  7----6
+		this->frustumViewWorldFaces[0] = { frustumCorners[0], frustumCorners[1], frustumCorners[2], frustumCorners[3]}; // near
+		this->frustumViewWorldFaces[1] = { frustumCorners[4], frustumCorners[5], frustumCorners[6], frustumCorners[7] }; // far
+		this->frustumViewWorldFaces[2] = { frustumCorners[0], frustumCorners[4], frustumCorners[5], frustumCorners[1] }; // top
+		this->frustumViewWorldFaces[3] = { frustumCorners[3], frustumCorners[7], frustumCorners[6], frustumCorners[2] }; // bottom
+		this->frustumViewWorldFaces[4] = { frustumCorners[3], frustumCorners[7], frustumCorners[4], frustumCorners[0] }; // left
+		this->frustumViewWorldFaces[5] = { frustumCorners[2], frustumCorners[6], frustumCorners[5], frustumCorners[1] }; // right
 
 
 		if (this->init == false)

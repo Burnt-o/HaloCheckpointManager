@@ -21,10 +21,10 @@ template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
 {
 private:
-	struct CameraFrustumSideFaces
-	{
-		std::array<SimpleMath::Vector3, 4> leftFrustum, rightFrustum, topFrustum, bottomFrustum;
-	};
+	//struct CameraFrustumFaces
+	//{
+	//	std::array<SimpleMath::Vector3, 4> nearFrustum, farFrustum, leftFrustum, rightFrustum, topFrustum, bottomFrustum;
+	//};
 
 	struct CameraFrustumSidePlanes
 	{
@@ -48,7 +48,7 @@ private:
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
 	DirectX::BoundingFrustum frustumViewWorldBackwards;
-	CameraFrustumSideFaces frustumViewWorldSideFaces;
+	std::array<std::array<SimpleMath::Vector3, 4>, 6> frustumViewWorldFaces;
 	CameraFrustumSidePlanes frustumViewWorldSidePlanes;
 	std::array<SimpleMath::Plane, 6> frustumViewWorldPlanes;
 	CameraFrustumSideTris frustumViewWorldSideTris;
@@ -87,10 +87,10 @@ private:
 
 
 	bool pointBehindCamera(const SimpleMath::Vector3& point);
-	std::array<SimpleMath::Vector3, 8> clipFaceToFrustum(const faceView& face);
+	std::vector<SimpleMath::Vector3> clipFaceToFrustum(const faceView& face);
 	void renderFace(const faceView& face, uint32_t color, bool debugVertices = false);
 
-	std::pair<SimpleMath::Vector3, SimpleMath::Vector3> clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end);
+	std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end);
 	void renderEdge(const edgeView& edge, uint32_t color);
 
 

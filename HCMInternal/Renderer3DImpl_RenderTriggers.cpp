@@ -3,86 +3,151 @@
 #include "directxtk\SimpleMath.h"
 #include "RenderTextHelper.h"
 
+//#include "Mathematics\IntrSegment3Triangle3.h"
+
+bool worldPointAisBetweenBC(const SimpleMath::Vector3& a, const SimpleMath::Vector3& b, const SimpleMath::Vector3& c)
+{
+	float distanceBC = SimpleMath::Vector3::DistanceSquared(b, c);
+	return (SimpleMath::Vector3::DistanceSquared(a, b) <= distanceBC) && (SimpleMath::Vector3::DistanceSquared(a, c) <= distanceBC);
+}
+
+
 #define v3tv2(x) static_cast<SimpleMath::Vector2>(x)
 
 template<GameState::Value mGame>
-std::array<SimpleMath::Vector3, 8> Renderer3DImpl<mGame>::clipFaceToFrustum(const faceView& face)
+std::vector<SimpleMath::Vector3> Renderer3DImpl<mGame>::clipFaceToFrustum(const faceView& face)
 {
 	// Construct 4 line segments from the face, feed them to edge clippedToFrustum
-	std::array<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>, 4> lineSegments =
-	{
-		clipLineSegmentToFrustum(face[0]->worldPosition, face[1]->worldPosition),
-		clipLineSegmentToFrustum(face[1]->worldPosition, face[2]->worldPosition),
-		clipLineSegmentToFrustum(face[2]->worldPosition, face[3]->worldPosition),
-		clipLineSegmentToFrustum(face[3]->worldPosition, face[0]->worldPosition),
+	std::array<std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>>, 4> lineSegments = {
+	 clipLineSegmentToFrustum(face[0]->worldPosition, face[1]->worldPosition),
+	 clipLineSegmentToFrustum(face[1]->worldPosition, face[2]->worldPosition),
+	 clipLineSegmentToFrustum(face[2]->worldPosition, face[3]->worldPosition),
+	 clipLineSegmentToFrustum(face[3]->worldPosition, face[0]->worldPosition)
 	};
 
-	// I wish std::pair was guarenteed to be contiguous, in which case we could cheat and just cast from lineSegments to output.
-	// Alas we must copy. Maybe the compiler will optimize it for us.
-	return { lineSegments[0].first, lineSegments[0].second, lineSegments[1].first, lineSegments[1].second, lineSegments[2].first, lineSegments[2].second , lineSegments[3].first, lineSegments[3].second };
+	std::vector<SimpleMath::Vector3> out;
 
+	for (auto& lineSegment : lineSegments)
+	{
+		if (lineSegment.has_value())
+		{
+			out.emplace_back(lineSegment.value().first);
+			out.emplace_back(lineSegment.value().second);
+		}
+	}
+	return out;
 }
 
 template<GameState::Value mGame>
-std::pair<SimpleMath::Vector3, SimpleMath::Vector3> Renderer3DImpl<mGame>::clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end)
+std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImpl<mGame>::clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end)
 {
-	// https://stackoverflow.com/questions/77836/how-do-i-clip-a-line-segment-against-a-frustum
 
-	std::optional<DirectX::XMVECTOR> intersect1;
-	std::optional<DirectX::XMVECTOR> intersect2;
-	for (auto& frustumPlane : this->frustumViewWorldPlanes)
+
+	/*
+	Clips a line segment to only the portion contained inside the view frustum.
+	A line segment may have 0, 1, or 2 intersections with the view frustum. 
+	We need to find these intersection points and construct the new line from them.
+	*/
+
+
+	bool startInside = pointOnScreen(start);
+	bool endInside = pointOnScreen(end);
+
+	// If both points are inside the frustum, we can just return the original line.
+	if (startInside && endInside)
 	{
-		// PROBLEM: this is testing against PLANE, not FACE. do we really need to add a extra check for if the intersect point lies on the face? ugh.
-		auto maybeIntersect = DirectX::XMPlaneIntersectLine(frustumPlane, start, end);
-		if (DirectX::XMVector3IsNaN(maybeIntersect) == false) // have we got a intersect?
-		{
-			if (intersect1.has_value() == false) // is this the first one?
-			{
-				intersect1 = maybeIntersect;
-			}
-			else // it must be the second one
-			{
-				intersect2 = maybeIntersect;
-				break; // we can exit the for loop early- we will only ever have at most two intersects. 
-			}
+		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>( start, end );
+	}
+	
 
+	// Iterate over each face of the view frustum, finding the intersection point if there is one. We can stop iterating once we find 2.
+
+	std::optional<SimpleMath::Vector3> intersectionPoint1;
+	std::optional<SimpleMath::Vector3> intersectionPoint2;
+
+	for (auto& frustumFace : this->frustumViewWorldFaces)
+	{
+		/*
+		First, check if the infinite line describes by the line-segment intersects with the infinite plane described by the frustum face.
+		If so, check if the intersection point lies on the finite line segment.
+		If so, check if the intersection point lies on the finite frustum face.
+		*/
+
+		auto frustumPlane = DirectX::XMPlaneFromPoints(frustumFace[0], frustumFace[1], frustumFace[2]);
+		auto linePoint1 = DirectX::XMVECTOR{ start.x, start.y, start.z, 0.f };
+		auto linePoint2 = DirectX::XMVECTOR{end.x, end.y, end.z, 0.f};
+
+
+		PLOG_DEBUG << frustumFace[0];
+		PLOG_DEBUG << frustumFace[1];
+		PLOG_DEBUG << frustumFace[2];
+
+		// XMPlaneIntersectLine sets all components of vector to NAN if there is no intersection (Ie line is pefectly parralel to plane)
+		SimpleMath::Vector3 intersectionPoint = DirectX::XMPlaneIntersectLine(frustumPlane, linePoint1, linePoint2);
+		if (std::isnan(intersectionPoint.x))
+		{
+			PLOG_ERROR << "this should rarely if ever happen";
+			// BOY this is sure happening a lot
+			// like a LOT. wtf.
+			continue;
+		}
+
+
+		if (
+			worldPointAisBetweenBC(intersectionPoint, start, end) // Does the intersection point lie on the line segment? ps this only works cause the line segment is colinear to the infinite line.
+			&& worldPointAisBetweenBC(intersectionPoint, frustumFace[0], frustumFace[2]) // Is the intersection point between both the diagonals of the frustum face?
+			&& worldPointAisBetweenBC(intersectionPoint, frustumFace[1], frustumFace[3]) // ps this only works because the face is coplaner to the infinite plane
+			)
+		{
+			PLOG_INFO << "YOOOOOOOOOOOOO";
+			// Then we have a real intersection
+			if (intersectionPoint1.has_value() == false) // is this the first intersection we've found?
+			{
+				intersectionPoint1 = intersectionPoint;
+			}
+			else  // it must be the second intersection point we've found
+			{
+				intersectionPoint2 = intersectionPoint;
+				break; // we can't have more than two intersection points; bail out of the loop.
+			}
 		}
 	}
 
+	int intersectionCount = 0;
+	if (intersectionPoint1.has_value())
+		intersectionCount++;
+	if (intersectionPoint2.has_value())
+		intersectionCount++;
 
-	if (intersect1.has_value() && intersect2.has_value())
+	if (intersectionCount == 0)
 	{
-		// if we have two intersections already, we're done.
-		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersect1.value(), intersect2.value());
-	}
-	else if (intersect1.has_value() == false && intersect2.has_value() == false)
-	{
-		// if there were no intersections, the line must be fully inside or fully outside the frustum.
-		// return the original line. If it's fully outside then it shouldn't interfere once rendered.. I hope. This might be bad for faces er.
-		// Maybe we should be returning std::optional, and nullopt if we have both (no intersections) AND (neither point inside the frustum).
-		// How will faces deal with null opt?  uh connect the two adjacent edges i guess. 
-		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(start, end);
-	}
-	else
-	{
-		// we only have one intersection so far. This means the line segment is partially inside and partially outside the frustum.
-		// To put it another way, EITHER the start or end point are inside the frustum, but not both, and not neither. 
-		// And the line we want to output is a line starting at whichever point is inside the frustum, and ending at the intersection point.
-		if (this->frustumViewWorld.Contains(start))
+		// No intersections; the line segment must lie entirely outside the view frustum, so there's no valid line to return.
+		//assert(startInside == false && endInside == false);
+		if (startInside || endInside)
 		{
-			// output start -> intersection
-			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(start, intersect1.value());
+			//PLOG_ERROR << "no intersectiosn but a point was inside the frustum";
+		}
+		return std::nullopt;
+	}
+	else if (intersectionCount == 1)
+	{
+		// Need to check which of the two line points is inside the frustum (should be only one of them that is), return the line from it to the intersection point.
+		if (startInside)
+		{
+			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(start, intersectionPoint1.value());
 		}
 		else
 		{
-#ifdef HCM_DEBUG
-			if (this->frustumViewWorld.Contains(end) == false)
-				PLOG_ERROR << "clipLineSegmentToFrustum: One intersection found but neither point was inside the frustum?! wtf";
-#endif
-			// output intersection -> end
-			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersect1.value(), end);
+			//assert(endInside);
+			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(end, intersectionPoint1.value());
 		}
 	}
+	else // two intersections
+	{
+		//assert(startInside == false && endInside == false);
+		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), intersectionPoint2.value());
+	}
+
 
 
 }
@@ -123,10 +188,11 @@ void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color, bo
 		auto newPolygon = clipFaceToFrustum(face);
 
 		// calculate the new screen positions of this polygon
-		std::array<ImVec2, 8> newPolygonScreenPositions;
-		for (int i = 0; i < 8; i++)
+		std::vector<ImVec2> newPolygonScreenPositions;
+		for (auto& v : newPolygon)
 		{
-			newPolygonScreenPositions[i] = v3tv2(worldPointToScreenPosition(newPolygon[i], false));
+
+			newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(v, false)));
 		}
 
 
@@ -139,14 +205,10 @@ void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color, bo
 		if (debugVertices)
 		{
 			auto green = ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 0.f, 1.f));
-			RenderTextHelper::drawCenteredOutlinedText("0", newPolygonScreenPositions[0], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("1", newPolygonScreenPositions[1], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("2", newPolygonScreenPositions[2], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("3", newPolygonScreenPositions[3], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("4", newPolygonScreenPositions[4], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("5", newPolygonScreenPositions[5], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("6", newPolygonScreenPositions[6], green, 10.f);
-			RenderTextHelper::drawCenteredOutlinedText("7", newPolygonScreenPositions[7], green, 10.f);
+			for (int i = 0; i < newPolygonScreenPositions.size(); i++)
+			{
+				RenderTextHelper::drawCenteredOutlinedText(std::format("{}", i).c_str(), newPolygonScreenPositions[i], green, 10.f);
+			}
 		}
 	}
 
@@ -173,14 +235,18 @@ void  Renderer3DImpl<mGame>::renderEdge(const edgeView& edge, uint32_t color)
 	// get the clipped line
 		auto newLine = clipLineSegmentToFrustum(edge[0]->worldPosition, edge[1]->worldPosition);
 
-		// calulate the new lines screen positions
-		std::pair<ImVec2, ImVec2> newLineScreenPositions = {
-			v3tv2(worldPointToScreenPosition(newLine.first, false)),
-			v3tv2(worldPointToScreenPosition(newLine.second, false)),
-		};
+		if (newLine.has_value())
+		{
+			// calulate the new lines screen positions
+			std::pair<ImVec2, ImVec2> newLineScreenPositions = {
+				v3tv2(worldPointToScreenPosition(newLine.value().first, false)),
+				v3tv2(worldPointToScreenPosition(newLine.value().second, false)),
+			};
 
-		// draw it!
-		ImGui::GetBackgroundDrawList()->AddLine(newLineScreenPositions.first, newLineScreenPositions.second, color);
+			// draw it!
+			ImGui::GetBackgroundDrawList()->AddLine(newLineScreenPositions.first, newLineScreenPositions.second, color);
+		}
+		
 	}
 
 
