@@ -87,7 +87,8 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->frustumViewWorld.GetCorners(frustumCorners.data());
 
 
-		this->frustumViewWorld.GetPlanes(nullptr, nullptr, (DirectX::XMVECTOR*) & frustumViewWorldSidePlanes.rightFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.leftFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.topFrustum, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes.bottomFrustum);
+		this->frustumViewWorld.GetPlanes(nullptr, nullptr, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[0], (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[1], (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[2], (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[3]);
+
 
 		this->frustumViewWorld.GetPlanes((DirectX::XMVECTOR*)&frustumViewWorldPlanes[0], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[1], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[2], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[3], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[4], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[5]);
 

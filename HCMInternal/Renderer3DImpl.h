@@ -54,7 +54,7 @@ private:
 	std::optional<std::array<std::array<SimpleMath::Vector3, 4>, 6>> debugFrustumViewWorldFaces;
 	void renderDebugFrustumFaces(int face = -1);
 #endif
-	CameraFrustumSidePlanes frustumViewWorldSidePlanes;
+	std::array < SimpleMath::Plane, 4> frustumViewWorldSidePlanes;
 	std::array<SimpleMath::Plane, 6> frustumViewWorldPlanes;
 	CameraFrustumSideTris frustumViewWorldSideTris;
 	ID3D11Device* pDevice; 

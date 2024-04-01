@@ -2,6 +2,7 @@
 #include "Renderer3DImpl.h"
 #include "directxtk\SimpleMath.h"
 #include "RenderTextHelper.h"
+#include <unordered_set>
 
 //#include "Mathematics\IntrSegment3Triangle3.h"
 
@@ -32,19 +33,8 @@ std::optional<SimpleMath::Vector3> linePlaneIntersection(SimpleMath::Plane& plan
 	float distance;
 	if (ray.Intersects(plane, distance) == false)
 	{
-
-		// test the ray going the other direction
-
-		SimpleMath::Ray bRay(p2, p1 - p2);
-		if (bRay.Intersects(plane, distance) == false)
-		{
-			return std::nullopt;
-		}
-		else
-		{
-			PLOG_DEBUG << "INTERESTINGGGG";
-			return (bRay.position + (bRay.direction * distance * -1.f));
-		}
+		// could test the ray going the other direction; but easier for the caller to just call this again with the points swapped
+		return std::nullopt;
 	}
 
 	// is this not giving a valid position? I don't fucking understand
@@ -98,6 +88,15 @@ std::vector<SimpleMath::Vector3> Renderer3DImpl<mGame>::clipFaceToFrustum(const 
 	// Construct 4 line segments from the face, feed them to edge clippedToFrustum
 
 	// are we sending the vertexes in the wrong order? does the order matter?
+	// something is wrong in my logic here.
+	// Yeah the issue has gotta be here cos the edges are rendering fine..
+	// Is it the order of the points? or the order of the points returned by clipLineSegmentToFrustum?
+
+	// NO. an extra garbage point is sneaking in somewhere.
+
+
+	/// BIG CLUE: the glitch ONLY occurs if multiple edges are FULLY clipped.
+
 
 	std::array<std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>>, 4> lineSegments = {
 	 clipLineSegmentToFrustum(face[0]->worldPosition, face[1]->worldPosition),
@@ -112,12 +111,52 @@ std::vector<SimpleMath::Vector3> Renderer3DImpl<mGame>::clipFaceToFrustum(const 
 	{
 		if (lineSegment.has_value())
 		{
+			// is it bad that i'm doubling up in the case where there is no clipping? 
 			out.emplace_back(lineSegment.value().first);
 			out.emplace_back(lineSegment.value().second);
 		}
 	}
+
+	//std::erase_if(out, [this](const auto& p) { return pointOnScreen(p) == false; });
+
+
+	/* // an attempt to solve the doubling up. Still don't know if htat's actually an issue
+	if (lineSegments[0].has_value())
+	{
+		out.push_back(lineSegments[0].value().first);
+		out.push_back(lineSegments[0].value().second);
+	}
+
+	if (lineSegments[1].has_value())
+	{
+		if (!(out.empty() == false && out.back() == lineSegments[1].value().first))
+					out.push_back(lineSegments[1].value().first);
+
+		out.push_back(lineSegments[1].value().second);
+	}
+
+	if (lineSegments[2].has_value())
+	{
+		if (!(out.empty() == false && out.back() == lineSegments[2].value().first))
+			out.push_back(lineSegments[2].value().first);
+
+		out.push_back(lineSegments[2].value().second);
+	}
+
+	if (lineSegments[3].has_value())
+	{
+		if (!(out.empty() == false && out.back() == lineSegments[3].value().first))
+			out.push_back(lineSegments[3].value().first);
+
+		if (!(out.empty() == false && out.at(0) == lineSegments[3].value().second))
+			out.push_back(lineSegments[3].value().second);
+	}
+	*/
 	return out;
 }
+
+
+
 
 template<GameState::Value mGame>
 std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImpl<mGame>::clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end)
@@ -129,8 +168,110 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 	We need to find these intersection points and construct the new line from them.
 	*/
 
+	std::optional<SimpleMath::Vector3> startClipped;
+
+	{
+		SimpleMath::Ray rayForward(start, end - start);
+		float forwardClipDistance;
+		if (this->frustumViewWorld.Intersects(rayForward.position, rayForward.direction, forwardClipDistance))
+		{
+			auto intersectionPoint = start + (rayForward.direction * forwardClipDistance);
+			if (worldPointAisBetweenBC(intersectionPoint, start, end))
+				startClipped = intersectionPoint;
+		}
+	}
+
+	std::optional<SimpleMath::Vector3> endClipped;
+
+	{
+		SimpleMath::Ray rayBackward(end, start - end);
+		float backwardClipDistance;
+		if (this->frustumViewWorld.Intersects(rayBackward.position, rayBackward.direction, backwardClipDistance))
+		{
+			auto intersectionPoint = end + (rayBackward.direction * backwardClipDistance);
+			if (worldPointAisBetweenBC(intersectionPoint, start, end))
+				endClipped = intersectionPoint;
+			
+		}
+	}
+
+	if (startClipped.has_value() == false && endClipped.has_value() == false && pointOnScreen(start) == false && pointOnScreen(end) == false)
+	{
+		return std::nullopt;
+	}
+	else
+	{
+		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(
+			startClipped.has_value() ? startClipped.value() : start,
+			endClipped.has_value() ? endClipped.value() : end
+			);
+	}
 
 
+
+	/*
+	// Actually - given the infinite line drawn out by the line segment, and the 4 infinite side-planes of the view frustum,
+	// there is guarenteed to be exactly 4 intersections (unless the line is precisely parallel with the camera direction which is like impossible)
+	// two of these will intersect front faces - one on the real furstrum face, and one on only on the infinite plane. likewise for back faces.
+	// we can determine which one is on the real frustum face.. er.. can we? pointOnScreen doesn't have the tolerance..
+
+	std::optional<SimpleMath::Vector3> intersectionFrnt;
+	std::optional<SimpleMath::Vector3> intersectionBack;
+
+	bool frontFound = false;
+	bool backFound = false;
+
+	for (auto& sideFrustumPlane : this->frustumViewWorldSidePlanes)
+	{
+		auto maybeIntersectionFrnt = linePlaneIntersection(sideFrustumPlane, start, end);
+		if (maybeIntersectionFrnt.has_value())
+		{
+
+			if (this->frustumViewWorld.Intersects())
+
+
+			if (frontFound)
+			{
+				PLOG_ERROR << "this shouldn't be possible (front intersection already found)";
+				continue;
+			}
+			intersectionFrnt = maybeIntersectionFrnt.value();
+			frontFound = true;
+		}
+
+
+		auto maybeIntersectionBack = linePlaneIntersection(sideFrustumPlane, end, start);
+		if (maybeIntersectionBack.has_value())
+		{
+			if (backFound)
+			{
+				PLOG_ERROR << "this shouldn't be possible (front intersection already found)";
+				continue;
+			}
+			intersectionBack = maybeIntersectionBack.value();
+			backFound = true;
+		}
+			
+	}
+
+	// Now it's just a matter of checking if the intersections lie outside the line segment or not.
+
+
+
+	if (intersectionFrnt.has_value() == false && intersectionBack.has_value() == false && pointOnScreen(start) == false && pointOnScreen(end) == false)
+	{
+		// in this case, the entire line segment lies outside the frustum
+		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(start, end);
+		return std::nullopt;
+	}
+
+	// for some reason.. outstart is getting set to start when it oughtn't to be. what's up with that?
+	SimpleMath::Vector3 outStart = (pointOnScreen(start) == false && intersectionFrnt.has_value()) ? intersectionFrnt.value() : start;
+	SimpleMath::Vector3 outEnd   = (pointOnScreen(end)   == false && intersectionBack.has_value()) ? intersectionBack.value() : end;
+
+	return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(outStart, outEnd);
+	*/
+	/*
 
 	if (start == end)
 	{
@@ -155,13 +296,13 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 
 	int debugIntersectionCount = 0;
 
-	for (auto& frustumPlane : this->frustumViewWorldPlanes) //(auto& frustumFace : this->frustumViewWorldFaces)
+	for (auto& frustumPlane : this->frustumViewWorldSidePlanes) //(auto& frustumFace : this->frustumViewWorldFaces)
 	{
-		/*
-		First, check if the infinite line describes by the line-segment intersects with the infinite plane described by the frustum face.
-		If so, check if the intersection point lies on the finite line segment.
-		If so, check if the intersection point lies on the finite frustum face.
-		*/
+		
+		//First, check if the infinite line describes by the line-segment intersects with the infinite plane described by the frustum face.
+		//If so, check if the intersection point lies on the finite line segment.
+		//If so, check if the intersection point lies on the finite frustum face.
+		
 
 		//SimpleMath::Plane frustumPlane (frustumFace[0], frustumFace[1], frustumFace[2]);
 
@@ -186,7 +327,15 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 
 		bool pointOnLine = (AB >= AP && AB >= PB);
 
-		if ( worldPointAisBetweenBC(intersectionPoint.value(), start, end) == false)
+		bool worldPointAisBetweenBCresult = worldPointAisBetweenBC(intersectionPoint.value(), start, end);
+
+
+		if (pointOnLine != worldPointAisBetweenBCresult)
+		{
+			PLOG_ERROR << "how is this even possible?!";
+		}
+
+		if (worldPointAisBetweenBCresult == false)
 		{
 			//PLOG_VERBOSE << "Failed first test";
 			// it's always this first test that fails. is linePlaneIntersection spitting out garbage values?
@@ -195,7 +344,7 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 			continue;
 		}
 
-		/*if (worldPointAisBetweenBC(intersectionPoint.value(), frustumFace[0], frustumFace[2]) == false)
+		if (worldPointAisBetweenBC(intersectionPoint.value(), frustumFace[0], frustumFace[2]) == false)
 		{
 			PLOG_VERBOSE << "Failed second test";
 			continue;
@@ -205,7 +354,7 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 		{
 			PLOG_VERBOSE << "Failed third test";
 			continue;
-		}*/
+		}
 
 		//PLOG_DEBUG << "passed tests!";
 
@@ -233,6 +382,14 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 	//PLOG_DEBUG << "intersectionCount: " << intersectionCount;
 	//PLOG_DEBUG << "debugIntersectionCount: " << debugIntersectionCount;
 
+	static int returnOrder = 0;
+	if (GetKeyState('3') & 0x8000)
+	{
+		returnOrder = (returnOrder + 1) % 3;
+		PLOG_DEBUG << "return order " << returnOrder;
+	}
+
+
 	if (intersectionCount == 0)
 	{
 		// No intersections; the line segment must lie entirely outside the view frustum, so there's no valid line to return.
@@ -248,14 +405,33 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 		// Need to check which of the two line points is inside the frustum (should be only one of them that is), return the line from it to the intersection point.
 		if (startInside)
 		{
-			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(start, intersectionPoint1.value());
+			//return std::nullopt;
+			if (returnOrder == 0 || returnOrder == 1)
+			{
+				return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(start, intersectionPoint1.value());
+			}
+			else
+			{
+				return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), start);
+			}
+
+
 		}
 		else
 		{
 			//assert(endInside);
 			if (endInside == false)
 				PLOG_ERROR << "end wasn't inside?!";
-			return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), end);
+
+			if (returnOrder == 2)
+			{
+				return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), end);
+			}
+			else
+			{
+				return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(end, intersectionPoint1.value());
+			}
+
 		}
 	}
 	else // two intersections
@@ -265,10 +441,14 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 			PLOG_ERROR << "one of the points was inside?!";
 		return std::pair<SimpleMath::Vector3, SimpleMath::Vector3>(intersectionPoint1.value(), intersectionPoint2.value());
 	}
-
+	*/
 
 
 }
+
+
+
+
 
 
 template<GameState::Value mGame>
@@ -305,6 +485,8 @@ void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color, bo
 		// get the clipped polygon
 		auto newPolygon = clipFaceToFrustum(face);
 
+		if (newPolygon.empty()) return;
+
 		// calculate the new screen positions of this polygon
 		std::vector<ImVec2> newPolygonScreenPositions;
 		for (auto& v : newPolygon)
@@ -313,20 +495,35 @@ void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color, bo
 			newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(v, false)));
 		}
 
+		// connect it back to the start
+		//newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(newPolygon.at(0), false)));
 
 
-
-		// draw it!
-		ImGui::GetBackgroundDrawList()->AddConvexPolyFilled(newPolygonScreenPositions.data(), newPolygonScreenPositions.size(), color);
+		ImGui::GetBackgroundDrawList()->AddPolyline(newPolygonScreenPositions.data(), newPolygonScreenPositions.size(), color, ImDrawFlags_Closed, 1.f);
 
 		// debug vertices
 		if (debugVertices)
 		{
-			auto green = ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 0.f, 1.f));
+
+			std::map<int, uint32_t> verticeTextColor =
+			{
+				{0, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))},
+				{1, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 0.f, 1.f))},
+				{2, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 1.f, 1.f))},
+				{3, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 0.f, 1.f))},
+				{4, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 1.f, 1.f))},
+				{5, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 1.f, 1.f))},
+				{6, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 1.f, 1.f))},
+				{7, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 0.f, 1.f))},
+				{8, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.5f, 0.5, 0.5, 1.f))},
+			};
 			for (int i = 0; i < newPolygonScreenPositions.size(); i++)
 			{
-				RenderTextHelper::drawCenteredOutlinedText(std::format("{}", i).c_str(), newPolygonScreenPositions[i], green, 10.f);
+				RenderTextHelper::drawCenteredOutlinedText(std::format("{}", i).c_str(), newPolygonScreenPositions[i], verticeTextColor.at(i), 10.f);
 			}
+
+
+
 		}
 	}
 
