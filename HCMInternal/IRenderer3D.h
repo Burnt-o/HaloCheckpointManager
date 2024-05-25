@@ -33,7 +33,9 @@ public:
 	/// <param name="screenEdgeOffset">How far in pixels from the screen to offset clamped positions (negative numbers outside the screen, 0 on edge, positive into the screen)</param>
 	/// <param name="appliedClamp">Out - whether the initial world point was in the view frustrum (ie was it clamped?)</param>
 	/// <returns>Vector3 with screen space position in pixels in x (width, 0 is left), y (height, 0 is top), and z is clipspace depth.</returns>
-	virtual SimpleMath::Vector3 worldPointToScreenPositionClamped(SimpleMath::Vector3 worldPointPosition, int screenEdgeOffset = 0, bool* appliedClamp = nullptr) = 0;
+	virtual SimpleMath::Vector3 worldPointToScreenPositionClampedScreen(SimpleMath::Vector3 worldPointPosition, int screenEdgeOffset = 0, bool* appliedClamp = nullptr) = 0;
+
+	virtual SimpleMath::Vector3 worldPointToScreenPositionClampedFront(SimpleMath::Vector3 worldPointPosition, bool shouldFlipBehind = true) = 0;
 
 	/// <summary>
 	/// Calculates how far from the camera a world position is.

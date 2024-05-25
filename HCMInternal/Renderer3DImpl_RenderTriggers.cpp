@@ -4,7 +4,7 @@
 #include "RenderTextHelper.h"
 #include <unordered_set>
 
-//#include "Mathematics\IntrSegment3Triangle3.h"
+//#include "Mathematics\IntrConvexMesh3Plane3.h"
 
 // infinite line and infinite plane
 std::optional<SimpleMath::Vector3> linePlaneIntersection(SimpleMath::Plane& plane, const SimpleMath::Vector3& p1, const SimpleMath::Vector3& p2)
@@ -197,6 +197,17 @@ std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> Renderer3DImp
 
 	if (startClipped.has_value() == false && endClipped.has_value() == false && pointOnScreen(start) == false && pointOnScreen(end) == false)
 	{
+		// The case where the line segment lies entirely out the frustum.
+		// I think my issue is here.. I actually want to return a real value but like.. what. (also if we do, we should change turn type to std::pair<std::pair<v3,v3>, bool> where bool isVisible, returning false only in this case)
+
+		// a line from the closest point on the frustum to start? + line from closest point on frustum to end?
+		
+		// What we want is the line projected onto the frustum.. 
+		// or more accurately.. ah fuck me the answer might actually be multiple lines?
+		// yes it may be up to 4 lines. fuck. what the fuck. how am I meant to figure this out. I feel like my whole approach is wrong?
+		// we need to project to the center of the screen - does that mean the center of the frustum or the camera position?
+
+		//PLOG_DEBUG << "does this ever actually happen?"; // answer : yes
 		return std::nullopt;
 	}
 	else
@@ -459,8 +470,11 @@ void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color, bo
 #endif
 
 
+
+	
+
 	// Test if all of the points are inside the camera frustum
-	if (std::all_of(face.begin(), face.end(), [this](const VertexInfo* v) { return this->frustumViewWorld.Contains(v->worldPosition); }))
+	if (true) // (std::all_of(face.begin(), face.end(), [this](const VertexInfo* v) { return this->frustumViewWorld.Contains(v->worldPosition); }))
 	{
 		// then we don't need to do anything fancy
 		// draw it!
@@ -479,52 +493,120 @@ void  Renderer3DImpl<mGame>::renderFace(const faceView& face, uint32_t color, bo
 	}
 	else
 	{
-		// uh oh, at least one of the vertexes lies outside the frustum! We'll need to construct a new planar polygon that is the intersection of the original face AND the view frustum.
-		// This new polygon may have between 3 and 8 vertices.
+		std::vector<VertexInfo*> onlyFront = { face[0], face[1], face[2], face[3] };
 
-		// get the clipped polygon
-		auto newPolygon = clipFaceToFrustum(face);
+		std::erase_if(onlyFront, [this](const auto& p) { return pointBehindCamera(p->worldPosition); });
+		
 
-		if (newPolygon.empty()) return;
-
-		// calculate the new screen positions of this polygon
-		std::vector<ImVec2> newPolygonScreenPositions;
-		for (auto& v : newPolygon)
+		if (onlyFront.size() == 3)
 		{
-
-			newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(v, false)));
+			ImGui::GetBackgroundDrawList()->AddTriangleFilled(v3tv2(onlyFront[0]->screenPosition), v3tv2(onlyFront[1]->screenPosition), v3tv2(onlyFront[2]->screenPosition), color);
+		}
+		else if (onlyFront.size() == 4)
+		{
+			ImGui::GetBackgroundDrawList()->AddQuadFilled(v3tv2(face[0]->screenPosition), v3tv2(face[1]->screenPosition), v3tv2(face[2]->screenPosition), v3tv2(face[3]->screenPosition), color);
+		}
+		else
+		{
+			PLOG_ERROR << "culled";
+			return;
 		}
 
-		// connect it back to the start
-		//newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(newPolygon.at(0), false)));
+		/*
+		using namespace gte;
+
+		using MathType = BSRational<UIntegerFP32<4>>;
 
 
-		ImGui::GetBackgroundDrawList()->AddPolyline(newPolygonScreenPositions.data(), newPolygonScreenPositions.size(), color, ImDrawFlags_Closed, 1.f);
+		std::vector<ConvexMesh3<MathType>::Vertex> faceVertices;
+		for (auto& v : face)
+		{
+			ConvexMesh3<MathType>::Vertex temp {v->worldPosition.x, v->worldPosition.y, v->worldPosition.z};
+			faceVertices.push_back(temp);
+		}
 
-		// debug vertices
-		if (debugVertices)
+		ConvexMesh3<MathType> mMesh;
+		mMesh.vertices = faceVertices;
+
+		FIQuery<MathType, ConvexMesh3<MathType>, Plane3<MathType>> query;
+
+		for (auto& frustumPlane : this->frustumViewWorldSidePlanes)
 		{
 
-			std::map<int, uint32_t> verticeTextColor =
-			{
-				{0, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))},
-				{1, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 0.f, 1.f))},
-				{2, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 1.f, 1.f))},
-				{3, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 0.f, 1.f))},
-				{4, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 1.f, 1.f))},
-				{5, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 1.f, 1.f))},
-				{6, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 1.f, 1.f))},
-				{7, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 0.f, 1.f))},
-				{8, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.5f, 0.5, 0.5, 1.f))},
-			};
-			for (int i = 0; i < newPolygonScreenPositions.size(); i++)
-			{
-				RenderTextHelper::drawCenteredOutlinedText(std::format("{}", i).c_str(), newPolygonScreenPositions[i], verticeTextColor.at(i), 10.f);
-			}
+			Vector3<MathType> fplaneNormal {frustumPlane.Normal().x, frustumPlane.Normal().y, frustumPlane.Normal().z};
+			MathType fplaneConstant = frustumPlane.w;
+			Plane3<MathType> fPlane = {fplaneNormal, fplaneConstant};
 
-
-
+			FIQuery<MathType, ConvexMesh3<MathType>, Plane3<MathType>>::Result result = query(mMesh, fPlane, 0x0000000F);
+			mMesh = result.intersectionMesh;
 		}
+
+		// convert mMesh back to vector of SimpleMath::Vector3
+
+		std::vector<SimpleMath::Vector3> smVertices;
+
+		for (auto& v : mMesh.vertices)
+		{
+			smVertices.push_back(SimpleMath::Vector3(v[0], v[1], v[2]));
+		}
+
+
+		std::vector<ImVec2> screenPos;
+		for (auto& v : smVertices)
+		{
+			screenPos.push_back(v3tv2(worldPointToScreenPosition(v, false)));
+		}
+
+		ImGui::GetBackgroundDrawList()->AddConvexPolyFilled(screenPos.data(), screenPos.size(), color);
+
+		*/
+
+		//// uh oh, at least one of the vertexes lies outside the frustum! We'll need to construct a new planar polygon that is the intersection of the original face AND the view frustum.
+		//// This new polygon may have between 3 and 8 vertices.
+
+		//// get the clipped polygon
+		//auto newPolygon = clipFaceToFrustum(face);
+
+		//if (newPolygon.empty()) return;
+
+		//// calculate the new screen positions of this polygon
+		//std::vector<ImVec2> newPolygonScreenPositions;
+		//for (auto& v : newPolygon)
+		//{
+
+		//	newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(v, false)));
+		//}
+
+		//// connect it back to the start
+		////newPolygonScreenPositions.emplace_back(v3tv2(worldPointToScreenPosition(newPolygon.at(0), false)));
+
+
+		//ImGui::GetBackgroundDrawList()->AddPolyline(newPolygonScreenPositions.data(), newPolygonScreenPositions.size(), color, ImDrawFlags_Closed, 1.f);
+
+		//// debug vertices
+		//if (debugVertices)
+		//{
+
+		//	std::map<int, uint32_t> verticeTextColor =
+		//	{
+		//		{0, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 0.f, 1.f))},
+		//		{1, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 0.f, 1.f))},
+		//		{2, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 1.f, 1.f))},
+		//		{3, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 0.f, 1.f))},
+		//		{4, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 0.f, 1.f, 1.f))},
+		//		{5, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 1.f, 1.f, 1.f))},
+		//		{6, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(1.f, 1.f, 1.f, 1.f))},
+		//		{7, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.f, 0.f, 0.f, 1.f))},
+		//		{8, ImGui::ColorConvertFloat4ToU32(SimpleMath::Vector4(0.5f, 0.5, 0.5, 1.f))},
+		//	};
+		//	for (int i = 0; i < newPolygonScreenPositions.size(); i++)
+		//	{
+		//		RenderTextHelper::drawCenteredOutlinedText(std::format("{}", i).c_str(), newPolygonScreenPositions[i], verticeTextColor.at(i), 10.f);
+		//	}
+
+
+
+		//}
 	}
 
 }
@@ -579,7 +661,15 @@ void Renderer3DImpl<mGame>::renderTriggerModel(TriggerModel& model, uint32_t fil
 	// Calculate initial screen positions. Used if face/edge is entirely within frustum.
 	for (auto& v : model.vertices)
 	{
-		v.screenPosition = worldPointToScreenPosition(v.worldPosition, false);
+		static bool flipBehind = false;
+
+		if (GetKeyState('0' & 0x8000))
+		{
+			flipBehind = !flipBehind;
+			PLOG_DEBUG << flipBehind;
+		}
+
+		v.screenPosition = worldPointToScreenPositionClampedFront(v.worldPosition, flipBehind);
 	}
 
 	// Render faces
@@ -602,15 +692,49 @@ void Renderer3DImpl<mGame>::renderTriggerModel(TriggerModel& model, uint32_t fil
 template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::renderTriggerModelSortedDebug(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor)
 {
-
+	//using namespace gte;
 
 	// Cull if none of the trigger is visible.
 	if (this->frustumViewWorld.Contains(model.box) == false) return;
 
+
+	//ConvexMesh3<float> clippedBox;
+
+	//std::vector<ConvexMesh3<float>::Vertex> meshVertices;
+	//for (auto v : model.vertices)
+	//{
+	//	meshVertices.emplace(v.worldPosition.x, v.worldPosition.y, v.worldPosition.z);
+	//}
+
+	//ConvexMesh3<float> mMesh = ConvexMesh3<float>(meshVertices);
+
+	//FIQuery<float, ConvexMesh3<float>, Plane3<float>> query;
+
+	//for (auto& frustumPlane : this->frustumViewWorldSidePlanes)
+	//{
+
+	//	Vector3<float> fplaneNormal = Vector3<float>(frustumPlane.Normal().x, frustumPlane.Normal().y, frustumPlane.Normal().z);
+	//	float fplaneConstant = frustumPlane.w;
+	//	Plane3<float> fPlane = Plane3<float>(fplaneNormal, fplaneConstant);
+
+	//	FIQuery<float, ConvexMesh3<float>, Plane3<float>>::Result result = query(mMesh, fPlane);
+	//	mMesh = result.intersectionMesh;
+	//}
+
+	//// convert mMesh back to vector of SimpleMath::Vector3
+
+	//std::vector<SimpleMath::Vector3> smVertices;
+	//mMesh.vertices
+
+	
+
+
+
+
 	// Calculate initial screen positions. Used if face/edge is entirely within frustum.
 	for (auto& v : model.vertices)
 	{
-		v.screenPosition = worldPointToScreenPosition(v.worldPosition, false);
+		v.screenPosition = worldPointToScreenPositionClampedFront(v.worldPosition, true);
 	}
 
 	if (GetKeyState('8') & 0x8000)
@@ -645,8 +769,12 @@ void Renderer3DImpl<mGame>::renderTriggerModelSortedDebug(TriggerModel& model, u
 		auto& fv = std::get<faceView>(sfv);
 		auto centerPositionOfFace = fv[0]->worldPosition + fv[1]->worldPosition + fv[2]->worldPosition + fv[3]->worldPosition;
 		centerPositionOfFace = centerPositionOfFace / 4.f;
+
+
+
 		std::get<float>(sfv) = SimpleMath::Vector3::DistanceSquared(this->cameraPosition, centerPositionOfFace);
 	}
+
 
 	// Sort by distance
 	std::sort(sortedFaceViews.begin(), sortedFaceViews.end(), [](const auto& a, const auto& b) { return std::get<float>(a) > std::get<float>(b); });
@@ -659,9 +787,10 @@ void Renderer3DImpl<mGame>::renderTriggerModelSortedDebug(TriggerModel& model, u
 
 
 	// Render faces (sorted)
-	for (auto& sf : sortedFaceViews)
+	for (auto& sfv : sortedFaceViews)
 	{
-		renderFace(std::get<faceView>(sf), std::get<uint32_t>(sf));
+		//static_assert(false, "what I really need is some sort of backface culling")
+		//	renderFace(std::get<faceView>(sfv), std::get<uint32_t>(sfv));
 	}
 
 	// Render edges (not sorted)

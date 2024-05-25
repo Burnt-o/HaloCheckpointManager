@@ -68,6 +68,11 @@
 #include "TriggerOverlay.h"
 #include "GetTriggerData.h"
 #include "UpdateTriggerLastChecked.h"
+#include "BumpTestingTool.h"
+#include "GameInputterManager.h"
+#include "EntityPhysicsSimulator.h"
+#include "ObjectTableRange.h"
+#include "CacheBSPSearch.h"
 
 #include "DIContainer.h"
 #include "map.h"
@@ -266,7 +271,8 @@ case OptionalCheatEnum::_var:																	\
 
 	switch (gameCheatPair.second)
 	{
-		MAKECASE(ALLOPTIONALCHEATS);
+		MAKECASE(ALLOPTIONALCHEATS1);
+		MAKECASE(ALLOPTIONALCHEATS2);
 		/* Expands to:
 		 
 		 case OptionalCheatEnum::ForceCheckpoint: 

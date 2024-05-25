@@ -342,6 +342,14 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::TriggerOverlay}
 	},
 
+			{ GUIElementEnum::bumpToolRunningToggle,
+		{OptionalCheatEnum::BumpTestingTool}
+	},
+
+				{ GUIElementEnum::cacheBSPSearchToggle,
+		{OptionalCheatEnum::CacheBSPSearch}
+	},
+
 #endif
 
 };
