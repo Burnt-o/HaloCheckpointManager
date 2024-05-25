@@ -725,6 +725,9 @@
     <ClInclude Include="TriggerModel.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectTableRange.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1038,6 +1041,9 @@
     </ClCompile>
     <ClCompile Include="Renderer3DImpl_RenderTriggers.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTableRange.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

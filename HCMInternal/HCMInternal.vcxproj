@@ -243,6 +243,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
     <ClInclude Include="ModalDialogFactory.h" />
+    <ClInclude Include="ObjectTableRange.h" />
     <ClInclude Include="PointerDataGetter.h" />
     <ClInclude Include="PointerDataParser.h" />
     <ClInclude Include="PointerDataParserInstantiators.h" />
@@ -449,6 +450,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
+    <ClCompile Include="ObjectTableRange.cpp" />
     <ClCompile Include="PointerDataGetter.cpp" />
     <ClCompile Include="PointerDataParser.cpp" />
     <ClCompile Include="PointerDataStore.cpp" />

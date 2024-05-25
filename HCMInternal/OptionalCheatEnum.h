@@ -1,7 +1,7 @@
 #pragma once
 
 // MUST HAVE SAME NAME AS ASSOCIATED CLASS (the macro will be used in a std::variant and etc to convert from enum to type)
-#define ALLOPTIONALCHEATS 	\
+#define ALLOPTIONALCHEATS1 	\
 TogglePause,\
 GameTickEventHook,\
 AdvanceTicks,\
@@ -68,7 +68,14 @@ GetTriggerData,\
 UpdateTriggerLastChecked
 
 
+// Turns out there's a limit on how many entries in a tuple that boost::preprocesser can handle, so split it in two!
+
+#define ALLOPTIONALCHEATS2	\
+ObjectTableRange
+
+
 enum class OptionalCheatEnum {
-	ALLOPTIONALCHEATS
+	ALLOPTIONALCHEATS1,
+	ALLOPTIONALCHEATS2,
 };
 
