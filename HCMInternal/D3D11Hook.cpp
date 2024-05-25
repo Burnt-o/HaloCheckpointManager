@@ -351,13 +351,28 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 
 	if (!d3d->dxgiInternalPresentHook || d3d->dxgiInternalPresentHook->isHookInstalled() == false || Renderer2D::good == false)
 	{
+
+
 		LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via vmt");
 		d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
-		Lapua::shouldRun = false;
+		Lapua::shouldRunForBypass = false;
+
+		if (Lapua::shouldRunForWatermark)
+		{
+			if (Renderer2D::good == false)
+			{
+				Lapua::lapuaGood = false;
+			}
+			else
+			{
+				Renderer2D::render(d3d->m_pDevice, d3d->m_pDeviceContext, mScreenSize, d3d->m_pMainRenderTargetView);
+			}
+		}
+
 	}
 	else
 	{
-		Lapua::shouldRun = true;
+		Lapua::shouldRunForBypass = true;
 		Renderer2D::render(d3d->m_pDevice, d3d->m_pDeviceContext, mScreenSize, d3d->m_pMainRenderTargetView);
 	}
 

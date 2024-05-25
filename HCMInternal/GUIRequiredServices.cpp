@@ -33,6 +33,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 			{OptionalCheatEnum::OBSBypassCheck}
 	},
 
+			{GUIElementEnum::HideWatermarkGUI,
+			{OptionalCheatEnum::HideWatermarkCheck}
+	},
+
 	{GUIElementEnum::forceCheckpointGUI, 
 			{OptionalCheatEnum::ForceCheckpoint} 
 	},

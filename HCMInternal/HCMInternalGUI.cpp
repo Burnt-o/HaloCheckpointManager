@@ -4,7 +4,7 @@
 #include "GUISimpleButton.h"
 #include "MCCStateHook.h"
 #include "imgui.h"
-#include "FreeCamera.h"
+#include "Lapua.h"
 #define addTooltip(x) if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) ImGui::SetTooltip(x)
 
 
@@ -190,11 +190,11 @@ void HCMInternalGUI::primaryRender()
 
 	mWindowSize.y = (minimumWindowSize.y > totalContentHeight ? totalContentHeight : minimumWindowSize.y);
 
-	// check for free-camera-hide-watermark (only if window is collapsed)
-	if (!m_WindowOpen && FreeCamera::cameraIsFree && mSettings->freeCameraHideWatermark->GetValue())
+	// check for hide-watermark toggle (only if window is collapsed)
+	if (!m_WindowOpen && mSettings->hideWatermark->GetValue() && Lapua::lapuaGood && Lapua::lapuaGood2)
 	{
 		// do nothing
-		LOG_ONCE(PLOG_DEBUG << "skipping rendering collapsed window due to freeCameraHideWatermark setting");
+		LOG_ONCE(PLOG_DEBUG << "skipping rendering collapsed window due to hideWatermark setting");
 	}
 	else
 	{

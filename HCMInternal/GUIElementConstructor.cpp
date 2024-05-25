@@ -126,6 +126,7 @@ private:
 						createNestedElement(GUIElementEnum::togglePauseSettingsSubheading),
 						createNestedElement(GUIElementEnum::showGUIFailuresGUI),
 						createNestedElement(GUIElementEnum::OBSBypassToggleGUI),
+						createNestedElement(GUIElementEnum::HideWatermarkGUI),
 						}));
 
 				case GUIElementEnum::toggleGUIHotkeyGUI:
@@ -189,6 +190,18 @@ private:
 				case GUIElementEnum::OBSBypassToggleGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 						(game, ToolTipCollection("Causes HCMs GUI to not be captured by recording software like OBS"), std::nullopt, "Bypass OBS Capture", settings->OBSBypassToggle));
+
+
+				case GUIElementEnum::HideWatermarkGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+						(game, ToolTipCollection("Hides the HCM Watermark when the GUI is not open"), std::nullopt, "Hide HCM Watermark", settings->hideWatermark, headerChildElements
+							{
+							createNestedElement(GUIElementEnum::HideWatermarkIncludeMessagesGUI),
+							}));
+
+				case GUIElementEnum::HideWatermarkIncludeMessagesGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Hides the HCM message log too."), std::nullopt, "Also hide HCM messages", settings->hideWatermarkHideMessages));
 
 
 			case GUIElementEnum::saveManagementHeadingGUI:
@@ -999,8 +1012,6 @@ private:
 						(game, ToolTipCollection("Advanced settings for Free Camera"), "Free Camera Advanced Settings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::freeCameraTeleportToCamera),
-								createNestedElement(GUIElementEnum::freeCameraHideWatermark),
-								createNestedElement(GUIElementEnum::freeCameraHideMessages),
 								createNestedElement(GUIElementEnum::freeCameraThirdPersonRendering),
 								createNestedElement(GUIElementEnum::freeCameraDisableScreenEffects),
 								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
@@ -1017,13 +1028,6 @@ private:
 							(game, ToolTipCollection("Teleports the player to the cameras position"), RebindableHotkeyEnum::freeCameraTeleportToCameraHotkey, "Teleport to Camera", settings->freeCameraTeleportToCameraEvent));
 
 
-					case GUIElementEnum::freeCameraHideWatermark:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, ToolTipCollection("Hides the HCM collapsed-UI while free camera is active"), std::nullopt, "Hide HCM Watermark", settings->freeCameraHideWatermark));
-
-					case GUIElementEnum::freeCameraHideMessages:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, ToolTipCollection("Hides the HCM message log while free camera is active"), std::nullopt, "Hide HCM Messages", settings->freeCameraHideMessages));
 
 					case GUIElementEnum::freeCameraThirdPersonRendering:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>

@@ -71,7 +71,8 @@ UpdateTriggerLastChecked
 // Turns out there's a limit on how many entries in a tuple that boost::preprocesser can handle, so split it in two!
 
 #define ALLOPTIONALCHEATS2	\
-ObjectTableRange
+ObjectTableRange,\
+HideWatermarkCheck
 
 
 enum class OptionalCheatEnum {

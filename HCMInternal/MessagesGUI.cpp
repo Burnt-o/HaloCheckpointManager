@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MessagesGUI.h"
 #include "imgui.h"
-#include "FreeCamera.h"
+#include "Lapua.h"
 
 void MessagesGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 {
@@ -13,7 +13,7 @@ void MessagesGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 		auto mSettings = mSettingsWeak->lock();
 		if (mSettings)
 		{
-			hideMessages = FreeCamera::cameraIsFree && mSettings->freeCameraHideMessages->GetValue();
+			hideMessages = Lapua::lapuaGood && Lapua::lapuaGood2 && mSettings->hideWatermark->GetValue() && mSettings->hideWatermarkHideMessages->GetValue();
 		}
 	}
 

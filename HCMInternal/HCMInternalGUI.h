@@ -112,7 +112,7 @@ public:
 		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
 	}
 
-
+	void setHideWatermark(bool value);
 	void addPopupError(HCMExceptionBase error) { if (errorsToDisplay.size() < 5) errorsToDisplay.push_back(error); }
 	bool isWindowOpen() { return m_WindowOpen; };
 	virtual SimpleMath::Vector2 getAnchorPoint() override { return { 10, m_WindowOpen ? (mWindowSize.y + 10) : 30 }; } // anchors bottom left of window

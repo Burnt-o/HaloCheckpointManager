@@ -69,6 +69,7 @@
 #include "GetTriggerData.h"
 #include "UpdateTriggerLastChecked.h"
 #include "ObjectTableRange.h"
+#include "HideWatermarkCheck.h"
 
 #include "DIContainer.h"
 #include "map.h"

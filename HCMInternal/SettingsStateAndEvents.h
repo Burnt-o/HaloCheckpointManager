@@ -206,6 +206,21 @@ public:
 			nameof(advanceTicksCount)
 		);
 
+
+	std::shared_ptr<BinarySetting<bool>> hideWatermark = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(hideWatermark)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> hideWatermarkHideMessages = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(hideWatermarkHideMessages)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> injectionIgnoresChecksum = std::make_shared<BinarySetting<bool>>
 		(
 			true,
@@ -786,12 +801,6 @@ public:
 			nameof(freeCameraToggle)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> freeCameraHideWatermark = std::make_shared<BinarySetting<bool>>
-		(
-			false,
-			[](bool in) { return true; },
-			nameof(freeCameraHideWatermark)
-		);
 
 	std::shared_ptr<BinarySetting<bool>> freeCameraThirdPersonRendering = std::make_shared<BinarySetting<bool>>
 		(
@@ -808,12 +817,7 @@ public:
 		);
 
 
-	std::shared_ptr<BinarySetting<bool>> freeCameraHideMessages = std::make_shared<BinarySetting<bool>>
-		(
-			false,
-			[](bool in) { return true; },
-			nameof(freeCameraHideMessages)
-		);
+
 
 	std::shared_ptr<BinarySetting<bool>> freeCameraGameInputDisable = std::make_shared<BinarySetting<bool>>
 		(
@@ -1247,6 +1251,7 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		hideWatermarkHideMessages,
 		advanceTicksCount,
 		injectionIgnoresChecksum,
 		injectCheckpointForcesRevert,
@@ -1320,10 +1325,7 @@ public:
 		display2DInfoOutline,
 		editPlayerViewAngleVec2,
 		editPlayerViewAngleAdjustFactor,
-		//freeCameraToggle,
-		freeCameraHideWatermark,
 		freeCameraThirdPersonRendering,
-		freeCameraHideMessages,
 		freeCameraGameInputDisable,
 		//freeCameraCameraInputDisable,
 		freeCameraUserInputCameraTranslationSpeedChangeFactor,

@@ -34,6 +34,7 @@
 #include "Lapua.h"
 #include "OBSBypassManager.h"
 #include "ModalDialogFactory.h"
+#include "HideWatermarkManager.h"
 class App {
 
 
@@ -144,6 +145,7 @@ public:
 
             auto lap = std::make_shared<Lapua>(dllHandle); PLOGV << "lapua init";
             auto obsBypass = std::make_shared<OBSBypassManager>(d3d, settings->OBSBypassToggle, exp); PLOGV << "obsBypass init";
+            auto hideWatermark = std::make_shared<HideWatermarkManager>(settings->hideWatermark, exp); PLOGV << "hideWatermark init";
             d3d->beginHook();
 
             PLOG_INFO << "All services succesfully initialized! Entering main loop";

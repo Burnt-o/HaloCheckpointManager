@@ -95,7 +95,6 @@ private:
 	// event to fire on mcc state change (just set needToSetupCamera to true)
 	void onGameStateChange(const MCCState&)
 	{
-		FreeCamera::cameraIsFree = false;
 		needToResetCamera = true;
 	}
 
@@ -152,7 +151,6 @@ private:
 
 		try
 		{
-			FreeCamera::cameraIsFree = true;
 
 			LOG_ONCE(PLOG_VERBOSE << "getting game camera data");
 			auto gameCameraData = getGameCameraData->getGameCameraData();
@@ -227,7 +225,6 @@ private:
 	{
 		try
 		{
-			FreeCamera::cameraIsFree = false;
 
 			needToResetCamera = true; 
 			PLOG_DEBUG << "onToggleChange: newval: " << newValue;

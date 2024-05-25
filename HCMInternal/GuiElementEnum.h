@@ -32,6 +32,8 @@
 		((pauseAlsoBlocksInputGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((showGUIFailuresGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((OBSBypassToggleGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((HideWatermarkGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((HideWatermarkIncludeMessagesGUI, (ALL_GAMES_AND_MAINMENU)))\
 ((saveManagementHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceCheckpointGUI, (ALL_SUPPORTED_GAMES)))\
 	((forceRevertGUI, (ALL_SUPPORTED_GAMES)))\
@@ -166,8 +168,6 @@
 	((freeCameraSettingsSimpleSubheading, (FREE_CAMERA_SUPPORT)))\
 	((freeCameraSettingsAdvancedSubheading, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraTeleportToCamera, (FREE_CAMERA_SUPPORT)))\
-		((freeCameraHideWatermark, (FREE_CAMERA_SUPPORT)))\
-		((freeCameraHideMessages, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraThirdPersonRendering, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraDisableScreenEffects, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraGameInputDisable, (FREE_CAMERA_SUPPORT)))\

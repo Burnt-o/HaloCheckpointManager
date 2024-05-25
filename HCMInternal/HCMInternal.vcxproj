@@ -238,6 +238,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />
+    <ClInclude Include="HideWatermarkCheck.h" />
+    <ClInclude Include="HideWatermarkManager.h" />
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />

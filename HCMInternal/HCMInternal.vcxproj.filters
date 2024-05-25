@@ -728,6 +728,12 @@
     <ClInclude Include="ObjectTableRange.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
+    <ClInclude Include="HideWatermarkCheck.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="HideWatermarkManager.h">
+      <Filter>Services\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

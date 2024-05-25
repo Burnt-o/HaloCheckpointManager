@@ -18,7 +18,7 @@ private:
 		static int i = 0;
 		while (!GlobalKill::isKillSet())
 		{
-			if (!shouldRun)
+			if (shouldRun())
 			{
 				Sleep(10);
 				continue;
@@ -40,7 +40,8 @@ private:
 					PLOG_DEBUG << "lapua1 service failure";
 					lapuaGood = false;
 					lapuaGood2 = false;
-					shouldRun = false;
+					shouldRunForBypass = false;
+					shouldRunForWatermark = false;
 				}
 
 			}
