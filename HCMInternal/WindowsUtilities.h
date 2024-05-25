@@ -105,3 +105,5 @@ std::string to_string_with_precision(const T a_value, const int n)
 void downloadFileTo(std::string_view url, std::string_view pathToFile);
 
 std::string readFileContents(std::string_view pathToFile);
+
+std::string shortestStringRepresentation(float n);

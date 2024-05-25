@@ -72,7 +72,8 @@ UpdateTriggerLastChecked
 
 #define ALLOPTIONALCHEATS2	\
 ObjectTableRange,\
-HideWatermarkCheck
+HideWatermarkCheck,\
+PlayerPositionToClipboard
 
 
 enum class OptionalCheatEnum {

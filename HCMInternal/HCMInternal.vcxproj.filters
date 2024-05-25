@@ -734,6 +734,9 @@
     <ClInclude Include="HideWatermarkManager.h">
       <Filter>Services\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerPositionToClipboard.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1050,6 +1053,9 @@
     </ClCompile>
     <ClCompile Include="ObjectTableRange.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerPositionToClipboard.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

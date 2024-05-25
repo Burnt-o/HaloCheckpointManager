@@ -138,7 +138,7 @@ public:
             auto GUICon = std::make_shared<GUIElementConstructor>(guireq, cheatfail, guistore, guifail, settings, ver->getMCCProcessType(), exp); PLOGV << "GUIMan init"; // constructs gui elements, pushing them into guistore
             //guifail->printAllFailures();
             // set up main gui
-            auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, mccStateHook->getMCCStateChangedEvent(), control, settings, (bool*)isCursorShowingResolved); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
+            auto HCMGUI = std::make_shared<HCMInternalGUI>(mccStateHook, guistore, hkr, imm->MidgroundRenderEvent, std::reinterpret_pointer_cast<IMCCStateHook>(mccStateHook)->getMCCStateChangedEvent(), control, settings, (bool*)isCursorShowingResolved); PLOGV << "HCMGUI init";// main gui. Mostly just a canvas for rendering a collection of IGUIElements that will get constructed a bit below.
             mes->setAnchorPoint(HCMGUI);
 
             auto hb = std::make_shared<HeartbeatTimer>(sharedMem, settings); PLOGV << "hb init";
@@ -151,7 +151,7 @@ public:
             PLOG_INFO << "All services succesfully initialized! Entering main loop";
             Sleep(100);
 
-            mes->addMessage("HCM successfully initialised!");
+            std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage("HCM successfully initialised!");
 
             std::thread modalFailureWindowThread;
             if (!guifail->getFailureMessagesMap().empty())

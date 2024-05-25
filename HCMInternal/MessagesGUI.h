@@ -33,9 +33,13 @@ private:
 	// funcs
 	void iterateMessages();
 	void drawMessage(const temporaryMessage& message, const SimpleMath::Vector2& position);
+
+protected:
+	virtual void addMessage(std::string message) override;
+
 public:
 
-	virtual void addMessage(std::string message) override;
+
 
 	explicit MessagesGUI(SimpleMath::Vector2 anchorOffset, std::shared_ptr<RenderEvent> renderEvent)
 		:  mAnchorOffset(anchorOffset), mRenderEventCallback(renderEvent, [this](SimpleMath::Vector2 a) {onImGuiRenderEvent(a); })

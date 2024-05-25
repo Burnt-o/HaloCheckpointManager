@@ -70,6 +70,7 @@
 #include "UpdateTriggerLastChecked.h"
 #include "ObjectTableRange.h"
 #include "HideWatermarkCheck.h"
+#include "PlayerPositionToClipboard.h"
 
 #include "DIContainer.h"
 #include "map.h"

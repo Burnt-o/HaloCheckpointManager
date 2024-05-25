@@ -396,6 +396,7 @@ private:
 							createNestedElement(GUIElementEnum::switchBSPGUI),
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 							createNestedElement(GUIElementEnum::skullToggleGUI),
+							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -619,8 +620,12 @@ private:
 							"Skull Toggles",
 							settings));
 
-
-
+				case GUIElementEnum::playerPositionToClipboardGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Directly set the players health and shields"), std::nullopt,
+							"Copy Position to Clipboard",
+							settings->playerPositionToClipboardEvent));
+					
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, ToolTipCollection("Overlays that various information over the top of the game view"), "Overlays", headerChildElements

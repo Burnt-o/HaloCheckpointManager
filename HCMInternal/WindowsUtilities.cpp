@@ -251,3 +251,9 @@ std::string readFileContents(std::string_view pathToFile)
 	}
 
 }
+
+std::string shortestStringRepresentation(float n) {
+	std::array<char, 64> buf;
+	auto result = std::to_chars(buf.data(), buf.data() + buf.size(), n, std::chars_format::fixed);
+	return std::string(buf.data(), result.ptr - buf.data());
+}

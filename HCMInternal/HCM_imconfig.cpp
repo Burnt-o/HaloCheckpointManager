@@ -22,24 +22,64 @@ std::ostream& operator<< (std::ostream& out, const SimpleMath::Vector4& vec)
 
 
 
-std::string vec2ToString(const SimpleMath::Vector2& vec, int decimalPrecision)
+std::string vec2ToStringSetPrecision(const SimpleMath::Vector2& vec, int decimalPrecision)
 {
     std::ostringstream ss;
     ss << std::setprecision(6) << std::fixed << std::showpos << vec;
     return ss.str();
 }
 
-std::string vec3ToString(const SimpleMath::Vector3& vec, int decimalPrecision)
+std::string vec3ToStringSetPrecision(const SimpleMath::Vector3& vec, int decimalPrecision)
 {
     std::ostringstream ss;
     ss << std::setprecision(6) << std::fixed << std::showpos << vec;
     return ss.str();
 }
 
-std::string vec4ToString(const SimpleMath::Vector4& vec, int decimalPrecision)
+std::string vec4ToStringSetPrecision(const SimpleMath::Vector4& vec, int decimalPrecision)
 {
     std::ostringstream ss;
     ss << std::setprecision(6) << std::fixed << std::showpos << vec;
+    return ss.str();
+}
+
+
+
+
+
+std::string vec2ToString(const SimpleMath::Vector2& vec)
+{
+    std::ostringstream ss;
+    ss << (vec.x >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.x) << ", ";
+    ss << (vec.y >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.y);
+    return ss.str();
+}
+
+std::string vec3ToString(const SimpleMath::Vector3& vec)
+{
+    std::ostringstream ss;
+    ss << (vec.x >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.x) << ", ";
+    ss << (vec.y >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.y) << ", ";
+    ss << (vec.z >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.z);
+    return ss.str();
+}
+
+std::string vec4ToString(const SimpleMath::Vector4& vec)
+{
+    std::ostringstream ss;
+    ss << (vec.x >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.x) << ", ";
+    ss << (vec.y >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.y) << ", ";
+    ss << (vec.z >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.z) << ", ";
+    ss << (vec.w >= 0 ? "+" : "");
+    ss << shortestStringRepresentation(vec.w);
     return ss.str();
 }
 

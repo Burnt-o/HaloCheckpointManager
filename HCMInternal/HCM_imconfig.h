@@ -24,11 +24,19 @@ std::ostream& operator<< (std::ostream& out, const SimpleMath::Vector3& vec);
 
 std::ostream& operator<< (std::ostream& out, const SimpleMath::Vector4& vec);
 
-std::string vec2ToString(const SimpleMath::Vector2& vec, int decimalPrecision = 6);
 
-std::string vec3ToString(const SimpleMath::Vector3& vec, int decimalPrecision = 6);
+std::string vec2ToStringSetPrecision(const SimpleMath::Vector2& vec, int decimalPrecision = 6);
 
-std::string vec4ToString(const SimpleMath::Vector4& vec, int decimalPrecision = 6);
+std::string vec3ToStringSetPrecision(const SimpleMath::Vector3& vec, int decimalPrecision = 6);
+
+std::string vec4ToStringSetPrecision(const SimpleMath::Vector4& vec, int decimalPrecision = 6);
+
+// returns minimal string that precisely represents the floats
+std::string vec2ToString(const SimpleMath::Vector2& vec);
+
+std::string vec3ToString(const SimpleMath::Vector3& vec);
+
+std::string vec4ToString(const SimpleMath::Vector4& vec);
 
 SimpleMath::Vector2 vec2FromString(const std::string& str);
 

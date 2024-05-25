@@ -197,6 +197,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::BottomlessClip}
 	},
 
+		{ GUIElementEnum::playerPositionToClipboardGUI,
+		{OptionalCheatEnum::PlayerPositionToClipboard}
+	},
+
 		{ GUIElementEnum::display2DInfoToggleGUI,
 		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
 	},

@@ -4,7 +4,7 @@
 
 
 TODO: 
-* Move disable watermark option from freecam-only to anytime (lapua dependence)
+
 * Fix reach zoneset cheat
 * Improve vec3 (de)serialisation to clipboard so its interchangeable
 * Sprint Meter h4/hr
@@ -15,7 +15,8 @@ TODO:
 
 
 
-
+DONE:
+* Move disable watermark option from freecam-only to anytime (lapua dependence)
 
 
 
