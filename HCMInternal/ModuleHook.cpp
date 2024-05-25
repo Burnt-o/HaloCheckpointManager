@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ModuleHook.h"
-//#include "pointer.h"
 #include "ModuleCache.h"
 #include "ModuleHookManager.h"
 
@@ -24,6 +23,11 @@ std::unique_ptr<ModulePatch> ModulePatch::make(const std::wstring associatedModu
 	auto ptr = std::unique_ptr< ModulePatch>(new ModulePatch(associatedModule, original_func, patchedBytes, startEnabled));
 	ModuleHookManager::addHook(associatedModule, ptr.get());
 	return ptr;
+}
+
+std::unique_ptr<ModulePatch> ModulePatch::makeNOPCall(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, bool startEnabled)
+{
+	return ModulePatch::make(associatedModule, original_func, std::vector<byte>{0x90, 0x90, 0x90, 0x90, 0x90}, startEnabled);
 }
 
 const std::wstring& ModuleHookBase::getAssociatedModule() const
@@ -186,7 +190,7 @@ void ModulePatch::detach()
 
 	logErrorReturn(currentBytes != mPatchedBytes, "Current bytes did not match patched bytes")
 
-	safetyhook::ThreadFreezer freezeThreads;
+		safetyhook::ThreadFreezer freezeThreads;
 	PLOG_VERBOSE << "threads frozen";
 
 	logErrorReturn(mOriginalFunction->writeArrayData(mOriginalBytes.data(), mOriginalBytes.size(), true) == false, "Failed to restore original bytes");
@@ -227,7 +231,7 @@ bool ModuleHookBase::getWantsToBeAttached() const
 }
 
 // Gets a ref to the safetyhook object, mainly used for calling the original function from within the new function
-safetyhook::InlineHook& ModuleInlineHook::getInlineHook() 
+safetyhook::InlineHook& ModuleInlineHook::getInlineHook()
 {
 	return this->mInlineHook;
 }

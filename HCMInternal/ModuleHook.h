@@ -58,10 +58,10 @@ private:
 public:
 
 	static std::unique_ptr<ModuleInlineHook> make(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, void* new_func, bool startEnabled = false);
-	
+
 	~ModuleInlineHook() final;
-	 ModuleInlineHook(const ModuleInlineHook&) = delete;
-	 ModuleInlineHook& operator=(const ModuleInlineHook&) = delete;
+	ModuleInlineHook(const ModuleInlineHook&) = delete;
+	ModuleInlineHook& operator=(const ModuleInlineHook&) = delete;
 	void attach() final;
 	void detach() final;
 
@@ -96,8 +96,8 @@ private:
 public:
 
 	static std::unique_ptr<ModuleMidHook> make(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, safetyhook::MidHookFn new_func, bool startEnabled = false);
-	 
-	~ModuleMidHook() final; 
+
+	~ModuleMidHook() final;
 	ModuleMidHook(const ModuleMidHook&) = delete;
 	ModuleMidHook& operator=(const ModuleMidHook&) = delete;
 
@@ -129,7 +129,7 @@ private:
 	std::vector<byte> mPatchedBytes;
 
 	ModulePatch(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, std::vector<byte> patchedBytes, bool startEnabled = false)
-		: ModuleHookBase(associatedModule, startEnabled), mOriginalFunction(original_func), mPatchedBytes(patchedBytes) 
+		: ModuleHookBase(associatedModule, startEnabled), mOriginalFunction(original_func), mPatchedBytes(patchedBytes)
 	{
 		if (startEnabled)
 		{
@@ -140,8 +140,9 @@ private:
 
 public:
 	static std::unique_ptr<ModulePatch> make(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, std::vector<byte> patchedBytes, bool startEnabled = false);
+	static std::unique_ptr<ModulePatch> makeNOPCall(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, bool startEnabled = false);
 
-	~ModulePatch() final; 
+	~ModulePatch() final;
 	ModulePatch(const ModulePatch&) = delete;
 	ModulePatch& operator=(const ModulePatch&) = delete;
 
