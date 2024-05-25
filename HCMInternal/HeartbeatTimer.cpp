@@ -26,11 +26,11 @@ DWORD findProcess(std::wstring targetProcessName)
 		do
 		{
 
-				// If the current process entry is the target process, return its ID (ignore case)
-				if (_wcsicmp(entry.szExeFile, targetProcessName.c_str()) == 0)
-				{
-					return entry.th32ProcessID;
-				}
+			// If the current process entry is the target process, return its ID (ignore case)
+			if (_wcsicmp(entry.szExeFile, targetProcessName.c_str()) == 0)
+			{
+				return entry.th32ProcessID;
+			}
 
 		} while (Process32Next(hSnap.get(), &entry));        // Move on to the next running process.
 	}
@@ -42,7 +42,7 @@ DWORD findProcess(std::wstring targetProcessName)
 
 HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::weak_ptr<SettingsStateAndEvents> set)
 	: sharedMemWeak(shm), settingsWeak(set)
-    {
+{
 	DWORD HCMExternalPID = findProcess(L"HCMExternal.exe");
 
 	// PROCESS_QUERY_LIMITED_INFORMATION allows non-admin HCMInternal(mcc) to use GetExitCodeProcess on admin HCMExternal.
@@ -60,14 +60,18 @@ HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::wea
 		}
 
 	}
-		
+
 
 	HCMExternalHandle = std::move(h);
 
-        _thd = std::thread([this]()
-            {
-                while (!GlobalKill::isKillSet())
-                {
+	_thd = std::thread([this]()
+		{
+			static int waitCount = 0;
+			while (!GlobalKill::isKillSet())
+			{
+				waitCount = (waitCount + 1) % 100;
+				if (waitCount != 0)
+				{
 					// process inject command queue
 					try
 					{
@@ -104,17 +108,20 @@ HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::wea
 							return;
 						}
 					}
+				}
 
 
-                    auto nextWakeup = std::chrono::steady_clock::now() + std::chrono::milliseconds(1000);
-                    std::this_thread::sleep_until(nextWakeup);
-                }
-            });
-    }
+
+
+				auto nextWakeup = std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
+				std::this_thread::sleep_until(nextWakeup);
+			}
+		});
+}
 
 HeartbeatTimer::~HeartbeatTimer()
 {
-    PLOG_VERBOSE << "~HeartbeatTimer";
-    _thd.join();
-    PLOG_VERBOSE << "aye the thread died as it should";
+	PLOG_VERBOSE << "~HeartbeatTimer";
+	_thd.join();
+	PLOG_VERBOSE << "aye the thread died as it should";
 }
