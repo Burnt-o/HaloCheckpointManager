@@ -1231,6 +1231,20 @@ public:
 			nameof(triggerOverlayToggle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> bumpToolRunningToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(bumpToolRunningToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> cacheBSPSearchToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(cacheBSPSearchToggle)
+		);
+
 	enum class FreeCameraObjectTrackEnum
 	{
 		Player,

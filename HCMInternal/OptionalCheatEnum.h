@@ -1,7 +1,7 @@
 #pragma once
 
 // MUST HAVE SAME NAME AS ASSOCIATED CLASS (the macro will be used in a std::variant and etc to convert from enum to type)
-#define ALLOPTIONALCHEATS 	\
+#define ALLOPTIONALCHEATS1 	\
 TogglePause,\
 GameTickEventHook,\
 AdvanceTicks,\
@@ -67,8 +67,16 @@ TriggerOverlay,\
 GetTriggerData,\
 UpdateTriggerLastChecked
 
+#define ALLOPTIONALCHEATS2 	\
+BumpTestingTool,\
+EntityPhysicsSimulator,\
+GameInputterManager,\
+ObjectTableRange,\
+CacheBSPSearch
+
 
 enum class OptionalCheatEnum {
-	ALLOPTIONALCHEATS
+	ALLOPTIONALCHEATS1,
+	ALLOPTIONALCHEATS2
 };
 

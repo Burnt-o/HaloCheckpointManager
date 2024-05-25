@@ -83,6 +83,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\3D\Trigger">
       <UniqueIdentifier>{0f426aa6-70fa-45b4-b531-6866b9476161}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\Bump Tester">
+      <UniqueIdentifier>{ea47061a-cab2-4cf6-a3f8-c0e13f7a3eed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -725,6 +728,51 @@
     <ClInclude Include="TriggerModel.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="BumpTestingTool.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInputEnum.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityPhysicsSimulator.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpPlayerStruct.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumClass.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpSetupGenerator.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInputterManager.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpControlDefs.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpSetup.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpShieldStruct.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="BumpInput.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTableRange.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldGroupSetupGenerator.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="GetShieldTris.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="CacheBSPSearch.h">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1038,6 +1086,42 @@
     </ClCompile>
     <ClCompile Include="Renderer3DImpl_RenderTriggers.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityPhysicsSimulator.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpPlayerStruct.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInputterManager.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpSetup.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpInput.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTableRange.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldGroupSetupGenerator.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="GetShieldTris.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="CacheBSPSearch.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpTestingToolImpl.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpSetupGeneratorImpl.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
+    </ClCompile>
+    <ClCompile Include="BumpControlDefs.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Bump Tester</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -95,7 +95,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_CXX20_CISO646_REMOVED_WARNING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -112,7 +112,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;HCMINTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;_SILENCE_CXX20_CISO646_REMOVED_WARNING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -231,18 +231,32 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
+    <ClInclude Include="BumpControlDefs.h" />
+    <ClInclude Include="BumpInput.h" />
+    <ClInclude Include="BumpPlayerStruct.h" />
+    <ClInclude Include="BumpSetup.h" />
+    <ClInclude Include="BumpSetupGenerator.h" />
+    <ClInclude Include="BumpShieldStruct.h" />
+    <ClInclude Include="BumpTestingTool.h" />
+    <ClInclude Include="CacheBSPSearch.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
+    <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GameInputEnum.h" />
+    <ClInclude Include="GetShieldTris.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
+    <ClInclude Include="GameInputterManager.h" />
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
     <ClInclude Include="ModalDialogFactory.h" />
+    <ClInclude Include="EntityPhysicsSimulator.h" />
+    <ClInclude Include="ObjectTableRange.h" />
     <ClInclude Include="PointerDataGetter.h" />
     <ClInclude Include="PointerDataParser.h" />
     <ClInclude Include="PointerDataParserInstantiators.h" />
@@ -252,6 +266,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="RenderTextHelper.h" />
     <ClInclude Include="ScopedImFontScaler.h" />
     <ClInclude Include="SerialisableSetting.h" />
+    <ClInclude Include="ShieldGroupSetupGenerator.h" />
     <ClInclude Include="SkullEnum.h" />
     <ClInclude Include="SkullToggler.h" />
     <ClInclude Include="SpriteResource.h" />
@@ -446,9 +461,20 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BumpControlDefs.cpp" />
+    <ClCompile Include="BumpInput.cpp" />
+    <ClCompile Include="BumpPlayerStruct.cpp" />
+    <ClCompile Include="BumpSetup.cpp" />
+    <ClCompile Include="BumpSetupGeneratorImpl.cpp" />
+    <ClCompile Include="BumpTestingToolImpl.cpp" />
+    <ClCompile Include="CacheBSPSearch.cpp" />
+    <ClCompile Include="GameInputterManager.cpp" />
+    <ClCompile Include="GetShieldTris.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
+    <ClCompile Include="EntityPhysicsSimulator.cpp" />
+    <ClCompile Include="ObjectTableRange.cpp" />
     <ClCompile Include="PointerDataGetter.cpp" />
     <ClCompile Include="PointerDataParser.cpp" />
     <ClCompile Include="PointerDataStore.cpp" />
@@ -463,6 +489,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Renderer3DImpl_Sprites.cpp" />
     <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
     <ClCompile Include="RenderTextHelper.cpp" />
+    <ClCompile Include="ShieldGroupSetupGenerator.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />

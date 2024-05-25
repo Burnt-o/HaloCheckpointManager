@@ -4708,10 +4708,18 @@
 			<Offset>0x10</Offset>
 		</Version>
 	</VersionedEntry>
-	
-	
-	
-	
+
+
+	<VersionedEntry Name="objectHeaderTableSizeOffset" Type="int64_t">
+		<Version Version="All" Game="Halo1">
+			<Offset>-0x8</Offset> <!--0x2C or 0x30, not sure, both seem to track a count of something-->
+		</Version>
+
+	</VersionedEntry>
+
+
+
+
 	<!--try scan nw "0f b6 40 03 0f a3 c3" for the bit test-->
 	<VersionedEntry Name="getObjectAddressFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo1">
@@ -8683,5 +8691,321 @@
 	
 <!--#endregion-->
 
+	<!--#region bump testing tool-->
+	
+	<VersionedEntry Name="GameInputEnum" Type="DynStructOffsetInfo">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<W>0x80</W>
+			<A>0xB4</A>
+			<S>0xB8</S>
+			<D>0xBC</D>
+			<Space>0x120</Space>
+			<Ctrl>0x114</Ctrl>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="gameInputFieldPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B31C2A</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="overrideGameInputFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAD8D8D</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="overideGameInputPatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+
+	
+	<VersionedEntry Name="onPsuedoTickFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB3A06C</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="loopPseudoTickPatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB35878</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="loopPseudoTickPatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0xEB, 0xF9, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="entityPhysicsTickFunctionPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBA5098</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+
+
+	<VersionedEntry Name="removeTrap1PatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB90D14</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="removeTrap1PatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="removeTrap2PatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB938D5</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="removeTrap2PatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+
+
+	<VersionedEntry Name="psuedoTickPerformancePatch1" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x4B7FE</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch2" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB929C4</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch3" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB924C5</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch4" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAFDA3A</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch5" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAFD01B</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch6" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBAF7B5</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch7" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x4BCA8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch8" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x97B829</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch9" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBB2C38</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch10" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB36AE3</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+
+	<!--<VersionedEntry Name="psuedoTickPerformancePatch11" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBB9023</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch12" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBB9098</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>-->
+
+	<VersionedEntry Name="psuedoTickPerformancePatch13" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBB454A</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch7CrashFixFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x4BCB6</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="psuedoTickPerformancePatch7CrashFixCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0xE9, 0x0E, 0x04, 0x00, 0x00, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="correctThreadContextMidhookFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB3A06C</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="importantPhysicsCounter" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x02D91668</Offset>
+				<Offset>0x02</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="testSceneryObjectCollisionMidhookFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB9299D</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="setCacheMidhookFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xC73EE0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="findEntityInBSPTreeInlineFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xC73E44</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<!--<VersionedEntry Name="getCacheMidhookFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB9299D</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>-->
+
+
+	<VersionedEntry Name="pseudoTickRenderingPerformancePatch" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x4BCB6</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="pseudoTickRenderingPerformancePatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+	<!--#endregion-->
+	
 	
 </root>
