@@ -4,7 +4,7 @@
 class GlobalKill
 {
 private:
-	bool mKillFlag = false;
+	bool mKillFlag;
 
 	// singleton
 	static GlobalKill& get() {

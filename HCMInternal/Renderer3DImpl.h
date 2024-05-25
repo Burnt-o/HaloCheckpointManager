@@ -104,8 +104,7 @@ public:
 	~Renderer3DImpl();
 
 	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition, bool shouldFlipBehind) override;
-	virtual SimpleMath::Vector3 worldPointToScreenPositionClampedScreen(SimpleMath::Vector3 worldPointPosition, int screenEdgeOffset, bool* appliedClamp) override;
-	virtual SimpleMath::Vector3 worldPointToScreenPositionClampedFront(SimpleMath::Vector3 worldPointPosition, bool shouldFlipBehind) override;
+	virtual SimpleMath::Vector3 worldPointToScreenPositionClamped(SimpleMath::Vector3 worldPointPosition, int screenEdgeOffset, bool* appliedClamp) override;
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;

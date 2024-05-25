@@ -140,7 +140,6 @@ private:
 
 public:
 	static std::unique_ptr<ModulePatch> make(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, std::vector<byte> patchedBytes, bool startEnabled = false);
-	static std::unique_ptr<ModulePatch> makeNOPCall(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, bool startEnabled = false);
 
 	~ModulePatch() final; 
 	ModulePatch(const ModulePatch&) = delete;

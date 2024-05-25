@@ -66,54 +66,47 @@ HeartbeatTimer::HeartbeatTimer(std::weak_ptr<SharedMemoryInternal> shm, std::wea
 
         _thd = std::thread([this]()
             {
-				static int waitCount = 0;
                 while (!GlobalKill::isKillSet())
                 {
-					waitCount = (waitCount + 1) % 100;
-					if (waitCount != 0)
+					// process inject command queue
+					try
 					{
-						// process inject command queue
-						try
-						{
-							lockOrThrow(settingsWeak, settings);
-							lockOrThrow(sharedMemWeak, sharedMem);
+						lockOrThrow(settingsWeak, settings);
+						lockOrThrow(sharedMemWeak, sharedMem);
 
-							if (sharedMem->getAndClearInjectQueue())
-							{
-								PLOG_DEBUG << "Inject command recieved, firing event!";
-								settings->injectCheckpointEvent->operator()();
-							}
+						if (sharedMem->getAndClearInjectQueue())
+						{
+							PLOG_DEBUG << "Inject command recieved, firing event!";
+							settings->injectCheckpointEvent->operator()();
 						}
-						catch (HCMRuntimeException ex)
+					}
+					catch (HCMRuntimeException ex)
+					{
+						PLOG_ERROR << "Heartbeat timer unable to check inject command queue";
+					}
+
+
+
+					DWORD exitCode = 0;
+					if (GetExitCodeProcess(HCMExternalHandle.get(), &exitCode) == FALSE)
+					{
+						PLOG_ERROR << "GetExitCodeProcess failed, error code: " << GetLastError();
+						GlobalKill::killMe();
+						return;
+					}
+					else
+					{
+						// https://youtu.be/APc8QCGOdUE
+						if (exitCode != STILL_ACTIVE)
 						{
-							PLOG_ERROR << "Heartbeat timer unable to check inject command queue";
-						}
-
-
-
-						DWORD exitCode = 0;
-						if (GetExitCodeProcess(HCMExternalHandle.get(), &exitCode) == FALSE)
-						{
-							PLOG_ERROR << "GetExitCodeProcess failed, error code: " << GetLastError();
+							PLOG_INFO << "HCMExternal terminated with code: " << exitCode;
 							GlobalKill::killMe();
 							return;
 						}
-						else
-						{
-							// https://youtu.be/APc8QCGOdUE
-							if (exitCode != STILL_ACTIVE)
-							{
-								PLOG_INFO << "HCMExternal terminated with code: " << exitCode;
-								GlobalKill::killMe();
-								return;
-							}
-						}
 					}
 
-				
 
-
-                    auto nextWakeup = std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
+                    auto nextWakeup = std::chrono::steady_clock::now() + std::chrono::milliseconds(1000);
                     std::this_thread::sleep_until(nextWakeup);
                 }
             });

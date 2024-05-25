@@ -1488,8 +1488,6 @@ private:
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
 						createNestedElement(GUIElementEnum::triggerOverlayToggle),
-						createNestedElement(GUIElementEnum::bumpToolRunningToggle),
-												createNestedElement(GUIElementEnum::cacheBSPSearchToggle),
 						}));
 
 
@@ -1504,15 +1502,7 @@ private:
 
 				case GUIElementEnum::triggerOverlayToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection(""), std::nullopt, "Trigger Overlay", settings->triggerOverlayToggle));
-
-				case GUIElementEnum::bumpToolRunningToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection(""), std::nullopt, "Automated Teleport Testing Tool", settings->bumpToolRunningToggle));
-
-				case GUIElementEnum::cacheBSPSearchToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection(""), std::nullopt, "Cache BSP Search", settings->cacheBSPSearchToggle));
+						(game, ToolTipCollection("Disables game inputs while freecam active"), std::nullopt, "Trigger Overlay", settings->triggerOverlayToggle));
 
 #endif
 

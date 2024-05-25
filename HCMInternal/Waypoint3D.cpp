@@ -272,7 +272,7 @@ private:
 				if (waypoint.waypointEnabled == false) continue;
 
 				bool isClamped;
-				auto screenPosition = renderer->worldPointToScreenPositionClampedScreen(waypoint.position, 0, &isClamped);
+				auto screenPosition = renderer->worldPointToScreenPositionClamped(waypoint.position, 0, &isClamped);
 
 				if (isClamped && !settings->waypoint3DClampToggle->GetValue())
 				{

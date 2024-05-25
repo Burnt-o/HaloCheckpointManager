@@ -88,7 +88,7 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 	// result above is actually in homogenous space, divide all components by w to get clipspace.
 	clipSpace = clipSpace / clipSpace.w;
 
-	if (shouldFlipBehind && pointBehindCamera(worldPointPosition))
+	if (pointBehindCamera(worldPointPosition))
 	{
 		// points in semisphere behind camera need to have their clipSpace mirrored back the other direction
 			clipSpace.x *= -1.f;
@@ -111,7 +111,7 @@ SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPosition(SimpleMath
 
 
 template<GameState::Value mGame>
-SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPositionClampedScreen(SimpleMath::Vector3 worldPointPosition , int screenEdgeOffset , bool* appliedClamp)
+SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPositionClamped(SimpleMath::Vector3 worldPointPosition , int screenEdgeOffset , bool* appliedClamp)
 {
 https://github.com/jinincarnate/off-screen-indicator/blob/master/Off%20Screen%20Indicator/Assets/Scripts/OffScreenIndicatorCore.cs
 
@@ -130,60 +130,6 @@ https://github.com/jinincarnate/off-screen-indicator/blob/master/Off%20Screen%20
 
 	clampScreenPosition(screenPosition, this->screenCenter);
 	return screenPosition;
-
-}
-
-
-
-template<GameState::Value mGame>
-SimpleMath::Vector3 Renderer3DImpl<mGame>::worldPointToScreenPositionClampedFront(SimpleMath::Vector3 worldPointPosition, bool shouldFlipBehind)
-{
-	LOG_ONCE(PLOG_VERBOSE << "world to screen");
-	auto worldPosTransformed = SimpleMath::Vector4::Transform({ worldPointPosition.x, worldPointPosition.y, worldPointPosition.z, 1.f },
-		SimpleMath::Matrix::CreateWorld(
-			SimpleMath::Vector3::Zero,
-			SimpleMath::Vector3::Forward,
-			SimpleMath::Vector3::Up
-		));
-
-	auto clipSpace = SimpleMath::Vector4::Transform(worldPosTransformed, viewProjectionMatrix);
-
-	// result above is actually in homogenous space, divide all components by w to get clipspace.
-	clipSpace = clipSpace / clipSpace.w;
-
-	if (GetKeyState('9' & 0x8000))
-	{
-		PLOG_DEBUG << "z " << clipSpace.z;
-		PLOG_DEBUG << "w " << clipSpace.w;
-	}
-
-
-	if (pointBehindCamera(worldPointPosition))
-	{
-		//PLOG_DEBUG << "ya behind";
-		// er not sure how to do this
-		clipSpace.x *= 100000.f;
-		clipSpace.y *= 100000.f;
-
-		if (shouldFlipBehind)
-		{
-			// points in semisphere behind camera need to have their clipSpace mirrored back the other direction
-			clipSpace.x *= -1.f;
-			clipSpace.y *= -1.f;
-
-		}
-	}
-
-
-	// convert from clipSpace (-1..+1) to screenSpace (0..Width, 0..Height)
-	auto out = SimpleMath::Vector3
-	(
-		(1.f + clipSpace.x) * 0.5f * this->screenSize.x,
-		(1.f - clipSpace.y) * 0.5f * this->screenSize.y,
-		clipSpace.z
-	);
-
-	return out;
 
 }
 

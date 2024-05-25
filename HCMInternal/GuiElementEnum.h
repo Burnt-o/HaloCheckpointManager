@@ -209,9 +209,7 @@
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
-	((bumpToolRunningToggle, (Halo1)))\
-	((cacheBSPSearchToggle, (Halo1)))
+	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))
 
 
 

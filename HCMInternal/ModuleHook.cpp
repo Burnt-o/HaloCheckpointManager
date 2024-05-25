@@ -26,11 +26,6 @@ std::unique_ptr<ModulePatch> ModulePatch::make(const std::wstring associatedModu
 	return ptr;
 }
 
-std::unique_ptr<ModulePatch> ModulePatch::makeNOPCall(const std::wstring associatedModule, std::shared_ptr<MultilevelPointer> original_func, bool startEnabled)
-{
-	return ModulePatch::make(associatedModule, original_func, std::vector<byte>{0x90, 0x90, 0x90, 0x90, 0x90}, startEnabled);
-}
-
 const std::wstring& ModuleHookBase::getAssociatedModule() const
 {
 	return this->mAssociatedModule;

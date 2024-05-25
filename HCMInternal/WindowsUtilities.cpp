@@ -251,11 +251,3 @@ std::string readFileContents(std::string_view pathToFile)
 	}
 
 }
-
-
-
-float flooredModulo(float a, float N)
-{
-https://stackoverflow.com/a/4003241
-	return a - N * floor(a / N);
-}

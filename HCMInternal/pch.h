@@ -89,10 +89,6 @@ using namespace DirectX;
 #include "boost\algorithm\string\predicate.hpp"
 #include "boost\bimap.hpp"
 #include "boost\assign.hpp"
-
-#define BOOST_PP_LIMIT_TUPLE 128
-#define BOOST_PP_LIMIT_VARIADIC 128
-#define BOOST_PP_LIMIT_SEQ 512
 #include <boost\preprocessor.hpp>
 
 // Custom utilities
