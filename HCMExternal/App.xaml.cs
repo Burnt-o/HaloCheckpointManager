@@ -18,6 +18,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.IO;
 using System.Runtime.InteropServices;
 using static System.Net.WebRequestMethods;
+using System.Windows.Threading;
 
 namespace HCMExternal
 {
@@ -79,6 +80,9 @@ namespace HCMExternal
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                    ShowErrorAndShutdown("An unhandled exception occured!\n" + (args.ExceptionObject as Exception).Message + "\n\nStackTrace:\n" + (args.ExceptionObject as Exception).StackTrace);
 
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -311,5 +315,7 @@ namespace HCMExternal
             #endregion
 
         }
+
+
     }
 }
