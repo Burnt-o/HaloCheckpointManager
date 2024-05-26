@@ -47,16 +47,10 @@ private:
 	SimpleMath::Vector2 screenSize;
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
-	DirectX::BoundingFrustum frustumViewWorldBackwards;
-	std::array<std::array<SimpleMath::Vector3, 4>, 6> frustumViewWorldFaces;
 
-#ifdef HCM_DEBUG
-	std::optional<std::array<std::array<SimpleMath::Vector3, 4>, 6>> debugFrustumViewWorldFaces;
-	void renderDebugFrustumFaces(int face = -1);
-#endif
-	std::array < SimpleMath::Plane, 4> frustumViewWorldSidePlanes;
-	std::array<SimpleMath::Plane, 6> frustumViewWorldPlanes;
-	CameraFrustumSideTris frustumViewWorldSideTris;
+	const SimpleMath::Matrix worldTransformation = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ);
+
+
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
@@ -92,11 +86,7 @@ private:
 
 
 	bool pointBehindCamera(const SimpleMath::Vector3& point);
-	std::vector<SimpleMath::Vector3> clipFaceToFrustum(const faceView& face);
-	void renderFace(const faceView& face, uint32_t color, bool debugVertices = false);
 
-	std::optional<std::pair<SimpleMath::Vector3, SimpleMath::Vector3>> clipLineSegmentToFrustum(const SimpleMath::Vector3& start, const SimpleMath::Vector3& end);
-	void renderEdge(const edgeView& edge, uint32_t color);
 
 
 public:
@@ -111,8 +101,6 @@ public:
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
 	virtual void renderTriggerModel(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) override;
 
-#ifdef HCM_DEBUG
-	virtual void renderTriggerModelSortedDebug(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) override;
-#endif
+
 
 };

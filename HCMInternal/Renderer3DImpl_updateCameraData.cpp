@@ -79,65 +79,8 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->screenCenter = { screenSize.x / 2.f, screenSize.y / 2.f };
 
 
-		this->frustumViewWorld.CreateFromMatrix(this->frustumViewWorld, this->projectionMatrix, true); // frustrum in view space
-		this->frustumViewWorld.Transform(this->frustumViewWorld, this->viewMatrix.Invert()); // now in world space
-		this->frustumViewWorld.Transform(this->frustumViewWorldBackwards, SimpleMath::Matrix::CreateFromAxisAngle(this->cameraUp, DirectX::XM_PI)) ; // get the frustum but facing backwards so we can check for wrapparounds
-
-		std::array<XMFLOAT3, 8> frustumCorners;
-		this->frustumViewWorld.GetCorners(frustumCorners.data());
-
-
-		this->frustumViewWorld.GetPlanes(nullptr, nullptr, (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[0], (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[1], (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[2], (DirectX::XMVECTOR*)&frustumViewWorldSidePlanes[3]);
-
-
-		this->frustumViewWorld.GetPlanes((DirectX::XMVECTOR*)&frustumViewWorldPlanes[0], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[1], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[2], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[3], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[4], (DirectX::XMVECTOR*)&frustumViewWorldPlanes[5]);
-
-
-		//     Near    Far
-		//    0----1  4----5
-		//    |    |  |    |
-		//    |    |  |    |
-		//    3----2  7----6
-		this->frustumViewWorldFaces[0] = { frustumCorners[0], frustumCorners[1], frustumCorners[2], frustumCorners[3]}; // near
-		this->frustumViewWorldFaces[1] = { frustumCorners[4], frustumCorners[5], frustumCorners[6], frustumCorners[7] }; // far
-		this->frustumViewWorldFaces[2] = { frustumCorners[0], frustumCorners[4], frustumCorners[5], frustumCorners[1] }; // top
-		this->frustumViewWorldFaces[3] = { frustumCorners[3], frustumCorners[7], frustumCorners[6], frustumCorners[2] }; // bottom
-		this->frustumViewWorldFaces[4] = { frustumCorners[3], frustumCorners[7], frustumCorners[4], frustumCorners[0] }; // left
-		this->frustumViewWorldFaces[5] = { frustumCorners[2], frustumCorners[6], frustumCorners[5], frustumCorners[1] }; // right
-
-
-#ifdef HCM_DEBUG
-		if (GetKeyState('7') & 0x8000)
-		{
-			debugFrustumViewWorldFaces = frustumViewWorldFaces;
-		}
-
-		if (GetKeyState('8') & 0x8000 && debugFrustumViewWorldFaces.has_value())
-		{
-			renderDebugFrustumFaces();
-		}
-
-		if (GetKeyState('9') & 0x8000 && debugFrustumViewWorldFaces.has_value())
-		{
-			static int faceToRender = 0;
-			static int holdForFrames = 0;
-			renderDebugFrustumFaces(faceToRender);
-
-			
-			if (holdForFrames == 0)
-			{
-				faceToRender = (faceToRender + 1) % 6;
-			}
-			holdForFrames = (holdForFrames + 1) % 30;
-			
-		}
-
-
-#endif
-
-
-
-
+		DirectX::BoundingFrustum::CreateFromMatrix(this->frustumViewWorld, this->projectionMatrix, true); // frustrum in view space
+		this->frustumViewWorld.Transform(this->frustumViewWorld, this->viewMatrix.Invert()); // transform to world space
 
 
 
@@ -147,6 +90,26 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			this->init = true;
 		}
 
+
+		// TODO: make this created once (per resizeBuffers) in d3dhook and passed along as render args
+		// (should really use dxtk resources type)
+		// since making this every time is.. actually not that expensive nvm
+		// oh but should definitely be getting done in updateCameraData, not here
+		D3D11_VIEWPORT g_stViewport;
+
+		g_stViewport.TopLeftX = 0;
+		g_stViewport.TopLeftY = 0;
+		g_stViewport.Width = screenSize.x;
+		g_stViewport.Height = screenSize.y;
+		g_stViewport.MinDepth = 0.0f;
+		g_stViewport.MaxDepth = 1.0f;
+
+
+		pDeviceContext->RSSetViewports(1, &g_stViewport);
+
+#ifndef HCM_DEBUG
+		static_assert(false && "clean up above");
+#endif
 
 
 

@@ -84,7 +84,7 @@ private:
 			for (auto& [triggerPointer, triggerData] : allTriggersData)
 			{
 				//renderer->renderTriggerModelSortedDebug(triggerData.model, 0x700000FF, 0xF00000FF);
-				//renderer->renderTriggerModel(triggerData.model, 0x700000FF, 0xF00000FF);
+				renderer->renderTriggerModel(triggerData.model, 0x700000FF, 0xF00000FF);
 			}
 
 		}
