@@ -8,5 +8,5 @@ struct TriggerData
 	uint32_t tickLastChecked = 0;
 	TriggerModel model;
 
-	explicit TriggerData(std::string triggerName, TriggerModel triggerModel) : name(triggerName), model(triggerModel) {}
+	explicit TriggerData(std::string triggerName, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up) : name(triggerName), model(triggerName, position, extents, forward, up) {}
 };

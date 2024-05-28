@@ -6,6 +6,7 @@
 #include "WaypointList.h"
 #include "SkullEnum.h"
 #include "BitBoolPointer.h"
+#include "SettingsEnums.h"
 
 class SettingsStateAndEvents
 {
@@ -95,6 +96,9 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> switchBSPEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceFutureCheckpointFillEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> triggerOverlayFilterStringCopyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> triggerOverlayFilterStringPasteEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> triggerOverlayFilterStringLoadBoolEvent = std::make_shared<ActionEvent>();
 
 	// waypoint events (delete, edit)
 	std::shared_ptr<WaypointAndListEvent> deleteWaypointEvent = std::make_shared<WaypointAndListEvent>();
@@ -716,18 +720,11 @@ public:
 			nameof(display2DInfoShowEntityVehicleHealth)
 		);
 
-	enum class Display2DInfoAnchorEnum
-	{
-		TopLeft,
-		TopRight,
-		BottomRight,
-		BottomLeft
-	};
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> display2DInfoAnchorCorner = std::make_shared<BinarySetting<int>>
+
+	std::shared_ptr<BinarySetting<SettingsEnums::Display2DInfoAnchorEnum>> display2DInfoAnchorCorner = std::make_shared<BinarySetting<SettingsEnums::Display2DInfoAnchorEnum>>
 		(
-			2, // 0 is top left, 1 is top right, 2 is bottom right, 3 is bottom left
-			[](int in) { return in >= 0 && in <= 3; }, // within enum range
+			SettingsEnums::Display2DInfoAnchorEnum::BottomRight,
+			[](SettingsEnums::Display2DInfoAnchorEnum in) { return true; },
 			nameof(display2DInfoAnchorCorner)
 		);
 
@@ -788,11 +785,7 @@ public:
 		);
 
 
-	enum class FreeCameraInterpolationTypesEnum
-	{
-			None,
-			Linear
-	};
+
 
 
 	std::shared_ptr<BinarySetting<bool>> freeCameraToggle = std::make_shared<BinarySetting<bool>>
@@ -884,11 +877,10 @@ public:
 			nameof(freeCameraUserInputCameraTranslationSpeed)
 		);
 	
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraUserInputCameraTranslationInterpolator = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraUserInputCameraTranslationInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraUserInputCameraTranslationInterpolator)
 		);
 
@@ -908,10 +900,10 @@ public:
 		);
 
 	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraUserInputCameraRotationInterpolator = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraUserInputCameraRotationInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraUserInputCameraRotationInterpolator)
 		);
 
@@ -931,11 +923,11 @@ public:
 			nameof(freeCameraUserInputCameraFOVSpeed)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraUserInputCameraFOVInterpolator = std::make_shared<BinarySetting<int>>
+
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraUserInputCameraFOVInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraUserInputCameraFOVInterpolator)
 		);
 
@@ -953,11 +945,11 @@ public:
 			nameof(freeCameraAnchorPositionToObjectPosition)
 		);
 
-		// actually an enum but stored as int
-		std::shared_ptr<BinarySetting<int>> freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
+
+		std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnum>> freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup = std::make_shared<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnum>>
 			(
-				0, // 0 player, 1 is custom object
-				[](int in) { return in >= 0 && in <= 1; }, // within enum range
+				SettingsEnums::FreeCameraObjectTrackEnum::Player,
+				[](SettingsEnums::FreeCameraObjectTrackEnum in) { return true; },
 				nameof(freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup)
 			);
 
@@ -968,11 +960,10 @@ public:
 			nameof(freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorPositionToObjectPositionTranslationInterpolator = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraAnchorPositionToObjectPositionTranslationInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraAnchorPositionToObjectPositionTranslationInterpolator)
 		);
 
@@ -998,11 +989,10 @@ public:
 			nameof(freeCameraAnchorRotationToObjectPosition)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnum>> freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup = std::make_shared<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnum>>
 		(
-			0, // 0 player, 1 is custom object, 2 is absolute position
-			[](int in) { return in >= 0 && in <= 2; }, // within enum range
+			SettingsEnums::FreeCameraObjectTrackEnum::Player,
+			[](SettingsEnums::FreeCameraObjectTrackEnum in) { return true; },
 			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackComboGroup)
 		);
 
@@ -1019,12 +1009,10 @@ public:
 			[](SimpleMath::Vector3 in) { return true; },
 			nameof(freeCameraAnchorRotationToObjectPositionObjectToTrackManualPositionVec3)
 		);
-
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectPositionRotationInterpolator = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraAnchorRotationToObjectPositionRotationInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraAnchorRotationToObjectPositionRotationInterpolator)
 		);
 
@@ -1042,11 +1030,10 @@ public:
 			nameof(freeCameraAnchorRotationToObjectFacing)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnum>> freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup = std::make_shared<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnum>>
 		(
-			0, // 0 player, 1 is custom object
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraObjectTrackEnum::Player,
+			[](SettingsEnums::FreeCameraObjectTrackEnum in) { return true; },
 			nameof(freeCameraAnchorRotationToObjectFacingObjectToTrackComboGroup)
 		);
 
@@ -1057,11 +1044,10 @@ public:
 			nameof(freeCameraAnchorRotationToObjectFacingObjectToTrackCustomObjectDatum)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorRotationToObjectFacingRotationInterpolator = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraAnchorRotationToObjectFacingRotationInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraAnchorRotationToObjectFacingRotationInterpolator)
 		);
 
@@ -1079,11 +1065,11 @@ public:
 			nameof(freeCameraAnchorFOVToObjectDistance)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup = std::make_shared<BinarySetting<int>>
+
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnumPlusAbsolute>> freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup = std::make_shared<BinarySetting<SettingsEnums::FreeCameraObjectTrackEnumPlusAbsolute>>
 		(
-			0, // 0 player, 1 is custom object, 2 is absolute position
-			[](int in) { return in >= 0 && in <= 2; }, // within enum range
+			SettingsEnums::FreeCameraObjectTrackEnumPlusAbsolute::Player,
+			[](SettingsEnums::FreeCameraObjectTrackEnumPlusAbsolute in) { return true; },
 			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackComboGroup)
 		);
 
@@ -1101,11 +1087,10 @@ public:
 			nameof(freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3)
 		);
 
-	// actually an enum but stored as int
-	std::shared_ptr<BinarySetting<int>> freeCameraAnchorFOVToObjectDistanceFOVInterpolator = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraAnchorFOVToObjectDistanceFOVInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
-			1, // 0 none, 1 is proportional
-			[](int in) { return in >= 0 && in <= 1; }, // within enum range
+			SettingsEnums::FreeCameraInterpolationTypesEnum::Linear,
+			[](SettingsEnums::FreeCameraInterpolationTypesEnum in) { return true; },
 			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolator)
 		);
 
@@ -1236,22 +1221,135 @@ public:
 			nameof(triggerOverlayToggle)
 		);
 
-	enum class FreeCameraObjectTrackEnum
-	{
-		Player,
-		CustomObject
-	};
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayFilterToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(triggerOverlayFilterToggle)
+		);
 
-	enum class FreeCameraObjectTrackEnumPlusAbsolute
-	{
-		Player,
-		CustomObject,
-		ManualPosition
-	};
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayFilterExactMatchToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(triggerOverlayFilterExactMatchToggle)
+		);
+
+	std::shared_ptr<BinarySetting<std::string>> triggerOverlayFilterString = std::make_shared<BinarySetting<std::string>>
+		(
+			"",
+			[](std::string in) { return true; },
+			nameof(triggerOverlayFilterString)
+		);
+
+
+
+
+	std::shared_ptr<BinarySetting<SettingsEnums::TriggerRenderStyle>> triggerOverlayRenderStyle = std::make_shared<BinarySetting<SettingsEnums::TriggerRenderStyle>>
+		(
+			SettingsEnums::TriggerRenderStyle::SolidAndWireframe,
+			[](SettingsEnums::TriggerRenderStyle in) { return true; },
+			nameof(triggerOverlayRenderStyle)
+		);
+
+
+
+	std::shared_ptr<BinarySetting<SettingsEnums::TriggerInteriorStyle>> triggerOverlayInteriorStyle = std::make_shared<BinarySetting<SettingsEnums::TriggerInteriorStyle>>
+		(
+			SettingsEnums::TriggerInteriorStyle::Normal,
+			[](SettingsEnums::TriggerInteriorStyle in) { return true; },
+			nameof(triggerOverlayInteriorStyle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayLabelToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayLabelToggle)
+		);
+
+
+	std::shared_ptr<BinarySetting<float>> triggerOverlayLabelScale = std::make_shared<BinarySetting<float>>
+		(
+			16.f,
+			[](float in) { return in > 0.f; },
+			nameof(triggerOverlayLabelScale)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> triggerOverlayNormalColor = std::make_shared<BinarySetting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{1.0f, 0.0f, 0.0f}, // red
+			[](SimpleMath::Vector3 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			nameof(triggerOverlayNormalColor)
+		);
+
+	std::shared_ptr<BinarySetting<float>> triggerOverlayAlpha = std::make_shared<BinarySetting<float>>
+		(
+			0.5f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(triggerOverlayAlpha)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayCheckFlashToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayCheckFlashToggle)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> triggerOverlayCheckFailsColor = std::make_shared<BinarySetting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{1.0f, 1.0f, 0.0f}, // yellow
+			[](SimpleMath::Vector3 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			nameof(triggerOverlayCheckFailsColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> triggerOverlayCheckSuccessColor = std::make_shared<BinarySetting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{0.0f, 1.0f, 0.0f}, // green
+			[](SimpleMath::Vector3 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			nameof(triggerOverlayCheckSuccessColor)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnEnter = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayMessageOnEnter)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnExit = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayMessageOnExit)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnCheckSuccess = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayMessageOnCheckSuccess)
+		);
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		triggerOverlayFilterToggle,
+		triggerOverlayFilterExactMatchToggle,
+		triggerOverlayFilterString,
+		triggerOverlayRenderStyle,
+		triggerOverlayInteriorStyle,
+		triggerOverlayLabelToggle,
+		triggerOverlayLabelScale,
+		triggerOverlayNormalColor,
+		triggerOverlayAlpha,
+		triggerOverlayCheckFlashToggle,
+		triggerOverlayCheckFailsColor,
+		triggerOverlayCheckSuccessColor,
+		triggerOverlayMessageOnEnter,
+		triggerOverlayMessageOnExit,
+		triggerOverlayMessageOnCheckSuccess,
 		hideWatermarkHideMessages,
 		advanceTicksCount,
 		injectionIgnoresChecksum,

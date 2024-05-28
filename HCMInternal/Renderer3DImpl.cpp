@@ -49,6 +49,8 @@ for the rest of the implementation
  {
 	 spriteBatch = std::make_unique<SpriteBatch>(this->pDeviceContext);
 	 commonStates = std::make_unique<CommonStates>(this->pDevice);
+	 lineDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
+	 unitCube = GeometricPrimitive::CreateCube(this->pDeviceContext);
  }
 
 

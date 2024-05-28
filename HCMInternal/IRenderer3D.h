@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "SpriteResource.h"
 #include "TriggerModel.h"
-
+#include "SettingsEnums.h"
 
 /// <summary>
 /// Provides functions for rendering in 3D. Implemented by Renderer3DImpl.h
@@ -75,9 +75,12 @@ public:
 	/// Renders a trigger model to the screen with given colours.
 	/// </summary>
 	/// <param name="model">The trigger model to draw.</param>
-	/// <param name="fillColor">What colour will make up the faces of the trigger volume.</param>
-	/// <param name="outlineColor">What colour will outline the edges of the trigger volume.</param>
-	virtual void renderTriggerModel(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) = 0;
+	/// <param name="triggerColor">What colour to draw it (alpha supported).</param>
+	/// <param name="renderStyle">Draw solid volume, wireframe (line edges), or both.</param>
+	/// <param name="interiorStyle">When camera inside trigger, draw normally, with a patterned texture, or not at all.</param>
+	/// <param name="labelScale">Scaling of label text. If nullopt, don't draw label.</param>
+
+	virtual void renderTriggerModel(const TriggerModel& model, SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, std::optional<float> labelScale) = 0;
 
 
 

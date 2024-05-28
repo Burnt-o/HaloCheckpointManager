@@ -2,19 +2,19 @@
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
 
-template <typename E, float itemWidth>
+template <typename EnumType, float itemWidth>
 class GUIComboEnum : public IGUIElement {
 
 private:
 	std::string mLabelText;
-	std::weak_ptr<BinarySetting<int>> mOptionEnumWeak;
+	std::weak_ptr<BinarySetting<EnumType>> mOptionEnumWeak;
 	std::vector<std::thread> mUpdateSettingThreads;
-	static constexpr std::array<std::string_view, magic_enum::enum_count<E>()> itemLabels = magic_enum::enum_names<E>();
+	static constexpr std::array<std::string_view, magic_enum::enum_count<EnumType>()> itemLabels = magic_enum::enum_names<EnumType>();
 	std::string itemLabelsMashedTogether;
 public:
 
 
-	GUIComboEnum(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<int>> optionEnum)
+	GUIComboEnum(GameState implGame, ToolTipCollection tooltip, std::string labelText, std::shared_ptr<BinarySetting<EnumType>> optionEnum)
 		: IGUIElement(implGame, std::nullopt, tooltip), mLabelText(labelText), mOptionEnumWeak(optionEnum)
 	{
 		if (mLabelText.empty()) throw HCMInitException("Cannot have empty label (needs label for imgui ID system, use ## for invisible labels)");
@@ -56,16 +56,16 @@ public:
 		}
 
 		ImGui::SetNextItemWidth(itemWidth);
-		const char* combo_preview_value = itemLabels.at(mOptionEnum->GetValueDisplay()).data();
+		const char* combo_preview_value = itemLabels.at((int)mOptionEnum->GetValueDisplay()).data();
 		if (ImGui::BeginCombo(mLabelText.c_str(), combo_preview_value))
 		{
 			for (int n = 0; n < itemLabels.size(); n++)
 			{
-				const bool is_selected = (mOptionEnum->GetValueDisplay() == n);
+				const bool is_selected = ((int)mOptionEnum->GetValueDisplay() == n);
 				if (ImGui::Selectable(itemLabels.at(n).data(), is_selected))
 				{
-					mOptionEnum->GetValueDisplay() = n;
-					PLOG_VERBOSE << "GUIComboEnum (" << getName() << ") firing toggle event, new value: " << magic_enum::enum_name<E>((E)n);
+					mOptionEnum->GetValueDisplay() = (EnumType)n;
+					PLOG_VERBOSE << "GUIComboEnum (" << getName() << ") firing toggle event, new value: " << magic_enum::enum_name<EnumType>((EnumType)n);
 					auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionEnum]() { optionToggle->UpdateValueWithInput(); }));
 					newThread.detach();
 				}

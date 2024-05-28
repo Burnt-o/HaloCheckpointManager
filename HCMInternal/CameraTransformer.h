@@ -5,11 +5,12 @@
 #include "LinearSmoother.h"
 #include "IUpdateCameraTransform.h"
 
+using namespace SettingsEnums;
 
 class RotationTransformer
 {
 private:
-	ScopedCallback< eventpp::CallbackList<void(int&)>> currentInterpolationTypeChangedCallback;
+	ScopedCallback< eventpp::CallbackList<void(FreeCameraInterpolationTypesEnum&)>> currentInterpolationTypeChangedCallback;
 	ScopedCallback< eventpp::CallbackList<void(float&)>> currentLinearInterpolationFactorChangedCallback;
 
 	void applyRotationTransform(FreeCameraData& freeCameraData, float frameDelta)
@@ -81,16 +82,16 @@ private:
 
 	std::atomic_bool dataInUse = false;
 
-	void onInterpolationTypeChanged(int& newType)
+	void onInterpolationTypeChanged(FreeCameraInterpolationTypesEnum& newType)
 	{
 		ScopedAtomicBool lock(dataInUse);
 		switch (newType)
 		{
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::None:
+		case FreeCameraInterpolationTypesEnum::None:
 			pCurrentRotationSmoother = &nullRotationSmoother;
 			break;
 
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::Linear:
+		case FreeCameraInterpolationTypesEnum::Linear:
 			pCurrentRotationSmoother = &linearRotationSmoother;
 			break;
 
@@ -135,21 +136,21 @@ public:
 	}
 
 
-	RotationTransformer(std::shared_ptr<IUpdateRotationTransform> rotUpate, std::shared_ptr<BinarySetting<int>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
+	RotationTransformer(std::shared_ptr<IUpdateRotationTransform> rotUpate, std::shared_ptr<BinarySetting<FreeCameraInterpolationTypesEnum>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
 		: 
 		rotationUpdater(std::move(rotUpate)),
-		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](int& n) { onInterpolationTypeChanged(n); }),
+		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](FreeCameraInterpolationTypesEnum& n) { onInterpolationTypeChanged(n); }),
 		currentLinearInterpolationFactorChangedCallback(currentLinearInterpolationFactor->valueChangedEvent, [this](float& n) { onLinearInterpolationFactorChanged(n); }),
 		linearRotationSmoother(currentLinearInterpolationFactor->GetValue())
 	{
-		int curInterpolationType = currentInterpolationType->GetValue();
+		auto curInterpolationType = currentInterpolationType->GetValue();
 		switch (curInterpolationType)
 		{
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::None:
+		case FreeCameraInterpolationTypesEnum::None:
 			pCurrentRotationSmoother = &nullRotationSmoother;
 			break;
 
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::Linear:
+		case FreeCameraInterpolationTypesEnum::Linear:
 			pCurrentRotationSmoother = &linearRotationSmoother;
 			break;
 
@@ -175,7 +176,7 @@ class PositionTransformer
 {
 private:
 
-	ScopedCallback< eventpp::CallbackList<void(int&)>> currentInterpolationTypeChangedCallback;
+	ScopedCallback< eventpp::CallbackList<void(FreeCameraInterpolationTypesEnum&)>> currentInterpolationTypeChangedCallback;
 	ScopedCallback< eventpp::CallbackList<void(float&)>> currentLinearInterpolationFactorChangedCallback;
 
 	void applyPositionTransform(FreeCameraData& freeCameraData, float frameDelta)
@@ -199,16 +200,16 @@ private:
 
 	std::atomic_bool dataInUse = false;
 
-	void onInterpolationTypeChanged(int& newType)
+	void onInterpolationTypeChanged(FreeCameraInterpolationTypesEnum& newType)
 	{
 		ScopedAtomicBool lock(dataInUse);
 		switch (newType)
 		{
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::None:
+		case FreeCameraInterpolationTypesEnum::None:
 			pCurrentPositionSmoother = &nullPositionSmoother;
 			break;
 
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::Linear:
+		case FreeCameraInterpolationTypesEnum::Linear:
 			pCurrentPositionSmoother = &linearPositionSmoother;
 			break;
 
@@ -238,22 +239,22 @@ public:
 	}
 
 
-	PositionTransformer (std::shared_ptr<IUpdatePositionTransform> posUpdate, std::shared_ptr<BinarySetting<int>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
+	PositionTransformer (std::shared_ptr<IUpdatePositionTransform> posUpdate, std::shared_ptr<BinarySetting<FreeCameraInterpolationTypesEnum>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
 		: positionUpdater(std::move(posUpdate)),
-		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](int& n) { onInterpolationTypeChanged(n); }),
+		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](FreeCameraInterpolationTypesEnum& n) { onInterpolationTypeChanged(n); }),
 		currentLinearInterpolationFactorChangedCallback(currentLinearInterpolationFactor->valueChangedEvent, [this](float& n) { onLinearInterpolationFactorChanged(n); }),
 		linearPositionSmoother(currentLinearInterpolationFactor->GetValue())
 	{
 		PLOG_DEBUG << "constructing PositionTransformer";
 
-		int curInterpolationType = currentInterpolationType->GetValue();
+		auto curInterpolationType = currentInterpolationType->GetValue();
 		switch (curInterpolationType)
 		{
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::None:
+		case FreeCameraInterpolationTypesEnum::None:
 			pCurrentPositionSmoother = &nullPositionSmoother;
 			break;
 
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::Linear:
+		case FreeCameraInterpolationTypesEnum::Linear:
 			pCurrentPositionSmoother = &linearPositionSmoother;
 			break;
 
@@ -277,7 +278,7 @@ public:
 class FOVTransformer
 {
 private:
-	ScopedCallback< eventpp::CallbackList<void(int&)>> currentInterpolationTypeChangedCallback;
+	ScopedCallback< eventpp::CallbackList<void(FreeCameraInterpolationTypesEnum&)>> currentInterpolationTypeChangedCallback;
 	ScopedCallback< eventpp::CallbackList<void(float&)>> currentLinearInterpolationFactorChangedCallback;
 
 
@@ -300,16 +301,16 @@ private:
 
 	std::atomic_bool dataInUse = false;
 
-	void onInterpolationTypeChanged(int& newType)
+	void onInterpolationTypeChanged(FreeCameraInterpolationTypesEnum& newType)
 	{
 		ScopedAtomicBool lock(dataInUse);
 		switch (newType)
 		{
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::None:
+		case FreeCameraInterpolationTypesEnum::None:
 			pCurrentFOVSmoother = &nullFOVSmoother;
 			break;
 
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::Linear:
+		case FreeCameraInterpolationTypesEnum::Linear:
 			pCurrentFOVSmoother = &linearFOVSmoother;
 			break;
 
@@ -332,21 +333,21 @@ public:
 		currentFOV = newValue;
 	}
 
-	FOVTransformer(std::shared_ptr<IUpdateFOVTransform> fovUpate, std::shared_ptr<BinarySetting<int>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
+	FOVTransformer(std::shared_ptr<IUpdateFOVTransform> fovUpate, std::shared_ptr<BinarySetting<FreeCameraInterpolationTypesEnum>> currentInterpolationType, std::shared_ptr<BinarySetting<float>> currentLinearInterpolationFactor)
 		:
 		fovUpdater(std::move(fovUpate)),
-		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](int& n) { onInterpolationTypeChanged(n); }),
+		currentInterpolationTypeChangedCallback(currentInterpolationType->valueChangedEvent, [this](FreeCameraInterpolationTypesEnum& n) { onInterpolationTypeChanged(n); }),
 		currentLinearInterpolationFactorChangedCallback(currentLinearInterpolationFactor->valueChangedEvent, [this](float& n) { onLinearInterpolationFactorChanged(n); }),
 		linearFOVSmoother(currentLinearInterpolationFactor->GetValue())
 	{
-		int curInterpolationType = currentInterpolationType->GetValue();
+		auto curInterpolationType = currentInterpolationType->GetValue();
 		switch (curInterpolationType)
 		{
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::None:
+		case FreeCameraInterpolationTypesEnum::None:
 			pCurrentFOVSmoother = &nullFOVSmoother;
 			break;
 
-		case (int)SettingsStateAndEvents::FreeCameraInterpolationTypesEnum::Linear:
+		case FreeCameraInterpolationTypesEnum::Linear:
 			pCurrentFOVSmoother = &linearFOVSmoother;
 			break;
 

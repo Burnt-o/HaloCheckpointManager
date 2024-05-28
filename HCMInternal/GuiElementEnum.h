@@ -210,7 +210,26 @@
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))
+	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
+	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterExactMatchToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterString, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringPaste, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringLoadBool, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayRenderStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayInteriorStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayLabelToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayLabelScale, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayCheckFlashToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckFailsColor, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckSuccessColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnEnter, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnCheckSuccess, (ALL_SUPPORTED_GAMES)))
 
 
 

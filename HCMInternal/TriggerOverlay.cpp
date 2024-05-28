@@ -8,6 +8,8 @@
 #include "SettingsStateAndEvents.h"
 #include "RenderTextHelper.h"
 
+using namespace SettingsEnums;
+
 template<GameState::Value mGame>
 class TriggerOverlayImpl : public TriggerOverlayUntemplated 
 {
@@ -83,8 +85,8 @@ private:
 
 			for (auto& [triggerPointer, triggerData] : allTriggersData)
 			{
-				//renderer->renderTriggerModelSortedDebug(triggerData.model, 0x700000FF, 0xF00000FF);
-				renderer->renderTriggerModel(triggerData.model, 0x700000FF, 0xF00000FF);
+				SimpleMath::Vector4 triggerColor = { 0.f, 1.f, 0.f, 0.5f };
+				renderer->renderTriggerModel(triggerData.model, triggerColor, TriggerRenderStyle::SolidAndWireframe, TriggerInteriorStyle::Normal, 14.f);
 			}
 
 		}

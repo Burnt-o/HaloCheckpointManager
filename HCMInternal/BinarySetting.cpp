@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "BinarySetting.h"
-
+#include "SettingsEnums.h"
+#include <concepts>
 
 void BinarySetting<bool>::deserialise(pugi::xml_node input)
 {
 	valueDisplay = input.text().as_bool();
-	PLOG_DEBUG << "Deserialised bool value: " << (valueDisplay ? "True" : "False");
+	PLOG_DEBUG << "deserialised bool value: " << (valueDisplay ? "True" : "False");
 	UpdateValueWithInput();
 	if (value != valueDisplay) PLOG_ERROR << "Value didn't match after UpdateValueWithInput()!";
 }
@@ -66,7 +67,21 @@ void BinarySetting<SimpleMath::Vector4>::deserialise(pugi::xml_node input)
 	UpdateValueWithInput();
 }
 
-
+// for enums
+template<typename T>
+void BinarySetting<T>::deserialise(pugi::xml_node input)
+{
+	static_assert(std::is_enum_v<T>);
+	valueDisplay = (T)input.text().as_int();
+	UpdateValueWithInput();
+}
+using namespace SettingsEnums;
+template void BinarySetting<FreeCameraObjectTrackEnum>::deserialise(pugi::xml_node input);
+template void BinarySetting<FreeCameraObjectTrackEnumPlusAbsolute>::deserialise(pugi::xml_node input);
+template void BinarySetting<FreeCameraInterpolationTypesEnum>::deserialise(pugi::xml_node input);
+template void BinarySetting<TriggerInteriorStyle>::deserialise(pugi::xml_node input);
+template void BinarySetting<TriggerRenderStyle>::deserialise(pugi::xml_node input);
+template void BinarySetting<Display2DInfoAnchorEnum>::deserialise(pugi::xml_node input);
 
 
 

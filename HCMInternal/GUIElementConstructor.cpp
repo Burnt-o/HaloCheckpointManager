@@ -829,7 +829,7 @@ private:
 							}));
 
 					case GUIElementEnum::display2DInfoAnchorCorner:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsStateAndEvents::Display2DInfoAnchorEnum, 100.f>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::Display2DInfoAnchorEnum, 100.f>>
 							(game, ToolTipCollection(""), "Corner to Anchor to", settings->display2DInfoAnchorCorner));
 
 					case GUIElementEnum::display2DInfoScreenOffset:
@@ -1135,7 +1135,7 @@ private:
 
 
 						case GUIElementEnum::freeCameraUserInputCameraTranslationInterpolator:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsEnums::FreeCameraInterpolationTypesEnum, 100.f>>
 								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"),  "Translation Interpolation##UserInputCamera", settings->freeCameraUserInputCameraTranslationInterpolator,
 									vectorOfHeaderChildElements
 							{
@@ -1155,7 +1155,7 @@ private:
 								(game, ToolTipCollection("How fast the camera rotates (turns about)"), "Rotation Speed", settings->freeCameraUserInputCameraRotationSpeed));
 
 						case GUIElementEnum::freeCameraUserInputCameraRotationInterpolator:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsEnums::FreeCameraInterpolationTypesEnum, 100.f>>
 								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "Rotation Interpolation##UserInputCamera", settings->freeCameraUserInputCameraRotationInterpolator,
 									vectorOfHeaderChildElements
 									{
@@ -1175,7 +1175,7 @@ private:
 								(game, ToolTipCollection("How fast the camera FOV changes when you hold down the increase/decrease FOV binding"), "FOV change Speed", settings->freeCameraUserInputCameraFOVSpeed));
 
 						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolator:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsStateAndEvents::FreeCameraInterpolationTypesEnum, 100.f>>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnumWithChildren<SettingsEnums::FreeCameraInterpolationTypesEnum, 100.f>>
 								(game, ToolTipCollection("Function that controls how smoothly the camera adjusts to input"), "FOV Interpolation##UserInputCamera", settings->freeCameraUserInputCameraFOVInterpolator,
 									vectorOfHeaderChildElements
 									{

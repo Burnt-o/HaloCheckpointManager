@@ -17,7 +17,8 @@ private:
 	{
 		PLOG_DEBUG << "updating trigger data!";
 		triggerData.clear();
-		triggerData.emplace(0, TriggerData("box", TriggerModel({14.671300, -95.203300, -73.22693634 }, {0.2, 0.2, 0.2}, SimpleMath::Vector3::Forward, SimpleMath::Vector3::Up))); // test trigger at keyes start
+		triggerData.emplace(0, TriggerData("box", { 14.671300, -95.203300, -73.22693634 }, { 0.2, 0.2, 0.2 }, SimpleMath::Vector3::Forward, SimpleMath::Vector3::Up)); // test trigger at keyes start
+		triggerData.emplace(0, TriggerData("box", { 14.671300, -95.203300, -73.22693634 }, { 0.2, 0.2, 0.2 }, {0.7f, 0.7f, 0.f}, SimpleMath::Vector3::Up)); // test trigger at keyes start. but rotated.
 	
 		// TODO: get the real data
 	}

@@ -131,21 +131,21 @@ private:
 			// calculate screen position of display info window
 			SimpleMath::Vector2& cornerOffset = settings->display2DInfoScreenOffset->GetValue();
 			SimpleMath::Vector2 displayInfoScreenPosition;
-			switch ((SettingsStateAndEvents::Display2DInfoAnchorEnum)settings->display2DInfoAnchorCorner->GetValue())
+			switch (settings->display2DInfoAnchorCorner->GetValue())
 			{
-			case SettingsStateAndEvents::Display2DInfoAnchorEnum::TopLeft:
+			case SettingsEnums::Display2DInfoAnchorEnum::TopLeft:
 				displayInfoScreenPosition = cornerOffset ;
 				break;
 
-			case SettingsStateAndEvents::Display2DInfoAnchorEnum::TopRight:
+			case SettingsEnums::Display2DInfoAnchorEnum::TopRight:
 				displayInfoScreenPosition = {screenSize.x - cornerOffset.x, cornerOffset.y};
 				break;
 
-			case SettingsStateAndEvents::Display2DInfoAnchorEnum::BottomRight:
+			case SettingsEnums::Display2DInfoAnchorEnum::BottomRight:
 				displayInfoScreenPosition = { screenSize.x - cornerOffset.x, screenSize.y - cornerOffset.y };
 				break;
 
-			case SettingsStateAndEvents::Display2DInfoAnchorEnum::BottomLeft:
+			case SettingsEnums::Display2DInfoAnchorEnum::BottomLeft:
 				displayInfoScreenPosition = { cornerOffset.x, screenSize.y - cornerOffset.y };
 				break;
 

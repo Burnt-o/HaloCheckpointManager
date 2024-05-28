@@ -737,6 +737,9 @@
     <ClInclude Include="PlayerPositionToClipboard.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="SettingsEnums.h">
+      <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1056,6 +1059,9 @@
     </ClCompile>
     <ClCompile Include="PlayerPositionToClipboard.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsEnum.cpp">
+      <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

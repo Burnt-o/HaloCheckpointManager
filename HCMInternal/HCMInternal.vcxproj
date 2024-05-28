@@ -144,6 +144,7 @@
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
       <PreprocessToFile>false</PreprocessToFile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -256,6 +257,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="RenderTextHelper.h" />
     <ClInclude Include="ScopedImFontScaler.h" />
     <ClInclude Include="SerialisableSetting.h" />
+    <ClInclude Include="SettingsEnums.h" />
     <ClInclude Include="SkullEnum.h" />
     <ClInclude Include="SkullToggler.h" />
     <ClInclude Include="SpriteResource.h" />
@@ -469,6 +471,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Renderer3DImpl_Sprites.cpp" />
     <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
     <ClCompile Include="RenderTextHelper.cpp" />
+    <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />

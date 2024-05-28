@@ -15,6 +15,8 @@
 #include "directxtk\DDSTextureLoader.h"
 #include "directxtk\CommonStates.h"
 #include "MultilevelPointer.h"
+#include "directxtk\PrimitiveBatch.h"
+#include "directxtk\GeometricPrimitive.h"
 
 // impl in .cpp
 template<GameState::Value mGame>
@@ -48,9 +50,6 @@ private:
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
 
-	const SimpleMath::Matrix worldTransformation = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ);
-
-
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
@@ -68,6 +67,10 @@ private:
 	// map of loaded resource IDs to their respective spriteResource.
 	// If drawSprite is passed an ID not in this map, will call loadSpriteResource to try to load it and add to the map.
 	std::map<int, std::unique_ptr<SpriteResource>> spriteResourceCache {}; // starts empty
+
+	std::unique_ptr<GeometricPrimitive> unitCube;
+	std::unique_ptr<PrimitiveBatch<VertexPosition>> lineDrawer;
+	ID3D11ShaderResourceView* patternedTexture;
 
 	void constructSpriteResource(int resourceID); // throws HCMRuntimeExceptions on fail
 	void initialise(); // run on first render frame to init spriteBatch & common states
@@ -99,7 +102,10 @@ public:
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
-	virtual void renderTriggerModel(TriggerModel& model, uint32_t fillColor, uint32_t outlineColor) override;
+
+
+
+	virtual void renderTriggerModel(const TriggerModel& model, SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, std::optional<float> labelScale) override;
 
 
 
