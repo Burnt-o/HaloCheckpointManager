@@ -86,14 +86,25 @@ private:
 			for (auto& [triggerPointer, triggerData] : allTriggersData)
 			{
 				SimpleMath::Vector4 triggerColor = { 0.f, 1.f, 0.f, 0.5f };
-				renderer->renderTriggerModel(triggerData.model, triggerColor, TriggerRenderStyle::SolidAndWireframe, TriggerInteriorStyle::Normal, 14.f);
+				renderer->renderTriggerModel(triggerData.model, triggerColor, TriggerRenderStyle::SolidAndWireframe, TriggerInteriorStyle::Normal, 1.f);
 			}
 
 		}
 		catch (HCMRuntimeException ex)
 		{
-			PLOG_ERROR << "rendering error: " << ex.what();
+			PLOG_ERROR << "Trigger Overlay Rendering error: " << std::endl << ex.what();
 			runtimeExceptions->handleMessage(ex);
+			
+			try
+			{
+				lockOrThrow(settingsWeak, settings);
+				settings->triggerOverlayToggle->GetValueDisplay() = false;
+				settings->triggerOverlayToggle->UpdateValueWithInput();
+			}
+			catch (HCMRuntimeException ex)
+			{
+				runtimeExceptions->handleMessage(ex);
+			}
 		}
 	}
 

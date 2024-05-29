@@ -17,6 +17,7 @@
 #include "MultilevelPointer.h"
 #include "directxtk\PrimitiveBatch.h"
 #include "directxtk\GeometricPrimitive.h"
+#include "directxtk\Effects.h"
 
 // impl in .cpp
 template<GameState::Value mGame>
@@ -70,6 +71,7 @@ private:
 
 	std::unique_ptr<GeometricPrimitive> unitCube;
 	std::unique_ptr<PrimitiveBatch<VertexPosition>> lineDrawer;
+	std::unique_ptr<BasicEffect> m_effect;
 	ID3D11ShaderResourceView* patternedTexture;
 
 	void constructSpriteResource(int resourceID); // throws HCMRuntimeExceptions on fail

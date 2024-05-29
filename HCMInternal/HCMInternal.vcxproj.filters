@@ -740,6 +740,15 @@
     <ClInclude Include="SettingsEnums.h">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClInclude>
+    <ClInclude Include="GetTagAddress.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="TagBlock.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MCCString.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1062,6 +1071,9 @@
     </ClCompile>
     <ClCompile Include="SettingsEnum.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GetTagAddress.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

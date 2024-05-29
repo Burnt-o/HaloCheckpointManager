@@ -5657,12 +5657,40 @@
 			<dataSize>0xC</dataSize>
 		</Version>
 
+		<!--<Version Version="All" Game="Halo3">
+
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+
+		</Version>-->
+
 	</VersionedEntry>
+
+
+	<VersionedEntry Name="tagBlockDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<entryCount>0x0</entryCount>
+			<offset>0x4</offset>
+			<blockDefinition>0x8</blockDefinition>
+		</Version>
+
+	</VersionedEntry>
+
+
 
 	<VersionedEntry Name="metaHeaderDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo1">
 			<tagTableOffset>0x0</tagTableOffset> <!--tag base needs to be added to this-->
-			<scenarioDatumIndex>0x4</scenarioDatumIndex>
+			<scenarioDatum>0x4</scenarioDatum>
 			<checksum>0x8</checksum>
 			<numberOfTags>0xC</numberOfTags>
 			<magic>0x24</magic> <!--safety check, should always read "sgat"-->
@@ -5672,11 +5700,12 @@
 			<tagGroupTableOffset>0x0</tagGroupTableOffset>
 			<numberOfTagGroups>0x4</numberOfTagGroups>
 			<tagTableOffset>0x8</tagTableOffset>
-			<scenarioDatumIndex>0xC</scenarioDatumIndex>
+			<scenarioDatum>0xC</scenarioDatum>
 			<mapGlobalsDatumIndex>0x10</mapGlobalsDatumIndex>
 			<numberOfTags>0x18</numberOfTags>
 			<magic>0x1C</magic> <!--safety check, should always read "sgat-->
-		</Version>
+		
+	</Version>
 
 		<!--actually index table header-->
 		<Version Version="All" Game="Halo3">
@@ -8682,6 +8711,25 @@
 
 	
 <!--#endregion-->
+	<!--#region TriggerOverlay-->
 
+	<VersionedEntry Name="triggerDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<StrideSize>0x60</StrideSize>
+			<name>0x4</name>
+			<forward>0x30</forward>
+			<up>0x3C</up>
+			<position>0x48</position>
+			<extents>0x54</extents>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="triggerVolumeTagBlockOffset" Type="int64_t">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Offset>0x360</Offset>
+		</Version>
+	</VersionedEntry>
+	
+	<!--#endregion TriggerOverlay-->
 	
 </root>

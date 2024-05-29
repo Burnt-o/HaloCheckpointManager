@@ -42,8 +42,12 @@ namespace RenderTextHelper
 		constexpr float zmax = scalingFunc(nearClampDistance);
 
 		// remap
-		return remapf(zdistance, zmin, zmax, farClampScale, nearClampScale) * 2; // times two cos the base value was a lil low
-					// TODO: get rid of the times two and just do a relative to screen size thing in waypoint3D
+		auto remapped = remapf(zdistance, zmin, zmax, farClampScale, nearClampScale) * 2; // times two cos the base value was a lil low
+		// TODO: get rid of the times two and just do a relative to screen size thing in waypoint3D
+
+		// minimum return
+		return std::max(0.01f, remapped);
+					
 
 
 	}

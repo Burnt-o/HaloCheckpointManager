@@ -71,6 +71,7 @@
 #include "ObjectTableRange.h"
 #include "HideWatermarkCheck.h"
 #include "PlayerPositionToClipboard.h"
+#include "GetTagAddress.h"
 
 #include "DIContainer.h"
 #include "map.h"

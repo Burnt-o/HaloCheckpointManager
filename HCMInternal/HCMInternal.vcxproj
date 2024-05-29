@@ -236,6 +236,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GetTagAddress.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />
@@ -244,6 +245,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
+    <ClInclude Include="MCCString.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
     <ClInclude Include="ModalDialogFactory.h" />
     <ClInclude Include="ObjectTableRange.h" />
@@ -261,6 +263,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SkullEnum.h" />
     <ClInclude Include="SkullToggler.h" />
     <ClInclude Include="SpriteResource.h" />
+    <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TriggerData.h" />
     <ClInclude Include="TriggerModel.h" />
     <ClInclude Include="TriggerOverlay.h" />
@@ -452,6 +455,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GetTagAddress.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
