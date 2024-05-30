@@ -11,59 +11,6 @@ struct TriggerModel
 	SimpleMath::Matrix transformation; // how to get from a unit cube @ origin to the correct position, rotation, and size
 	std::string label;
 
-
-	TriggerModel(std::string triggerName, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up)
-		: label(triggerName)
-	{
-		auto triggerRotation = SimpleMath::Quaternion::LookRotation(forward, up);
-		triggerRotation.Normalize();
-		box = DirectX::BoundingOrientedBox(position, extents, triggerRotation);
-
-		std::array<SimpleMath::Vector3, 8> vertices;
-		box.GetCorners(vertices.data());
-
-		edges = {
-			// Near face.
-			Edge{vertices[0], vertices[1]},
-			Edge{vertices[1], vertices[2]},
-			Edge{vertices[2], vertices[3]},
-			Edge{vertices[3], vertices[0]},
-
-			// Far face.
-			Edge{vertices[4], vertices[5]},
-			Edge{vertices[5], vertices[6]},
-			Edge{vertices[6], vertices[7]},
-			Edge{vertices[7], vertices[4]},
-
-			// Connect 'em together.
-			Edge{vertices[0], vertices[4]},
-			Edge{vertices[1], vertices[5]},
-			Edge{vertices[2], vertices[6]},
-			Edge{vertices[3], vertices[7]},
-		};
-
-		transformation = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ) // world at origin
-		* SimpleMath::Matrix::CreateScale(extents)// resize
-		* SimpleMath::Matrix::CreateFromQuaternion(SimpleMath::Quaternion::LookRotation(forward, up)) // rotate
-		* SimpleMath::Matrix::CreateTranslation(position); // translate
-
-		/*
-		{
-    XMMATRIX matWorld = XMMatrixRotationQuaternion(XMLoadFloat4(&obb.Orientation));
-    XMMATRIX matScale = XMMatrixScaling(obb.Extents.x, obb.Extents.y, obb.Extents.z);
-    matWorld = XMMatrixMultiply(matScale, matWorld);
-    XMVECTOR position = XMLoadFloat3(&obb.Center);
-    matWorld.r[3] = XMVectorSelect(matWorld.r[3], position, g_XMSelect1110);
-
-    DrawCube(batch, matWorld, color);
-}
-		*/
-
-	}
-
-
-
-
-
-	
+	TriggerModel(std::string triggerName, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up);
+		
 };

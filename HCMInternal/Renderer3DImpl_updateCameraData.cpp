@@ -89,8 +89,8 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			this->init = true;
 		}
 
-		m_effect->SetView(this->viewMatrix);
-		//m_effect->SetWorld(SimpleMath::Matrix::CreateWorld(this->cameraPosition, this->cameraDirection, this->cameraUp));
+		//m_effect->SetView(this->viewMatrix);
+		m_effect->SetWorld(SimpleMath::Matrix::CreateWorld(this->cameraPosition, this->cameraDirection, this->cameraUp));
 
 
 		// TODO: make this created once (per resizeBuffers) in d3dhook and passed along as render args

@@ -40,9 +40,9 @@ public:
 		this->currentBaseAddress += StrideSize;
 	}
 
-	void setIndex(int i) noexcept
+	void setIndex(uintptr_t base, int i) noexcept
 	{
-		this->currentBaseAddress += (StrideSize * i);
+		this->currentBaseAddress = (base + (StrideSize * i));
 	}
 
 

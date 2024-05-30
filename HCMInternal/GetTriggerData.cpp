@@ -64,13 +64,13 @@ private:
 
 		PLOG_DEBUG << "triggerTagBlockOffset: " << std::hex << triggerTagBlockOffset;
 
-		triggerDataStruct->currentBaseAddress = metaHeaderAddressResolved + tagBase + triggerTagBlockOffset;
+		uintptr_t tagDataArray = metaHeaderAddressResolved + tagBase + triggerTagBlockOffset;
 
 		PLOG_DEBUG << "triggerDataStruct first entry location: " << std::hex << (uintptr_t)triggerDataStruct->currentBaseAddress;
 
 		for (int i = 0; i < triggerCount; i++)
 		{
-			triggerDataStruct->setIndex(i);
+			triggerDataStruct->setIndex(tagDataArray, i);
 
 			auto* pName = triggerDataStruct->field<const char>(triggerDataFields::name);
 			if (IsBadReadPtr(pName, 0x20)) throw HCMRuntimeException(std::format("Bad read address for pName at {}", (uintptr_t)pName));
@@ -104,6 +104,7 @@ private:
 					*pForward,
 					*pUp
 				));
+
 
 		}
 

@@ -478,6 +478,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
+    <ClCompile Include="TriggerModel.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />
     <ClCompile Include="UnarySetting.cpp" />
     <ClCompile Include="UpdateTriggerLastChecked.cpp" />

@@ -1075,6 +1075,9 @@
     <ClCompile Include="GetTagAddress.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
+    <ClCompile Include="TriggerModel.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

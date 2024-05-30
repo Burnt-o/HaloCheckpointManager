@@ -104,8 +104,7 @@ public:
 
 		if (tagDatum.index > cachedTagCount) throw HCMRuntimeException(std::format("tagDatumIndex out of range! index was {:X}, tagCount was {:X}", tagDatum.index, cachedTagCount));
 
-		tagElementDataStruct->currentBaseAddress = cachedTagTableAddress;
-		tagElementDataStruct->setIndex(tagDatum.index);
+		tagElementDataStruct->setIndex(cachedTagTableAddress, tagDatum.index);
 
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "tagElementDataStruct at index: " << tdidx, tdidx = tagDatum.index);
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "stride size is: " << ss, ss = tagElementDataStruct->StrideSize);
