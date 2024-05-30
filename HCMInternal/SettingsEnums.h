@@ -26,6 +26,8 @@ namespace SettingsEnums
 
 	enum class TriggerRenderStyle { Solid, Wireframe, SolidAndWireframe };
 
+	enum class TriggerLabelStyle { None, Center, Corner };
+
 	enum class Display2DInfoAnchorEnum
 	{
 		TopLeft,

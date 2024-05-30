@@ -238,6 +238,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
     <ClInclude Include="GetTagAddress.h" />
     <ClInclude Include="GetTriggerData.h" />
+    <ClInclude Include="GUIColourPicker.h" />
+    <ClInclude Include="GUIFloatSlider.h" />
+    <ClInclude Include="GUIInputMultilineString.h" />
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />
     <ClInclude Include="HideWatermarkCheck.h" />

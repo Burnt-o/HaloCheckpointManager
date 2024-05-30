@@ -12,6 +12,7 @@ public:
 	UpdateTriggerLastCheckedImpl(GameState gameImpl, IDIContainer& dicon)
 	{
 		// TODO
+		throw HCMInitException("Not implemented yet");
 	}
 
 
@@ -27,25 +28,25 @@ UpdateTriggerLastChecked::UpdateTriggerLastChecked(GameState gameImpl, IDIContai
 		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
-	case GameState::Value::Halo2:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo2>>(gameImpl, dicon);
-		break;
+	//case GameState::Value::Halo2:
+	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo2>>(gameImpl, dicon);
+	//	break;
 
-	case GameState::Value::Halo3:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo3>>(gameImpl, dicon);
-		break;
+	//case GameState::Value::Halo3:
+	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo3>>(gameImpl, dicon);
+	//	break;
 
-	case GameState::Value::Halo3ODST:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
-		break;
+	//case GameState::Value::Halo3ODST:
+	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+	//	break;
 
-	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
-		break;
+	//case GameState::Value::HaloReach:
+	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
+	//	break;
 
-	case GameState::Value::Halo4:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo4>>(gameImpl, dicon);
-		break;
+	//case GameState::Value::Halo4:
+	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo4>>(gameImpl, dicon);
+	//	break;
 	default:
 		throw HCMInitException("not impl yet");
 	}

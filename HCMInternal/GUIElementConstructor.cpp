@@ -17,9 +17,12 @@
 #include "GUIRadioButton.h"
 #include "GUIRadioGroup.h"
 #include "GUIFloat.h"
+#include "GUIFloatSlider.h"
 #include "GUIToggleWithChildren.h"
 #include "GUIInputString.h"
+#include "GUIInputMultilineString.h"
 #include "GUIInputDWORD.h"
+#include "GUIColourPicker.h"
 #include "GUIColourPickerAlpha.h"
 #include "GUIInputInt.h"
 #include "GUIComboEnum.h"
@@ -30,6 +33,7 @@
 #include "GUIButtonAndInt.h"
 #include "GUIWaypointList.h"
 #include "GUISkullToggle.h"
+
 
 
 
@@ -397,6 +401,8 @@ private:
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 							createNestedElement(GUIElementEnum::skullToggleGUI),
 							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
+							createNestedElement(GUIElementEnum::triggerOverlayToggle),
+							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -625,6 +631,132 @@ private:
 						(game, ToolTipCollection("Directly set the players health and shields"), std::nullopt,
 							"Copy Position to Clipboard",
 							settings->playerPositionToClipboardEvent));
+
+
+
+				case GUIElementEnum::triggerOverlayToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Overlays trigger volumes onto the screen"), std::nullopt, "Trigger Overlay", settings->triggerOverlayToggle));
+
+				case GUIElementEnum::triggerOverlaySettings:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Settings for the trigger overlay"), "Trigger Overlay Settings", headerChildElements
+							{
+								createNestedElement(GUIElementEnum::triggerOverlayFilterToggle),
+								createNestedElement(GUIElementEnum::triggerOverlayRenderStyle),
+								createNestedElement(GUIElementEnum::triggerOverlayInteriorStyle),
+								createNestedElement(GUIElementEnum::triggerOverlayLabelStyle),
+								createNestedElement(GUIElementEnum::triggerOverlayLabelScale),
+								createNestedElement(GUIElementEnum::triggerOverlayNormalColor),
+								createNestedElement(GUIElementEnum::triggerOverlayBSPColor),
+								createNestedElement(GUIElementEnum::triggerOverlayAlpha),
+								createNestedElement(GUIElementEnum::triggerOverlayCheckFlashToggle),
+								createNestedElement(GUIElementEnum::triggerOverlayMessageOnEnter),
+								createNestedElement(GUIElementEnum::triggerOverlayMessageOnExit),
+								createNestedElement(GUIElementEnum::triggerOverlayMessageOnCheckSuccess),
+								createNestedElement(GUIElementEnum::triggerOverlayMessageOnCheckFailed),
+							}));
+
+				case GUIElementEnum::triggerOverlayFilterToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
+						(game, ToolTipCollection("Filter which triggers to show by name"), std::nullopt, "Filter Triggers by Name", settings->triggerOverlayFilterToggle, headerChildElements
+							{
+							createNestedElement(GUIElementEnum::triggerOverlayFilterString),
+							createNestedElement(GUIElementEnum::triggerOverlayFilterStringCopy),
+							createNestedElement(GUIElementEnum::triggerOverlayFilterStringPaste),
+							createNestedElement(GUIElementEnum::triggerOverlayFilterStringLoadBool),
+							createNestedElement(GUIElementEnum::triggerOverlayFilterStringLoadBoolPlusBSP),
+							}));
+
+				case GUIElementEnum::triggerOverlayFilterString:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputMultilineString<4, 350.f>>
+						(game, ToolTipCollection("Which triggers should show up. Names should be comma seperated."), "Filter Whitelist (exact match, comma seperated)", settings->triggerOverlayFilterString, std::nullopt));
+
+
+				case GUIElementEnum::triggerOverlayFilterStringCopy:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Copy the filter list to the clipboard"), std::nullopt, "Copy Filter", settings->triggerOverlayFilterStringCopyEvent));
+
+				case GUIElementEnum::triggerOverlayFilterStringPaste:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Paste the filter list from the clipboard"), std::nullopt, "Paste Filter", settings->triggerOverlayFilterStringPasteEvent));
+
+				case GUIElementEnum::triggerOverlayFilterStringLoadBool:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Set the filter list to the triggers for Banshee-out-of-level on Two Betrayals"), std::nullopt, "Load BOOL filter", settings->triggerOverlayFilterStringLoadBoolEvent));
+
+				case GUIElementEnum::triggerOverlayFilterStringLoadBoolPlusBSP:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Set the filter list to the triggers for Banshee-out-of-level on Two Betrayals (plus BSP load triggers)"), std::nullopt, "Load BOOL (+BSPs) filter", settings->triggerOverlayFilterStringLoadBoolPlusBSPEvent));
+
+				case GUIElementEnum::triggerOverlayRenderStyle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerRenderStyle, 100.f>>
+						(game, ToolTipCollection("What style to render trigger volumes as"), "Render trigger volumes as: ", settings->triggerOverlayRenderStyle));
+
+				case GUIElementEnum::triggerOverlayInteriorStyle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerInteriorStyle, 100.f>>
+						(game, ToolTipCollection("What style to render trigger volumes as when the camera is inside them"), "Render volume interior as: ", settings->triggerOverlayInteriorStyle));
+
+				case GUIElementEnum::triggerOverlayLabelStyle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerLabelStyle, 100.f>>
+						(game, ToolTipCollection("Render Labels (Trigger names) at center of volume, corner, or not at all."), "Render Labels at: ", settings->triggerOverlayLabelStyle));
+
+				case GUIElementEnum::triggerOverlayLabelScale:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<8.f, 100.f>>
+						(game, ToolTipCollection("How large the font size of the label should be, in pts"), "Label Font Size", settings->triggerOverlayLabelScale));
+
+
+				case GUIElementEnum::triggerOverlayNormalColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						(game, ToolTipCollection("Color to render triggers when not checked or BSP"), "Trigger Normal Colour", settings->triggerOverlayNormalColor));
+
+				case GUIElementEnum::triggerOverlayBSPColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						(game, ToolTipCollection("Color to render BSP (loadzone) triggers"), "Trigger BSP Colour", settings->triggerOverlayBSPColor));
+
+				case GUIElementEnum::triggerOverlayAlpha:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
+						(game, ToolTipCollection("How transparent triggers are, from 0 (fully transparent) to 1 (fully opaque)"), "Trigger Transparency", settings->triggerOverlayAlpha));
+
+				case GUIElementEnum::triggerOverlayCheckFlashToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
+						(game, ToolTipCollection("Whether to flash triggers to a certain colour when the script checks them for the players presence"), std::nullopt, "Flash Triggers on Check", settings->triggerOverlayCheckFlashToggle, headerChildElements
+							{
+							createNestedElement(GUIElementEnum::triggerOverlayCheckFalloff),
+							createNestedElement(GUIElementEnum::triggerOverlayCheckFailsColor),
+							createNestedElement(GUIElementEnum::triggerOverlayCheckSuccessColor),
+							}));
+
+				case GUIElementEnum::triggerOverlayCheckFalloff:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						(game, ToolTipCollection("How many ticks does the check-flash last"), "Flash for x ticks", settings->triggerOverlayCheckFalloff));
+
+				case GUIElementEnum::triggerOverlayCheckSuccessColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						(game, ToolTipCollection("Color to flash trigger when it successfully checks for the player"), "Colour on Successful Check", settings->triggerOverlayCheckSuccessColor));
+
+				case GUIElementEnum::triggerOverlayCheckFailsColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						(game, ToolTipCollection("Color to flash trigger when it failfully checks for the player"), "Colour on Failed Check", settings->triggerOverlayCheckFailsColor));
+
+
+				case GUIElementEnum::triggerOverlayMessageOnEnter:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Prints a message to the screen when the player enters a trigger"), std::nullopt, "Message on Entering Trigger", settings->triggerOverlayMessageOnEnter));
+
+				case GUIElementEnum::triggerOverlayMessageOnExit:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Prints a message to the screen when the player exits a trigger"), std::nullopt, "Message on Exiting Trigger", settings->triggerOverlayMessageOnExit));
+
+				case GUIElementEnum::triggerOverlayMessageOnCheckSuccess:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Prints a message to the screen when a trigger successfully checks for the player"), std::nullopt, "Message on Successful Trigger Check", settings->triggerOverlayMessageOnCheckSuccess));
+
+
+				case GUIElementEnum::triggerOverlayMessageOnCheckFailed:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Prints a message to the screen when a trigger failfully checks for the player"), std::nullopt, "Message on Failed Trigger Check", settings->triggerOverlayMessageOnCheckFailed));
+
 					
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
@@ -1495,8 +1627,7 @@ private:
 					(game, ToolTipCollection("Debug tools for HCM development"), "Debug", headerChildElements
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
-						createNestedElement(GUIElementEnum::getObjectAddressGUI),
-						createNestedElement(GUIElementEnum::triggerOverlayToggle),
+						createNestedElement(GUIElementEnum::getObjectAddressGUI)
 						}));
 
 
@@ -1509,9 +1640,6 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
-				case GUIElementEnum::triggerOverlayToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection("Disables game inputs while freecam active"), std::nullopt, "Trigger Overlay", settings->triggerOverlayToggle));
 
 #endif
 

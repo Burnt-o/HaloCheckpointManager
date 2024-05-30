@@ -201,6 +201,33 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::PlayerPositionToClipboard}
 	},
 
+
+		{ GUIElementEnum::triggerOverlayToggle,
+		{OptionalCheatEnum::TriggerOverlay}
+		},
+
+		{ GUIElementEnum::triggerOverlayCheckFlashToggle,
+		{OptionalCheatEnum::UpdateTriggerLastChecked }
+		},
+
+		{ GUIElementEnum::triggerOverlayMessageOnEnter,
+		{OptionalCheatEnum::UpdateTriggerLastChecked }
+		},
+
+		{ GUIElementEnum::triggerOverlayMessageOnExit,
+		{OptionalCheatEnum::UpdateTriggerLastChecked }
+		},
+
+		{ GUIElementEnum::triggerOverlayMessageOnCheckSuccess,
+		{OptionalCheatEnum::UpdateTriggerLastChecked }
+		},
+
+	{ GUIElementEnum::triggerOverlayMessageOnCheckFailed,
+	{OptionalCheatEnum::UpdateTriggerLastChecked }
+	},
+
+
+
 		{ GUIElementEnum::display2DInfoToggleGUI,
 		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
 	},
@@ -346,9 +373,6 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ConsoleCommand}
 	},
 
-		{ GUIElementEnum::triggerOverlayToggle,
-		{OptionalCheatEnum::TriggerOverlay}
-	},
 
 #endif
 
@@ -378,7 +402,11 @@ const std::vector<std::pair< GUIElementEnum, GameState>> GUIRequiredServices::to
 
 const std::map<GUIElementEnum, std::set<GameState>> GUIRequiredServices::supportedGamesPerGUIElement =
 {
-	MAKE_ALL_MAPSET(ALLGUIELEMENTS_ANDSUPPORTEDGAMES)
+	MAKE_ALL_MAPSET(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES1)
+	MAKE_ALL_MAPSET(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES2)
+#ifdef HCM_DEBUG
+	MAKE_ALL_MAPSET(DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES)
+#endif
 };
 
 

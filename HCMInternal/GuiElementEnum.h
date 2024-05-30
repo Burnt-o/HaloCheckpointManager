@@ -18,7 +18,7 @@
 
 // A sequence of pairs, where the first element of a pair is the GUIElementEnum name, and the second element is a tuple of supported games for that guielement
 // Indentation is cosmetic but indicates hiearchy of elements
-#define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES \
+#define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES1 \
 ((controlHeadingGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((toggleGUIHotkeyGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((GUISettingsSubheading, (ALL_GAMES_AND_MAINMENU)))\
@@ -104,6 +104,33 @@
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
 	((skullToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((playerPositionToClipboardGUI, (ALL_SUPPORTED_GAMES)))\
+	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
+	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterString, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringPaste, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringLoadBool, (Halo1)))\
+			((triggerOverlayFilterStringLoadBoolPlusBSP, (Halo1)))\
+		((triggerOverlayRenderStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayInteriorStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayLabelStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayLabelScale, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayBSPColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayCheckFlashToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckFalloff, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckFailsColor, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckSuccessColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnEnter, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnCheckSuccess, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnCheckFailed, (ALL_SUPPORTED_GAMES)))
+
+
+
+#define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES2 \
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
@@ -210,47 +237,34 @@
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
-	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterExactMatchToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterString, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringPaste, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringLoadBool, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayRenderStyle, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayInteriorStyle, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayLabelToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayLabelScale, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayCheckFlashToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayCheckFailsColor, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayCheckSuccessColor, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnEnter, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnCheckSuccess, (ALL_SUPPORTED_GAMES)))
 
 
 
-#ifdef HCM_DEBUG
 
-#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES BOOST_PP_CAT(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES, DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES)
-
-#else 
-
-#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES
-
-#endif
+//#ifdef HCM_DEBUG
+//
+//#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES BOOST_PP_CAT(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES, DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES)
+//
+//#else 
+//
+//#define ALLGUIELEMENTS_ANDSUPPORTEDGAMES RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES
+//
+//#endif
 
 
 
 
 #define MAKE_FIRSTOFPAIR_SET(r, d, seq) BOOST_PP_TUPLE_ELEM(0, seq),
 #define MAKE_ALL_FIRSTOFPAIR(seq) BOOST_PP_SEQ_FOR_EACH(MAKE_FIRSTOFPAIR_SET, _, seq)
-#define ALLGUIELEMENTS MAKE_ALL_FIRSTOFPAIR(ALLGUIELEMENTS_ANDSUPPORTEDGAMES)
+#define ALLGUIELEMENTS1 MAKE_ALL_FIRSTOFPAIR(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES1)
 
+#define ALLGUIELEMENTS2 MAKE_ALL_FIRSTOFPAIR(RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES2)
+#define ALLGUIELEMENTSDEBUG MAKE_ALL_FIRSTOFPAIR(DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES)
 
 enum class GUIElementEnum {
-	ALLGUIELEMENTS
+	ALLGUIELEMENTS1
+	ALLGUIELEMENTS2
+#ifdef HCM_DEBUG
+	ALLGUIELEMENTSDEBUG
+#endif
 };

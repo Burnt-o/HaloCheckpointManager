@@ -51,6 +51,7 @@ for the rest of the implementation
 	 commonStates = std::make_unique<CommonStates>(this->pDevice);
 	 lineDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
 	 unitCube = GeometricPrimitive::CreateCube(this->pDeviceContext);
+	 unitCubeInverse = GeometricPrimitive::CreateCube(this->pDeviceContext, 1.f, false); // rhcoords = flip faces
 	 m_effect = std::make_unique<BasicEffect>(this->pDevice);
  }
 

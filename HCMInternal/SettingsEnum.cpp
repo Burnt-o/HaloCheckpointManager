@@ -9,5 +9,6 @@ namespace SettingsEnums
 	template std::ostream& operator<< (std::ostream& out, const FreeCameraInterpolationTypesEnum& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const TriggerInteriorStyle& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const TriggerRenderStyle& enumValue);
+	template std::ostream& operator<< (std::ostream& out, const TriggerLabelStyle& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const Display2DInfoAnchorEnum& enumValue);
 }

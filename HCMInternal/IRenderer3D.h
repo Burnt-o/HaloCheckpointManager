@@ -78,9 +78,9 @@ public:
 	/// <param name="triggerColor">What colour to draw it (alpha supported).</param>
 	/// <param name="renderStyle">Draw solid volume, wireframe (line edges), or both.</param>
 	/// <param name="interiorStyle">When camera inside trigger, draw normally, with a patterned texture, or not at all.</param>
-	/// <param name="labelScale">Scaling of label text. If nullopt, don't draw label.</param>
-
-	virtual void renderTriggerModel(const TriggerModel& model, SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, std::optional<float> labelScale) = 0;
+	/// <param name="labelStyle">Draw label (trigger name) at center of trigger, corner, or not at all.</param>
+	/// <param name="labelScale">Scaling of label (trigger name) text.</param>
+	virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale = 1.f) = 0;
 
 
 

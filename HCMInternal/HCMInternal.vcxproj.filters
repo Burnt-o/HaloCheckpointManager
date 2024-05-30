@@ -749,6 +749,15 @@
     <ClInclude Include="MCCString.h">
       <Filter>Classes</Filter>
     </ClInclude>
+    <ClInclude Include="GUIColourPicker.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIInputMultilineString.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIFloatSlider.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

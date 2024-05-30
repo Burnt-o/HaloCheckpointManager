@@ -99,6 +99,7 @@ public:
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringCopyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringPasteEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringLoadBoolEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> triggerOverlayFilterStringLoadBoolPlusBSPEvent = std::make_shared<ActionEvent>();
 
 	// waypoint events (delete, edit)
 	std::shared_ptr<WaypointAndListEvent> deleteWaypointEvent = std::make_shared<WaypointAndListEvent>();
@@ -1228,12 +1229,7 @@ public:
 			nameof(triggerOverlayFilterToggle)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> triggerOverlayFilterExactMatchToggle = std::make_shared<BinarySetting<bool>>
-		(
-			false,
-			[](bool in) { return true; },
-			nameof(triggerOverlayFilterExactMatchToggle)
-		);
+
 
 	std::shared_ptr<BinarySetting<std::string>> triggerOverlayFilterString = std::make_shared<BinarySetting<std::string>>
 		(
@@ -1261,12 +1257,13 @@ public:
 			nameof(triggerOverlayInteriorStyle)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> triggerOverlayLabelToggle = std::make_shared<BinarySetting<bool>>
+	std::shared_ptr<BinarySetting<SettingsEnums::TriggerLabelStyle>> triggerOverlayLabelStyle = std::make_shared<BinarySetting<SettingsEnums::TriggerLabelStyle>>
 		(
-			true,
-			[](bool in) { return true; },
-			nameof(triggerOverlayLabelToggle)
+			SettingsEnums::TriggerLabelStyle::Center,
+			[](SettingsEnums::TriggerLabelStyle in) { return true; },
+			nameof(triggerOverlayLabelStyle)
 		);
+
 
 
 	std::shared_ptr<BinarySetting<float>> triggerOverlayLabelScale = std::make_shared<BinarySetting<float>>
@@ -1283,10 +1280,17 @@ public:
 			nameof(triggerOverlayNormalColor)
 		);
 
+	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> triggerOverlayBSPColor = std::make_shared<BinarySetting<SimpleMath::Vector3>>
+		(
+			SimpleMath::Vector3{0.0f, 0.0f, 1.0f}, // blue
+			[](SimpleMath::Vector3 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			nameof(triggerOverlayBSPColor)
+		);
+
 	std::shared_ptr<BinarySetting<float>> triggerOverlayAlpha = std::make_shared<BinarySetting<float>>
 		(
 			0.5f,
-			[](float in) { return in >= 0.f && in <= 1.f; },
+			[](float in) { return in >= 0.1f && in <= 1.f; },
 			nameof(triggerOverlayAlpha)
 		);
 
@@ -1295,6 +1299,13 @@ public:
 			true,
 			[](bool in) { return true; },
 			nameof(triggerOverlayCheckFlashToggle)
+		);
+
+	std::shared_ptr<BinarySetting<int>> triggerOverlayCheckFalloff = std::make_shared<BinarySetting<int>>
+		(
+			30,
+			[](int in) { return in > 0 && in < 1000; },
+			nameof(triggerOverlayCheckFalloff)
 		);
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector3>> triggerOverlayCheckFailsColor = std::make_shared<BinarySetting<SimpleMath::Vector3>>
@@ -1332,24 +1343,33 @@ public:
 			nameof(triggerOverlayMessageOnCheckSuccess)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnCheckFailed = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(triggerOverlayMessageOnCheckFailed)
+		);
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
 		triggerOverlayFilterToggle,
-		triggerOverlayFilterExactMatchToggle,
 		triggerOverlayFilterString,
 		triggerOverlayRenderStyle,
 		triggerOverlayInteriorStyle,
-		triggerOverlayLabelToggle,
-		triggerOverlayLabelScale,
+			triggerOverlayLabelStyle,
+			triggerOverlayLabelScale,
 		triggerOverlayNormalColor,
+		triggerOverlayBSPColor,
 		triggerOverlayAlpha,
 		triggerOverlayCheckFlashToggle,
+			triggerOverlayCheckFalloff,
 		triggerOverlayCheckFailsColor,
 		triggerOverlayCheckSuccessColor,
 		triggerOverlayMessageOnEnter,
 		triggerOverlayMessageOnExit,
 		triggerOverlayMessageOnCheckSuccess,
+		triggerOverlayMessageOnCheckFailed,
 		hideWatermarkHideMessages,
 		advanceTicksCount,
 		injectionIgnoresChecksum,

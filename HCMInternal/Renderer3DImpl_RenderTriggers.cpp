@@ -9,7 +9,7 @@
 using namespace SettingsEnums;
 
 template<GameState::Value mGame>
-void Renderer3DImpl<mGame>::renderTriggerModel(const TriggerModel& model, SimpleMath::Vector4& triggerColor, const TriggerRenderStyle renderStyle, const TriggerInteriorStyle interiorStyle, std::optional<float> labelScale)
+void Renderer3DImpl<mGame>::renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale)
 {
 	LOG_ONCE(PLOG_DEBUG << "renderTriggerModel");
 	// Cull if none of the trigger is visible.
@@ -26,36 +26,84 @@ void Renderer3DImpl<mGame>::renderTriggerModel(const TriggerModel& model, Simple
 	// draw solid volume
 	if (renderStyle != TriggerRenderStyle::Wireframe)
 	{
-		assert(interiorStyle != TriggerInteriorStyle::Patterned && "TODO, need to create the patternedTexture Resource");
-		ID3D11ShaderResourceView* texture = (cameraInsideTrigger && interiorStyle == TriggerInteriorStyle::Patterned) ? patternedTexture : nullptr;
-		unitCube->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, texture);
-	}
+		if (cameraInsideTrigger)
+		{
+			assert(interiorStyle != TriggerInteriorStyle::Patterned && "TODO, need to create the patternedTexture Resource");
+			ID3D11ShaderResourceView* texture = (cameraInsideTrigger && interiorStyle == TriggerInteriorStyle::Patterned) ? patternedTexture : nullptr;
+			unitCubeInverse->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, texture);
+		}
+		else
+		{
+			unitCube->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, nullptr);
+		}
 
-	// set alpha to max for wireframe/label
-	triggerColor.w = 1.f;
+	}
 
 	// draw wireframe
 	if (renderStyle != TriggerRenderStyle::Solid)
 	{
+
+
 		lineDrawer->Begin();
 		for (auto& edge : model.edges)
 		{
-			lineDrawer->DrawLine(edge.first, edge.second);
+			auto m_World = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ);
+			XMVECTOR mp1 = XMVector4Transform(edge.first, m_World);
+			XMVECTOR pt1 = XMVector3Project(mp1, 0, 0, this->screenSize.x, this->screenSize.y, 0, 1, this->projectionMatrix, this->viewMatrix, m_World);
+			XMFLOAT3 pos1;
+			XMStoreFloat3(&pos1, pt1);
+
+			XMVECTOR mp2 = XMVector4Transform(edge.second, m_World);
+			XMVECTOR pt2 = XMVector3Project(mp2, 0, 0, this->screenSize.x, this->screenSize.y, 0, 1, this->projectionMatrix, this->viewMatrix, m_World);
+			XMFLOAT3 pos2;
+			XMStoreFloat3(&pos2, pt2);
+
+			
+			lineDrawer->DrawLine(pos1, pos2);
 		}
 		lineDrawer->End();
 	}
 
 	// draw label
-	if (labelScale.has_value())
+	if (labelStyle != TriggerLabelStyle::None)
 	{
-		auto screenPosition = worldPointToScreenPosition(model.box.Center, false);
-		auto dynLabelScale = labelScale.value() * RenderTextHelper::scaleTextDistance(cameraDistanceToWorldPoint(model.box.Center));
-		// draw main label text
-		RenderTextHelper::drawCenteredOutlinedText(
-			model.label,
-			{ screenPosition.x, screenPosition.y },
-			ImGui::ColorConvertFloat4ToU32(triggerColor),
-			dynLabelScale);
+
+		auto pointOnScreen = labelStyle == TriggerLabelStyle::Center
+			? !pointBehindCamera(model.box.Center)
+			: !pointBehindCamera(model.box.Center - ((SimpleMath::Vector3)model.box.Extents / 2)); // corner (TODO: store corner in triggermodel)
+
+		if (pointOnScreen)
+		{
+			auto screenPosition = labelStyle == TriggerLabelStyle::Center
+				? worldPointToScreenPosition(model.box.Center, false)
+				: worldPointToScreenPosition(model.box.Center - ((SimpleMath::Vector3)model.box.Extents / 2), false); // corner (TODO: store corner in triggermodel)
+
+			auto dynLabelScale = labelScale * RenderTextHelper::scaleTextDistance(cameraDistanceToWorldPoint(model.box.Center));
+			// draw main label text
+
+			if (labelStyle == TriggerLabelStyle::Center)
+			{
+				RenderTextHelper::drawCenteredOutlinedText(
+					model.label,
+					{ screenPosition.x, screenPosition.y },
+					ImGui::ColorConvertFloat4ToU32(triggerColor) | 0xFFC0C0C0, // remove alpha, brigten a lil bit
+					dynLabelScale
+				);
+			}
+			else
+			{
+				RenderTextHelper::drawOutlinedText(
+					model.label,
+					{ screenPosition.x, screenPosition.y },
+					ImGui::ColorConvertFloat4ToU32(triggerColor) | 0xFFC0C0C0, // remove alpha, brigten a lil bit
+					dynLabelScale
+				);
+			}
+
+
+
+		}
+
 	}
 
 

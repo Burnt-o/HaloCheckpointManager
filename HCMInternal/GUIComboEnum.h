@@ -2,6 +2,8 @@
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
 
+
+// TODO: make itemWidth dynamic based on longest enum name char-wise
 template <typename EnumType, float itemWidth>
 class GUIComboEnum : public IGUIElement {
 

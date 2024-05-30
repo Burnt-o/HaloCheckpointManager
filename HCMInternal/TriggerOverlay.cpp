@@ -7,6 +7,7 @@
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
 #include "RenderTextHelper.h"
+#include "UpdateTriggerLastChecked.h"
 
 using namespace SettingsEnums;
 
@@ -25,6 +26,7 @@ private:
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::optional<std::weak_ptr<UpdateTriggerLastChecked>> updateTriggerLastCheckedOptionalWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// data
@@ -76,17 +78,33 @@ private:
 	{
 		if (game.operator GameState::Value() != mGame) return;
 
+
+
+
+
 		try // renderer funcs can throw HCMRuntime exceptions
 		{
 			ScopedAtomicBool lockRender(renderingMutex);
+
+
+			lockOrThrow(settingsWeak, settings);
+
+			auto& renderStyle = settings->triggerOverlayRenderStyle->GetValue();
+			auto& interiorStyle = settings->triggerOverlayInteriorStyle->GetValue();
+			
+			auto& labelStyle = settings->triggerOverlayLabelStyle->GetValue();
+			auto labelScale = settings->triggerOverlayLabelScale->GetValue() / (15.f);
+
+			auto noAlpha = settings->triggerOverlayNormalColor->GetValue(); // needs to be a copy since mutable
+			auto triggerColor = SimpleMath::Vector4(noAlpha.x, noAlpha.y, noAlpha.z, settings->triggerOverlayAlpha->GetValue());
+			// TODO: cache colours and set by last checked interval
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
 			auto& allTriggersData = getTriggerData->getTriggerData();
 
 			for (auto& [triggerPointer, triggerData] : allTriggersData)
 			{
-				SimpleMath::Vector4 triggerColor = { 0.f, 1.f, 0.f, 0.5f };
-				renderer->renderTriggerModel(triggerData.model, triggerColor, TriggerRenderStyle::SolidAndWireframe, TriggerInteriorStyle::Normal, 1.f);
+				renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
 			}
 
 		}
@@ -119,6 +137,14 @@ public:
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>())
 	{
 
+		try
+		{
+			updateTriggerLastCheckedOptionalWeak = resolveDependentCheat(UpdateTriggerLastChecked);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Trigger overlay could not resolve UpdateTriggerLastChecked, continuing anyway";
+		}
 	}
 
 

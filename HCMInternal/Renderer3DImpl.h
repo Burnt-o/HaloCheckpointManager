@@ -70,6 +70,7 @@ private:
 	std::map<int, std::unique_ptr<SpriteResource>> spriteResourceCache {}; // starts empty
 
 	std::unique_ptr<GeometricPrimitive> unitCube;
+	std::unique_ptr<GeometricPrimitive> unitCubeInverse; // backfaces on the front
 	std::unique_ptr<PrimitiveBatch<VertexPosition>> lineDrawer;
 	std::unique_ptr<BasicEffect> m_effect;
 	ID3D11ShaderResourceView* patternedTexture;
@@ -107,7 +108,7 @@ public:
 
 
 
-	virtual void renderTriggerModel(const TriggerModel& model, SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, std::optional<float> labelScale) override;
+	virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale) override;
 
 
 

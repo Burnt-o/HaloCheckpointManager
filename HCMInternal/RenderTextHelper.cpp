@@ -148,6 +148,8 @@ namespace RenderTextHelper
 			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.c_str());
 		}
 
+		// TODO: going over like 1.f outlineSize looks fucking GARBAGE, would need to add multiple layers of expansion for every 2.f of size.. sounds dumb, gotta be a better way eh. is there not some way to render the text as an image then blur it?
+
 		return RECTF(centeredTextPos.x - outlineOffset, centeredTextPos.y - outlineOffset, centeredTextPos.x + textSize.x + outlineOffset, centeredTextPos.y + textSize.y + outlineOffset);
 
 	}
