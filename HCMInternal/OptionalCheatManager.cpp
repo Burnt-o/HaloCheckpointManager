@@ -72,6 +72,7 @@
 #include "HideWatermarkCheck.h"
 #include "PlayerPositionToClipboard.h"
 #include "GetTagAddress.h"
+#include "TriggerFilter.h"
 
 #include "DIContainer.h"
 #include "map.h"

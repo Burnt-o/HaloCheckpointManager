@@ -227,6 +227,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	},
 
 
+		{ GUIElementEnum::triggerOverlayFilterToggle,
+	{OptionalCheatEnum::TriggerFilter }
+	},
+
 
 		{ GUIElementEnum::display2DInfoToggleGUI,
 		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}

@@ -74,7 +74,8 @@ UpdateTriggerLastChecked
 ObjectTableRange,\
 HideWatermarkCheck,\
 PlayerPositionToClipboard,\
-GetTagAddress
+GetTagAddress,\
+TriggerFilter
 
 
 enum class OptionalCheatEnum {

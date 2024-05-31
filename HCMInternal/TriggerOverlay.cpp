@@ -100,9 +100,9 @@ private:
 			// TODO: cache colours and set by last checked interval
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
-			auto& allTriggersData = getTriggerData->getTriggerData();
+			auto filteredTriggerData = getTriggerData->getTriggerData()->filteredTriggers;
 
-			for (auto& [triggerPointer, triggerData] : allTriggersData)
+			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
 				renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
 			}

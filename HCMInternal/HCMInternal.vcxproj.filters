@@ -758,6 +758,9 @@
     <ClInclude Include="GUIFloatSlider.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="TriggerFilter.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1085,6 +1088,9 @@
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
     <ClCompile Include="TriggerModel.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerFilter.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
   </ItemGroup>

@@ -268,6 +268,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SpriteResource.h" />
     <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TriggerData.h" />
+    <ClInclude Include="TriggerFilter.h" />
     <ClInclude Include="TriggerModel.h" />
     <ClInclude Include="TriggerOverlay.h" />
     <ClInclude Include="UnarySetting.h" />
@@ -481,6 +482,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
+    <ClCompile Include="TriggerFilter.cpp" />
     <ClCompile Include="TriggerModel.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />
     <ClCompile Include="UnarySetting.cpp" />

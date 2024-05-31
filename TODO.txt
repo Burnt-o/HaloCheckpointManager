@@ -5,7 +5,7 @@
 
 TODO: 
 
-* Fix reach zoneset cheat
+* Fix reach && ODST zoneset cheat
 * Improve vec3 (de)serialisation to clipboard so its interchangeable
 * Sprint Meter h4/hr
 * Trigger Overlay (need to .. find some higher level 3d library)
