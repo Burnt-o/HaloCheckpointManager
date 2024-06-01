@@ -19,6 +19,7 @@ struct Datum
 		return os;
 	}
 
+	// todo: make explicit/factory. implicit conversion is bad
 	Datum(uint32_t in)
 	{
 		this->index = (uint16_t)(in);

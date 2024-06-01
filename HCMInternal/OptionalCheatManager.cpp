@@ -73,6 +73,7 @@
 #include "PlayerPositionToClipboard.h"
 #include "GetTagAddress.h"
 #include "TriggerFilter.h"
+#include "TriggerAlpha.h"
 
 #include "DIContainer.h"
 #include "map.h"

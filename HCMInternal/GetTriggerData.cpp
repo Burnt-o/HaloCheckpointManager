@@ -105,9 +105,9 @@ private:
 
 		PLOG_DEBUG << "triggerDataStruct first entry location: " << std::hex << (uintptr_t)triggerDataStruct->currentBaseAddress;
 
-		for (int i = 0; i < triggerCount; i++)
+		for (uint32_t triggerIndex = 0; triggerIndex < triggerCount; triggerIndex++)
 		{
-			triggerDataStruct->setIndex(tagDataArray, i);
+			triggerDataStruct->setIndex(tagDataArray, triggerIndex);
 
 			auto* pName = triggerDataStruct->field<const char>(triggerDataFields::name);
 			if (IsBadReadPtr(pName, 0x20)) throw HCMRuntimeException(std::format("Bad read address for pName at {}", (uintptr_t)pName));
@@ -125,7 +125,7 @@ private:
 			if (IsBadReadPtr(pUp, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pUp at {}", (uintptr_t)pUp));
 
 
-			PLOG_DEBUG << "read Trigger Data at index " << i << ", location " << std::hex << triggerDataStruct->currentBaseAddress << ":";
+			PLOG_DEBUG << "read Trigger Data at index " << triggerIndex << ", location " << std::hex << triggerDataStruct->currentBaseAddress << ":";
 			PLOG_DEBUG << "Name: " << std::string(pName);
 			PLOG_DEBUG << "Posi: " << *pPos;
 			PLOG_DEBUG << "Exte: " << *pExtents;
@@ -136,6 +136,8 @@ private:
 			triggerDataAll->emplace(triggerDataStruct->currentBaseAddress,
 				std::move(makeTriggerData(
 					std::string(pName),
+					triggerIndex,
+					std::string(pName).starts_with("bsp"),
 					*pPos,
 					*pExtents,
 					*pForward,

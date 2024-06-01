@@ -202,8 +202,8 @@ private:
 
 			// must be after userControlled and before any other transformers
 			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "updating FOV setting with transformed value: " << fov, fov = targetFOVCopy);
-			settings->freeCameraUserInputCameraBaseFOV->GetValue() = targetFOVCopy;
 			settings->freeCameraUserInputCameraBaseFOV->GetValueDisplay() = targetFOVCopy; 
+			settings->freeCameraUserInputCameraBaseFOV->GetValue() = targetFOVCopy;
 			LOG_ONCE(PLOG_VERBOSE << "fov setting updated");
 
 			LOG_ONCE(PLOG_DEBUG << "updating game camera");

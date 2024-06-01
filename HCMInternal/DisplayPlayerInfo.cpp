@@ -129,7 +129,7 @@ private:
 			lockOrThrow(settingsWeak, settings);
 
 			// calculate screen position of display info window
-			SimpleMath::Vector2& cornerOffset = settings->display2DInfoScreenOffset->GetValue();
+			const SimpleMath::Vector2& cornerOffset = settings->display2DInfoScreenOffset->GetValue();
 			SimpleMath::Vector2 displayInfoScreenPosition;
 			switch (settings->display2DInfoAnchorCorner->GetValue())
 			{

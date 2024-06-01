@@ -8729,7 +8729,17 @@
 			<Offset>0x360</Offset>
 		</Version>
 	</VersionedEntry>
-	
+
+	<VersionedEntry Name="updateTriggerLastCheckedFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB721CC</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
 	<!--#endregion TriggerOverlay-->
 	
 </root>

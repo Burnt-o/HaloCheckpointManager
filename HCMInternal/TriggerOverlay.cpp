@@ -89,23 +89,73 @@ private:
 
 			lockOrThrow(settingsWeak, settings);
 
-			auto& renderStyle = settings->triggerOverlayRenderStyle->GetValue();
-			auto& interiorStyle = settings->triggerOverlayInteriorStyle->GetValue();
+			const auto& renderStyle = settings->triggerOverlayRenderStyle->GetValue();
+			const auto& interiorStyle = settings->triggerOverlayInteriorStyle->GetValue();
 			
-			auto& labelStyle = settings->triggerOverlayLabelStyle->GetValue();
-			auto labelScale = settings->triggerOverlayLabelScale->GetValue() / (15.f);
+			const auto& labelStyle = settings->triggerOverlayLabelStyle->GetValue();
+			const auto labelScale = settings->triggerOverlayLabelScale->GetValue() / (15.f);
 
-			auto noAlpha = settings->triggerOverlayNormalColor->GetValue(); // needs to be a copy since mutable
-			auto triggerColor = SimpleMath::Vector4(noAlpha.x, noAlpha.y, noAlpha.z, settings->triggerOverlayAlpha->GetValue());
-			// TODO: cache colours and set by last checked interval
+
+			// calculate colours
+
+
+			const auto& triggerOverlayNormalColor = settings->triggerOverlayNormalColor->GetValue(); 
+
+			const auto& triggerOverlayBSPColor = settings->triggerOverlayBSPColor->GetValue();
+
+			const auto& triggerOverlayCheckFailsColor = settings->triggerOverlayCheckFailsColor->GetValue();
+
+			const auto& triggerOverlayCheckSuccessColor = settings->triggerOverlayCheckSuccessColor->GetValue();
+
+			const auto now = std::chrono::steady_clock::now();
+
+			const std::chrono::duration<float> durationToFlashFor = std::chrono::round<std::chrono::milliseconds>(std::chrono::duration<float>(settings->triggerOverlayCheckFalloff->GetValue()));
+			const std::chrono::duration<float> durationToFlashForExtended = durationToFlashFor * 2.f;
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
 			auto triggerDataLock = getTriggerData->getTriggerData();
-			auto filteredTriggerData = triggerDataLock->filteredTriggers;
+			const auto& filteredTriggerData = triggerDataLock->filteredTriggers;
 
-			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+
+
+			for (const auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
-				renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
+				const std::chrono::duration<float> durationSinceLastChecked = now - triggerData.timeLastChecked;
+
+
+				// we'll make succesful trigger checks flash for extra long
+				if (durationSinceLastChecked > (triggerData.lastCheckSuccessful ? durationToFlashForExtended : durationToFlashFor))
+				{
+					const auto& triggerColor = triggerData.isBSPTrigger ? triggerOverlayBSPColor :
+						triggerOverlayNormalColor;
+
+					renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
+				}
+				else
+				{
+					const auto& checkColor = triggerData.lastCheckSuccessful ? triggerOverlayCheckSuccessColor : triggerOverlayCheckFailsColor;
+
+
+					// need to transition from checkColour to normal colour based on how long its been as fraction of durationToFlashFor
+					 const float normalRatio = (durationSinceLastChecked / durationToFlashFor);
+					 float checkRatio = 1.f - normalRatio;
+
+
+
+#ifdef HCM_DEBUG
+					if (GetKeyState('5') & 0x8000)
+					{
+						PLOG_DEBUG << "normalRatio: " << normalRatio;
+						PLOG_DEBUG << "checkRatio: " << checkRatio;
+					}
+#endif
+
+					auto triggerColour = (triggerOverlayNormalColor * normalRatio) + (checkColor * checkRatio);
+					triggerColour.w = triggerOverlayNormalColor.w;
+
+					renderer->renderTriggerModel(triggerData.model, triggerColour, renderStyle, interiorStyle, labelStyle, labelScale);
+				}
+
 			}
 
 		}

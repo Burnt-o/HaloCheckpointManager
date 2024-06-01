@@ -24,7 +24,7 @@ public:
 		: isInputValid(inputValidator), value(defaultValue), valueDisplay(defaultValue), mOptionName(optionName)
 	{}
 
-
+	// TODO: make value reference const. this will require a lot of boilerplate consting around the joint so we can compile but shouldn't actually break anything.
 	std::shared_ptr<eventpp::CallbackList<void(T& newValue)>> valueChangedEvent = std::make_shared<eventpp::CallbackList<void(T & newValue)>>();
 
 	void UpdateValueWithInput()
@@ -53,6 +53,7 @@ public:
 		valueChangedEvent->operator ()(value);
 	}
 
+	// TODO: make const (need to fixup freeCameraFOV interaction, everything else will work fine. should probably make freeCameraFOV a Direct-pointer UnarySetting (will I need a new class for that? that's fine))
 	T& GetValue()
 	{
 		return value;

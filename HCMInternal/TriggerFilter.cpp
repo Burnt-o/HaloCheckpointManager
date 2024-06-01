@@ -22,12 +22,12 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(std::string& newValue)>> filterStringChangedCallback;
 	ScopedCallback<ToggleEvent> filterToggleChangedCallback;
 
-	void onFilterToggleChanged(bool& newValue)
+	void onFilterToggleChanged(const bool& newValue)
 	{
 		onFilterStringChanged(settings->triggerOverlayFilterString->GetValue());
 	}
 
-	void onFilterStringChanged(std::string& newValue)
+	void onFilterStringChanged(const std::string& newValue)
 	{
 		try
 		{
@@ -92,7 +92,7 @@ private:
 public:
 	TriggerFilterImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
-		filterStringChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterString->valueChangedEvent, [this](std::string& n) {onFilterStringChanged(n); }),
+		filterStringChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterString->valueChangedEvent, [this](const std::string& n) {onFilterStringChanged(n); }),
 		filterToggleChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterToggle->valueChangedEvent, [this](bool& n) {onFilterToggleChanged(n); }),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),

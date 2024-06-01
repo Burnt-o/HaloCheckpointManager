@@ -728,8 +728,8 @@ private:
 							}));
 
 				case GUIElementEnum::triggerOverlayCheckFalloff:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
-						(game, ToolTipCollection("How many ticks does the check-flash last"), "Flash for x ticks", settings->triggerOverlayCheckFalloff));
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						(game, ToolTipCollection("How many seconds does the check-flash last"), "Flash for x seconds", settings->triggerOverlayCheckFalloff));
 
 				case GUIElementEnum::triggerOverlayCheckSuccessColor:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>

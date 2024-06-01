@@ -70,7 +70,7 @@ public:
 				for (auto& [radioIndex, radioBut] : mRadioButtons)
 				{
 					radioBut->mBoundOption.lock()->GetValueDisplay() = false;
-					radioBut->mBoundOption.lock()->GetValue() = false;
+					radioBut->mBoundOption.lock()->UpdateValueWithInput();
 				}
 				// enable the first one
 				mRadioButtons.at(0).second->mBoundOption.lock()->GetValueDisplay() = true;

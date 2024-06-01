@@ -90,7 +90,7 @@ public:
 		mGUIShowingFreesMCCCursorCallbackHandle(settings->GUIShowingFreesCursor->valueChangedEvent, [this](bool& n) { onGUIShowingFreesMCCCursorChanged(n); }),
 		mGUIShowingBlocksGameInputCallbackHandle(settings->GUIShowingBlocksInput->valueChangedEvent, [this](bool& n) { onGUIShowingBlocksGameInputChanged(n); }),
 		mGUIShowingPausesGameCallbackHandle(settings->GUIShowingPausesGame->valueChangedEvent, [this](bool& n) { onGUIShowingPausesGameChanged(n); }),
-		m_WindowOpen(settings->GUIWindowOpen->GetValue()),
+		m_WindowOpen(settings->GUIWindowOpen->GetValueDisplay()),
 		mIsCursorShowing(isCursorShowing)
 	{
 
