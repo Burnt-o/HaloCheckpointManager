@@ -11,23 +11,27 @@
 #include "MCCString.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
+#include <shared_mutex>
 
 
 struct AtomicTriggerDataStore : public IAtomicTriggerDataStore
 {
 public:
-	ScopedAtomicBoolShared lock;
+	std::shared_lock<std::shared_mutex> lock;
+
 
 	explicit AtomicTriggerDataStore(
 		std::shared_ptr<TriggerDataMap> allT,
 		std::shared_ptr<TriggerDataMap> filteredT,
-		std::shared_ptr<std::atomic_bool> mut
+		std::shared_ptr<std::shared_mutex> mut
 	)
 		: 
 		IAtomicTriggerDataStore(allT, filteredT), 
-		lock(mut)
+		lock(*mut.get())
 	{
 	}
+
+
 
 
 	AtomicTriggerDataStore(const AtomicTriggerDataStore&) = delete;
@@ -66,7 +70,7 @@ private:
 	std::shared_ptr<TriggerDataMap> triggerDataAll = std::make_shared<TriggerDataMap>();
 	bool triggerDataCached = false;
 	std::shared_ptr<TriggerDataMap> triggerDataFiltered = std::make_shared<TriggerDataMap>();
-	std::shared_ptr<std::atomic_bool> triggerDataMutex = std::make_shared<std::atomic_bool>(false);
+	std::shared_ptr<std::shared_mutex> triggerDataMutex = std::make_shared<std::shared_mutex>();
 
 	void onGameStateChange(const MCCState&)
 	{
@@ -76,7 +80,7 @@ private:
 
 	void updateTriggerData()
 	{
-		ScopedAtomicBoolShared lock(triggerDataMutex);
+		std::shared_lock<std::shared_mutex> lock(*triggerDataMutex.get());
 		PLOG_DEBUG << "updating trigger data!";
 		triggerDataAll->clear();
 		triggerDataFiltered->clear();

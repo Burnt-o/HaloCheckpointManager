@@ -100,7 +100,8 @@ private:
 			// TODO: cache colours and set by last checked interval
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
-			auto filteredTriggerData = getTriggerData->getTriggerData()->filteredTriggers;
+			auto triggerDataLock = getTriggerData->getTriggerData();
+			auto filteredTriggerData = triggerDataLock->filteredTriggers;
 
 			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{

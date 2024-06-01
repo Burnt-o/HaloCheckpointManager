@@ -4,14 +4,17 @@
 #include "RuntimeExceptionHandler.h"
 #include "GetTriggerData.h"
 #include "IMakeOrGetCheat.h"
+#include "IMCCStateHook.h"
 
 class TriggerFilterImpl
 {
 
 private:
-	
+	GameState mGame;
+
 	// injected services
 	std::weak_ptr<GetTriggerData> getTriggerDataWeak;
+	std::weak_ptr< IMCCStateHook> mccStateHookWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	std::shared_ptr< SettingsStateAndEvents> settings;
 
@@ -28,6 +31,11 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false)
+				return;
+
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
 			auto triggerDataLock = getTriggerData->getTriggerData();
 
@@ -83,10 +91,12 @@ private:
 
 public:
 	TriggerFilterImpl(GameState game, IDIContainer& dicon)
-		: filterStringChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterString->valueChangedEvent, [this](std::string& n) {onFilterStringChanged(n); }),
+		: mGame(game),
+		filterStringChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterString->valueChangedEvent, [this](std::string& n) {onFilterStringChanged(n); }),
 		filterToggleChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterToggle->valueChangedEvent, [this](bool& n) {onFilterToggleChanged(n); }),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		mccStateHookWeak(dicon.Resolve< IMCCStateHook>()),
 		settings(dicon.Resolve<SettingsStateAndEvents>())
 	{
 
