@@ -28,7 +28,7 @@ private:
 
 			if (newValue)
 			{
-				gameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(int)>>>(gameTickEventHook->getGameTickEvent(), [this](int i) {onGameTickEventCallback(i); });
+				gameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>>(gameTickEventHook->getGameTickEvent(), [this](uint32_t i) {onGameTickEventCallback(i); });
 			}
 			else
 			{
@@ -44,8 +44,8 @@ private:
 	}
 
 	// runs every tick while armed, if current tick is the user-selected tick then disarm the service and force a checkpoint. 
-	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(int)>>> gameTickEventCallback;
-	void onGameTickEventCallback(int tickCount)
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> gameTickEventCallback;
+	void onGameTickEventCallback(uint32_t tickCount)
 	{
 		try
 		{

@@ -60,7 +60,7 @@ private:
 
 	// main callbacks
 	ScopedCallback<RenderEvent> mRenderEventCallback;
-	ScopedCallback<eventpp::CallbackList<void(int)>> mGameTickEventCallback;
+	ScopedCallback<eventpp::CallbackList<void(uint32_t)>> mGameTickEventCallback;
 	ScopedCallback<ToggleEvent> mDisplayPlayerInfoToggleEventCallback;
 	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
 	ScopedCallback<eventpp::CallbackList<void(int&)>> display2DInfoFontSizeCallback;
@@ -79,7 +79,7 @@ private:
 
 
 	// fires every game tick, updates info (dataString) if isActive. Alternate which data string to use every game tick
-	void onGameTickEvent(int currentGameTick)
+	void onGameTickEvent(uint32_t currentGameTick)
 	{
 		LOG_ONCE(PLOG_VERBOSE << "onGameTickEvent");
 		if (!isActive) return;
@@ -348,7 +348,7 @@ public:
 	DisplayPlayerInfoImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
 		mRenderEventCallback(dicon.Resolve<RenderEvent>().lock(), [this](SimpleMath::Vector2 ss) { onRenderEvent(ss); }),
-		mGameTickEventCallback(resolveDependentCheat(GameTickEventHook)->getGameTickEvent(), [this](int t) { onGameTickEvent(t); }),
+		mGameTickEventCallback(resolveDependentCheat(GameTickEventHook)->getGameTickEvent(), [this](uint32_t t) { onGameTickEvent(t); }),
 		mDisplayPlayerInfoToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoToggle->valueChangedEvent, [this](bool& n) {onDisplayPlayerInfoToggleEvent(n); }),
 		mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); }),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),

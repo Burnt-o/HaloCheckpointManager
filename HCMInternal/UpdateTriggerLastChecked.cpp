@@ -12,6 +12,7 @@
 #include "MidhookContextInterpreter.h"
 #include "Datum.h"
 #include "GetPlayerDatum.h"
+#include "GameTickEventHook.h"
 
 template<GameState::Value mGame>
 class UpdateTriggerLastCheckedImpl : public UpdateTriggerLastCheckedUntemplated
@@ -20,6 +21,7 @@ private:
 
 	//injected services
 	std::weak_ptr <GetTriggerData> getTriggerDataWeak;
+	std::weak_ptr< GameTickEventHook> gameTickEventHookWeak;
 	std::shared_ptr <GetPlayerDatum> getPlayerDatum;
 	std::shared_ptr< RuntimeExceptionHandler> runtimeExceptions;
 	std::shared_ptr< SettingsStateAndEvents> settings;
@@ -32,13 +34,22 @@ private:
 
 	// callbacks
 	ScopedCallback<ToggleEvent> triggerOverlayToggleCallback;
-	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashToggleCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashHitCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashMissCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckHitCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckMissCallback;
 
 	void onSettingChanged()
 	{
 		try
 		{
-			updateTriggerCheckHook->setWantsToBeAttached(settings->triggerOverlayToggle->GetValue() && settings->triggerOverlayCheckFlashToggle->GetValue());
+			updateTriggerCheckHook->setWantsToBeAttached(settings->triggerOverlayToggle->GetValue()
+				&& (
+					settings->triggerOverlayCheckHitToggle->GetValue()
+					|| settings->triggerOverlayCheckMissToggle->GetValue()
+					|| settings->triggerOverlayMessageOnCheckHit->GetValue()
+					|| settings->triggerOverlayMessageOnCheckMiss->GetValue()
+					));
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -75,19 +86,19 @@ private:
 
 			auto triggerDataLock = getTriggerData->getTriggerData();
 
-			auto now = std::chrono::steady_clock::now();
+
 
 			for (auto& [triggerPointer, triggerData] : *triggerDataLock->filteredTriggers.get())
 			{
-
-
-
 				if (triggerData.triggerIndex == triggerIndex)
 				{
 					if (triggerData.isBSPTrigger == false)
 					{
+						lockOrThrow(instance->gameTickEventHookWeak, gameTickEventHook);
+						auto currentTick = gameTickEventHook->getCurrentGameTick();
+
 						LOG_ONCE_CAPTURE(PLOG_DEBUG << "updating timeLastChecked of trigger with index: " << t, t = triggerIndex);
-						triggerData.timeLastChecked = now;
+						triggerData.tickLastChecked = currentTick;
 						triggerData.lastCheckSuccessful = wasSuccessfulCheck;
 					}
 
@@ -113,8 +124,12 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
 		triggerOverlayToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayCheckFlashToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckFlashToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		getPlayerDatum(resolveDependentCheat(GetPlayerDatum))
+		triggerOverlayCheckFlashHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckHitToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
+		triggerOverlayCheckFlashMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckMissToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
+		triggerOverlayMessageOnCheckHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckHit->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
+		triggerOverlayMessageOnCheckMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckMiss->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
+		getPlayerDatum(resolveDependentCheat(GetPlayerDatum)),
+		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
 	{
 
 		instance = this;

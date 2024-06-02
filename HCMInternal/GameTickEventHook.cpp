@@ -2,7 +2,7 @@
 #include "GameTickEventHook.h"
 #include "ModuleHook.h"
 #include "PointerDataStore.h"
-
+#include "IMCCStateHook.h"
 
 
 template <GameState::Value gameT>
@@ -14,10 +14,19 @@ private:
 	static inline std::atomic_bool gameTickHookRunning = false;
 	static inline GameTickEventHookTemplated<gameT>* instance = nullptr;
 
-	std::shared_ptr<eventpp::CallbackList<void(int)>> gameTickEvent = std::make_shared<eventpp::CallbackList<void(int)>>();
+	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> gameTickEvent = std::make_shared<eventpp::CallbackList<void(uint32_t)>>();
+
+	ScopedCallback < eventpp::CallbackList<void(const MCCState&)>> mccStateChangedCallback;
+
+	void onMccStateChangedCallback(const MCCState&)
+	{
+		cacheValid = false;
+	}
 
 	std::unique_ptr<ModuleMidHook> tickIncrementHook;
 	std::shared_ptr<MultilevelPointer> tickCounter;
+	uint32_t* cachedTickCounter;
+	bool cacheValid = false;
 
 	static void tickIncrementHookFunction(SafetyHookContext& ctx)
 	{
@@ -28,7 +37,10 @@ private:
 	}
 
 public:
-	GameTickEventHookTemplated(GameState game, IDIContainer& dicon) : mGame(game)
+	GameTickEventHookTemplated(GameState game, IDIContainer& dicon) 
+		: 
+		mGame(game),
+		mccStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onMccStateChangedCallback(n); })
 	{
 		if (instance) throw HCMInitException("Cannot have more than one GameTickEventHookTemplated per game");
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
@@ -40,26 +52,22 @@ public:
 		instance = this;
 	}
 
-	std::shared_ptr<eventpp::CallbackList<void(int)>> getGameTickEvent()
+	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> getGameTickEvent()
 	{
 		tickIncrementHook->setWantsToBeAttached(true);
 		return gameTickEvent;
 	}
 
-	virtual int getCurrentGameTick() override
+	virtual uint32_t getCurrentGameTick() override
 	{
-		if (!instance) { PLOG_ERROR << "null GameTickEventHookTemplated instance"; return 0; }
-		int tickCount;
-		if (!instance->tickCounter->readData(&tickCount))
+		if (cacheValid == false)
 		{
-			LOG_ONCE_CAPTURE(PLOG_ERROR << "getCurrentGameTick failed to resolve tickCounter, impl:" << game, game = instance->mGame.toString());
-			LOG_ONCE_CAPTURE(PLOG_ERROR << " error: " << error, error = MultilevelPointer::GetLastError());
-			return 0;
+			uintptr_t temp;
+			if (tickCounter->resolve(&temp) == false) throw HCMRuntimeException(std::format("Could not resolve tickcounter: {}", MultilevelPointer::GetLastError()));
+			cachedTickCounter = (uint32_t*)temp;
 		}
-		else
-		{
-			return tickCount;
-		}
+
+		return *cachedTickCounter;
 	}
 
 	~GameTickEventHookTemplated()
@@ -101,6 +109,6 @@ GameTickEventHook::~GameTickEventHook()
 	PLOG_DEBUG << "~" << getName();
 }
 
-std::shared_ptr<eventpp::CallbackList<void(int)>> GameTickEventHook::getGameTickEvent() { return pimpl->getGameTickEvent();  }
+std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> GameTickEventHook::getGameTickEvent() { return pimpl->getGameTickEvent();  }
 
-int GameTickEventHook::getCurrentGameTick() { return pimpl->getCurrentGameTick(); }
+uint32_t GameTickEventHook::getCurrentGameTick() { return pimpl->getCurrentGameTick(); }

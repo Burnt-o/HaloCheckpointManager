@@ -26,7 +26,7 @@ private:
 
 	// event callbacks
 	ScopedCallback <ActionEvent> mAdvanceTicksCallbackHandle;
-	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(int)>>> mGameTickEventCallback;
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> mGameTickEventCallback;
 
 
 	// injected services
@@ -40,7 +40,7 @@ private:
 
 	int advanceTicksCount = 0;
 
-	void onGameTickEvent(int tickCount)
+	void onGameTickEvent(uint32_t tickCount)
 	{
 		if (advanceTicksCount > 1) // since "0" will cause a hit
 		{
@@ -88,7 +88,7 @@ private:
 			// it looks like the scoped call back is just instantly auto-destructing
 
 			advanceTicksCount = settings->advanceTicksCount->GetValue();
-			mGameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(int)>>>(gameTickEventHook->getGameTickEvent(), [this](int i) {onGameTickEvent(i); });
+			mGameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>>(gameTickEventHook->getGameTickEvent(), [this](uint32_t i) {onGameTickEvent(i); });
 			pauseOverrideRequest = pauseService->scopedOverrideRequest(nameof(AdvanceTicks::AdvanceTicksImpl));
 
 

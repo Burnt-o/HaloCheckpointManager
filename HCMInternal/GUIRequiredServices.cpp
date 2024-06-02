@@ -206,7 +206,11 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::TriggerOverlay, OptionalCheatEnum::TriggerAlpha}
 		},
 
-		{ GUIElementEnum::triggerOverlayCheckFlashToggle,
+		{ GUIElementEnum::triggerOverlayCheckHitToggle,
+		{OptionalCheatEnum::UpdateTriggerLastChecked }
+		},
+
+				{ GUIElementEnum::triggerOverlayCheckMissToggle,
 		{OptionalCheatEnum::UpdateTriggerLastChecked }
 		},
 
@@ -218,11 +222,11 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::UpdateTriggerLastChecked }
 		},
 
-		{ GUIElementEnum::triggerOverlayMessageOnCheckSuccess,
+		{ GUIElementEnum::triggerOverlayMessageOnCheckHit,
 		{OptionalCheatEnum::UpdateTriggerLastChecked }
 		},
 
-	{ GUIElementEnum::triggerOverlayMessageOnCheckFailed,
+	{ GUIElementEnum::triggerOverlayMessageOnCheckMiss,
 	{OptionalCheatEnum::UpdateTriggerLastChecked }
 	},
 

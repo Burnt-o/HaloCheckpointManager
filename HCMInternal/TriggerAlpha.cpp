@@ -20,11 +20,12 @@ private:
 		settings->triggerOverlayBSPColor->GetValueDisplay().w = newValue;
 		settings->triggerOverlayBSPColor->UpdateValueWithInput();
 
-		settings->triggerOverlayCheckFailsColor->GetValueDisplay().w = newValue;
-		settings->triggerOverlayCheckFailsColor->UpdateValueWithInput();
+		
+		settings->triggerOverlayCheckHitColor->GetValueDisplay().w = newValue + ((1.f - newValue) / 3.f); // lil extra alpha for hits
+		settings->triggerOverlayCheckHitColor->UpdateValueWithInput();
 
-		settings->triggerOverlayCheckSuccessColor->GetValueDisplay().w = newValue;
-		settings->triggerOverlayCheckSuccessColor->UpdateValueWithInput();
+		settings->triggerOverlayCheckMissColor->GetValueDisplay().w = newValue;
+		settings->triggerOverlayCheckMissColor->UpdateValueWithInput();
 	}
 
 public:

@@ -12,6 +12,16 @@ TODO:
 * FreeCam for other games (RE + confirm same coordinate system)
 * fix tickadvance issueeees
 
+CODE TODO:
+* trigger flash system back to tick-based instead of realtime
+	* don't colour cache (premature optimization)
+	* will fix pause/speedhack interfence
+	* will simplify print message on check
+* slight gui adjustment (ticks for successful check + failed check, add option for print message on failed check)
+* large gui adjustment (edit trigger filter modal dialog)
+* impl for non-ce games
+* bool script mode? (hacky implementation of scriptReader for ce-bool only? might not take too long if I really hacky)
+
 
 
 

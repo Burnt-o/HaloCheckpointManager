@@ -1294,32 +1294,48 @@ public:
 			nameof(triggerOverlayAlpha)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> triggerOverlayCheckFlashToggle = std::make_shared<BinarySetting<bool>>
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayCheckHitToggle = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
-			nameof(triggerOverlayCheckFlashToggle)
+			nameof(triggerOverlayCheckHitToggle)
 		);
 
-	std::shared_ptr<BinarySetting<float>> triggerOverlayCheckFalloff = std::make_shared<BinarySetting<float>>
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayCheckMissToggle = std::make_shared<BinarySetting<bool>>
 		(
-			0.5f,
-			[](float in) { return in > 0.f; },
-			nameof(triggerOverlayCheckFalloff)
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayCheckMissToggle)
 		);
 
-	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckFailsColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+	std::shared_ptr<BinarySetting<int>> triggerOverlayCheckHitFalloff = std::make_shared<BinarySetting<int>>
 		(
-			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 1.f}, // yellow
-			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
-			nameof(triggerOverlayCheckFailsColor)
+			60,
+			[](int in) { return in >= 0; },
+			nameof(triggerOverlayCheckHitFalloff)
 		);
 
-	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckSuccessColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+	std::shared_ptr<BinarySetting<int>> triggerOverlayCheckMissFalloff = std::make_shared<BinarySetting<int>>
+		(
+			15,
+			[](int in) { return in >= 0; },
+			nameof(triggerOverlayCheckMissFalloff)
+		);
+
+
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckHitColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
 			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 1.f}, // green
 			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
-			nameof(triggerOverlayCheckSuccessColor)
+			nameof(triggerOverlayCheckHitColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckMissColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 1.f}, // yellow
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			nameof(triggerOverlayCheckMissColor)
 		);
 
 	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnEnter = std::make_shared<BinarySetting<bool>>
@@ -1336,18 +1352,18 @@ public:
 			nameof(triggerOverlayMessageOnExit)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnCheckSuccess = std::make_shared<BinarySetting<bool>>
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnCheckHit = std::make_shared<BinarySetting<bool>>
 		(
 			true,
 			[](bool in) { return true; },
-			nameof(triggerOverlayMessageOnCheckSuccess)
+			nameof(triggerOverlayMessageOnCheckHit)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnCheckFailed = std::make_shared<BinarySetting<bool>>
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayMessageOnCheckMiss = std::make_shared<BinarySetting<bool>>
 		(
 			false,
 			[](bool in) { return true; },
-			nameof(triggerOverlayMessageOnCheckFailed)
+			nameof(triggerOverlayMessageOnCheckMiss)
 		);
 
 	// settings that ought to be serialised/deserialised between HCM runs
@@ -1362,14 +1378,16 @@ public:
 		triggerOverlayNormalColor,
 		triggerOverlayBSPColor,
 		triggerOverlayAlpha,
-		triggerOverlayCheckFlashToggle,
-			triggerOverlayCheckFalloff,
-		triggerOverlayCheckFailsColor,
-		triggerOverlayCheckSuccessColor,
+		triggerOverlayCheckHitToggle,
+		triggerOverlayCheckMissToggle,
+		triggerOverlayCheckHitFalloff,
+		triggerOverlayCheckMissFalloff,
+		triggerOverlayCheckHitColor,
+		triggerOverlayCheckMissColor,
 		triggerOverlayMessageOnEnter,
 		triggerOverlayMessageOnExit,
-		triggerOverlayMessageOnCheckSuccess,
-		triggerOverlayMessageOnCheckFailed,
+		triggerOverlayMessageOnCheckHit,
+		triggerOverlayMessageOnCheckMiss,
 		hideWatermarkHideMessages,
 		advanceTicksCount,
 		injectionIgnoresChecksum,

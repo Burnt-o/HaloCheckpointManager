@@ -13,7 +13,7 @@ struct TriggerData
 
 	// changes at run time
 	bool lastCheckSuccessful = false;
-	std::chrono::time_point<std::chrono::steady_clock> timeLastChecked = std::chrono::steady_clock::now() - std::chrono::minutes(1);
+	std::optional<uint32_t> tickLastChecked = std::nullopt;
 
 private:
 	friend class GetTriggerDataUntemplated;

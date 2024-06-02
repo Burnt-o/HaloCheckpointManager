@@ -8,6 +8,7 @@
 #include "SettingsStateAndEvents.h"
 #include "RenderTextHelper.h"
 #include "UpdateTriggerLastChecked.h"
+#include "GameTickEventHook.h"
 
 using namespace SettingsEnums;
 
@@ -25,6 +26,7 @@ private:
 	std::weak_ptr<GetTriggerData> getTriggerDataWeak;
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::weak_ptr< GameTickEventHook> gameTickEventHookWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::optional<std::weak_ptr<UpdateTriggerLastChecked>> updateTriggerLastCheckedOptionalWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
@@ -98,62 +100,77 @@ private:
 
 			// calculate colours
 
+			const bool shouldFlashOnCheckHit = settings->triggerOverlayCheckHitToggle->GetValue();
+			const bool shouldFlashOnCheckMiss = settings->triggerOverlayCheckMissToggle->GetValue();
 
 			const auto& triggerOverlayNormalColor = settings->triggerOverlayNormalColor->GetValue(); 
 
 			const auto& triggerOverlayBSPColor = settings->triggerOverlayBSPColor->GetValue();
 
-			const auto& triggerOverlayCheckFailsColor = settings->triggerOverlayCheckFailsColor->GetValue();
+			const auto& triggerOverlayCheckMissColor = settings->triggerOverlayCheckMissColor->GetValue();
 
-			const auto& triggerOverlayCheckSuccessColor = settings->triggerOverlayCheckSuccessColor->GetValue();
+			const auto& triggerOverlayCheckHitColor = settings->triggerOverlayCheckHitColor->GetValue();
 
 			const auto now = std::chrono::steady_clock::now();
 
-			const std::chrono::duration<float> durationToFlashFor = std::chrono::round<std::chrono::milliseconds>(std::chrono::duration<float>(settings->triggerOverlayCheckFalloff->GetValue()));
-			const std::chrono::duration<float> durationToFlashForExtended = durationToFlashFor * 2.f;
+			const uint32_t triggerOverlayCheckHitFalloff = settings->triggerOverlayCheckHitFalloff->GetValue();
+			const uint32_t triggerOverlayCheckMissFalloff = settings->triggerOverlayCheckMissFalloff->GetValue();
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
 			auto triggerDataLock = getTriggerData->getTriggerData();
 			const auto& filteredTriggerData = triggerDataLock->filteredTriggers;
 
-
+			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
+			const uint32_t currentTick = gameTickEventHook->getCurrentGameTick();
 
 			for (const auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
-				const std::chrono::duration<float> durationSinceLastChecked = now - triggerData.timeLastChecked;
+				std::optional<long> ticksSinceLastCheck = std::nullopt;
+				if (triggerData.tickLastChecked.has_value())
+					ticksSinceLastCheck = (long)currentTick - (long)(triggerData.tickLastChecked.value());
+				
+
+				bool shouldFlash = 
+					((shouldFlashOnCheckHit && triggerData.lastCheckSuccessful == true) || (shouldFlashOnCheckMiss && triggerData.lastCheckSuccessful == false)) //lastCheckSuccessful matches setting
+					&& ticksSinceLastCheck.has_value() // null opt if that trigger has never been checked at all
+					&& ticksSinceLastCheck >= 0 // can be negative when player reverts
+					&&
+					(
+						(triggerData.lastCheckSuccessful == true && ticksSinceLastCheck.value() < triggerOverlayCheckHitFalloff) // didn't happen too long ago
+						|| (triggerData.lastCheckSuccessful == false && ticksSinceLastCheck.value() < triggerOverlayCheckMissFalloff)
+					);
 
 
-				// we'll make succesful trigger checks flash for extra long
-				if (durationSinceLastChecked > (triggerData.lastCheckSuccessful ? durationToFlashForExtended : durationToFlashFor))
+				if (shouldFlash)
+				{
+					const auto& checkColor = triggerData.lastCheckSuccessful ? triggerOverlayCheckHitColor : triggerOverlayCheckMissColor;
+					const auto& durationToFlashFor = triggerData.lastCheckSuccessful ? triggerOverlayCheckHitFalloff : triggerOverlayCheckMissFalloff;
+
+					// need to transition from checkColour to normal colour based on how long its been as fraction of durationToFlashFor
+					float normalRatio = ((float)ticksSinceLastCheck.value() / (float)durationToFlashFor);
+					float checkRatio = 1.f - normalRatio;
+
+
+
+					auto triggerColour = (triggerOverlayNormalColor * normalRatio) + (checkColor * checkRatio);
+					triggerColour.w = triggerOverlayNormalColor.w; // w is alpha right?
+
+					// boost alpha on first tick of check
+					if (ticksSinceLastCheck.value() == 0)
+					{
+						// todo: print message if setting enabled
+						triggerColour.w += (1.f - triggerColour.w) / 4.f;
+					}
+
+					renderer->renderTriggerModel(triggerData.model, triggerColour, renderStyle, interiorStyle, labelStyle, labelScale);
+				}
+				else
 				{
 					const auto& triggerColor = triggerData.isBSPTrigger ? triggerOverlayBSPColor :
 						triggerOverlayNormalColor;
 
 					renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
-				}
-				else
-				{
-					const auto& checkColor = triggerData.lastCheckSuccessful ? triggerOverlayCheckSuccessColor : triggerOverlayCheckFailsColor;
 
-
-					// need to transition from checkColour to normal colour based on how long its been as fraction of durationToFlashFor
-					 const float normalRatio = (durationSinceLastChecked / durationToFlashFor);
-					 float checkRatio = 1.f - normalRatio;
-
-
-
-#ifdef HCM_DEBUG
-					if (GetKeyState('5') & 0x8000)
-					{
-						PLOG_DEBUG << "normalRatio: " << normalRatio;
-						PLOG_DEBUG << "checkRatio: " << checkRatio;
-					}
-#endif
-
-					auto triggerColour = (triggerOverlayNormalColor * normalRatio) + (checkColor * checkRatio);
-					triggerColour.w = triggerOverlayNormalColor.w;
-
-					renderer->renderTriggerModel(triggerData.model, triggerColour, renderStyle, interiorStyle, labelStyle, labelScale);
 				}
 
 			}
@@ -185,7 +202,8 @@ public:
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
-		mccStateHookWeak(dicon.Resolve<IMCCStateHook>())
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
 	{
 
 		try

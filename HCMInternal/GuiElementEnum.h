@@ -104,29 +104,7 @@
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
 	((skullToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((playerPositionToClipboardGUI, (ALL_SUPPORTED_GAMES)))\
-	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
-	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterString, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringPaste, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringLoadBool, (Halo1)))\
-			((triggerOverlayFilterStringLoadBoolPlusBSP, (Halo1)))\
-		((triggerOverlayRenderStyle, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayInteriorStyle, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayLabelStyle, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayLabelScale, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayBSPColor, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayCheckFlashToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayCheckFalloff, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayCheckFailsColor, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayCheckSuccessColor, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnEnter, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnCheckSuccess, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayMessageOnCheckFailed, (ALL_SUPPORTED_GAMES)))
+
 
 
 
@@ -181,6 +159,31 @@
 		((waypoint3DGUIGlobalDistanceColor, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalDistanceScale, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalDistancePrecision, (ALL_SUPPORTED_GAMES)))\
+	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
+	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterString, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringPaste, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringLoadBool, (Halo1)))\
+			((triggerOverlayFilterStringLoadBoolPlusBSP, (Halo1)))\
+		((triggerOverlayRenderStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayInteriorStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayLabelStyle, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayLabelScale, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayBSPColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayCheckHitToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckHitFalloff, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckHitColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayCheckMissToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckMissFalloff, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayCheckMissColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnEnter, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnCheckHit, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayMessageOnCheckMiss, (ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
