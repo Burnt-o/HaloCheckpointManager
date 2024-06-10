@@ -12,8 +12,10 @@ struct TriggerData
 	const bool isBSPTrigger;
 
 	// changes at run time
-	bool lastCheckSuccessful = false;
-	std::optional<uint32_t> tickLastChecked = std::nullopt;
+	bool lastCheckSuccessful = false; // updated by UpdateTriggerLastChecked
+	std::optional<uint32_t> tickLastChecked = std::nullopt; // updated by UpdateTriggerLastChecked
+	bool printedMessageForLastCheck = false; // set to true by TriggerOverlay, false by UpdateTriggerLastChecked. Prevents duplicate messages.
+	bool playerWasInsideLastTick = false; // updated by TrackTriggerEnterExit
 
 private:
 	friend class GetTriggerDataUntemplated;

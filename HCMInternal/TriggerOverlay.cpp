@@ -9,6 +9,7 @@
 #include "RenderTextHelper.h"
 #include "UpdateTriggerLastChecked.h"
 #include "GameTickEventHook.h"
+#include "IMessagesGUI.h"
 
 using namespace SettingsEnums;
 
@@ -97,6 +98,8 @@ private:
 			const auto& labelStyle = settings->triggerOverlayLabelStyle->GetValue();
 			const auto labelScale = settings->triggerOverlayLabelScale->GetValue() / (15.f);
 
+			const bool triggerOverlayMessageOnCheckHit = settings->triggerOverlayMessageOnCheckHit->GetValue();
+			const bool triggerOverlayMessageOnCheckMiss = settings->triggerOverlayMessageOnCheckMiss->GetValue();
 
 			// calculate colours
 
@@ -123,7 +126,7 @@ private:
 			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
 			const uint32_t currentTick = gameTickEventHook->getCurrentGameTick();
 
-			for (const auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
 				std::optional<long> ticksSinceLastCheck = std::nullopt;
 				if (triggerData.tickLastChecked.has_value())
@@ -158,7 +161,27 @@ private:
 					// boost alpha on first tick of check
 					if (ticksSinceLastCheck.value() == 0)
 					{
-						// todo: print message if setting enabled
+						
+						// print message on check if appropiate setting
+						if (triggerData.printedMessageForLastCheck == false)
+						{
+							triggerData.printedMessageForLastCheck = true; // prevents us from printing multiple times on the tick of the check
+
+							if (triggerData.lastCheckSuccessful && triggerOverlayMessageOnCheckHit)
+							{
+								lockOrThrow(messagesGUIWeak, messagesGUI);
+								messagesGUI->addMessage(std::format("Trigger hit on tick: {}, {}", currentTick, triggerData.name));
+							}
+							else if (triggerData.lastCheckSuccessful == false && triggerOverlayMessageOnCheckMiss)
+							{
+								lockOrThrow(messagesGUIWeak, messagesGUI);
+								messagesGUI->addMessage(std::format("Trigger miss on tick: {}, {}", currentTick, triggerData.name));
+							}
+				
+						}
+					
+
+
 						triggerColour.w += (1.f - triggerColour.w) / 4.f;
 					}
 

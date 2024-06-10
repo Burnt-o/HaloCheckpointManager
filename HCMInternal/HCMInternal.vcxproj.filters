@@ -764,6 +764,12 @@
     <ClInclude Include="TriggerAlpha.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="TrackTriggerEnterExit.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="GetPlayerTriggerPosition.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1097,6 +1103,12 @@
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="TriggerAlpha.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="TrackTriggerEnterExit.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="GetPlayerTriggerPosition.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
   </ItemGroup>

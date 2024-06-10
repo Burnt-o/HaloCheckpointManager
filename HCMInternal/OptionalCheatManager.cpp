@@ -74,6 +74,8 @@
 #include "GetTagAddress.h"
 #include "TriggerFilter.h"
 #include "TriggerAlpha.h"
+#include "GetPlayerTriggerPosition.h"
+#include "TrackTriggerEnterExit.h"
 
 #include "DIContainer.h"
 #include "map.h"

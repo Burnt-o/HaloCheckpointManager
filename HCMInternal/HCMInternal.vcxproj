@@ -236,6 +236,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetTagAddress.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUIColourPicker.h" />
@@ -267,6 +268,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SkullToggler.h" />
     <ClInclude Include="SpriteResource.h" />
     <ClInclude Include="TagBlock.h" />
+    <ClInclude Include="TrackTriggerEnterExit.h" />
     <ClInclude Include="TriggerAlpha.h" />
     <ClInclude Include="TriggerData.h" />
     <ClInclude Include="TriggerFilter.h" />
@@ -460,6 +462,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GetPlayerTriggerPosition.cpp" />
     <ClCompile Include="GetTagAddress.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
@@ -483,6 +486,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
+    <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerAlpha.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
     <ClCompile Include="TriggerModel.cpp" />

@@ -214,13 +214,6 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::UpdateTriggerLastChecked }
 		},
 
-		{ GUIElementEnum::triggerOverlayMessageOnEnter,
-		{OptionalCheatEnum::UpdateTriggerLastChecked }
-		},
-
-		{ GUIElementEnum::triggerOverlayMessageOnExit,
-		{OptionalCheatEnum::UpdateTriggerLastChecked }
-		},
 
 		{ GUIElementEnum::triggerOverlayMessageOnCheckHit,
 		{OptionalCheatEnum::UpdateTriggerLastChecked }
@@ -228,6 +221,13 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 
 	{ GUIElementEnum::triggerOverlayMessageOnCheckMiss,
 	{OptionalCheatEnum::UpdateTriggerLastChecked }
+	},
+
+		{ GUIElementEnum::triggerOverlayMessageOnEnter,
+	{OptionalCheatEnum::TrackTriggerEnterExit }
+	},
+			{ GUIElementEnum::triggerOverlayMessageOnExit,
+	{OptionalCheatEnum::TrackTriggerEnterExit }
 	},
 
 

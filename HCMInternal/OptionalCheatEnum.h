@@ -76,7 +76,9 @@ HideWatermarkCheck,\
 PlayerPositionToClipboard,\
 GetTagAddress,\
 TriggerFilter,\
-TriggerAlpha
+TriggerAlpha,\
+GetPlayerTriggerPosition,\
+TrackTriggerEnterExit
 
 
 enum class OptionalCheatEnum {

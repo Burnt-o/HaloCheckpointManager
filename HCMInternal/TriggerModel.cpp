@@ -24,36 +24,41 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 	//triggerRotation.Normalize();
 	//box = DirectX::BoundingOrientedBox(center, extents, triggerRotation);
 
+	// begin with unit cube vertices
 	std::array<SimpleMath::Vector3, 8> vertices =
 	{
-/*
-	{ { { -1.0f, -1.0f,  1.0f, 0.0f } } },
-	{ { {  1.0f, -1.0f,  1.0f, 0.0f } } },
-	{ { {  1.0f,  1.0f,  1.0f, 0.0f } } },
-	{ { { -1.0f,  1.0f,  1.0f, 0.0f } } },
-	{ { { -1.0f, -1.0f, -1.0f, 0.0f } } },
-	{ { {  1.0f, -1.0f, -1.0f, 0.0f } } },
-	{ { {  1.0f,  1.0f, -1.0f, 0.0f } } },
-	{ { { -1.0f,  1.0f, -1.0f, 0.0f } } },
+		// from DirectX::BoundingOrientedBox constructor
+		/*
+			{ { { -1.0f, -1.0f,  1.0f, 0.0f } } },
+			{ { {  1.0f, -1.0f,  1.0f, 0.0f } } },
+			{ { {  1.0f,  1.0f,  1.0f, 0.0f } } },
+			{ { { -1.0f,  1.0f,  1.0f, 0.0f } } },
+			{ { { -1.0f, -1.0f, -1.0f, 0.0f } } },
+			{ { {  1.0f, -1.0f, -1.0f, 0.0f } } },
+			{ { {  1.0f,  1.0f, -1.0f, 0.0f } } },
+			{ { { -1.0f,  1.0f, -1.0f, 0.0f } } },
 
-*/
-		SimpleMath::Vector3{ -1.0f, -1.0f,  1.0f },
-		SimpleMath::Vector3{  1.0f, -1.0f,  1.0f },
-		SimpleMath::Vector3{  1.0f,  1.0f,  1.0f },
-		SimpleMath::Vector3{ -1.0f,  1.0f,  1.0f },
-		SimpleMath::Vector3{ -1.0f, -1.0f, -1.0f },
-		SimpleMath::Vector3{  1.0f, -1.0f, -1.0f },
-		SimpleMath::Vector3{  1.0f,  1.0f, -1.0f },
-		SimpleMath::Vector3{ -1.0f,  1.0f, -1.0f },
+		*/
+		// above is span -1 .. 1, but unit cube is actually -0.5f to 0.5f
+
+
+		SimpleMath::Vector3{ -0.5f, -0.5f,  0.5f },
+		SimpleMath::Vector3{  0.5f, -0.5f,  0.5f },
+		SimpleMath::Vector3{  0.5f,  0.5f,  0.5f },
+		SimpleMath::Vector3{ -0.5f,  0.5f,  0.5f },
+		SimpleMath::Vector3{ -0.5f, -0.5f, -0.5f },
+		SimpleMath::Vector3{  0.5f, -0.5f, -0.5f },
+		SimpleMath::Vector3{  0.5f,  0.5f, -0.5f },
+		SimpleMath::Vector3{ -0.5f,  0.5f, -0.5f },
 	};
 
+	// transform unit cube vertices by transformation
 	for (auto& vertex : vertices)
 	{
-		PLOG_DEBUG << "vertice pre: " << vertex;
 		vertex = SimpleMath::Vector3::Transform(vertex, transformation);
-		PLOG_DEBUG << "vertice post: " << vertex;
 	}
 
+	// create bounding box
 	DirectX::BoundingOrientedBox::CreateFromPoints(box, vertices.size(), vertices.data(), sizeof(SimpleMath::Vector3));
 
 	PLOG_DEBUG << "box.Center" << (SimpleMath::Vector3)box.Center;

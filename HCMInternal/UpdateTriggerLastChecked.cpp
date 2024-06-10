@@ -100,6 +100,7 @@ private:
 						LOG_ONCE_CAPTURE(PLOG_DEBUG << "updating timeLastChecked of trigger with index: " << t, t = triggerIndex);
 						triggerData.tickLastChecked = currentTick;
 						triggerData.lastCheckSuccessful = wasSuccessfulCheck;
+						triggerData.printedMessageForLastCheck = false;
 					}
 
 					break;
