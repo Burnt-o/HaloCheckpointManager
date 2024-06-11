@@ -770,6 +770,15 @@
     <ClInclude Include="GetPlayerTriggerPosition.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
+    <ClInclude Include="ShieldInputPrinter.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumClass.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="SensDriftDetector.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1110,6 +1119,12 @@
     </ClCompile>
     <ClCompile Include="GetPlayerTriggerPosition.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="ShieldInputPrinter.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="SensDriftDetector.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

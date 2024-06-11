@@ -5473,6 +5473,14 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="objectHeaderTableSizeOffset" Type="int64_t">
+		<Version Version="All" Game="Halo1">
+			<Offset>-0x8</Offset>
+			<!--0x2C or 0x30, not sure, both seem to track a count of something-->
+		</Version>
+
+	</VersionedEntry>
+
 
 	<VersionedEntry Name="bipedDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo1">
@@ -5490,6 +5498,8 @@
 			<shieldCooldown>0xC0</shieldCooldown>
 			<currentOutWeaponDatum>0xD4</currentOutWeaponDatum>
 			<currentVehicleDatum>0xD8</currentVehicleDatum>
+			<crouchJumpInput>0x1D8</crouchJumpInput>
+			<movementInput>0x258</movementInput>
 			<deathTimer>0x26B</deathTimer>
 			<dropWeaponFlag>0x26C</dropWeaponFlag>
 			<throwGrenadeFlag>0x26D</throwGrenadeFlag>
@@ -5497,6 +5507,7 @@
 			<plasGrenadeCount>0x2F3</plasGrenadeCount>
 			<flashLightBattery>0x328</flashLightBattery>
 			<isAirborneFlag>0x4D8</isAirborneFlag>
+
 		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo2">
@@ -8741,5 +8752,11 @@
 
 
 	<!--#endregion TriggerOverlay-->
-	
+
+	<VersionedEntry Name="deployableShieldDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<shieldCooldown>0xC0</shieldCooldown>
+		</Version>
+	</VersionedEntry>
+
 </root>

@@ -235,6 +235,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
+    <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetTagAddress.h" />
@@ -262,8 +263,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
     <ClInclude Include="ScopedImFontScaler.h" />
+    <ClInclude Include="SensDriftDetector.h" />
     <ClInclude Include="SerialisableSetting.h" />
     <ClInclude Include="SettingsEnums.h" />
+    <ClInclude Include="ShieldInputPrinter.h" />
     <ClInclude Include="SkullEnum.h" />
     <ClInclude Include="SkullToggler.h" />
     <ClInclude Include="SpriteResource.h" />
@@ -483,7 +486,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Renderer3DImpl_Sprites.cpp" />
     <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
     <ClCompile Include="RenderTextHelper.cpp" />
+    <ClCompile Include="SensDriftDetector.cpp" />
     <ClCompile Include="SettingsEnum.cpp" />
+    <ClCompile Include="ShieldInputPrinter.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />

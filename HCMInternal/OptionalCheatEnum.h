@@ -78,7 +78,8 @@ GetTagAddress,\
 TriggerFilter,\
 TriggerAlpha,\
 GetPlayerTriggerPosition,\
-TrackTriggerEnterExit
+TrackTriggerEnterExit,\
+ShieldInputPrinter
 
 
 enum class OptionalCheatEnum {

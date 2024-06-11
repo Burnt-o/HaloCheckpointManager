@@ -76,6 +76,7 @@
 #include "TriggerAlpha.h"
 #include "GetPlayerTriggerPosition.h"
 #include "TrackTriggerEnterExit.h"
+#include "ShieldInputPrinter.h"
 
 #include "DIContainer.h"
 #include "map.h"

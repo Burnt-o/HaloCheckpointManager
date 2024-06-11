@@ -643,6 +643,7 @@ private:
 							createNestedElement(GUIElementEnum::waypoint3DGUISettings),
 							createNestedElement(GUIElementEnum::triggerOverlayToggle),
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
+							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
 						}));
 
 
@@ -1067,7 +1068,9 @@ private:
 						(game, ToolTipCollection("Prints a message to the screen when a trigger failfully checks for the player"), std::nullopt, "Message on Failed Trigger Check", settings->triggerOverlayMessageOnCheckMiss));
 
 					
-
+			case GUIElementEnum::shieldInputPrinterToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+					(game, ToolTipCollection("Locks onto nearest deployable shield; when shield disabled, prints which tick you pressed movement inputs"), std::nullopt, "Shield Input Printer", settings->shieldInputPrinterToggle));
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

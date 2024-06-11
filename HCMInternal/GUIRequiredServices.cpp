@@ -235,6 +235,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{OptionalCheatEnum::TriggerFilter }
 	},
 
+			{ GUIElementEnum::shieldInputPrinterToggle,
+		{OptionalCheatEnum::ShieldInputPrinter,}
+		},
+
 
 		{ GUIElementEnum::display2DInfoToggleGUI,
 		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
