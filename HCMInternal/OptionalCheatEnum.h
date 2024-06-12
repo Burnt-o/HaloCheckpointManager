@@ -79,7 +79,8 @@ TriggerFilter,\
 TriggerAlpha,\
 GetPlayerTriggerPosition,\
 TrackTriggerEnterExit,\
-ShieldInputPrinter
+ShieldInputPrinter,\
+SensDriftDetector
 
 
 enum class OptionalCheatEnum {

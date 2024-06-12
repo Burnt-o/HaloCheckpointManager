@@ -77,6 +77,7 @@
 #include "GetPlayerTriggerPosition.h"
 #include "TrackTriggerEnterExit.h"
 #include "ShieldInputPrinter.h"
+#include "SensDriftDetector.h"
 
 #include "DIContainer.h"
 #include "map.h"

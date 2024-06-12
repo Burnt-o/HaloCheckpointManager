@@ -1373,6 +1373,13 @@ public:
 			nameof(shieldInputPrinterToggle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> sensDriftDetectorToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensDriftDetectorToggle)
+		);
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{

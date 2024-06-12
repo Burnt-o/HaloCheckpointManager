@@ -185,6 +185,7 @@
 		((triggerOverlayMessageOnCheckHit, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayMessageOnCheckMiss, (ALL_SUPPORTED_GAMES)))\
 	((shieldInputPrinterToggle, (Halo1)))\
+	((sensDriftDetectorToggle, (Halo1)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\

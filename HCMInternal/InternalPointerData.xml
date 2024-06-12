@@ -8759,4 +8759,31 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="mouseMovementFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xADDA7E</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="mouseMovementContextInterpreter" Type="MidhookContextInterpreter">
+		<Version Version="All" Game="Halo1">
+			<Parameters>
+				<pCurrentMouseMovement>rax</pCurrentMouseMovement>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="currentSensitivityPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B05610</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
 </root>

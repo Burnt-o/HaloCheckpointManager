@@ -644,6 +644,7 @@ private:
 							createNestedElement(GUIElementEnum::triggerOverlayToggle),
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
+							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 						}));
 
 
@@ -1071,6 +1072,10 @@ private:
 			case GUIElementEnum::shieldInputPrinterToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 					(game, ToolTipCollection("Locks onto nearest deployable shield; when shield disabled, prints which tick you pressed movement inputs"), std::nullopt, "Shield Input Printer", settings->shieldInputPrinterToggle));
+
+			case GUIElementEnum::sensDriftDetectorToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+					(game, ToolTipCollection("Prints a warning message whenever you move your mouse fast enough to cause a sensitivity manip to drift"), std::nullopt, "Sensitivity Drift Detector", settings->sensDriftDetectorToggle));
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
