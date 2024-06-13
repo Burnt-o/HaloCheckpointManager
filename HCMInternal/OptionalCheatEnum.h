@@ -80,7 +80,8 @@ TriggerAlpha,\
 GetPlayerTriggerPosition,\
 TrackTriggerEnterExit,\
 ShieldInputPrinter,\
-SensDriftDetector
+SensDriftDetector,\
+TriggerFilterModalDialogManager
 
 
 enum class OptionalCheatEnum {

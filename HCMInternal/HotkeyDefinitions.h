@@ -257,7 +257,9 @@ private:
 		mSettings->toggleWaypoint3DHotkeyEvent,
 		vvk{}),
 
-
+		initEventOnPressHotkey(triggerOverlayToggleHotkey,
+		mSettings->triggerOverlayToggleHotkeyEvent,
+		vvk{}),
 
 		/// skullllllllls
 		initEventOnPressHotkey(skullAngerHotkey,
@@ -411,6 +413,7 @@ private:
 		initEventOnPressHotkey(skullAcrophobiaHotkey,
 		mSettings->skullAcrophobiaToggleHotkeyEvent,
 		vvk{}),
+
 
 
 	};

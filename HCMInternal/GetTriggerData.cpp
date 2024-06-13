@@ -175,7 +175,7 @@ public:
 			{
 				updateTriggerData();
 				triggerDataCached = true;
-				settings->triggerOverlayFilterString->UpdateValueWithInput();
+				//settings->triggerOverlayFilterString->UpdateValueWithInput();
 			}
 		}
 		catch (HCMRuntimeException ex)

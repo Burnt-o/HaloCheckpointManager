@@ -46,7 +46,8 @@ editPlayerViewAngleAdjustVertical,\
 switchBSP,\
 hideHUDToggle,\
 setPlayerHealth,\
-toggleWaypoint3D
+toggleWaypoint3D,\
+triggerOverlayToggleHotkey
 
 
 

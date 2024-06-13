@@ -189,3 +189,6 @@ std::tuple<bool, std::string> ModalDialogRenderer::showReturningDialog(std::shar
 
 template
 std::optional<Waypoint> ModalDialogRenderer::showReturningDialog(std::shared_ptr<IModalDialogReturner<std::optional<Waypoint>>>dialogToShow);
+
+template
+std::string ModalDialogRenderer::showReturningDialog(std::shared_ptr<IModalDialogReturner<std::string>>dialogToShow);

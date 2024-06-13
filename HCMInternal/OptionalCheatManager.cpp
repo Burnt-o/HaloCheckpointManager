@@ -78,6 +78,7 @@
 #include "TrackTriggerEnterExit.h"
 #include "ShieldInputPrinter.h"
 #include "SensDriftDetector.h"
+#include "TriggerFilterModalDialogManager.h"
 
 #include "DIContainer.h"
 #include "map.h"

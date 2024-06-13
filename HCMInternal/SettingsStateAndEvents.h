@@ -52,6 +52,7 @@ public:
 	std::shared_ptr<ActionEvent> hideHUDToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> setPlayerHealthEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> toggleWaypoint3DHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> triggerOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
 
 
 	// events
@@ -95,11 +96,10 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> switchBSPEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> forceFutureCheckpointFillEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> forceFutureCheckpointFillEvent = std::make_shared<ActionEvent>(); 
+	std::shared_ptr<ActionEvent> triggerOverlayFilterStringDialogEvent = std::make_shared<ActionEvent>(); 
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringCopyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringPasteEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> triggerOverlayFilterStringLoadBoolEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> triggerOverlayFilterStringLoadBoolPlusBSPEvent = std::make_shared<ActionEvent>();
 
 	// waypoint events (delete, edit)
 	std::shared_ptr<WaypointAndListEvent> deleteWaypointEvent = std::make_shared<WaypointAndListEvent>();
@@ -1229,6 +1229,11 @@ public:
 			nameof(triggerOverlayFilterToggle)
 		);
 
+	std::shared_ptr<UnarySetting<int>> triggerOverlayFilterCountLabel = std::make_shared<UnarySetting<int>>
+		(
+			0,
+			nameof(triggerOverlayFilterCountLabel)
+		);
 
 
 	std::shared_ptr<BinarySetting<std::string>> triggerOverlayFilterString = std::make_shared<BinarySetting<std::string>>

@@ -33,6 +33,7 @@
 #include "GUIButtonAndInt.h"
 #include "GUIWaypointList.h"
 #include "GUISkullToggle.h"
+#include "GUILabel.h"
 
 
 
@@ -934,7 +935,7 @@ private:
 
 				case GUIElementEnum::triggerOverlayToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection("Overlays trigger volumes onto the screen"), std::nullopt, "Trigger Overlay", settings->triggerOverlayToggle));
+						(game, ToolTipCollection("Overlays trigger volumes onto the screen"), RebindableHotkeyEnum::triggerOverlayToggleHotkey, "Trigger Overlay", settings->triggerOverlayToggle));
 
 				case GUIElementEnum::triggerOverlaySettings:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
@@ -960,33 +961,29 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
 						(game, ToolTipCollection("Filter which triggers to show by name"), std::nullopt, "Filter Triggers by Name", settings->triggerOverlayFilterToggle, headerChildElements
 							{
-							createNestedElement(GUIElementEnum::triggerOverlayFilterString),
+							createNestedElement(GUIElementEnum::triggerOverlayFilterStringDialog),
+							createNestedElement(GUIElementEnum::triggerOverlayFilterCountLabel),
 							createNestedElement(GUIElementEnum::triggerOverlayFilterStringCopy),
 							createNestedElement(GUIElementEnum::triggerOverlayFilterStringPaste),
-							createNestedElement(GUIElementEnum::triggerOverlayFilterStringLoadBool),
-							createNestedElement(GUIElementEnum::triggerOverlayFilterStringLoadBoolPlusBSP),
 							}));
 
-				case GUIElementEnum::triggerOverlayFilterString:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputMultilineString<4, 350.f>>
-						(game, ToolTipCollection("Which triggers should show up. Names should be comma seperated."), "Filter Whitelist (exact match, comma seperated)", settings->triggerOverlayFilterString, std::nullopt));
+				case GUIElementEnum::triggerOverlayFilterStringDialog:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Which triggers should show up. Names should be semicolon seperated."), std::nullopt, "Edit Filter Name Whitelist", settings->triggerOverlayFilterStringDialogEvent));
+
+
+				case GUIElementEnum::triggerOverlayFilterCountLabel:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUILabel<int>>
+						(game, ToolTipCollection("How many trigger names are in the filter list."), "Filter Name Count: {}", settings->triggerOverlayFilterCountLabel));
 
 
 				case GUIElementEnum::triggerOverlayFilterStringCopy:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-						(game, ToolTipCollection("Copy the filter list to the clipboard"), std::nullopt, "Copy Filter", settings->triggerOverlayFilterStringCopyEvent));
+						(game, ToolTipCollection("Copy the filter list to the clipboard"), std::nullopt, "Copy Filter List", settings->triggerOverlayFilterStringCopyEvent));
 
 				case GUIElementEnum::triggerOverlayFilterStringPaste:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-						(game, ToolTipCollection("Paste the filter list from the clipboard"), std::nullopt, "Paste Filter", settings->triggerOverlayFilterStringPasteEvent));
-
-				case GUIElementEnum::triggerOverlayFilterStringLoadBool:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-						(game, ToolTipCollection("Set the filter list to the triggers for Banshee-out-of-level on Two Betrayals"), std::nullopt, "Load BOOL filter", settings->triggerOverlayFilterStringLoadBoolEvent));
-
-				case GUIElementEnum::triggerOverlayFilterStringLoadBoolPlusBSP:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
-						(game, ToolTipCollection("Set the filter list to the triggers for Banshee-out-of-level on Two Betrayals (plus BSP load triggers)"), std::nullopt, "Load BOOL (+BSPs) filter", settings->triggerOverlayFilterStringLoadBoolPlusBSPEvent));
+						(game, ToolTipCollection("Paste the filter list from the clipboard"), std::nullopt, "Paste Filter List", settings->triggerOverlayFilterStringPasteEvent));
 
 				case GUIElementEnum::triggerOverlayRenderStyle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerRenderStyle, 100.f>>

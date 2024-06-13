@@ -162,11 +162,10 @@
 	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
 	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterString, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterStringDialog, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterCountLabel, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayFilterStringPaste, (ALL_SUPPORTED_GAMES)))\
-			((triggerOverlayFilterStringLoadBool, (Halo1)))\
-			((triggerOverlayFilterStringLoadBoolPlusBSP, (Halo1)))\
 		((triggerOverlayRenderStyle, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayInteriorStyle, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayLabelStyle, (ALL_SUPPORTED_GAMES)))\

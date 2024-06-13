@@ -83,6 +83,12 @@
     <Filter Include="Services\OptionalCheats\Implementations\3D\Trigger">
       <UniqueIdentifier>{0f426aa6-70fa-45b4-b531-6866b9476161}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Includes\safetyhook">
+      <UniqueIdentifier>{d1f7066d-bbdc-4427-bb5a-b19007d2b8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\ImGuiColorTextEditor">
+      <UniqueIdentifier>{e97217e9-5185-4653-aa8c-93717bbdec9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -93,12 +99,6 @@
     </ClInclude>
     <ClInclude Include="GlobalKill.h">
       <Filter>Global</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\safetyhook\safetyhook.hpp">
-      <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\safetyhook\Zydis.h">
-      <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="ControlDefs.h">
       <Filter>Global</Filter>
@@ -151,9 +151,6 @@
     <ClInclude Include="App.h">
       <Filter>Global</Filter>
     </ClInclude>
-    <ClInclude Include="includes\utki\shared_ref.hpp">
-      <Filter>Includes</Filter>
-    </ClInclude>
     <ClInclude Include="GetMCCVersion.h">
       <Filter>Services</Filter>
     </ClInclude>
@@ -162,9 +159,6 @@
     </ClInclude>
     <ClInclude Include="DIContainer.h">
       <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="map.h">
-      <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="DumpCheckpoint.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
@@ -779,6 +773,27 @@
     <ClInclude Include="SensDriftDetector.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="GUILabel.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerFilterModalDialogManager.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerFilterStringDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Includes\safetyhook</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\safetyhook.hpp">
+      <Filter>Includes\safetyhook</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\Zydis.h">
+      <Filter>Includes\safetyhook</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -786,12 +801,6 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Global</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\safetyhook\safetyhook.cpp">
-      <Filter>Includes</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\safetyhook\Zydis.c">
-      <Filter>Includes</Filter>
     </ClCompile>
     <ClCompile Include="MidhookContextInterpreter.cpp">
       <Filter>Classes</Filter>
@@ -1126,11 +1135,35 @@
     <ClCompile Include="SensDriftDetector.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
+    <ClCompile Include="includes\safetyhook\safetyhook.cpp">
+      <Filter>Includes\safetyhook</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\TextEditor.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\UnitTests.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\Zydis.c">
+      <Filter>Includes\safetyhook</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\LanguageDefinitions.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
     <None Include="dds2.bin">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="includes\ImGuiColorTextEdit\README.md">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </None>
+    <None Include="includes\ImGuiColorTextEdit\LICENSE">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

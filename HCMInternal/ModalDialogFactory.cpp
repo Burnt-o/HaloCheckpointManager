@@ -4,7 +4,7 @@
 #include "InjectionWarningDialog.h"
 #include "CheckpointDumpNameDialog.h"
 #include "EditOrAddWaypointDialog.h"
-
+#include "TriggerFilterStringDialog.h"
 
 
 
@@ -35,4 +35,11 @@
 	{
 		PLOG_VERBOSE << "factory creating EditOrAddWaypointDialog";
 		return std::make_unique<EditOrAddWaypointDialog>(runtimeExceptionHandler, dialogTitle, defaultWaypoint, playerPosition, canMeasureDistance);
+	}
+
+	std::shared_ptr<IModalDialogReturner<std::string>> ModalDialogFactory::makeTriggerFilterStringDialog
+	(std::string dialogTitle, std::string defaultValue, MCCState mccState)
+	{
+		PLOG_VERBOSE << "factory creating TriggerFilterStringDialog";
+		return std::make_unique<TriggerFilterStringDialog>(dialogTitle, defaultValue, mccState);
 	}

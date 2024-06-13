@@ -232,7 +232,7 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 
 
 		{ GUIElementEnum::triggerOverlayFilterToggle,
-	{OptionalCheatEnum::TriggerFilter }
+	{OptionalCheatEnum::TriggerFilter, OptionalCheatEnum::TriggerFilterModalDialogManager }
 	},
 
 			{ GUIElementEnum::shieldInputPrinterToggle,
