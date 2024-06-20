@@ -5,37 +5,18 @@
 #include "DIContainer.h"
 #include "TriggerData.h"
 
+#include "CsLibGuarded\cs_plain_guarded.h"
+
 typedef uintptr_t TriggerPointer;
 typedef std::map<TriggerPointer, TriggerData> TriggerDataMap;
+typedef libguarded::plain_guarded<TriggerDataMap>::handle TriggerDataMapLock;
 
 
-struct IAtomicTriggerDataStore
-{
-private:
-	friend class TriggerFilterImpl;
-	std::shared_ptr<TriggerDataMap> allTriggers;
-
-protected:
-	IAtomicTriggerDataStore(
-		std::shared_ptr<TriggerDataMap> allT,
-		std::shared_ptr<TriggerDataMap> filteredT)
-		:
-		allTriggers(allT), 
-		filteredTriggers(filteredT) 
-	{}
-
-
-
-public:
-	virtual ~IAtomicTriggerDataStore() = default;
-
-	std::shared_ptr<TriggerDataMap> filteredTriggers;
-};
 
 class GetTriggerDataUntemplated
 {
 protected:
-	// friendship proxy
+	// friendship proxy so that only GetTriggerData can access TriggerData constructor
 	TriggerData makeTriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up)
 	{
 		return std::move(TriggerData(triggerName, trigIndex, isBSP, position, extents, forward, up));
@@ -43,23 +24,26 @@ protected:
 
 public:
 	virtual ~GetTriggerDataUntemplated() = default;
-	virtual std::unique_ptr<IAtomicTriggerDataStore> getTriggerData() = 0;
+	virtual TriggerDataMapLock getAllTriggers() = 0;
+	virtual TriggerDataMapLock getFilteredTriggers() = 0;
 
 };
 
 class GetTriggerData : public IOptionalCheat
 {
-
+private:
+	std::unique_ptr<GetTriggerDataUntemplated> pimpl;
 public:
 
 	GetTriggerData(GameState gameImpl, IDIContainer& dicon);
 	~GetTriggerData();
 
-	std::unique_ptr<IAtomicTriggerDataStore> getTriggerData();
+	TriggerDataMapLock getAllTriggers();
+	TriggerDataMapLock getFilteredTriggers();
 
 	std::string_view getName() override { return nameof(GetTriggerData); }
 
-private:
-	std::unique_ptr<GetTriggerDataUntemplated> pimpl;
+
+
 
 };

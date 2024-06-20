@@ -87,12 +87,11 @@ private:
 			bool shouldPrintForExit = settings->triggerOverlayMessageOnExit->GetValue();
 
 			auto& playerTriggerPosition = getPlayerTriggerPosition->getPlayerTriggerPosition();
-			auto triggerDataLock = getTriggerData->getTriggerData();
-
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "checking triggers against player trigger vertex at: " << p, p = playerTriggerPosition);
 
+			auto filteredTriggerData = getTriggerData->getFilteredTriggers();
 
-			for (auto& [triggerPointer, triggerData] : *triggerDataLock->filteredTriggers.get())
+			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
 				bool playerIsInsideThisTick = triggerData.model.box.Contains(playerTriggerPosition) == DirectX::ContainmentType::CONTAINS;
 

@@ -44,12 +44,7 @@ private:
 
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
-			auto triggerDataLock = getTriggerData->getTriggerData();
-			// I'm currently experiencing a crash when filtering triggers while overlay is running.
-			// is the mutex not working properly?
-#ifndef HCM_DEBUG
-			static_assert(false && "FIX THAT CRASH");
-#endif
+
 
 			if (settings->triggerOverlayToggle->GetValue() && settings->triggerOverlayFilterToggle->GetValue())
 			{
@@ -74,17 +69,19 @@ private:
 						delimitedTriggerFilter.push_back(tmp);
 				}
 
-				triggerDataLock->filteredTriggers->clear();
+				auto filteredTriggerData = getTriggerData->getFilteredTriggers();
+				auto allTriggerData = getTriggerData->getAllTriggers();
+				filteredTriggerData->clear();
 
 				int matchedTriggerCount = 0;
-				for (auto& [triggerPointer, triggerData] : *triggerDataLock->allTriggers.get())
+				for (auto& [triggerPointer, triggerData] : *allTriggerData.get())
 				{
 					for (auto& filterName : delimitedTriggerFilter)
 					{
 						if (triggerData.name == filterName)
 						{
 							matchedTriggerCount++;
-							triggerDataLock->filteredTriggers->emplace(triggerPointer, triggerData);
+							filteredTriggerData->emplace(triggerPointer, triggerData);
 							break;
 						}
 
@@ -110,10 +107,13 @@ private:
 			else if (settings->triggerOverlayToggle->GetValue())
 			{
 				PLOG_DEBUG << "unfiltering trigger data";
-				triggerDataLock->filteredTriggers->clear();
-				for (auto& [triggerPointer, triggerData] : *triggerDataLock->allTriggers.get())
+				auto filteredTriggerData = getTriggerData->getFilteredTriggers();
+				auto allTriggerData = getTriggerData->getAllTriggers();
+				filteredTriggerData->clear();
+
+				for (auto& [triggerPointer, triggerData] : *allTriggerData.get())
 				{
-					triggerDataLock->filteredTriggers->emplace(triggerPointer, triggerData);
+					filteredTriggerData->emplace(triggerPointer, triggerData);
 				}
 			}
 			

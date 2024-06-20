@@ -84,11 +84,11 @@ private:
 
 			lockOrThrow(instance->getTriggerDataWeak, getTriggerData);
 
-			auto triggerDataLock = getTriggerData->getTriggerData();
+			auto filteredTriggerData = getTriggerData->getFilteredTriggers();
 
 
 
-			for (auto& [triggerPointer, triggerData] : *triggerDataLock->filteredTriggers.get())
+			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
 				if (triggerData.triggerIndex == triggerIndex)
 				{

@@ -120,8 +120,7 @@ private:
 			const uint32_t triggerOverlayCheckMissFalloff = settings->triggerOverlayCheckMissFalloff->GetValue();
 
 			lockOrThrow(getTriggerDataWeak, getTriggerData);
-			auto triggerDataLock = getTriggerData->getTriggerData();
-			const auto& filteredTriggerData = triggerDataLock->filteredTriggers;
+			auto filteredTriggerData = getTriggerData->getFilteredTriggers();
 
 			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
 			const uint32_t currentTick = gameTickEventHook->getCurrentGameTick();

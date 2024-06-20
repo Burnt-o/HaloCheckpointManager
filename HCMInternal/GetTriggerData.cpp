@@ -11,35 +11,8 @@
 #include "MCCString.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
-#include <shared_mutex>
 
 
-struct AtomicTriggerDataStore : public IAtomicTriggerDataStore
-{
-public:
-	std::shared_lock<std::shared_mutex> lock;
-
-
-	explicit AtomicTriggerDataStore(
-		std::shared_ptr<TriggerDataMap> allT,
-		std::shared_ptr<TriggerDataMap> filteredT,
-		std::shared_ptr<std::shared_mutex> mut
-	)
-		: 
-		IAtomicTriggerDataStore(allT, filteredT), 
-		lock(*mut.get())
-	{
-	}
-
-
-
-
-	AtomicTriggerDataStore(const AtomicTriggerDataStore&) = delete;
-	AtomicTriggerDataStore(AtomicTriggerDataStore&&) = delete;
-	AtomicTriggerDataStore& operator=(const AtomicTriggerDataStore&) = delete;
-	AtomicTriggerDataStore& operator=(AtomicTriggerDataStore&&) = delete;
-
-};
 
 
 template<GameState::Value mGame>
@@ -67,10 +40,10 @@ private:
 	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
 
 	// resolved data
-	std::shared_ptr<TriggerDataMap> triggerDataAll = std::make_shared<TriggerDataMap>();
+	libguarded::plain_guarded<TriggerDataMap> triggerDataAll = libguarded::plain_guarded<TriggerDataMap>();
 	bool triggerDataCached = false;
-	std::shared_ptr<TriggerDataMap> triggerDataFiltered = std::make_shared<TriggerDataMap>();
-	std::shared_ptr<std::shared_mutex> triggerDataMutex = std::make_shared<std::shared_mutex>();
+	libguarded::plain_guarded<TriggerDataMap> triggerDataFiltered = libguarded::plain_guarded<TriggerDataMap>();
+
 
 	void onGameStateChange(const MCCState&)
 	{
@@ -80,10 +53,8 @@ private:
 
 	void updateTriggerData()
 	{
-		std::shared_lock<std::shared_mutex> lock(*triggerDataMutex.get());
 		PLOG_DEBUG << "updating trigger data!";
-		triggerDataAll->clear();
-		triggerDataFiltered->clear();
+
 
 		lockOrThrow(getTagAddressWeak, getTagAddress);
 
@@ -104,6 +75,11 @@ private:
 		uintptr_t tagDataArray = metaHeaderAddressResolved + tagBase + triggerTagBlockOffset;
 
 		PLOG_DEBUG << "triggerDataStruct first entry location: " << std::hex << (uintptr_t)triggerDataStruct->currentBaseAddress;
+
+		auto triggerDataAllLocked = triggerDataAll.lock();
+		auto triggerDataFilteredLocked = triggerDataFiltered.lock();
+		triggerDataAllLocked->clear();
+		triggerDataFilteredLocked->clear();
 
 		for (uint32_t triggerIndex = 0; triggerIndex < triggerCount; triggerIndex++)
 		{
@@ -133,7 +109,7 @@ private:
 			PLOG_DEBUG << "UpDr: " << *pUp;
 
 
-			triggerDataAll->emplace(triggerDataStruct->currentBaseAddress,
+			triggerDataAllLocked->emplace(triggerDataStruct->currentBaseAddress,
 				std::move(makeTriggerData(
 					std::string(pName),
 					triggerIndex,
@@ -167,7 +143,26 @@ public:
 
 	}
 
-	std::unique_ptr<IAtomicTriggerDataStore> getTriggerData() override
+	virtual TriggerDataMapLock getAllTriggers() override
+	{
+			try
+			{
+				if (triggerDataCached == false)
+				{
+					updateTriggerData();
+					triggerDataCached = true;
+					//settings->triggerOverlayFilterString->UpdateValueWithInput();
+				}
+			}
+			catch (HCMRuntimeException ex)
+			{
+				runtimeExceptions->handleMessage(ex);
+				settings->triggerOverlayToggle->GetValueDisplay() = false;
+				settings->triggerOverlayToggle->UpdateValueWithInput();
+			}
+			return triggerDataAll.lock();
+	}
+	virtual TriggerDataMapLock getFilteredTriggers() override
 	{
 		try
 		{
@@ -185,17 +180,41 @@ public:
 			settings->triggerOverlayToggle->UpdateValueWithInput();
 		}
 
-		return std::make_unique<AtomicTriggerDataStore>(triggerDataAll, triggerDataFiltered, triggerDataMutex);
-	
-		
-
+		return triggerDataFiltered.lock();
 	}
+
+
+	//std::unique_ptr<IAtomicTriggerDataStore> getTriggerData() override
+	//{
+	//	try
+	//	{
+	//		if (triggerDataCached == false)
+	//		{
+	//			updateTriggerData();
+	//			triggerDataCached = true;
+	//			//settings->triggerOverlayFilterString->UpdateValueWithInput();
+	//		}
+	//	}
+	//	catch (HCMRuntimeException ex)
+	//	{
+	//		runtimeExceptions->handleMessage(ex);
+	//		settings->triggerOverlayToggle->GetValueDisplay() = false;
+	//		settings->triggerOverlayToggle->UpdateValueWithInput();
+	//	}
+
+	//	return std::make_unique<AtomicTriggerDataStore>(triggerDataAll, triggerDataFiltered, triggerDataMutex);
+	//
+	//	
+
+	//}
 };
 
 
-std::unique_ptr<IAtomicTriggerDataStore> GetTriggerData::getTriggerData()
-{
-	return pimpl->getTriggerData();
+TriggerDataMapLock GetTriggerData::getAllTriggers() {
+	return pimpl->getAllTriggers();
+}
+TriggerDataMapLock GetTriggerData::getFilteredTriggers() {
+	return pimpl->getFilteredTriggers();
 }
 
 GetTriggerData::GetTriggerData(GameState gameImpl, IDIContainer& dicon)
