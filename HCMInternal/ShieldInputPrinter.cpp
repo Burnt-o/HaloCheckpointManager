@@ -57,7 +57,7 @@ private:
 
 	// data
 	GameState mGame;
-	Datum lockedShieldDatum;
+	std::optional<Datum> lockedShield;
 	InpMask lastInputs = Input::None;
 
 	enum class bipedDataFields { crouchJumpInput, movementInput };
@@ -95,7 +95,7 @@ private:
 		return out;
 	}
 
-	Datum findNearestShield()
+	std::optional<Datum> findNearestShield()
 	{
 		lockOrThrow(objectTableRangeWeak, objectTableRange);
 		auto objectRange = objectTableRange->getObjectTableRange();
@@ -133,7 +133,7 @@ private:
 			allShieldObjects.emplace_back(ShieldInfo(object, shieldPosition, distanceToPlayer));
 		}
 
-		if (allShieldObjects.empty()) throw HCMRuntimeException("No deployable shield objects on map!");
+		if (allShieldObjects.empty()) return std::nullopt;
 
 		// sort shield objects by distance to player
 		std::ranges::sort(allShieldObjects, [](const auto& lhs, const auto& rhs) {
@@ -142,10 +142,16 @@ private:
 			});
 		
 
+		// if closest shield over 1.5 units away, return null
+		if (SimpleMath::Vector3::Distance(playerPosition, allShieldObjects.at(0).shieldPosition) > 1.5f)
+		{
+			return std::nullopt;
+		}
+
 
 		// return datum of closest shield object
 		lockOrThrow(messagesWeak, messages);
-		messages->addMessage(std::format("Locking onto Shield at position: {}", vec3ToStringSetPrecision(allShieldObjects.at(0).shieldPosition, 3)));
+		messages->addMessage(std::format("Input printing for Shield at position: {}", vec3ToStringSetPrecision(allShieldObjects.at(0).shieldPosition, 3)));
 
 		return allShieldObjects.at(0).objectInfo.objectDatum;
 	}
@@ -156,19 +162,39 @@ private:
 Get player object. Get inputs and compare to last tick inputs.
 Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 */
+
+
 		try
 		{
+
 			// check for reverts. if revert, refind shieldDatum.
 			static uint32_t lastTick = 0;
-			if (currentTick < lastTick)
+			if (currentTick < lastTick || (lockedShield.has_value() == false && currentTick % 10 == 0))
 			{
-				lockedShieldDatum = findNearestShield();
+				lockedShield = findNearestShield();
 			}
 			lastTick = currentTick;
 
+			if (lockedShield.has_value() == false) return;
+
+			// check shield not too far away
+			lockOrThrow(getObjectPhysicsWeak, getObjectPhysics);
+			lockOrThrow(getPlayerDatumWeak, getPlayerDatum);
+			auto playerPosition = *getObjectPhysics->getObjectPosition(getPlayerDatum->getPlayerDatum());
+			auto shieldPosition = *getObjectPhysics->getObjectPosition(lockedShield.value());
+
+			if (SimpleMath::Vector3::Distance(playerPosition, shieldPosition) > 1.5f)
+			{
+				lockedShield = std::nullopt;
+				return;
+			}
+
+
+
 			// get shield object
 			lockOrThrow(getObjectAddressWeak, getObjectAddress);
-			shieldDataStruct->currentBaseAddress = getObjectAddress->getObjectAddress(lockedShieldDatum);
+			shieldDataStruct->currentBaseAddress = getObjectAddress->getObjectAddress(lockedShield.value());
+
 			auto shieldCooldown = *shieldDataStruct->field<uint16_t>(deployableShieldDataFields::shieldCooldown);
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "shield object: " << p, p = shieldDataStruct->currentBaseAddress);
@@ -178,7 +204,7 @@ Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 			if (shieldCooldown == 0 || shieldCooldown == 210)
 				return;
 
-			lockOrThrow(getPlayerDatumWeak, getPlayerDatum);
+
 			playerDataStruct->currentBaseAddress = getObjectAddress->getObjectAddress(getPlayerDatum->getPlayerDatum());
 
 			InpMask currentInputs = getPlayerInputState(playerDataStruct);
@@ -240,7 +266,6 @@ Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 
 			if (shouldEnable)
 			{
-				lockedShieldDatum = findNearestShield();
 				lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
 				mGameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>>(gameTickEventHook->getGameTickEvent(), [this](uint32_t i) {onGameTickEvent(i); });
 			}
