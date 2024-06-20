@@ -165,9 +165,9 @@ UpdateTriggerLastChecked::UpdateTriggerLastChecked(GameState gameImpl, IDIContai
 		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
-	//case GameState::Value::Halo2:
-	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo2>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo2:
+		pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo2>>(gameImpl, dicon);
+		break;
 
 	//case GameState::Value::Halo3:
 	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImpl<GameState::Value::Halo3>>(gameImpl, dicon);

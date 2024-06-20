@@ -5524,11 +5524,13 @@
 			<currentVehicleDatum>0x14</currentVehicleDatum>
 			<!--these pos/vel are the non-havok physics versions (aka the ghost hitbox?)-->
 			<position>0x64</position>
+			<triggerHitVertex>0x30</triggerHitVertex>
 			<velocity>0x88</velocity>
 			<health>0xEC</health>
 			<shields>0xF0</shields>
 			<shieldCooldown>0x104</shieldCooldown>
-		</Version>
+		
+	</Version>
 
 		<Version Version="All" Game="Halo3">
 			<!--confirmed 2448, 2645, 3272-->
@@ -5694,9 +5696,23 @@
 			<blockDefinition>0x8</blockDefinition>
 		</Version>
 
+		<Version Version="All" Game="Halo2">
+			<entryCount>0x0</entryCount>
+			<offset>0x4</offset>
+			<blockDefinition>0x8</blockDefinition>
+		</Version>
+
 	</VersionedEntry>
 
-
+	<VersionedEntry Name="tagTableAddress" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15A2EC0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
 
 	<VersionedEntry Name="metaHeaderDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo1">
@@ -5710,12 +5726,10 @@
 		<Version Version="All" Game="Halo2">
 			<tagGroupTableOffset>0x0</tagGroupTableOffset>
 			<numberOfTagGroups>0x4</numberOfTagGroups>
-			<tagTableOffset>0x8</tagTableOffset>
 			<scenarioDatum>0xC</scenarioDatum>
 			<mapGlobalsDatumIndex>0x10</mapGlobalsDatumIndex>
 			<numberOfTags>0x18</numberOfTags>
 			<magic>0x1C</magic> <!--safety check, should always read "sgat-->
-		
 	</Version>
 
 		<!--actually index table header-->
@@ -6076,7 +6090,24 @@
 			</Offsets>
 		</Version>
 	</VersionedEntry>
+
+	<VersionedEntry Name="debugStringTableAddress" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE97AE0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
 	
+	<VersionedEntry Name="debugStringMetaTableAddress" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE7FAE0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
 	
 	<!--special value added to runtime tag addresses-->
 	<VersionedEntry Name="tagBase" Type="int64_t">
@@ -8733,11 +8764,25 @@
 			<position>0x48</position>
 			<extents>0x54</extents>
 		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<StrideSize>0x44</StrideSize>
+			<debugStringIndex>0x0</debugStringIndex>
+			<debugStringLength>0x3</debugStringLength>
+			<forward>0xC</forward>
+			<up>0x18</up>
+			<position>0x24</position>
+			<extents>0x30</extents>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="triggerVolumeTagBlockOffset" Type="int64_t">
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Offset>0x360</Offset>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Offset>0x108</Offset>
 		</Version>
 	</VersionedEntry>
 
@@ -8746,6 +8791,13 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0xB721CC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x678FD0</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

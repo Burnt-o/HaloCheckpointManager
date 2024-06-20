@@ -13,7 +13,7 @@ typedef libguarded::plain_guarded<TriggerDataMap>::handle TriggerDataMapLock;
 
 
 
-class GetTriggerDataUntemplated
+class TriggerDataFactory
 {
 protected:
 	// friendship proxy so that only GetTriggerData can access TriggerData constructor
@@ -21,6 +21,11 @@ protected:
 	{
 		return std::move(TriggerData(triggerName, trigIndex, isBSP, position, extents, forward, up));
 	}
+};
+
+
+class GetTriggerDataUntemplated
+{
 
 public:
 	virtual ~GetTriggerDataUntemplated() = default;

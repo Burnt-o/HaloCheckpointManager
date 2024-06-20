@@ -18,7 +18,7 @@ struct TriggerData
 	bool playerWasInsideLastTick = false; // updated by TrackTriggerEnterExit
 
 private:
-	friend class GetTriggerDataUntemplated;
+	friend class TriggerDataFactory;
 	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up) 
 		: name(triggerName), 
 		model(triggerName, position, extents, forward, up),

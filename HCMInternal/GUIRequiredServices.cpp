@@ -206,6 +206,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::TriggerOverlay, OptionalCheatEnum::TriggerAlpha}
 		},
 
+				{ GUIElementEnum::triggerOverlaySettings,
+		{OptionalCheatEnum::TriggerOverlay}
+		},
+
 		{ GUIElementEnum::triggerOverlayCheckHitToggle,
 		{OptionalCheatEnum::UpdateTriggerLastChecked }
 		},

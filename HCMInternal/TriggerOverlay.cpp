@@ -123,7 +123,14 @@ private:
 			auto filteredTriggerData = getTriggerData->getFilteredTriggers();
 
 			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
-			const uint32_t currentTick = gameTickEventHook->getCurrentGameTick();
+			 uint32_t currentTick = gameTickEventHook->getCurrentGameTick();
+
+			if (mGame == GameState::Value::Halo2) 
+				currentTick--;
+
+#ifndef HCM_DEBUG
+			static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value").
+#endif
 
 			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
@@ -238,6 +245,14 @@ public:
 		}
 	}
 
+	~TriggerOverlayImpl()
+	{
+		if (renderingMutex)
+		{
+			renderingMutex.wait(true);
+		}
+		mRenderEventCallback.reset();
+	}
 
 };
 
