@@ -1,95 +1,49 @@
 
+3.1 TODO
+* impl triggerOverlay for non-ce games (mainly RE trigger data location and the triggerDataStruct)
+* add load All Triggers to filterTrigger modal dialog
+* bool script mode? (hacky implementation of scriptReader for ce-bool only? might not take too long if I'm really hacky)
+* upgrade sensitivity drift detector (actually do the float math and check for drift)
 
 
 
-
-TODO: 
-
-* Fix reach && ODST zoneset cheat
-* Improve vec3 (de)serialisation to clipboard so its interchangeable
+FUTURE TODO: 
+* freeCamera for h3, 0d, hr, h4
+* freeCamera automation stuff 
+* 3d object info overlay
+* refactor GetPosition services into Quake/Havok nomenclature, and to use std::expected instead of throwing exceptions
+* display2dinfo ghosting info (desync/difference between quake and havok positions)
+* refactor a bunch of simple services to use std::expected
 * Sprint Meter h4/hr
-* Trigger Overlay (need to .. find some higher level 3d library)
-* FreeCam for other games (RE + confirm same coordinate system)
-* fix tickadvance issueeees
-
-CODE TODO:
-* trigger flash system back to tick-based instead of realtime
-	* don't colour cache (premature optimization)
-	* will fix pause/speedhack interfence
-	* will simplify print message on check
-* slight gui adjustment (ticks for successful check + failed check, add option for print message on failed check)
-* large gui adjustment (edit trigger filter modal dialog)
-* impl for non-ce games
-* bool script mode? (hacky implementation of scriptReader for ce-bool only? might not take too long if I really hacky)
+* Fix reach && ODST zoneset cheat
+* fix tickadvance issues (caused by the scopedServiceRequest for pausing the game not always working properly)
 
 
 
 
-DONE:
-* Move disable watermark option from freecam-only to anytime (lapua dependence)
+BACKBURNER (tasks to do eventually):
+* freeCamera velocity-based interpolator (and maintain/set velocity stuff)
+* HCMExternal filterSearch thingy
+* Add backup cheats system and internal injection toggle to external
+* add loading the correct level if possible on inject / change level feature in general
 
-
-
-
-
-
-Cleanup:
-Settings GetValue should not be used to set value (unreference, make seperate set value method)
-Cleanup how GetValue vs GetValueDisplay work and who can use them
-resolveDependentCheat macro should take game as arg
-formatter pass
-compiler warning pass
-linter pass
-
-
-
-TODO:
-* Improve injection logging for Morgahonahon's access_denied issue
-	* add check for security permissions - GetSecurityInfo(hTargetProcess, SE_KERNEL_OBJECT, DACL_SECURITY_INFORMATION | SACL_SECURITY_INFORMATION, NULL, NULL, &dacl, &sacl, &pSecDesc);
-	* RtlGetLastNtStatus
-
-
-
-
-
-
-
-
-
-
-
-
-
-DONE LIST:
-Fix ctrl-tab input bringing up imgui thing
-h1 rng in displayinfo
-
-
-backburner (tasks to do eventually):
-freeCamera for h3, 0d, hr, h4
-freeCamera automation stuff 
-freeCamera velocity-based interpolator (and maintain/set velocity stuff)
-3d object info overlay
-
-trigger overlay
-sprint meter
-
-
+CODE CLEANUP (eventually eventually)
+* Refactor optionalCheats to not reference settings, instead provide all their functionality in public api - add Commander layer to bind settings-events to calling said api
+	* then pull out all optionalCheats (rename to mccService maybe) into seperate library that other devs/projects can use
+	* optinalCheatStore should return std::expected<mccService> instead of throwing InitException. Let caller throw if they choose to. 
+	* instead of all our optionalCheats storing weak_ptrs to dependent services, maybe they should just hold the optionalCheatStore and call that when they want something instead of lockOrThrow
+		* this removes boilerplate, and prevents uninitialized weak_ptrs
+* Settings GetValue should not be used to set value (unreference, make seperate set value method)
+* Cleanup how GetValue vs GetValueDisplay work and who can use them (clean up unarySettings vs binarySettings)
+* resolveDependentCheat macro should take game as arg
+* formatter pass
+* compiler warning pass
+* linter pass
+* update unit tests
 
 --------------
 
 
-
-
 maybe:
-* Random practice mode
-* Synchronoiser
-
-
-
-
-HCMExternal filterSearch thingy
-Add backup cheats system and internal injection toggle to external
-add loading the correct level if possible on inject / change level feature in general
-Update pointer data to make unit tests pass
-
+* Random practice mode (Select multiple checkpoints and have them randomly injected - including cross level loading)
+* Synchronise (theater, coop)
