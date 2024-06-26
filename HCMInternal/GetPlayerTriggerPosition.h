@@ -11,7 +11,7 @@ public:
 	{
 	public:
 		virtual ~IGetPlayerTriggerPosition() = default;
-		virtual const SimpleMath::Vector3 getPlayerTriggerPosition() = 0;
+		virtual  std::expected<const SimpleMath::Vector3, HCMRuntimeException> getPlayerTriggerPosition() = 0;
 	};
 private:
 	std::unique_ptr<IGetPlayerTriggerPosition> pimpl;
@@ -19,7 +19,7 @@ private:
 public:
 	GetPlayerTriggerPosition(GameState game, IDIContainer& dicon);
 
-	const SimpleMath::Vector3 getPlayerTriggerPosition() { return pimpl->getPlayerTriggerPosition(); }
+	std::expected<const SimpleMath::Vector3, HCMRuntimeException> getPlayerTriggerPosition() { return pimpl->getPlayerTriggerPosition(); }
 
 	virtual std::string_view getName() override { return nameof(GetPlayerTriggerPosition); }
 };

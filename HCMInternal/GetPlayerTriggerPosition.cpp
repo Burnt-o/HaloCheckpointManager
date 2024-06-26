@@ -32,15 +32,19 @@ public:
 		playerDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);
 	}
 
-	virtual const SimpleMath::Vector3 getPlayerTriggerPosition() override
+	virtual std::expected<const SimpleMath::Vector3, HCMRuntimeException> getPlayerTriggerPosition() override
 	{
 		lockOrThrow(getPlayerDatumWeak, getPlayerDatum);
 		lockOrThrow(getObjectAddressWeak, getObjectAddress);
 		
-		playerDataStruct->currentBaseAddress = getObjectAddress->getObjectAddress(getPlayerDatum->getPlayerDatum());
+		auto playerDatum = getPlayerDatum->getPlayerDatum();
+
+		if (playerDatum.isNull()) return std::unexpected("Null player datum");
+
+		playerDataStruct->currentBaseAddress = getObjectAddress->getObjectAddress(playerDatum);
 
 		auto* result = playerDataStruct->field<SimpleMath::Vector3>(bipedDataFields::triggerHitVertex);
-		if (IsBadReadPtr(result, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad triggerHitVertex read at {}", (uintptr_t)result));
+		if (IsBadReadPtr(result, sizeof(SimpleMath::Vector3))) return std::unexpected( HCMRuntimeException(std::format("Bad triggerHitVertex read at {}", (uintptr_t)result)));
 
 		return *result;
 		 
