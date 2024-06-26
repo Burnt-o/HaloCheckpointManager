@@ -244,12 +244,21 @@ private:
 
 	void updateTriggerData()
 	{
+
 		lockOrThrow(mccStateHookWeak, mccStateHook);
 		mTriggerDataCreator->updateTriggerData(triggerDataAll.lock(), mccStateHook->getCurrentMCCState().currentLevelID);
 		triggerDataFiltered.lock()->clear();
+		triggerDataCached = true;
+		triggerDataChangedEvent->operator()();
 	}
 
 public:
+	std::shared_ptr<eventpp::CallbackList<void(void)>> triggerDataChangedEvent = std::make_shared < eventpp::CallbackList<void(void)>>();
+	virtual std::shared_ptr<eventpp::CallbackList<void(void)>> getTriggerDataChangedEvent() override
+	{
+		return triggerDataChangedEvent;
+	}
+
 	GetTriggerDataImpl(GameState game, IDIContainer& dicon, std::unique_ptr<ITriggerDataCreator> triggerDataCreator)
 		: 
 		mTriggerDataCreator(std::move(triggerDataCreator)),
@@ -270,7 +279,7 @@ public:
 				if (triggerDataCached == false)
 				{
 					updateTriggerData();
-					triggerDataCached = true;
+
 					//settings->triggerOverlayFilterString->UpdateValueWithInput();
 				}
 			}
@@ -289,7 +298,6 @@ public:
 			if (triggerDataCached == false)
 			{
 				updateTriggerData();
-				triggerDataCached = true;
 				//settings->triggerOverlayFilterString->UpdateValueWithInput();
 			}
 		}

@@ -31,6 +31,7 @@ public:
 	virtual ~GetTriggerDataUntemplated() = default;
 	virtual TriggerDataMapLock getAllTriggers() = 0;
 	virtual TriggerDataMapLock getFilteredTriggers() = 0;
+	virtual std::shared_ptr<eventpp::CallbackList<void(void)>> getTriggerDataChangedEvent() = 0;
 
 };
 
@@ -45,6 +46,8 @@ public:
 
 	TriggerDataMapLock getAllTriggers();
 	TriggerDataMapLock getFilteredTriggers();
+
+	std::shared_ptr<eventpp::CallbackList<void(void)>> getTriggerDataChangedEvent() { return pimpl->getTriggerDataChangedEvent(); }
 
 	std::string_view getName() override { return nameof(GetTriggerData); }
 

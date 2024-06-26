@@ -8,6 +8,7 @@
 #include "IMessagesGUI.h"
 #include "boost\algorithm\string\trim.hpp"
 
+
 class TriggerFilterImpl
 {
 
@@ -27,6 +28,7 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(std::string& newValue)>> filterStringChangedCallback;
 	ScopedCallback<ToggleEvent> filterToggleChangedCallback;
 	ScopedCallback<ToggleEvent> triggerOverlayToggleCallback;
+	ScopedCallback<eventpp::CallbackList<void(void)>> triggerDataChangedCallback;
 
 	void onToggleChanged()
 	{
@@ -137,7 +139,8 @@ public:
 		mccStateHookWeak(dicon.Resolve< IMCCStateHook>()),
 		settings(dicon.Resolve<SettingsStateAndEvents>()),
 		messagesWeak(dicon.Resolve<IMessagesGUI>()),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState&) {onToggleChanged(); })
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState&) {onToggleChanged(); }),
+		triggerDataChangedCallback(resolveDependentCheat(GetTriggerData)->getTriggerDataChangedEvent(), [this]() {onToggleChanged(); })
 	{
 
 	}
