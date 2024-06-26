@@ -12,7 +12,6 @@ class IGetTagAddressImpl
 public:
 	virtual ~IGetTagAddressImpl() = default;
 	virtual uintptr_t getTagAddress(Datum tagDatum) = 0;
-	virtual uintptr_t getScenarioAddress() = 0;
 };
 
 class GetTagAddress : public IOptionalCheat
@@ -25,7 +24,7 @@ public:
 	~GetTagAddress();
 
 	uintptr_t getTagAddress(Datum tagDatum);
-	uintptr_t getScenarioAddress();
+
 
 	std::string_view getName() override { return nameof(GetTagAddress); }
 

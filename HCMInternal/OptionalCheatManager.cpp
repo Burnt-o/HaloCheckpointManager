@@ -79,6 +79,9 @@
 #include "ShieldInputPrinter.h"
 #include "SensDriftDetector.h"
 #include "TriggerFilterModalDialogManager.h"
+#include "GetScenarioAddress.h"
+#include "GetDebugString.h"
+#include "TagBlockReader.h"
 
 #include "DIContainer.h"
 #include "map.h"

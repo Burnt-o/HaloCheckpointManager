@@ -68,6 +68,7 @@ GetTriggerData,\
 UpdateTriggerLastChecked
 
 
+
 // Turns out there's a limit on how many entries in a tuple that boost::preprocesser can handle, so split it in two!
 
 #define ALLOPTIONALCHEATS2	\
@@ -81,7 +82,10 @@ GetPlayerTriggerPosition,\
 TrackTriggerEnterExit,\
 ShieldInputPrinter,\
 SensDriftDetector,\
-TriggerFilterModalDialogManager
+TriggerFilterModalDialogManager,\
+GetScenarioAddress,\
+GetDebugString,\
+TagBlockReader
 
 
 enum class OptionalCheatEnum {

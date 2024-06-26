@@ -794,6 +794,18 @@
     <ClInclude Include="includes\safetyhook\Zydis.h">
       <Filter>Includes\safetyhook</Filter>
     </ClInclude>
+    <ClInclude Include="GetScenarioAddress.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetDebugString.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerNamesHardcoded.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="TagBlockReader.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1152,6 +1164,15 @@
     </ClCompile>
     <ClCompile Include="includes\ImGuiColorTextEdit\LanguageDefinitions.cpp">
       <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GetScenarioAddress.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetDebugString.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="TagBlockReader.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

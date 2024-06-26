@@ -8,6 +8,22 @@
 
 
 FUTURE TODO: 
+
+* Some big refactoring:
+Replace ObjectTableRange & GetObjectAddress & GetObjectPhysics w/ ObjectPool. Concept of CommonObjectType, CommonUnitType, CommonBipdType etc, + game specialisations eg H1ObjectType, etc.
+	* COULD still use dynamic structs.. if I want to. Ought to test how much it affects performance in a side project.
+TagBlock concept and TagBlock resolver
+TagRefernece concept and TagReference resolver.
+TagTable (also providing iterator) to replace GetTagAddress.
+TagNameTable to replace GetTagName.
+DebugNameTable for triggers (except h1)
+ScenarioTag and associated fields (can do via dynamicstruct)
+
+
+
+
+
+
 * freeCamera for h3, 0d, hr, h4
 * freeCamera automation stuff 
 * 3d object info overlay

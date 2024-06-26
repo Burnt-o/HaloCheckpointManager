@@ -129,17 +129,17 @@ public:
 		return tagAddress; 
 	}
 
-	virtual uintptr_t getScenarioAddress() override
-	{
-		// Get the scenario datum from the metaHeader struct, then call getTagAddress on it.
-		updateCache();
+	//virtual uintptr_t getScenarioAddress() override
+	//{
+	//	// Get the scenario datum from the metaHeader struct, then call getTagAddress on it.
+	//	updateCache();
 
-		auto* pScenarioDatum = metaHeaderDataStruct->field<uint32_t>(metaHeaderDataFields::scenarioDatum);
-		if (IsBadReadPtr((void*)pScenarioDatum, 4)) throw HCMRuntimeException(std::format("Bad read address for pScenarioDatum at {:x}", (uintptr_t)pScenarioDatum));
+	//	auto* pScenarioDatum = metaHeaderDataStruct->field<uint32_t>(metaHeaderDataFields::scenarioDatum);
+	//	if (IsBadReadPtr((void*)pScenarioDatum, 4)) throw HCMRuntimeException(std::format("Bad read address for pScenarioDatum at {:x}", (uintptr_t)pScenarioDatum));
 
-		return getTagAddress(*pScenarioDatum);
+	//	return getTagAddress(*pScenarioDatum);
 
-	}
+	//}
 };
 
 
@@ -258,17 +258,17 @@ public:
 		return tagAddress;
 	}
 
-	virtual uintptr_t getScenarioAddress() override
-	{
-		// Get the scenario datum from the metaHeader struct, then call getTagAddress on it.
-		updateCache();
+	//virtual uintptr_t getScenarioAddress() override
+	//{
+	//	// Get the scenario datum from the metaHeader struct, then call getTagAddress on it.
+	//	updateCache();
 
-		auto* pScenarioDatum = metaHeaderDataStruct->field<uint32_t>(metaHeaderDataFields::scenarioDatum);
-		if (IsBadReadPtr((void*)pScenarioDatum, 4)) throw HCMRuntimeException(std::format("Bad read address for pScenarioDatum at {:x}", (uintptr_t)pScenarioDatum));
+	//	auto* pScenarioDatum = metaHeaderDataStruct->field<uint32_t>(metaHeaderDataFields::scenarioDatum);
+	//	if (IsBadReadPtr((void*)pScenarioDatum, 4)) throw HCMRuntimeException(std::format("Bad read address for pScenarioDatum at {:x}", (uintptr_t)pScenarioDatum));
 
-		return getTagAddress(*pScenarioDatum);
+	//	return getTagAddress(*pScenarioDatum);
 
-	}
+	//}
 };
 
 GetTagAddress::GetTagAddress(GameState gameImpl, IDIContainer& dicon)
@@ -311,4 +311,4 @@ GetTagAddress::~GetTagAddress()
 
 
 uintptr_t GetTagAddress::getTagAddress(Datum tagDatum) { return pimpl->getTagAddress(tagDatum); }
-uintptr_t GetTagAddress::getScenarioAddress() { return pimpl->getScenarioAddress();  }
+//uintptr_t GetTagAddress::getScenarioAddress() { return pimpl->getScenarioAddress();  }

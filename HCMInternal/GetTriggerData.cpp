@@ -4,7 +4,7 @@
 #include "Render3DEventProvider.h"
 #include "MultilevelPointer.h"
 #include "PointerDataStore.h"
-#include "GetTagAddress.h"
+#include "GetScenarioAddress.h"
 #include "IMakeOrGetCheat.h"
 #include "TagBlock.h"
 #include "DynamicStructFactory.h"
@@ -12,7 +12,9 @@
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
 #include <spanstream>
-
+#include "GetDebugString.h"
+#include "TriggerNamesHardcoded.h"
+#include "TagBlockReader.h"
 
 class ITriggerDataCreator
 {
@@ -22,34 +24,125 @@ public:
 };
 
 
-class TriggerDataCreatorH1 : public ITriggerDataCreator, public TriggerDataFactory
+class ITriggerNameResolver
+{
+public:
+	virtual std::string getTriggerName(int triggerIndex, uintptr_t triggerDataStruct, LevelID level) = 0;
+	virtual ~ITriggerNameResolver() = default;
+};
+
+class TriggerNameResolverH1 : public ITriggerNameResolver
 {
 private:
-	int triggerVolumeTagBlockOffset;
-
-	std::shared_ptr<MultilevelPointer> metaHeaderAddress;
-	int64_t tagBase;
-
-	enum class tagBlockDataFields { entryCount, offset };
-	std::shared_ptr<DynamicStruct<tagBlockDataFields>> tagBlockDataStruct;
-
-	enum class triggerDataFields { name, forward, up, position, extents };
+	enum class triggerDataFields { name };
 	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
 
-	std::weak_ptr< GetTagAddress> getTagAddressWeak;
+public:
+	TriggerNameResolverH1(GameState game, IDIContainer& dicon)
+	{
+		auto ptr = dicon.Resolve< PointerDataStore>().lock();
+		triggerDataStruct = DynamicStructFactory::makeStrideable<triggerDataFields>(ptr, game);
+	}
+
+	virtual std::string getTriggerName(int triggerIndex, uintptr_t ptriggerDataStruct, LevelID level)
+	{
+		triggerDataStruct->currentBaseAddress = ptriggerDataStruct;
+		char* name = *triggerDataStruct->field<char*>(triggerDataFields::name);
+		if (IsBadReadPtr(name, sizeof(uint32_t))) throw HCMRuntimeException(std::format("Bad read address for name at {}", (uintptr_t)name));
+		return std::string(name);
+	}
+};
+
+class TriggerNameResolverH2 : public ITriggerNameResolver
+{
+private:
+	enum class triggerDataFields { stringID };
+	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
+
+	std::weak_ptr<GetDebugString> getDebugStringWeak;
+
+public:
+	TriggerNameResolverH2(GameState game, IDIContainer& dicon)
+		: getDebugStringWeak(resolveDependentCheat(GetDebugString))
+	{
+		auto ptr = dicon.Resolve< PointerDataStore>().lock();
+		triggerDataStruct = DynamicStructFactory::makeStrideable<triggerDataFields>(ptr, game);
+	}
+
+	virtual std::string getTriggerName(int triggerIndex, uintptr_t ptriggerDataStruct, LevelID level)
+	{
+
+		auto* pStringID = triggerDataStruct->field<uint32_t>(triggerDataFields::stringID);
+		if (IsBadReadPtr(pStringID, sizeof(uint32_t))) throw HCMRuntimeException(std::format("Bad read address for pStringID at {}", (uintptr_t)pStringID));
+
+		lockOrThrow(getDebugStringWeak, getDebugString);
+
+		auto name = getDebugString->getDebugString((uintptr_t)pStringID);
+
+		if (!name) throw name.error();
+		return name.value();
+	}
+};
+
+class TriggerNameResolverHardcoded : public ITriggerNameResolver
+{
+private:
+
+
+public:
+	TriggerNameResolverHardcoded(GameState game, IDIContainer& dicon)
+	{
+	}
+
+	virtual std::string getTriggerName(int triggerIndex, uintptr_t ptriggerDataStruct, LevelID level)
+	{
+		if (triggerNamesHardcoded.contains(level) && triggerNamesHardcoded.at(level).size() > triggerIndex)
+			return triggerNamesHardcoded.at(level).at(triggerIndex);
+		else
+			return std::format("Trigger{}", triggerIndex);
+	}
+};
+
+
+
+class TriggerDataCreatorImpl : public ITriggerDataCreator, public TriggerDataFactory
+{
+private:
+
+	//std::shared_ptr<MultilevelPointer> metaHeaderAddress;
+	//int64_t tagBase;
+
+	enum class scenarioTagDataFields { triggerVolumeTagBlock };
+	std::shared_ptr<DynamicStruct<scenarioTagDataFields>> scenarioTagDataStruct;
+
+	//enum class tagBlockDataFields { entryCount, offset };
+	//std::shared_ptr<DynamicStruct<tagBlockDataFields>> tagBlockDataStruct;
+
+	enum class triggerDataFields { forward, up, position, extents };
+	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
+
+	std::weak_ptr< GetScenarioAddress> getScenarioAddressWeak;
+
+	std::shared_ptr<ITriggerNameResolver> triggerNameResolver;
+	std::function<bool(std::string)> triggerIsBSPLambda;
+
+	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr< TagBlockReader> tagBlockReaderWeak;
 
 public:
 
-	TriggerDataCreatorH1(GameState game, IDIContainer& dicon)
-		: getTagAddressWeak(resolveDependentCheat(GetTagAddress))
+	TriggerDataCreatorImpl(GameState game, IDIContainer& dicon, std::shared_ptr<ITriggerNameResolver> nameResolver, std::function<bool(std::string)> bspCheck)
+		: getScenarioAddressWeak(resolveDependentCheat(GetScenarioAddress)),
+		triggerNameResolver(nameResolver),
+		triggerIsBSPLambda(bspCheck),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		tagBlockReaderWeak(resolveDependentCheat(TagBlockReader))
 
 	{
 		auto ptr = dicon.Resolve< PointerDataStore>().lock();
-		triggerVolumeTagBlockOffset = *ptr->getData<std::shared_ptr<int64_t>>(nameof(triggerVolumeTagBlockOffset), game).get();
-		tagBlockDataStruct = DynamicStructFactory::make<tagBlockDataFields>(ptr, game);
 		triggerDataStruct = DynamicStructFactory::makeStrideable<triggerDataFields>(ptr, game);
-		metaHeaderAddress = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(metaHeaderAddress), game);
-		tagBase = *ptr->getData<std::shared_ptr<int64_t>>(nameof(tagBase), game).get();
+		scenarioTagDataStruct = DynamicStructFactory::make<scenarioTagDataFields>(ptr, game);
+
 	}
 
 	virtual void updateTriggerData(TriggerDataMapLock triggerDataAllLocked, LevelID levelID) override
@@ -58,34 +151,29 @@ public:
 		PLOG_DEBUG << "updating trigger data!";
 
 
-		lockOrThrow(getTagAddressWeak, getTagAddress);
+		lockOrThrow(getScenarioAddressWeak, getScenarioAddress);
+		auto scenAddress = getScenarioAddress->getScenarioAddress();
+		if (!scenAddress) throw scenAddress.error();
 
-		tagBlockDataStruct->currentBaseAddress = getTagAddress->getScenarioAddress() + triggerVolumeTagBlockOffset;
-		auto triggerCount = *tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::entryCount);
+		scenarioTagDataStruct->currentBaseAddress = scenAddress.value();
 
-		uintptr_t metaHeaderAddressResolved;
-		if (!metaHeaderAddress->resolve(&metaHeaderAddressResolved)) throw HCMRuntimeException(std::format("Could not resolve metaHeaderAddress, {}", MultilevelPointer::GetLastError()));
+		auto* ptriggerVolumeTagBlock = scenarioTagDataStruct->field<void*>(scenarioTagDataFields::triggerVolumeTagBlock);
 
+		lockOrThrow(tagBlockReaderWeak, tagBlockReader);
+		auto tagBlockResolved = tagBlockReader->read((uintptr_t)ptriggerVolumeTagBlock);
+		if (!tagBlockResolved) throw tagBlockResolved.error();
 
-		auto* pTriggerTagBlockOffset = tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::offset);
-		if (IsBadReadPtr((void*)pTriggerTagBlockOffset, 8)) throw HCMRuntimeException(std::format("Bad read address for pTriggerTagBlockOffset at {}", (uintptr_t)pTriggerTagBlockOffset));
+		PLOG_DEBUG << "triggerDataStruct first entry location: " << std::hex << tagBlockResolved.value().firstElement;
 
-		auto triggerTagBlockOffset = *pTriggerTagBlockOffset;
-
-		PLOG_DEBUG << "triggerTagBlockOffset: " << std::hex << triggerTagBlockOffset;
-
-		uintptr_t tagDataArray = metaHeaderAddressResolved + tagBase + triggerTagBlockOffset;
-
-		PLOG_DEBUG << "triggerDataStruct first entry location: " << std::hex << (uintptr_t)triggerDataStruct->currentBaseAddress;
-
+		lockOrThrow(mccStateHookWeak, mccStateHook);
+		auto currentLevel = mccStateHook->getCurrentMCCState().currentLevelID;
 		triggerDataAllLocked->clear();
 
-		for (uint32_t triggerIndex = 0; triggerIndex < triggerCount; triggerIndex++)
+		for (uint32_t triggerIndex = 0; triggerIndex < tagBlockResolved.value().elementCount; triggerIndex++)
 		{
-			triggerDataStruct->setIndex(tagDataArray, triggerIndex);
+			triggerDataStruct->setIndex(tagBlockResolved.value().firstElement, triggerIndex);
 
-			auto* pName = triggerDataStruct->field<const char>(triggerDataFields::name);
-			if (IsBadReadPtr(pName, 0x20)) throw HCMRuntimeException(std::format("Bad read address for pName at {}", (uintptr_t)pName));
+			auto name = triggerNameResolver->getTriggerName(triggerIndex, triggerDataStruct->currentBaseAddress, currentLevel);
 
 			auto* pPos = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::position);
 			if (IsBadReadPtr(pPos, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pPos at {}", (uintptr_t)pPos));
@@ -101,7 +189,7 @@ public:
 
 
 			PLOG_DEBUG << "read Trigger Data at index " << triggerIndex << ", location " << std::hex << triggerDataStruct->currentBaseAddress << ":";
-			PLOG_DEBUG << "Name: " << std::string(pName);
+			PLOG_DEBUG << "Name: " << name;
 			PLOG_DEBUG << "Posi: " << *pPos;
 			PLOG_DEBUG << "Exte: " << *pExtents;
 			PLOG_DEBUG << "Ford: " << *pForward;
@@ -110,9 +198,9 @@ public:
 
 			triggerDataAllLocked->emplace(triggerDataStruct->currentBaseAddress,
 				std::move(makeTriggerData(
-					std::string(pName),
+					name,
 					triggerIndex,
-					std::string(pName).starts_with("bsp"),
+					triggerIsBSPLambda(name),
 					*pPos,
 					*pExtents,
 					*pForward,
@@ -124,144 +212,6 @@ public:
 	}
 
 };
-
-
-// names looked up by debugStringTable/debugStringMetaTable (TODO: really ought to write a generic class for dealing with that pattern)
-class TriggerDataCreatorH2 : public ITriggerDataCreator, public TriggerDataFactory
-{
-private:
-	int triggerVolumeTagBlockOffset;
-
-	std::shared_ptr<MultilevelPointer> debugStringTableAddress;
-	std::shared_ptr<MultilevelPointer> debugStringMetaTableAddress;
-	std::shared_ptr<MultilevelPointer> metaHeaderAddress;
-	int64_t tagBase;
-
-	enum class tagBlockDataFields { entryCount, offset };
-	std::shared_ptr<DynamicStruct<tagBlockDataFields>> tagBlockDataStruct;
-
-	enum class triggerDataFields { debugStringIndex, debugStringLength, forward, up, position, extents };
-	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
-
-	std::weak_ptr< GetTagAddress> getTagAddressWeak;
-
-public:
-
-	TriggerDataCreatorH2(GameState game, IDIContainer& dicon)
-		: getTagAddressWeak(resolveDependentCheat(GetTagAddress))
-
-	{
-		auto ptr = dicon.Resolve< PointerDataStore>().lock();
-		triggerVolumeTagBlockOffset = *ptr->getData<std::shared_ptr<int64_t>>(nameof(triggerVolumeTagBlockOffset), game).get();
-		tagBlockDataStruct = DynamicStructFactory::make<tagBlockDataFields>(ptr, game);
-		triggerDataStruct = DynamicStructFactory::makeStrideable<triggerDataFields>(ptr, game);
-		metaHeaderAddress = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(metaHeaderAddress), game);
-		tagBase = *ptr->getData<std::shared_ptr<int64_t>>(nameof(tagBase), game).get();
-
-		debugStringTableAddress = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(debugStringTableAddress), game);
-		debugStringMetaTableAddress = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(debugStringMetaTableAddress), game);
-	}
-
-	virtual void updateTriggerData(TriggerDataMapLock triggerDataAllLocked, LevelID levelID) override
-	{
-
-		PLOG_DEBUG << "updating trigger data!";
-
-
-		lockOrThrow(getTagAddressWeak, getTagAddress);
-
-		tagBlockDataStruct->currentBaseAddress = getTagAddress->getScenarioAddress() + triggerVolumeTagBlockOffset;
-		auto triggerCount = *tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::entryCount);
-
-		uintptr_t metaHeaderAddressResolved;
-		if (!metaHeaderAddress->resolve(&metaHeaderAddressResolved)) throw HCMRuntimeException(std::format("Could not resolve metaHeaderAddress, {}", MultilevelPointer::GetLastError()));
-
-
-		auto* pTriggerTagBlockOffset = tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::offset);
-		if (IsBadReadPtr((void*)pTriggerTagBlockOffset, 8)) throw HCMRuntimeException(std::format("Bad read address for pTriggerTagBlockOffset at {}", (uintptr_t)pTriggerTagBlockOffset));
-
-		auto triggerTagBlockOffset = *pTriggerTagBlockOffset;
-
-		PLOG_DEBUG << "triggerTagBlockOffset: " << std::hex << triggerTagBlockOffset;
-
-		uintptr_t tagDataArray = metaHeaderAddressResolved + tagBase + triggerTagBlockOffset;
-
-		PLOG_DEBUG << "triggerDataStruct first entry location: " << std::hex << (uintptr_t)triggerDataStruct->currentBaseAddress;
-
-		triggerDataAllLocked->clear();
-
-		uintptr_t debugStringTable;
-		if (!debugStringTableAddress->resolve(&debugStringTable)) throw HCMRuntimeException(std::format("Could not resolve debugStringTableAddress, {}", MultilevelPointer::GetLastError()));
-
-		uintptr_t debugStringMetaTable;
-		if (!debugStringMetaTableAddress->resolve(&debugStringMetaTable)) throw HCMRuntimeException(std::format("Could not resolve debugStringMetaTableAddress, {}", MultilevelPointer::GetLastError()));
-
-		for (uint32_t triggerIndex = 0; triggerIndex < triggerCount; triggerIndex++)
-		{
-			triggerDataStruct->setIndex(tagDataArray, triggerIndex);
-
-			auto* pDebugStringIndex = triggerDataStruct->field<uint16_t>(triggerDataFields::debugStringIndex);
-			if (IsBadReadPtr(pDebugStringIndex, sizeof(uint16_t))) throw HCMRuntimeException(std::format("Bad read address for pDebugStringIndex at {}", (uintptr_t)pDebugStringIndex));
-
-			auto* pDebugStringLength= triggerDataStruct->field<uint8_t>(triggerDataFields::debugStringLength);
-			if (IsBadReadPtr(pDebugStringLength, sizeof(uint8_t))) throw HCMRuntimeException(std::format("Bad read address for pDebugStringLength at {}", (uintptr_t)pDebugStringLength));
-
-			auto pNameOffset = debugStringMetaTable + (*pDebugStringIndex * sizeof(uint32_t));
-			if (IsBadReadPtr((void*)pNameOffset, sizeof(uint32_t))) throw HCMRuntimeException(std::format("Bad read address for pNameOffset at {}", (uintptr_t)pNameOffset));
-
-			auto pName = debugStringTable + *(uint32_t*)pNameOffset;
-
-#ifdef HCM_DEBUG
-			PLOG_DEBUG << "triggerIndex: 0x" << std::hex << triggerIndex;
-			PLOG_DEBUG << "pDebugStringIndex: 0x" << std::hex << *pDebugStringIndex;
-			PLOG_DEBUG << "pDebugStringLength: 0x" << std::hex << (int)*pDebugStringLength;
-			PLOG_DEBUG << "nameOffset: 0x" << std::hex << *(uint32_t*)pNameOffset;
-			PLOG_DEBUG << "pName: 0x" << std::hex << pName;
-#endif
-
-
-			if (IsBadReadPtr((void*)pName, *pDebugStringLength)) throw HCMRuntimeException(std::format("Bad read address for pName at {}", pName));
-
-			auto* pPos = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::position);
-			if (IsBadReadPtr(pPos, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pPos at {}", (uintptr_t)pPos));
-
-			auto* pExtents = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::extents);
-			if (IsBadReadPtr(pExtents, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pExtents at {}", (uintptr_t)pExtents));
-
-			auto* pForward = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::forward);
-			if (IsBadReadPtr(pForward, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pForward at {}", (uintptr_t)pForward));
-
-			auto* pUp = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::up);
-			if (IsBadReadPtr(pUp, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pUp at {}", (uintptr_t)pUp));
-
-
-			PLOG_DEBUG << "read Trigger Data at index " << triggerIndex << ", location " << std::hex << triggerDataStruct->currentBaseAddress << ":";
-			PLOG_DEBUG << "Name: " << std::string((char*)pName);
-			PLOG_DEBUG << "Posi: " << *pPos;
-			PLOG_DEBUG << "Exte: " << *pExtents;
-			PLOG_DEBUG << "Ford: " << *pForward;
-			PLOG_DEBUG << "UpDr: " << *pUp;
-
-
-			triggerDataAllLocked->emplace(triggerDataStruct->currentBaseAddress,
-				std::move(makeTriggerData(
-					std::string((char*)pName),
-					triggerIndex,
-					std::string((char*)pName).starts_with("trans_"),
-					*pPos,
-					*pExtents,
-					*pForward,
-					*pUp
-				)));
-
-
-		}
-	}
-
-};
-
-
-
 
 
 template<GameState::Value mGame>
@@ -365,19 +315,21 @@ TriggerDataMapLock GetTriggerData::getFilteredTriggers() {
 
 GetTriggerData::GetTriggerData(GameState gameImpl, IDIContainer& dicon)
 {
+
+
 	switch (gameImpl)
 	{
 	case GameState::Value::Halo1:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo1>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorH1>(gameImpl, dicon));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo1>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverH1>(gameImpl, dicon), [](std::string str) { return str.starts_with("bsp"); }));
 		break;
 
 	case GameState::Value::Halo2:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo2>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorH2>(gameImpl, dicon));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo2>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverH2>(gameImpl, dicon), [](std::string str) { return str.starts_with("trans"); }));
 		break;
 
-	//case GameState::Value::Halo3:
-	//	pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo3:
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		break;
 
 	//case GameState::Value::Halo3ODST:
 	//	pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);

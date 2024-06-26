@@ -237,7 +237,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GetDebugString.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
+    <ClInclude Include="GetScenarioAddress.h" />
     <ClInclude Include="GetTagAddress.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUIColourPicker.h" />
@@ -273,6 +275,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SkullToggler.h" />
     <ClInclude Include="SpriteResource.h" />
     <ClInclude Include="TagBlock.h" />
+    <ClInclude Include="TagBlockReader.h" />
     <ClInclude Include="TrackTriggerEnterExit.h" />
     <ClInclude Include="TriggerAlpha.h" />
     <ClInclude Include="TriggerData.h" />
@@ -280,6 +283,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="TriggerFilterModalDialogManager.h" />
     <ClInclude Include="TriggerFilterStringDialog.h" />
     <ClInclude Include="TriggerModel.h" />
+    <ClInclude Include="TriggerNamesHardcoded.h" />
     <ClInclude Include="TriggerOverlay.h" />
     <ClInclude Include="UnarySetting.h" />
     <ClInclude Include="UpdateTriggerLastChecked.h" />
@@ -468,7 +472,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WinHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GetDebugString.cpp" />
     <ClCompile Include="GetPlayerTriggerPosition.cpp" />
+    <ClCompile Include="GetScenarioAddress.cpp" />
     <ClCompile Include="GetTagAddress.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
@@ -510,6 +516,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="ShieldInputPrinter.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
+    <ClCompile Include="TagBlockReader.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerAlpha.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
