@@ -755,9 +755,6 @@
     <ClInclude Include="TriggerFilter.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
-    <ClInclude Include="TriggerAlpha.h">
-      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
-    </ClInclude>
     <ClInclude Include="TrackTriggerEnterExit.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
@@ -1130,9 +1127,6 @@
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="TriggerFilter.cpp">
-      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
-    </ClCompile>
-    <ClCompile Include="TriggerAlpha.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="TrackTriggerEnterExit.cpp">

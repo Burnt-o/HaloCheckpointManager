@@ -77,7 +77,6 @@ HideWatermarkCheck,\
 PlayerPositionToClipboard,\
 GetTagAddress,\
 TriggerFilter,\
-TriggerAlpha,\
 GetPlayerTriggerPosition,\
 TrackTriggerEnterExit,\
 ShieldInputPrinter,\

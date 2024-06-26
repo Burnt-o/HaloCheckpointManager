@@ -73,7 +73,6 @@
 #include "PlayerPositionToClipboard.h"
 #include "GetTagAddress.h"
 #include "TriggerFilter.h"
-#include "TriggerAlpha.h"
 #include "GetPlayerTriggerPosition.h"
 #include "TrackTriggerEnterExit.h"
 #include "ShieldInputPrinter.h"

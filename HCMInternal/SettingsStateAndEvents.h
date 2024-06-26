@@ -1280,15 +1280,15 @@ public:
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayNormalColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{1.0f, 0.0f, 0.0f, 1.f}, // red
-			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			SimpleMath::Vector4{1.0f, 0.0f, 0.0f, 0.2f}, // red
+			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlayNormalColor)
 		);
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayBSPColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{0.0f, 0.0f, 1.0f, 1.f}, // blue
-			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			SimpleMath::Vector4{0.0f, 0.0f, 1.0f, 0.2f}, // blue
+			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlayBSPColor)
 		);
 
@@ -1331,15 +1331,15 @@ public:
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckHitColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 1.f}, // green
-			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 0.75f}, // green
+			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlayCheckHitColor)
 		);
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckMissColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 1.f}, // yellow
-			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1; }, // range 0.f ... 1.f 
+			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 0.5f}, // yellow
+			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; }, 
 			nameof(triggerOverlayCheckMissColor)
 		);
 

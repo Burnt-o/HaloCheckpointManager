@@ -54,7 +54,7 @@ private:
 		{
 			try
 			{
-
+				PLOG_DEBUG << "subscribing to render event!";
 				lockOrThrow(render3DEventProviderWeak, render3DEventProvider);
 				mRenderEventCallback = std::make_unique<ScopedCallback<Render3DEvent>>(render3DEventProvider->render3DEvent, [this](GameState g, IRenderer3D* n) {onRenderEvent(g, n); });
 
@@ -114,6 +114,8 @@ private:
 
 			const auto& triggerOverlayCheckHitColor = settings->triggerOverlayCheckHitColor->GetValue();
 
+			const float& triggerOverlayAlpha = settings->triggerOverlayAlpha->GetValue();
+
 			const auto now = std::chrono::steady_clock::now();
 
 			const uint32_t triggerOverlayCheckHitFalloff = settings->triggerOverlayCheckHitFalloff->GetValue();
@@ -161,8 +163,10 @@ private:
 
 
 
-					auto triggerColour = (triggerOverlayNormalColor * normalRatio) + (checkColor * checkRatio);
-					triggerColour.w = triggerOverlayNormalColor.w; // w is alpha right?
+					auto triggerColor = (triggerOverlayNormalColor * normalRatio) + (checkColor * checkRatio);
+					//triggerColor.w = checkColor.w;
+
+
 
 					// boost alpha on first tick of check
 					if (ticksSinceLastCheck.value() == 0)
@@ -187,16 +191,17 @@ private:
 						}
 					
 
-
-						triggerColour.w += (1.f - triggerColour.w) / 4.f;
+						triggerColor.w += (1.f - triggerColor.w) / 4.f;
+						
 					}
-
-					renderer->renderTriggerModel(triggerData.model, triggerColour, renderStyle, interiorStyle, labelStyle, labelScale);
+					triggerColor.w *= triggerOverlayAlpha;
+					renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
 				}
 				else
 				{
-					const auto& triggerColor = triggerData.isBSPTrigger ? triggerOverlayBSPColor :
+					auto triggerColor = triggerData.isBSPTrigger ? triggerOverlayBSPColor :
 						triggerOverlayNormalColor;
+					triggerColor.w *= triggerOverlayAlpha;
 
 					renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
 

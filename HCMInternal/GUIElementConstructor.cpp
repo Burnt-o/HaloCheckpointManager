@@ -1003,16 +1003,16 @@ private:
 
 
 				case GUIElementEnum::triggerOverlayNormalColor:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 						(game, ToolTipCollection("Color to render triggers when not checked or BSP"), "Trigger Normal Colour", settings->triggerOverlayNormalColor));
 
 				case GUIElementEnum::triggerOverlayBSPColor:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 						(game, ToolTipCollection("Color to render BSP (loadzone) triggers"), "Trigger BSP Colour", settings->triggerOverlayBSPColor));
 
 				case GUIElementEnum::triggerOverlayAlpha:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
-						(game, ToolTipCollection("How transparent triggers are, from 0 (fully transparent) to 1 (fully opaque)"), "Trigger Transparency", settings->triggerOverlayAlpha));
+						(game, ToolTipCollection("Multiplies how transparent triggers are, from 0 (fully transparent) to 1 (fully opaque)"), "Trigger Transparency Multiplier", settings->triggerOverlayAlpha));
 
 				case GUIElementEnum::triggerOverlayCheckHitToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
@@ -1027,7 +1027,7 @@ private:
 							(game, ToolTipCollection("How many seconds does the check-flash last"), "Flash for x ticks", settings->triggerOverlayCheckHitFalloff));
 
 					case GUIElementEnum::triggerOverlayCheckHitColor:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 							(game, ToolTipCollection("Color to flash trigger when it successfully checks for the player"), "Colour on Successful Check", settings->triggerOverlayCheckHitColor));
 
 				case GUIElementEnum::triggerOverlayCheckMissToggle:
@@ -1043,7 +1043,7 @@ private:
 							(game, ToolTipCollection("How many seconds does the check-flash last"), "Flash for x ticks", settings->triggerOverlayCheckMissFalloff));
 
 					case GUIElementEnum::triggerOverlayCheckMissColor:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 							(game, ToolTipCollection("Color to flash trigger when it successfully checks for the player"), "Colour on Failed Check", settings->triggerOverlayCheckMissColor));
 
 

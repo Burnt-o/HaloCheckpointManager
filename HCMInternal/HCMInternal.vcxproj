@@ -277,7 +277,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TagBlockReader.h" />
     <ClInclude Include="TrackTriggerEnterExit.h" />
-    <ClInclude Include="TriggerAlpha.h" />
     <ClInclude Include="TriggerData.h" />
     <ClInclude Include="TriggerFilter.h" />
     <ClInclude Include="TriggerFilterModalDialogManager.h" />
@@ -518,7 +517,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="TagBlockReader.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
-    <ClCompile Include="TriggerAlpha.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
     <ClCompile Include="TriggerModel.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />
