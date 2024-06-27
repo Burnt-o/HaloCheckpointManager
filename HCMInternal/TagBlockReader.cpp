@@ -121,10 +121,10 @@ TagBlockReader::TagBlockReader(GameState game, IDIContainer& dicon)
 	case GameState::Value::Halo1: pimpl = std::make_unique<TagBlockReaderImplMeta<GameState::Value::Halo1>>(game, dicon); break;
 	case GameState::Value::Halo2: pimpl = std::make_unique<TagBlockReaderImplMeta<GameState::Value::Halo2>>(game, dicon); break;
 	case GameState::Value::Halo3: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::Halo3>>(game, dicon, [](uint32_t& in) { return ((uintptr_t)in) << 2; }); break;
-	//case GameState::Value::Halo3ODST: pimpl = std::make_unique<TagBlockReaderImpl<GameState::Value::Halo3ODST>>(game, dicon); break;
+	case GameState::Value::Halo3ODST: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::Halo3ODST>>(game, dicon, [](uint32_t& in) { return ((uintptr_t)in) << 2; }); break;
 	//case GameState::Value::HaloReach: pimpl = std::make_unique<TagBlockReaderImpl<GameState::Value::HaloReach>>(game, dicon); break;
 	//case GameState::Value::Halo4: pimpl = std::make_unique<TagBlockReaderImpl<GameState::Value::Halo4>>(game, dicon); break;
-	default: throw HCMInitException("not impl yet");
+	default: throw HCMInitException("tagBlockReader not impl yet");
 	}
 }
 

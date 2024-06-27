@@ -86,7 +86,7 @@ private:
 			bool shouldPrintForEnter = settings->triggerOverlayMessageOnEnter->GetValue();
 			bool shouldPrintForExit = settings->triggerOverlayMessageOnExit->GetValue();
 
-			auto& playerTriggerPosition = getPlayerTriggerPosition->getPlayerTriggerPosition();
+			const auto& playerTriggerPosition = getPlayerTriggerPosition->getPlayerTriggerPosition();
 			if (!playerTriggerPosition) 
 				return;
 

@@ -5548,6 +5548,7 @@
 			<!--confirmed 2448, 2645, 3272-->
 			<currentVehicleDatum>0x10</currentVehicleDatum>
 			<position>0x50</position>
+			<triggerHitVertex>0x50</triggerHitVertex>
 			<velocity>0x74</velocity>
 			<health>0xE8</health>
 			<shields>0xEC</shields>
@@ -5694,19 +5695,21 @@
 		<Version Version="All" Game="Halo1">
 			<entryCount>0x0</entryCount>
 			<offset>0x4</offset>
-			<blockDefinition>0x8</blockDefinition>
 		</Version>
 
 		<Version Version="All" Game="Halo2">
 			<entryCount>0x0</entryCount>
 			<offset>0x4</offset>
-			<blockDefinition>0x8</blockDefinition>
 		</Version>
 
 		<Version Version="All" Game="Halo3">
 			<entryCount>0x0</entryCount>
 			<offset>0x4</offset>
-			<blockDefinition>0x8</blockDefinition>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<entryCount>0x0</entryCount>
+			<offset>0x4</offset>
 		</Version>
 
 	</VersionedEntry>
@@ -6129,6 +6132,10 @@
 		<Version Version="All" Game="Halo3">
 			<data>0x0</data>
 		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<data>0x0</data>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="magicAddress" Type="MultilevelPointer::ModuleOffset">
@@ -6136,6 +6143,13 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x1FCE4C8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2022AA8</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -8800,10 +8814,23 @@
 				<Offset>0x16F20C</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x19DC74</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="entityTriggerInfoDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo3">
+			<Datum>-0x28</Datum>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="entityTriggerInfoDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo3ODST">
 			<Datum>-0x28</Datum>
 		</Version>
 	</VersionedEntry>
@@ -8866,6 +8893,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xA9C9B8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="triggerDataFields" Type="DynStructOffsetInfo">
@@ -8889,12 +8924,18 @@
 
 		<Version Version="All" Game="Halo3">
 			<StrideSize>0x44</StrideSize>
-			<debugStringIndex>0x0</debugStringIndex>
-			<debugStringLength>0x3</debugStringLength>
 			<forward>0xC</forward>
 			<up>0x18</up>
 			<position>0x24</position>
 			<extents>0x30</extents>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<StrideSize>0x7C</StrideSize>
+			<forward>0x10</forward>
+			<up>0x1C</up>
+			<position>0x28</position>
+			<extents>0x34</extents>
 		</Version>
 	</VersionedEntry>
 
@@ -8909,6 +8950,10 @@
 
 		<Version Version="All" Game="Halo3">
 			<triggerVolumeTagBlock>0x258</triggerVolumeTagBlock>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<triggerVolumeTagBlock>0x28C</triggerVolumeTagBlock>
 		</Version>
 	</VersionedEntry>
 

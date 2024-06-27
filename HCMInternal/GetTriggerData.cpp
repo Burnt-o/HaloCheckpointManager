@@ -92,6 +92,7 @@ private:
 public:
 	TriggerNameResolverHardcoded(GameState game, IDIContainer& dicon)
 	{
+		assertHardcodedTriggerCounts();
 	}
 
 	virtual std::string getTriggerName(int triggerIndex, uintptr_t ptriggerDataStruct, LevelID level)
@@ -339,9 +340,10 @@ GetTriggerData::GetTriggerData(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
 		break;
 
-	//case GameState::Value::Halo3ODST:
-	//	pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
-	//	break;
+
+	case GameState::Value::Halo3ODST:
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		break;
 
 	//case GameState::Value::HaloReach:
 	//	pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::HaloReach>>(gameImpl, dicon);

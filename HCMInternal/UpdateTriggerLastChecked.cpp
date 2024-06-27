@@ -234,6 +234,8 @@ public:
 
 				bool wasSuccessfulCheck = instance->updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, uintptr_t>(triggerIndex, pEntityInfo);
 
+				LOG_ONCE(PLOG_DEBUG << "inline call succeeded");
+
 				instance->entityTriggerInfoDataStruct->currentBaseAddress = pEntityInfo;
 				auto* pEntityDatum = instance->entityTriggerInfoDataStruct->field<Datum>(entityTriggerInfoDataFields::Datum);
 				if (IsBadReadPtr(pEntityDatum, sizeof(Datum))) throw HCMRuntimeException(std::format("Bad entity datum read at {:X}", (uintptr_t)pEntityDatum));
@@ -354,9 +356,9 @@ UpdateTriggerLastChecked::UpdateTriggerLastChecked(GameState gameImpl, IDIContai
 		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo3>>(gameImpl, dicon);
 		break;
 
-	//case GameState::Value::Halo3ODST:
-	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImplByIndex<GameState::Value::Halo3ODST>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo3ODST:
+		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+		break;
 
 	//case GameState::Value::HaloReach:
 	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImplByIndex<GameState::Value::HaloReach>>(gameImpl, dicon);

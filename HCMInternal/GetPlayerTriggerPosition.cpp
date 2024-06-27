@@ -39,7 +39,7 @@ public:
 		
 		auto playerDatum = getPlayerDatum->getPlayerDatum();
 
-		if (playerDatum.isNull()) return std::unexpected("Null player datum");
+		if (playerDatum.isNull()) return std::unexpected(HCMRuntimeException("Null player datum"));
 
 		playerDataStruct->currentBaseAddress = getObjectAddress->getObjectAddress(playerDatum);
 
