@@ -1299,6 +1299,13 @@ public:
 			nameof(triggerOverlayAlpha)
 		);
 
+	std::shared_ptr<BinarySetting<float>> triggerOverlayWireframeAlpha = std::make_shared<BinarySetting<float>>
+		(
+			0.5f,
+			[](float in) { return in >= 0.05f && in <= 1.f; },
+			nameof(triggerOverlayWireframeAlpha)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> triggerOverlayCheckHitToggle = std::make_shared<BinarySetting<bool>>
 		(
 			true,
@@ -1383,6 +1390,13 @@ public:
 			false,
 			[](bool in) { return true; },
 			nameof(sensDriftDetectorToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> softCeilingOverlayToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(softCeilingOverlayToggle)
 		);
 
 	// settings that ought to be serialised/deserialised between HCM runs

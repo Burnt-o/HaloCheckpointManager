@@ -3,6 +3,8 @@
 #include "SpriteResource.h"
 #include "TriggerModel.h"
 #include "SettingsEnums.h"
+#include "directxtk\VertexTypes.h"
+#include "directxtk\PrimitiveBatch.h"
 
 /// <summary>
 /// Provides functions for rendering in 3D. Implemented by Renderer3DImpl.h
@@ -49,7 +51,14 @@ public:
 	/// <returns>True if world position will be visible.</returns>
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) = 0;
 
-	// RECTF return is the screen position min and max of the drawn item.
+
+
+	/// <summary>
+	/// Checks if a world position will in the 180 degree semisphere behind the camera
+	/// </summary>
+	/// <param name="worldPointPosition">The 3D world position.</param>
+	/// <returns>True if world position will be behind the camera.</returns>
+	virtual bool pointBehindCamera(const SimpleMath::Vector3& worldPointPosition) = 0;
 
 	/// <summary>
 	/// Draws a 2D sprite at the specified screen position (anchored top-left). 
@@ -72,15 +81,24 @@ public:
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = { 1.f, 0.5f, 0.f, 1.f }) = 0;
 
 	/// <summary>
-	/// Renders a trigger model to the screen with given colours.
+	/// Renders a trigger model to the screen with given colours as a solid volume.
 	/// </summary>
 	/// <param name="model">The trigger model to draw.</param>
 	/// <param name="triggerColor">What colour to draw it (alpha supported).</param>
-	/// <param name="renderStyle">Draw solid volume, wireframe (line edges), or both.</param>
 	/// <param name="interiorStyle">When camera inside trigger, draw normally, with a patterned texture, or not at all.</param>
-	/// <param name="labelStyle">Draw label (trigger name) at center of trigger, corner, or not at all.</param>
-	/// <param name="labelScale">Scaling of label (trigger name) text.</param>
-	virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale = 1.f) = 0;
+	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) = 0;
+
+	/// <summary>
+	/// Gets the primitiveBatch drawer.
+	/// </summary>
+	/// <returns>Shared ptr to the primitive batch drawer.</returns>
+	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() = 0;
+
+	/// <summary>
+	/// Sets the color of objects drawn by primitiveBatch drawer.
+	/// </summary>
+	/// <param name="color">Float4 of the colour to be drawn.</param>
+	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) = 0;
 
 
 

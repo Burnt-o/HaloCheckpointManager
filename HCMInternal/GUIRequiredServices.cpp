@@ -391,7 +391,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{ GUIElementEnum::consoleCommandGUI,
 		{OptionalCheatEnum::ConsoleCommand}
 	},
-
+		{ GUIElementEnum::softCeilingOverlayToggle,
+		{OptionalCheatEnum::SoftCeilingOverlay}
+	},
 
 #endif
 

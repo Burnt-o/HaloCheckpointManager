@@ -19,7 +19,6 @@ class TriggerOverlayImpl : public TriggerOverlayUntemplated
 private:
 	// callbacks
 	std::unique_ptr<ScopedCallback<Render3DEvent>> mRenderEventCallback;
-	std::atomic_bool renderingMutex = false;
 	ScopedCallback<ToggleEvent> triggerOverlayToggleEventCallback;
 
 	// injected services
@@ -33,7 +32,7 @@ private:
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// data
-	bool gameValid = false;
+	std::atomic_bool renderingMutex = false;
 
 	void onToggleChange(bool& newValue)
 	{
@@ -115,6 +114,7 @@ private:
 			const auto& triggerOverlayCheckHitColor = settings->triggerOverlayCheckHitColor->GetValue();
 
 			const float& triggerOverlayAlpha = settings->triggerOverlayAlpha->GetValue();
+			const float& triggerOverlayWireframeAlpha = settings->triggerOverlayWireframeAlpha->GetValue();
 
 			const auto now = std::chrono::steady_clock::now();
 
@@ -134,6 +134,8 @@ private:
 			static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value").
 #endif
 
+
+			// calculate colors for each trigger on this tick
 			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
 				std::optional<long> ticksSinceLastCheck = std::nullopt;
@@ -195,7 +197,8 @@ private:
 						
 					}
 					triggerColor.w *= triggerOverlayAlpha;
-					renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
+					
+					triggerData.setColor(triggerColor, triggerOverlayWireframeAlpha);
 				}
 				else
 				{
@@ -203,11 +206,88 @@ private:
 						triggerOverlayNormalColor;
 					triggerColor.w *= triggerOverlayAlpha;
 
-					renderer->renderTriggerModel(triggerData.model, triggerColor, renderStyle, interiorStyle, labelStyle, labelScale);
+					triggerData.setColor(triggerColor, triggerOverlayWireframeAlpha);
 
 				}
 
 			}
+
+			// render wireframes
+			// idk why but renderering solid volumes first messes up the wireframes positions
+			if (renderStyle == TriggerRenderStyle::Wireframe || renderStyle == TriggerRenderStyle::SolidAndWireframe)
+			{
+				auto primitiveDrawer = renderer->getPrimitiveDrawer();
+
+				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+				{
+					// unfortunately setPrimitiveColor can only apply to one begin call
+					primitiveDrawer->Begin();
+					renderer->setPrimitiveColor(triggerData.currentColorWireframe);
+					for (auto& edge : triggerData.model.edges)
+					{
+						primitiveDrawer->DrawLine(edge.first, edge.second);
+					}
+					primitiveDrawer->End();
+				}
+
+
+			}
+
+			// render solid volumes
+			if (renderStyle == TriggerRenderStyle::Solid || renderStyle == TriggerRenderStyle::SolidAndWireframe)
+			{
+				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+				{
+					renderer->renderTriggerModelSolid(triggerData.model, triggerData.currentColor, interiorStyle);
+				}
+			}
+
+		
+
+			// render labels
+			if (labelStyle != TriggerLabelStyle::None)
+			{
+				bool isCentered = labelStyle == TriggerLabelStyle::Center;
+				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+				{
+	
+					auto pointOnScreen = isCentered
+						? !renderer->pointBehindCamera(triggerData.model.box.Center)
+						: !renderer->pointBehindCamera(triggerData.model.box.Center - ((SimpleMath::Vector3)triggerData.model.box.Extents / 2)); // corner (TODO: store corner in triggermodel)
+
+					if (pointOnScreen)
+					{
+						auto screenPosition = labelStyle == TriggerLabelStyle::Center
+							? renderer->worldPointToScreenPosition(triggerData.model.box.Center, false)
+							: renderer->worldPointToScreenPosition(triggerData.model.box.Center - ((SimpleMath::Vector3)triggerData.model.box.Extents / 2), false); // corner (TODO: store corner in triggermodel)
+
+						auto dynLabelScale = labelScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(triggerData.model.box.Center));
+						// draw main label text
+
+						if (isCentered)
+						{
+							RenderTextHelper::drawCenteredOutlinedText(
+								triggerData.model.label,
+								{ screenPosition.x, screenPosition.y },
+								triggerData.currentColorU32 | 0xFFC0C0C0, // remove alpha, brigten a lil bit, 
+								dynLabelScale
+							);
+						}
+						else
+						{
+							RenderTextHelper::drawOutlinedText(
+								triggerData.model.label,
+								{ screenPosition.x, screenPosition.y },
+								triggerData.currentColorU32 | 0xFFC0C0C0, // remove alpha, brigten a lil bit, 
+								dynLabelScale
+							);
+						}
+
+					}
+				}
+				
+			}
+
 
 		}
 		catch (HCMRuntimeException ex)

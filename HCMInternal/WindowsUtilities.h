@@ -107,3 +107,5 @@ void downloadFileTo(std::string_view url, std::string_view pathToFile);
 std::string readFileContents(std::string_view pathToFile);
 
 std::string shortestStringRepresentation(float n);
+
+uint32_t Vec4ColorToU32(const SimpleMath::Vector4& color);

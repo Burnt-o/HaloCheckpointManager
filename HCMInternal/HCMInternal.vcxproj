@@ -240,7 +240,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetDebugString.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetScenarioAddress.h" />
-    <ClInclude Include="GetTagAddress.h" />
+    <ClInclude Include="GetSoftCeilingData.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUIColourPicker.h" />
     <ClInclude Include="GUIFloatSlider.h" />
@@ -254,6 +254,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
+    <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
     <ClInclude Include="ModalDialogFactory.h" />
@@ -273,9 +274,12 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ShieldInputPrinter.h" />
     <ClInclude Include="SkullEnum.h" />
     <ClInclude Include="SkullToggler.h" />
+    <ClInclude Include="SoftCeilingData.h" />
+    <ClInclude Include="SoftCeilingOverlay.h" />
     <ClInclude Include="SpriteResource.h" />
     <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TagBlockReader.h" />
+    <ClInclude Include="TagTableRange.h" />
     <ClInclude Include="TrackTriggerEnterExit.h" />
     <ClInclude Include="TriggerData.h" />
     <ClInclude Include="TriggerFilter.h" />
@@ -474,7 +478,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetDebugString.cpp" />
     <ClCompile Include="GetPlayerTriggerPosition.cpp" />
     <ClCompile Include="GetScenarioAddress.cpp" />
-    <ClCompile Include="GetTagAddress.cpp" />
+    <ClCompile Include="GetSoftCeilingData.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -514,8 +518,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="ShieldInputPrinter.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
+    <ClCompile Include="SoftCeilingOverlay.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="TagBlockReader.cpp" />
+    <ClCompile Include="TagTableRange.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
     <ClCompile Include="TriggerModel.cpp" />

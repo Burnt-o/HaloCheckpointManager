@@ -8,6 +8,37 @@
 
 using namespace SettingsEnums;
 
+
+
+
+
+
+template<GameState::Value mGame>
+void Renderer3DImpl<mGame>::renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle)
+{
+	LOG_ONCE(PLOG_DEBUG << "renderTriggerModelSolid");
+	// Cull if none of the trigger is visible.
+	if (this->frustumViewWorld.Contains(model.box) == false) return;
+
+	bool cameraInsideTrigger = model.box.Contains(this->cameraPosition);
+
+	if (cameraInsideTrigger && interiorStyle == TriggerInteriorStyle::DontRender)
+		return;
+
+	// draw solid volume
+	if (cameraInsideTrigger)
+	{
+		assert(interiorStyle != TriggerInteriorStyle::Patterned && "TODO, need to create the patternedTexture Resource");
+		ID3D11ShaderResourceView* texture = (cameraInsideTrigger && interiorStyle == TriggerInteriorStyle::Patterned) ? patternedTexture : nullptr;
+		unitCubeInverse->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, texture);
+	}
+	else
+	{
+		unitCube->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, nullptr);
+	}
+}
+
+/*
 template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale)
 {
@@ -47,19 +78,10 @@ void Renderer3DImpl<mGame>::renderTriggerModel(const TriggerModel& model, const 
 		lineDrawer->Begin();
 		for (auto& edge : model.edges)
 		{
-			auto m_World = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ);
-			XMVECTOR mp1 = XMVector4Transform(edge.first, m_World);
-			XMVECTOR pt1 = XMVector3Project(mp1, 0, 0, this->screenSize.x, this->screenSize.y, 0, 1, this->projectionMatrix, this->viewMatrix, m_World);
-			XMFLOAT3 pos1;
-			XMStoreFloat3(&pos1, pt1);
+			VertexPositionColor a = VertexPositionColor(edge.first, triggerColor);
+			VertexPositionColor b = VertexPositionColor(edge.second, triggerColor);
 
-			XMVECTOR mp2 = XMVector4Transform(edge.second, m_World);
-			XMVECTOR pt2 = XMVector3Project(mp2, 0, 0, this->screenSize.x, this->screenSize.y, 0, 1, this->projectionMatrix, this->viewMatrix, m_World);
-			XMFLOAT3 pos2;
-			XMStoreFloat3(&pos2, pt2);
-
-			
-			lineDrawer->DrawLine(pos1, pos2);
+			lineDrawer->DrawLine(a, b);
 		}
 		lineDrawer->End();
 	}
@@ -110,6 +132,7 @@ void Renderer3DImpl<mGame>::renderTriggerModel(const TriggerModel& model, const 
 
 }
 
+*/
 
 
 

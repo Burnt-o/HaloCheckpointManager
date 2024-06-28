@@ -24,7 +24,7 @@ namespace SettingsEnums
 
 	enum class TriggerInteriorStyle { Normal, Patterned, DontRender };
 
-	enum class TriggerRenderStyle { Solid, Wireframe, SolidAndWireframe };
+	enum class TriggerRenderStyle { Solid, Wireframe, SolidAndWireframe, None };
 
 	enum class TriggerLabelStyle { None, Center, Corner };
 

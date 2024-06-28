@@ -173,6 +173,7 @@
 		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayBSPColor, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayWireframeAlpha, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayCheckHitToggle, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayCheckHitFalloff, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayCheckHitColor, (ALL_SUPPORTED_GAMES)))\
@@ -241,7 +242,7 @@
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-
+	((softCeilingOverlayToggle, (Halo3, Halo3ODST, HaloReach, Halo4)))\
 
 
 

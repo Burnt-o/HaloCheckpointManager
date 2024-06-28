@@ -16,6 +16,17 @@ struct TriggerData
 	std::optional<uint32_t> tickLastChecked = std::nullopt; // updated by UpdateTriggerLastChecked
 	bool printedMessageForLastCheck = false; // set to true by TriggerOverlay, false by UpdateTriggerLastChecked. Prevents duplicate messages.
 	bool playerWasInsideLastTick = false; // updated by TrackTriggerEnterExit
+	SimpleMath::Vector4 currentColor;
+	uint32_t currentColorU32;
+	SimpleMath::Vector4 currentColorWireframe;
+	void setColor(const SimpleMath::Vector4& color, const float& wireframeOpacity)
+	{
+		currentColor = color; // copy
+		currentColorU32 = Vec4ColorToU32(currentColor); // convert
+
+		currentColorWireframe = currentColor;
+		currentColorWireframe.w += (1.f - currentColorWireframe.w) * wireframeOpacity; // boost opacity
+	}
 
 private:
 	friend class TriggerDataFactory;

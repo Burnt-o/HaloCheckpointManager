@@ -75,7 +75,6 @@ UpdateTriggerLastChecked
 ObjectTableRange,\
 HideWatermarkCheck,\
 PlayerPositionToClipboard,\
-GetTagAddress,\
 TriggerFilter,\
 GetPlayerTriggerPosition,\
 TrackTriggerEnterExit,\
@@ -84,7 +83,10 @@ SensDriftDetector,\
 TriggerFilterModalDialogManager,\
 GetScenarioAddress,\
 GetDebugString,\
-TagBlockReader
+TagBlockReader,\
+TagTableRange,\
+GetSoftCeilingData,\
+SoftCeilingOverlay
 
 
 enum class OptionalCheatEnum {

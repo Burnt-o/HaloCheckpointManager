@@ -49,10 +49,23 @@ for the rest of the implementation
  {
 	 spriteBatch = std::make_unique<SpriteBatch>(this->pDeviceContext);
 	 commonStates = std::make_unique<CommonStates>(this->pDevice);
-	 lineDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
+	 primitiveDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
 	 unitCube = GeometricPrimitive::CreateCube(this->pDeviceContext);
 	 unitCubeInverse = GeometricPrimitive::CreateCube(this->pDeviceContext, 1.f, false); // rhcoords = flip faces
-	 m_effect = std::make_unique<BasicEffect>(this->pDevice);
+	 basicEffect = std::make_unique<BasicEffect>(this->pDevice);
+	 //basicEffect->SetVertexColorEnabled(true);
+	 
+	 void const* shaderByteCode;
+	 size_t byteCodeLength;
+
+	 basicEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+
+
+		 this->pDevice->CreateInputLayout(VertexPosition::InputElements,
+			 VertexPosition::InputElementCount,
+			 shaderByteCode,
+			 byteCodeLength,
+			 inputLayout.ReleaseAndGetAddressOf());
  }
 
 

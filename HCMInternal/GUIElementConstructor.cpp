@@ -949,6 +949,7 @@ private:
 								createNestedElement(GUIElementEnum::triggerOverlayNormalColor),
 								createNestedElement(GUIElementEnum::triggerOverlayBSPColor),
 								createNestedElement(GUIElementEnum::triggerOverlayAlpha),
+								createNestedElement(GUIElementEnum::triggerOverlayWireframeAlpha),
 								createNestedElement(GUIElementEnum::triggerOverlayCheckHitToggle),
 								createNestedElement(GUIElementEnum::triggerOverlayCheckMissToggle),
 								createNestedElement(GUIElementEnum::triggerOverlayMessageOnEnter),
@@ -986,12 +987,12 @@ private:
 						(game, ToolTipCollection("Paste the filter list from the clipboard"), std::nullopt, "Paste Filter List", settings->triggerOverlayFilterStringPasteEvent));
 
 				case GUIElementEnum::triggerOverlayRenderStyle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerRenderStyle, 100.f>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerRenderStyle, 150.f>>
 						(game, ToolTipCollection("What style to render trigger volumes as"), "Render trigger volumes as: ", settings->triggerOverlayRenderStyle));
 
 				case GUIElementEnum::triggerOverlayInteriorStyle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerInteriorStyle, 100.f>>
-						(game, ToolTipCollection("What style to render trigger volumes as when the camera is inside them"), "Render volume interior as: ", settings->triggerOverlayInteriorStyle));
+						(game, ToolTipCollection("What style to render trigger volumes as when the camera is inside them"), "Render Solid Interior as: ", settings->triggerOverlayInteriorStyle));
 
 				case GUIElementEnum::triggerOverlayLabelStyle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::TriggerLabelStyle, 100.f>>
@@ -1012,7 +1013,12 @@ private:
 
 				case GUIElementEnum::triggerOverlayAlpha:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
-						(game, ToolTipCollection("Multiplies how transparent triggers are, from 0 (fully transparent) to 1 (fully opaque)"), "Trigger Transparency Multiplier", settings->triggerOverlayAlpha));
+						(game, ToolTipCollection("Multiplies how opaque triggers are, from 0 (fully transparent) to 1 (fully opaque)"), "Trigger Opacity Multiplier", settings->triggerOverlayAlpha));
+
+				case GUIElementEnum::triggerOverlayWireframeAlpha:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
+						(game, ToolTipCollection("Multiplies how opaque trigger wireframes are, from 0 (fully transparent) to 1 (fully opaque)"), "Wireframe Opacity Multiplier", settings->triggerOverlayWireframeAlpha));
+
 
 				case GUIElementEnum::triggerOverlayCheckHitToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
@@ -1647,7 +1653,8 @@ private:
 					(game, ToolTipCollection("Debug tools for HCM development"), "Debug", headerChildElements
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
-						createNestedElement(GUIElementEnum::getObjectAddressGUI)
+						createNestedElement(GUIElementEnum::getObjectAddressGUI),
+						createNestedElement(GUIElementEnum::softCeilingOverlayToggle)
 						}));
 
 
@@ -1659,6 +1666,11 @@ private:
 				case GUIElementEnum::getObjectAddressGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
+
+				case GUIElementEnum::softCeilingOverlayToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Renders Soft Ceilings (barriers)"), std::nullopt, "Soft Ceiling Overlay", settings->softCeilingOverlayToggle));
+
 
 
 #endif

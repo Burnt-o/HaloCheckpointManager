@@ -18,6 +18,7 @@
 #include "directxtk\PrimitiveBatch.h"
 #include "directxtk\GeometricPrimitive.h"
 #include "directxtk\Effects.h"
+#include <wrl/client.h>
 
 // impl in .cpp
 template<GameState::Value mGame>
@@ -71,9 +72,12 @@ private:
 
 	std::unique_ptr<GeometricPrimitive> unitCube;
 	std::unique_ptr<GeometricPrimitive> unitCubeInverse; // backfaces on the front
-	std::unique_ptr<PrimitiveBatch<VertexPosition>> lineDrawer;
-	std::unique_ptr<BasicEffect> m_effect;
+	std::shared_ptr<PrimitiveBatch<VertexPosition>> primitiveDrawer;
+
+	std::unique_ptr<BasicEffect> basicEffect;
+	Microsoft::WRL::ComPtr< ID3D11InputLayout > inputLayout;
 	ID3D11ShaderResourceView* patternedTexture;
+
 
 	void constructSpriteResource(int resourceID); // throws HCMRuntimeExceptions on fail
 	void initialise(); // run on first render frame to init spriteBatch & common states
@@ -91,7 +95,7 @@ private:
 	friend class Render3DEventProvider;
 
 
-	bool pointBehindCamera(const SimpleMath::Vector3& point);
+
 
 
 
@@ -105,10 +109,18 @@ public:
 	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
+	virtual bool pointBehindCamera(const SimpleMath::Vector3& worldPointPosition) override;
 
+	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) override;
+	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() override{ return primitiveDrawer; }
+	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) 
+	{ 
+		basicEffect->SetColorAndAlpha(color); 
+		basicEffect->Apply(this->pDeviceContext);
+	}
 
-
-	virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale) override;
+	//virtual void renderTriangle(const std::array<SimpleMath::Vector3, 3>& vertices, const SimpleMath::Vector4& color) override;
+	//virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale) override;
 
 
 

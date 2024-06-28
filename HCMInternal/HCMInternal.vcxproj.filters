@@ -89,6 +89,9 @@
     <Filter Include="Includes\ImGuiColorTextEditor">
       <UniqueIdentifier>{e97217e9-5185-4653-aa8c-93717bbdec9b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\3D\SoftCeiling">
+      <UniqueIdentifier>{87b7cc1c-459d-46ad-8e31-c6c33df15298}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -734,9 +737,6 @@
     <ClInclude Include="SettingsEnums.h">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClInclude>
-    <ClInclude Include="GetTagAddress.h">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClInclude>
     <ClInclude Include="TagBlock.h">
       <Filter>Classes</Filter>
     </ClInclude>
@@ -802,6 +802,21 @@
     </ClInclude>
     <ClInclude Include="TagBlockReader.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftCeilingOverlay.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
+    </ClInclude>
+    <ClInclude Include="TagTableRange.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetSoftCeilingData.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftCeilingData.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
+    </ClInclude>
+    <ClInclude Include="MagicString.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1120,9 +1135,6 @@
     <ClCompile Include="SettingsEnum.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
-    <ClCompile Include="GetTagAddress.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClCompile>
     <ClCompile Include="TriggerModel.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
@@ -1167,6 +1179,15 @@
     </ClCompile>
     <ClCompile Include="TagBlockReader.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="TagTableRange.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetSoftCeilingData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftCeilingOverlay.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

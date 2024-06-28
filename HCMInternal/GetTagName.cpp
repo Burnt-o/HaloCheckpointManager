@@ -4,12 +4,9 @@
 #include "PointerDataStore.h"
 #include "DynamicStructFactory.h"
 #include "IMCCStateHook.h"
+#include "MagicString.h"
 
-// used for checking magic strings "scnr" "tags" "bipd" etc
-union char_int {
-	char chars[4];
-	int32_t num;
-};
+
 
 
 // First gen (ie h1) stores an offset (nameOffset) to the tagNameString as part of the tagElementDataStructure. just add this offset to metaHeaderAddress (same thing as magicAddress in 1st gen) and boom there's ya string
@@ -38,7 +35,7 @@ private:
 	std::shared_ptr<MultilevelPointer> metaHeaderAddress;
 	int64_t tagBase;
 
-	char_int expectedMagic;
+	MagicString expectedMagic = MagicString("tags");
 
 	// cache
 	bool cacheValid = false;
@@ -53,10 +50,6 @@ public:
 		:
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onGameStateChange(n); })
 	{
-		expectedMagic.chars[3] = 't';
-		expectedMagic.chars[2] = 'a';
-		expectedMagic.chars[1] = 'g';
-		expectedMagic.chars[0] = 's';
 
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
@@ -80,8 +73,8 @@ public:
 			metaHeaderDataStruct->currentBaseAddress = cachedMetaHeaderAddress;
 
 			// validate magic
-			char_int observedMagic = *metaHeaderDataStruct->field<char_int>(metaHeaderDataFields::magic);
-			if (observedMagic.num != expectedMagic.num) throw HCMRuntimeException(std::format("metaHeaderTable magic mismatch! Expected: {}, observed: {}", expectedMagic.chars, observedMagic.chars));
+			MagicString observedMagic = *metaHeaderDataStruct->field<MagicString>(metaHeaderDataFields::magic);
+			if (observedMagic != expectedMagic) throw HCMRuntimeException(std::format("metaHeaderTable magic mismatch! Expected: {}, observed: {}", expectedMagic.getString(), observedMagic.getString()));
 
 			// resolve tag count
 			cachedTagCount = *metaHeaderDataStruct->field<int32_t>(metaHeaderDataFields::numberOfTags);
@@ -157,7 +150,7 @@ private:
 	enum class metaHeaderDataFields { numberOfTags, magic };
 	std::shared_ptr<DynamicStruct<metaHeaderDataFields>> metaHeaderDataStruct;
 
-	char_int expectedMagic;
+	MagicString expectedMagic = MagicString("tags");
 
 	// cache
 	uint32_t cachedTagCount;
@@ -170,10 +163,6 @@ public:
 		:
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onGameStateChange(n); })
 	{
-		expectedMagic.chars[3] = 't';
-		expectedMagic.chars[2] = 'a';
-		expectedMagic.chars[1] = 'g'; 
-		expectedMagic.chars[0] = 's';
 
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
@@ -196,8 +185,8 @@ public:
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "metaHeader resolved as: " << std::hex << pmh, pmh = pMetaHeader);
 			// validate magic
-			char_int observedMagic = *metaHeaderDataStruct->field<char_int>(metaHeaderDataFields::magic);
-			if (observedMagic.num != expectedMagic.num) throw HCMRuntimeException(std::format("metaHeaderTable magic mismatch! Expected: {}, observed: {} at address {:X}", expectedMagic.chars, observedMagic.chars, (uintptr_t)metaHeaderDataStruct->field<char_int>(metaHeaderDataFields::magic)));
+			MagicString observedMagic = *metaHeaderDataStruct->field<MagicString>(metaHeaderDataFields::magic);
+			if (observedMagic != expectedMagic) throw HCMRuntimeException(std::format("metaHeaderTable magic mismatch! Expected: {}, observed: {} at address {:X}", expectedMagic.getString(), observedMagic.getString(), (uintptr_t)metaHeaderDataStruct->field<MagicString>(metaHeaderDataFields::magic)));
 
 			// resolve tag count
 			cachedTagCount = *metaHeaderDataStruct->field<int32_t>(metaHeaderDataFields::numberOfTags);
@@ -245,7 +234,7 @@ private:
 	enum class metaHeaderDataFields { numberOfTags, magic };
 	std::shared_ptr<DynamicStruct<metaHeaderDataFields>> metaHeaderDataStruct;
 
-	char_int expectedMagic;
+	MagicString expectedMagic = MagicString("tags");
 
 	// cache
 	uint32_t cachedTagCount;
@@ -258,10 +247,6 @@ public:
 		:
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onGameStateChange(n); })
 	{
-		expectedMagic.chars[3] = 't';
-		expectedMagic.chars[2] = 'a';
-		expectedMagic.chars[1] = 'g';
-		expectedMagic.chars[0] = 's';
 
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 
@@ -284,8 +269,8 @@ public:
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "metaHeader resolved as: " << std::hex << pmh, pmh = pMetaHeader);
 			// validate magic
-			char_int observedMagic = *metaHeaderDataStruct->field<char_int>(metaHeaderDataFields::magic);
-			if (observedMagic.num != expectedMagic.num) throw HCMRuntimeException(std::format("metaHeaderTable magic mismatch! Expected: {}, observed: {} at address {:X}", expectedMagic.chars, observedMagic.chars, (uintptr_t)metaHeaderDataStruct->field<char_int>(metaHeaderDataFields::magic)));
+			MagicString observedMagic = *metaHeaderDataStruct->field<MagicString>(metaHeaderDataFields::magic);
+			if (observedMagic != expectedMagic) throw HCMRuntimeException(std::format("metaHeaderTable magic mismatch! Expected: {}, observed: {} at address {:X}", expectedMagic.getString(), observedMagic.getString(), (uintptr_t)metaHeaderDataStruct->field<MagicString>(metaHeaderDataFields::magic)));
 
 			// resolve tag count
 			cachedTagCount = *metaHeaderDataStruct->field<int32_t>(metaHeaderDataFields::numberOfTags);

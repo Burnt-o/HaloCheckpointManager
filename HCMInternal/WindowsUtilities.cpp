@@ -257,3 +257,15 @@ std::string shortestStringRepresentation(float n) {
 	auto result = std::to_chars(buf.data(), buf.data() + buf.size(), n, std::chars_format::fixed);
 	return std::string(buf.data(), result.ptr - buf.data());
 }
+
+uint32_t Vec4ColorToU32(const SimpleMath::Vector4& color)
+{
+	//Convert color components to value between 0 and 255.
+	uint32_t r = 255 * color.x;
+	uint32_t b = 255 * color.y;
+	uint32_t g = 255 * color.z;
+	uint32_t a = 255 * color.w;
+
+	//Combine the color components in a single value of the form 0xAaBbGgRr
+	return 0x00000000 | r | (g << 8) | (b << 16) | (a << 24);
+}
