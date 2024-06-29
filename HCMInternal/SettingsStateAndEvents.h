@@ -1431,7 +1431,7 @@ public:
 
 	std::shared_ptr<BinarySetting<SettingsEnums::SoftCeilingRenderTypes>> softCeilingOverlayRenderTypes = std::make_shared<BinarySetting<SettingsEnums::SoftCeilingRenderTypes>>
 		(
-			SettingsEnums::SoftCeilingRenderTypes::BipedAndVehicle,
+			SettingsEnums::SoftCeilingRenderTypes::BipedsOrVehicles,
 			[](SettingsEnums::SoftCeilingRenderTypes in) { return true; },
 			nameof(softCeilingOverlayRenderTypes)
 		);
@@ -1471,19 +1471,7 @@ public:
 			nameof(softCeilingOverlaySolidTransparency)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> softCeilingOverlayRenderRangeToggle = std::make_shared<BinarySetting<bool>>
-		(
-			false,
-			[](bool in) { return true; },
-			nameof(softCeilingOverlayRenderRangeToggle)
-		);
 
-	std::shared_ptr<BinarySetting<float>> softCeilingOverlayRenderRangeValue = std::make_shared<BinarySetting<float>>
-		(
-			10.f,
-			[](float in) { return true; },
-			nameof(softCeilingOverlayRenderRangeValue)
-		);
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
@@ -1497,6 +1485,7 @@ public:
 		triggerOverlayNormalColor,
 		triggerOverlayBSPColor,
 		triggerOverlayAlpha,
+			triggerOverlayWireframeAlpha,
 		triggerOverlayCheckHitToggle,
 		triggerOverlayCheckMissToggle,
 		triggerOverlayCheckHitFalloff,
@@ -1507,6 +1496,16 @@ public:
 		triggerOverlayMessageOnExit,
 		triggerOverlayMessageOnCheckHit,
 		triggerOverlayMessageOnCheckMiss,
+			triggerOverlayPositionToggle,
+			triggerOverlayPositionColor,
+			triggerOverlayPositionScale,
+			triggerOverlayPositionWireframe,
+			softCeilingOverlayRenderTypes,
+			softCeilingOverlayColorAccel,
+			softCeilingOverlayColorSlippy,
+			softCeilingOverlayColorKill,
+			softCeilingOverlaySolidTransparency,
+			softCeilingOverlayWireframeTransparency,
 		hideWatermarkHideMessages,
 		advanceTicksCount,
 		injectionIgnoresChecksum,

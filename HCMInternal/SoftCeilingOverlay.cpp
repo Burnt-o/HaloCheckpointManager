@@ -122,6 +122,7 @@ private:
 	}
 
 
+
 	// new frame, render
 	void onRenderEvent(GameState game, IRenderer3D* renderer)
 	{
@@ -150,17 +151,20 @@ private:
 
 			lockOrThrow(settingsWeak, settings);
 			auto desiredSubjects = settings->softCeilingOverlayRenderTypes->GetValue();
-			bool wantsVehicles = desiredSubjects != SettingsEnums::SoftCeilingRenderTypes::BipedOnly;
-			bool wantsBipeds = desiredSubjects != SettingsEnums::SoftCeilingRenderTypes::VehicleOnly;
+			bool wantsVehicles = desiredSubjects != SettingsEnums::SoftCeilingRenderTypes::Bipeds;
+			bool wantsBipeds = desiredSubjects != SettingsEnums::SoftCeilingRenderTypes::Vehicles;
 
+
+			auto cameraPosition = renderer->getCameraPosition();
 
 			auto primitiveDrawer = renderer->getPrimitiveDrawer();
 
 			for (auto& softCeiling : *softCeilingDataLock.value().get())
 			{
-				bool shouldRender = (wantsVehicles && softCeiling.appliesToVehicle()) || (wantsBipeds && softCeiling.appliesToBiped());
-				if (!shouldRender)
-					continue;
+				bool isDesiredSubject = (wantsVehicles && softCeiling.appliesToVehicle()) || (wantsBipeds && softCeiling.appliesToBiped());
+				if (!isDesiredSubject)
+					continue; 
+
 
 				// fill
 				renderer->setPrimitiveColor(softCeiling.colorSolid);

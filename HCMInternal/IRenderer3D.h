@@ -109,5 +109,11 @@ public:
 	/// <param name="isWireframe">Whether should be drawn as wireframe. Otherwise, filled volume. </param>
 	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe) = 0;
 
+	/// <summary>
+	/// Gets the cameras current position.
+	/// </summary>
+	/// <returns>worldPoint position of camera</returns>
+	virtual const SimpleMath::Vector3 getCameraPosition() = 0;
+
 
 };

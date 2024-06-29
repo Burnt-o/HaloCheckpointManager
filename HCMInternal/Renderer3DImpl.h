@@ -126,6 +126,8 @@ public:
 		primitiveBatchEffect->Apply(this->pDeviceContext);
 	}
 
+	virtual const SimpleMath::Vector3 getCameraPosition() override { return cameraPosition; };
+
 	//virtual void renderTriangle(const std::array<SimpleMath::Vector3, 3>& vertices, const SimpleMath::Vector4& color) override;
 	//virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale) override;
 

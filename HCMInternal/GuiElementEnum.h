@@ -199,8 +199,6 @@
 		((softCeilingOverlayColorKill, (THIRD_GEN)))\
 		((softCeilingOverlaySolidTransparency, (THIRD_GEN)))\
 		((softCeilingOverlayWireframeTransparency, (THIRD_GEN)))\
-		((softCeilingOverlayRenderRangeToggle, (THIRD_GEN)))\
-			((softCeilingOverlayRenderRangeValue, (THIRD_GEN)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\

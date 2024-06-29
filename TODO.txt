@@ -2,13 +2,6 @@
 3.1 TODO
 * impl triggerOverlay for HR and H4 (mainly RE trigger data location and the triggerDataStruct)
 * add load All Triggers to filterTrigger modal dialog
-* impl softCeilingOverlay for OD, HR, H4
-	* GUI options too such as
-		* whether to render biped, vehicle, or both (GUIComboEnum)
-		* colour of accel vs slippy vs softKill (Need to cache and recalculate in SoftCeilingOverlay)- just callback to colorChanged and bool colourCached
-		* Overall transparency
-		* Wireframe transparency
-		* Render range limit (tri dist calc)
 * options to adjust message GUI font
 * adjust trigger overlay colour setting defaults
 * move sensdrift/shieldinput to debug

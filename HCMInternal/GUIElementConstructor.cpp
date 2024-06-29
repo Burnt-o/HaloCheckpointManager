@@ -1109,8 +1109,7 @@ private:
 						createNestedElement(GUIElementEnum::softCeilingOverlayColorSlippy),
 						createNestedElement(GUIElementEnum::softCeilingOverlayColorKill),
 						createNestedElement(GUIElementEnum::softCeilingOverlaySolidTransparency),
-						createNestedElement(GUIElementEnum::softCeilingOverlayWireframeTransparency),
-						createNestedElement(GUIElementEnum::softCeilingOverlayRenderRangeToggle)
+						createNestedElement(GUIElementEnum::softCeilingOverlayWireframeTransparency)
 						}));
 
 			case GUIElementEnum::softCeilingOverlayRenderTypes:
@@ -1137,17 +1136,6 @@ private:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.f, 1.f>>
 					(game, ToolTipCollection("Opacity of the outline of the barrier triangles"), "Outline Opacity", settings->softCeilingOverlayWireframeTransparency));
 
-			case GUIElementEnum::softCeilingOverlayRenderRangeToggle:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
-					(game, ToolTipCollection("Hides barrier triangles far away from the player"), std::nullopt, "Render Range##ToggleSoftCeiling", settings->softCeilingOverlayRenderRangeToggle, headerChildElements
-						{
-						createNestedElement(GUIElementEnum::softCeilingOverlayRenderRangeValue),
-						}));
-
-
-				case GUIElementEnum::softCeilingOverlayRenderRangeValue:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
-						(game, ToolTipCollection("How far from a barrier triangle to be before hiding it"), "##RenderRangeValueSoftCeiling", settings->softCeilingOverlayRenderRangeValue));
 
 
 			case GUIElementEnum::shieldInputPrinterToggle:
