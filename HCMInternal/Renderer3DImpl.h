@@ -118,7 +118,7 @@ public:
 	virtual bool pointBehindCamera(const SimpleMath::Vector3& worldPointPosition) override;
 
 	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) override;
-	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale) override;
+	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe) override;
 	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() override{ return primitiveDrawer; }
 	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) 
 	{ 

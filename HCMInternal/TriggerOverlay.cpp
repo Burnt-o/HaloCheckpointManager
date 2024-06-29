@@ -10,6 +10,7 @@
 #include "UpdateTriggerLastChecked.h"
 #include "GameTickEventHook.h"
 #include "IMessagesGUI.h"
+#include "GetPlayerTriggerPosition.h"
 
 using namespace SettingsEnums;
 
@@ -28,6 +29,7 @@ private:
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
 	std::weak_ptr< GameTickEventHook> gameTickEventHookWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::optional<std::weak_ptr< GetPlayerTriggerPosition>> getPlayerTriggerPositionOptionalWeak;
 	std::optional<std::weak_ptr<UpdateTriggerLastChecked>> updateTriggerLastCheckedOptionalWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
@@ -90,6 +92,30 @@ private:
 
 
 			lockOrThrow(settingsWeak, settings);
+
+			// draw player trigger vertex
+			if (getPlayerTriggerPositionOptionalWeak.has_value() && settings->triggerOverlayPositionToggle->GetValue())
+			{
+				lockOrThrow(getPlayerTriggerPositionOptionalWeak.value(), getPlayerTriggerPosition);
+				auto playerTriggerPosition = getPlayerTriggerPosition->getPlayerTriggerPosition();
+
+				if (playerTriggerPosition)
+				{
+					const bool& isWireframe = settings->triggerOverlayPositionWireframe->GetValue();
+
+					auto vertexColor = settings->triggerOverlayPositionColor->GetValue(); // make a copy since we will mutate
+					auto scale = settings->triggerOverlayPositionScale->GetValue();
+					renderer->renderSphere(playerTriggerPosition.value(), vertexColor, scale, isWireframe);
+
+					// draw a smaller sphere at 1/10th size and extra opacity
+					vertexColor.w += (1.f - vertexColor.w) / 2.f;
+					renderer->renderSphere(playerTriggerPosition.value(), vertexColor, scale / 10.f, isWireframe);
+				}
+					
+			}
+
+
+
 
 			const auto& renderStyle = settings->triggerOverlayRenderStyle->GetValue();
 			const auto& interiorStyle = settings->triggerOverlayInteriorStyle->GetValue();
@@ -289,6 +315,8 @@ private:
 			}
 
 
+
+
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -318,6 +346,7 @@ public:
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
+		
 	{
 
 		try
@@ -327,6 +356,15 @@ public:
 		catch (HCMInitException ex)
 		{
 			PLOG_ERROR << "Trigger overlay could not resolve UpdateTriggerLastChecked, continuing anyway";
+		}
+
+		try
+		{
+			getPlayerTriggerPositionOptionalWeak = resolveDependentCheat(GetPlayerTriggerPosition);
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Trigger overlay could not resolve getPlayerTriggerPositionWeak, continuing anyway";
 		}
 	}
 

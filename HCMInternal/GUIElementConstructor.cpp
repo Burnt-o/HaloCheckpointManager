@@ -956,6 +956,7 @@ private:
 								createNestedElement(GUIElementEnum::triggerOverlayMessageOnExit),
 								createNestedElement(GUIElementEnum::triggerOverlayMessageOnCheckHit),
 								createNestedElement(GUIElementEnum::triggerOverlayMessageOnCheckMiss),
+								createNestedElement(GUIElementEnum::triggerOverlayPositionToggle),
 							}));
 
 				case GUIElementEnum::triggerOverlayFilterToggle:
@@ -1070,6 +1071,28 @@ private:
 				case GUIElementEnum::triggerOverlayMessageOnCheckMiss:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 						(game, ToolTipCollection("Prints a message to the screen when a trigger failfully checks for the player"), std::nullopt, "Message on Failed Trigger Check", settings->triggerOverlayMessageOnCheckMiss));
+
+				case GUIElementEnum::triggerOverlayPositionToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
+						(game, ToolTipCollection("Draws a sphere at the vertex of the player model that activates triggers"), std::nullopt, "Show Player Trigger Vertex", settings->triggerOverlayPositionToggle, headerChildElements
+							{
+							createNestedElement(GUIElementEnum::triggerOverlayPositionColor),
+							createNestedElement(GUIElementEnum::triggerOverlayPositionScale),
+							createNestedElement(GUIElementEnum::triggerOverlayPositionWireframe),
+							}));
+
+					case GUIElementEnum::triggerOverlayPositionColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+							(game, ToolTipCollection("Color of the sphere drawn at the players trigger vertex"), "Trigger Vertex Color", settings->triggerOverlayPositionColor));
+
+					case GUIElementEnum::triggerOverlayPositionScale:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
+							(game, ToolTipCollection("Size of the sphere drawn at the players trigger vertex"), "Trigger Vertex Scale", settings->triggerOverlayPositionScale));
+
+					case GUIElementEnum::triggerOverlayPositionWireframe:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Draw the player-trigger-vertex sphere as wireframe instead of solid"), std::nullopt, "Trigger Vertex Wireframe", settings->triggerOverlayPositionWireframe));
+
 
 					
 			case GUIElementEnum::shieldInputPrinterToggle:

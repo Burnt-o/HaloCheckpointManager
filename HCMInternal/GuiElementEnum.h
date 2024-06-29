@@ -184,6 +184,10 @@
 		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayMessageOnCheckHit, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayMessageOnCheckMiss, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlayPositionToggle, (Halo1)))\
+			((triggerOverlayPositionColor, (Halo1)))\
+			((triggerOverlayPositionScale, (Halo1)))\
+			((triggerOverlayPositionWireframe, (Halo1)))\
 	((shieldInputPrinterToggle, (Halo1)))\
 	((sensDriftDetectorToggle, (Halo1)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\

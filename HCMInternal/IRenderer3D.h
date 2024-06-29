@@ -100,6 +100,14 @@ public:
 	/// <param name="color">Float4 of the colour to be drawn.</param>
 	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) = 0;
 
+	/// <summary>
+	/// Draws a unit sphere (scaled by param) of the specified colour at the specified position.
+	/// </summary>
+	/// <param name="position">Float3 world position of the center of the sphere.</param>
+	/// <param name="color">Float4 of the colour to be drawn.</param>
+	/// <param name="scale">Float of scaling (unit scale) to apply to the sphere.</param>
+	/// <param name="isWireframe">Whether should be drawn as wireframe. Otherwise, filled volume. </param>
+	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe) = 0;
 
 
 };

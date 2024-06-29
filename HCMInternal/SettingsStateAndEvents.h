@@ -1378,6 +1378,36 @@ public:
 			nameof(triggerOverlayMessageOnCheckMiss)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayPositionToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayPositionToggle)
+		);
+
+
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayPositionColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 1.f}, // green
+			[](SimpleMath::Vector4 in) { return in.w == 1.f; },
+			nameof(triggerOverlayPositionColor)
+		);
+
+	std::shared_ptr<BinarySetting<float>> triggerOverlayPositionScale = std::make_shared<BinarySetting<float>>
+		(
+			0.1f,
+			[](float in) { return in > 0.f; },
+			nameof(triggerOverlayPositionScale)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayPositionWireframe = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(triggerOverlayPositionWireframe)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> shieldInputPrinterToggle = std::make_shared<BinarySetting<bool>>
 		(
 			false,

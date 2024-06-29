@@ -33,11 +33,20 @@ void Renderer3DImpl<mGame>::renderTriggerModelSolid(const TriggerModel& model, c
 	}
 	else
 	{
-		unitCube->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, nullptr);
+		unitCube->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, nullptr, false, [=] {
+			});
 	}
 }
 
+template<GameState::Value mGame>
+void Renderer3DImpl<mGame>::renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe)
+{
+	// create position and scale transforms
+	auto resizeTransform = SimpleMath::Matrix::CreateScale(scale);
+	auto translateTransform = SimpleMath::Matrix::CreateTranslation(position);
 
+	unitSphere->Draw(resizeTransform * translateTransform, this->viewMatrix, this->projectionMatrix, color, nullptr, isWireframe);
+}
 
 // explicit template instantiation
 template class Renderer3DImpl<GameState::Value::Halo1>;

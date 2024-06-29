@@ -239,6 +239,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{OptionalCheatEnum::TriggerFilter, OptionalCheatEnum::TriggerFilterModalDialogManager }
 	},
 
+			{ GUIElementEnum::triggerOverlayPositionToggle,
+	{ OptionalCheatEnum::GetPlayerTriggerPosition }
+	},
+
 			{ GUIElementEnum::shieldInputPrinterToggle,
 		{OptionalCheatEnum::ShieldInputPrinter,}
 		},

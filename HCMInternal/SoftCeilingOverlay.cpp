@@ -78,6 +78,7 @@ private:
 			lockOrThrow(settingsWeak, settings);
 			//throw HCMRuntimeException("TODO: get relavent settings for which type to draw and what colour to draw them");
 			SimpleMath::Vector4 debugColor {1.0f, 1.0f, 0.0f, 0.2f};
+			SimpleMath::Vector4 debugWireframeColor {1.0f, 1.0f, 0.0f, 0.5f};
 
 			LOG_ONCE(PLOG_DEBUG << "acquiring soft ceiling data");
 
@@ -112,6 +113,12 @@ private:
 
 				primitiveDrawer->DrawTriangle(softCeiling.vertices[0], softCeiling.vertices[1], softCeiling.vertices[2]);
 				primitiveDrawer->DrawTriangle(softCeiling.vertices[0], softCeiling.vertices[2], softCeiling.vertices[1]); // need to render the back face too
+
+				// wireframe ? 
+				renderer->setPrimitiveColor(debugWireframeColor);
+				primitiveDrawer->DrawLine(softCeiling.vertices[0], softCeiling.vertices[1]);
+				primitiveDrawer->DrawLine(softCeiling.vertices[1], softCeiling.vertices[2]);
+				primitiveDrawer->DrawLine(softCeiling.vertices[2], softCeiling.vertices[0]);
 
 			}
 			primitiveDrawer->End();
