@@ -6173,39 +6173,35 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="magicAddress" Type="MultilevelPointer::ModuleOffset">
+		<!--metaHeaderAddress but not dereferenced-->
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2D9CE10</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2D9CE10</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3251.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2D9CE10</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2F01D98</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x2A53590</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		
@@ -6213,21 +6209,18 @@
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x00DA61A0</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x15e3b58</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
 				<Offset>0x15e3b58</Offset>
-				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		
