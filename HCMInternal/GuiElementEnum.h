@@ -8,6 +8,7 @@
 #define ALL_SUPPORTED_GAMES Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
 #define FREE_CAMERA_SUPPORT Halo1, Halo2
+#define THIRD_GEN Halo3, Halo3ODST, HaloReach, Halo4
 
 
 // interpolator macro for freecamera
@@ -190,6 +191,16 @@
 			((triggerOverlayPositionWireframe, (Halo1)))\
 	((shieldInputPrinterToggle, (Halo1)))\
 	((sensDriftDetectorToggle, (Halo1)))\
+	((softCeilingOverlayToggle, (THIRD_GEN)))\
+	((softCeilingOverlaySettings, (THIRD_GEN)))\
+		((softCeilingOverlayRenderTypes, (THIRD_GEN)))\
+		((softCeilingOverlayColorAccel, (THIRD_GEN)))\
+		((softCeilingOverlayColorSlippy, (THIRD_GEN)))\
+		((softCeilingOverlayColorKill, (THIRD_GEN)))\
+		((softCeilingOverlaySolidTransparency, (THIRD_GEN)))\
+		((softCeilingOverlayWireframeTransparency, (THIRD_GEN)))\
+		((softCeilingOverlayRenderRangeToggle, (THIRD_GEN)))\
+			((softCeilingOverlayRenderRangeValue, (THIRD_GEN)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
@@ -246,7 +257,7 @@
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
-	((softCeilingOverlayToggle, (Halo3, Halo3ODST, HaloReach, Halo4)))\
+
 
 
 

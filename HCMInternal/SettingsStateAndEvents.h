@@ -1429,6 +1429,62 @@ public:
 			nameof(softCeilingOverlayToggle)
 		);
 
+	std::shared_ptr<BinarySetting<SettingsEnums::SoftCeilingRenderTypes>> softCeilingOverlayRenderTypes = std::make_shared<BinarySetting<SettingsEnums::SoftCeilingRenderTypes>>
+		(
+			SettingsEnums::SoftCeilingRenderTypes::BipedAndVehicle,
+			[](SettingsEnums::SoftCeilingRenderTypes in) { return true; },
+			nameof(softCeilingOverlayRenderTypes)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> softCeilingOverlayColorAccel = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 1.f}, // green
+			[](SimpleMath::Vector4 in) { return in.w == 1.f; },
+			nameof(softCeilingOverlayColorAccel)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> softCeilingOverlayColorSlippy = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 1.f}, // yellow
+			[](SimpleMath::Vector4 in) { return in.w == 1.f; },
+			nameof(softCeilingOverlayColorSlippy)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> softCeilingOverlayColorKill = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{1.0f, 0.0f, 0.0f, 1.f}, // red
+			[](SimpleMath::Vector4 in) { return in.w == 1.f; },
+			nameof(softCeilingOverlayColorKill)
+		);
+
+	std::shared_ptr<BinarySetting<float>> softCeilingOverlaySolidTransparency = std::make_shared<BinarySetting<float>>
+		(
+			0.3f,
+			[](float in) { return true; },
+			nameof(softCeilingOverlaySolidTransparency)
+		);
+
+	std::shared_ptr<BinarySetting<float>> softCeilingOverlayWireframeTransparency = std::make_shared<BinarySetting<float>>
+		(
+			0.6f,
+			[](float in) { return true; },
+			nameof(softCeilingOverlaySolidTransparency)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> softCeilingOverlayRenderRangeToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(softCeilingOverlayRenderRangeToggle)
+		);
+
+	std::shared_ptr<BinarySetting<float>> softCeilingOverlayRenderRangeValue = std::make_shared<BinarySetting<float>>
+		(
+			10.f,
+			[](float in) { return true; },
+			nameof(softCeilingOverlayRenderRangeValue)
+		);
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{

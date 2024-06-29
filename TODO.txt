@@ -11,11 +11,6 @@
 		* Render range limit (tri dist calc)
 * options to adjust message GUI font
 * adjust trigger overlay colour setting defaults
-* test if adding a sphere to triggerHitPosition works with depth, if so:
-	* toggle
-		* colour
-		* size
-		* wireframe??
 * move sensdrift/shieldinput to debug
 * confirm that triggerHitPosition works for all games (ie when in vehicles)
 	* maybe fix the third gen implentation to use the ACTUAL value
@@ -35,7 +30,7 @@ FUTURE TODO:
 * refactor a bunch of simple services to use std::expected
 	* !! add new cheaper virtual error type exposing a what()
 * bool script mode? (hacky implementation of scriptReader for ce-bool only? might not take too long if I'm really hacky)
-
+* several of my settings enums would be better represented as bitmasks
 
 
 * Some big refactoring:

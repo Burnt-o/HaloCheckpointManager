@@ -83,6 +83,7 @@ template void BinarySetting<TriggerRenderStyle>::deserialise(pugi::xml_node inpu
 template void BinarySetting<TriggerInteriorStyle>::deserialise(pugi::xml_node input);
 template void BinarySetting<TriggerLabelStyle>::deserialise(pugi::xml_node input);
 template void BinarySetting<Display2DInfoAnchorEnum>::deserialise(pugi::xml_node input);
+template void BinarySetting<SoftCeilingRenderTypes>::deserialise(pugi::xml_node input);
 
 
 

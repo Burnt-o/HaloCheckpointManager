@@ -33,4 +33,10 @@ public:
 
 	explicit SoftCeilingData(SoftCeilingObjectMask softCeilingObjectMask, SoftCeilingType softCeilingType, std::array<SimpleMath::Vector3, 3> vertices)
 		: softCeilingObjectMask(softCeilingObjectMask), softCeilingType(softCeilingType), vertices(vertices) {}
+
+
+	// mutable
+	SimpleMath::Vector4 colorSolid { 1.f, 0.f, 1.f, 1.f };
+	SimpleMath::Vector4 colorWireframe { 0.f, 1.f, 1.f, 1.f };
+
 };

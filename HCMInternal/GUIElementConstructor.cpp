@@ -644,8 +644,10 @@ private:
 							createNestedElement(GUIElementEnum::waypoint3DGUISettings),
 							createNestedElement(GUIElementEnum::triggerOverlayToggle),
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
-							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
-							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
+							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
+							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
+	/*						createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
+							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),*/
 						}));
 
 
@@ -1086,7 +1088,7 @@ private:
 							(game, ToolTipCollection("Color of the sphere drawn at the players trigger vertex"), "Trigger Vertex Color", settings->triggerOverlayPositionColor));
 
 					case GUIElementEnum::triggerOverlayPositionScale:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.01f, 2.f>>
 							(game, ToolTipCollection("Size of the sphere drawn at the players trigger vertex"), "Trigger Vertex Scale", settings->triggerOverlayPositionScale));
 
 					case GUIElementEnum::triggerOverlayPositionWireframe:
@@ -1094,7 +1096,60 @@ private:
 							(game, ToolTipCollection("Draw the player-trigger-vertex sphere as wireframe instead of solid"), std::nullopt, "Trigger Vertex Wireframe", settings->triggerOverlayPositionWireframe));
 
 
-					
+			case GUIElementEnum::softCeilingOverlayToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+					(game, ToolTipCollection("Renders Soft Ceilings (barriers)"), std::nullopt, "Barrier Overlay", settings->softCeilingOverlayToggle));
+
+			case GUIElementEnum::softCeilingOverlaySettings:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+					(game, ToolTipCollection("Settings for the barrier overlay"), "Barrier Overlay Settings", headerChildElements
+						{
+						createNestedElement(GUIElementEnum::softCeilingOverlayRenderTypes),
+						createNestedElement(GUIElementEnum::softCeilingOverlayColorAccel),
+						createNestedElement(GUIElementEnum::softCeilingOverlayColorSlippy),
+						createNestedElement(GUIElementEnum::softCeilingOverlayColorKill),
+						createNestedElement(GUIElementEnum::softCeilingOverlaySolidTransparency),
+						createNestedElement(GUIElementEnum::softCeilingOverlayWireframeTransparency),
+						createNestedElement(GUIElementEnum::softCeilingOverlayRenderRangeToggle)
+						}));
+
+			case GUIElementEnum::softCeilingOverlayRenderTypes:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::SoftCeilingRenderTypes, 150.f>>
+					(game, ToolTipCollection("Whether to render barriers that apply to bipeds, vehicles, or both."), "Render Barrier Subjects", settings->softCeilingOverlayRenderTypes));
+
+			case GUIElementEnum::softCeilingOverlayColorAccel:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+					(game, ToolTipCollection("Color of barriers of the \"Acceleration\" type"), "Accelleration Color", settings->softCeilingOverlayColorAccel));
+
+			case GUIElementEnum::softCeilingOverlayColorSlippy:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+					(game, ToolTipCollection("Color of barriers of the \"Slip Surface\" type"), "Slippery Color", settings->softCeilingOverlayColorSlippy));
+
+			case GUIElementEnum::softCeilingOverlayColorKill:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+					(game, ToolTipCollection("Color of barriers of the \"Soft Kill\" type"), "Kill Color", settings->softCeilingOverlayColorKill));
+
+			case GUIElementEnum::softCeilingOverlaySolidTransparency:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.f, 1.f>>
+					(game, ToolTipCollection("Opacity of the filled barrier triangles"), "Solid Opacity", settings->softCeilingOverlaySolidTransparency));
+
+			case GUIElementEnum::softCeilingOverlayWireframeTransparency:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.f, 1.f>>
+					(game, ToolTipCollection("Opacity of the outline of the barrier triangles"), "Outline Opacity", settings->softCeilingOverlayWireframeTransparency));
+
+			case GUIElementEnum::softCeilingOverlayRenderRangeToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
+					(game, ToolTipCollection("Hides barrier triangles far away from the player"), std::nullopt, "Render Range##ToggleSoftCeiling", settings->softCeilingOverlayRenderRangeToggle, headerChildElements
+						{
+						createNestedElement(GUIElementEnum::softCeilingOverlayRenderRangeValue),
+						}));
+
+
+				case GUIElementEnum::softCeilingOverlayRenderRangeValue:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						(game, ToolTipCollection("How far from a barrier triangle to be before hiding it"), "##RenderRangeValueSoftCeiling", settings->softCeilingOverlayRenderRangeValue));
+
+
 			case GUIElementEnum::shieldInputPrinterToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 					(game, ToolTipCollection("Locks onto nearest deployable shield; when shield disabled, prints which tick you pressed movement inputs"), std::nullopt, "Shield Input Printer", settings->shieldInputPrinterToggle));
@@ -1677,7 +1732,6 @@ private:
 						{ 
 						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
-						createNestedElement(GUIElementEnum::softCeilingOverlayToggle)
 						}));
 
 
@@ -1690,9 +1744,6 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
-				case GUIElementEnum::softCeilingOverlayToggle:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-						(game, ToolTipCollection("Renders Soft Ceilings (barriers)"), std::nullopt, "Soft Ceiling Overlay", settings->softCeilingOverlayToggle));
 
 
 

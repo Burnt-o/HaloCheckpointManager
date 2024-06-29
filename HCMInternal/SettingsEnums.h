@@ -28,6 +28,9 @@ namespace SettingsEnums
 
 	enum class TriggerLabelStyle { None, Center, Corner };
 
+
+	enum class SoftCeilingRenderTypes { BipedOnly, VehicleOnly, BipedAndVehicle };
+
 	enum class Display2DInfoAnchorEnum
 	{
 		TopLeft,
