@@ -9,20 +9,22 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 
 
 
-	transformation = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ) // world at origin
-		* SimpleMath::Matrix::CreateScale(extents)// resize
+	auto resizeTransform = SimpleMath::Matrix::CreateScale(extents);
 
-		* SimpleMath::Matrix::CreateTranslation(extents / 2) // offset to pivot point (corner)
+	auto rotateTransform = SimpleMath::Matrix::CreateTranslation(extents / 2) // offset to pivot point (corner)
 		* SimpleMath::Matrix::CreateFromQuaternion(SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitX, forward)) // rotate forward
 		* SimpleMath::Matrix::CreateFromQuaternion(SimpleMath::Quaternion::FromToRotation(SimpleMath::Vector3::UnitZ, up)) // rotate up
-		* SimpleMath::Matrix::CreateTranslation(-1.f * (extents / 2)) // unoffset to pivot point
+		* SimpleMath::Matrix::CreateTranslation(-1.f * (extents / 2)); // unoffset to pivot point
 
-		* SimpleMath::Matrix::CreateTranslation(center); // translate
+	auto translateTransform = SimpleMath::Matrix::CreateTranslation(center);
 
 
-	//	auto triggerRotation = SimpleMath::Quaternion::LookRotation(forward, up);
-	//triggerRotation.Normalize();
-	//box = DirectX::BoundingOrientedBox(center, extents, triggerRotation);
+	transformation = SimpleMath::Matrix::CreateWorld(SimpleMath::Vector3::Zero, SimpleMath::Vector3::UnitX, SimpleMath::Vector3::UnitZ) // world at origin
+		* resizeTransform // resize
+		* rotateTransform // rotate
+		* translateTransform; // translate
+
+
 
 	// begin with unit cube vertices
 	std::array<SimpleMath::Vector3, 8> vertices =
@@ -41,7 +43,6 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 		*/
 		// above is span -1 .. 1, but unit cube is actually -0.5f to 0.5f
 
-
 		SimpleMath::Vector3{ -0.5f, -0.5f,  0.5f },
 		SimpleMath::Vector3{  0.5f, -0.5f,  0.5f },
 		SimpleMath::Vector3{  0.5f,  0.5f,  0.5f },
@@ -53,15 +54,19 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 	};
 
 	// transform unit cube vertices by transformation
-	for (auto& vertex : vertices)
-	{
-		vertex = SimpleMath::Vector3::Transform(vertex, transformation);
-	}
+	std::ranges::transform(vertices, vertices.begin(), [this](const auto& v) { return SimpleMath::Vector3::Transform(v, transformation); });
 
 	// create bounding box
-	DirectX::BoundingOrientedBox::CreateFromPoints(box, vertices.size(), vertices.data(), sizeof(SimpleMath::Vector3));
+	box = DirectX::BoundingOrientedBox(SimpleMath::Vector3::Zero, extents / 2, SimpleMath::Quaternion::Identity);
+	box.Transform(box, rotateTransform);
+	box.Transform(box, translateTransform);
 
+
+	//DirectX::BoundingOrientedBox::CreateFromPoints(box, vertices.size(), vertices.data(), sizeof(SimpleMath::Vector3)); // overzealous bounding box! bad
+
+#ifdef HCM_DEBUG
 	PLOG_DEBUG << "box.Center" << (SimpleMath::Vector3)box.Center;
+#endif
 
 	edges = {
 		// Near face.
