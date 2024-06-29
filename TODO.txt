@@ -2,6 +2,7 @@
 3.1 TODO
 * impl triggerOverlay for HR and H4 (mainly RE trigger data location and the triggerDataStruct)
 * add load All Triggers to filterTrigger modal dialog
+* make level-specific load-triggers in filter dialog runtime dynamic
 * options to adjust message GUI font
 * adjust trigger overlay colour setting defaults
 * move sensdrift/shieldinput to debug

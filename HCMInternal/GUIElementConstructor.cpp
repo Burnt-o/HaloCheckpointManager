@@ -1114,7 +1114,7 @@ private:
 
 			case GUIElementEnum::softCeilingOverlayRenderTypes:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::SoftCeilingRenderTypes, 150.f>>
-					(game, ToolTipCollection("Whether to render barriers that apply to bipeds, vehicles, or both."), "Render Barrier Subjects", settings->softCeilingOverlayRenderTypes));
+					(game, ToolTipCollection("Whether to render barriers that apply to bipeds, vehicles, or either."), "Render Barriers Affecting:", settings->softCeilingOverlayRenderTypes));
 
 			case GUIElementEnum::softCeilingOverlayColorAccel:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>

@@ -9,13 +9,15 @@ private:
 	std::string mOriginalValue;
 	MCCState mMCCState;
 	std::unique_ptr<TextEditor> textEditor;
+	std::string allTriggers;
 
 public:
-	TriggerFilterStringDialog(std::string dialogTitle, std::string defaultValue, MCCState mccState)
+	TriggerFilterStringDialog(std::string dialogTitle, std::string defaultValue, MCCState mccState, std::string allTriggers)
 		: IModalDialogReturner
 		(dialogTitle, defaultValue),
 		mOriginalValue(defaultValue),
-		mMCCState(mccState)
+		mMCCState(mccState),
+		allTriggers(allTriggers)
 	{
 	// setup texteditor
 		textEditor = std::make_unique<TextEditor>();
@@ -78,6 +80,11 @@ public:
 					"bsp 2,12; bsp 12,2; bsp 2,10; bsp 10,1; \n"
 					"bsp 1,6; bsp 6,1; bsp 1,0; \n");
 			}
+		}
+
+		if (ImGui::Button("Load All Triggers"))
+		{
+			textEditor->SetText(allTriggers);
 		}
 
 

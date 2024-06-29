@@ -8,6 +8,9 @@
 #include "RuntimeExceptionHandler.h"
 #include "IMCCStateHook.h"
 #include "boost\algorithm\string\trim.hpp"
+#include "GetTriggerData.h"
+#include "IMakeOrGetCheat.h"
+#include <numeric>
 
 class TriggerFilterModalDialogManager : public IOptionalCheat
 {
@@ -17,9 +20,12 @@ private:
 	class TriggerFilterModalDialogManagerImpl
 	{
 	private:
+		GameState mGame;
+
 		std::weak_ptr<ModalDialogRenderer> modalDialogsWeak;
 		std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 		std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+		std::weak_ptr<GetTriggerData> getTriggerDataWeak;
 		std::shared_ptr< RuntimeExceptionHandler> runtimeExceptions;
 
 		ScopedCallback<ActionEvent> triggerOverlayFilterStringDialogEventCallback;
@@ -35,9 +41,35 @@ private:
 				lockOrThrow(settingsWeak, settings);
 				lockOrThrow(modalDialogsWeak, modalDialogs);
 				lockOrThrow(mccStateHookWeak, mccStateHook);
-				
 
-				auto newFilterString = modalDialogs->showReturningDialog(ModalDialogFactory::makeTriggerFilterStringDialog("Edit Filter String", settings->triggerOverlayFilterString->GetValue(), mccStateHook->getCurrentMCCState()));
+				// one at a time pls
+				if (mccStateHook->isGameCurrentlyPlaying(mGame) == false)
+					return;
+
+				std::stringstream allTriggers;
+				{
+					lockOrThrow(getTriggerDataWeak, getTriggerData);
+					auto allTriggerDataLock = getTriggerData->getAllTriggers();
+					PLOG_DEBUG << "allTrigger count: " << allTriggerDataLock->size();
+
+					int count = 0;
+					for (auto& [triggerPointer, triggerData] : *allTriggerDataLock.get())
+					{
+						count++;
+						allTriggers << std::format("{} ;", triggerData.name);
+						if (count % 4 == 0)
+						{
+							allTriggers << std::endl;
+						}
+					}
+
+#ifdef HCM_DEBUG
+					PLOG_DEBUG << "allTriggers str size: " << allTriggers.str().size(); // this allocates dunnit?
+#endif
+				}
+
+
+				auto newFilterString = modalDialogs->showReturningDialog(ModalDialogFactory::makeTriggerFilterStringDialog("Edit Filter String", settings->triggerOverlayFilterString->GetValue(), mccStateHook->getCurrentMCCState(), allTriggers.str()));
 
 				settings->triggerOverlayFilterString->GetValueDisplay() = newFilterString;
 				settings->triggerOverlayFilterString->UpdateValueWithInput();
@@ -105,27 +137,28 @@ private:
 		}
 
 	public:
-		TriggerFilterModalDialogManagerImpl(GameState gameImpl, IDIContainer& dicon)
+		TriggerFilterModalDialogManagerImpl(GameState game, IDIContainer& dicon)
 			:
+			mGame(game),
 			filterStringChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterString->valueChangedEvent, [this](const std::string& n) { onFilterStringChanged(n); }),
 			modalDialogsWeak(dicon.Resolve<ModalDialogRenderer>()),
 			settingsWeak(dicon.Resolve< SettingsStateAndEvents>()),
 			triggerOverlayFilterStringDialogEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterStringDialogEvent, [this]() { onTriggerOverlayFilterStringDialogEvent(); }),
 			mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 			triggerOverlayFilterStringCopyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterStringCopyEvent, [this]() { onTriggerOverlayFilterStringCopyEvent(); }),
-			triggerOverlayFilterStringPasteEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterStringPasteEvent, [this]() { onTriggerOverlayFilterStringPasteEvent(); })
+			triggerOverlayFilterStringPasteEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterStringPasteEvent, [this]() { onTriggerOverlayFilterStringPasteEvent(); }),
+			getTriggerDataWeak(resolveDependentCheat(GetTriggerData))
+		
 		{
 
 		}
 	};
 
-	static inline std::unique_ptr< TriggerFilterModalDialogManagerImpl> pimpl;
+	std::unique_ptr< TriggerFilterModalDialogManagerImpl> pimpl;
 
 public:
 	TriggerFilterModalDialogManager(GameState gameImpl, IDIContainer& dicon)
 	{
-		// only need once instance
-		if (!pimpl)
 			pimpl = std::make_unique< TriggerFilterModalDialogManagerImpl>(gameImpl, dicon);
 	}
 
