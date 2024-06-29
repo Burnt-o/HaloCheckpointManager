@@ -74,7 +74,7 @@ private:
 	std::unique_ptr<GeometricPrimitive> unitCubeInverse; // backfaces on the front
 	std::shared_ptr<PrimitiveBatch<VertexPosition>> primitiveDrawer;
 
-	std::unique_ptr<BasicEffect> basicEffect;
+	std::unique_ptr<BasicEffect> primitiveBatchEffect;
 	Microsoft::WRL::ComPtr< ID3D11InputLayout > inputLayout;
 	ID3D11ShaderResourceView* patternedTexture;
 
@@ -115,8 +115,8 @@ public:
 	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() override{ return primitiveDrawer; }
 	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) 
 	{ 
-		basicEffect->SetColorAndAlpha(color); 
-		basicEffect->Apply(this->pDeviceContext);
+		primitiveBatchEffect->SetColorAndAlpha(color);
+		primitiveBatchEffect->Apply(this->pDeviceContext);
 	}
 
 	//virtual void renderTriangle(const std::array<SimpleMath::Vector3, 3>& vertices, const SimpleMath::Vector4& color) override;

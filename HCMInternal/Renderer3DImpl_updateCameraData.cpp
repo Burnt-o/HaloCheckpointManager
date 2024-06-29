@@ -89,8 +89,8 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			this->init = true;
 		}
 
-		this->basicEffect->SetProjection(this->viewProjectionMatrix);
-		this->basicEffect->Apply(this->pDeviceContext);
+		this->primitiveBatchEffect->SetProjection(this->viewProjectionMatrix);
+		this->primitiveBatchEffect->Apply(this->pDeviceContext);
 		this->pDeviceContext->IASetInputLayout(inputLayout.Get()); // does this need to be done every frame or just once on init?
 
 		this->pDeviceContext->OMSetBlendState(commonStates->AlphaBlend(), Colors::White, 0xFFFFFFFF);

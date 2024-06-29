@@ -99,6 +99,8 @@ IDR_DDS3                DDS                     "lapua2.dds"
 
 IDR_DDS2                DDS                     "Waypoint3DReticle.dds"
 
+IDR_DDS4                DDS                     "TriggerPatternedTexture.dds"
+
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
 

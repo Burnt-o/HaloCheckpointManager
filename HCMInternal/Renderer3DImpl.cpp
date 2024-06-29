@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Renderer3DImpl.h"
 #include "PointerDataStore.h"
-
+#include "LoadTexture.h"
 /*
 
 See:
@@ -52,13 +52,22 @@ for the rest of the implementation
 	 primitiveDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
 	 unitCube = GeometricPrimitive::CreateCube(this->pDeviceContext);
 	 unitCubeInverse = GeometricPrimitive::CreateCube(this->pDeviceContext, 1.f, false); // rhcoords = flip faces
-	 basicEffect = std::make_unique<BasicEffect>(this->pDevice);
+	 primitiveBatchEffect = std::make_unique<BasicEffect>(this->pDevice);
+
 	 //basicEffect->SetVertexColorEnabled(true);
-	 
+	 //primitiveBatchEffect->SetAmbientLightColor(SimpleMath::Vector4{1.f, 1.f, 1.f, 0.2f});
+	 //basicEffect->DisableSpecular();
+	 //basicEffect->SetEmissiveColor(SimpleMath::Vector4{1.f, 1.f, 1.f, 0.2f});
+
+	 // how to change lighting on geometricprimitive?
+	 // would probably need to create on basicEffect for it ugh
+	 // plus another for the patterened texture version.. ugh
+
+
 	 void const* shaderByteCode;
 	 size_t byteCodeLength;
 
-	 basicEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+	 primitiveBatchEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
 
 		 this->pDevice->CreateInputLayout(VertexPosition::InputElements,
@@ -66,6 +75,17 @@ for the rest of the implementation
 			 shaderByteCode,
 			 byteCodeLength,
 			 inputLayout.ReleaseAndGetAddressOf());
+
+
+
+	// setup hatched texture of triggers
+		 auto loadedTexture = LoadTextureFromMemory(111, this->pDevice);
+
+		 if (loadedTexture)
+			 patternedTexture = loadedTexture.value().textureView;
+		 else
+			 PLOG_ERROR << "Failed to load texture: " << loadedTexture.error().what();
+
  }
 
 
