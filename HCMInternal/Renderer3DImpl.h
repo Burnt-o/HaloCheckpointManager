@@ -48,6 +48,7 @@ private:
 	DirectX::SimpleMath::Matrix viewMatrix;
 	DirectX::SimpleMath::Matrix projectionMatrix;
 	DirectX::SimpleMath::Matrix viewProjectionMatrix;
+	SimpleMath::Vector2 lastScreenSize {0, 0};
 	SimpleMath::Vector2 screenSize;
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
@@ -72,12 +73,17 @@ private:
 
 	std::unique_ptr<GeometricPrimitive> unitCube;
 	std::unique_ptr<GeometricPrimitive> unitCubeInverse; // backfaces on the front
+	std::unique_ptr<GeometricPrimitive> unitSphere;
 	std::shared_ptr<PrimitiveBatch<VertexPosition>> primitiveDrawer;
 
 	std::unique_ptr<BasicEffect> primitiveBatchEffect;
 	Microsoft::WRL::ComPtr< ID3D11InputLayout > inputLayout;
 	ID3D11ShaderResourceView* patternedTexture;
 
+	void createDepthStencilView(SimpleMath::Vector2 screenSize);
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
+	ID3D11DepthStencilView* m_depthStencilView;
+	ID3D11DepthStencilState* m_depthStencilState;
 
 	void constructSpriteResource(int resourceID); // throws HCMRuntimeExceptions on fail
 	void initialise(); // run on first render frame to init spriteBatch & common states
@@ -112,6 +118,7 @@ public:
 	virtual bool pointBehindCamera(const SimpleMath::Vector3& worldPointPosition) override;
 
 	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) override;
+	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale) override;
 	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() override{ return primitiveDrawer; }
 	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) 
 	{ 

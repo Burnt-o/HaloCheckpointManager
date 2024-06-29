@@ -45,15 +45,18 @@ for the rest of the implementation
  }
 
  template<GameState::Value mGame>
- void Renderer3DImpl<mGame>::initialise() 
+ void Renderer3DImpl<mGame>::initialise()
  {
 	 spriteBatch = std::make_unique<SpriteBatch>(this->pDeviceContext);
 	 commonStates = std::make_unique<CommonStates>(this->pDevice);
 	 primitiveDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
 	 unitCube = GeometricPrimitive::CreateCube(this->pDeviceContext);
 	 unitCubeInverse = GeometricPrimitive::CreateCube(this->pDeviceContext, 1.f, false); // rhcoords = flip faces
+	 unitSphere = GeometricPrimitive::CreateSphere(this->pDeviceContext);
 	 primitiveBatchEffect = std::make_unique<BasicEffect>(this->pDevice);
 
+	
+	 //GeometricPrimitive::SetDepthBufferMode(true);
 	 //basicEffect->SetVertexColorEnabled(true);
 	 //primitiveBatchEffect->SetAmbientLightColor(SimpleMath::Vector4{1.f, 1.f, 1.f, 0.2f});
 	 //basicEffect->DisableSpecular();
@@ -64,11 +67,25 @@ for the rest of the implementation
 	 // plus another for the patterened texture version.. ugh
 
 
+	 // setup depth stencil state.
+	 // https://stackoverflow.com/questions/43815438/direct3d-11-depth-stencil-alpha-blending-issue
+	 D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
+	 ZeroMemory(&depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+
+	 depthStencilStateDesc.DepthEnable = TRUE;
+	 depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	 depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	 depthStencilStateDesc.StencilEnable = FALSE;
+
+	 auto hr = this->pDevice->CreateDepthStencilState(&depthStencilStateDesc, &this->m_depthStencilState);
+	 PLOG_DEBUG << "hr " << hr;
+
+
+
 	 void const* shaderByteCode;
 	 size_t byteCodeLength;
 
 	 primitiveBatchEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
-
 
 		 this->pDevice->CreateInputLayout(VertexPosition::InputElements,
 			 VertexPosition::InputElementCount,
@@ -118,6 +135,59 @@ for the rest of the implementation
 	 }
 
  }
+
+
+ // TODO: depth stencil view needs to be recreated every time screen size changes!
+ template<GameState::Value mGame>
+void Renderer3DImpl<mGame>::createDepthStencilView(SimpleMath::Vector2 screenSize)
+ {
+	// create a depth stencil view
+/*
+Create a 2d image (texture) w/ D3D11_BIND_DEPTH_STENCIL  - needs to match resolution of screen
+then making a view of that is easy pz
+then bind with OMSetRenderTargets (every frame - done in updateCamera)
+https://learn.microsoft.com/en-us/windows/uwp/gaming/using-depth-and-effects-on-primitives
+*/
+
+	 D3D11_TEXTURE2D_DESC depthStencilDesc;
+	 depthStencilDesc.Width = screenSize.x;
+	 depthStencilDesc.Height = screenSize.y;
+	 depthStencilDesc.MipLevels = 1;
+	 depthStencilDesc.ArraySize = 1;
+	 depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	 depthStencilDesc.SampleDesc.Count = 1;
+	 depthStencilDesc.SampleDesc.Quality = 0;
+	 depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	 depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	 depthStencilDesc.CPUAccessFlags = 0;
+	 depthStencilDesc.MiscFlags = 0;
+
+
+	 auto hr1 = this->pDevice->CreateTexture2D(
+		 &depthStencilDesc,
+		 nullptr,
+		 &this->depthStencil
+	 );
+
+	 PLOG_DEBUG << "hr1: " << hr1;
+	
+
+	 D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	 depthStencilViewDesc.Format = depthStencilDesc.Format;
+	 depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	 depthStencilViewDesc.Flags = 0;
+	 depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+
+	 auto hr2 = this->pDevice->CreateDepthStencilView(
+		 this->depthStencil.Get(),
+		 &depthStencilViewDesc,
+		 &this->m_depthStencilView
+	 );
+
+	 PLOG_DEBUG << "hr2: " << hr2;
+ }
+
 
 
  // explicit template instantiation

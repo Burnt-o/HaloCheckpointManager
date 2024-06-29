@@ -89,13 +89,28 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			this->init = true;
 		}
 
+		if (lastScreenSize != screenSizeIn)
+		{
+			createDepthStencilView(screenSizeIn);
+		}
+
 		this->primitiveBatchEffect->SetProjection(this->viewProjectionMatrix);
 		this->primitiveBatchEffect->Apply(this->pDeviceContext);
-		this->pDeviceContext->IASetInputLayout(inputLayout.Get()); // does this need to be done every frame or just once on init?
+
+
+
 
 		this->pDeviceContext->OMSetBlendState(commonStates->AlphaBlend(), Colors::White, 0xFFFFFFFF);
 
 
+		// so now we have "working" depth.. but only for non-transparent textures
+		// I think we'd need to create a custom shader to fix this? maybe not
+		this->pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, this->m_depthStencilView);
+		this->pDeviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
+		this->pDeviceContext->OMSetDepthStencilState(this->m_depthStencilState, 0);
+
+
+		this->pDeviceContext->IASetInputLayout(inputLayout.Get()); 
 
 
 		// TODO: make this created once (per resizeBuffers) in d3dhook and passed along as render args
@@ -119,7 +134,7 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 
 
 
-
+		lastScreenSize = screenSizeIn;
 		return true;
 	}
 	catch (HCMRuntimeException ex)
