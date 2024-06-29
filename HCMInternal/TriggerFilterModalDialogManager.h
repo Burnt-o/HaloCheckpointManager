@@ -21,6 +21,7 @@ private:
 	{
 	private:
 		GameState mGame;
+		std::optional<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>> levelMapStringVector;
 
 		std::weak_ptr<ModalDialogRenderer> modalDialogsWeak;
 		std::weak_ptr<IMCCStateHook> mccStateHookWeak;
@@ -63,13 +64,15 @@ private:
 						}
 					}
 
-#ifdef HCM_DEBUG
-					PLOG_DEBUG << "allTriggers str size: " << allTriggers.str().size(); // this allocates dunnit?
-#endif
 				}
 
 
-				auto newFilterString = modalDialogs->showReturningDialog(ModalDialogFactory::makeTriggerFilterStringDialog("Edit Filter String", settings->triggerOverlayFilterString->GetValue(), mccStateHook->getCurrentMCCState(), allTriggers.str()));
+				auto newFilterString = modalDialogs->showReturningDialog(ModalDialogFactory::makeTriggerFilterStringDialog(
+					"Edit Filter String", 
+					settings->triggerOverlayFilterString->GetValue(), 
+					allTriggers.str(), 
+					mccStateHook->getCurrentMCCState().currentLevelID, 
+					levelMapStringVector));
 
 				settings->triggerOverlayFilterString->GetValueDisplay() = newFilterString;
 				settings->triggerOverlayFilterString->UpdateValueWithInput();
@@ -150,7 +153,16 @@ private:
 			getTriggerDataWeak(resolveDependentCheat(GetTriggerData))
 		
 		{
-
+			try
+			{
+				auto ptr = dicon.Resolve<PointerDataStore>().lock();
+				levelMapStringVector = ptr->getData<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>>("TriggerFilterLevelPresets", game);
+			}
+			catch (HCMInitException ex)
+			{
+				PLOG_ERROR << "Could not resolve TriggerFilterLevelPresets, contiuining anyway";
+			}
+			
 		}
 	};
 

@@ -6,6 +6,7 @@
 #include "MidhookFlagInterpreter.h"
 #include "MultilevelPointer.h"
 #include "DynamicStructFactory.h"
+#include "MCCState.h"
 using namespace pugi;
 
 // Checks for "0x" to know if it's a hex string. Also checks for negatives ("-" at start)
@@ -509,6 +510,35 @@ void PointerDataParser::instantiateDynStructOffsetInfo(VersionEntry versionEntry
 
     emplaceObject(result, versionEntry);
 }
+
+
+void PointerDataParser::instantiateLevelMapStringVector(VersionEntry versionEntry)
+{
+    using LevelMapStringVector = std::map<LevelID, std::vector<std::pair<std::string, std::string>>>;
+    std::shared_ptr<LevelMapStringVector> result = std::make_shared<LevelMapStringVector>();
+
+    for (pugi::xml_node levelEntry = versionEntry.first_child(); levelEntry; levelEntry = levelEntry.next_sibling())
+    {
+        std::string levelIDString = levelEntry.name();
+        std::optional<LevelID> levelID = magic_enum::enum_cast<LevelID>(levelIDString);
+
+        if (!levelID.has_value()) 
+            throw HCMInitException(std::format("instantiateLevelStringMap failed to cast levelID string, str value: {}", levelIDString));
+
+        std::vector<std::pair<std::string, std::string>> value;
+
+        for (pugi::xml_node presetEntry = levelEntry.first_child(); presetEntry; presetEntry = presetEntry.next_sibling())
+        {
+            auto preset = std::make_pair <std::string, std::string>(presetEntry.name(), presetEntry.text().as_string());
+            value.emplace_back(preset);
+        }
+        result->insert_or_assign(levelID.value(), value);
+
+    }
+
+    emplaceObject(result, versionEntry);
+}
+
 //
 //template <typename T>
 //T PointerDataParser::instantiateObject<std::shared_ptr<DynStructOffsetInfo>>(VersionEntry versionEntry)

@@ -14,5 +14,5 @@ namespace ModalDialogFactory
 	std::shared_ptr < IModalDialogReturner<bool>> makeInjectionWarningDialog(std::string dialogTitle, std::string warningText);
 	std::shared_ptr<IModalDialogReturner<std::tuple<bool, std::string>>> makeCheckpointDumpNameDialog(std::string dialogTitle, std::string defaultValue);
 	std::shared_ptr<IModalDialogReturner<std::optional<Waypoint>>> makeEditOrAddWaypointDialog(std::shared_ptr<RuntimeExceptionHandler> runtimeExceptionHandler, std::string dialogTitle, Waypoint defaultWaypoint, std::optional<SimpleMath::Vector3> playerPosition, bool canMeasureDistance);
-	std::shared_ptr<IModalDialogReturner<std::string>> makeTriggerFilterStringDialog(std::string dialogTitle, std::string defaultValue, MCCState mccState, std::string allTriggers);
+	std::shared_ptr<IModalDialogReturner<std::string>> makeTriggerFilterStringDialog(std::string dialogTitle, std::string defaultValue, std::string allTriggers, LevelID currentLevel, std::optional<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>> levelMapStringVector);
 }

@@ -91,7 +91,8 @@ void PointerDataParser::processVersionedEntry(VersionEntry versionEntry,std::str
         offsetLengthPair,
         int64_t,
         DynStructOffsetInfo,
-        Invalid
+        Invalid,
+        LevelMapStringVector
     } currentEntryType = magic_enum::enum_cast<PointerDataType>(versionEntryType).value_or(PointerDataType::Invalid);
 
 
@@ -156,6 +157,8 @@ void PointerDataParser::processVersionedEntry(VersionEntry versionEntry,std::str
         instantiateDynStructOffsetInfo(versionEntry);
         break;
 
+    case PointerDataType::LevelMapStringVector:
+        instantiateLevelMapStringVector(versionEntry);
 
     default:
     case PointerDataType::Invalid:

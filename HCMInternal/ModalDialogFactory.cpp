@@ -38,8 +38,8 @@
 	}
 
 	std::shared_ptr<IModalDialogReturner<std::string>> ModalDialogFactory::makeTriggerFilterStringDialog
-	(std::string dialogTitle, std::string defaultValue, MCCState mccState, std::string allTriggers)
+	(std::string dialogTitle, std::string defaultValue, std::string allTriggers, LevelID currentLevel, std::optional<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>> levelMapStringVector)
 	{
 		PLOG_VERBOSE << "factory creating TriggerFilterStringDialog";
-		return std::make_unique<TriggerFilterStringDialog>(dialogTitle, defaultValue, mccState, allTriggers);
+		return std::make_unique<TriggerFilterStringDialog>(dialogTitle, defaultValue, allTriggers, currentLevel, levelMapStringVector);
 	}

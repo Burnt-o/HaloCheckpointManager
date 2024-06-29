@@ -7,16 +7,18 @@ class TriggerFilterStringDialog : public IModalDialogReturner<std::string>
 {
 private:
 	std::string mOriginalValue;
-	MCCState mMCCState;
 	std::unique_ptr<TextEditor> textEditor;
 	std::string allTriggers;
+	LevelID currentLevel; 
+	std::optional<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>> levelMapStringVector;
 
 public:
-	TriggerFilterStringDialog(std::string dialogTitle, std::string defaultValue, MCCState mccState, std::string allTriggers)
+	TriggerFilterStringDialog(std::string dialogTitle, std::string defaultValue, std::string allTriggers, LevelID currentLevel, std::optional<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>> levelMapStringVector)
 		: IModalDialogReturner
 		(dialogTitle, defaultValue),
 		mOriginalValue(defaultValue),
-		mMCCState(mccState),
+		levelMapStringVector(levelMapStringVector),
+		currentLevel(currentLevel),
 		allTriggers(allTriggers)
 	{
 	// setup texteditor
@@ -39,48 +41,17 @@ public:
 
 		ImGui::Dummy(ImVec2(10, 10));
 
-		if (mMCCState.currentGameState.operator GameState::Value() == GameState::Value::Halo1 
-			&& mMCCState.currentLevelID == LevelID::_map_id_halo1_two_betrayals
-			)
+		if (levelMapStringVector.has_value() && levelMapStringVector.value()->contains(currentLevel))
 		{
-			// note: techinically the mandatory triggers should include e51_a_trigger.
-			// but that trigger is huge and basically impossible to miss,
-			// and it's hugeness makes it hard to see some other more important triggers near it
-
-			if (ImGui::Button("Load BOOL Triggers"))
+			for (auto& [listName, listValue] : levelMapStringVector.value()->at(currentLevel))
 			{
-				textEditor->SetText(
-					"e3_trigger; canyon3_base_trigger; canyon3_land_trigger; e6_trigger; \n"
-					"pulse_1_trigger; e8_trigger; \n"
-					"waypoint3_trigger; e20_a_trigger; e21_a_trigger; e21_b_trigger; \n"
-					"e22_a_trigger; e30_a_trigger; jump_1_trigger; jump_2_trigger; \n"
-					"jump_3_trigger; e33_a_trigger; e34_a_trigger; e37_a_trigger; \n"
-					"e39_a_trigger; e40_a_trigger; e41_jump_1_trigger; e41_c_trigger; \n"
-					"e43_a_trigger; e43_b_trigger; e43_c_trigger; e44_a_trigger; \n"
-					"e46_a_trigger; e48_a_trigger; e50_a_trigger; e52_a_trigger; \n"
-					"e52_c_trigger; pulse_2_trigger; c40_230_240_250_trigger; tunnel_trigger; \n"
-					"e59_a_trigger; e59_b_trigger; e59_c_trigger; e60_a_trigger; \n"
-					"e61_a_trigger; e62_a_trigger; pulse_3_trigger; \n");
-			}
-
-			if (ImGui::Button("Load BOOL+BSP Triggers"))
-			{
-				textEditor->SetText(
-					"e3_trigger; canyon3_base_trigger; canyon3_land_trigger; e6_trigger; \n"
-					"pulse_1_trigger; e8_trigger; \n"
-					"waypoint3_trigger; e20_a_trigger; e21_a_trigger; e21_b_trigger; \n"
-					"e22_a_trigger; e30_a_trigger; jump_1_trigger; jump_2_trigger; \n"
-					"jump_3_trigger; e33_a_trigger; e34_a_trigger; e37_a_trigger; \n"
-					"e39_a_trigger; e40_a_trigger; e41_jump_1_trigger; e41_c_trigger; \n"
-					"e43_a_trigger; e43_b_trigger; e43_c_trigger; e44_a_trigger; \n"
-					"e46_a_trigger; e48_a_trigger; e50_a_trigger; e52_a_trigger; \n"
-					"e52_c_trigger; pulse_2_trigger; c40_230_240_250_trigger; tunnel_trigger; \n"
-					"e59_a_trigger; e59_b_trigger; e59_c_trigger; e60_a_trigger; \n"
-					"e61_a_trigger; e62_a_trigger; pulse_3_trigger; \n"
-					"bsp 2,12; bsp 12,2; bsp 2,10; bsp 10,1; \n"
-					"bsp 1,6; bsp 6,1; bsp 1,0; \n");
+				if (ImGui::Button(std::format("Load {} Triggers", listName).c_str()))
+				{
+					textEditor->SetText(listValue);
+				}
 			}
 		}
+	
 
 		if (ImGui::Button("Load All Triggers"))
 		{

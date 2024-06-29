@@ -48,6 +48,7 @@ private:
     void instantiateInt64_t(VersionEntry versionEntry);
     void instantiateDynStructOffsetInfo(VersionEntry versionEntry);
     void instantiateMidhookFlagInterpreter(VersionEntry versionEntry);
+    void instantiateLevelMapStringVector(VersionEntry versionEntry);
 
 
     //template <typename T> 

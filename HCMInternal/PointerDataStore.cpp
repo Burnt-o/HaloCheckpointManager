@@ -5,7 +5,7 @@
 #include "MultilevelPointer.h"
 #include "MidhookContextInterpreter.h"
 #include "MidhookFlagInterpreter.h"
-
+#include "MCCState.h"
 
 template <typename T>
 T PointerDataStore::getData(std::string dataName, std::optional<GameState> game)
@@ -166,3 +166,6 @@ std::shared_ptr<DynStructOffsetInfo> PointerDataStore::getData(std::string dataN
 
 template
 std::shared_ptr<std::vector<byte>> PointerDataStore::getVectorData(std::string dataName, std::optional<GameState> game);
+
+template
+std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>> PointerDataStore::getData(std::string dataName, std::optional<GameState> game);
