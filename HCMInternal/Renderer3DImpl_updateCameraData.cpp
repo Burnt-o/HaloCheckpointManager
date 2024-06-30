@@ -128,11 +128,6 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 
 		pDeviceContext->RSSetViewports(1, &g_stViewport);
 
-#ifndef HCM_DEBUG
-		static_assert(false && "clean up above");
-#endif
-
-
 
 		lastScreenSize = screenSizeIn;
 		return true;

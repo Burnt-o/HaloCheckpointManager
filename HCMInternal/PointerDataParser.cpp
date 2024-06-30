@@ -58,7 +58,12 @@ void PointerDataParser::emplaceObject(T& object, VersionEntry versionEntry)
     // check for duplicates
     if (mDataStoreToLoad.contains(dKey))
     {
-        throw HCMInitException(std::format("Entry already exists in pointerData, entryName: {}, entryGame: {}\n", std::get<std::string>(dKey), entryGameString));
+        std::string err = std::format("Entry already exists in pointerData, entryName: {}, entryGame: {}\n", std::get<std::string>(dKey), entryGameString);
+#ifdef HCM_DEBUG
+        throw HCMInitException(err);
+#else
+        PLOG_ERROR << err;
+#endif
     }
 
     PLOG_DEBUG << "Loaded " << versionCollection.attribute("Type").value() << " " << std::get<std::string>(dKey) << " for game " << entryGameString;
@@ -159,10 +164,11 @@ void PointerDataParser::processVersionedEntry(VersionEntry versionEntry,std::str
 
     case PointerDataType::LevelMapStringVector:
         instantiateLevelMapStringVector(versionEntry);
+        break;
 
     default:
     case PointerDataType::Invalid:
-        PLOG_ERROR << "Bad Type in pointer data!: " << versionEntryType << ", on entry named: " << versionEntryName;
+        throw HCMInitException(std::format("Bad Type in pointer data!: {}, on entry named {}", versionEntryType, versionEntryName));
         break;
     }
 }
@@ -228,18 +234,25 @@ void PointerDataParser::parse()
                 {
                     processVersionedEntry(versionEntry, entry.attribute("Type").value(), entry.attribute("Name").value(), entry.attribute("Typename").value());
                 }
+                // rethrow if HCM_DEBUG, otherwise continue processing
                 catch (HCMInitException ex)
                 {
                     std::stringstream xmlContent;
                     versionEntry.print(xmlContent);
-                    PLOG_ERROR << "Failed to process pointer data: " << std::endl
+                    std::stringstream extraInfo;
+                    extraInfo << "Failed to process pointer data: " << std::endl
                         << "Name: " << entry.attribute("Name").value() << std::endl
-                        << "Type : " << entry.attribute("Name").value() << std::endl
+                        << "Type : " << entry.attribute("Type").value() << std::endl
                         << "Version : " << versionEntry.attribute("Version").value() << std::endl
                         << "ProcessType : " << versionEntry.attribute("ProcessType").value() << std::endl
                         << "Game: " << versionEntry.attribute("Game").value() << std::endl
                         << "Error: " << ex.what() << std::endl
                         << "Data: " << xmlContent.str();
+                    PLOG_ERROR << extraInfo.str();
+#ifdef HCM_DEBUG
+                    ex.append(extraInfo.str());
+                    throw ex;
+#endif
                 }
             }
 
@@ -247,7 +260,12 @@ void PointerDataParser::parse()
         }
         else
         {
-            PLOG_ERROR << "Unexpected item in pointer data: " << entry.name();
+            std::string err = std::format("Unexpected item in pointer data: {}", entry.name());
+#ifdef HCM_DEBUG
+            throw HCMInitException(err);
+#else
+            PLOG_ERROR << err;
+#endif
         }
 
     }
