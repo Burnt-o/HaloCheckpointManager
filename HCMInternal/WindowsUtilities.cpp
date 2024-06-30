@@ -144,7 +144,7 @@ void move_towards(float& value, float target, float step)
 
 float degreesToRadians(float degrees)
 {
-	constexpr float conv = (DirectX::XM_PI / 180.f);
+	constexpr float conv = (std::numbers::pi_v<float> / 180.f);
 	return degrees * conv;
 }
 

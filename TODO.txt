@@ -1,15 +1,13 @@
 
 3.1 TODO
 * impl triggerOverlay for HR and H4 (mainly RE trigger data location and the triggerDataStruct)
-* add load All Triggers to filterTrigger modal dialog
-* make level-specific load-triggers in filter dialog runtime dynamic
-* options to adjust message GUI font
+* impl softCeilingOverlay for OD, HR, H4
 * adjust trigger overlay colour setting defaults
-* move sensdrift/shieldinput to debug
 * confirm that triggerHitPosition works for all games (ie when in vehicles)
 	* maybe fix the third gen implentation to use the ACTUAL value
 
-
+	*messages - fix scaling fucking with vertical spacing and outline
+Pointer init errors should only throw in debug!!!
 
 
 

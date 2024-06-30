@@ -2,6 +2,7 @@
 #include "MessagesGUI.h"
 #include "imgui.h"
 #include "Lapua.h"
+#include "RenderTextHelper.h"
 
 void MessagesGUI::onImGuiRenderEvent(SimpleMath::Vector2 screenSize)
 {
@@ -86,7 +87,7 @@ void MessagesGUI::iterateMessages()
 	{
 		drawMessage(message, messagePosition);
 		// update messagePosition based on previous messages linecount
-		messagePosition = SimpleMath::Vector2(messagePosition.x, messagePosition.y + (message.lineCount * 17.f) + 5.f);
+		messagePosition = SimpleMath::Vector2(messagePosition.x, messagePosition.y + (message.lineCount * (fontSize * 1.5f)) + 5.f);
 	}
 }
 
@@ -101,9 +102,7 @@ void MessagesGUI::drawMessage(const temporaryMessage& message, const SimpleMath:
 		opacity = (messageFadeTime - delta) / messageFadeTime;
 	}
 
-	constexpr int outlineWidth = 1;
-	ImColor textColor(1.f, 0.2f, 0.0f, opacity); // todo: mess with colours. maybe increase font size?
-	ImColor outlineColor(0.3f, 0.f, 0.3f, opacity);
+	ImColor textColor(fontColor.x, fontColor.y, fontColor.z, opacity); 
 
 #ifdef HCM_DEBUG // these checks are probably bad for performance
 	if (position.x < 0) PLOG_FATAL << "position.x < 0: " << position.x;
@@ -111,16 +110,7 @@ void MessagesGUI::drawMessage(const temporaryMessage& message, const SimpleMath:
 	if (message.message.size() == 0) PLOG_FATAL << "message size == 0";
 
 #endif
-
-
-	// outline
-	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x, position.y - outlineWidth), outlineColor, message.message.c_str());
-	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x, position.y + outlineWidth), outlineColor, message.message.c_str());
-	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x - outlineWidth, position.y), outlineColor, message.message.c_str());
-	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x + outlineWidth, position.y), outlineColor, message.message.c_str());
-
-	// main
-	ImGui::GetForegroundDrawList()->AddText(ImVec2(position.x, position.y), textColor, message.message.c_str());
+	RenderTextHelper::drawOutlinedText(message.message, position, textColor, fontSize);
 
 }
 

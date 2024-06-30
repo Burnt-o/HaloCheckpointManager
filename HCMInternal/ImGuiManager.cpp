@@ -228,11 +228,7 @@ void ImGuiManager::onPresentHookEvent(ID3D11Device* pDevice, ID3D11DeviceContext
 
 
 	// invoke callback of anything that wants to render with ImGui
-
-	ImGui::PushFont(mRescalableMonospacedFont);
-	//lapuaTest(screenSize);
 	BackgroundRenderEvent->operator()(screenSize); // for overlays.
-	ImGui::PopFont();
 	MidgroundRenderEvent->operator()(screenSize);
 	ForegroundRenderEvent->operator()(screenSize);
 	ForegroundDirectXRenderEvent->operator()(pDevice, pDeviceContext, screenSize, pMainRenderTargetView);

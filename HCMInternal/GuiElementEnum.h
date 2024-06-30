@@ -22,6 +22,8 @@
 #define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES1 \
 ((controlHeadingGUI, (ALL_GAMES_AND_MAINMENU)))\
 	((toggleGUIHotkeyGUI, (ALL_GAMES_AND_MAINMENU)))\
+	((messagesFontSize, (ALL_GAMES_AND_MAINMENU)))\
+	((messagesFontColor, (ALL_GAMES_AND_MAINMENU)))\
 	((GUISettingsSubheading, (ALL_GAMES_AND_MAINMENU)))\
 		((GUIShowingFreesCursor, (ALL_GAMES_AND_MAINMENU)))\
 		((GUIShowingBlocksInput, (ALL_GAMES_AND_MAINMENU)))\

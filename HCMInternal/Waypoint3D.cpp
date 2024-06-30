@@ -332,7 +332,7 @@ private:
 						ImGui::ColorConvertFloat4ToU32(labelColor), 
 						labelfontDistanceScale);
 					
-					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * labelfontDistanceScale));
+					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * labelfontDistanceScale / 16.f));
 				}
 
 

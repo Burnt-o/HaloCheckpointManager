@@ -89,5 +89,13 @@ public:
 		return m_d3d.lock()->getScreenCenter();
 	}
 
+	// Might be nullptr
+	static ImFont * const getRescalableMonospacedFont()
+	{
+		if (!instance)
+			return nullptr;
+		return instance->mRescalableMonospacedFont; // still might be null
+	}
+
 };
 

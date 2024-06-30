@@ -155,6 +155,21 @@ public:
 
 
 	// settings
+
+	std::shared_ptr<BinarySetting<float>> messagesFontSize = std::make_shared<BinarySetting<float>>
+		(
+			10.f,
+			[](float in) { return in > 6.f; }, // must be positive
+			nameof(messagesFontSize)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> messagesFontColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{ 1.f, 0.2f, 0.f, 1.f },
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(messagesFontColor)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> GUIWindowOpen = std::make_shared<BinarySetting<bool>>
 		(
 			false,
@@ -342,7 +357,7 @@ public:
 	std::shared_ptr<BinarySetting<double>> speedhackSetting = std::make_shared<BinarySetting<double>>
 	(
 		10.f,
-		[](float in) { return in > 0; }, // must be positive
+		[](double in) { return in > 0; }, // must be positive
 		nameof(speedhackSetting)
 	);
 
@@ -736,10 +751,10 @@ public:
 			nameof(display2DInfoScreenOffset)
 		);
 
-	std::shared_ptr<BinarySetting<int>> display2DInfoFontSize = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<float>> display2DInfoFontSize = std::make_shared<BinarySetting<float>>
 		(
-			16, 
-			[](int in) { return in > 0 ; },
+			16.f, 
+			[](int in) { return in > 6.f ; },
 			nameof(display2DInfoFontSize)
 		);
 
@@ -774,7 +789,7 @@ public:
 	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> editPlayerViewAngleVec2 = std::make_shared<BinarySetting<SimpleMath::Vector2>>
 		(
 			SimpleMath::Vector2(4.20, 0.69), // gottem
-			[](SimpleMath::Vector2 in) { return (in.x >= 0.f) && (in.x < DirectX::XM_2PI) && (in.y < DirectX::XM_PIDIV2) && (in.y > (DirectX::XM_PIDIV2 * -1.f)); }, // x (yaw) must be from 0 to 6.14, y (pitch) must be from -1.57 to 1.57
+			[](SimpleMath::Vector2 in) { return (in.x >= 0.f) && (in.x < (std::numbers::pi_v<float> * 2.f)) && (in.y < (std::numbers::pi_v<float> / 2.f)) && (in.y > ((std::numbers::pi_v<float> / 2.f) * -1.f)); }, // x (yaw) must be from 0 to 6.14, y (pitch) must be from -1.57 to 1.57
 			nameof(editPlayerViewAngleVec2)
 		);
 
@@ -1168,15 +1183,15 @@ public:
 
 	std::shared_ptr<BinarySetting<float>> waypoint3DGlobalLabelScale = std::make_shared<BinarySetting<float>>
 		(
-			1.f,
-			[](float in) { return in > 0.f; },
+			16.f,
+			[](float in) { return in > 6.f; },
 			nameof(waypoint3DGlobalLabelScale)
 		);
 
 	std::shared_ptr<BinarySetting<float>> waypoint3DGlobalDistanceScale = std::make_shared<BinarySetting<float>>
 		(
-			1.f,
-			[](float in) { return in > 0.f; },
+			16.f,
+			[](float in) { return in > 6.f; },
 			nameof(waypoint3DGlobalDistanceScale)
 		);
 
@@ -1274,7 +1289,7 @@ public:
 	std::shared_ptr<BinarySetting<float>> triggerOverlayLabelScale = std::make_shared<BinarySetting<float>>
 		(
 			16.f,
-			[](float in) { return in > 0.f; },
+			[](float in) { return in > 6.f; },
 			nameof(triggerOverlayLabelScale)
 		);
 
@@ -1476,6 +1491,8 @@ public:
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		messagesFontSize,
+			messagesFontColor,
 		triggerOverlayFilterToggle,
 		triggerOverlayFilterString,
 		triggerOverlayRenderStyle,

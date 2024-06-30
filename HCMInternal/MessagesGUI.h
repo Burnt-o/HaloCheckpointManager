@@ -30,6 +30,11 @@ private:
 	std::optional < std::weak_ptr<SettingsStateAndEvents>> mSettingsWeak;
 	SimpleMath::Vector2 mAnchorOffset;
 	static inline std::mutex addMessageMutex{};
+
+	std::optional<ScopedCallback<eventpp::CallbackList<void(float&)>>> fontSizeChangedCallback;
+	std::optional<ScopedCallback<eventpp::CallbackList<void(SimpleMath::Vector4&)>>> fontColorChangedCallback;
+	float fontSize = 1.f;
+	SimpleMath::Vector4 fontColor{1.f, 0.2f, 0.0f, 1.f};
 	// funcs
 	void iterateMessages();
 	void drawMessage(const temporaryMessage& message, const SimpleMath::Vector2& position);
@@ -52,19 +57,16 @@ public:
 		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks finish executing
 	}
 
-	void setSettings(std::weak_ptr<SettingsStateAndEvents> settings) { mSettingsWeak = settings; }
+	void setSettings(std::shared_ptr<SettingsStateAndEvents> settings) {
+		mSettingsWeak = settings; 
+		fontSizeChangedCallback = ScopedCallback<eventpp::CallbackList<void(float&)>>(settings->messagesFontSize->valueChangedEvent, [this](auto& n) { fontSize = n; });
+		fontColorChangedCallback = ScopedCallback<eventpp::CallbackList<void(SimpleMath::Vector4&)>>(settings->messagesFontColor->valueChangedEvent, [this](auto& n) { fontColor = n; });
 
-	//explicit MessagesGUI(Vec2 anchorOffset)
-	//	: mAnchorOffset(anchorOffset)
-	//{
-	//}
+		fontSize = settings->messagesFontSize->GetValue();
+		fontColor = settings->messagesFontColor->GetValue();
+	}
 
-	//void setRenderEvent(std::shared_ptr<RenderEvent> renderEvent)
-	//{
-	//	auto sharedThis = shared_from_this();
-	//	mRenderEventCallback.make( renderEvent, [this, sharedThis](Vec2 a) {onImGuiRenderEvent(a); } );
-	//	
-	//}
+
 
 	virtual void setAnchorPoint(std::weak_ptr<IAnchorPoint> anchorPoint) override { mAnchorPoint = anchorPoint; }
 };

@@ -243,7 +243,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetSoftCeilingData.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUIColourPicker.h" />
-    <ClInclude Include="GUIFloatSlider.h" />
     <ClInclude Include="GUIInputMultilineString.h" />
     <ClInclude Include="GUILabel.h" />
     <ClInclude Include="GUISkullToggle.h" />
@@ -275,6 +274,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ShieldInputPrinter.h" />
     <ClInclude Include="SkullEnum.h" />
     <ClInclude Include="SkullToggler.h" />
+    <ClInclude Include="SliderParam.h" />
     <ClInclude Include="SoftCeilingData.h" />
     <ClInclude Include="SoftCeilingOverlay.h" />
     <ClInclude Include="SpriteResource.h" />
@@ -516,6 +516,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Renderer3DImpl_Sprites.cpp" />
     <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
     <ClCompile Include="RenderTextHelper.cpp" />
+    <ClCompile Include="ScopedImFontScaler.cpp" />
     <ClCompile Include="SensDriftDetector.cpp" />
     <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="ShieldInputPrinter.cpp" />

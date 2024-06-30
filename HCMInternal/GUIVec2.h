@@ -1,8 +1,10 @@
 #pragma once
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
+#include "SliderParam.h"
 
-template< bool shouldRenderVertically, bool showTypeLabelWhenVertical, int decimalPrecision>
+
+template< bool shouldRenderVertically, bool showTypeLabelWhenVertical, int decimalPrecision, SliderParam<SimpleMath::Vector2> sliderParam = SliderParam<SimpleMath::Vector2>()>
 class GUIVec2 : public IGUIElement {
 
 private:
@@ -52,31 +54,47 @@ public:
 				renderTooltip();
 			}
 
+			bool updateRequired = false;
+
 			// 2 float boxes each seperately bound to x, y of mOptionVec2. Each will render on a seperate horizontal line.
 			ImGui::SetNextItemWidth(100);
-			if (ImGui::InputFloat(std::format("{}##{}", mxLabel, mLabelText).c_str(), &mOptionVec2->GetValueDisplay().x, 0, 0, decimalPrecisionFormatter.c_str()))
-			{
-				PLOG_VERBOSE << "GUIVec2 (" << getName() << ") firing toggle event, new value: " << mOptionVec2->GetValueDisplay();
-				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec2]() { optionToggle->UpdateValueWithInput(); }));
-				newThread.detach();
-			}
+			if constexpr (sliderParam.showSlider)
+				updateRequired = updateRequired || ImGui::SliderFloat(std::format("{}##{}", mxLabel, mLabelText).c_str(), &mOptionVec2->GetValueDisplay().x, sliderParam.minValue.x, sliderParam.maxValue.x, decimalPrecisionFormatter.c_str(), sliderParam.sliderFlags);
+			else
+				updateRequired = updateRequired || ImGui::InputFloat(std::format("{}##{}", mxLabel, mLabelText).c_str(), &mOptionVec2->GetValueDisplay().x, 0, 0, decimalPrecisionFormatter.c_str());
+
+
+			renderTooltip();
+			ImGui::SetNextItemWidth(100);
+
+			if constexpr (sliderParam.showSlider)
+				updateRequired = updateRequired || ImGui::SliderFloat(std::format("{}##{}", myLabel, mLabelText).c_str(), &mOptionVec2->GetValueDisplay().y, sliderParam.minValue.y, sliderParam.maxValue.y, decimalPrecisionFormatter.c_str(), sliderParam.sliderFlags);
+			else
+				updateRequired = updateRequired || ImGui::InputFloat(std::format("{}##{}", myLabel, mLabelText).c_str(), &mOptionVec2->GetValueDisplay().y, 0, 0, decimalPrecisionFormatter.c_str());
+
 			renderTooltip();
 
-			ImGui::SetNextItemWidth(100);
-			if (ImGui::InputFloat(std::format("{}##{}", myLabel, mLabelText).c_str(), &mOptionVec2->GetValueDisplay().y, 0, 0, decimalPrecisionFormatter.c_str()))
+			if (updateRequired)
 			{
 				PLOG_VERBOSE << "GUIVec2 (" << getName() << ") firing toggle event, new value: " << mOptionVec2->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec2]() { optionToggle->UpdateValueWithInput(); }));
 				newThread.detach();
 			}
-			renderTooltip();
+
 
 			ImGui::EndChild();
 		}
 		else
 		{
 			ImGui::SetNextItemWidth(200);
-			if (ImGui::InputFloat2(mLabelText.c_str(), &mOptionVec2->GetValueDisplay().x, decimalPrecisionFormatter.c_str())) // can bind InputFloat2 directly to Vec2.x for the whole thing
+			bool updateRequired = false;
+
+			if constexpr (sliderParam.showSlider)
+				updateRequired = ImGui::SliderFloat2(mLabelText.c_str(), &mOptionVec2->GetValueDisplay().x, sliderParam.minValue.x, sliderParam.maxValue.x, decimalPrecisionFormatter.c_str(), sliderParam.sliderFlags);
+			else
+				updateRequired = ImGui::InputFloat2(mLabelText.c_str(), &mOptionVec2->GetValueDisplay().x, decimalPrecisionFormatter.c_str());
+
+			if (updateRequired) 
 			{
 				PLOG_VERBOSE << "GUIVec2 (" << getName() << ") firing toggle event, new value: " << mOptionVec2->GetValueDisplay();
 				auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionVec2]() { optionToggle->UpdateValueWithInput(); }));

@@ -6,20 +6,10 @@
 class ScopedImFontScaler {
 private: 
 	float previousFontScale;
-	ImFont* pFont;
+	ImFont* const pFont;
 
 public:
-	ScopedImFontScaler(float newFontScale)
-	{
-		this->pFont = ImGui::GetFont();
-		this->previousFontScale = this->pFont->Scale;
-		this->pFont->Scale = newFontScale;
-		ImGui::PushFont(this->pFont);
-	}
+	ScopedImFontScaler(float newFontScale);
 
-	~ScopedImFontScaler()
-	{
-		this->pFont->Scale = previousFontScale;
-		ImGui::PopFont();
-	}
+	~ScopedImFontScaler();
 };

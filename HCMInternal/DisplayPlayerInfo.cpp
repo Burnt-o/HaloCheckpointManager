@@ -63,7 +63,7 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(uint32_t)>> mGameTickEventCallback;
 	ScopedCallback<ToggleEvent> mDisplayPlayerInfoToggleEventCallback;
 	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
-	ScopedCallback<eventpp::CallbackList<void(int&)>> display2DInfoFontSizeCallback;
+	ScopedCallback<eventpp::CallbackList<void(float&)>> display2DInfoFontSizeCallback;
 
 
 
@@ -153,22 +153,20 @@ private:
 					throw HCMRuntimeException(std::format("Invalid enum value for Display2DInfoAnchorEnum: ", settings->display2DInfoAnchorCorner->GetValue()));
 			}
 
-			auto windowFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize;
+			//auto windowFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize;
 
 			auto fontColour = ImGui::ColorConvertFloat4ToU32(settings->display2DInfoFontColour->GetValue());
 
-			
-			float fontScale = fontSize / (15.f * 2.f);
 
 			std::string* stringToRender = useDataA ? &dataStringA : &dataStringB;
 
 			if (settings->display2DInfoOutline->GetValue())
 			{
-				RenderTextHelper::drawOutlinedText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
+				RenderTextHelper::drawOutlinedText(*stringToRender, displayInfoScreenPosition, fontColour, fontSize);
 			}
 			else
 			{
-				RenderTextHelper::drawText(*stringToRender, displayInfoScreenPosition, fontColour, fontScale);
+				RenderTextHelper::drawText(*stringToRender, displayInfoScreenPosition, fontColour, fontSize);
 			}
 
 
@@ -310,11 +308,7 @@ private:
 	}
 
 
-	void onFontSizeChange(int& newValue)
-	{
-		fontSize = (float)newValue;	
-		needToLoadNewFont = true;
-	}
+
 
 
 
@@ -335,7 +329,6 @@ private:
 	std::optional<std::weak_ptr<GetCurrentBSP>> getCurrentBSPOptionalWeak;
 
 	float fontSize;
-	bool needToLoadNewFont = true;
 	ImFont* displayInfoFont = nullptr;
 public:
 
@@ -358,7 +351,7 @@ public:
 		getEntityDataAsString(resolveDependentCheat(GetObjectAddress)),
 		getPlayerDataAsString(resolveDependentCheat(GetObjectAddress), resolveDependentCheat(GetPlayerDatum)),
 		getGameDataAsString(),
-		display2DInfoFontSizeCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoFontSize->valueChangedEvent, [this](int& n) {onFontSizeChange(n); }),
+		display2DInfoFontSizeCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoFontSize->valueChangedEvent, [this](float& n) { fontSize = n; }),
 		setSettingCallback(display2DInfoShowGameTick, bool),
 		setSettingCallback(display2DInfoShowAggro, bool),
 		setSettingCallback(display2DInfoShowRNG, bool),
@@ -418,7 +411,7 @@ public:
 
 		if (atLeastOneServiceIsWorking == false) throw HCMInitException("DisplayPlayerInfoImpl could not resolve any optional services for getting data!");
 
-		fontSize = (float)dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoFontSize->GetValue();
+		fontSize = dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoFontSize->GetValue();
 
 		// init getString thingy settings
 		onSettingsUpdate();

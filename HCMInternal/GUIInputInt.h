@@ -1,7 +1,9 @@
 #pragma once
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
+#include "SliderParam.h"
 
+template <SliderParam<int> sliderParam = SliderParam<int>()>
 class GUIInputInt : public IGUIElement {
 
 private:
@@ -33,7 +35,15 @@ public:
 		}
 
 		ImGui::SetNextItemWidth(150);
-		if (ImGui::InputInt(mLabelText.c_str(), &mOptionInt->GetValueDisplay()))
+		bool updateRequired = false;
+
+		if constexpr (sliderParam.showSlider)
+			updateRequired = ImGui::SliderInt(mLabelText.c_str(), &mOptionInt->GetValueDisplay(), sliderParam.minValue, sliderParam.maxValue, "%d", sliderParam.sliderFlags);
+		else
+			updateRequired = ImGui::InputInt(mLabelText.c_str(), &mOptionInt->GetValueDisplay());
+
+
+		if (updateRequired)
 		{
 			PLOG_VERBOSE << "GUIInputInt (" << getName() << ") firing toggle event, new value: " << mOptionInt->GetValueDisplay();
 			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionInt]() { optionToggle->UpdateValueWithInput(); }));

@@ -121,7 +121,7 @@ private:
 			const auto& interiorStyle = settings->triggerOverlayInteriorStyle->GetValue();
 			
 			const auto& labelStyle = settings->triggerOverlayLabelStyle->GetValue();
-			const auto labelScale = settings->triggerOverlayLabelScale->GetValue() / (15.f);
+			const auto labelScale = settings->triggerOverlayLabelScale->GetValue();
 
 			const bool triggerOverlayMessageOnCheckHit = settings->triggerOverlayMessageOnCheckHit->GetValue();
 			const bool triggerOverlayMessageOnCheckMiss = settings->triggerOverlayMessageOnCheckMiss->GetValue();

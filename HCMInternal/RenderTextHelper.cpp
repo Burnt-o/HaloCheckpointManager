@@ -73,35 +73,43 @@ namespace RenderTextHelper
 		auto centeredTextPos = SimpleMath::Vector2(textPos.x - (textSize.x / 2), textPos.y - (textSize.y / 2));
 		ImGui::GetBackgroundDrawList()->AddText(centeredTextPos, textColor, textString.c_str());
 
-		return RECTF(centeredTextPos.x, centeredTextPos.y, centeredTextPos.x + textSize.x, centeredTextPos.y + textSize.y);
+		return RECTF(
+			centeredTextPos.x,
+			centeredTextPos.y,
+			centeredTextPos.x + textSize.x,
+			centeredTextPos.y + textSize.y
+		);
 	}
 
 
 
 
-	RECTF drawOutlinedText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale, const float& outlineSize, const uint32_t& outlineColor)
+	RECTF drawOutlinedText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale, const float& outlinePixels)
 	{
 		ScopedImFontScaler setFont{ fontScale };
 
 		SimpleMath::Vector2 outlineTextPos;
-		float outlineOffset = fontScale * outlineSize;
-		auto textSize = ImGui::CalcTextSize(textString.c_str());
+		SimpleMath::Vector2 textSize = ImGui::CalcTextSize(textString.c_str());
+		textSize /= 8.f; // not sure why this is necessary .. only became a thing after i introduced rescalable fonts to the font scaler
+
+		// outline color is black but with opacity of text color (opacity is MOST sig byte of uint32_t)
+		const uint32_t outlineColor = textColor & 0xFF000000;
 
 		for (int i = 0; i < 9; i++)
 		{
 
 			switch (i)
 			{
-			case 0: outlineTextPos = { textPos.x - outlineOffset, textPos.y - outlineOffset }; break;
-			case 1: outlineTextPos = { textPos.x                , textPos.y - outlineOffset }; break;
-			case 2: outlineTextPos = { textPos.x + outlineOffset, textPos.y - outlineOffset }; break;
+			case 0: outlineTextPos = { textPos.x - outlinePixels, textPos.y - outlinePixels }; break;
+			case 1: outlineTextPos = { textPos.x                , textPos.y - outlinePixels }; break;
+			case 2: outlineTextPos = { textPos.x + outlinePixels, textPos.y - outlinePixels }; break;
 
-			case 3: outlineTextPos = { textPos.x - outlineOffset, textPos.y + outlineOffset }; break;
-			case 4: outlineTextPos = { textPos.x                , textPos.y + outlineOffset }; break;
-			case 5: outlineTextPos = { textPos.x + outlineOffset, textPos.y + outlineOffset }; break;
+			case 3: outlineTextPos = { textPos.x - outlinePixels, textPos.y + outlinePixels }; break;
+			case 4: outlineTextPos = { textPos.x                , textPos.y + outlinePixels }; break;
+			case 5: outlineTextPos = { textPos.x + outlinePixels, textPos.y + outlinePixels }; break;
 
-			case 6: outlineTextPos = { textPos.x - outlineOffset, textPos.y }; break;
-			case 7: outlineTextPos = { textPos.x + outlineOffset, textPos.y }; break;
+			case 6: outlineTextPos = { textPos.x - outlinePixels, textPos.y }; break;
+			case 7: outlineTextPos = { textPos.x + outlinePixels, textPos.y }; break;
 
 			case 8: outlineTextPos = textPos;  break; // center, draws on top of all others
 			}
@@ -111,35 +119,37 @@ namespace RenderTextHelper
 
 		}
 
-		return RECTF(textPos.x - outlineOffset, textPos.y - outlineOffset, textPos.x + textSize.x + outlineOffset, textPos.y + textSize.y + outlineOffset);
+		return RECTF(textPos.x - outlinePixels, textPos.y - outlinePixels, textPos.x + textSize.x + outlinePixels, textPos.y + textSize.y + outlinePixels);
 
 	}
 
 
-	RECTF drawCenteredOutlinedText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale, const float& outlineSize, const uint32_t& outlineColor)
+	RECTF drawCenteredOutlinedText(const std::string& textString, const SimpleMath::Vector2& textPos, const uint32_t& textColor, const float& fontScale, const float& outlinePixels)
 	{
 		ScopedImFontScaler setFont{ fontScale };
 
 		SimpleMath::Vector2 outlineTextPos;
-		float outlineOffset = fontScale * outlineSize;
 		auto textSize = ImGui::CalcTextSize(textString.c_str());
-		auto centeredTextPos = SimpleMath::Vector2(textPos.x - (textSize.x / 2), textPos.y - (textSize.y / 2));
+		auto centeredTextPos = SimpleMath::Vector2(textPos.x - (textSize.x / 2), textPos.y);
+
+		// outline color is black but with opacity of text color (opacity is MOST sig byte of uint32_t)
+		const uint32_t outlineColor = textColor & 0xFF000000;
 
 		for (int i = 0; i < 9; i++)
 		{
 
 			switch (i)
 			{
-			case 0: outlineTextPos = { centeredTextPos.x - outlineOffset, centeredTextPos.y - outlineOffset }; break;
-			case 1: outlineTextPos = { centeredTextPos.x                , centeredTextPos.y - outlineOffset }; break;
-			case 2: outlineTextPos = { centeredTextPos.x + outlineOffset, centeredTextPos.y - outlineOffset }; break;
+			case 0: outlineTextPos = { centeredTextPos.x - outlinePixels, centeredTextPos.y - outlinePixels }; break;
+			case 1: outlineTextPos = { centeredTextPos.x                , centeredTextPos.y - outlinePixels }; break;
+			case 2: outlineTextPos = { centeredTextPos.x + outlinePixels, centeredTextPos.y - outlinePixels }; break;
 
-			case 3: outlineTextPos = { centeredTextPos.x - outlineOffset, centeredTextPos.y + outlineOffset }; break;
-			case 4: outlineTextPos = { centeredTextPos.x                , centeredTextPos.y + outlineOffset }; break;
-			case 5: outlineTextPos = { centeredTextPos.x + outlineOffset, centeredTextPos.y + outlineOffset }; break;
+			case 3: outlineTextPos = { centeredTextPos.x - outlinePixels, centeredTextPos.y + outlinePixels }; break;
+			case 4: outlineTextPos = { centeredTextPos.x                , centeredTextPos.y + outlinePixels }; break;
+			case 5: outlineTextPos = { centeredTextPos.x + outlinePixels, centeredTextPos.y + outlinePixels }; break;
 
-			case 6: outlineTextPos = { centeredTextPos.x - outlineOffset, centeredTextPos.y }; break;
-			case 7: outlineTextPos = { centeredTextPos.x + outlineOffset, centeredTextPos.y }; break;
+			case 6: outlineTextPos = { centeredTextPos.x - outlinePixels, centeredTextPos.y }; break;
+			case 7: outlineTextPos = { centeredTextPos.x + outlinePixels, centeredTextPos.y }; break;
 
 			case 8: outlineTextPos = centeredTextPos;  break; // center, draws on top of all others
 			}
@@ -150,7 +160,11 @@ namespace RenderTextHelper
 
 		// TODO: going over like 1.f outlineSize looks fucking GARBAGE, would need to add multiple layers of expansion for every 2.f of size.. sounds dumb, gotta be a better way eh. is there not some way to render the text as an image then blur it?
 
-		return RECTF(centeredTextPos.x - outlineOffset, centeredTextPos.y - outlineOffset, centeredTextPos.x + textSize.x + outlineOffset, centeredTextPos.y + textSize.y + outlineOffset);
-
+		return RECTF(
+			centeredTextPos.x - outlinePixels, 
+			centeredTextPos.y - outlinePixels, 
+			centeredTextPos.x + textSize.x + outlinePixels, 
+			centeredTextPos.y + textSize.y + outlinePixels
+		);
 	}
 }

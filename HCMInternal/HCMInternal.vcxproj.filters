@@ -749,9 +749,6 @@
     <ClInclude Include="GUIInputMultilineString.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="GUIFloatSlider.h">
-      <Filter>Services\GUI\GUIElements</Filter>
-    </ClInclude>
     <ClInclude Include="TriggerFilter.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
@@ -820,6 +817,9 @@
     </ClInclude>
     <ClInclude Include="LoadTexture.h">
       <Filter>Services\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SliderParam.h">
+      <Filter>Services\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1194,6 +1194,9 @@
     </ClCompile>
     <ClCompile Include="LoadTexture.cpp">
       <Filter>Services\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ScopedImFontScaler.cpp">
+      <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

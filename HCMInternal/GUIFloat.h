@@ -1,7 +1,9 @@
 #pragma once
 #include "IGUIElement.h"
 #include "SettingsStateAndEvents.h"
+#include "SliderParam.h"
 
+template <SliderParam<float> sliderParam = SliderParam<float>()>
 class GUIFloat : public IGUIElement {
 
 private:
@@ -32,12 +34,22 @@ public:
 		}
 
 		ImGui::SetNextItemWidth(100);
-		if (ImGui::InputFloat(mLabelText.c_str(), &mOptionFloat->GetValueDisplay()))
+		bool updateRequired = false;
+
+		if constexpr (sliderParam.showSlider)
+			updateRequired = ImGui::SliderFloat(mLabelText.c_str(), &mOptionFloat->GetValueDisplay(), sliderParam.minValue, sliderParam.maxValue, "%.3f", sliderParam.sliderFlags);
+		else
+			updateRequired = ImGui::InputFloat(mLabelText.c_str(), &mOptionFloat->GetValueDisplay());
+
+
+
+		if (updateRequired)
 		{
 			PLOG_VERBOSE << "GUIFloat (" << getName() << ") firing toggle event, new value: " << mOptionFloat->GetValueDisplay();
 			auto& newThread = mUpdateSettingThreads.emplace_back(std::thread([optionToggle = mOptionFloat]() { optionToggle->UpdateValueWithInput(); }));
 			newThread.detach();
 		}
+
 		renderTooltip();
 		DEBUG_GUI_HEIGHT;
 		

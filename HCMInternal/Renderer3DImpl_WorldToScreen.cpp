@@ -20,7 +20,7 @@ void clampScreenPosition(SimpleMath::Vector3& screenPosition, const SimpleMath::
 	float screenPosAngle = std::atan2f(screenPosition.y, screenPosition.x);
 
 	if (reverse)
-		screenPosAngle = std::fmodf(screenPosAngle + DirectX::XM_2PI, DirectX::XM_2PI) - DirectX::XM_PI;
+		screenPosAngle = std::fmodf(screenPosAngle + (std::numbers::pi_v<float> * 2.f), (std::numbers::pi_v<float> * 2.f)) - std::numbers::pi_v<float>;
 
 	float screenPosSlope = std::tanf(screenPosAngle);
 

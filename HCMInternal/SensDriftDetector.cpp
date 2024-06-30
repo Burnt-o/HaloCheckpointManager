@@ -44,7 +44,7 @@ private:
 
 		std::unique_lock<std::mutex> lock(instance->mDestructionGuard); 
 
-		constexpr float incrementConversionFactor = 0.02222222276f * DirectX::XM_PI / 180.f; // converts from in-game-sensitivity value to how much your viewangle will be incremented by when moving a single mouse-pixel
+		constexpr float incrementConversionFactor = 0.02222222276f * std::numbers::pi_v<float> / 180.f; // converts from in-game-sensitivity value to how much your viewangle will be incremented by when moving a single mouse-pixel
 
 		try
 		{

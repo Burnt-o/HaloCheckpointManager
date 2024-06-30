@@ -17,7 +17,6 @@
 #include "GUIRadioButton.h"
 #include "GUIRadioGroup.h"
 #include "GUIFloat.h"
-#include "GUIFloatSlider.h"
 #include "GUIToggleWithChildren.h"
 #include "GUIInputString.h"
 #include "GUIInputMultilineString.h"
@@ -126,6 +125,8 @@ private:
 					(game, ToolTipCollection("General HCM options"), "Control", headerChildElements
 						{
 						createNestedElement(GUIElementEnum::toggleGUIHotkeyGUI),
+						createNestedElement(GUIElementEnum::messagesFontSize),
+						createNestedElement(GUIElementEnum::messagesFontColor),
 						createNestedElement(GUIElementEnum::GUISettingsSubheading),
 						createNestedElement(GUIElementEnum::togglePauseGUI),
 						createNestedElement(GUIElementEnum::togglePauseSettingsSubheading),
@@ -137,6 +138,16 @@ private:
 				case GUIElementEnum::toggleGUIHotkeyGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHotkeyOnly<63>>
 						(game, ToolTipCollection("Brings up or collapses this main GUI window"), RebindableHotkeyEnum::toggleGUI, "Toggle this GUI"));
+
+				case GUIElementEnum::messagesFontSize:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(6.f, 120.f)>>
+						(game, ToolTipCollection("Font size of messages that show up under this window"), "Message Font Size", settings->messagesFontSize));
+
+
+				case GUIElementEnum::messagesFontColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+						(game, ToolTipCollection("Color of messages that show up under this window"), "Messages Font Color", settings->messagesFontColor));
+
 
 				case GUIElementEnum::GUISettingsSubheading:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
@@ -374,7 +385,7 @@ private:
 						(game, ToolTipCollection("When ticked, HCM will force a checkpoint on the below tick"), std::nullopt, "Force future checkpoint", settings->forceFutureCheckpointToggle));
 
 				case GUIElementEnum::forceFutureCheckpointTick:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<>>
 						(game, ToolTipCollection("Which tick to force a checkpoint on (make sure you use the same value as your coop partner)"), "on tick:", settings->forceFutureCheckpointTick));
 
 				case GUIElementEnum::forceFutureCheckpointFill:
@@ -845,12 +856,12 @@ private:
 							(game, ToolTipCollection(""), "Corner to Anchor to", settings->display2DInfoAnchorCorner));
 
 					case GUIElementEnum::display2DInfoScreenOffset:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<false, false, 0>> 
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({0.f, 0.f}, {1600.f, 1000.f}, ImGuiSliderFlags_None) >>
 							(game, ToolTipCollection(""), "Pixel Offset from Corner", settings->display2DInfoScreenOffset, "Horizontal", "Vertical"));
 
 
 					case GUIElementEnum::display2DInfoFontSize:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt> 
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
 							(game, ToolTipCollection(""),  "Info Font Size", settings->display2DInfoFontSize));
 
 					case GUIElementEnum::display2DInfoFontColour:
@@ -858,7 +869,7 @@ private:
 							(game, ToolTipCollection(""),  "Colour#2dinfo", settings->display2DInfoFontColour));
 
 					case GUIElementEnum::display2DInfoFloatPrecision:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<SliderParam<int>(0, 10)>>
 							(game, ToolTipCollection(""), "Info Decimal Precision", settings->display2DInfoFloatPrecision));
 
 					case GUIElementEnum::display2DInfoOutline:
@@ -901,7 +912,7 @@ private:
 							(game, ToolTipCollection("Toggles disabling rendering of waypoints that are too far away"), std::nullopt, "Render Range Filter", settings->waypoint3DRenderRangeToggle));
 
 					case GUIElementEnum::waypoint3DGUIRenderRangeInput:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 							(game, ToolTipCollection("How far away (game units) does a waypoint need to be before disabling rendering?"), "Render Range", settings->waypoint3DRenderRangeInput));
 
 					case GUIElementEnum::waypoint3DGUIGlobalSpriteColor:
@@ -909,7 +920,7 @@ private:
 							(game, ToolTipCollection("Color to apply to waypoint sprite"), "Global Sprite Color", settings->waypoint3DGlobalSpriteColor));
 
 					case GUIElementEnum::waypoint3DGUIGlobalSpriteScale:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 10.f)>>
 							(game, ToolTipCollection("Scaling factor of waypoint sprite"), "Global Sprite Scale", settings->waypoint3DGlobalSpriteScale));
 
 					case GUIElementEnum::waypoint3DGUIGlobalLabelColor:
@@ -917,7 +928,7 @@ private:
 							(game, ToolTipCollection("Color to apply to waypoint label"), "Global Label Color", settings->waypoint3DGlobalLabelColor));
 
 					case GUIElementEnum::waypoint3DGUIGlobalLabelScale:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
 							(game, ToolTipCollection("Scaling factor of waypoint label"), "Global Label Scale", settings->waypoint3DGlobalLabelScale));
 
 					case GUIElementEnum::waypoint3DGUIGlobalDistanceColor:
@@ -925,11 +936,11 @@ private:
 							(game, ToolTipCollection("Color to apply to waypoint distance text"), "Global Distance Color", settings->waypoint3DGlobalDistanceColor));
 
 					case GUIElementEnum::waypoint3DGUIGlobalDistanceScale:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
 							(game, ToolTipCollection("Scaling factor of waypoint distance text"), "Global Distance Scale", settings->waypoint3DGlobalDistanceScale));
 
 					case GUIElementEnum::waypoint3DGUIGlobalDistancePrecision:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<SliderParam<int>(0, 10)>>
 							(game, ToolTipCollection("Decimal precision of waypoint distance text"), "Global Distance Precision", settings->waypoint3DGlobalDistancePrecision));
 
 
@@ -1002,7 +1013,7 @@ private:
 						(game, ToolTipCollection("Render Labels (Trigger names) at center of volume, corner, or not at all."), "Render Labels at: ", settings->triggerOverlayLabelStyle));
 
 				case GUIElementEnum::triggerOverlayLabelScale:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<8.f, 100.f>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
 						(game, ToolTipCollection("How large the font size of the label should be, in pts"), "Label Font Size", settings->triggerOverlayLabelScale));
 
 
@@ -1015,11 +1026,11 @@ private:
 						(game, ToolTipCollection("Color to render BSP (loadzone) triggers"), "Trigger BSP Colour", settings->triggerOverlayBSPColor));
 
 				case GUIElementEnum::triggerOverlayAlpha:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.1, 1.f)>>
 						(game, ToolTipCollection("Multiplies how opaque triggers are, from 0 (fully transparent) to 1 (fully opaque)"), "Trigger Opacity Multiplier", settings->triggerOverlayAlpha));
 
 				case GUIElementEnum::triggerOverlayWireframeAlpha:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.1f, 1.f>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.1, 1.f)>>
 						(game, ToolTipCollection("Multiplies how opaque trigger wireframes are, from 0 (fully transparent) to 1 (fully opaque)"), "Wireframe Opacity Multiplier", settings->triggerOverlayWireframeAlpha));
 
 
@@ -1032,7 +1043,7 @@ private:
 							}));
 
 					case GUIElementEnum::triggerOverlayCheckHitFalloff:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<>>
 							(game, ToolTipCollection("How many seconds does the check-flash last"), "Flash for x ticks", settings->triggerOverlayCheckHitFalloff));
 
 					case GUIElementEnum::triggerOverlayCheckHitColor:
@@ -1048,7 +1059,7 @@ private:
 							}));
 
 					case GUIElementEnum::triggerOverlayCheckMissFalloff:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<>>
 							(game, ToolTipCollection("How many seconds does the check-flash last"), "Flash for x ticks", settings->triggerOverlayCheckMissFalloff));
 
 					case GUIElementEnum::triggerOverlayCheckMissColor:
@@ -1088,7 +1099,7 @@ private:
 							(game, ToolTipCollection("Color of the sphere drawn at the players trigger vertex"), "Trigger Vertex Color", settings->triggerOverlayPositionColor));
 
 					case GUIElementEnum::triggerOverlayPositionScale:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.01f, 2.f>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.01f, 4.f)>>
 							(game, ToolTipCollection("Size of the sphere drawn at the players trigger vertex"), "Trigger Vertex Scale", settings->triggerOverlayPositionScale));
 
 					case GUIElementEnum::triggerOverlayPositionWireframe:
@@ -1129,11 +1140,11 @@ private:
 					(game, ToolTipCollection("Color of barriers of the \"Soft Kill\" type"), "Kill Color", settings->softCeilingOverlayColorKill));
 
 			case GUIElementEnum::softCeilingOverlaySolidTransparency:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.f, 1.f>>
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f)>>
 					(game, ToolTipCollection("Opacity of the filled barrier triangles"), "Solid Opacity", settings->softCeilingOverlaySolidTransparency));
 
 			case GUIElementEnum::softCeilingOverlayWireframeTransparency:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloatSlider<0.f, 1.f>>
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f)>>
 					(game, ToolTipCollection("Opacity of the outline of the barrier triangles"), "Outline Opacity", settings->softCeilingOverlayWireframeTransparency));
 
 
@@ -1181,7 +1192,7 @@ private:
 							(game, ToolTipCollection("Set player view direction to the specified angles"), RebindableHotkeyEnum::editPlayerViewAngleSet, "Set view angle to: ##editPlayerViewAngleSet", settings->editPlayerViewAngleSet));
 
 					case GUIElementEnum::editPlayerViewAngleVec2:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec2<true, false, 8>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < true, false, 8, SliderParam<SimpleMath::Vector2>({0, -std::numbers::pi / 2.f }, {std::numbers::pi * 2.f, std::numbers::pi / 2.f})>>
 							(game, ToolTipCollection("Rotation of the player"), "Rotation: ##editPlayerViewAngleVec2", settings->editPlayerViewAngleVec2, "yaw", "pitch"));
 
 
@@ -1211,7 +1222,7 @@ private:
 
 
 					case GUIElementEnum::editPlayerViewAngleAdjustFactor:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 							(game, ToolTipCollection("Amount to nudge by when using above functions"), "Nudge Amount##editPlayerViewAngleAdjustFactor", settings->editPlayerViewAngleAdjustFactor));
 
 
@@ -1336,11 +1347,11 @@ private:
 
 
 						case GUIElementEnum::freeCameraUserInputCameraBaseFOV:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 360.f)>>
 								(game, ToolTipCollection("Field of view of the camera, in vertical degrees (assumes 16:9. same as in-game-menu) (before any adjustment by anchorFOVtoObjectDistance automation)"), "Base Field of View", settings->freeCameraUserInputCameraBaseFOV));
 
 						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeed:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 								(game, ToolTipCollection("How fast the camera translates (moves positionally)"), "Translation Speed", settings->freeCameraUserInputCameraTranslationSpeed));
 
 
@@ -1353,7 +1364,7 @@ private:
 								(game, ToolTipCollection("Decreases camera translation speed by a scale factor"), RebindableHotkeyEnum::freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, "Decrease Translation Speed", settings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey));
 
 						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeedChangeFactor:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 								(game, ToolTipCollection("How much the camera translation speed changes when you press the above hotkeys"), "Translation Speed Change Factor", settings->freeCameraUserInputCameraTranslationSpeedChangeFactor));
 
 
@@ -1369,13 +1380,13 @@ private:
 							));
 
 						case GUIElementEnum::freeCameraUserInputCameraTranslationInterpolatorLinearFactor:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f, ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat | ImGuiSliderFlags_Logarithmic)>>
 								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."),  "Snap Factor##UserInputCameraTranslation", settings->freeCameraUserInputCameraTranslationInterpolatorLinearFactor));
 
 
 
 						case GUIElementEnum::freeCameraUserInputCameraRotationSpeed:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 								(game, ToolTipCollection("How fast the camera rotates (turns about)"), "Rotation Speed", settings->freeCameraUserInputCameraRotationSpeed));
 
 						case GUIElementEnum::freeCameraUserInputCameraRotationInterpolator:
@@ -1389,13 +1400,13 @@ private:
 							));
 
 						case GUIElementEnum::freeCameraUserInputCameraRotationInterpolatorLinearFactor:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f, ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat | ImGuiSliderFlags_Logarithmic)>>
 								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##UserInputCameraRotation", settings->freeCameraUserInputCameraRotationInterpolatorLinearFactor));
 
 
 
 						case GUIElementEnum::freeCameraUserInputCameraFOVSpeed:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 								(game, ToolTipCollection("How fast the camera FOV changes when you hold down the increase/decrease FOV binding"), "FOV change Speed", settings->freeCameraUserInputCameraFOVSpeed));
 
 						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolator:
@@ -1409,7 +1420,7 @@ private:
 							));
 
 						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolatorLinearFactor:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f, ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat | ImGuiSliderFlags_Logarithmic)>>
 								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##UserInputCameraFOV", settings->freeCameraUserInputCameraFOVInterpolatorLinearFactor));
 
 
@@ -1465,7 +1476,7 @@ private:
 							));
 
 							case GUIElementEnum::freeCameraUserInputCameraSetRotationVec3:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIVec3<true, false, 8>>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec3 < true, false, 8, SliderParam<SimpleMath::Vector3>({ -std::numbers::pi, -std::numbers::pi / 2.f, -std::numbers::pi / 2.f } , { std::numbers::pi, std::numbers::pi / 2.f, std::numbers::pi / 2.f }) >>
 									(game, ToolTipCollection("Rotation of the camera (in radians, yaw pitch roll)"), "Rotation: ##freeCameraUserInputCameraSetRotationVec3", settings->freeCameraUserInputCameraSetRotationVec3, "Yaw", "Pitch", "Roll"));
 
 							case GUIElementEnum::freeCameraUserInputCameraSetRotationFillCurrent:
@@ -1563,7 +1574,7 @@ private:
 							));
 
 							case GUIElementEnum::freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor", settings->freeCameraAnchorPositionToObjectPositionTranslationInterpolatorLinearFactor));
 
 
@@ -1616,7 +1627,7 @@ private:
 							));
 
 							case GUIElementEnum::freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor", settings->freeCameraAnchorRotationToObjectPositionRotationInterpolatorLinearFactor));
 
 
@@ -1655,7 +1666,7 @@ private:
 								));
 
 								case GUIElementEnum::freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor:
-									return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+									return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 										(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor", settings->freeCameraAnchorRotationToObjectFacingRotationInterpolatorLinearFactor));
 
 					case GUIElementEnum::freeCameraAnchorFOVToObjectDistance:
@@ -1700,7 +1711,7 @@ private:
 							));
 
 							case GUIElementEnum::freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor:
-								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat>
+								return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor", settings->freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor));
 */
 				

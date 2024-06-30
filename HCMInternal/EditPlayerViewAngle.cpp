@@ -67,7 +67,7 @@ private:
 			lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
 			lockOrThrow(settingsWeak, settings);
 			auto currentViewAngle = getPlayerViewAngle->getPlayerViewAngle();
-			currentViewAngle.x = std::fmodf(currentViewAngle.x + settings->editPlayerViewAngleAdjustFactor->GetValue(), DirectX::XM_2PI); // rolls over at 2pi
+			currentViewAngle.x = std::fmodf(currentViewAngle.x + settings->editPlayerViewAngleAdjustFactor->GetValue(), (std::numbers::pi_v<float> * 2.f)); // rolls over at 2pi
 			getPlayerViewAngle->setPlayerViewAngle(currentViewAngle);
 
 			{
@@ -93,7 +93,7 @@ private:
 			lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
 			lockOrThrow(settingsWeak, settings);
 			auto currentViewAngle = getPlayerViewAngle->getPlayerViewAngle();
-			currentViewAngle.y = std::clamp(currentViewAngle.y + settings->editPlayerViewAngleAdjustFactor->GetValue(), DirectX::XM_PIDIV2 * -1.f, DirectX::XM_PIDIV2);
+			currentViewAngle.y = std::clamp(currentViewAngle.y + settings->editPlayerViewAngleAdjustFactor->GetValue(), (std::numbers::pi_v<float> / 2.f) * -1.f, (std::numbers::pi_v<float> / 2.f));
 			getPlayerViewAngle->setPlayerViewAngle(currentViewAngle);
 
 			
