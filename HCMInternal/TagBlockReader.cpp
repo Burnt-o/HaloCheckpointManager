@@ -32,28 +32,38 @@ public:
 		tagBlockDataStruct = DynamicStructFactory::make<tagBlockDataFields>(ptr, game);
 	}
 
-	std::expected<void, HCMRuntimeException> updateCache()
+	std::optional<HCMRuntimeException> updateCache()
 	{
-		if (!magicAddress->readData(&magicAddressCached)) return std::unexpected(HCMRuntimeException(std::format("Could not resolve magicAddress, {}", MultilevelPointer::GetLastError())));
-		LOG_ONCE_CAPTURE(PLOG_DEBUG << "magicAddress: " << std::hex << p, p = magicAddressCached);
+		if (!magicAddress->readData(&magicAddressCached)) 
+			return HCMRuntimeException(std::format("Could not resolve magicAddress, {}", MultilevelPointer::GetLastError()));
+		PLOG_DEBUG << "tagBlockReader cache updated, magicAddress: " << std::hex << magicAddressCached;
+		return std::nullopt;
 	}
 
 	std::expected<ParsedTagBlock, HCMRuntimeException> read(uintptr_t tagBlock)
 	{
+		LOG_ONCE(PLOG_DEBUG << "reading tagblock");
 		if (!cacheValid)
 		{
 			auto cacheUpdated = updateCache();
-			if (!cacheUpdated)
-				return std::unexpected(cacheUpdated.error());
+			if (cacheUpdated.has_value())
+			{
+				return std::unexpected(cacheUpdated.value());
+			}
+				
 			cacheValid = true;
 		}
+
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "tagBlock: " << std::hex << p, p = tagBlock);
 
 		tagBlockDataStruct->currentBaseAddress = tagBlock;
 
 		auto* pOffset = tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::offset);
 		auto* pEntryCount = tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::entryCount);
-		if (IsBadReadPtr(pOffset, sizeof(uint32_t))) return std::unexpected(HCMRuntimeException(std::format("Bad read of pOffset at 0x{:X}", (uintptr_t)pOffset)));
-		if (IsBadReadPtr(pEntryCount, sizeof(uint32_t))) return std::unexpected(HCMRuntimeException(std::format("Bad read of pEntryCount at 0x{:X}", (uintptr_t)pEntryCount)));
+		if (IsBadReadPtr(pOffset, sizeof(uint32_t))) 
+			return std::unexpected(HCMRuntimeException(std::format("Bad read of pOffset at 0x{:X}", (uintptr_t)pOffset)));
+		if (IsBadReadPtr(pEntryCount, sizeof(uint32_t))) 
+			return std::unexpected(HCMRuntimeException(std::format("Bad read of pEntryCount at 0x{:X}", (uintptr_t)pEntryCount)));
 
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pOffset: " << std::hex << p, p = (uintptr_t)pOffset);
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "*pOffset: " << std::hex << o, o = *pOffset);
@@ -63,6 +73,8 @@ public:
 
 		uintptr_t pFirstElement = offsetTransformed + tagBase + magicAddressCached;
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pFirstElement: " << std::hex << p, p = pFirstElement);
+		if (IsBadReadPtr((void*)pFirstElement, sizeof(uint32_t)))
+			return std::unexpected(HCMRuntimeException(std::format("Bad read of pFirstElement at 0x{:X}", pFirstElement)));
 
 		return ParsedTagBlock(pFirstElement, *pEntryCount);
 	}

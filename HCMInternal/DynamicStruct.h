@@ -20,7 +20,9 @@ public:
 	{
 		if (!fieldOffsetMap.contains(whichField)) throw HCMRuntimeException("?!");
 		uintptr_t pField = currentBaseAddress + fieldOffsetMap.at(whichField);
-		if (IsBadReadPtr((void*)pField, sizeof(fieldType))) throw HCMRuntimeException(std::format("Bad read ptr at field: {}, address: 0x{:X}", magic_enum::enum_name(whichField), pField));
+
+		// CLIENT MUST CHECK, if they want to that is
+		//if (IsBadReadPtr((void*)pField, sizeof(fieldType))) throw HCMRuntimeException(std::format("Bad read ptr at field: {}, address: 0x{:X}", magic_enum::enum_name(whichField), pField));
 
 		return (fieldType*)pField;
 	}

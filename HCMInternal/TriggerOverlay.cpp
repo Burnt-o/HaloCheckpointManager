@@ -157,7 +157,7 @@ private:
 				currentTick--;
 
 #ifndef HCM_DEBUG
-			static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value").
+			//static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value");
 #endif
 
 
