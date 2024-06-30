@@ -3,7 +3,7 @@
 #include "ModuleHook.h"
 #include "PointerDataStore.h"
 #include "IMCCStateHook.h"
-
+#include "RuntimeExceptionHandler.h"
 
 template <GameState::Value gameT>
 class GameTickEventHookTemplated : public GameTickEventHook::GameTickEventHookImpl
@@ -15,7 +15,7 @@ private:
 	static inline GameTickEventHookTemplated<gameT>* instance = nullptr;
 
 	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> gameTickEvent = std::make_shared<eventpp::CallbackList<void(uint32_t)>>();
-
+	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 	ScopedCallback < eventpp::CallbackList<void(const MCCState&)>> mccStateChangedCallback;
 
 	void onMccStateChangedCallback(const MCCState&)
@@ -30,9 +30,24 @@ private:
 
 	static void tickIncrementHookFunction(SafetyHookContext& ctx)
 	{
+		static int errorCount = 0;
 		if (!instance) { PLOG_ERROR << "null GameTickEventHookTemplated instance"; return; }
 		ScopedAtomicBool lock(gameTickHookRunning);
-		instance->gameTickEvent->operator()(instance->getCurrentGameTick());
+		try
+		{
+			instance->gameTickEvent->operator()(instance->getCurrentGameTick());
+			errorCount = 0;
+		}
+		catch (HCMRuntimeException ex)
+		{
+			errorCount++;
+			PLOG_ERROR << "Error in game tick hook. This is only a problem if it happens repeatedly. Error details: " << ex.what();
+			if (errorCount == 10)
+			{
+				ex.append("10x\n");
+				instance->runtimeExceptions->handleMesssage(ex);
+			}
+		}
 
 	}
 
@@ -40,7 +55,8 @@ public:
 	GameTickEventHookTemplated(GameState game, IDIContainer& dicon) 
 		: 
 		mGame(game),
-		mccStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onMccStateChangedCallback(n); })
+		mccStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onMccStateChangedCallback(n); }),
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock())
 	{
 		if (instance) throw HCMInitException("Cannot have more than one GameTickEventHookTemplated per game");
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
