@@ -45,7 +45,7 @@ private:
 			if (errorCount == 10)
 			{
 				ex.append("10x\n");
-				instance->runtimeExceptions->handleMesssage(ex);
+				instance->runtimeExceptions->handleMessage(ex);
 			}
 		}
 

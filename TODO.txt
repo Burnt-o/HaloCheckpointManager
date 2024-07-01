@@ -2,10 +2,8 @@
 3.1 TODO
 * impl triggerOverlay for HR and H4 (mainly RE trigger data location and the triggerDataStruct)
 * impl softCeilingOverlay for OD, HR, H4
-* adjust trigger overlay colour setting defaults
 * confirm that triggerHitPosition works for all games (ie when in vehicles)
 	* maybe fix the third gen implentation to use the ACTUAL value
-Pointer init errors should only throw in debug!!!
 
 
 

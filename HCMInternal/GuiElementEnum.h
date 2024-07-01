@@ -187,10 +187,10 @@
 		((triggerOverlayMessageOnExit, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayMessageOnCheckHit, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayMessageOnCheckMiss, (ALL_SUPPORTED_GAMES)))\
-		((triggerOverlayPositionToggle, (Halo1)))\
-			((triggerOverlayPositionColor, (Halo1)))\
-			((triggerOverlayPositionScale, (Halo1)))\
-			((triggerOverlayPositionWireframe, (Halo1)))\
+		((triggerOverlayPositionToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayPositionColor, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayPositionScale, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayPositionWireframe, (ALL_SUPPORTED_GAMES)))\
 	((shieldInputPrinterToggle, (Halo1)))\
 	((sensDriftDetectorToggle, (Halo1)))\
 	((softCeilingOverlayToggle, (THIRD_GEN)))\
