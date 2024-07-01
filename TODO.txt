@@ -4,7 +4,7 @@
 * impl softCeilingOverlay for OD, HR, H4
 * confirm that triggerHitPosition works for all games (ie when in vehicles)
 	* maybe fix the third gen implentation to use the ACTUAL value
-
+* starting hcm into h2-mid-game is a freeze?
 
 
 FUTURE TODO: 

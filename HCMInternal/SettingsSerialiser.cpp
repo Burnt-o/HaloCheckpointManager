@@ -87,12 +87,18 @@ void SettingsSerialiser::deserialise(std::vector<std::shared_ptr<SerialisableSet
 		try
 		{
 			auto optionArray = doc.child(nameof(Setting));
-			if (optionArray.type() == pugi::node_null) throw HCMSerialisationException("Could not find OptionArray node");
+			if (optionArray.type() == pugi::node_null) 
+				throw HCMSerialisationException("Could not find OptionArray node");
 			for (auto& option : allSerialisableOptions)
 			{
 				PLOG_VERBOSE << "Deserialising setting: " << option->getOptionName();
 				auto optionXML = optionArray.child(option->getOptionName().c_str());
-				if (optionXML.type() == pugi::node_null) throw HCMSerialisationException(std::format("Setting deserialisation failed: Could not find Option node {}", option->getOptionName()));
+				if (optionXML.type() == pugi::node_null)
+				{
+					messagesGUI->addMessage(std::format("Couldn't find saved value of option: {}, using default value.", option->getOptionName()));
+					continue;
+				}
+
 				PLOG_VERBOSE << "with value: [" << optionXML.text() << "]";
 				option->deserialise(optionXML);
 			}
