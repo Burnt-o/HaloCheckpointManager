@@ -72,7 +72,8 @@ public:
 
 	virtual std::string getTriggerName(int triggerIndex, uintptr_t ptriggerDataStruct, LevelID level)
 	{
-
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "ptriggerDataStruct: " << std::hex << p, p = ptriggerDataStruct);
+		triggerDataStruct->currentBaseAddress = ptriggerDataStruct;
 		auto* pStringID = triggerDataStruct->field<uint32_t>(triggerDataFields::stringID);
 		if (IsBadReadPtr(pStringID, sizeof(uint32_t))) throw HCMRuntimeException(std::format("Bad read address for pStringID at {}", (uintptr_t)pStringID));
 
