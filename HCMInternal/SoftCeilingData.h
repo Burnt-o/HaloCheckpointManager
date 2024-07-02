@@ -8,28 +8,31 @@ enum class SoftCeilingType
 	SlipSurface
 };
 
-enum class SoftCeilingIgnoresObjectType
+enum class SoftCeilingIgnoresObjectType : uint16_t
 {
-	Biped = 0,
-	Vehicle = 1,
-	Camera = 2,
-	HugeVehicle = 3
+	None = 0,
+	Biped = 0x1 << 0,
+	Vehicle = 0x1 << 1,
+	Camera = 0x1 << 2,
+	HugeVehicle = 0x1 << 3
 };
 enableEnumClassBitmask(SoftCeilingIgnoresObjectType); // Activate bitmask operators
 using SoftCeilingObjectMask = bitmask<SoftCeilingIgnoresObjectType>;
 
+static_assert(sizeof(SoftCeilingObjectMask) == 0x2);
+
 struct SoftCeilingData
 {
-private:
+public:
 	const SoftCeilingObjectMask softCeilingObjectMask;
 public:
 	const SoftCeilingType softCeilingType;
 	const std::array<SimpleMath::Vector3, 3> vertices;
 
-	bool appliesToBiped() const { return (SoftCeilingObjectMask(SoftCeilingIgnoresObjectType::Biped) & softCeilingObjectMask).operator bool() == false; }
-	bool appliesToVehicle() const { return (SoftCeilingObjectMask(SoftCeilingIgnoresObjectType::Vehicle) & softCeilingObjectMask).operator bool() == false; }
-	bool appliesToCamera() const { return (SoftCeilingObjectMask(SoftCeilingIgnoresObjectType::Camera) & softCeilingObjectMask).operator bool() == false; }
-	bool appliesToHugeVehicle() const { return (SoftCeilingObjectMask(SoftCeilingIgnoresObjectType::HugeVehicle) & softCeilingObjectMask).operator bool() == false; }
+	bool appliesToBiped() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::Biped) == false; }
+	bool appliesToVehicle() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::Vehicle) == false; }
+	bool appliesToCamera() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::Camera) == false; }
+	bool appliesToHugeVehicle() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::HugeVehicle) == false; }
 
 	explicit SoftCeilingData(SoftCeilingObjectMask softCeilingObjectMask, SoftCeilingType softCeilingType, std::array<SimpleMath::Vector3, 3> vertices)
 		: softCeilingObjectMask(softCeilingObjectMask), softCeilingType(softCeilingType), vertices(vertices) {}
