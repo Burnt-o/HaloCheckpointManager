@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VersionInfo.h"
-
+#include "EnumClass.h"
 
 
 // decent chunk of this nicked from Scales' MCCTAS, with slight modifications
@@ -109,3 +109,9 @@ std::string readFileContents(std::string_view pathToFile);
 std::string shortestStringRepresentation(float n);
 
 uint32_t Vec4ColorToU32(const SimpleMath::Vector4& color);
+
+template<typename enumT>
+bool bitmaskContains(const bitmask<enumT>& lhs, enumT rhs)
+{
+	return (lhs & bitmask(rhs)).operator bool();
+}

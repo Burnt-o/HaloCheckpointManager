@@ -5680,10 +5680,24 @@
 			<datumIndexSalt>0x2</datumIndexSalt>
 			<offset>0x4</offset>
 		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<StrideSize>0x8</StrideSize>
+			<tagGroupIndex>0x0</tagGroupIndex>
+			<datumIndexSalt>0x2</datumIndexSalt>
+			<offset>0x4</offset>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="tagGroupDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo3">
+			<StrideSize>0x10</StrideSize>
+			<tagGroupMagic>0x0</tagGroupMagic>
+			<parentGroupMagic>0x4</parentGroupMagic>
+			<grandparentGroupMagic>0x8</grandparentGroupMagic>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
 			<StrideSize>0x10</StrideSize>
 			<tagGroupMagic>0x0</tagGroupMagic>
 			<parentGroupMagic>0x4</parentGroupMagic>
@@ -5733,6 +5747,16 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+
+		<!--[indexTableHeader+0x18]-->
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20EF350</Offset>
+				<Offset>0x18</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="tagTableCount" Type="MultilevelPointer::ModuleOffset">
@@ -5741,6 +5765,15 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x20AC058</Offset>
+				<Offset>0x10</Offset>
+			</Offsets>
+		</Version>
+
+		<!--indexTableHeader+10-->
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20EF350</Offset>
 				<Offset>0x10</Offset>
 			</Offsets>
 		</Version>
@@ -5756,6 +5789,17 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+
+		<!--indexTableHeader+8-->
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20EF350</Offset>
+				<Offset>0x8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
 	</VersionedEntry>
 
 	<VersionedEntry Name="metaHeaderDataFields" Type="DynStructOffsetInfo">
@@ -9041,6 +9085,7 @@
 
 		<Version Version="All" Game="Halo3ODST">
 			<triggerVolumeTagBlock>0x28C</triggerVolumeTagBlock>
+			<softCeilingMetaTagBlock>0x268</softCeilingMetaTagBlock>
 		</Version>
 	</VersionedEntry>
 
@@ -9062,10 +9107,21 @@
 			<stringID>0x4</stringID>
 			<type>0x8</type>
 		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<StrideSize>0xC</StrideSize>
+			<flagsMask>0x0</flagsMask>
+			<stringID>0x4</stringID>
+			<type>0x8</type>
+		</Version>
+		
 	</VersionedEntry>
 
 	<VersionedEntry Name="sddtTagDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo3">
+			<softCeilingTagBlock>0x10</softCeilingTagBlock>
+		</Version>
+		<Version Version="All" Game="Halo3ODST">
 			<softCeilingTagBlock>0x10</softCeilingTagBlock>
 		</Version>
 	</VersionedEntry>
@@ -9076,11 +9132,23 @@
 			<stringID>0x0</stringID>
 			<softCeilingTriangleTagBlock>0x8</softCeilingTriangleTagBlock>
 		</Version>
+		<Version Version="All" Game="Halo3ODST">
+			<StrideSize>0x14</StrideSize>
+			<stringID>0x0</stringID>
+			<softCeilingTriangleTagBlock>0x8</softCeilingTriangleTagBlock>
+		</Version>
 	</VersionedEntry>
 
 
 	<VersionedEntry Name="softCeilingTriangleDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo3">
+			<StrideSize>0x44</StrideSize>
+			<vertex0>0x20</vertex0>
+			<vertex1>0x2C</vertex1>
+			<vertex2>0x38</vertex2>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
 			<StrideSize>0x44</StrideSize>
 			<vertex0>0x20</vertex0>
 			<vertex1>0x2C</vertex1>

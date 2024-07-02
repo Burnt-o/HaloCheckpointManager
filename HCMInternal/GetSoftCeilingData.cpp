@@ -190,7 +190,7 @@ public:
 
 			}
 			
-			LOG_ONCE_CAPTURE(PLOG_DEBUG << "ceiling data acquired, triangle count: " << c, c = outVec.size());
+			PLOG_DEBUG << "ceiling data acquired, triangle count: " << outVec.size();
 
 			return outVec;
 		}
@@ -208,6 +208,7 @@ class SoftCeilingDataCacher : public GetSoftCeilingDataUntemplated
 private:
 	// callbacks
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
+	ScopedCallback<ToggleEvent> softCeilingBarrierToggleCallback;
 
 	// injected services
 	std::unique_ptr<ISoftCeilingDataFactory> mSoftCeilingDataFactory;
@@ -241,6 +242,7 @@ public:
 		:
 		mSoftCeilingDataFactory(std::move(softCeilingDataFactory)),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { cacheValid = false; }),
+		softCeilingBarrierToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayToggle->valueChangedEvent, [this](bool& n) {cacheValid = false; }),
 		settings(dicon.Resolve<SettingsStateAndEvents>().lock()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock())
@@ -280,6 +282,9 @@ GetSoftCeilingData::GetSoftCeilingData(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3>>(gameImpl, dicon));
 		break;
 
+	case GameState::Value::Halo3ODST:
+		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon));
+		break;
 	default:
 		throw HCMInitException(std::format("{} not impl yet", nameof(GetSoftCeilingData)));
 	}
