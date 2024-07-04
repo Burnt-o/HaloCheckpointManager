@@ -85,6 +85,13 @@
 #include "SoftCeilingOverlay.h"
 #include "GetCurrentBSPSet.h"
 #include "SwitchBSPSet.h"
+#include "GetCurrentZoneSet.h"
+#include "BSPChangeHookEvent.h"
+#include "ZoneSetChangeHookEvent.h"
+#include "BSPSetChangeHookEvent.h"
+#include "GetActiveStructureDesignTags.h"
+#include "TagReferenceReader.h"
+
 
 #include "DIContainer.h"
 #include "map.h"

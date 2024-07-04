@@ -92,6 +92,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\3D\SoftCeiling">
       <UniqueIdentifier>{87b7cc1c-459d-46ad-8e31-c6c33df15298}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\Services\BSPs">
+      <UniqueIdentifier>{337a314c-9702-461f-9e86-e2e84933141d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -575,9 +578,6 @@
     <ClInclude Include="GUIButtonAndInt.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
-    <ClInclude Include="GetCurrentBSP.h">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClInclude>
     <ClInclude Include="ThirdPersonRendering.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
@@ -821,9 +821,6 @@
     <ClInclude Include="SliderParam.h">
       <Filter>Services\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="GetCurrentBSPSet.h">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClInclude>
     <ClInclude Include="BSPSet.h">
       <Filter>Classes</Filter>
     </ClInclude>
@@ -832,6 +829,33 @@
     </ClInclude>
     <ClInclude Include="SwitchBSPSet.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="BSPChangeHookEvent.h">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClInclude>
+    <ClInclude Include="GetCurrentBSP.h">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClInclude>
+    <ClInclude Include="GetCurrentBSPSet.h">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClInclude>
+    <ClInclude Include="GetCurrentZoneSet.h">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClInclude>
+    <ClInclude Include="ZoneSetChangeHookEvent.h">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClInclude>
+    <ClInclude Include="BSPSetChangeHookEvent.h">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClInclude>
+    <ClInclude Include="GetActiveStructureDesignTags.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="TagInfo.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="TagReferenceReader.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1045,9 +1069,6 @@
     <ClCompile Include="SwitchBSP.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="GetCurrentBSP.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClCompile>
     <ClCompile Include="ThirdPersonRendering.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
@@ -1210,11 +1231,32 @@
     <ClCompile Include="ScopedImFontScaler.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="GetCurrentBSPSet.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClCompile>
     <ClCompile Include="SwitchBSPSet.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCurrentBSP.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCurrentBSPSet.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCurrentZoneSet.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClCompile>
+    <ClCompile Include="BSPSetChangeHookEvent.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClCompile>
+    <ClCompile Include="BSPChangeHookEvent.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClCompile>
+    <ClCompile Include="ZoneSetChangeHookEvent.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
+    </ClCompile>
+    <ClCompile Include="GetActiveStructureDesignTags.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="TagReferenceReader.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,13 +16,6 @@ private:
 	std::unique_ptr<ScopedCallback<Render3DEvent>> mRenderEventCallback;
 	ScopedCallback<ToggleEvent> softCeilingOverlayToggleEventCallback;
 
-	ScopedCallback < eventpp::CallbackList<void(SimpleMath::Vector4&) >> softCeilingOverlayColorAccelChangedCallback;
-	ScopedCallback < eventpp::CallbackList<void(SimpleMath::Vector4&)>> softCeilingOverlayColorSlippyChangedCallback;
-	ScopedCallback < eventpp::CallbackList<void(SimpleMath::Vector4&)>> softCeilingOverlayColorKillChangedCallback;
-	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlaySolidTransparencyChangedCallback;
-	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlayWireframeTransparencyChangedCallback;
-	bool coloursCached = false;
-
 
 	// injected services
 	std::weak_ptr<Render3DEventProvider> render3DEventProviderWeak;
@@ -75,51 +68,9 @@ private:
 			mRenderEventCallback.reset();
 		}
 
-		coloursCached = false;
 	}
 
-	void cacheColors(SoftCeilingVectorLock& softCeilingDataLock)
-	{
-		lockOrThrow(settingsWeak, settings);
-		PLOG_DEBUG << "updating color cache";
 
-
-		// we will multiply colors w/ transparencies so make copies
-		auto solidColorAccel = settings->softCeilingOverlayColorAccel->GetValue();
-		auto solidColorSlippy = settings->softCeilingOverlayColorSlippy->GetValue();
-		auto solidColorKill = settings->softCeilingOverlayColorKill->GetValue();
-
-
-		float opacitySolid = settings->softCeilingOverlaySolidTransparency->GetValue();
-
-		solidColorAccel.w = opacitySolid;
-		solidColorSlippy.w = opacitySolid;
-		solidColorKill.w = opacitySolid;
-
-
-		float opacityWireframe = settings->softCeilingOverlayWireframeTransparency->GetValue();
-
-		auto wireframeColorAccel = solidColorAccel;
-		auto wireframeColorSlippy = solidColorSlippy;
-		auto wireframeColorKill = solidColorKill;
-
-		wireframeColorAccel.w = opacityWireframe;
-		wireframeColorSlippy.w = opacityWireframe;
-		wireframeColorKill.w = opacityWireframe;
-
-		// loop thru tris and apply colours
-		for (auto& softCeiling : *softCeilingDataLock.get())
-		{
-			softCeiling.colorSolid = softCeiling.softCeilingType == SoftCeilingType::Acceleration ? solidColorAccel :
-				softCeiling.softCeilingType == SoftCeilingType::SoftKill ? solidColorKill : solidColorSlippy;
-
-			softCeiling.colorWireframe = softCeiling.softCeilingType == SoftCeilingType::Acceleration ? wireframeColorAccel :
-				softCeiling.softCeilingType == SoftCeilingType::SoftKill ? wireframeColorKill : wireframeColorSlippy;
-		}
-
-		coloursCached = true;
-
-	}
 
 
 
@@ -141,9 +92,6 @@ private:
 
 			if (!softCeilingDataLock)
 				throw softCeilingDataLock.error(); // todo; figure out a neater way to handle errors
-
-			if (!coloursCached)
-				cacheColors(softCeilingDataLock.value()); // this may be a deleted func
 
 			LOG_ONCE(PLOG_DEBUG << "successfully acquired soft ceiling data");
 
@@ -229,12 +177,7 @@ public:
 		softCeilingOverlayToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayToggle->valueChangedEvent, [this](bool& n) {onToggleChange(n); }),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
-		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
-		softCeilingOverlayColorAccelChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayColorAccel->valueChangedEvent, [=](auto&) { coloursCached = false; }),
-		softCeilingOverlayColorSlippyChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayColorSlippy->valueChangedEvent, [=](auto&) { coloursCached = false; }),
-		softCeilingOverlayColorKillChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayColorKill->valueChangedEvent, [=](auto&) { coloursCached = false; }),
-		softCeilingOverlaySolidTransparencyChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlaySolidTransparency->valueChangedEvent, [=](auto&) { coloursCached = false; }),
-		softCeilingOverlayWireframeTransparencyChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayWireframeTransparency->valueChangedEvent, [=](auto&) { coloursCached = false; })
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>())
 
 	{
 

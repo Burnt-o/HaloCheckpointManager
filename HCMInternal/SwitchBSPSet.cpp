@@ -17,6 +17,7 @@ private:
 	// data
 	GameState mGame;
 	std::shared_ptr<MultilevelPointer> currentBSPSet;
+	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> BSPSetChangeEvent = std::make_shared<eventpp::CallbackList<void(BSPSet)>>();
 
 	// callbacks
 	ScopedCallback<ActionEvent> switchBSPSetLoadSetEventCallback;
@@ -36,6 +37,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			BSPSet bspSet = BSPSet(settings->switchBSPSetLoadSet->GetValue());
 			LoadBSPSet(bspSet);
@@ -50,6 +54,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			auto bspIndex = settings->switchBSPSetLoadIndex->GetValue();
 
@@ -65,6 +72,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			auto bspIndex = settings->switchBSPSetUnloadIndex->GetValue();
 
@@ -80,6 +90,9 @@ private:
 	{
 		try
 		{
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
+
 			lockOrThrow(settingsWeak, settings);
 			lockOrThrow(getCurrentBSPSetWeak, getCurrentBSPSet);
 			auto currentBSPSet = getCurrentBSPSet->getCurrentBSPSet();
@@ -99,10 +112,10 @@ private:
 public:
 	SwitchBSPSetImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getCurrentBSPSetWeak(resolveDependentCheat(GetCurrentBSPSet)),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		switchBSPSetLoadSetEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->switchBSPSetLoadSetEvent, [this]() {onSwitchBSPSetLoadSetEvent(); }),
 		switchBSPLoadIndexEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->switchBSPLoadIndexEvent, [this]() {onSwitchBSPLoadIndexEvent(); }),
@@ -126,6 +139,8 @@ public:
 
 		if (!currentBSPSet->writeData(&bspSet))
 			throw HCMRuntimeException(std::format("Failed to write BSP set, {}", MultilevelPointer::GetLastError()));
+
+		BSPSetChangeEvent->operator()(getCurrentBSPSet->getCurrentBSPSet());
 
 		lockOrThrow(messagesGUIWeak, messages);
 		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.toBinaryString(getCurrentBSPSet->getMaxBSPIndex())));
@@ -153,6 +168,8 @@ public:
 		if (!currentBSPSet->writeData(&bspSet))
 			throw HCMRuntimeException(std::format("Failed to write BSP set, {}", MultilevelPointer::GetLastError()));
 
+		BSPSetChangeEvent->operator()(getCurrentBSPSet->getCurrentBSPSet());
+
 		lockOrThrow(messagesGUIWeak, messages);
 		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.toBinaryString(getCurrentBSPSet->getMaxBSPIndex())));
 	}
@@ -178,8 +195,16 @@ public:
 		if (!currentBSPSet->writeData(&bspSet))
 			throw HCMRuntimeException(std::format("Failed to write BSP set, {}", MultilevelPointer::GetLastError()));
 
+
+		BSPSetChangeEvent->operator()(getCurrentBSPSet->getCurrentBSPSet());
+
 		lockOrThrow(messagesGUIWeak, messages);
 		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.toBinaryString(getCurrentBSPSet->getMaxBSPIndex())));
+	}
+
+	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> getBSPSetChangeEvent()
+	{
+		return BSPSetChangeEvent;
 	}
 };
 
@@ -194,3 +219,5 @@ SwitchBSPSet::~SwitchBSPSet() = default;
 void SwitchBSPSet::LoadBSPSet(BSPSet bspSet) { return pimpl->LoadBSPSet(bspSet); }
 void SwitchBSPSet::UnloadBSPByIndex(int BSPindex) { return pimpl->UnloadBSPByIndex(BSPindex); }
 void SwitchBSPSet::LoadBSPByIndex(int BSPindex) { return pimpl->LoadBSPByIndex(BSPindex); }
+
+std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> SwitchBSPSet::getBSPSetChangeEvent() { return pimpl->getBSPSetChangeEvent(); }

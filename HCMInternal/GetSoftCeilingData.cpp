@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "GetSoftCeilingData.h"
-#include "TagTableRange.h"
 #include "IMakeOrGetCheat.h"
 #include "IMCCStateHook.h"
 #include "RuntimeExceptionHandler.h"
@@ -9,8 +8,9 @@
 #include "DynamicStructFactory.h"
 #include "PointerDataStore.h"
 #include "TagBlockReader.h"
-
-
+#include "GetActiveStructureDesignTags.h"
+#include "BSPSetChangeHookEvent.h"
+#include "ZoneSetChangeHookEvent.h"
 
 
 
@@ -30,7 +30,7 @@ template<GameState::Value mGame>
 class SoftCeilingDataFactoryImpl : public ISoftCeilingDataFactory
 {
 private:
-	std::weak_ptr<TagTableRange> tagTableRangeWeak;
+	std::weak_ptr<GetActiveStructureDesignTags> getActiveStructureDesignTagsWeak;
 	std::weak_ptr<TagBlockReader> tagBlockReaderWeak;
 	std::weak_ptr< GetScenarioAddress> getScenarioAddressWeak;
 
@@ -53,9 +53,10 @@ private:
 	std::shared_ptr<StrideableDynamicStruct<softCeilingTriangleDataFields>> softCeilingTriangleDataStruct;
 
 
+
 public:
 	SoftCeilingDataFactoryImpl(GameState game, IDIContainer& dicon)
-		: tagTableRangeWeak(resolveDependentCheat(TagTableRange)),
+		: getActiveStructureDesignTagsWeak(resolveDependentCheat(GetActiveStructureDesignTags)),
 		tagBlockReaderWeak(resolveDependentCheat(TagBlockReader)),
 		getScenarioAddressWeak(resolveDependentCheat(GetScenarioAddress))
 	{
@@ -113,38 +114,9 @@ public:
 
 
 
-			lockOrThrow(tagTableRangeWeak, tagTableRange);
-			auto tagTable = tagTableRange->getTagTableRange();
+			lockOrThrow(getActiveStructureDesignTagsWeak, getActiveStructureDesignTags);
+			auto sddtTags = getActiveStructureDesignTags->getActiveStructureDesignTags();
 
-			if (!tagTable)
-				return std::unexpected(tagTable.error());
-			LOG_ONCE_CAPTURE(PLOG_DEBUG << "acquired tag table range, tagCount: " << c, c = tagTable.value().size());
-
-
-			/* Right now, I'm grabbing ALL sddt tags. This is not accurate. Each SBSP is associated with a sddt tag by the scnr tag. So:
-			Go to scnr tag -> structure BSPS tag block - > build associations, check which bsps are loaded and grab appropiate sddt tags
-			ACTUALLY i wonder if there's a pointer stored somewhere to the datum of the currently loaded sddt.. ah but right there can be multiple sbsps loaded, therefore multiple sddt loaded
-
-
-*/
-
-			// get all sddt tags
-			std::vector<TagInfo> sddtTags;
-			MagicString sddtMagic = MagicString("tdds");
-			for (auto& tagMeta : tagTable.value())
-			{
-//#ifdef HCM_DEBUG
-//				PLOG_DEBUG << "tagMagic: " << tagMeta.tagType.getString();
-//				PLOG_DEBUG << "sddt: " << sddtMagic.getString();
-//				
-//#endif
-				if (tagMeta.tagType == sddtMagic)
-				{
-					sddtTags.emplace_back(tagMeta);
-				}
-			}
-
-			LOG_ONCE_CAPTURE(PLOG_DEBUG << "sddt tag count: " << c, c = sddtTags.size());
 
 			for (auto& sddtTag : sddtTags)
 			{
@@ -224,6 +196,17 @@ private:
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
 	ScopedCallback<ToggleEvent> softCeilingBarrierToggleCallback;
 
+	// these clear the colour cache
+	ScopedCallback < eventpp::CallbackList<void(SimpleMath::Vector4&) >> softCeilingOverlayColorAccelChangedCallback;
+	ScopedCallback < eventpp::CallbackList<void(SimpleMath::Vector4&)>> softCeilingOverlayColorSlippyChangedCallback;
+	ScopedCallback < eventpp::CallbackList<void(SimpleMath::Vector4&)>> softCeilingOverlayColorKillChangedCallback;
+	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlaySolidTransparencyChangedCallback;
+	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlayWireframeTransparencyChangedCallback;
+
+	// bsp change callbacks. clear cache
+	std::optional<ScopedCallback<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEventCallback;
+	std::optional<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEventCallback;
+
 	// injected services
 	std::unique_ptr<ISoftCeilingDataFactory> mSoftCeilingDataFactory;
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
@@ -232,13 +215,60 @@ private:
 
 	// resolved data
 	libguarded::plain_guarded<SoftCeilingVector> softCeilingData = libguarded::plain_guarded<SoftCeilingVector>();
-	bool cacheValid = false;
+	bool dataCacheValid = false;
+	bool colourCacheValid = false;
 
-	std::expected<void, HCMRuntimeException> updateCache()
+
+	std::optional<HCMRuntimeException> updateColorCache()
+	{
+		PLOG_DEBUG << "updating color cache";
+
+		auto softCeilingDataLock = softCeilingData.lock();
+
+		// we will multiply colors w/ transparencies so make copies
+		auto solidColorAccel = settings->softCeilingOverlayColorAccel->GetValue();
+		auto solidColorSlippy = settings->softCeilingOverlayColorSlippy->GetValue();
+		auto solidColorKill = settings->softCeilingOverlayColorKill->GetValue();
+
+
+		float opacitySolid = settings->softCeilingOverlaySolidTransparency->GetValue();
+
+		solidColorAccel.w = opacitySolid;
+		solidColorSlippy.w = opacitySolid;
+		solidColorKill.w = opacitySolid;
+
+
+		float opacityWireframe = settings->softCeilingOverlayWireframeTransparency->GetValue();
+
+		auto wireframeColorAccel = solidColorAccel;
+		auto wireframeColorSlippy = solidColorSlippy;
+		auto wireframeColorKill = solidColorKill;
+
+		wireframeColorAccel.w = opacityWireframe;
+		wireframeColorSlippy.w = opacityWireframe;
+		wireframeColorKill.w = opacityWireframe;
+
+		// loop thru tris and apply colours
+		for (auto& softCeiling : *softCeilingDataLock.get())
+		{
+			softCeiling.colorSolid = softCeiling.softCeilingType == SoftCeilingType::Acceleration ? solidColorAccel :
+				softCeiling.softCeilingType == SoftCeilingType::SoftKill ? solidColorKill : solidColorSlippy;
+
+			softCeiling.colorWireframe = softCeiling.softCeilingType == SoftCeilingType::Acceleration ? wireframeColorAccel :
+				softCeiling.softCeilingType == SoftCeilingType::SoftKill ? wireframeColorKill : wireframeColorSlippy;
+		}
+
+		colourCacheValid = true;
+
+		return std::nullopt;
+
+	}
+
+	std::optional<HCMRuntimeException> updateDataCache()
 	{
 		auto newData = mSoftCeilingDataFactory->getSoftCeilings();
 		if (!newData) 
-			return std::unexpected(newData.error());
+			return newData.error();
 
 
 		auto softCeilingDataLock = softCeilingData.lock();
@@ -247,7 +277,10 @@ private:
 		{
 			softCeilingDataLock->push_back(sc); // makes a copy. TODO: uncopify
 		}
-		cacheValid = true;
+		dataCacheValid = true;
+		colourCacheValid = false;
+
+		return std::nullopt;
 	}
 
 public:
@@ -255,24 +288,55 @@ public:
 	SoftCeilingDataCacher(GameState game, IDIContainer& dicon, std::unique_ptr<ISoftCeilingDataFactory> softCeilingDataFactory)
 		:
 		mSoftCeilingDataFactory(std::move(softCeilingDataFactory)),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { cacheValid = false; }),
-		softCeilingBarrierToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayToggle->valueChangedEvent, [this](bool& n) {cacheValid = false; }),
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { dataCacheValid = false; }),
+		softCeilingBarrierToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayToggle->valueChangedEvent, [this](bool& n) {dataCacheValid = false; }),
 		settings(dicon.Resolve<SettingsStateAndEvents>().lock()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
-		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock())
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock()),
+		softCeilingOverlayColorAccelChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayColorAccel->valueChangedEvent, [=](auto&) { colourCacheValid = false; }),
+		softCeilingOverlayColorSlippyChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayColorSlippy->valueChangedEvent, [=](auto&) { colourCacheValid = false; }),
+		softCeilingOverlayColorKillChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayColorKill->valueChangedEvent, [=](auto&) { colourCacheValid = false; }),
+		softCeilingOverlaySolidTransparencyChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlaySolidTransparency->valueChangedEvent, [=](auto&) { colourCacheValid = false; }),
+		softCeilingOverlayWireframeTransparencyChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayWireframeTransparency->valueChangedEvent, [=](auto&) { colourCacheValid = false; })
 	{
 
+		// setup bsp change callbacks for clearing cache. these aren't required so no biggy if they fail.
+		try
+		{
+			auto BSPSetChangeEventHookLock = resolveDependentCheat(BSPSetChangeHookEvent);
+			BSPSetChangeEventCallback = ScopedCallback<eventpp::CallbackList<void(BSPSet)>>(BSPSetChangeEventHookLock->getBSPSetChangeEvent(), [this](BSPSet) { dataCacheValid = false; });
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Failed to resolve BSPSetChangeEventCallback, continuing anyway";
+		}
+
+		try
+		{
+			auto ZoneSetChangeEventHookLock = resolveDependentCheat(ZoneSetChangeHookEvent);
+			ZoneSetChangeEventCallback = ScopedCallback<eventpp::CallbackList<void(uint32_t)>>(ZoneSetChangeEventHookLock->getZoneSetChangeEvent(), [this](uint32_t) { dataCacheValid = false; });
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Failed to resolve ZoneSetChangeEventCallback, continuing anyway";
+		}
 	}
 
 	virtual std::expected<SoftCeilingVectorLock, HCMRuntimeException> getSoftCeilings()  override
 	{
-		if (!cacheValid)
+		if (!dataCacheValid)
 		{
-			auto cacheSuccessfullyUpdated = updateCache();
-			if (!cacheSuccessfullyUpdated)
-				return std::unexpected(cacheSuccessfullyUpdated.error());
+			auto dataCacheSuccessfullyUpdated = updateDataCache();
+			if (dataCacheSuccessfullyUpdated.has_value())
+				return std::unexpected(dataCacheSuccessfullyUpdated.value());
 		}
 
+		if (!colourCacheValid)
+		{
+			auto colorCacheSuccessfullyUpdated = updateColorCache();
+			if (colorCacheSuccessfullyUpdated.has_value())
+				return std::unexpected(colorCacheSuccessfullyUpdated.value());
+		}
 
 		return softCeilingData.lock();
 	}

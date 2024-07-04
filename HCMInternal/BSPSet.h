@@ -36,7 +36,7 @@ public:
 
 	explicit operator bool() const = delete;
 
-	constexpr bool indexIsLoaded(uint32_t BSPindex) { return (value.value & (1 << BSPindex)) == 1; }
+	constexpr bool indexIsLoaded(uint8_t BSPindex) const { return (value.value & (1 << BSPindex)); }
 
 	std::string toBinaryString(uint8_t maxIndex) const
 	{
@@ -68,6 +68,21 @@ public:
 			value.value |= (1 << index);
 		else
 			value.value &= ~(1 << index);
+	}
+
+	std::set<uint8_t> toIndexSet() const
+	{
+		std::set<uint8_t> out;
+		for (uint8_t i = 0; i < 32; i++)
+		{
+			if (indexIsLoaded(i))
+				out.insert(i);
+		}
+
+		if (out.size() != std::popcount(value.value))
+			throw HCMRuntimeException(std::format("toIndexSet returned bad size, expected: {}, observed: {}", std::popcount(value.value), out.size()));
+
+		return out;
 	}
 };
 

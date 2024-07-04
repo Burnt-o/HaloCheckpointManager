@@ -20,6 +20,7 @@ public:
 	void LoadBSPSet(BSPSet bspSet);
 	void UnloadBSPByIndex(int BSPindex);
 	void LoadBSPByIndex(int BSPindex);
+	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> getBSPSetChangeEvent();
 
 	std::string_view getName() override { return nameof(SwitchBSP); }
 

@@ -322,12 +322,34 @@ public:
 		if (tagDatum.isNull())
 			return std::unexpected(HCMRuntimeException("Null tag datum"));
 
-		if (tagTableInfoCached.size() > tagDatum.index)
-			return std::unexpected(HCMRuntimeException(std::format("tagDatum index ({:X}) larger than tagCount ({:X})", tagTableInfoCached.size(), tagDatum.index)));
+		if (tagDatum.index > tagTableInfoCached.size())
+			return std::unexpected(HCMRuntimeException(std::format("tagDatum index ({:X}) larger than tagCount ({:X})", tagDatum.index, tagTableInfoCached.size())));
 
 		auto& out = tagTableInfoCached.at(tagDatum.index);
 		if (out.tagDatum != tagDatum)
 			return std::unexpected(HCMRuntimeException(std::format("tagDatum mismatch: expected {}, observed {}", tagDatum.toString(), out.tagDatum.toString())));
+
+		return out;
+
+	}
+
+	virtual std::expected<TagInfo, HCMRuntimeException> getTagByIndex(uint16_t tagDatumIndex) override
+	{
+		if (!cacheValid)
+		{
+			auto cacheUpdated = updateCache();
+			if (!cacheUpdated)
+				return std::unexpected(cacheUpdated.error());
+			cacheValid = true;
+		}
+
+		if (tagDatumIndex == 0xFFFF)
+			return std::unexpected(HCMRuntimeException("Null tagDatumIndex"));
+
+		if (tagDatumIndex > tagTableInfoCached.size())
+			return std::unexpected(HCMRuntimeException(std::format("tagDatumIndex ({:X}) larger than tagCount ({:X})", tagDatumIndex, tagTableInfoCached.size())));
+
+		auto& out = tagTableInfoCached.at(tagDatumIndex);
 
 		return out;
 

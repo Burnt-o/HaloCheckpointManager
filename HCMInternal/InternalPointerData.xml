@@ -5729,6 +5729,33 @@
 
 	</VersionedEntry>
 
+	<VersionedEntry Name="tagReferenceDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo1">
+			<datumIndex>0xC</datumIndex>
+		</Version>
+
+		<Version Version="All" Game="Halo2">
+			<datumIndex>0x4</datumIndex>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<datumIndex>0xC</datumIndex>
+		</Version>
+
+		<Version Version="All" Game="Halo3ODST">
+			<datumIndex>0xC</datumIndex>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<datumIndex>0xC</datumIndex>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<datumIndex>0xC</datumIndex>
+		</Version>
+
+	</VersionedEntry>
+
 	<VersionedEntry Name="tagTableAddress" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
@@ -6914,6 +6941,7 @@
 			</Offsets>
 		</Version>
 
+		<!-- NOT RELIABLE, MUST FIX-->
 		<Version Version="1.3385.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
@@ -7723,8 +7751,65 @@
 				<Offset>0x4967998</Offset>
 			</Offsets>
 		</Version>
+	</VersionedEntry>
 
+	<VersionedEntry Name="BSPSetChangeFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x9C1C8</Offset>
+			</Offsets>
+		</Version>
 
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xA8F53</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x14E7B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x455D9</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="currentZoneSet" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE30</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xE5BB50</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="ZoneSetChangeFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x14E7B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x455D9</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 	
 
@@ -9242,6 +9327,17 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="structureBSPsMetaDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo3">
+			<StrideSize>0x6C</StrideSize>
+			<structureDesignReference>0x10</structureDesignReference>
+		</Version>
+		<Version Version="All" Game="Halo3ODST">
+			<StrideSize>0x6C</StrideSize>
+			<structureDesignReference>0x10</structureDesignReference>
+		</Version>
+	</VersionedEntry>
+	
 	<!--#endregion SoftCeilingOverlay-->
 
 

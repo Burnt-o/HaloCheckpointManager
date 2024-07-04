@@ -88,7 +88,13 @@ TagTableRange,\
 GetSoftCeilingData,\
 SoftCeilingOverlay,\
 GetCurrentBSPSet,\
-SwitchBSPSet
+SwitchBSPSet,\
+GetCurrentZoneSet,\
+BSPChangeHookEvent,\
+ZoneSetChangeHookEvent,\
+BSPSetChangeHookEvent,\
+GetActiveStructureDesignTags,\
+TagReferenceReader
 
 
 enum class OptionalCheatEnum {

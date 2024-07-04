@@ -232,12 +232,15 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
+    <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GetActiveStructureDesignTags.h" />
     <ClInclude Include="GetCurrentBSPSet.h" />
+    <ClInclude Include="GetCurrentZoneSet.h" />
     <ClInclude Include="GetDebugString.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetScenarioAddress.h" />
@@ -249,6 +252,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUILabel.h" />
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />
+    <ClInclude Include="BSPSetChangeHookEvent.h" />
     <ClInclude Include="HideWatermarkCheck.h" />
     <ClInclude Include="HideWatermarkManager.h" />
     <ClInclude Include="IModalDialog.h" />
@@ -283,6 +287,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SwitchBSPSet.h" />
     <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TagBlockReader.h" />
+    <ClInclude Include="TagInfo.h" />
+    <ClInclude Include="TagReferenceReader.h" />
     <ClInclude Include="TagTableRange.h" />
     <ClInclude Include="TrackTriggerEnterExit.h" />
     <ClInclude Include="TriggerData.h" />
@@ -478,9 +484,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
     <ClInclude Include="BSPSet.h" />
+    <ClInclude Include="ZoneSetChangeHookEvent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BSPChangeHookEvent.cpp" />
+    <ClCompile Include="BSPSetChangeHookEvent.cpp" />
+    <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />
+    <ClCompile Include="GetCurrentZoneSet.cpp" />
     <ClCompile Include="GetDebugString.cpp" />
     <ClCompile Include="GetPlayerTriggerPosition.cpp" />
     <ClCompile Include="GetScenarioAddress.cpp" />
@@ -530,6 +541,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="SwitchBSPSet.cpp" />
     <ClCompile Include="TagBlockReader.cpp" />
+    <ClCompile Include="TagReferenceReader.cpp" />
     <ClCompile Include="TagTableRange.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
@@ -594,6 +606,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="HotkeyManager.cpp" />
     <ClCompile Include="HotkeyRendererImpl.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="ZoneSetChangeHookEvent.cpp" />
     <Xml Include="InternalPointerData.xml">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
