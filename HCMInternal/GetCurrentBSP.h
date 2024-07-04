@@ -5,7 +5,7 @@
 #include "GameState.h"
 
 
-// actually returns zone set in case of h3+
+// only impl for h1 and h2. See GetCurrentZoneset for third-gen games
 class GetCurrentBSP : public IOptionalCheat
 {
 private:

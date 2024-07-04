@@ -237,12 +237,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="GetCurrentBSPSet.h" />
     <ClInclude Include="GetDebugString.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetScenarioAddress.h" />
     <ClInclude Include="GetSoftCeilingData.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUIColourPicker.h" />
+    <ClInclude Include="GUIButtonAndBinaryInt.h" />
     <ClInclude Include="GUIInputMultilineString.h" />
     <ClInclude Include="GUILabel.h" />
     <ClInclude Include="GUISkullToggle.h" />
@@ -278,6 +280,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SoftCeilingData.h" />
     <ClInclude Include="SoftCeilingOverlay.h" />
     <ClInclude Include="SpriteResource.h" />
+    <ClInclude Include="SwitchBSPSet.h" />
     <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TagBlockReader.h" />
     <ClInclude Include="TagTableRange.h" />
@@ -474,8 +477,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="VersionInfo.h" />
     <ClInclude Include="WindowsUtilities.h" />
     <ClInclude Include="WinHandle.h" />
+    <ClInclude Include="BSPSet.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetDebugString.cpp" />
     <ClCompile Include="GetPlayerTriggerPosition.cpp" />
     <ClCompile Include="GetScenarioAddress.cpp" />
@@ -523,6 +528,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SoftCeilingOverlay.cpp" />
     <ClCompile Include="SpriteResource.cpp" />
+    <ClCompile Include="SwitchBSPSet.cpp" />
     <ClCompile Include="TagBlockReader.cpp" />
     <ClCompile Include="TagTableRange.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />

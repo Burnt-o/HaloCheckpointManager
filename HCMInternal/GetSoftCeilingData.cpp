@@ -10,6 +10,13 @@
 #include "PointerDataStore.h"
 #include "TagBlockReader.h"
 
+
+
+
+
+
+
+
 class ISoftCeilingDataFactory
 {
 public:
@@ -113,6 +120,13 @@ public:
 				return std::unexpected(tagTable.error());
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "acquired tag table range, tagCount: " << c, c = tagTable.value().size());
 
+
+			/* Right now, I'm grabbing ALL sddt tags. This is not accurate. Each SBSP is associated with a sddt tag by the scnr tag. So:
+			Go to scnr tag -> structure BSPS tag block - > build associations, check which bsps are loaded and grab appropiate sddt tags
+			ACTUALLY i wonder if there's a pointer stored somewhere to the datum of the currently loaded sddt.. ah but right there can be multiple sbsps loaded, therefore multiple sddt loaded
+
+
+*/
 
 			// get all sddt tags
 			std::vector<TagInfo> sddtTags;

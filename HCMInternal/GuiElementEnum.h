@@ -101,7 +101,12 @@
 			((forceLaunchForwardIgnoreZ, (ALL_SUPPORTED_GAMES)))\
 		((forceLaunchManual, (ALL_SUPPORTED_GAMES)))\
 			((forceLaunchAbsoluteVec3, (ALL_SUPPORTED_GAMES)))\
-	((switchBSPGUI, (ALL_SUPPORTED_GAMES)))\
+	((switchBSPGUI, (Halo1, Halo2)))\
+	((switchBSPSetGUI, (THIRD_GEN)))\
+		((switchBSPSetLoadSet, (THIRD_GEN)))\
+		((switchBSPSetFillCurrent, (THIRD_GEN)))\
+		((switchBSPSetLoadIndex, (THIRD_GEN)))\
+		((switchBSPSetUnloadIndex, (THIRD_GEN)))\
 	((setPlayerHealthSubheadingGUI, (ALL_SUPPORTED_GAMES)))\
 		((setPlayerHealthGUI, (ALL_SUPPORTED_GAMES)))\
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
@@ -118,7 +123,8 @@
 			((display2DInfoShowGameTick, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowAggro, (Halo1)))\
 			((display2DInfoShowRNG, (Halo1)))\
-			((display2DInfoShowBSP, (ALL_SUPPORTED_GAMES)))\
+			((display2DInfoShowBSP, (Halo1, Halo2)))\
+			((display2DInfoShowBSPSet, (Halo1, Halo2)))\
 			((display2DInfoShowNextObjectDatum, (Halo2)))\
 			((display2DInfoTrackPlayer, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerViewAngle, (ALL_SUPPORTED_GAMES)))\

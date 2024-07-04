@@ -86,7 +86,9 @@ GetDebugString,\
 TagBlockReader,\
 TagTableRange,\
 GetSoftCeilingData,\
-SoftCeilingOverlay
+SoftCeilingOverlay,\
+GetCurrentBSPSet,\
+SwitchBSPSet
 
 
 enum class OptionalCheatEnum {

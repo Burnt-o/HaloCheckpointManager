@@ -58,6 +58,8 @@ public:
 		renderTooltip();
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(100);
+	
+
 		if (ImGui::InputInt(std::format("{}##{}", mInputLabel, mButtonText).c_str(), &mOptionInt->GetValueDisplay()))
 		{
 			PLOG_VERBOSE << "GUIButtonAndInt (" << getName() << ") firing int update event, new value: " << mOptionInt->GetValueDisplay();

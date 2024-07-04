@@ -33,7 +33,7 @@
 #include "GUIWaypointList.h"
 #include "GUISkullToggle.h"
 #include "GUILabel.h"
-
+#include "GUIButtonAndBinaryInt.h"
 
 
 
@@ -410,6 +410,7 @@ private:
 							createNestedElement(GUIElementEnum::forceLaunchGUI),
 							createNestedElement(GUIElementEnum::forceLaunchSettingsSubheading),
 							createNestedElement(GUIElementEnum::switchBSPGUI),
+							createNestedElement(GUIElementEnum::switchBSPSetGUI),
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 							createNestedElement(GUIElementEnum::skullToggleGUI),
 							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
@@ -604,8 +605,46 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIButtonAndInt<true>>
 						(game, ToolTipCollection("Loads a different part of the map by index"), RebindableHotkeyEnum::switchBSP, 
 							((game.operator GameState::Value() == GameState::Value::Halo1 || game.operator GameState::Value() == GameState::Value::Halo2) ? "Switch BSP to" : "Switch Zone Set to"), 
-							"index",
+							"Index",
 							settings->switchBSPIndex, settings->switchBSPEvent));
+
+				case GUIElementEnum::switchBSPSetGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection(""), "Switch BSP Set", headerChildElements
+							{
+								createNestedElement(GUIElementEnum::switchBSPSetLoadSet),
+								createNestedElement(GUIElementEnum::switchBSPSetFillCurrent),
+								createNestedElement(GUIElementEnum::switchBSPSetLoadIndex),
+								createNestedElement(GUIElementEnum::switchBSPSetUnloadIndex),
+							}));
+
+				case GUIElementEnum::switchBSPSetLoadSet:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIButtonAndBinaryInt<true>>
+						(game, ToolTipCollection("Loads a set of BSPs by binary index"), RebindableHotkeyEnum::switchBSPSet,
+							 "Switch BSP Binary Set",
+							"Set",
+							settings->switchBSPSetLoadSet, settings->switchBSPSetLoadSetEvent));
+
+				case GUIElementEnum::switchBSPSetFillCurrent:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Fills the above field with the binary value of the currently loaded BSPs"), std::nullopt,
+							"Fill With Current BSP Set",
+							settings->switchBSPSetFillCurrent));
+
+				case GUIElementEnum::switchBSPSetLoadIndex:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIButtonAndInt<false>>
+						(game, ToolTipCollection("Loads a BSP by index"), std::nullopt,
+							"Load BSP index",
+							"Index",
+							settings->switchBSPSetLoadIndex, settings->switchBSPLoadIndexEvent));
+
+				case GUIElementEnum::switchBSPSetUnloadIndex:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIButtonAndInt<false>>
+						(game, ToolTipCollection("Unloads a BSP by index"), std::nullopt,
+							"Unload BSP index",
+							"Index",
+							settings->switchBSPSetUnloadIndex, settings->switchBSPUnloadIndexEvent));
+
 
 				case GUIElementEnum::setPlayerHealthSubheadingGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>

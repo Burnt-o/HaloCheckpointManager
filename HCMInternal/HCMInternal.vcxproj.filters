@@ -821,6 +821,18 @@
     <ClInclude Include="SliderParam.h">
       <Filter>Services\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="GetCurrentBSPSet.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="BSPSet.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIButtonAndBinaryInt.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="SwitchBSPSet.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1197,6 +1209,12 @@
     </ClCompile>
     <ClCompile Include="ScopedImFontScaler.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="GetCurrentBSPSet.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="SwitchBSPSet.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

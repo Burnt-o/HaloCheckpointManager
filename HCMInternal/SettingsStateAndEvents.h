@@ -96,6 +96,10 @@ public:
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityCopy = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetVelocityPaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> switchBSPEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> switchBSPSetLoadSetEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> switchBSPLoadIndexEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> switchBSPUnloadIndexEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> switchBSPSetFillCurrent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceFutureCheckpointFillEvent = std::make_shared<ActionEvent>(); 
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringDialogEvent = std::make_shared<ActionEvent>(); 
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringCopyEvent = std::make_shared<ActionEvent>();
@@ -1124,6 +1128,27 @@ public:
 			nameof(switchBSPIndex)
 		);
 
+	std::shared_ptr<BinarySetting<int>> switchBSPSetLoadSet = std::make_shared<BinarySetting<int>>
+		(
+			0,
+			[](int in) { return true; },
+			nameof(switchBSPSetLoadSet)
+		);
+
+	std::shared_ptr<BinarySetting<int>> switchBSPSetLoadIndex = std::make_shared<BinarySetting<int>>
+		(
+			0,
+			[](int in) { return true; },
+			nameof(switchBSPSetLoadIndex)
+		);
+
+	std::shared_ptr<BinarySetting<int>> switchBSPSetUnloadIndex = std::make_shared<BinarySetting<int>>
+		(
+			0,
+			[](int in) { return true; },
+			nameof(switchBSPSetUnloadIndex)
+		);
+
 
 	std::shared_ptr<BinarySetting<bool>> OBSBypassToggle = std::make_shared<BinarySetting<bool>>
 		(
@@ -1639,6 +1664,9 @@ public:
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor,
 		switchBSPIndex,
+		switchBSPSetLoadSet,
+		switchBSPSetLoadIndex,
+		switchBSPSetUnloadIndex,
 		setPlayerHealthVec2,
 		waypoint3DClampToggle,
 		waypoint3DRenderRangeToggle,

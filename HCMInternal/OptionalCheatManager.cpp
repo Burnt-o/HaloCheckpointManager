@@ -83,6 +83,8 @@
 #include "TagTableRange.h"
 #include "GetSoftCeilingData.h"
 #include "SoftCeilingOverlay.h"
+#include "GetCurrentBSPSet.h"
+#include "SwitchBSPSet.h"
 
 #include "DIContainer.h"
 #include "map.h"

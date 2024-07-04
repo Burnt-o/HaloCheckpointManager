@@ -7696,6 +7696,38 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="currentBSPSet" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x46B60A8</Offset>
+			</Offsets>
+		</Version>
+		
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x46E261C</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4E2FBAC</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x4967998</Offset>
+			</Offsets>
+		</Version>
+
+
+	</VersionedEntry>
+	
+
 
 	<!--all games have the iron skull so just gonna use that as my base-->
 	<VersionedEntry Name="skullIronPointer" Type="MultilevelPointer::ModuleOffset">
@@ -9081,11 +9113,26 @@
 		<Version Version="All" Game="Halo3">
 			<triggerVolumeTagBlock>0x258</triggerVolumeTagBlock>
 			<softCeilingMetaTagBlock>0x234</softCeilingMetaTagBlock>
+			<StructureBSPsTagBlock>0x18</StructureBSPsTagBlock>
 		</Version>
 
 		<Version Version="All" Game="Halo3ODST">
 			<triggerVolumeTagBlock>0x28C</triggerVolumeTagBlock>
 			<softCeilingMetaTagBlock>0x268</softCeilingMetaTagBlock>
+			<StructureBSPsTagBlock>0x18</StructureBSPsTagBlock>
+		</Version>
+
+
+		<Version Version="All" Game="HaloReach">
+			<triggerVolumeTagBlock>0x280</triggerVolumeTagBlock>
+			<softCeilingMetaTagBlock>0x25C</softCeilingMetaTagBlock>
+			<StructureBSPsTagBlock>0x50</StructureBSPsTagBlock>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<triggerVolumeTagBlock>0x328</triggerVolumeTagBlock>
+			<softCeilingMetaTagBlock>0x304</softCeilingMetaTagBlock>
+			<StructureBSPsTagBlock>0xA4</StructureBSPsTagBlock>
 		</Version>
 	</VersionedEntry>
 

@@ -26,7 +26,10 @@ public:
 
 GetCurrentBSP::GetCurrentBSP(GameState gameImpl, IDIContainer& dicon)
 {
+	if (gameImpl.operator GameState::Value() == GameState::Value::Halo1 || gameImpl.operator GameState::Value() == GameState::Value::Halo2)
 		pimpl = std::make_unique<GetCurrentBSPImpl>(gameImpl, dicon);
+	else
+		throw HCMInitException("GetCurrentBSP not applicable to third gen");
 }
 GetCurrentBSP::~GetCurrentBSP()
 {

@@ -370,6 +370,22 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::SwitchBSP}
 	},
 
+			{ GUIElementEnum::switchBSPSetLoadSet,
+{OptionalCheatEnum::SwitchBSPSet}
+			},
+
+						{ GUIElementEnum::switchBSPSetFillCurrent,
+{OptionalCheatEnum::SwitchBSPSet}
+			},
+
+						{ GUIElementEnum::switchBSPSetLoadIndex,
+{OptionalCheatEnum::SwitchBSPSet}
+			},
+
+		{ GUIElementEnum::switchBSPSetUnloadIndex,
+{OptionalCheatEnum::SwitchBSPSet}
+		},
+
 				{ GUIElementEnum::hideHUDToggle,
 {OptionalCheatEnum::HideHUD}
 	},

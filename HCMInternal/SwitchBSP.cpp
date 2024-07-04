@@ -94,19 +94,19 @@ SwitchBSP::SwitchBSP(GameState gameImpl, IDIContainer& dicon)
 			break;
 
 		case GameState::Value::Halo3:
-			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo3>>(gameImpl, dicon);
+			throw HCMInitException("Not applicable, use SwitchBSPSet instead.");
 			break;
 
 		case GameState::Value::Halo3ODST:
-			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+			throw HCMInitException("Not applicable, use SwitchBSPSet instead.");
 			break;
 
 		case GameState::Value::HaloReach:
-			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
+			throw HCMInitException("Not applicable, use SwitchBSPSet instead.");
 			break;
 
 		case GameState::Value::Halo4:
-			pimpl = std::make_unique<SwitchBSPImpl<GameState::Value::Halo4>>(gameImpl, dicon);
+			throw HCMInitException("Not applicable, use SwitchBSPSet instead.");
 			break;
 	default:
 		throw HCMInitException("not impl yet");

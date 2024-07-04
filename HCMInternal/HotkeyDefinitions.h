@@ -242,6 +242,12 @@ private:
 			mSettings->switchBSPEvent,
 			vvk{}),
 
+		initEventOnPressHotkey(switchBSPSet,
+			mSettings->switchBSPSetLoadSetEvent,
+			vvk{}),
+
+
+
 
 		initEventOnPressHotkey(hideHUDToggle,
 			mSettings->hideHUDToggleHotkeyEvent,
