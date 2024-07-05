@@ -3,8 +3,8 @@
 #include "MultilevelPointer.h"
 #include "IMCCStateHook.h"
 #include "DynamicStructFactory.h"
-
-
+#include "GetScenarioAddress.h"
+#include "IMakeOrGetCheat.h"
 /*
 TODO:
 move injected depencies to different files for readability
@@ -182,6 +182,27 @@ public:
 
 };
 
+class GetScenarioTagDatum
+{
+private:
+	std::shared_ptr<MultilevelPointer> scenarioTagDatumAddress;
+public:
+	GetScenarioTagDatum(GameState game, IDIContainer& dicon)
+	{
+		scenarioTagDatumAddress = dicon.Resolve<PointerDataStore>().lock()->getData<std::shared_ptr<MultilevelPointer>>(nameof(scenarioTagDatumAddress), game);
+	}
+
+	std::expected<Datum, HCMRuntimeException> getScenarioTagDatum()
+	{
+		Datum scenarioTagDatum;
+		if (!scenarioTagDatumAddress->readData(&scenarioTagDatum))
+			return std::unexpected(HCMRuntimeException(std::format("Could not resolve scenarioTagDatumAddress, error: {}", MultilevelPointer::GetLastError())));
+
+		return scenarioTagDatum;
+	}
+
+};
+
 
 template <GameState::Value gameT>
 class TagTableRangeImpl : public ITagTableRangeImpl
@@ -190,7 +211,8 @@ private:
 	// callbacks
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
 
-
+	std::unique_ptr< GetScenarioTagDatum> getScenarioTagDatum;
+	std::weak_ptr<GetScenarioAddress> getScenarioAddressWeak;
 	std::shared_ptr<ITagMetaTableCountResolver> getTagMetaTableCount;
 	std::shared_ptr<ITagMetaTableAddressResolver> getTagMetaTableAddress;
 	std::shared_ptr<ITagTypeResolver> getTagType;
@@ -210,26 +232,56 @@ private:
 
 	std::function<uintptr_t(uint32_t&)> mOffsetTransformation;
 
-	std::expected<void, HCMRuntimeException> updateCache()
+	std::optional<HCMRuntimeException> scenarioTagSafetyCheck()
+	{
+		PLOG_DEBUG << "performing scenarioTagSafetyCheck";
+
+		auto scenarioTagDatum = getScenarioTagDatum->getScenarioTagDatum();
+		if (!scenarioTagDatum)
+			return scenarioTagDatum.error();
+
+		PLOG_DEBUG << "scenarioTagDatum: " << scenarioTagDatum.value().toString();
+
+		auto calculatedScenarioAddress = getTagByDatum(scenarioTagDatum.value());
+		if (!calculatedScenarioAddress)
+			return calculatedScenarioAddress.error();
+
+		PLOG_DEBUG << "calculatedScenarioAddress: 0x" << std::hex << calculatedScenarioAddress.value().tagAddress;
+
+		lockOrThrow(getScenarioAddressWeak, getScenarioAddress);
+		auto expectedScenarioAddress = getScenarioAddress->getScenarioAddress();
+		if (!expectedScenarioAddress)
+			return expectedScenarioAddress.error();
+
+		PLOG_DEBUG << "expectedScenarioAddress: 0x" << std::hex << expectedScenarioAddress.value();
+
+		if (expectedScenarioAddress.value() != calculatedScenarioAddress.value().tagAddress)
+			return HCMRuntimeException(std::format("calculatedScenarioAddress {:X} did not match expectedScenarioAddress {:X}", calculatedScenarioAddress.value().tagAddress, expectedScenarioAddress.value()));
+		else
+			return std::nullopt;
+
+	}
+
+	std::optional<HCMRuntimeException> updateCache()
 	{
 		LOG_ONCE(PLOG_DEBUG << "updating tagTableRange cache");
 
 
 		auto tagTableAddressResolved = getTagMetaTableAddress->getTagMetaTableAddress();
 		if (!tagTableAddressResolved) 
-			return std::unexpected(tagTableAddressResolved.error());
+			return tagTableAddressResolved.error();
 
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "resolved tagTableAddress: 0x" << std::hex << p, p = tagTableAddressResolved.value());
 
 		auto tagCount = getTagMetaTableCount->getTagMetaTableCount();
 		if (!tagCount)
-			return std::unexpected(tagCount.error());
+			return tagCount.error();
 
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "resolved tagCount: 0x" << std::hex << c, c = tagCount.value());
 
 		uintptr_t magicAddressResolved;
 		if (!magicAddress->readData(&magicAddressResolved)) 
-			return std::unexpected(HCMRuntimeException(std::format("Could not resolve magicAddress, {}", MultilevelPointer::GetLastError())));
+			return HCMRuntimeException(std::format("Could not resolve magicAddress, {}", MultilevelPointer::GetLastError()));
 		
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "resolved magicAddress: 0x" << std::hex << p, p = magicAddressResolved);
 
@@ -240,7 +292,7 @@ private:
 			tagMetaElementStruct->setIndex(tagTableAddressResolved.value(), tagIndex);
 			auto tagType = getTagType->getTagType(tagMetaElementStruct->currentBaseAddress);
 			if (!tagType)
-				return std::unexpected(tagType.error());
+				return tagType.error();
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "acquired first tag tagType: " << tt, tt = tagType.value().getString());
 
@@ -249,7 +301,7 @@ private:
 			tagDatum.salt  = *tagMetaElementStruct->field<uint16_t>(tagElementDataFields::datumIndexSalt);
 
 			if (tagDatum.index != tagIndex)
-				return std::unexpected(HCMRuntimeException(std::format("Mismatched tagDatum getting TagTableRange: expected {:X}, observed {:X}", tagIndex, tagDatum.index)));
+				return HCMRuntimeException(std::format("Mismatched tagDatum getting TagTableRange: expected {:X}, observed {:X}", tagIndex, tagDatum.index));
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "first tag tagDatum: 0x" << td, td = tagDatum.toString());
 
@@ -268,10 +320,33 @@ private:
 			TagInfo out = TagInfo(tagType.value(), tagDatum, tagAddress);
 			outVec.emplace_back(out);
 
-
+			
 		}
 
 		tagTableInfoCached = outVec;
+
+		return std::nullopt;
+	}
+
+
+	std::optional<HCMRuntimeException> validateCache()
+	{
+		if (!cacheValid)
+		{
+			auto cacheUpdated = updateCache();
+			if (cacheUpdated.has_value())
+				return cacheUpdated.value();
+			cacheValid = true;
+
+			auto safetyCheck = scenarioTagSafetyCheck();
+			if (safetyCheck.has_value())
+			{
+				cacheValid = false;
+				return safetyCheck.value();
+			}
+		}
+
+		return std::nullopt;
 	}
 
 public:
@@ -284,7 +359,9 @@ public:
 		mOffsetTransformation(offsetTransformation),
 		getTagMetaTableCount(getTagMetaTableCount),
 		getTagMetaTableAddress(getTagMetaTableAddress),
-		getTagType(getTagType)
+		getTagType(getTagType),
+		getScenarioTagDatum(std::make_unique<GetScenarioTagDatum>(game, dicon)),
+		getScenarioAddressWeak(resolveDependentCheat(GetScenarioAddress))
 
 	{
 		auto ptr = dicon.Resolve< PointerDataStore>().lock();
@@ -297,13 +374,9 @@ public:
 
 	virtual std::expected<std::vector<TagInfo>, HCMRuntimeException> getTagTableRange() override
 	{
-		if (!cacheValid)
-		{
-			auto cacheUpdated = updateCache();
-			if (!cacheUpdated)
-				return std::unexpected(cacheUpdated.error());
-			cacheValid = true;
-		}
+		auto validation = validateCache();
+		if (validation.has_value())
+			return std::unexpected(validation.value());
 
 		return tagTableInfoCached;
 
@@ -311,13 +384,9 @@ public:
 
 	virtual std::expected<TagInfo, HCMRuntimeException> getTagByDatum(Datum tagDatum) override
 	{
-		if (!cacheValid)
-		{
-			auto cacheUpdated = updateCache();
-			if (!cacheUpdated)
-				return std::unexpected(cacheUpdated.error());
-			cacheValid = true;
-		}
+		auto validation = validateCache();
+		if (validation.has_value())
+			return std::unexpected(validation.value());
 
 		if (tagDatum.isNull())
 			return std::unexpected(HCMRuntimeException("Null tag datum"));
@@ -335,13 +404,9 @@ public:
 
 	virtual std::expected<TagInfo, HCMRuntimeException> getTagByIndex(uint16_t tagDatumIndex) override
 	{
-		if (!cacheValid)
-		{
-			auto cacheUpdated = updateCache();
-			if (!cacheUpdated)
-				return std::unexpected(cacheUpdated.error());
-			cacheValid = true;
-		}
+		auto validation = validateCache();
+		if (validation.has_value())
+			return std::unexpected(validation.value());
 
 		if (tagDatumIndex == 0xFFFF)
 			return std::unexpected(HCMRuntimeException("Null tagDatumIndex"));

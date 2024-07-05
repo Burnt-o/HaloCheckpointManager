@@ -5571,6 +5571,7 @@
 			<!--confirmed 3272-->
 			<currentVehicleDatum>0x24</currentVehicleDatum>
 			<position>0x64</position>
+			<triggerHitVertex>0x40</triggerHitVertex>
 			<velocity>0x88</velocity>
 			<health>0x13BC</health>
 			<shields>0x13EC</shields>
@@ -9202,6 +9203,13 @@
 				<Offset>0x9E984</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xF3B40</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="entityTriggerInfoDataFields" Type="DynStructOffsetInfo">
@@ -9215,6 +9223,10 @@
 
 		<Version Version="All" Game="HaloReach">
 			<Datum>-0x2C</Datum>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<Datum>-0x4C</Datum>
 		</Version>
 	</VersionedEntry>
 
@@ -9292,6 +9304,61 @@
 			<Offsets>
 				<Offset>0xC1A2B0</Offset>
 				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x049679B0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="scenarioTagDatumAddress" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2D9CE10</Offset>
+				<Offset>0x4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15e3b58</Offset>
+				<Offset>0xC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x89BAE8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x8E0B98</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE38</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xED4234</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -9424,7 +9491,7 @@
 
 		<Version Version="All" Game="Halo4">
 			<StrideSize>0x1A0</StrideSize>
-			<structureDesignReference>0x118</structureDesignReference>
+			<runtimeStructureDesignZoneMask>0x118</runtimeStructureDesignZoneMask>
 		</Version>
 	</VersionedEntry>
 

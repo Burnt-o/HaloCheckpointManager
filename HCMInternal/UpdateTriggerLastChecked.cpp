@@ -399,7 +399,7 @@ public:
 
 		if constexpr (mGame == GameState::Value::Halo3 || mGame == GameState::Value::Halo3ODST)
 			updateTriggerCheckHook = ModuleInlineHook::make(game.toModuleName(), updateTriggerLastCheckedFunction, UpdateTriggerCheckHookFunctionSig1);
-		else if constexpr (mGame == GameState::Value::HaloReach)
+		else if constexpr (mGame == GameState::Value::HaloReach || mGame == GameState::Value::Halo4)
 			updateTriggerCheckHook = ModuleInlineHook::make(game.toModuleName(), updateTriggerLastCheckedFunction, UpdateTriggerCheckHookFunctionSig2);
 
 
@@ -444,9 +444,9 @@ UpdateTriggerLastChecked::UpdateTriggerLastChecked(GameState gameImpl, IDIContai
 		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::HaloReach>>(gameImpl, dicon);
 		break;
 
-	//case GameState::Value::Halo4:
-	//	pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo4>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo4:
+		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo4>>(gameImpl, dicon);
+		break;
 	default:
 		throw HCMInitException("not impl yet");
 	}

@@ -69,6 +69,10 @@ public:
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pOffset: " << std::hex << p, p = (uintptr_t)pOffset);
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "*pOffset: " << std::hex << o, o = *pOffset);
 
+		// is it an empty tagBlock?
+		if (*pEntryCount == 0)
+			return ParsedTagBlock(0, 0);
+
 		uintptr_t offsetTransformed = mOffsetTransformation(*pOffset);
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "offsetTransformed: " << std::hex << o, o = offsetTransformed);
 

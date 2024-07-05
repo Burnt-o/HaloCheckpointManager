@@ -1,8 +1,11 @@
 
 3.1 TODO
-* impl triggerOverlay for HR and H4 (mainly RE trigger data location and the triggerDataStruct)
-* impl softCeilingOverlay for OD, HR, H4
-* confirm that triggerHitPosition works for all games (ie when in vehicles)
+* impl triggerOverlay and soft ceiling for h4
+* add BSPSet to display info
+* fix trigger filter match count issue when duplicate trigger names (each name should match at least one trigger)
+* add scenario tag safety check to tagtablerange
+* add toggle messages for triggerOverlay/barrierOverlay
+
 
 
 
