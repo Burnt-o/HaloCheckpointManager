@@ -848,14 +848,17 @@
     <ClInclude Include="BSPSetChangeHookEvent.h">
       <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
     </ClInclude>
-    <ClInclude Include="GetActiveStructureDesignTags.h">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClInclude>
     <ClInclude Include="TagInfo.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="TagReferenceReader.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GetActiveStructureDesignTags.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
+    </ClInclude>
+    <ClInclude Include="bitset_iter.h">
+      <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1252,11 +1255,11 @@
     <ClCompile Include="ZoneSetChangeHookEvent.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services\BSPs</Filter>
     </ClCompile>
-    <ClCompile Include="GetActiveStructureDesignTags.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClCompile>
     <ClCompile Include="TagReferenceReader.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GetActiveStructureDesignTags.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

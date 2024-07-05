@@ -232,6 +232,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
+    <ClInclude Include="bitset_iter.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />

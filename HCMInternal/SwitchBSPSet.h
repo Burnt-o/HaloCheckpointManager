@@ -3,7 +3,9 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "BSPSet.h"
+
+
+using BSPSet = std::bitset<32>;
 
 
 // Third gen only. Allows you to manipulate which BSPs are loaded (by index or set of indexes)

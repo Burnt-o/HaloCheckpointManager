@@ -3,7 +3,9 @@
 #include "IOptionalCheat.h"
 #include "DIContainer.h"
 #include "GameState.h"
-#include "BSPSet.h"
+
+
+using BSPSet = std::bitset<32>;
 
 class IBSPSetChangeHookEvent
 {

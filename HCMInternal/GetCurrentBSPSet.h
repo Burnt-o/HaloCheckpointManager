@@ -4,10 +4,10 @@
 #include "DIContainer.h"
 #include "GameState.h"
 #include "BSPSet.h"
+#include <bitset>
 
 
-
-
+using BSPSet = std::bitset<32>;
 
 class GetCurrentBSPSet : public IOptionalCheat
 {

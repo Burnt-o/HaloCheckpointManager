@@ -37,6 +37,7 @@ public:
 		if (!magicAddress->readData(&magicAddressCached)) 
 			return HCMRuntimeException(std::format("Could not resolve magicAddress, {}", MultilevelPointer::GetLastError()));
 		PLOG_DEBUG << "tagBlockReader cache updated, magicAddress: " << std::hex << magicAddressCached;
+		PLOG_DEBUG << "also the tagBase is: " << std::hex << tagBase;
 		return std::nullopt;
 	}
 
@@ -55,7 +56,7 @@ public:
 		}
 
 		LOG_ONCE_CAPTURE(PLOG_DEBUG << "tagBlock: " << std::hex << p, p = tagBlock);
-
+		
 		tagBlockDataStruct->currentBaseAddress = tagBlock;
 
 		auto* pOffset = tagBlockDataStruct->field<uint32_t>(tagBlockDataFields::offset);
@@ -90,8 +91,8 @@ TagBlockReader::TagBlockReader(GameState game, IDIContainer& dicon)
 	case GameState::Value::Halo2: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::Halo2>>(game, dicon, [](uint32_t& in) {return in; }); break;
 	case GameState::Value::Halo3: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::Halo3>>(game, dicon, [](uint32_t& in) { return ((uintptr_t)in) << 2; }); break;
 	case GameState::Value::Halo3ODST: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::Halo3ODST>>(game, dicon, [](uint32_t& in) { return ((uintptr_t)in) << 2; }); break;
-	//case GameState::Value::HaloReach: pimpl = std::make_unique<TagBlockReaderImpl<GameState::Value::HaloReach>>(game, dicon); break;
-	//case GameState::Value::Halo4: pimpl = std::make_unique<TagBlockReaderImpl<GameState::Value::Halo4>>(game, dicon); break;
+	case GameState::Value::HaloReach: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::HaloReach>>(game, dicon, [](uint32_t& in) { return ((uintptr_t)in) << 2; }); break;
+	case GameState::Value::Halo4: pimpl = std::make_unique<TagBlockReaderImplMagic<GameState::Value::Halo4>>(game, dicon, [](uint32_t& in) { return ((uintptr_t)in) << 2; }); break;
 	default: throw HCMInitException("tagBlockReader not impl yet");
 	}
 }

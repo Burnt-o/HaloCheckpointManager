@@ -8,6 +8,7 @@
 #include "TagBlockReader.h"
 #include "GetScenarioAddress.h"
 #include "PointerDataStore.h"
+#include "bitset_iter.h"
 
 
 // h3 and ODST have their scnr tag associate each SBSP to a SDDT tag. the SDDT tag ref can be null, and can be shared between SBSPs.
@@ -64,22 +65,21 @@ public:
 
 		lockOrThrow(getCurrentBSPSetWeak, getCurrentBSPSet);
 		auto bspSet = getCurrentBSPSet->getCurrentBSPSet();
-		auto bspIndexSet = bspSet.toIndexSet();
 
 		// set because multiple sbsps can refer to the same sddt tag and we don't want duplicates
 		std::set<TagInfo> out;
 
 		PLOG_DEBUG << "structureBSPsTagBlock.value().elementCount: " << structureBSPsTagBlock.value().elementCount;
-		PLOG_DEBUG << "loaded BSP count: " << bspIndexSet.size();
-		PLOG_DEBUG << "bspSet.value: 0x" << bspSet.toHexadecimalString();
+		PLOG_DEBUG << "loaded BSP count: " << bspSet.size();
+		PLOG_DEBUG << "bspSet.value: 0x" << std::hex <<  bspSet.to_ulong();
 
 		lockOrThrow(tagReferenceReaderWeak, tagReferenceReader);
-		for (uint8_t bspIndex : bspIndexSet)
+		for (auto bspIndex : bitset::indices_on(bspSet))
 		{
-			PLOG_DEBUG << "Getting SDDT tag for bspIndex: " << (uint32_t)bspIndex;
+			PLOG_DEBUG << "Getting SDDT tag for bspIndex: " << bspIndex;
 
 			if (bspIndex >= structureBSPsTagBlock.value().elementCount)
-				throw HCMRuntimeException(std::format("loaded BSP index exceeded scnr tag BSP tag block count! observed: {}, max: {}", (uint32_t)bspIndex, structureBSPsTagBlock.value().elementCount));
+				throw HCMRuntimeException(std::format("loaded BSP index exceeded scnr tag BSP tag block count! observed: {}, max: {}", bspIndex, structureBSPsTagBlock.value().elementCount));
 
 			structureBSPsMetaDataStruct->setIndex(structureBSPsTagBlock.value().firstElement, bspIndex);
 			auto* pStructureDesignReference = structureBSPsMetaDataStruct->field<uint32_t>(structureBSPsMetaDataFields::structureDesignReference);
@@ -87,11 +87,11 @@ public:
 				throw HCMRuntimeException(std::format("Bad read of pStructureDesignReference at {:X}", (uintptr_t)pStructureDesignReference));
 
 
-			auto tagRefIsNull = tagReferenceReader->isNull((uintptr_t)pStructureDesignReference);
-			if (!tagRefIsNull)
-				throw tagRefIsNull.error();
+			auto checkTagRefNull = tagReferenceReader->isNull((uintptr_t)pStructureDesignReference);
+			if (!checkTagRefNull)
+				throw checkTagRefNull.error();
 
-			if (tagRefIsNull.value())
+			if (checkTagRefNull.value())
 				continue;
 
 			auto tagInfo = tagReferenceReader->read((uintptr_t)pStructureDesignReference);
@@ -100,7 +100,7 @@ public:
 				throw tagInfo.error();
 			}
 
-			PLOG_DEBUG << "Found SDDT tag for bspIndex: " << (uint32_t)bspIndex << " with datum: " << tagInfo.value().tagDatum.toString();
+			PLOG_DEBUG << "Found SDDT tag for bspIndex: " << bspIndex << " with datum: " << tagInfo.value().tagDatum.toString();
 
 			out.insert(tagInfo.value());
 
@@ -117,15 +117,146 @@ class GetActiveStructureDesignTagsImplZoneSet : public IGetActiveStructureDesign
 {
 private:
 
+	std::weak_ptr< GetCurrentZoneSet> getCurrentZoneSetWeak;
+	std::weak_ptr<TagReferenceReader> tagReferenceReaderWeak;
+	std::weak_ptr<TagBlockReader> tagBlockReaderWeak;
+	std::weak_ptr< GetScenarioAddress> getScenarioAddressWeak;
+
+	enum class scenarioTagDataFields { StructureDesignTagBlock, ZoneSetTagBlock };
+	std::shared_ptr<DynamicStruct<scenarioTagDataFields>> scenarioTagDataStruct;
+
+
+	// looked up from scen tag at StructureDesignTagBlock offset
+	enum class structureDesignMetaDataFields { structureDesignReference };
+	std::shared_ptr<StrideableDynamicStruct<structureDesignMetaDataFields>> structureDesignMetaDataStruct;
+
+	// looked up from scen tag at ZoneSetTagBlock offset
+	enum class zoneSetMetaDataFields { runtimeStructureDesignZoneMask };
+	std::shared_ptr<StrideableDynamicStruct<zoneSetMetaDataFields>> zoneSetMetaDataStruct;
+
+
 public:
 	GetActiveStructureDesignTagsImplZoneSet(GameState game, IDIContainer& dicon)
+		: getCurrentZoneSetWeak(resolveDependentCheat(GetCurrentZoneSet)),
+		tagReferenceReaderWeak(resolveDependentCheat(TagReferenceReader)),
+		tagBlockReaderWeak(resolveDependentCheat(TagBlockReader)),
+		getScenarioAddressWeak(resolveDependentCheat(GetScenarioAddress))
 	{
-		throw HCMInitException("Not impl yet");
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
+		scenarioTagDataStruct = DynamicStructFactory::make<scenarioTagDataFields>(ptr, game);
+		structureDesignMetaDataStruct = DynamicStructFactory::makeStrideable<structureDesignMetaDataFields>(ptr, game);
+		zoneSetMetaDataStruct = DynamicStructFactory::makeStrideable<zoneSetMetaDataFields>(ptr, game);
 	}
 
 	virtual std::set<TagInfo> getActiveStructureDesignTags() override
 	{
-		throw HCMRuntimeException("Not impl yet");
+		using SDDTMask = std::bitset<32>;
+
+		lockOrThrow(getScenarioAddressWeak, getScenarioAddress);
+		auto scenAddress = getScenarioAddress->getScenarioAddress();
+		if (!scenAddress)
+			throw scenAddress.error();
+
+		scenarioTagDataStruct->currentBaseAddress = scenAddress.value();
+
+
+		PLOG_DEBUG << "1";
+
+		auto* pZoneSetTagBlock = scenarioTagDataStruct->field<uint32_t>(scenarioTagDataFields::ZoneSetTagBlock);
+		if (IsBadReadPtr(pZoneSetTagBlock, sizeof(uint32_t)))
+			throw HCMRuntimeException(std::format("Bad read of pZoneSetTagBlock at {:X}", (uintptr_t)pZoneSetTagBlock));
+
+		PLOG_DEBUG << "1";
+
+		lockOrThrow(tagBlockReaderWeak, tagBlockReader);
+		auto ZoneSetTagBlock = tagBlockReader->read((uintptr_t)pZoneSetTagBlock);
+		if (!ZoneSetTagBlock)
+			throw ZoneSetTagBlock.error();
+
+		PLOG_DEBUG << "1";
+		lockOrThrow(getCurrentZoneSetWeak, getCurrentZoneSet);
+		auto currentZoneSet = getCurrentZoneSet->getCurrentZoneSet();
+		
+		if (currentZoneSet >= ZoneSetTagBlock.value().elementCount)
+			throw HCMRuntimeException(std::format("currentZoneSet exceeded zoneset tagblock size, observed {}, expected {}", currentZoneSet, ZoneSetTagBlock.value().elementCount));
+
+		PLOG_DEBUG << "1";
+
+		zoneSetMetaDataStruct->setIndex(ZoneSetTagBlock.value().firstElement, currentZoneSet);
+		auto* pRuntimeStructureDesignZoneMask = zoneSetMetaDataStruct->field<SDDTMask>(zoneSetMetaDataFields::runtimeStructureDesignZoneMask);
+		if (IsBadReadPtr(pRuntimeStructureDesignZoneMask, sizeof(SDDTMask)))
+			throw HCMRuntimeException(std::format("Bad read of pRuntimeStructureDesignZoneMask at {:X}", (uintptr_t)pRuntimeStructureDesignZoneMask));
+
+		PLOG_DEBUG << "1";
+		auto runtimeStructureDesignZoneMask = *pRuntimeStructureDesignZoneMask;
+
+		PLOG_DEBUG << "1";
+		auto highestSDDTIndexSet = find_last_index_of_bit_set(runtimeStructureDesignZoneMask);
+		// if no sddt indexes are set then we return an empty set
+		if (highestSDDTIndexSet.has_value() == false)
+			return std::set<TagInfo>();
+
+		PLOG_DEBUG << "1";
+
+		// now we need to go to the structure design tag block
+		auto* pStructureDesignTagBlock = scenarioTagDataStruct->field<uint32_t>(scenarioTagDataFields::StructureDesignTagBlock);
+		if (IsBadReadPtr(pStructureDesignTagBlock, sizeof(uint32_t)))
+			throw HCMRuntimeException(std::format("Bad read of pStructureDesignTagBlock at {:X}", (uintptr_t)pStructureDesignTagBlock));
+
+		PLOG_DEBUG << "1";
+		auto StructureDesignTagBlock = tagBlockReader->read((uintptr_t)pStructureDesignTagBlock);
+		if (!StructureDesignTagBlock)
+			throw StructureDesignTagBlock.error();
+
+		PLOG_DEBUG << "1";
+
+		// if highestSDDTIndexSet is larger than the element count of the sddt tagblock, that's an uh oh
+		if (highestSDDTIndexSet.value() >= StructureDesignTagBlock.value().elementCount)
+			throw HCMRuntimeException(std::format("highestSDDTIndexSet exceeded sddt tagblock size, observed {}, expected {}", highestSDDTIndexSet.value(), StructureDesignTagBlock.value().elementCount));
+
+		PLOG_DEBUG << "1";
+
+		lockOrThrow(tagReferenceReaderWeak, tagReferenceReader);
+		std::set<TagInfo> out;
+
+		// for each index in the runtimeStructureDesignZoneMask, look it up in the SDDTTagBlock and resolve the tag reference, appending to out
+		for (auto sddtIndex : bitset::indices_on(runtimeStructureDesignZoneMask))
+		{
+			PLOG_DEBUG << "1";
+			PLOG_DEBUG << "looking up sddt index: " << sddtIndex;
+
+			structureDesignMetaDataStruct->setIndex(StructureDesignTagBlock.value().firstElement, sddtIndex);
+
+			auto* pSDDTref = structureDesignMetaDataStruct->field<uint32_t>(structureDesignMetaDataFields::structureDesignReference);
+			if (IsBadReadPtr(pSDDTref, sizeof(uint32_t)))
+				throw HCMRuntimeException(std::format("Bad read of pSDDTref at {:X}", (uintptr_t)pSDDTref));
+
+			PLOG_DEBUG << "1";
+
+			auto checkTagRefNull = tagReferenceReader->isNull((uintptr_t)pSDDTref);
+			if (!checkTagRefNull)
+				throw checkTagRefNull.error();
+			PLOG_DEBUG << "1";
+
+			if (checkTagRefNull.value())
+				continue;
+
+			PLOG_DEBUG << "1";
+
+			auto tagInfo = tagReferenceReader->read((uintptr_t)pSDDTref);
+			if (!tagInfo)
+			{
+				throw tagInfo.error();
+			}
+
+			PLOG_DEBUG << "Found SDDT tag matching SDDT index: " << sddtIndex << " with datum: " << tagInfo.value().tagDatum.toString() << " for zoneset index: " << currentZoneSet;
+
+			out.insert(tagInfo.value());
+
+
+		}
+
+		return out;
 	}
 };
 

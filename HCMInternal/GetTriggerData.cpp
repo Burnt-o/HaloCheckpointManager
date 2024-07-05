@@ -347,13 +347,14 @@ GetTriggerData::GetTriggerData(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
 		break;
 
-	//case GameState::Value::HaloReach:
-	//	pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::HaloReach:
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		break;
 
-	//case GameState::Value::Halo4:
-	//	pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo4>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo4:
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo4>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		break;
+
 	default:
 		throw HCMInitException("not impl yet");
 	}

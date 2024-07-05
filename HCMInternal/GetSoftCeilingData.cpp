@@ -123,6 +123,8 @@ public:
 				PLOG_DEBUG << "sddtTagAddress: " << std::hex << sddtTag.tagAddress;
 			}
 
+			// address isn't correct for halo reach - it's tagBase(0x50000000) less than it should be.
+
 
 			SoftCeilingVector outVec;
 
@@ -130,8 +132,12 @@ public:
 			for (auto& sddtTag : sddtTags)
 			{
 				sddtTagDataStruct->currentBaseAddress = sddtTag.tagAddress;
-				auto softCeilingTagBlock = sddtTagDataStruct->field<uint32_t>(sddtTagDataFields::softCeilingTagBlock);
-				auto softCeilingTagBlockResolved = tagBlockReader->read((uintptr_t)softCeilingTagBlock);
+				auto* pSoftCeilingTagBlock = sddtTagDataStruct->field<uint32_t>(sddtTagDataFields::softCeilingTagBlock);
+				if (IsBadReadPtr(pSoftCeilingTagBlock, sizeof(uint32_t)))
+					return std::unexpected(HCMRuntimeException(std::format("Bad read of pSoftCeilingTagBlock at {:X}", (uintptr_t)pSoftCeilingTagBlock)));
+
+
+				auto softCeilingTagBlockResolved = tagBlockReader->read((uintptr_t)pSoftCeilingTagBlock);
 
 				if (!softCeilingTagBlockResolved)
 					return std::unexpected(softCeilingTagBlockResolved.error());
@@ -367,8 +373,16 @@ GetSoftCeilingData::GetSoftCeilingData(GameState gameImpl, IDIContainer& dicon)
 	case GameState::Value::Halo3ODST:
 		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon));
 		break;
+
+	case GameState::Value::HaloReach:
+		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::HaloReach>>(gameImpl, dicon));
+		break;
+
+	case GameState::Value::Halo4:
+		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo4>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo4>>(gameImpl, dicon));
+		break;
 	default:
 		throw HCMInitException(std::format("{} not impl yet", nameof(GetSoftCeilingData)));
 	}
 }
-GetSoftCeilingData::~GetSoftCeilingData() = default;
+GetSoftCeilingData::~GetSoftCeilingData() = default; 

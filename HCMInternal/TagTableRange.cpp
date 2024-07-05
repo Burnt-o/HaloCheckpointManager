@@ -261,7 +261,7 @@ private:
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "first tag tagOffset (postTransform): 0x" << std::hex << to, to = tagOffsetPost);
 
-			uintptr_t tagAddress = tagOffsetPost + magicAddressResolved;
+			uintptr_t tagAddress = tagOffsetPost + magicAddressResolved + tagBase;
 
 			LOG_ONCE_CAPTURE(PLOG_DEBUG << "first tag tagAddress: 0x" << std::hex << ta, ta = tagAddress);
 

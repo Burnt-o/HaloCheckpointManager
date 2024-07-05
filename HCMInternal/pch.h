@@ -46,7 +46,7 @@
 #include <variant>
 #include <concepts>
 #include <numbers>
-
+#include <bitset>
 
 
 // External Libraries

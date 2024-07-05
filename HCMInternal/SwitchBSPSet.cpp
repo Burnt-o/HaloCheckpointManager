@@ -96,7 +96,7 @@ private:
 			lockOrThrow(settingsWeak, settings);
 			lockOrThrow(getCurrentBSPSetWeak, getCurrentBSPSet);
 			auto currentBSPSet = getCurrentBSPSet->getCurrentBSPSet();
-			settings->switchBSPSetLoadSet->GetValueDisplay() = currentBSPSet.operator BSPIndexMask().value;
+			settings->switchBSPSetLoadSet->GetValueDisplay() = currentBSPSet.to_ulong();
 			settings->switchBSPSetLoadSet->UpdateValueWithInput();
 		}
 		catch (HCMRuntimeException ex)
@@ -132,10 +132,12 @@ public:
 		lockOrThrow(getCurrentBSPSetWeak, getCurrentBSPSet);
 		auto maxIndex = getCurrentBSPSet->getMaxBSPIndex();
 
-		if (bspSet.highestLoadedIndex() > maxIndex)
-			throw HCMRuntimeException(std::format("Highest set bit of BSP set {} exceeded max index of {}", bspSet.highestLoadedIndex(), maxIndex));
+		auto highestSetIndex = find_last_index_of_bit_set(bspSet);
 
-		PLOG_DEBUG << "Setting bsp set to value: 0x" << bspSet.toHexadecimalString();
+		if (highestSetIndex.has_value() && highestSetIndex.value() > maxIndex)
+			throw HCMRuntimeException(std::format("Highest set bit of BSP set {} exceeded max index of {}", highestSetIndex.value(), maxIndex));
+
+		PLOG_DEBUG << "Setting bsp set to value: 0x" << std::hex << bspSet.to_ulong();
 
 		if (!currentBSPSet->writeData(&bspSet))
 			throw HCMRuntimeException(std::format("Failed to write BSP set, {}", MultilevelPointer::GetLastError()));
@@ -143,7 +145,7 @@ public:
 		BSPSetChangeEvent->operator()(getCurrentBSPSet->getCurrentBSPSet());
 
 		lockOrThrow(messagesGUIWeak, messages);
-		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.toBinaryString(getCurrentBSPSet->getMaxBSPIndex())));
+		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.to_string().substr(bspSet.to_string().find('1'))));
 		
 	}
 	void UnloadBSPByIndex(int BSPindex)
@@ -156,14 +158,15 @@ public:
 
 		auto bspSet = getCurrentBSPSet->getCurrentBSPSet();
 
+
 		// check if bsp was already unloaded
-		if (bspSet.indexIsLoaded(BSPindex) == false)
+		if (bspSet.test(BSPindex) == false)
 			throw HCMRuntimeException(std::format("BSPIndex {} was already unloaded!", BSPindex));
 
 		// set corrosponding bit to false in currentSet
-		bspSet.setIndex(BSPindex, false);
+		bspSet.set(BSPindex, false);
 
-		PLOG_DEBUG << "Setting bsp set to value: 0x" << bspSet.toHexadecimalString();
+		PLOG_DEBUG << "Setting bsp set to value: 0x" << std::hex << bspSet.to_ulong();
 
 		if (!currentBSPSet->writeData(&bspSet))
 			throw HCMRuntimeException(std::format("Failed to write BSP set, {}", MultilevelPointer::GetLastError()));
@@ -171,7 +174,7 @@ public:
 		BSPSetChangeEvent->operator()(getCurrentBSPSet->getCurrentBSPSet());
 
 		lockOrThrow(messagesGUIWeak, messages);
-		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.toBinaryString(getCurrentBSPSet->getMaxBSPIndex())));
+		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.to_string().substr(bspSet.to_string().find('1'))));
 	}
 	void LoadBSPByIndex(int BSPindex)
 	{
@@ -184,13 +187,13 @@ public:
 		auto bspSet = getCurrentBSPSet->getCurrentBSPSet();
 
 		// check if bsp was already loaded
-		if (bspSet.indexIsLoaded(BSPindex) == true)
+		if (bspSet.test(BSPindex) == true)
 			throw HCMRuntimeException(std::format("BSPIndex {} was already loaded!", BSPindex));
 
 		// set corrosponding bit to true in currentSet
-		bspSet.setIndex(BSPindex, true);
+		bspSet.set(BSPindex, true);
 
-		PLOG_DEBUG << "Setting bsp set to value: 0x" << bspSet.toHexadecimalString();
+		PLOG_DEBUG << "Setting bsp set to value: 0x" << std::hex << bspSet.to_ulong();
 
 		if (!currentBSPSet->writeData(&bspSet))
 			throw HCMRuntimeException(std::format("Failed to write BSP set, {}", MultilevelPointer::GetLastError()));
@@ -199,7 +202,7 @@ public:
 		BSPSetChangeEvent->operator()(getCurrentBSPSet->getCurrentBSPSet());
 
 		lockOrThrow(messagesGUIWeak, messages);
-		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.toBinaryString(getCurrentBSPSet->getMaxBSPIndex())));
+		messages->addMessage(std::format("Loaded BSP Set: {}", bspSet.to_string().substr(bspSet.to_string().find('1'))));
 	}
 
 	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> getBSPSetChangeEvent()

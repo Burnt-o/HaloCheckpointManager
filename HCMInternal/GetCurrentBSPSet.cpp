@@ -7,6 +7,7 @@
 #include "DynamicStructFactory.h"
 #include "IMakeOrGetCheat.h"
 
+
 class GetCurrentBSPSet::GetCurrentBSPSetImpl
 {
 private:
@@ -29,7 +30,7 @@ public:
 	}
 	const BSPSet getCurrentBSPSet()
 	{
-		BSPSet bspSet(BSPIndex::None);
+		BSPSet bspSet(0);
 		if (!currentBSPSet->readData(&bspSet)) 
 			throw HCMRuntimeException(std::format("Could not read currentBSPSet, {}", MultilevelPointer::GetLastError()));
 

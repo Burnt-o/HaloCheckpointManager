@@ -115,3 +115,14 @@ bool bitmaskContains(const bitmask<enumT>& lhs, enumT rhs)
 {
 	return (lhs & bitmask(rhs)).operator bool();
 }
+
+template <size_t N>
+constexpr std::optional<int> find_last_index_of_bit_set(const std::bitset<N>& set)
+{
+	for (int i = set.size() - 1; i > -1; --i) {
+		if (set.test(i)) {
+			return std::optional(i);
+		}
+	}
+	return std::nullopt;
+}
