@@ -160,6 +160,10 @@ public:
 					for (int softCeilingTriangleIndex = 0; softCeilingTriangleIndex < softCeilingTriangleTagBlockResolved.value().elementCount; softCeilingTriangleIndex++)
 					{
 						softCeilingTriangleDataStruct->setIndex(softCeilingTriangleTagBlockResolved.value().firstElement, softCeilingTriangleIndex);
+//
+//#ifdef HCM_DEBUG
+//						PLOG_DEBUG << "softCeilingTriangleDataStruct->currentBaseAddress" << std::hex << softCeilingTriangleDataStruct->currentBaseAddress;
+//#endif
 
 						std::array<SimpleMath::Vector3, 3> vertices;
 						vertices[0] = *softCeilingTriangleDataStruct->field<SimpleMath::Vector3>(softCeilingTriangleDataFields::vertex0);

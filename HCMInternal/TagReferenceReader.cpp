@@ -43,6 +43,23 @@ public:
 		lockOrThrow(tagTableRangeWeak, tagTableRange);
 		return tagTableRange->getTagByIndex(*pDatumIndex);
 	}
+
+	std::expected<bool, HCMRuntimeException> isNull(uintptr_t tagReference)
+	{
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "tagReference: " << std::hex << p, p = tagReference);
+
+		tagReferenceDataStruct->currentBaseAddress = tagReference;
+
+		auto* pDatumIndex = tagReferenceDataStruct->field<uint16_t>(tagReferenceDataFields::datumIndex);
+		if (IsBadReadPtr(pDatumIndex, sizeof(uint16_t)))
+			return std::unexpected(HCMRuntimeException(std::format("Bad read of pDatumIndex at 0x{:X}", (uintptr_t)pDatumIndex)));
+
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pDatumIndex: " << std::hex << p, p = (uintptr_t)pDatumIndex);
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "*pDatumIndex: " << std::hex << o, o = *pDatumIndex);
+
+		return *pDatumIndex == 0xFFFF;
+
+	}
 };
 
 

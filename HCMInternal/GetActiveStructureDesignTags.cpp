@@ -43,7 +43,7 @@ public:
 		structureBSPsMetaDataStruct = DynamicStructFactory::makeStrideable<structureBSPsMetaDataFields>(ptr, game);
 	}
 
-	virtual std::vector<TagInfo> getActiveStructureDesignTags() override
+	virtual std::set<TagInfo> getActiveStructureDesignTags() override
 	{
 		lockOrThrow(getScenarioAddressWeak, getScenarioAddress);
 		auto scenAddress = getScenarioAddress->getScenarioAddress();
@@ -66,7 +66,8 @@ public:
 		auto bspSet = getCurrentBSPSet->getCurrentBSPSet();
 		auto bspIndexSet = bspSet.toIndexSet();
 
-		std::vector<TagInfo> out;
+		// set because multiple sbsps can refer to the same sddt tag and we don't want duplicates
+		std::set<TagInfo> out;
 
 		PLOG_DEBUG << "structureBSPsTagBlock.value().elementCount: " << structureBSPsTagBlock.value().elementCount;
 		PLOG_DEBUG << "loaded BSP count: " << bspIndexSet.size();
@@ -75,23 +76,33 @@ public:
 		lockOrThrow(tagReferenceReaderWeak, tagReferenceReader);
 		for (uint8_t bspIndex : bspIndexSet)
 		{
-			PLOG_DEBUG << "Getting SDDT tag for bspIndex: " << bspIndex;
+			PLOG_DEBUG << "Getting SDDT tag for bspIndex: " << (uint32_t)bspIndex;
 
 			if (bspIndex >= structureBSPsTagBlock.value().elementCount)
-				throw HCMRuntimeException(std::format("loaded BSP index exceeded scnr tag BSP tag block count! observed: {}, max: {}", bspIndex, structureBSPsTagBlock.value().elementCount));
+				throw HCMRuntimeException(std::format("loaded BSP index exceeded scnr tag BSP tag block count! observed: {}, max: {}", (uint32_t)bspIndex, structureBSPsTagBlock.value().elementCount));
 
 			structureBSPsMetaDataStruct->setIndex(structureBSPsTagBlock.value().firstElement, bspIndex);
 			auto* pStructureDesignReference = structureBSPsMetaDataStruct->field<uint32_t>(structureBSPsMetaDataFields::structureDesignReference);
 			if (IsBadReadPtr(pStructureDesignReference, sizeof(uint32_t)))
 				throw HCMRuntimeException(std::format("Bad read of pStructureDesignReference at {:X}", (uintptr_t)pStructureDesignReference));
 
+
+			auto tagRefIsNull = tagReferenceReader->isNull((uintptr_t)pStructureDesignReference);
+			if (!tagRefIsNull)
+				throw tagRefIsNull.error();
+
+			if (tagRefIsNull.value())
+				continue;
+
 			auto tagInfo = tagReferenceReader->read((uintptr_t)pStructureDesignReference);
 			if (!tagInfo)
+			{
 				throw tagInfo.error();
+			}
 
-			PLOG_DEBUG << "Found SDDT tag for bspIndex: " << bspIndex << " with datum: " << tagInfo.value().tagDatum.toString();
+			PLOG_DEBUG << "Found SDDT tag for bspIndex: " << (uint32_t)bspIndex << " with datum: " << tagInfo.value().tagDatum.toString();
 
-			out.push_back(tagInfo.value());
+			out.insert(tagInfo.value());
 
 		}
 
@@ -112,7 +123,7 @@ public:
 		throw HCMInitException("Not impl yet");
 	}
 
-	virtual std::vector<TagInfo> getActiveStructureDesignTags() override
+	virtual std::set<TagInfo> getActiveStructureDesignTags() override
 	{
 		throw HCMRuntimeException("Not impl yet");
 	}

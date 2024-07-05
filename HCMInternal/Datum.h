@@ -29,7 +29,7 @@ struct Datum
 	bool isNull() const { return this->operator unsigned int() == 0xFFFFFFFF || this->operator unsigned int() == 0; }
 	//operator bool() const { return this->operator unsigned int() == 0xFFFFFFFF || this->operator unsigned int() == 0; } // null datum check
 
-	std::string toString()
+	std::string toString() const
 	{
 		std::stringstream ss;
 		ss << *this;
