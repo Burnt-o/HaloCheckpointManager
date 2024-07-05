@@ -1000,6 +1000,7 @@ private:
 								createNestedElement(GUIElementEnum::triggerOverlayLabelScale),
 								createNestedElement(GUIElementEnum::triggerOverlayNormalColor),
 								createNestedElement(GUIElementEnum::triggerOverlayBSPColor),
+								createNestedElement(GUIElementEnum::triggerOverlaySectorColor),
 								createNestedElement(GUIElementEnum::triggerOverlayAlpha),
 								createNestedElement(GUIElementEnum::triggerOverlayWireframeAlpha),
 								createNestedElement(GUIElementEnum::triggerOverlayCheckHitToggle),
@@ -1063,6 +1064,10 @@ private:
 				case GUIElementEnum::triggerOverlayBSPColor:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 						(game, ToolTipCollection("Color to render BSP (loadzone) triggers"), "Trigger BSP Colour", settings->triggerOverlayBSPColor));
+
+				case GUIElementEnum::triggerOverlaySectorColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+						(game, ToolTipCollection("Color to render Sector-type triggers"), "Trigger Sector Colour", settings->triggerOverlaySectorColor));
 
 				case GUIElementEnum::triggerOverlayAlpha:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.1, 1.f)>>

@@ -10,6 +10,7 @@ struct TriggerData
 	const TriggerModel model;
 	const uint32_t triggerIndex;
 	const bool isBSPTrigger;
+	const bool isSectorType; // only relevant to ODST/Reach/H4
 
 	// changes at run time
 	bool lastCheckSuccessful = false; // updated by UpdateTriggerLastChecked
@@ -30,10 +31,11 @@ struct TriggerData
 
 private:
 	friend class TriggerDataFactory;
-	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up) 
+	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up, bool isSector = false) 
 		: name(triggerName), 
 		model(triggerName, position, extents, forward, up),
 		triggerIndex(trigIndex),
-		isBSPTrigger(isBSP)
+		isBSPTrigger(isBSP),
+		isSectorType(isSector)
 	{}
 };

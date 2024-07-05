@@ -16,6 +16,55 @@
 #include "TriggerNamesHardcoded.h"
 #include "TagBlockReader.h"
 
+
+
+
+template <GameState::Value gameT, typename = void>
+class TriggerIsSectorResolver
+{
+public:
+	TriggerIsSectorResolver(GameState game, IDIContainer& dicon);
+	bool isSectorType(uintptr_t triggerDataStruct);
+};
+
+
+template <GameState::Value gameT>
+class TriggerIsSectorResolver<gameT, typename std::enable_if<gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo2 || gameT == GameState::Value::Halo3>::type>
+{
+public:
+	TriggerIsSectorResolver(GameState game, IDIContainer& dicon) {}
+	bool isSectorType(uintptr_t triggerDataStruct) { return false; }
+};
+
+template <GameState::Value gameT>
+class TriggerIsSectorResolver<gameT, typename std::enable_if<gameT == GameState::Value::Halo3ODST || gameT == GameState::Value::HaloReach || gameT == GameState::Value::Halo4>::type>
+{
+private:
+	enum class triggerDataFields { triggerType };
+	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
+public:
+	TriggerIsSectorResolver(GameState game, IDIContainer& dicon) 
+	{
+		auto ptr = dicon.Resolve< PointerDataStore>().lock();
+		triggerDataStruct = DynamicStructFactory::makeStrideable<triggerDataFields>(ptr, game);
+	}
+	bool isSectorType(uintptr_t ptriggerDataStruct)
+	{
+		enum class triggerTypes
+		{
+			BoundingBox = 0,
+			Sector = 1
+		};
+
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "ptriggerDataStruct: " << std::hex << p, p = ptriggerDataStruct);
+		triggerDataStruct->currentBaseAddress = ptriggerDataStruct;
+		auto* type = triggerDataStruct->field<triggerTypes>(triggerDataFields::triggerType);
+		if (IsBadReadPtr(type, sizeof(uint32_t))) throw HCMRuntimeException(std::format("Bad read address for type at {}", (uintptr_t)type));
+
+		return *type == triggerTypes::Sector;
+	}
+};
+
 class ITriggerDataCreator
 {
 public:
@@ -107,7 +156,7 @@ public:
 };
 
 
-
+template <GameState::Value gameT>
 class TriggerDataCreatorImpl : public ITriggerDataCreator, public TriggerDataFactory
 {
 private:
@@ -128,6 +177,7 @@ private:
 
 	std::shared_ptr<ITriggerNameResolver> triggerNameResolver;
 	std::function<bool(std::string)> triggerIsBSPLambda;
+	std::unique_ptr< TriggerIsSectorResolver<gameT>> triggerIsSectorResolver;
 
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr< TagBlockReader> tagBlockReaderWeak;
@@ -139,7 +189,8 @@ public:
 		triggerNameResolver(nameResolver),
 		triggerIsBSPLambda(bspCheck),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
-		tagBlockReaderWeak(resolveDependentCheat(TagBlockReader))
+		tagBlockReaderWeak(resolveDependentCheat(TagBlockReader)),
+		triggerIsSectorResolver(std::make_unique<TriggerIsSectorResolver<gameT>>(game, dicon))
 
 	{
 		auto ptr = dicon.Resolve< PointerDataStore>().lock();
@@ -190,6 +241,7 @@ public:
 			auto* pUp = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::up);
 			if (IsBadReadPtr(pUp, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pUp at {}", (uintptr_t)pUp));
 
+			bool isSector = triggerIsSectorResolver->isSectorType(triggerDataStruct->currentBaseAddress);
 
 			PLOG_DEBUG << "read Trigger Data at index " << triggerIndex << ", location " << std::hex << triggerDataStruct->currentBaseAddress << ":";
 			PLOG_DEBUG << "Name: " << name;
@@ -207,7 +259,8 @@ public:
 					*pPos,
 					*pExtents,
 					*pForward,
-					*pUp
+					*pUp,
+					isSector
 				)));
 
 
@@ -331,28 +384,28 @@ GetTriggerData::GetTriggerData(GameState gameImpl, IDIContainer& dicon)
 	switch (gameImpl)
 	{
 	case GameState::Value::Halo1:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo1>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverH1>(gameImpl, dicon), [](std::string str) { return str.starts_with("bsp"); }));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo1>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl<GameState::Value::Halo1>>(gameImpl, dicon, std::make_shared<TriggerNameResolverH1>(gameImpl, dicon), [](std::string str) { return str.starts_with("bsp"); }));
 		break;
 
 	case GameState::Value::Halo2:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo2>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverH2>(gameImpl, dicon), [](std::string str) { return str.starts_with("trans"); }));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo2>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl<GameState::Value::Halo2>>(gameImpl, dicon, std::make_shared<TriggerNameResolverH2>(gameImpl, dicon), [](std::string str) { return str.starts_with("trans"); }));
 		break;
 
 	case GameState::Value::Halo3:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl<GameState::Value::Halo3>>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
 		break;
 
 
 	case GameState::Value::Halo3ODST:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
 		break;
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
 		break;
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo4>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
+		pimpl = std::make_unique<GetTriggerDataImpl<GameState::Value::Halo4>>(gameImpl, dicon, std::make_unique<TriggerDataCreatorImpl<GameState::Value::Halo4>>(gameImpl, dicon, std::make_shared<TriggerNameResolverHardcoded>(gameImpl, dicon), [](std::string str) { return str.contains("zone_set"); }));
 		break;
 
 	default:

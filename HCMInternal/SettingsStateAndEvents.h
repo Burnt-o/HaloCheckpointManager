@@ -1332,6 +1332,13 @@ public:
 			nameof(triggerOverlayBSPColor)
 		);
 
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlaySectorColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{1.0f, 0.0f, 1.0f, 0.2f}, // purple
+			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
+			nameof(triggerOverlaySectorColor)
+		);
+
 	std::shared_ptr<BinarySetting<float>> triggerOverlayAlpha = std::make_shared<BinarySetting<float>>
 		(
 			0.5f,
@@ -1526,6 +1533,7 @@ public:
 			triggerOverlayLabelScale,
 		triggerOverlayNormalColor,
 		triggerOverlayBSPColor,
+			triggerOverlaySectorColor,
 		triggerOverlayAlpha,
 			triggerOverlayWireframeAlpha,
 		triggerOverlayCheckHitToggle,

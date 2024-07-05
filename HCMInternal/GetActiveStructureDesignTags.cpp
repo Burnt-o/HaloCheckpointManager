@@ -160,61 +160,48 @@ public:
 		scenarioTagDataStruct->currentBaseAddress = scenAddress.value();
 
 
-		PLOG_DEBUG << "1";
-
 		auto* pZoneSetTagBlock = scenarioTagDataStruct->field<uint32_t>(scenarioTagDataFields::ZoneSetTagBlock);
 		if (IsBadReadPtr(pZoneSetTagBlock, sizeof(uint32_t)))
 			throw HCMRuntimeException(std::format("Bad read of pZoneSetTagBlock at {:X}", (uintptr_t)pZoneSetTagBlock));
-
-		PLOG_DEBUG << "1";
 
 		lockOrThrow(tagBlockReaderWeak, tagBlockReader);
 		auto ZoneSetTagBlock = tagBlockReader->read((uintptr_t)pZoneSetTagBlock);
 		if (!ZoneSetTagBlock)
 			throw ZoneSetTagBlock.error();
 
-		PLOG_DEBUG << "1";
 		lockOrThrow(getCurrentZoneSetWeak, getCurrentZoneSet);
 		auto currentZoneSet = getCurrentZoneSet->getCurrentZoneSet();
 		
 		if (currentZoneSet >= ZoneSetTagBlock.value().elementCount)
 			throw HCMRuntimeException(std::format("currentZoneSet exceeded zoneset tagblock size, observed {}, expected {}", currentZoneSet, ZoneSetTagBlock.value().elementCount));
 
-		PLOG_DEBUG << "1";
-
 		zoneSetMetaDataStruct->setIndex(ZoneSetTagBlock.value().firstElement, currentZoneSet);
 		auto* pRuntimeStructureDesignZoneMask = zoneSetMetaDataStruct->field<SDDTMask>(zoneSetMetaDataFields::runtimeStructureDesignZoneMask);
 		if (IsBadReadPtr(pRuntimeStructureDesignZoneMask, sizeof(SDDTMask)))
 			throw HCMRuntimeException(std::format("Bad read of pRuntimeStructureDesignZoneMask at {:X}", (uintptr_t)pRuntimeStructureDesignZoneMask));
 
-		PLOG_DEBUG << "1";
 		auto runtimeStructureDesignZoneMask = *pRuntimeStructureDesignZoneMask;
 
-		PLOG_DEBUG << "1";
 		auto highestSDDTIndexSet = find_last_index_of_bit_set(runtimeStructureDesignZoneMask);
 		// if no sddt indexes are set then we return an empty set
 		if (highestSDDTIndexSet.has_value() == false)
 			return std::set<TagInfo>();
 
-		PLOG_DEBUG << "1";
 
 		// now we need to go to the structure design tag block
 		auto* pStructureDesignTagBlock = scenarioTagDataStruct->field<uint32_t>(scenarioTagDataFields::StructureDesignTagBlock);
 		if (IsBadReadPtr(pStructureDesignTagBlock, sizeof(uint32_t)))
 			throw HCMRuntimeException(std::format("Bad read of pStructureDesignTagBlock at {:X}", (uintptr_t)pStructureDesignTagBlock));
 
-		PLOG_DEBUG << "1";
 		auto StructureDesignTagBlock = tagBlockReader->read((uintptr_t)pStructureDesignTagBlock);
 		if (!StructureDesignTagBlock)
 			throw StructureDesignTagBlock.error();
-
-		PLOG_DEBUG << "1";
 
 		// if highestSDDTIndexSet is larger than the element count of the sddt tagblock, that's an uh oh
 		if (highestSDDTIndexSet.value() >= StructureDesignTagBlock.value().elementCount)
 			throw HCMRuntimeException(std::format("highestSDDTIndexSet exceeded sddt tagblock size, observed {}, expected {}", highestSDDTIndexSet.value(), StructureDesignTagBlock.value().elementCount));
 
-		PLOG_DEBUG << "1";
+
 
 		lockOrThrow(tagReferenceReaderWeak, tagReferenceReader);
 		std::set<TagInfo> out;
@@ -222,7 +209,7 @@ public:
 		// for each index in the runtimeStructureDesignZoneMask, look it up in the SDDTTagBlock and resolve the tag reference, appending to out
 		for (auto sddtIndex : bitset::indices_on(runtimeStructureDesignZoneMask))
 		{
-			PLOG_DEBUG << "1";
+
 			PLOG_DEBUG << "looking up sddt index: " << sddtIndex;
 
 			structureDesignMetaDataStruct->setIndex(StructureDesignTagBlock.value().firstElement, sddtIndex);
@@ -231,17 +218,12 @@ public:
 			if (IsBadReadPtr(pSDDTref, sizeof(uint32_t)))
 				throw HCMRuntimeException(std::format("Bad read of pSDDTref at {:X}", (uintptr_t)pSDDTref));
 
-			PLOG_DEBUG << "1";
-
 			auto checkTagRefNull = tagReferenceReader->isNull((uintptr_t)pSDDTref);
 			if (!checkTagRefNull)
 				throw checkTagRefNull.error();
-			PLOG_DEBUG << "1";
 
 			if (checkTagRefNull.value())
 				continue;
-
-			PLOG_DEBUG << "1";
 
 			auto tagInfo = tagReferenceReader->read((uintptr_t)pSDDTref);
 			if (!tagInfo)

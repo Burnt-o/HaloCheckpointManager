@@ -134,6 +134,7 @@ private:
 			const auto& triggerOverlayNormalColor = settings->triggerOverlayNormalColor->GetValue(); 
 
 			const auto& triggerOverlayBSPColor = settings->triggerOverlayBSPColor->GetValue();
+			const auto& triggerOverlaySectorColor = settings->triggerOverlaySectorColor->GetValue();
 
 			const auto& triggerOverlayCheckMissColor = settings->triggerOverlayCheckMissColor->GetValue();
 
@@ -229,7 +230,9 @@ private:
 				else
 				{
 					auto triggerColor = triggerData.isBSPTrigger ? triggerOverlayBSPColor :
-						triggerOverlayNormalColor;
+						(triggerData.isSectorType ? triggerOverlaySectorColor : triggerOverlayNormalColor);
+
+
 					triggerColor.w *= triggerOverlayAlpha;
 
 					triggerData.setColor(triggerColor, triggerOverlayWireframeAlpha);

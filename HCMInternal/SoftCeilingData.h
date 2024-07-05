@@ -23,7 +23,7 @@ static_assert(sizeof(SoftCeilingObjectMask) == 0x2);
 
 struct SoftCeilingData
 {
-public:
+private:
 	const SoftCeilingObjectMask softCeilingObjectMask;
 public:
 	const SoftCeilingType softCeilingType;

@@ -181,6 +181,7 @@
 		((triggerOverlayLabelScale, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayNormalColor, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayBSPColor, (ALL_SUPPORTED_GAMES)))\
+		((triggerOverlaySectorColor, (Halo3ODST, HaloReach, Halo4)))\
 		((triggerOverlayAlpha, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayWireframeAlpha, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayCheckHitToggle, (ALL_SUPPORTED_GAMES)))\

@@ -113,23 +113,6 @@ private:
 				if (!isDesiredSubject)
 					continue; 
 
-#ifdef HCM_DEBUG
-#define bts(x) (x ? "true" : "false")
-				if (GetKeyState('8') & 0x8000)
-				{
-					if (softCeiling.softCeilingObjectMask.value != 0)
-					{
-						PLOG_DEBUG << "wantsVehicles: " << bts(wantsVehicles);
-						PLOG_DEBUG << "wantsBipeds: " << bts(wantsBipeds);
-						PLOG_DEBUG << "softCeiling.appliesToVehicle()): " << bts(softCeiling.appliesToVehicle());
-						PLOG_DEBUG << "softCeiling.appliesToBiped(): " << bts(softCeiling.appliesToBiped());
-						PLOG_DEBUG << "softCeilingObjectMask.value: 0x" << std::hex << softCeiling.softCeilingObjectMask.value;
-						PLOG_DEBUG << "break";
-					}
-
-				}
-#endif
-
 
 				// fill
 				renderer->setPrimitiveColor(softCeiling.colorSolid);
