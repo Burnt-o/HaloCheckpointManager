@@ -124,7 +124,7 @@
 			((display2DInfoShowAggro, (Halo1)))\
 			((display2DInfoShowRNG, (Halo1)))\
 			((display2DInfoShowBSP, (Halo1, Halo2)))\
-			((display2DInfoShowBSPSet, (Halo1, Halo2)))\
+			((display2DInfoShowBSPSet, (THIRD_GEN)))\
 			((display2DInfoShowNextObjectDatum, (Halo2)))\
 			((display2DInfoTrackPlayer, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerViewAngle, (ALL_SUPPORTED_GAMES)))\

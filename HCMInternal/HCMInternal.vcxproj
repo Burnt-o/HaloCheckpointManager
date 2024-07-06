@@ -236,6 +236,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
+    <ClInclude Include="earcut.hpp" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
@@ -257,6 +258,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HideWatermarkCheck.h" />
     <ClInclude Include="HideWatermarkManager.h" />
     <ClInclude Include="IModalDialog.h" />
+    <ClInclude Include="IModel.h" />
     <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
@@ -297,6 +299,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="TriggerFilterModalDialogManager.h" />
     <ClInclude Include="TriggerFilterStringDialog.h" />
     <ClInclude Include="TriggerModel.h" />
+    <ClInclude Include="TriggerModel2.h" />
     <ClInclude Include="TriggerNamesHardcoded.h" />
     <ClInclude Include="TriggerOverlay.h" />
     <ClInclude Include="UnarySetting.h" />
@@ -547,6 +550,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
     <ClCompile Include="TriggerModel.cpp" />
+    <ClCompile Include="TriggerModel2.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />
     <ClCompile Include="UnarySetting.cpp" />
     <ClCompile Include="UpdateTriggerLastChecked.cpp" />

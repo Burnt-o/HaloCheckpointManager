@@ -39,3 +39,21 @@ private:
 		isSectorType(isSector)
 	{}
 };
+
+
+
+
+/*
+Note for when I later implement Sectors properly:
+Sector shapes are specifically called "right prisms" https://en.wikipedia.org/wiki/Prism_(geometry)
+This will help me google how to do the trianglulation of the top/bottom faces
+Though honestly it's just a 2-dimensional problem. Maybe find a library to do ear-clipping triangulation.
+GTE has it but that shits impenetrable
+Tutorialised example: https://github.com/ssell/Ear-Clipping
+prob best: https://github.com/mapbox/earcut.hpp
+side faces are easy to figure out.
+
+How to do the pointContained test tho?
+made doubly harder by the fact that polygons can be concave
+lol maybe we could just call the games own function for "point inside trigger volume", that actually may be way easier
+*/

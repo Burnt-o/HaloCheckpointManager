@@ -95,6 +95,9 @@
     <Filter Include="Services\OptionalCheats\Implementations\Services\BSPs">
       <UniqueIdentifier>{337a314c-9702-461f-9e86-e2e84933141d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\3DModel">
+      <UniqueIdentifier>{33b37033-68bc-4a7a-b2ac-4c0fc788ba2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -860,6 +863,15 @@
     <ClInclude Include="bitset_iter.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="earcut.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerModel2.h">
+      <Filter>Classes\3DModel</Filter>
+    </ClInclude>
+    <ClInclude Include="IModel.h">
+      <Filter>Classes\3DModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1260,6 +1272,9 @@
     </ClCompile>
     <ClCompile Include="GetActiveStructureDesignTags.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerModel2.cpp">
+      <Filter>Classes\3DModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -713,6 +713,7 @@ private:
 							createNestedElement(GUIElementEnum::display2DInfoShowAggro),
 							createNestedElement(GUIElementEnum::display2DInfoShowRNG),
 							createNestedElement(GUIElementEnum::display2DInfoShowBSP),
+							createNestedElement(GUIElementEnum::display2DInfoShowBSPSet),
 							createNestedElement(GUIElementEnum::display2DInfoShowNextObjectDatum),
 							createNestedElement(GUIElementEnum::display2DInfoTrackPlayer),
 							createNestedElement(GUIElementEnum::display2DInfoTrackCustomObject),
@@ -737,8 +738,14 @@ private:
 					case GUIElementEnum::display2DInfoShowBSP:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection(""), std::nullopt, 
-								((game.operator GameState::Value() == GameState::Value::Halo1 || game.operator GameState::Value() == GameState::Value::Halo2) ? "Show BSP Index" : "Show Zone Set Index"),
+								("Show BSP Index"),
 								settings->display2DInfoShowBSP));
+
+					case GUIElementEnum::display2DInfoShowBSPSet:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection(""), std::nullopt,
+								("Show BSP Set"),
+								settings->display2DInfoShowBSPSet));
 
 
 					case GUIElementEnum::display2DInfoShowNextObjectDatum:

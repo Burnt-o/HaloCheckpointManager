@@ -578,6 +578,13 @@ public:
 			nameof(display2DInfoShowBSP)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowBSPSet = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(display2DInfoShowBSPSet)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> display2DInfoTrackPlayer = std::make_shared<BinarySetting<bool>>
 		(
 			true,
@@ -1599,6 +1606,7 @@ public:
 		display2DInfoShowAggro,
 		display2DInfoShowRNG,
 		display2DInfoShowBSP,
+			display2DInfoShowBSPSet,
 		display2DInfoShowNextObjectDatum,
 		display2DInfoTrackPlayer,
 		display2DInfoShowPlayerViewAngle,
