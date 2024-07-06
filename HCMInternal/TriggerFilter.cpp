@@ -55,7 +55,8 @@ private:
 				PLOG_DEBUG << "filtering trigger data by string: " << std::endl << newValue;
 				std::stringstream stringstream(newValue);
 
-				std::vector<std::string> delimitedTriggerFilter;
+				// string.. is the name, bool is whether a match has been found yet (init to false)
+				std::vector<std::pair<std::string, bool>> delimitedTriggerFilter;
 				std::string tmp;
 				while (std::getline(stringstream, tmp, ';')) // delimit by semicolon
 				{
@@ -68,40 +69,55 @@ private:
 
 
 					if (tmp.size() > 0)
-						delimitedTriggerFilter.push_back(tmp);
+						delimitedTriggerFilter.push_back(std::pair<std::string, bool>(tmp, false));
 				}
 
 				auto filteredTriggerData = getTriggerData->getFilteredTriggers();
 				auto allTriggerData = getTriggerData->getAllTriggers();
 				filteredTriggerData->clear();
 
-				int matchedTriggerCount = 0;
-				for (auto& [triggerPointer, triggerData] : *allTriggerData.get())
+				lockOrThrow(messagesWeak, messages);
+				if (delimitedTriggerFilter.size() == 0)
 				{
-					for (auto& filterName : delimitedTriggerFilter)
+					messages->addMessage("Trigger Filter: Empty Trigger Filter List! Don't forget to add trigger names to the filter");
+					return;
+				}
+
+				for (auto& filterName : delimitedTriggerFilter)
+				{
+					for (auto& [triggerPointer, triggerData] : *allTriggerData.get())
 					{
-						if (triggerData.name == filterName)
+						
+						if (triggerData.name == filterName.first)
 						{
-							matchedTriggerCount++;
+							filterName.second = true;
 							filteredTriggerData->emplace(triggerPointer, triggerData);
-							break;
+							// you'd think we ought to break here, but a filter name can match multiple triggers! ie triggers can share a name
 						}
 
 					}
 				}
 
-				lockOrThrow(messagesWeak, messages);
-				if (delimitedTriggerFilter.size() == 0)
+
+				int matchedFilterCount = std::ranges::count_if(delimitedTriggerFilter, [](const auto& f) { return f.second; });
+
+
+				if (delimitedTriggerFilter.size() != matchedFilterCount)
 				{
-					messages->addMessage("Trigger Filter: Empty Trigger Filter List! Don't forget to add trigger names to the filter");
-				}
-				else if (delimitedTriggerFilter.size() != matchedTriggerCount)
-				{
-					messages->addMessage(std::format("Trigger Filter: Matched {} Triggers out of {} filter entries. Did you make a typo?", matchedTriggerCount, delimitedTriggerFilter.size()));
+					std::stringstream unmatchedss;
+					for (auto& filter : delimitedTriggerFilter)
+					{
+						if (!filter.second)
+							unmatchedss << filter.first << std::endl;
+					}
+					messages->addMessage(std::format("The following filter entries didn't find a match: \n{}", unmatchedss.str()));
+
+					messages->addMessage(std::format("Trigger Filter: Only {}/{} filter entries found matching trigger names. Did you make a typo?", matchedFilterCount, delimitedTriggerFilter.size()));
+					
 				}
 				else
 				{
-					messages->addMessage(std::format("Trigger Filter: Matched {} Triggers out of {} filter entries.", matchedTriggerCount, delimitedTriggerFilter.size()));
+					messages->addMessage(std::format("Trigger Filter: Matched {} filter entries.", matchedFilterCount));
 				}
 
 

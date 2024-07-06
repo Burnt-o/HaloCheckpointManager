@@ -35,6 +35,13 @@ bool TriggerModel2::pointInside(const SimpleMath::Vector3& worldPoint)
 		if (worldPoint.z < vertices[0].position.z || worldPoint.z > vertices[0].position.z + sectorHeight.value())
 			return false;
 
+
+
+		assert(false && "Turns out my assumption about the bases sharing the same z position was incorrect. They can indeed differ. ");
+		// so how the fuck am I gonna perform this test then? 
+
+
+
 		// Now our problem is just a 2D one! using an algo I stole from the internet
 		return pnpoly(sectorPoints2D.value(), { worldPoint.x, worldPoint.y });
 
@@ -224,7 +231,7 @@ TriggerModel2::TriggerModel2(std::vector<SimpleMath::Vector3> sectorPointsBottom
 
 	// bottom and top faces.. not trivial. Need to nick this neat ear-clipping triangulation library
 	std::vector<std::vector<SimpleMath::Vector3>> polygon;
-	polygon.push_back(sectorPointsBottom); // doesn't matter if we use bottom or top since this is a 2d calc and they're all on the same z plane
+	polygon.push_back(sectorPointsBottom); // doesn't matter if we use bottom or top since this is a 2d calc 
 
 	// Run tessellation
 	// Returns array of indices that refer to the vertices of the input polygon.
