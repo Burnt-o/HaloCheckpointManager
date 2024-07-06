@@ -6,6 +6,7 @@
 #include "IMCCStateHook.h"
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
+#include "IMessagesGUI.h"
 
 
 template <GameState::Value gameT>
@@ -22,6 +23,7 @@ private:
 	std::weak_ptr<GetSoftCeilingData> getSoftCeilingDataWeak;
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
+	std::weak_ptr<IMessagesGUI> messagesWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
 	// data
@@ -66,6 +68,16 @@ private:
 				renderingMutex.wait(true);
 			}
 			mRenderEventCallback.reset();
+		}
+
+		try
+		{
+			lockOrThrow(messagesWeak, messages);
+			messages->addMessage(newValue ? "Barrier Overlay enabled." : "Barrier Overlay disabled.");
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
 		}
 
 	}
@@ -149,7 +161,8 @@ public:
 		softCeilingOverlayToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->softCeilingOverlayToggle->valueChangedEvent, [this](bool& n) {onToggleChange(n); }),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
-		mccStateHookWeak(dicon.Resolve<IMCCStateHook>())
+		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
+		messagesWeak(dicon.Resolve<IMessagesGUI>())
 
 	{
 

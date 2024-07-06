@@ -74,6 +74,18 @@ private:
 			}
 			mRenderEventCallback.reset();
 		}
+
+
+		try
+		{
+			lockOrThrow(messagesGUIWeak, messages);
+			messages->addMessage(newValue ? "Trigger Overlay enabled." : "Trigger Overlay disabled.");
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
 	}
 
 
