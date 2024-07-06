@@ -245,21 +245,13 @@ private:
 			// idk why but renderering solid volumes first messes up the wireframes positions
 			if (renderStyle == TriggerRenderStyle::Wireframe || renderStyle == TriggerRenderStyle::SolidAndWireframe)
 			{
-				auto primitiveDrawer = renderer->getPrimitiveDrawer();
-
 				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 				{
-					// unfortunately setPrimitiveColor can only apply to one begin call
-					primitiveDrawer->Begin();
-					renderer->setPrimitiveColor(triggerData.currentColorWireframe);
 					for (auto& edge : triggerData.model.edges)
 					{
-						primitiveDrawer->DrawLine(edge.first, edge.second);
+						renderer->drawEdge(edge.first, edge.second, triggerData.currentColorWireframe);
 					}
-					primitiveDrawer->End();
 				}
-
-
 			}
 
 			// render solid volumes

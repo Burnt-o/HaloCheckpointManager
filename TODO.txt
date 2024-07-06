@@ -6,7 +6,18 @@
 * add scenario tag safety check to tagtablerange
 * add toggle messages for triggerOverlay/barrierOverlay
 
+* order of turning on triggeroverlay/barrieroverlay changes whether or not barrieroverlay has working depth/occlusion
+	* why is this happening???
+	* patterend texture is bleeding into primitiveBatch
+* also turning on/off triggerHitVertex rendering affects how wireframe of everything else looks?
+see https://github.com/microsoft/DirectXTK/wiki/GeometricPrimitive
+-> State management
+// so blendstate and depthstencilstate are getting fucked with? need to reset it after each geometricprimitive call?
+// maybe the rasterizer state too?
+* maybe change SoftCeilingData to store VertexPositionColor
 
+
+* need to disable HCM inputs while player entering trigger filter names
 
 
 FUTURE TODO: 

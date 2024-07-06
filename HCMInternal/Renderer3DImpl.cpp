@@ -85,6 +85,14 @@ for the rest of the implementation
 	 void const* shaderByteCode;
 	 size_t byteCodeLength;
 
+
+	 // https://github.com/microsoft/DirectXTK/blob/main/Src/GeometricPrimitive.cpp#L100
+
+	 // should create two inputLayouts.. one with a texture and one without.
+	 // or an array of inputLayouts for each element of TextureEnum
+	 // effect.. do we need different effects? I don't think so. effect doesn't really change
+	 // code above shares the effect between input layouts
+
 	 primitiveBatchEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
 		 this->pDevice->CreateInputLayout(VertexPosition::InputElements,

@@ -101,9 +101,9 @@ private:
 	friend class Render3DEventProvider;
 
 
-
-
-
+	//virtual void drawFilledTris(const VertexCollection& vertices, const IndexCollection& indices, const SimpleMath::Vector4& colour, TextureEnum texture) override;
+	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color) override;
+	virtual void drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color) override;
 
 public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
@@ -119,12 +119,6 @@ public:
 
 	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) override;
 	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe) override;
-	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() override{ return primitiveDrawer; }
-	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) 
-	{ 
-		primitiveBatchEffect->SetColorAndAlpha(color);
-		primitiveBatchEffect->Apply(this->pDeviceContext);
-	}
 
 	virtual const SimpleMath::Vector3 getCameraPosition() override { return cameraPosition; };
 

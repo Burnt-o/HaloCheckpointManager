@@ -94,8 +94,7 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 			createDepthStencilView(screenSizeIn);
 		}
 
-		this->primitiveBatchEffect->SetProjection(this->viewProjectionMatrix);
-		this->primitiveBatchEffect->Apply(this->pDeviceContext);
+
 
 
 
@@ -109,8 +108,19 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 		this->pDeviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
 		this->pDeviceContext->OMSetDepthStencilState(this->m_depthStencilState, 0);
 
+		//this->pDeviceContext->OMSetBlendState(this->commonStates->NonPremultiplied(), nullptr, 0xFFFFFFFF);
+		//this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+
+		ID3D11SamplerState* samplerState = this->commonStates->LinearClamp();
+		this->pDeviceContext->PSSetSamplers(0, 1, &samplerState);
+
 
 		this->pDeviceContext->IASetInputLayout(inputLayout.Get()); 
+
+
+
+		this->primitiveBatchEffect->SetProjection(this->viewProjectionMatrix);
+		this->primitiveBatchEffect->Apply(this->pDeviceContext);
 
 
 		// TODO: make this created once (per resizeBuffers) in d3dhook and passed along as render args

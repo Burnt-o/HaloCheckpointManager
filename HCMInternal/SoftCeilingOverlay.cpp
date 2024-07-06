@@ -103,10 +103,6 @@ private:
 			bool wantsBipeds = desiredSubjects == SettingsEnums::SoftCeilingRenderTypes::Bipeds || desiredSubjects == SettingsEnums::SoftCeilingRenderTypes::BipedsOrVehicles;
 
 
-			auto cameraPosition = renderer->getCameraPosition();
-
-			auto primitiveDrawer = renderer->getPrimitiveDrawer();
-
 			for (auto& softCeiling : *softCeilingDataLock.value().get())
 			{
 				bool isDesiredSubject = (wantsVehicles && softCeiling.appliesToVehicle()) || (wantsBipeds && softCeiling.appliesToBiped());
@@ -115,19 +111,12 @@ private:
 
 
 				// fill
-				renderer->setPrimitiveColor(softCeiling.colorSolid);
-				primitiveDrawer->Begin();
-				primitiveDrawer->DrawTriangle(softCeiling.vertices[0], softCeiling.vertices[1], softCeiling.vertices[2]);
-				primitiveDrawer->DrawTriangle(softCeiling.vertices[0], softCeiling.vertices[2], softCeiling.vertices[1]); // need to render the back face too
-				primitiveDrawer->End();
+				renderer->drawTriangle(softCeiling.vertices, softCeiling.colorSolid);
 
-				// wireframe 
-				renderer->setPrimitiveColor(softCeiling.colorWireframe);
-				primitiveDrawer->Begin();
-				primitiveDrawer->DrawLine(softCeiling.vertices[0], softCeiling.vertices[1]);
-				primitiveDrawer->DrawLine(softCeiling.vertices[1], softCeiling.vertices[2]);
-				primitiveDrawer->DrawLine(softCeiling.vertices[2], softCeiling.vertices[0]);
-				primitiveDrawer->End();
+				// outline 
+				renderer->drawEdge(softCeiling.vertices[0], softCeiling.vertices[1], softCeiling.colorWireframe);
+				renderer->drawEdge(softCeiling.vertices[1], softCeiling.vertices[2], softCeiling.colorWireframe);
+				renderer->drawEdge(softCeiling.vertices[2], softCeiling.vertices[0], softCeiling.colorWireframe);
 
 			}
 			

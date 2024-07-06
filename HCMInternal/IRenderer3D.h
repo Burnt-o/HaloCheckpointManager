@@ -89,18 +89,6 @@ public:
 	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) = 0;
 
 	/// <summary>
-	/// Gets the primitiveBatch drawer.
-	/// </summary>
-	/// <returns>Shared ptr to the primitive batch drawer.</returns>
-	virtual std::shared_ptr<PrimitiveBatch<VertexPosition>> getPrimitiveDrawer() = 0;
-
-	/// <summary>
-	/// Sets the color of objects drawn by primitiveBatch drawer.
-	/// </summary>
-	/// <param name="color">Float4 of the colour to be drawn.</param>
-	virtual void setPrimitiveColor(const SimpleMath::Vector4& color) = 0;
-
-	/// <summary>
 	/// Draws a unit sphere (scaled by param) of the specified colour at the specified position.
 	/// </summary>
 	/// <param name="position">Float3 world position of the center of the sphere.</param>
@@ -115,5 +103,30 @@ public:
 	/// <returns>worldPoint position of camera</returns>
 	virtual const SimpleMath::Vector3 getCameraPosition() = 0;
 
+	/*
+	enum class TextureEnum
+	{
+		NoTexture,
+		Splotchy
+	};
 
+	using IndexCollection = std::vector<uint16_t>;
+	using VertexCollection = std::vector<DirectX::VertexPosition>;
+	virtual void drawFilledTris(const VertexCollection& vertices, const IndexCollection& indices, const SimpleMath::Vector4& colour, TextureEnum texture) = 0;
+*/
+
+/// <summary>
+/// Draws a filled triangle of the specified colour at the specified position.
+/// </summary>
+/// <param name="vertexPositions">3x Float3 world position of the triangle vertices.</param>
+/// <param name="color">Float4 of the colour to be drawn.</param>
+	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color) = 0;
+
+	/// <summary>
+	/// Draws an edge (line of the specified colour at the specified position.
+	/// </summary>
+	/// <param name="edgeStart">Start world position of the line.</param>
+	/// <param name="edgeEnd">End world position of the line.</param>
+	/// <param name="color">Float4 of the colour to be drawn.</param>
+	virtual void drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color) = 0;
 };
