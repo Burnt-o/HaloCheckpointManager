@@ -169,12 +169,9 @@ private:
 			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
 			 uint32_t currentTick = gameTickEventHook->getCurrentGameTick();
 
-			if (mGame == GameState::Value::Halo2) 
-				currentTick--;
+			 if (mGame == GameState::Value::Halo2)
+				 currentTick--;
 
-#ifndef HCM_DEBUG
-			static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value");
-#endif
 
 			auto& cameraFrustum = renderer->getCameraFrustum();
 			auto& cameraPosition = renderer->getCameraPosition();
@@ -294,19 +291,17 @@ private:
 				if (labelStyle != TriggerLabelStyle::None)
 				{
 					bool isCentered = labelStyle == TriggerLabelStyle::Center;
-					auto pointOnScreen = isCentered
-						? !renderer->pointBehindCamera(triggerData.model.getBoundingBox().Center)
-						: !renderer->pointBehindCamera(triggerData.model.getBoundingBox().Center - ((SimpleMath::Vector3)triggerData.model.getBoundingBox().Extents / 2)); // corner (TODO: store corner in triggermodel)
+
+					auto& labelPosition = isCentered ? triggerData.model.getCenter() : triggerData.model.getCorner();
+
+					auto pointOnScreen = !renderer->pointBehindCamera(labelPosition);
 
 
 					if (pointOnScreen)
 					{
-						auto screenPosition = labelStyle == TriggerLabelStyle::Center
-							? renderer->worldPointToScreenPosition(triggerData.model.getBoundingBox().Center, false)
-							: renderer->worldPointToScreenPosition(triggerData.model.getBoundingBox().Center - ((SimpleMath::Vector3)triggerData.model.getBoundingBox().Extents / 2), false); // corner (TODO: store corner in triggermodel)
+						auto screenPosition = renderer->worldPointToScreenPosition(labelPosition, false);
 
-
-						auto dynLabelScale = labelScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(triggerData.model.getBoundingBox().Center));
+						auto dynLabelScale = labelScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(labelPosition));
 
 						// draw main label text
 						if (isCentered)

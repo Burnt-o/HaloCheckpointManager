@@ -11,6 +11,9 @@ class TriggerModel : public IModelTriangles, public IModelEdges
 private:
 	DirectX::BoundingOrientedBox box;
 
+	// used for labels
+	SimpleMath::Vector3 centerPosition;
+	SimpleMath::Vector3 cornerPosition;
 
 	VertexCollection vertices;
 	IndexCollection triangleIndices;
@@ -31,6 +34,8 @@ public:
 	const bool m_isSectorType;
 
 	const std::string& getLabel() const { return label; }
+	const SimpleMath::Vector3& getCenter() const { return centerPosition; }
+	const SimpleMath::Vector3& getCorner() const { return cornerPosition; }
 
 	// Only accurate for box type triggers
 	const DirectX::BoundingOrientedBox& getBoundingBox() const { return box; }

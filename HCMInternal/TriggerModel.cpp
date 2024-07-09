@@ -12,7 +12,7 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 	: label(triggerName),
 	m_isSectorType(false)
 {
-	// Note: position is actually the location of the mininum x/y/z, not the center.
+	// Note: position input parameter is actually the location of the mininum x/y/z, not the center.
 	auto center = position + (extents / 2);
 
 	auto resizeTransform = SimpleMath::Matrix::CreateScale(extents);
@@ -126,7 +126,9 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 		4, 6, 7
 	};
 
-
+	// setup center/corner
+	this->centerPosition = box.Center;
+	this->cornerPosition = center - ((SimpleMath::Vector3)box.Extents / 2.f);
 }
 
 
@@ -221,7 +223,9 @@ TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vect
 	// Create bounding box (not an accurate representation of sector trigs)
 	DirectX::BoundingOrientedBox::CreateFromPoints(box, vertices.size(), &vertices.data()->position, (size_t)sizeof(VertexPosition));
 
-
+	// setup center/corner
+	this->centerPosition = box.Center;
+	this->cornerPosition = sectorPointsBottom.at(0);
 }
 
 // let's us input our SimpleMath Vec3's directly into the 2d earcut algo

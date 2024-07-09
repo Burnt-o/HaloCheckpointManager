@@ -1349,7 +1349,7 @@ public:
 	std::shared_ptr<BinarySetting<float>> triggerOverlayAlpha = std::make_shared<BinarySetting<float>>
 		(
 			0.4f,
-			[](float in) { return in >= 0.1f && in <= 1.f; },
+			[](float in) { return in >= 0.05f && in <= 1.f; },
 			nameof(triggerOverlayAlpha)
 		);
 
