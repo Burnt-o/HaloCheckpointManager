@@ -5524,7 +5524,7 @@
 			<currentVehicleDatum>0x14</currentVehicleDatum>
 			<!--these pos/vel are the non-havok physics versions (aka the ghost hitbox?)-->
 			<position>0x64</position>
-			<triggerHitVertex>0x1C</triggerHitVertex>
+			<triggerHitVertex>0x30</triggerHitVertex>
 			<velocity>0x88</velocity>
 			<health>0xEC</health>
 			<shields>0xF0</shields>
