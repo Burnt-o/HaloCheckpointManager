@@ -1522,7 +1522,7 @@ public:
 		(
 			0.6f,
 			[](float in) { return true; },
-			nameof(softCeilingOverlaySolidTransparency)
+			nameof(softCeilingOverlayWireframeTransparency)
 		);
 
 
