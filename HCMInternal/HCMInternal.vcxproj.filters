@@ -638,9 +638,6 @@
     <ClInclude Include="DirectXRenderEvent.h">
       <Filter>Services\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteResource.h">
-      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
-    </ClInclude>
     <ClInclude Include="RenderTextHelper.h">
       <Filter>Services</Filter>
     </ClInclude>
@@ -722,7 +719,7 @@
     <ClInclude Include="TriggerData.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
-    <ClInclude Include="TriggerModel.h">
+    <ClInclude Include="TriggerModelOld.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
     <ClInclude Include="ObjectTableRange.h">
@@ -818,7 +815,7 @@
     <ClInclude Include="MagicString.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="LoadTexture.h">
+    <ClInclude Include="TextureFactory.h">
       <Filter>Services\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="SliderParam.h">
@@ -866,11 +863,17 @@
     <ClInclude Include="earcut.hpp">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="TriggerModel2.h">
-      <Filter>Classes\3DModel</Filter>
-    </ClInclude>
     <ClInclude Include="IModel.h">
       <Filter>Classes\3DModel</Filter>
+    </ClInclude>
+    <ClInclude Include="PointInsideTrigger.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerModel.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureResource.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1126,9 +1129,6 @@
     <ClCompile Include="Renderer3DImpl_Sprites.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteResource.cpp">
-      <Filter>Services\OptionalCheats\Implementations\3D</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTextHelper.cpp">
       <Filter>Services</Filter>
     </ClCompile>
@@ -1174,7 +1174,7 @@
     <ClCompile Include="Renderer3DImpl_updateCameraData.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer3DImpl_RenderTriggers.cpp">
+    <ClCompile Include="Renderer3DImpl_Geometry.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D</Filter>
     </ClCompile>
     <ClCompile Include="ObjectTableRange.cpp">
@@ -1186,7 +1186,7 @@
     <ClCompile Include="SettingsEnum.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
-    <ClCompile Include="TriggerModel.cpp">
+    <ClCompile Include="TriggerModelOld.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="TriggerFilter.cpp">
@@ -1240,7 +1240,7 @@
     <ClCompile Include="SoftCeilingOverlay.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
     </ClCompile>
-    <ClCompile Include="LoadTexture.cpp">
+    <ClCompile Include="TextureFactory.cpp">
       <Filter>Services\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ScopedImFontScaler.cpp">
@@ -1273,8 +1273,11 @@
     <ClCompile Include="GetActiveStructureDesignTags.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
     </ClCompile>
-    <ClCompile Include="TriggerModel2.cpp">
-      <Filter>Classes\3DModel</Filter>
+    <ClCompile Include="PointInsideTrigger.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerModel.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

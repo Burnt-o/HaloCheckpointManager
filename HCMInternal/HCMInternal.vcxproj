@@ -262,7 +262,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
-    <ClInclude Include="LoadTexture.h" />
+    <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
     <ClInclude Include="MeasurePlayerDistanceToObject.h" />
@@ -273,6 +273,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="PointerDataParser.h" />
     <ClInclude Include="PointerDataParserInstantiators.h" />
     <ClInclude Include="PointerDataStore.h" />
+    <ClInclude Include="PointInsideTrigger.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
@@ -286,20 +287,20 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="SliderParam.h" />
     <ClInclude Include="SoftCeilingData.h" />
     <ClInclude Include="SoftCeilingOverlay.h" />
-    <ClInclude Include="SpriteResource.h" />
     <ClInclude Include="SwitchBSPSet.h" />
     <ClInclude Include="TagBlock.h" />
     <ClInclude Include="TagBlockReader.h" />
     <ClInclude Include="TagInfo.h" />
     <ClInclude Include="TagReferenceReader.h" />
     <ClInclude Include="TagTableRange.h" />
+    <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TrackTriggerEnterExit.h" />
     <ClInclude Include="TriggerData.h" />
     <ClInclude Include="TriggerFilter.h" />
     <ClInclude Include="TriggerFilterModalDialogManager.h" />
     <ClInclude Include="TriggerFilterStringDialog.h" />
+    <ClInclude Include="TriggerModelOld.h" />
     <ClInclude Include="TriggerModel.h" />
-    <ClInclude Include="TriggerModel2.h" />
     <ClInclude Include="TriggerNamesHardcoded.h" />
     <ClInclude Include="TriggerOverlay.h" />
     <ClInclude Include="UnarySetting.h" />
@@ -517,7 +518,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="LoadTexture.cpp" />
+    <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
     <ClCompile Include="ObjectTableRange.cpp" />
@@ -525,8 +526,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="PointerDataGetter.cpp" />
     <ClCompile Include="PointerDataParser.cpp" />
     <ClCompile Include="PointerDataStore.cpp" />
+    <ClCompile Include="PointInsideTrigger.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
-    <ClCompile Include="Renderer3DImpl_RenderTriggers.cpp" />
+    <ClCompile Include="Renderer3DImpl_Geometry.cpp" />
     <ClCompile Include="Renderer3DImpl_updateCameraData.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -542,15 +544,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="ShieldInputPrinter.cpp" />
     <ClCompile Include="SkullToggler.cpp" />
     <ClCompile Include="SoftCeilingOverlay.cpp" />
-    <ClCompile Include="SpriteResource.cpp" />
     <ClCompile Include="SwitchBSPSet.cpp" />
     <ClCompile Include="TagBlockReader.cpp" />
     <ClCompile Include="TagReferenceReader.cpp" />
     <ClCompile Include="TagTableRange.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
+    <ClCompile Include="TriggerModelOld.cpp" />
     <ClCompile Include="TriggerModel.cpp" />
-    <ClCompile Include="TriggerModel2.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />
     <ClCompile Include="UnarySetting.cpp" />
     <ClCompile Include="UpdateTriggerLastChecked.cpp" />

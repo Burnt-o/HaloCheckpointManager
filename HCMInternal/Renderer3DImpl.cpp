@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Renderer3DImpl.h"
 #include "PointerDataStore.h"
-#include "LoadTexture.h"
+#include "TextureFactory.h"
 /*
 
 See:
@@ -50,21 +50,8 @@ for the rest of the implementation
 	 spriteBatch = std::make_unique<SpriteBatch>(this->pDeviceContext);
 	 commonStates = std::make_unique<CommonStates>(this->pDevice);
 	 primitiveDrawer = std::make_unique<PrimitiveBatch<VertexPosition>>(this->pDeviceContext);
-	 unitCube = GeometricPrimitive::CreateCube(this->pDeviceContext);
-	 unitCubeInverse = GeometricPrimitive::CreateCube(this->pDeviceContext, 1.f, false); // rhcoords = flip faces
 	 unitSphere = GeometricPrimitive::CreateSphere(this->pDeviceContext);
 	 primitiveBatchEffect = std::make_unique<BasicEffect>(this->pDevice);
-
-	
-	 //GeometricPrimitive::SetDepthBufferMode(true);
-	 //basicEffect->SetVertexColorEnabled(true);
-	 //primitiveBatchEffect->SetAmbientLightColor(SimpleMath::Vector4{1.f, 1.f, 1.f, 0.2f});
-	 //basicEffect->DisableSpecular();
-	 //basicEffect->SetEmissiveColor(SimpleMath::Vector4{1.f, 1.f, 1.f, 0.2f});
-
-	 // how to change lighting on geometricprimitive?
-	 // would probably need to create on basicEffect for it ugh
-	 // plus another for the patterened texture version.. ugh
 
 
 	 // setup depth stencil state.
@@ -78,7 +65,8 @@ for the rest of the implementation
 	 depthStencilStateDesc.StencilEnable = FALSE;
 
 	 auto hr = this->pDevice->CreateDepthStencilState(&depthStencilStateDesc, &this->m_depthStencilState);
-	 PLOG_DEBUG << "hr " << hr;
+	 if (SUCCEEDED(hr) == false)
+		 throw HCMInitException(std::format("Failed to create depth stencil state, error code: {}", hr));
 
 
 
@@ -88,28 +76,48 @@ for the rest of the implementation
 
 	 // https://github.com/microsoft/DirectXTK/blob/main/Src/GeometricPrimitive.cpp#L100
 
-	 // should create two inputLayouts.. one with a texture and one without.
-	 // or an array of inputLayouts for each element of TextureEnum
-	 // effect.. do we need different effects? I don't think so. effect doesn't really change
-	 // code above shares the effect between input layouts
 
+	 primitiveBatchEffect->SetTextureEnabled(true);
 	 primitiveBatchEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
-		 this->pDevice->CreateInputLayout(VertexPosition::InputElements,
-			 VertexPosition::InputElementCount,
-			 shaderByteCode,
-			 byteCodeLength,
-			 inputLayout.ReleaseAndGetAddressOf());
+		this->pDevice->CreateInputLayout(VertexPosition::InputElements,
+			VertexPosition::InputElementCount,
+			shaderByteCode,
+			byteCodeLength,
+			inputLayoutTextured.ReleaseAndGetAddressOf());
+
+
+		primitiveBatchEffect->SetTextureEnabled(false);
+		primitiveBatchEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+		this->pDevice->CreateInputLayout(VertexPosition::InputElements,
+			VertexPosition::InputElementCount,
+			shaderByteCode,
+			byteCodeLength,
+			inputLayoutUntextured.ReleaseAndGetAddressOf());
 
 
 
-	// setup hatched texture of triggers
-		 auto loadedTexture = LoadTextureFromMemory(111, this->pDevice);
+	// setup textures
+	std::map<TextureEnum, int> textureResourceIDs = // maps HCMInternal.rc id's to texture enums for init
+	{
+		{TextureEnum::Crosshair, 110},
+		{TextureEnum::SplotchyPattern, 111},
+	};
 
-		 if (loadedTexture)
-			 patternedTexture = loadedTexture.value().textureView;
-		 else
-			 PLOG_ERROR << "Failed to load texture: " << loadedTexture.error().what();
+	for (auto& [texEnum, resourceID] : textureResourceIDs)
+	{
+		auto texture = TextureFactory::LoadTextureMemory(resourceID, this->pDevice);
+		if (!texture)
+		{
+			throw HCMInitException(std::format("Failed to load texture of enum: {}, resource ID: {}, error: {}",
+				magic_enum::enum_name(texEnum), resourceID, texture.error().what()));
+		}
+
+
+		textureResources.insert(std::pair<TextureEnum, std::unique_ptr<TextureResource>>(texEnum, std::move(texture.value())));
+	}
+
+
 
  }
 

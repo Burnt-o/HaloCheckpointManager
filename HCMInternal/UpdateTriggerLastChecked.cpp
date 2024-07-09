@@ -33,6 +33,7 @@ private:
 	// data
 	static inline UpdateTriggerLastCheckedImplByIndex<mGame>* instance = nullptr;
 	std::shared_ptr<ModuleInlineHook> updateTriggerCheckHook;
+	std::shared_ptr<MultilevelPointer> pointInsideTriggerFunction;
 	std::atomic_bool destructionGuard = false;
 
 	// callbacks
@@ -153,7 +154,7 @@ public:
 		auto updateTriggerLastCheckedFunction = ptr->getData < std::shared_ptr<MultilevelPointer>>(nameof(updateTriggerLastCheckedFunction), game);
 		updateTriggerCheckHook = ModuleInlineHook::make(game.toModuleName(), updateTriggerLastCheckedFunction, UpdateTriggerCheckHookFunction);
 
-
+		auto pointInsideTriggerFunction = ptr->getData < std::shared_ptr<MultilevelPointer>>(nameof(pointInsideTriggerFunction), game);
 
 	}
 
@@ -168,7 +169,33 @@ public:
 		instance = nullptr;
 	}
 
+	//virtual bool isPointInsideTrigger(const SimpleMath::Vector3& worldPoint, const uintptr_t triggerData, const uint32_t triggerIndex) override
+	//{
+	//	uintptr_t pointInsideTriggerFunctionResolved;
+	//	if (!pointInsideTriggerFunction->resolve(&pointInsideTriggerFunctionResolved))
+	//		throw HCMRuntimeException(std::format("Failed to resolve pointInsideTriggerFunction, error: {}", MultilevelPointer::GetLastError()));
+
+	//	if constexpr (mGame == GameState::Value::Halo1)
+	//	{
+	//		typedef int64_t(*PointInsideTrigger_t)(uint16_t tIndex, const SimpleMath::Vector3* wPos);
+	//		PointInsideTrigger_t pointInsideTrigger_vptr;
+	//		pointInsideTrigger_vptr = static_cast<PointInsideTrigger_t>((void*)pointInsideTriggerFunctionResolved);
+	//		return pointInsideTrigger_vptr(triggerIndex, &worldPoint);
+	//	}
+	//	else if constexpr (mGame == GameState::Value::Halo2)
+	//	{
+	//		typedef int64_t(*PointInsideTrigger_t)(uintptr_t triggerDataPlus10, const SimpleMath::Vector3* wPos, uintptr_t triggerData);
+	//		PointInsideTrigger_t pointInsideTrigger_vptr;
+	//		pointInsideTrigger_vptr = static_cast<PointInsideTrigger_t>((void*)pointInsideTriggerFunctionResolved);
+	//		return pointInsideTrigger_vptr((triggerData + 0x10), &worldPoint, triggerData);
+	//	}
+
+	//}
+
 };
+
+
+
 
 
 
@@ -397,6 +424,7 @@ public:
 		entityTriggerInfoDataStruct = DynamicStructFactory::make<entityTriggerInfoDataFields>(ptr, game);
 
 
+
 		if constexpr (mGame == GameState::Value::Halo3 || mGame == GameState::Value::Halo3ODST)
 			updateTriggerCheckHook = ModuleInlineHook::make(game.toModuleName(), updateTriggerLastCheckedFunction, UpdateTriggerCheckHookFunctionSig1);
 		else if constexpr (mGame == GameState::Value::HaloReach || mGame == GameState::Value::Halo4)
@@ -415,6 +443,15 @@ public:
 		updateTriggerCheckHook->setWantsToBeAttached(false);
 		instance = nullptr;
 	}
+
+
+	//virtual bool isPointInsideTrigger(const SimpleMath::Vector3& worldPoint, const uintptr_t triggerData, const uint32_t triggerIndex) override
+	//{
+	//	if constexpr (mGame == GameState::Value::Halo3 || mGame == GameState::Value::Halo3ODST)
+	//		return updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, const SimpleMath::Vector3*>(triggerIndex, &worldPoint);
+	//	else if constexpr (mGame == GameState::Value::HaloReach || mGame == GameState::Value::Halo4)
+	//		return updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, uint32_t, const SimpleMath::Vector3*>(triggerIndex, 0xFFFFFF, &worldPoint);
+	//}
 
 };
 

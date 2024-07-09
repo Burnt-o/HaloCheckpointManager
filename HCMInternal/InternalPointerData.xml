@@ -9212,6 +9212,29 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="pointInsideTriggerFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB720A0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x729F70</Offset>
+			</Offsets>
+		</Version>
+
+		<!--<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x12086C</Offset>
+			</Offsets>
+		</Version>-->
+	</VersionedEntry>
+
 	<VersionedEntry Name="entityTriggerInfoDataFields" Type="DynStructOffsetInfo">
 		<Version Version="All" Game="Halo3">
 			<Datum>-0x28</Datum>
@@ -9397,6 +9420,7 @@
 			<position>0x28</position>
 			<extents>0x34</extents>
 			<triggerType>0xC</triggerType>
+			<sectorPointsTagBlock>0x44</sectorPointsTagBlock>
 		</Version>
 
 		<Version Version="All" Game="HaloReach">
@@ -9406,6 +9430,7 @@
 			<position>0x28</position>
 			<extents>0x34</extents>
 			<triggerType>0xC</triggerType>
+			<sectorPointsTagBlock>0x44</sectorPointsTagBlock>
 		</Version>
 
 		<Version Version="All" Game="Halo4">
@@ -9415,6 +9440,24 @@
 			<position>0x28</position>
 			<extents>0x3C</extents> <!--diff!-->
 			<triggerType>0xC</triggerType>
+			<sectorPointsTagBlock>0x4C</sectorPointsTagBlock> <!--diff!-->
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="sectorPointsDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="Halo3ODST">
+			<StrideSize>0x14</StrideSize>
+			<position>0x0</position>
+		</Version>
+
+		<Version Version="All" Game="HaloReach">
+			<StrideSize>0x14</StrideSize>
+			<position>0x0</position>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<StrideSize>0x14</StrideSize>
+			<position>0x0</position>
 		</Version>
 	</VersionedEntry>
 

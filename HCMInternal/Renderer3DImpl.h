@@ -10,7 +10,6 @@
 #include "IMakeOrGetCheat.h"
 #include "SettingsStateAndEvents.h"
 #include <d3d11.h>
-#include "SpriteResource.h"
 #include "directxtk\SpriteBatch.h"
 #include "directxtk\DDSTextureLoader.h"
 #include "directxtk\CommonStates.h"
@@ -19,16 +18,16 @@
 #include "directxtk\GeometricPrimitive.h"
 #include "directxtk\Effects.h"
 #include <wrl/client.h>
+#include "TextureResource.h"
+
+using namespace Microsoft::WRL;
 
 // impl in .cpp
 template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
 {
 private:
-	//struct CameraFrustumFaces
-	//{
-	//	std::array<SimpleMath::Vector3, 4> nearFrustum, farFrustum, leftFrustum, rightFrustum, topFrustum, bottomFrustum;
-	//};
+	
 
 	struct CameraFrustumSidePlanes
 	{
@@ -53,9 +52,11 @@ private:
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
 
+	// These resources do not belong to us, they belong to the game - do not release them
 	ID3D11Device* pDevice; 
 	ID3D11DeviceContext* pDeviceContext; 
 	ID3D11RenderTargetView* pMainRenderTargetView;
+
 	bool init = false; // initialise spriteBatch & commonStates on first render frame
 	std::unique_ptr<SpriteBatch> spriteBatch; // gets remade by constructSpriteResource to update sprite atlas
 	std::unique_ptr<CommonStates> commonStates;
@@ -67,25 +68,22 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
 	void onGameStateChanged(const MCCState& newMCCState);
 
-	// map of loaded resource IDs to their respective spriteResource.
-	// If drawSprite is passed an ID not in this map, will call loadSpriteResource to try to load it and add to the map.
-	std::map<int, std::unique_ptr<SpriteResource>> spriteResourceCache {}; // starts empty
+	// map of loaded resource IDs to their respective resourve view.
+	std::map<TextureEnum, std::unique_ptr<TextureResource>> textureResources {}; // loaded up in init
 
-	std::unique_ptr<GeometricPrimitive> unitCube;
-	std::unique_ptr<GeometricPrimitive> unitCubeInverse; // backfaces on the front
-	std::unique_ptr<GeometricPrimitive> unitSphere;
+	std::unique_ptr<GeometricPrimitive> unitSphere; // used in renderSphere (trigger hit position)
 	std::shared_ptr<PrimitiveBatch<VertexPosition>> primitiveDrawer;
 
 	std::unique_ptr<BasicEffect> primitiveBatchEffect;
-	Microsoft::WRL::ComPtr< ID3D11InputLayout > inputLayout;
-	ID3D11ShaderResourceView* patternedTexture;
+	ComPtr< ID3D11InputLayout > inputLayoutTextured;
+	ComPtr< ID3D11InputLayout > inputLayoutUntextured;
 
 	void createDepthStencilView(SimpleMath::Vector2 screenSize);
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
-	ID3D11DepthStencilView* m_depthStencilView;
-	ID3D11DepthStencilState* m_depthStencilState;
+	ComPtr<ID3D11Texture2D> depthStencil;
+	ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+	ComPtr<ID3D11DepthStencilState> m_depthStencilState;
 
-	void constructSpriteResource(int resourceID); // throws HCMRuntimeExceptions on fail
+
 	void initialise(); // run on first render frame to init spriteBatch & common states
 
 	// injected services
@@ -97,14 +95,11 @@ private:
 
 	// funcs
 	virtual bool updateCameraData(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) override;
-	RECTF drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter);
+	RECTF drawSpriteImpl(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter);
 	friend class Render3DEventProvider;
 
 
-	//virtual void drawFilledTris(const VertexCollection& vertices, const IndexCollection& indices, const SimpleMath::Vector4& colour, TextureEnum texture) override;
-	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color) override;
-	virtual void drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color) override;
-
+	void setTexture(std::optional<TextureEnum> texture);
 public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
@@ -112,15 +107,21 @@ public:
 	virtual SimpleMath::Vector3 worldPointToScreenPosition(SimpleMath::Vector3 worldPointPosition, bool shouldFlipBehind) override;
 	virtual SimpleMath::Vector3 worldPointToScreenPositionClamped(SimpleMath::Vector3 worldPointPosition, int screenEdgeOffset, bool* appliedClamp) override;
 	virtual float cameraDistanceToWorldPoint(SimpleMath::Vector3 worldPointPosition) override;
-	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
-	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
+	virtual RECTF drawSprite(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
+	virtual RECTF drawCenteredSprite(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor) override;
 	virtual bool pointOnScreen(const SimpleMath::Vector3& worldPointPosition) override;
 	virtual bool pointBehindCamera(const SimpleMath::Vector3& worldPointPosition) override;
 
-	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) override;
 	virtual void renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe) override;
 
 	virtual const SimpleMath::Vector3 getCameraPosition() override { return cameraPosition; };
+	virtual const DirectX::BoundingFrustum& getCameraFrustum() override { return frustumViewWorld; }
+
+	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture) override;
+	virtual void drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture) override;
+
+	virtual void drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color) override;
+	virtual void drawEdgeCollection(const IModelEdges* model, const SimpleMath::Vector4& color) override;
 
 	//virtual void renderTriangle(const std::array<SimpleMath::Vector3, 3>& vertices, const SimpleMath::Vector4& color) override;
 	//virtual void renderTriggerModel(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerRenderStyle renderStyle, const SettingsEnums::TriggerInteriorStyle interiorStyle, const SettingsEnums::TriggerLabelStyle labelStyle, const float labelScale) override;

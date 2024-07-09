@@ -1,10 +1,17 @@
 #pragma once
 #include "pch.h"
-#include "SpriteResource.h"
 #include "TriggerModel.h"
 #include "SettingsEnums.h"
 #include "directxtk\VertexTypes.h"
 #include "directxtk\PrimitiveBatch.h"
+#include "IModel.h"
+
+
+enum class TextureEnum
+{
+	SplotchyPattern,
+	Crosshair
+};
 
 /// <summary>
 /// Provides functions for rendering in 3D. Implemented by Renderer3DImpl.h
@@ -63,30 +70,23 @@ public:
 	/// <summary>
 	/// Draws a 2D sprite at the specified screen position (anchored top-left). 
 	/// </summary>
-	/// <param name="spriteResourceID">Identifier of the sprite to draw (see HCMInternal.rc).</param>
+	/// <param name="texture">Emum of the sprite to draw.</param>
 	/// <param name="screenPosition">Screen position to draw the sprite (this will be the top-left corner of the sprite).</param>
 	/// <param name="spriteScale">Scaling factor of sprite.</param>
 	/// <param name="spriteColor">What colour should be overlaid on the sprite.</param>
 	/// <returns></returns>
-	virtual RECTF drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = {1.f, 0.5f, 0.f, 1.f}) = 0;
+	virtual RECTF drawSprite(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = {1.f, 0.5f, 0.f, 1.f}) = 0;
 
 	/// <summary>
 	/// Draws a 2D sprite at the specified screen position (center of sprite). 
 	/// </summary>
-	/// <param name="spriteResourceID">Identifier of the sprite to draw (see HCMInternal.rc).</param>
+	/// <param name="texture">Enum of the sprite to draw.</param>
 	/// <param name="screenPosition">Screen position to draw the sprite (this will be the center of the sprite).</param>
 	/// <param name="spriteScale">Scaling factor of sprite.</param>
 	/// <param name="spriteColor">What colour should be overlaid on the sprite.</param>
 	/// <returns></returns>
-	virtual RECTF drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = { 1.f, 0.5f, 0.f, 1.f }) = 0;
+	virtual RECTF drawCenteredSprite(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale = 1.f, SimpleMath::Vector4 spriteColor = { 1.f, 0.5f, 0.f, 1.f }) = 0;
 
-	/// <summary>
-	/// Renders a trigger model to the screen with given colours as a solid volume.
-	/// </summary>
-	/// <param name="model">The trigger model to draw.</param>
-	/// <param name="triggerColor">What colour to draw it (alpha supported).</param>
-	/// <param name="interiorStyle">When camera inside trigger, draw normally, with a patterned texture, or not at all.</param>
-	virtual void renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle) = 0;
 
 	/// <summary>
 	/// Draws a unit sphere (scaled by param) of the specified colour at the specified position.
@@ -103,24 +103,29 @@ public:
 	/// <returns>worldPoint position of camera</returns>
 	virtual const SimpleMath::Vector3 getCameraPosition() = 0;
 
-	/*
-	enum class TextureEnum
-	{
-		NoTexture,
-		Splotchy
-	};
+	/// <summary>
+	/// Gets the cameras frustum (viewing area).
+	/// </summary>
+	/// <returns>Cameras frustum</returns>
+	virtual const DirectX::BoundingFrustum& getCameraFrustum() = 0;
 
-	using IndexCollection = std::vector<uint16_t>;
-	using VertexCollection = std::vector<DirectX::VertexPosition>;
-	virtual void drawFilledTris(const VertexCollection& vertices, const IndexCollection& indices, const SimpleMath::Vector4& colour, TextureEnum texture) = 0;
-*/
 
-/// <summary>
-/// Draws a filled triangle of the specified colour at the specified position.
-/// </summary>
-/// <param name="vertexPositions">3x Float3 world position of the triangle vertices.</param>
-/// <param name="color">Float4 of the colour to be drawn.</param>
-	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color) = 0;
+	/// <summary>
+	/// Draws a filled triangle of the specified colour at the specified position.
+	/// </summary>
+	/// <param name="vertexPositions">3x Float3 world position of the triangle vertices.</param>
+	/// <param name="color">Float4 of the colour to be drawn.</param>
+	/// <param name="texture">Optional enum of the texture to be drawn.</param>
+	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture = std::nullopt) = 0;
+
+
+	/// <summary>
+	/// Draws a collection of triangles of the specified colour and texture.
+	/// </summary>
+	/// <param name="model">Interface providing access to a VertexCollection and IndiceCollection of the triangle vertices (in sets of 3).</param>
+	/// <param name="color">Float4 of the colour to be drawn.</param>
+	/// <param name="texture">Optional enum of the texture to be drawn.</param>
+	virtual void drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture = std::nullopt) = 0;
 
 	/// <summary>
 	/// Draws an edge (line of the specified colour at the specified position.
@@ -129,4 +134,12 @@ public:
 	/// <param name="edgeEnd">End world position of the line.</param>
 	/// <param name="color">Float4 of the colour to be drawn.</param>
 	virtual void drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color) = 0;
+
+
+	/// <summary>
+	/// Draws a collection of edges (line) of the specified colour.
+	/// </summary>
+	/// <param name="model">Interface providing access to a VertexCollection and IndiceCollection of the edge vertices (in sets of 2).</param>
+	/// <param name="color">Float4 of the colour to be drawn.</param>
+	virtual void drawEdgeCollection(const IModelEdges* model, const SimpleMath::Vector4& color) = 0;
 };

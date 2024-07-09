@@ -1327,35 +1327,35 @@ public:
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayNormalColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{1.0f, 0.0f, 0.0f, 0.2f}, // red
+			SimpleMath::Vector4{1.0f, 0.0f, 0.0f, 0.25f}, // red
 			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlayNormalColor)
 		);
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayBSPColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{0.0f, 0.0f, 1.0f, 0.2f}, // blue
+			SimpleMath::Vector4{0.0f, 0.0f, 1.0f, 0.25f}, // blue
 			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlayBSPColor)
 		);
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlaySectorColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{1.0f, 0.0f, 1.0f, 0.2f}, // purple
+			SimpleMath::Vector4{1.0f, 0.0f, 1.0f, 0.25f}, // purple
 			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlaySectorColor)
 		);
 
 	std::shared_ptr<BinarySetting<float>> triggerOverlayAlpha = std::make_shared<BinarySetting<float>>
 		(
-			0.5f,
+			0.4f,
 			[](float in) { return in >= 0.1f && in <= 1.f; },
 			nameof(triggerOverlayAlpha)
 		);
 
 	std::shared_ptr<BinarySetting<float>> triggerOverlayWireframeAlpha = std::make_shared<BinarySetting<float>>
 		(
-			0.5f,
+			1.0f,
 			[](float in) { return in >= 0.05f && in <= 1.f; },
 			nameof(triggerOverlayWireframeAlpha)
 		);
@@ -1392,14 +1392,14 @@ public:
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckHitColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 0.75f}, // green
+			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 1.f}, // green
 			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; },
 			nameof(triggerOverlayCheckHitColor)
 		);
 
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> triggerOverlayCheckMissColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
-			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 0.5f}, // yellow
+			SimpleMath::Vector4{1.0f, 1.0f, 0.0f, 1.0f}, // yellow
 			[](SimpleMath::Vector4 in) { return  in.w >= 0.05f; }, 
 			nameof(triggerOverlayCheckMissColor)
 		);

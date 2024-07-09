@@ -3,23 +3,12 @@
 #include "directxtk\SimpleMath.h"
 
 
-template<GameState::Value mGame>
-void Renderer3DImpl<mGame>::constructSpriteResource(int resourceID)
-{
-	this->spriteResourceCache.insert(std::make_pair(resourceID, std::make_unique<SpriteResource>(resourceID, this->pDevice)));
-	//this->spriteBatch = std::make_unique<SpriteBatch>(this->pDeviceContext);
-
-}
 
 template<GameState::Value mGame>
-RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter)
+RECTF Renderer3DImpl<mGame>::drawSpriteImpl(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor, bool shouldCenter)
 {
-	if (this->spriteResourceCache.contains(spriteResourceID) == false)
-	{
-		constructSpriteResource(spriteResourceID); // throws HCMRuntimeExceptions on fail so be ready!
-	}
 
-	auto& pSpriteToDraw = this->spriteResourceCache.at(spriteResourceID);
+	auto& pSpriteToDraw = this->textureResources.at(texture);
 
 	UINT viewportCount = 1;
 	D3D11_VIEWPORT vp;
@@ -48,7 +37,7 @@ RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Ve
 	this->spriteBatch->Begin(SpriteSortMode_Immediate, this->commonStates->NonPremultiplied(), nullptr, nullptr, nullptr);
 
 
-	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with ID: " << id, id = spriteResourceID);
+	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with texture: " << id, id = magic_enum::enum_name(texture));
 	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with left: " << left, left = screenPosition.x);
 	LOG_ONCE_CAPTURE(PLOG_INFO << "Drawing sprite with top: " << top, top = screenPosition.y);
 
@@ -69,15 +58,15 @@ RECTF Renderer3DImpl<mGame>::drawSpriteImpl(int spriteResourceID, SimpleMath::Ve
 
 
 template<GameState::Value mGame>
-RECTF Renderer3DImpl<mGame>::drawSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor)
+RECTF Renderer3DImpl<mGame>::drawSprite(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor)
 {
-	return drawSpriteImpl(spriteResourceID, screenPosition, spriteScale, spriteColor, false);
+	return drawSpriteImpl(texture, screenPosition, spriteScale, spriteColor, false);
 }
 
 template<GameState::Value mGame>
-RECTF Renderer3DImpl<mGame>::drawCenteredSprite(int spriteResourceID, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor)
+RECTF Renderer3DImpl<mGame>::drawCenteredSprite(TextureEnum texture, SimpleMath::Vector2 screenPosition, float spriteScale, SimpleMath::Vector4 spriteColor)
 {
-	return drawSpriteImpl(spriteResourceID, screenPosition, spriteScale, spriteColor, true);
+	return drawSpriteImpl(texture, screenPosition, spriteScale, spriteColor, true);
 }
 
 

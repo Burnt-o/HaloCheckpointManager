@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "WindowsUtilities.h"
 #include "curl/curl.h" // for downloadToFile
-
+#include "imgui.h"
 std::wstring str_to_wstr(const std::string str)
 {
 	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
@@ -260,12 +260,5 @@ std::string shortestStringRepresentation(float n) {
 
 uint32_t Vec4ColorToU32(const SimpleMath::Vector4& color)
 {
-	//Convert color components to value between 0 and 255.
-	uint32_t r = 255 * color.x;
-	uint32_t b = 255 * color.y;
-	uint32_t g = 255 * color.z;
-	uint32_t a = 255 * color.w;
-
-	//Combine the color components in a single value of the form 0xAaBbGgRr
-	return 0x00000000 | r | (g << 8) | (b << 16) | (a << 24);
+	return ImGui::ColorConvertFloat4ToU32(color);
 }

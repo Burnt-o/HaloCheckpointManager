@@ -8,38 +8,30 @@
 
 using namespace SettingsEnums;
 
-
-
-
-
-
 template<GameState::Value mGame>
-void Renderer3DImpl<mGame>::renderTriggerModelSolid(const TriggerModel& model, const SimpleMath::Vector4& triggerColor, const SettingsEnums::TriggerInteriorStyle interiorStyle)
+void Renderer3DImpl<mGame>::setTexture(std::optional<TextureEnum> texture)
 {
-	LOG_ONCE(PLOG_DEBUG << "renderTriggerModelSolid");
-	// Cull if none of the trigger is visible.
-	if (this->frustumViewWorld.Contains(model.box) == false) return;
-
-	bool cameraInsideTrigger = model.box.Contains(this->cameraPosition);
-
-	if (cameraInsideTrigger && interiorStyle == TriggerInteriorStyle::DontRender)
-		return;
-
-	// draw solid volume
-	if (cameraInsideTrigger)
+	if (texture)
 	{
-		ID3D11ShaderResourceView* texture = interiorStyle == TriggerInteriorStyle::Patterned ? patternedTexture : nullptr;
-		unitCubeInverse->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, texture);
+		primitiveBatchEffect->SetTextureEnabled(true);
+		primitiveBatchEffect->SetTexture(textureResources.at(texture.value())->getTextureView());
+		this->pDeviceContext->IASetInputLayout(inputLayoutTextured.Get());
 	}
 	else
 	{
-		unitCube->Draw(model.transformation, this->viewMatrix, this->projectionMatrix, triggerColor, nullptr);
+		primitiveBatchEffect->SetTextureEnabled(false);
+		this->pDeviceContext->IASetInputLayout(inputLayoutUntextured.Get());
 	}
+
+
 }
+
+
 
 template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe)
 {
+
 	// create position and scale transforms
 	auto resizeTransform = SimpleMath::Matrix::CreateScale(scale);
 	auto translateTransform = SimpleMath::Matrix::CreateTranslation(position);
@@ -47,11 +39,12 @@ void Renderer3DImpl<mGame>::renderSphere(const SimpleMath::Vector3& position, co
 	unitSphere->Draw(resizeTransform * translateTransform, this->viewMatrix, this->projectionMatrix, color, nullptr, isWireframe);
 }
 
+
 template<GameState::Value mGame>
-void Renderer3DImpl<mGame>::drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color)
+void Renderer3DImpl<mGame>::drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture)
 {
-	this->primitiveBatchEffect->SetTextureEnabled(false);
-	//this->pDeviceContext->IASetInputLayout(inputLayout);
+
+	setTexture(texture);
 
 	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF); 
 	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
@@ -69,8 +62,7 @@ void Renderer3DImpl<mGame>::drawTriangle(const std::array<SimpleMath::Vector3, 3
 template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color)
 {
-	this->primitiveBatchEffect->SetTextureEnabled(false);
-	//this->pDeviceContext->IASetInputLayout(inputLayout);
+	setTexture(std::nullopt);
 
 	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF);
 	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
@@ -83,6 +75,53 @@ void Renderer3DImpl<mGame>::drawEdge(const SimpleMath::Vector3& edgeStart, const
 	primitiveDrawer->DrawLine(edgeStart, edgeEnd);
 	primitiveDrawer->End();
 }
+
+template<GameState::Value mGame>
+void  Renderer3DImpl<mGame>::drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture)
+{
+	setTexture(texture);
+
+	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF);
+	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
+	this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+
+
+	this->primitiveBatchEffect->SetColorAndAlpha(color);
+	this->primitiveBatchEffect->Apply(pDeviceContext);
+
+	primitiveDrawer->Begin();
+	primitiveDrawer->DrawIndexed(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 
+		model->getTriangleIndices().data(), 
+		model->getTriangleIndices().size(), 
+		model->getTriangleVertices().data(), 
+		model->getTriangleVertices().size());
+	primitiveDrawer->End();
+}
+
+template<GameState::Value mGame>
+void  Renderer3DImpl<mGame>::drawEdgeCollection(const IModelEdges* model, const SimpleMath::Vector4& color)
+{
+	setTexture(std::nullopt);
+
+
+	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF);
+	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
+	this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+
+	this->primitiveBatchEffect->SetColorAndAlpha(color);
+	this->primitiveBatchEffect->Apply(this->pDeviceContext);
+
+	primitiveDrawer->Begin();
+	primitiveDrawer->DrawIndexed(D3D10_PRIMITIVE_TOPOLOGY_LINELIST, 
+		model->getEdgeIndices().data(),
+		model->getEdgeIndices().size(),
+		model->getEdgeVertices().data(),
+		model->getEdgeVertices().size());
+	primitiveDrawer->End();
+}
+
+
+
 /*
 template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::drawFilledTris(const VertexCollection& vertices, const IndexCollection& indices, const SimpleMath::Vector4& colour, TextureEnum texture)

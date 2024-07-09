@@ -300,7 +300,7 @@ private:
 
 					if (isClamped) spriteColor.w = spriteColor.w * 0.5f; // half transparency of clamped waypoints
 
-					auto drawnRect = renderer->drawCenteredSprite(110, { screenPosition.x, screenPosition.y }, spriteScale, spriteColor);
+					auto drawnRect = renderer->drawCenteredSprite(TextureEnum::Crosshair, { screenPosition.x, screenPosition.y }, spriteScale, spriteColor);
 					
 					renderVerticalOffset += (((drawnRect.bottom - drawnRect.top) / 2.f) + (verticalpadding * spriteScale));
 				}

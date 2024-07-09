@@ -1,6 +1,6 @@
 #pragma once
 #include "EnumClass.h"
-
+#include "IModel.h"
 enum class SoftCeilingType
 {
 	Acceleration,
@@ -21,21 +21,46 @@ using SoftCeilingObjectMask = bitmask<SoftCeilingIgnoresObjectType>;
 
 static_assert(sizeof(SoftCeilingObjectMask) == 0x2);
 
-struct SoftCeilingData
+class SoftCeilingData : public IModelTriangles, public IModelEdges
 {
 private:
 	const SoftCeilingObjectMask softCeilingObjectMask;
+	VertexCollection vertices = {};
+	IndexCollection triangleIndices;
+	IndexCollection edgeIndices;
+
 public:
 	const SoftCeilingType softCeilingType;
-	const std::array<SimpleMath::Vector3, 3> vertices;
+
+
+
+	virtual const VertexCollection& getTriangleVertices() const override { return vertices; }
+	virtual const IndexCollection& getTriangleIndices() const override { return triangleIndices; }
+
+	virtual const VertexCollection& getEdgeVertices() const override { return vertices; }
+	virtual const IndexCollection& getEdgeIndices() const override { return edgeIndices; }
+
 
 	bool appliesToBiped() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::Biped) == false; }
 	bool appliesToVehicle() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::Vehicle) == false; }
 	bool appliesToCamera() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::Camera) == false; }
 	bool appliesToHugeVehicle() const { return bitmaskContains(softCeilingObjectMask, SoftCeilingIgnoresObjectType::HugeVehicle) == false; }
 
-	explicit SoftCeilingData(SoftCeilingObjectMask softCeilingObjectMask, SoftCeilingType softCeilingType, std::array<SimpleMath::Vector3, 3> vertices)
-		: softCeilingObjectMask(softCeilingObjectMask), softCeilingType(softCeilingType), vertices(vertices) {}
+	explicit SoftCeilingData(SoftCeilingObjectMask softCeilingObjectMask, SoftCeilingType softCeilingType, std::array<SimpleMath::Vector3, 3> verts)
+		: softCeilingObjectMask(softCeilingObjectMask), softCeilingType(softCeilingType)
+	
+	{
+		vertices.push_back(verts.at(0));
+		vertices.push_back(verts.at(1));
+		vertices.push_back(verts.at(2));
+
+		triangleIndices = { 0, 1, 2 };
+		edgeIndices = {
+			0, 1,
+			1, 2,
+			2, 0
+		};
+	}
 
 
 	// mutable

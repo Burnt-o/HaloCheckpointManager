@@ -31,15 +31,45 @@ struct TriggerData
 
 private:
 	friend class TriggerDataFactory;
-	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up, bool isSector = false) 
+
+	// bounding
+	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up) 
 		: name(triggerName), 
 		model(triggerName, position, extents, forward, up),
 		triggerIndex(trigIndex),
 		isBSPTrigger(isBSP),
-		isSectorType(isSector)
+		isSectorType(false)
+	{}
+	
+	// sector
+	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, std::vector<SimpleMath::Vector3> sectorPoints, float height)
+		: name(triggerName),
+		model(triggerName, sectorPoints, height),
+		triggerIndex(trigIndex),
+		isBSPTrigger(isBSP),
+		isSectorType(true)
 	{}
 };
 
+
+class TriggerDataFactory
+{
+public:
+
+
+	TriggerData makeBoundingBox(std::string triggerName, uint32_t trigIndex, bool isBSP, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up)
+	{
+		return std::move(TriggerData(triggerName, trigIndex, isBSP, position, extents, forward, up));
+	}
+
+
+	TriggerData makeSector(std::string triggerName, uint32_t trigIndex, bool isBSP, std::vector<SimpleMath::Vector3> sectorPoints, float height)
+	{
+		return std::move(TriggerData(triggerName, trigIndex, isBSP, sectorPoints, height));
+	}
+
+
+};
 
 
 

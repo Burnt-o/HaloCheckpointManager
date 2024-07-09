@@ -104,18 +104,20 @@ bool Renderer3DImpl<mGame>::updateCameraData(ID3D11Device* pDevice, ID3D11Device
 
 		// so now we have "working" depth.. but only for non-transparent textures
 		// I think we'd need to create a custom shader to fix this? maybe not
-		this->pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, this->m_depthStencilView);
-		this->pDeviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
-		this->pDeviceContext->OMSetDepthStencilState(this->m_depthStencilState, 0);
+		this->pDeviceContext->OMSetRenderTargets(1, &pMainRenderTargetView, this->m_depthStencilView.Get());
+		this->pDeviceContext->ClearDepthStencilView(this->m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
+		this->pDeviceContext->OMSetDepthStencilState(this->m_depthStencilState.Get(), 0);
 
 		//this->pDeviceContext->OMSetBlendState(this->commonStates->NonPremultiplied(), nullptr, 0xFFFFFFFF);
 		//this->pDeviceContext->RSSetState(this->commonStates->CullNone());
 
-		ID3D11SamplerState* samplerState = this->commonStates->LinearClamp();
+
+
+		ID3D11SamplerState* samplerState = this->commonStates->LinearWrap();
 		this->pDeviceContext->PSSetSamplers(0, 1, &samplerState);
 
 
-		this->pDeviceContext->IASetInputLayout(inputLayout.Get()); 
+
 
 
 

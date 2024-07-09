@@ -30,7 +30,6 @@ private:
 	std::atomic_bool renderingMutex = false;
 
 
-
 	void onToggleChange(bool& newValue)
 	{
 		lockOrThrow(mccStateHookWeak, mccStateHook);
@@ -84,7 +83,7 @@ private:
 
 
 
-
+	
 
 	// new frame, render
 	void onRenderEvent(GameState game, IRenderer3D* renderer)
@@ -121,17 +120,12 @@ private:
 				if (!isDesiredSubject)
 					continue; 
 
-
-				// fill
-				renderer->drawTriangle(softCeiling.vertices, softCeiling.colorSolid);
-
-				// outline 
-				renderer->drawEdge(softCeiling.vertices[0], softCeiling.vertices[1], softCeiling.colorWireframe);
-				renderer->drawEdge(softCeiling.vertices[1], softCeiling.vertices[2], softCeiling.colorWireframe);
-				renderer->drawEdge(softCeiling.vertices[2], softCeiling.vertices[0], softCeiling.colorWireframe);
+				renderer->drawTriangleCollection(&softCeiling, softCeiling.colorSolid);
+				renderer->drawEdgeCollection(&softCeiling, softCeiling.colorWireframe);
 
 			}
 			
+
 
 
 

@@ -131,6 +131,9 @@ private:
 
 			const auto& renderStyle = settings->triggerOverlayRenderStyle->GetValue();
 			const auto& interiorStyle = settings->triggerOverlayInteriorStyle->GetValue();
+			std::optional<TextureEnum> interiorTexture = std::nullopt;
+			if (interiorStyle == TriggerInteriorStyle::Patterned)
+				interiorTexture = TextureEnum::SplotchyPattern;
 			
 			const auto& labelStyle = settings->triggerOverlayLabelStyle->GetValue();
 			const auto labelScale = settings->triggerOverlayLabelScale->GetValue();
@@ -170,13 +173,22 @@ private:
 				currentTick--;
 
 #ifndef HCM_DEBUG
-			//static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value");
+			static_assert(false && "don't release the currentTick-- fix. change the placement of the gametick hook in impl so it's getting the correct value");
 #endif
 
+			auto& cameraFrustum = renderer->getCameraFrustum();
+			auto& cameraPosition = renderer->getCameraPosition();
 
 			// calculate colors for each trigger on this tick
 			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
+
+				// check if trigger is even on screen
+				if (cameraFrustum.Intersects(triggerData.model.getBoundingBox()) == false)
+					continue;
+
+
+
 				std::optional<long> ticksSinceLastCheck = std::nullopt;
 				if (triggerData.tickLastChecked.has_value())
 					ticksSinceLastCheck = (long)currentTick - (long)(triggerData.tickLastChecked.value());
@@ -251,75 +263,81 @@ private:
 
 				}
 
-			}
 
-			// render wireframes
-			// idk why but renderering solid volumes first messes up the wireframes positions
-			if (renderStyle == TriggerRenderStyle::Wireframe || renderStyle == TriggerRenderStyle::SolidAndWireframe)
-			{
-				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+				// render solid volumes
+				if (renderStyle == TriggerRenderStyle::Solid || renderStyle == TriggerRenderStyle::SolidAndWireframe)
 				{
-					for (auto& edge : triggerData.model.edges)
+					// sector types don't have implemented containment test so we'll just always assume the camera is outside for those.
+					bool cameraIsInsideTrigger = triggerData.isSectorType == false && triggerData.model.getBoundingBox().Contains(cameraPosition) == DirectX::ContainmentType::CONTAINS;
+
+					if (cameraIsInsideTrigger && interiorStyle == TriggerInteriorStyle::DontRender)
 					{
-						renderer->drawEdge(edge.first, edge.second, triggerData.currentColorWireframe);
+						// do nothing
 					}
+					else
+					{
+						if (cameraIsInsideTrigger)
+							renderer->drawTriangleCollection(&triggerData.model, triggerData.currentColor, interiorTexture);
+						else
+							renderer->drawTriangleCollection(&triggerData.model, triggerData.currentColor, std::nullopt);
+					}
+
 				}
-			}
 
-			// render solid volumes
-			if (renderStyle == TriggerRenderStyle::Solid || renderStyle == TriggerRenderStyle::SolidAndWireframe)
-			{
-				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+				// render wireframes
+				if (renderStyle == TriggerRenderStyle::Wireframe || renderStyle == TriggerRenderStyle::SolidAndWireframe)
 				{
-					renderer->renderTriggerModelSolid(triggerData.model, triggerData.currentColor, interiorStyle);
+					renderer->drawEdgeCollection(&triggerData.model, triggerData.currentColorWireframe);
 				}
-			}
 
-		
-
-			// render labels
-			if (labelStyle != TriggerLabelStyle::None)
-			{
-				bool isCentered = labelStyle == TriggerLabelStyle::Center;
-				for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
+				// render labels
+				if (labelStyle != TriggerLabelStyle::None)
 				{
-	
+					bool isCentered = labelStyle == TriggerLabelStyle::Center;
 					auto pointOnScreen = isCentered
-						? !renderer->pointBehindCamera(triggerData.model.box.Center)
-						: !renderer->pointBehindCamera(triggerData.model.box.Center - ((SimpleMath::Vector3)triggerData.model.box.Extents / 2)); // corner (TODO: store corner in triggermodel)
+						? !renderer->pointBehindCamera(triggerData.model.getBoundingBox().Center)
+						: !renderer->pointBehindCamera(triggerData.model.getBoundingBox().Center - ((SimpleMath::Vector3)triggerData.model.getBoundingBox().Extents / 2)); // corner (TODO: store corner in triggermodel)
+
 
 					if (pointOnScreen)
 					{
 						auto screenPosition = labelStyle == TriggerLabelStyle::Center
-							? renderer->worldPointToScreenPosition(triggerData.model.box.Center, false)
-							: renderer->worldPointToScreenPosition(triggerData.model.box.Center - ((SimpleMath::Vector3)triggerData.model.box.Extents / 2), false); // corner (TODO: store corner in triggermodel)
+							? renderer->worldPointToScreenPosition(triggerData.model.getBoundingBox().Center, false)
+							: renderer->worldPointToScreenPosition(triggerData.model.getBoundingBox().Center - ((SimpleMath::Vector3)triggerData.model.getBoundingBox().Extents / 2), false); // corner (TODO: store corner in triggermodel)
 
-						auto dynLabelScale = labelScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(triggerData.model.box.Center));
+
+						auto dynLabelScale = labelScale * RenderTextHelper::scaleTextDistance(renderer->cameraDistanceToWorldPoint(triggerData.model.getBoundingBox().Center));
+
 						// draw main label text
-
 						if (isCentered)
 						{
 							RenderTextHelper::drawCenteredOutlinedText(
-								triggerData.model.label,
+								triggerData.model.getLabel(),
 								{ screenPosition.x, screenPosition.y },
-								triggerData.currentColorU32 | 0xFFC0C0C0, // remove alpha, brigten a lil bit, 
+								triggerData.currentColorU32 | 0xFFC0C0C0, // remove alpha, brigten a lil bit
 								dynLabelScale
 							);
 						}
 						else
 						{
 							RenderTextHelper::drawOutlinedText(
-								triggerData.model.label,
+								triggerData.model.getLabel(),
 								{ screenPosition.x, screenPosition.y },
-								triggerData.currentColorU32 | 0xFFC0C0C0, // remove alpha, brigten a lil bit, 
+								triggerData.currentColorU32 | 0xFFC0C0C0, // remove alpha, brigten a lil bit
 								dynLabelScale
 							);
 						}
 
+
 					}
+					
+
 				}
-				
 			}
+
+		
+
+			
 
 
 

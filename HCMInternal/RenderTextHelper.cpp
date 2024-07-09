@@ -58,8 +58,8 @@ namespace RenderTextHelper
 
 		ScopedImFontScaler setFont{ fontScale };
 
-		auto textSize = ImGui::CalcTextSize(textString.c_str());
-		ImGui::GetBackgroundDrawList()->AddText(textPos, textColor, textString.c_str());
+		auto textSize = ImGui::CalcTextSize(textString.data());
+		ImGui::GetBackgroundDrawList()->AddText(textPos, textColor, textString.data());
 
 		return RECTF(textPos.x, textPos.y, textPos.x + textSize.x, textPos.y + textSize.y);
 	}
@@ -69,9 +69,9 @@ namespace RenderTextHelper
 	{
 		ScopedImFontScaler setFont{ fontScale };
 
-		auto textSize = ImGui::CalcTextSize(textString.c_str());
+		auto textSize = ImGui::CalcTextSize(textString.data());
 		auto centeredTextPos = SimpleMath::Vector2(textPos.x - (textSize.x / 2), textPos.y - (textSize.y / 2));
-		ImGui::GetBackgroundDrawList()->AddText(centeredTextPos, textColor, textString.c_str());
+		ImGui::GetBackgroundDrawList()->AddText(centeredTextPos, textColor, textString.data());
 
 		return RECTF(
 			centeredTextPos.x,
@@ -89,7 +89,7 @@ namespace RenderTextHelper
 		ScopedImFontScaler setFont{ fontScale };
 
 		SimpleMath::Vector2 outlineTextPos;
-		SimpleMath::Vector2 textSize = ImGui::CalcTextSize(textString.c_str());
+		SimpleMath::Vector2 textSize = ImGui::CalcTextSize(textString.data());
 		textSize /= 8.f; // not sure why this is necessary .. only became a thing after i introduced rescalable fonts to the font scaler
 
 		// outline color is black but with opacity of text color (opacity is MOST sig byte of uint32_t)
@@ -115,7 +115,7 @@ namespace RenderTextHelper
 			}
 
 			auto& colorToRender = i == 8 ? textColor : outlineColor;
-			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.c_str());
+			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.data());
 
 		}
 
@@ -129,7 +129,7 @@ namespace RenderTextHelper
 		ScopedImFontScaler setFont{ fontScale };
 
 		SimpleMath::Vector2 outlineTextPos;
-		auto textSize = ImGui::CalcTextSize(textString.c_str());
+		auto textSize = ImGui::CalcTextSize(textString.data());
 		auto centeredTextPos = SimpleMath::Vector2(textPos.x - (textSize.x / 2), textPos.y);
 
 		// outline color is black but with opacity of text color (opacity is MOST sig byte of uint32_t)
@@ -155,7 +155,7 @@ namespace RenderTextHelper
 			}
 
 			auto& colorToRender = i == 8 ? textColor : outlineColor;
-			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.c_str());
+			ImGui::GetBackgroundDrawList()->AddText(outlineTextPos, colorToRender, textString.data());
 		}
 
 		// TODO: going over like 1.f outlineSize looks fucking GARBAGE, would need to add multiple layers of expansion for every 2.f of size.. sounds dumb, gotta be a better way eh. is there not some way to render the text as an image then blur it?

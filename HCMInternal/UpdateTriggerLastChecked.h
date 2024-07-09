@@ -6,7 +6,11 @@
 
 
 
-class UpdateTriggerLastCheckedUntemplated { public: virtual ~UpdateTriggerLastCheckedUntemplated() = default; };
+class UpdateTriggerLastCheckedUntemplated { 
+public:
+	virtual ~UpdateTriggerLastCheckedUntemplated() = default;
+	// virtual bool isPointInsideTrigger(const SimpleMath::Vector3& worldPoint, const uintptr_t triggerData, const uint32_t triggerIndex) = 0;
+};
 class UpdateTriggerLastChecked : public IOptionalCheat
 {
 private:
@@ -16,6 +20,8 @@ private:
 public:
 	UpdateTriggerLastChecked(GameState gameImpl, IDIContainer& dicon);
 	~UpdateTriggerLastChecked();
+
+	//bool isPointInsideTrigger(const SimpleMath::Vector3& worldPoint, const uintptr_t triggerData, const uint32_t triggerIndex) { return pimpl->isPointInsideTrigger(worldPoint, triggerData, triggerIndex); }
 
 	std::string_view getName() override { return nameof(UpdateTriggerLastChecked); }
 

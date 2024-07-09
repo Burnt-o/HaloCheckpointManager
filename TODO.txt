@@ -1,8 +1,9 @@
 
 3.1 TODO
-* fix trigger filter match count issue when duplicate trigger names (each name should match at least one trigger)
-* need to disable HCM inputs while player entering trigger filter names
+maybe ? * Refactor triggerModel (triggerModel2 is wip)
+* add trigger names for h4
 
+* add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff)
 
 FUTURE TODO: 
 * upgrade sensitivity drift detector (actually do the float math and check for drift)

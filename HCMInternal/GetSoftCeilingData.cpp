@@ -118,10 +118,7 @@ public:
 			auto sddtTags = getActiveStructureDesignTags->getActiveStructureDesignTags();
 
 
-			for (auto& sddtTag : sddtTags)
-			{
-				PLOG_DEBUG << "sddtTagAddress: " << std::hex << sddtTag.tagAddress;
-			}
+
 
 			// address isn't correct for halo reach - it's tagBase(0x50000000) less than it should be.
 
@@ -131,6 +128,7 @@ public:
 			// loop through all sddt tags, go to the softCeiling tagBlock
 			for (auto& sddtTag : sddtTags)
 			{
+				PLOG_DEBUG << "reading sddt tag at address: 0x" << std::hex << sddtTag.tagAddress;
 				sddtTagDataStruct->currentBaseAddress = sddtTag.tagAddress;
 				auto* pSoftCeilingTagBlock = sddtTagDataStruct->field<uint32_t>(sddtTagDataFields::softCeilingTagBlock);
 				if (IsBadReadPtr(pSoftCeilingTagBlock, sizeof(uint32_t)))
@@ -161,20 +159,26 @@ public:
 					if (!softCeilingTriangleTagBlockResolved) 
 						return std::unexpected(softCeilingTriangleTagBlockResolved.error());
 
-					LOG_ONCE(PLOG_DEBUG << "reading softCeilingTriangleTagBlock");
+					PLOG_DEBUG << "reading softCeilingTagBlock at address: " << std::hex << softCeilingDataStruct->currentBaseAddress;;
 					// loop through each triangle. emplace into outvec together with the meta info
 					for (int softCeilingTriangleIndex = 0; softCeilingTriangleIndex < softCeilingTriangleTagBlockResolved.value().elementCount; softCeilingTriangleIndex++)
 					{
 						softCeilingTriangleDataStruct->setIndex(softCeilingTriangleTagBlockResolved.value().firstElement, softCeilingTriangleIndex);
-//
-//#ifdef HCM_DEBUG
-//						PLOG_DEBUG << "softCeilingTriangleDataStruct->currentBaseAddress" << std::hex << softCeilingTriangleDataStruct->currentBaseAddress;
-//#endif
+
+#ifdef HCM_DEBUG
+						PLOG_DEBUG << "softCeilingTriangleDataStruct->currentBaseAddress" << std::hex << softCeilingTriangleDataStruct->currentBaseAddress;
+#endif
 
 						std::array<SimpleMath::Vector3, 3> vertices;
 						vertices[0] = *softCeilingTriangleDataStruct->field<SimpleMath::Vector3>(softCeilingTriangleDataFields::vertex0);
 						vertices[1] = *softCeilingTriangleDataStruct->field<SimpleMath::Vector3>(softCeilingTriangleDataFields::vertex1);
 						vertices[2] = *softCeilingTriangleDataStruct->field<SimpleMath::Vector3>(softCeilingTriangleDataFields::vertex2);
+
+#ifdef HCM_DEBUG
+						PLOG_DEBUG << "vert0: " << vertices[0];
+						PLOG_DEBUG << "vert1: " << vertices[1];
+						PLOG_DEBUG << "vert2: " << vertices[2];
+#endif
 
 						outVec.emplace_back(SoftCeilingData(
 							matchedSoftCeilingMeta.softCeilingObjectMask,

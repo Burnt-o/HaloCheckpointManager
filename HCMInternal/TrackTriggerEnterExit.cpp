@@ -9,6 +9,7 @@
 #include "SettingsStateAndEvents.h"
 #include "GameTickEventHook.h"
 #include "IMCCStateHook.h"
+#include "UpdateTriggerLastChecked.h"
 
 template <GameState::Value gameT>
 class TrackTriggerEnterExitImpl : public TrackTriggerEnterExit::ITrackTriggerEnterExit
@@ -22,6 +23,7 @@ private:
 	std::weak_ptr< SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr<GameTickEventHook> gameTickEventHookWeak;
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
+	std::weak_ptr<UpdateTriggerLastChecked> updateTriggerLastCheckedWeak;
 	std::shared_ptr< RuntimeExceptionHandler> runtimeExceptions;
 
 	// callbacks
@@ -95,9 +97,16 @@ private:
 
 			auto filteredTriggerData = getTriggerData->getFilteredTriggers();
 
+			lockOrThrow(updateTriggerLastCheckedWeak, updateTriggerLastChecked);
+
 			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
-				bool playerIsInsideThisTick = triggerData.model.box.Contains(playerTriggerPosition.value()) == DirectX::ContainmentType::CONTAINS;
+
+				// this functionality is disabled for SectorType triggers since I don't know how to do the containment math on that
+				if (triggerData.isSectorType)
+					continue;
+
+				bool playerIsInsideThisTick = triggerData.model.getBoundingBox().Contains(playerTriggerPosition.value()) == DirectX::ContainmentType::CONTAINS;
 
 				if (playerIsInsideThisTick == triggerData.playerWasInsideLastTick)
 					continue;
@@ -143,7 +152,9 @@ public:
 		triggerOverlayToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
 		triggerOverlayMessageOnEnterCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnEnter->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
 		triggerOverlayMessageOnExitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnExit->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) {onSettingChanged(); })
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) {onSettingChanged(); }),
+		updateTriggerLastCheckedWeak(resolveDependentCheat(UpdateTriggerLastChecked))
+	
 	{
 		PLOG_DEBUG << "TrackTriggerEnterExitImpl con";
 	}
