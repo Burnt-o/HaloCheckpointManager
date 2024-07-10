@@ -411,14 +411,16 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::SkullToggler}
 		},
 
+	{ GUIElementEnum::consoleCommandGUI,
+{OptionalCheatEnum::ConsoleCommand}
+	},
+
 #ifdef HCM_DEBUG
 
 	{ GUIElementEnum::getObjectAddressGUI,
 		{OptionalCheatEnum::GetObjectAddressCLI}
 	},
-	{ GUIElementEnum::consoleCommandGUI,
-		{OptionalCheatEnum::ConsoleCommand}
-	},
+
 
 
 #endif

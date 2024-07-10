@@ -6647,6 +6647,7 @@
 	<!--#endregion InfiniteAmmo/BottomlessClip-->
 
 	<!--#region consoleCommand-->
+	<!--scan nw "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00"-->
 	<VersionedEntry Name="sendCommandPointer" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -6658,6 +6659,43 @@
 			<Module>halo1.dll</Module>
 			<Offsets>
 				<Offset>0x955C0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x3AE20</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xBF68</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xC61C</Offset>
+			</Offsets>
+		</Version>
+
+		<!--not sure on this. maybe 10008 instead-->
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<!--<Offset>0xCF2C</Offset>-->
+				<Offset>0x10008</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x4074C</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

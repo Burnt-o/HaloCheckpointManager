@@ -1279,6 +1279,9 @@
     <ClCompile Include="TriggerModel.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleCommand.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

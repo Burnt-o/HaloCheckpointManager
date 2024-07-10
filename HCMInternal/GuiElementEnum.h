@@ -112,6 +112,7 @@
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
 	((skullToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((playerPositionToClipboardGUI, (ALL_SUPPORTED_GAMES)))\
+	((consoleCommandGUI, (ALL_SUPPORTED_GAMES)))\
 
 
 
@@ -262,7 +263,6 @@
 
 #define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
-	((consoleCommandGUI, (Halo1)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
 
 

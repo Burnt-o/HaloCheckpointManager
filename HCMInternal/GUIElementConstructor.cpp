@@ -414,6 +414,7 @@ private:
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 							createNestedElement(GUIElementEnum::skullToggleGUI),
 							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
+							createNestedElement(GUIElementEnum::consoleCommandGUI),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -680,6 +681,11 @@ private:
 						(game, ToolTipCollection("Directly set the players health and shields"), std::nullopt,
 							"Copy Position to Clipboard",
 							settings->playerPositionToClipboardEvent));
+
+				case GUIElementEnum::consoleCommandGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputString>
+						(game, ToolTipCollection("Sends commands to the games console parser"), "Console command: ", settings->consoleCommandString, settings->consoleCommandEvent));
+
 
 
 			case GUIElementEnum::overlaysHeadingGUI:
@@ -1780,14 +1786,9 @@ private:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, ToolTipCollection("Debug tools for HCM development"), "Debug", headerChildElements
 						{ 
-						createNestedElement(GUIElementEnum::consoleCommandGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
 						}));
 
-
-				case GUIElementEnum::consoleCommandGUI:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputString>
-						(game, ToolTipCollection("Sends commands to the games console parser"), "Console command: ", settings->consoleCommandString, settings->consoleCommandEvent));
 
 
 				case GUIElementEnum::getObjectAddressGUI:

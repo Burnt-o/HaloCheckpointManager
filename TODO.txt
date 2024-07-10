@@ -4,6 +4,8 @@ maybe ? * Refactor triggerModel (triggerModel2 is wip)
 * add trigger names for h4
 
 * add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff)
+* disable hotkeys when hcm gui is up 
+* add modal dialog for console commands (or just make a real console)
 
 FUTURE TODO: 
 * upgrade sensitivity drift detector (actually do the float math and check for drift)
