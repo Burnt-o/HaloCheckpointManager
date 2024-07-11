@@ -6794,13 +6794,13 @@
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Parameters>
-				<pOutputString>r11+0x0</pOutputString>
+				<pOutputString>rax+0x0</pOutputString>
 			</Parameters>
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Parameters>
-				<pOutputString>r11+0x0</pOutputString>
+				<pOutputString>rax+0x0</pOutputString>
 			</Parameters>
 		</Version>
 	</VersionedEntry>
