@@ -340,7 +340,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="CameraTransformer.h" />
     <ClInclude Include="GameCameraData.h" />
     <ClInclude Include="Conduit_ITCFont.h" />
-    <ClInclude Include="ConsoleCommand.h" />
+    <ClInclude Include="EngineCommand.h" />
     <ClInclude Include="ControlServiceContainer.h" />
     <ClInclude Include="LinearSmoother.h" />
     <ClInclude Include="DifficultyEnum.h" />
@@ -374,7 +374,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetTagName.h" />
     <ClInclude Include="GUIAdvanceTicks.h" />
     <ClInclude Include="GUIColourPickerAlpha.h" />
-    <ClInclude Include="GUIConsoleCommand.h" />
     <ClInclude Include="GUIFloat.h" />
     <ClInclude Include="GUIHeading.h" />
     <ClInclude Include="GUIHotkeyOnly.h" />
@@ -494,7 +493,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
-    <ClCompile Include="ConsoleCommand.cpp" />
+    <ClCompile Include="EngineCommand.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetCurrentZoneSet.cpp" />

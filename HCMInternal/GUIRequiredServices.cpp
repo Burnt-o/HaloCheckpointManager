@@ -411,8 +411,8 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::SkullToggler}
 		},
 
-	{ GUIElementEnum::consoleCommandGUI,
-{OptionalCheatEnum::ConsoleCommand}
+	{ GUIElementEnum::engineCommandGUI,
+{OptionalCheatEnum::EngineCommand}
 	},
 
 #ifdef HCM_DEBUG

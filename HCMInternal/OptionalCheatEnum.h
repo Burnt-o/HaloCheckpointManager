@@ -30,7 +30,7 @@ AIFreeze,\
 Medusa,\
 ForceTeleport,\
 ForceLaunch,\
-ConsoleCommand,\
+EngineCommand,\
 GetObjectPhysics,\
 GetHavokComponent,\
 GetHavokAnchorPoint,\

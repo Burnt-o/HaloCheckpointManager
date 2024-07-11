@@ -22,7 +22,7 @@
 #include "GetPlayerDatum.h"
 #include "GetObjectAddress.h"
 #include "AIFreeze.h"
-#include "ConsoleCommand.h"
+#include "EngineCommand.h"
 #include "GetCurrentDifficulty.h"
 #include "IgnoreCheckpointChecksum.h"
 #include "AdvanceTicks.h"

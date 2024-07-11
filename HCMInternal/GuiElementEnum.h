@@ -112,7 +112,7 @@
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
 	((skullToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((playerPositionToClipboardGUI, (ALL_SUPPORTED_GAMES)))\
-	((consoleCommandGUI, (ALL_SUPPORTED_GAMES)))\
+	((engineCommandGUI, (ALL_SUPPORTED_GAMES)))\
 
 
 

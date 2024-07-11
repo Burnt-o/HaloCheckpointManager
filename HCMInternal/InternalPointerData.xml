@@ -6646,7 +6646,7 @@
 
 	<!--#endregion InfiniteAmmo/BottomlessClip-->
 
-	<!--#region consoleCommand-->
+	<!--#region EngineCommand-->
 	<!--scan nw "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00"
 	or use IDA to check for xrefs to InterlockedPopEntrySList
 	-->
@@ -6805,7 +6805,7 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--#endregion consoleCommand-->
+	<!--#endregion EngineCommand-->
 
 
 	<!--#region freeCamera-->

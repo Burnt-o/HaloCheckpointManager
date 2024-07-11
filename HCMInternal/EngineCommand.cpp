@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "ConsoleCommand.h"
+#include "EngineCommand.h"
 #include "IMCCStateHook.h"
 
 #include "MultilevelPointer.h"
@@ -12,15 +12,15 @@
 #include "ModuleHook.h"
 
 template <GameState::Value gameT>
-class ConsoleCommandImpl : public IConsoleCommand
+class EngineCommandImpl : public IEngineCommand
 {
 private:
 	static inline std::mutex mDestructionGuard{};
 
-	static inline ConsoleCommandImpl<gameT>* instance = nullptr;
+	static inline EngineCommandImpl<gameT>* instance = nullptr;
 
 	// event callbacks
-	ScopedCallback<ActionEvent> mConsoleCommandEventCallbackHandle;
+	ScopedCallback<ActionEvent> mEngineCommandEventCallbackHandle;
 
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
@@ -51,16 +51,16 @@ private:
 
 			if (mccStateHook->isGameCurrentlyPlaying((GameState)gameT) == false) return;
 
-			std::string command = mSettings->consoleCommandString->GetValue();
+			std::string command = mSettings->engineCommandString->GetValue();
 
 
 
-			messagesGUI->addMessage(std::format("Sending command: {}", mSettings->consoleCommandString->GetValue()));
+			messagesGUI->addMessage(std::format("Sending command: {}", mSettings->engineCommandString->GetValue()));
 
 			if (command.contains("gamespeed"))
 				return;
 
-			auto commandOutput = sendCommand(command);
+			auto commandOutput = sendEngineCommand(command);
 
 			if (commandOutput)
 				messagesGUI->addMessage(std::format("Command Output: {}", commandOutput.value()));
@@ -113,9 +113,9 @@ private:
 
 public:
 
-	ConsoleCommandImpl(GameState game, IDIContainer& dicon)
+	EngineCommandImpl(GameState game, IDIContainer& dicon)
 		: 
-		mConsoleCommandEventCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandEvent, [this]() {onSendCommand(); }),
+		mEngineCommandEventCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->engineCommandEvent, [this]() {onSendCommand(); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
@@ -132,13 +132,13 @@ public:
 		commandOutputStringHook = ModuleMidHook::make(game.toModuleName(), commandOutputStringFunction, commandOutputStringHookFunction);
 	}
 
-	~ConsoleCommandImpl()
+	~EngineCommandImpl()
 	{
 		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks/hooks finish executing
 		instance = nullptr;
 	}
 
-	std::optional<std::string> sendCommand(std::string commandString)
+	std::optional<std::string> sendEngineCommand(std::string commandString)
 	{
 
 		uintptr_t pCommand;
@@ -182,36 +182,36 @@ public:
 
 
 
-ConsoleCommand::ConsoleCommand(GameState gameImpl, IDIContainer& dicon)
+EngineCommand::EngineCommand(GameState gameImpl, IDIContainer& dicon)
 {
 	switch (gameImpl)
 	{
 	case GameState::Value::Halo1:
-		pimpl = std::make_unique<ConsoleCommandImpl<GameState::Value::Halo1>>(gameImpl, dicon);
+		pimpl = std::make_unique<EngineCommandImpl<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo2:
-		pimpl = std::make_unique<ConsoleCommandImpl<GameState::Value::Halo2>>(gameImpl, dicon);
+		pimpl = std::make_unique<EngineCommandImpl<GameState::Value::Halo2>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo3:
-		pimpl = std::make_unique<ConsoleCommandImpl<GameState::Value::Halo3>>(gameImpl, dicon);
+		pimpl = std::make_unique<EngineCommandImpl<GameState::Value::Halo3>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo3ODST:
-		pimpl = std::make_unique<ConsoleCommandImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+		pimpl = std::make_unique<EngineCommandImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<ConsoleCommandImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
+		pimpl = std::make_unique<EngineCommandImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_unique<ConsoleCommandImpl<GameState::Value::Halo4>>(gameImpl, dicon);
+		pimpl = std::make_unique<EngineCommandImpl<GameState::Value::Halo4>>(gameImpl, dicon);
 		break;
 	default:
 		throw HCMInitException("not impl yet");
 	}
 }
 
-ConsoleCommand::~ConsoleCommand() = default;
+EngineCommand::~EngineCommand() = default;

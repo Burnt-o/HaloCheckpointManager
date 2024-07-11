@@ -9,7 +9,6 @@
 #include "GUISimpleToggle.h"
 #include "GUISpeedhack.h"
 #include "GUIInvulnerability.h"
-#include "GUIConsoleCommand.h"
 #include "GUIHeading.h"
 #include "GUISubHeading.h"
 #include "GUIHotkeyOnly.h"
@@ -414,7 +413,7 @@ private:
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 							createNestedElement(GUIElementEnum::skullToggleGUI),
 							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
-							createNestedElement(GUIElementEnum::consoleCommandGUI),
+							createNestedElement(GUIElementEnum::engineCommandGUI),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -682,9 +681,9 @@ private:
 							"Copy Position to Clipboard",
 							settings->playerPositionToClipboardEvent));
 
-				case GUIElementEnum::consoleCommandGUI:
+				case GUIElementEnum::engineCommandGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputString>
-						(game, ToolTipCollection("Sends commands to the games console parser"), "Console command: ", settings->consoleCommandString, settings->consoleCommandEvent));
+						(game, ToolTipCollection("Sends commands to the games console parser"), "Console command: ", settings->engineCommandString, settings->engineCommandEvent));
 
 
 

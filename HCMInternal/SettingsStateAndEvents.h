@@ -67,7 +67,7 @@ public:
 	std::shared_ptr<ActionEvent> dumpCheckpointEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> injectCoreEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> dumpCoreEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> consoleCommandEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> engineCommandEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> getObjectAddressEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> playerPositionToClipboardEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
@@ -394,11 +394,11 @@ public:
 			nameof(medusaToggle)
 		);
 
-	std::shared_ptr<BinarySetting<std::string>> consoleCommandString = std::make_shared<BinarySetting<std::string>>
+	std::shared_ptr<BinarySetting<std::string>> engineCommandString = std::make_shared<BinarySetting<std::string>>
 		(
 			"game_revert",
 			[](std::string in) { return true; },
-			nameof(consoleCommandString)
+			nameof(engineCommandString)
 		);
 
 
@@ -1586,7 +1586,7 @@ public:
 		GUIShowingPausesGame, 
 		pauseAlsoBlocksInput,
 		pauseAlsoFreesCursor,
-		consoleCommandString,
+		engineCommandString,
 		getObjectAddressDWORD,
 		forceTeleportApplyToPlayer,
 		forceTeleportCustomObject,

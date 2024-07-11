@@ -352,10 +352,7 @@
     <ClInclude Include="MidhookFlagInterpreter.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="GUIConsoleCommand.h">
-      <Filter>Services\GUI\GUIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsoleCommand.h">
+    <ClInclude Include="EngineCommand.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
     <ClInclude Include="GUIHeading.h">
@@ -1279,7 +1276,7 @@
     <ClCompile Include="TriggerModel.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleCommand.cpp">
+    <ClCompile Include="EngineCommand.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
