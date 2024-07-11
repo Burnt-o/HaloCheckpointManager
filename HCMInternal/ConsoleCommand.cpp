@@ -8,12 +8,16 @@
 #include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
-#include "winnt.h"
+#include "MidhookContextInterpreter.h"
+#include "ModuleHook.h"
 
 template <GameState::Value gameT>
 class ConsoleCommandImpl : public IConsoleCommand
 {
 private:
+	static inline std::mutex mDestructionGuard{};
+
+	static inline ConsoleCommandImpl<gameT>* instance = nullptr;
 
 	// event callbacks
 	ScopedCallback<ActionEvent> mConsoleCommandEventCallbackHandle;
@@ -29,7 +33,13 @@ private:
 	std::shared_ptr<MultilevelPointer> gameEnginePointer;
 	std::shared_ptr<MultilevelPointer> sendCommandPointer;
 
-	// primary event callback
+	std::shared_ptr<ModuleMidHook> commandOutputStringHook;
+	std::shared_ptr<MidhookContextInterpreter> commandOutputStringFunctionContext;
+
+	std::optional<std::string> lastCommandOutputString;
+
+
+	// primary user fired event callback
 	void onSendCommand()
 	{
 
@@ -50,7 +60,16 @@ private:
 			if (command.contains("gamespeed"))
 				return;
 
-			sendCommand(command);
+			auto commandOutput = sendCommand(command);
+
+			if (commandOutput)
+				messagesGUI->addMessage(std::format("Command Output: {}", commandOutput.value()));
+			else
+			{
+#ifdef HCM_DEBUG 
+				messagesGUI->addMessage("Command had no output!");
+#endif
+			}
 
 		}
 		catch (HCMRuntimeException ex)
@@ -58,6 +77,36 @@ private:
 			runtimeExceptions->handleMessage(ex);
 		}
 
+	}
+
+
+	// for extracting command output strings
+	static void commandOutputStringHookFunction(SafetyHookContext& ctx)
+	{
+		if (!instance)
+			return;
+
+		std::unique_lock<std::mutex> lock(mDestructionGuard);
+		LOG_ONCE(PLOG_DEBUG << "commandOutputStringHookFunction running");
+
+		try
+		{
+			enum class param
+			{
+				pOutputString
+			};
+			auto* ctxInterpreter = instance->commandOutputStringFunctionContext.get();
+
+			const char* outputChars = (const char*)ctxInterpreter->getParameterRef(ctx, (int)param::pOutputString);
+			if (IsBadReadPtr(outputChars, 4))
+				throw HCMRuntimeException(std::format("Bad read of command string output characters! at {:X}", (uintptr_t)outputChars));
+
+			instance->lastCommandOutputString = std::string(outputChars);
+		}
+		catch (HCMRuntimeException ex)
+		{
+			instance->runtimeExceptions->handleMessage(ex);
+		}
 	}
 
 
@@ -73,16 +122,24 @@ public:
 		mSettingsWeak(dicon.Resolve<SettingsStateAndEvents>())
 
 	{
+		instance = this;
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		gameEnginePointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameEnginePointer));
 		sendCommandPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(sendCommandPointer), game);
+
+		auto commandOutputStringFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(commandOutputStringFunction), game);
+		commandOutputStringFunctionContext = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(commandOutputStringFunctionContext), game);
+		commandOutputStringHook = ModuleMidHook::make(game.toModuleName(), commandOutputStringFunction, commandOutputStringHookFunction);
 	}
 
-
-
-	void sendCommand(std::string commandString)
+	~ConsoleCommandImpl()
 	{
+		std::unique_lock<std::mutex> lock(mDestructionGuard); // block until callbacks/hooks finish executing
+		instance = nullptr;
+	}
 
+	std::optional<std::string> sendCommand(std::string commandString)
+	{
 
 		uintptr_t pCommand;
 		if (!sendCommandPointer->resolve(&pCommand)) throw HCMRuntimeException("Could not resolve pointer to sendCommand function");
@@ -99,26 +156,24 @@ public:
 
 		std::string command = "HS: " + commandString;
 
+
+		lastCommandOutputString = std::nullopt;
+		commandOutputStringHook->setWantsToBeAttached(true);
+
+		// Execute the command
 		engine_command_vptr(pEngine, command.c_str());
 
+		// Command output generation happens on a different game thread, er there's probably a better way to do this.
+		// Keep in mind that depending on the command, there may be no output at all.
+		int maxSleepTime = 3;
+		while (lastCommandOutputString.has_value() == false && maxSleepTime > 0)
+		{
+			maxSleepTime--;
+			Sleep(1);
+		}
 
-		/* TODO: how to get output of a command? eg calling something like "cheat_deathless_player" should return a true or a false.
-		IDA reckons pEngine is PSLIST_HEADER (a sequenced singlely-linked list - i think), and the func returns a PSLIST_ENTRY.
-		But in practice the return is always 0. so uh not sure what's going on there.
-
-		However there definitely does seem to be a PSLIST_HEADER structure in the game engine pointer. 
-			- I can see the entry count getting incremented every time I call this function
-
-		Handy resources:
-		https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/singly-and-doubly-linked-lists#singly-linked-lists
-		https://github.com/MicrosoftDocs/windows-driver-docs-ddi/blob/9b77e5eebca6410941311ecaf65507cf12734ed9/wdk-ddi-src/content/wdm/ns-wdm-_slist_entry.md
-		https://www.nirsoft.net/kernel_struct/vista/SLIST_HEADER.html
-
-
-		could try calling ExQueryDepthSList function (wdm.h) on enginePointer? https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-exquerydepthslist
-		
-		48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40040000
-		*/
+		commandOutputStringHook->setWantsToBeAttached(false);
+		return lastCommandOutputString;
 
 	}
 

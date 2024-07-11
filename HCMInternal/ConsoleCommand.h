@@ -10,7 +10,7 @@ class IConsoleCommand
 {
 public:
 	virtual ~IConsoleCommand() = default;
-	virtual void sendCommand(std::string commandString) = 0;
+	virtual std::optional<std::string> sendCommand(std::string commandString) = 0;
 };
 
 
@@ -30,7 +30,7 @@ public:
 	}
 
 
-	void sendCommand(std::string commandString) { return pimpl->sendCommand(commandString); }
+	std::optional<std::string> sendCommand(std::string commandString) { return pimpl->sendCommand(commandString); }
 
 
 };

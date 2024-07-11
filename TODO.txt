@@ -4,8 +4,16 @@ maybe ? * Refactor triggerModel (triggerModel2 is wip)
 * add trigger names for h4
 
 * add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff)
-* disable hotkeys when hcm gui is up 
-* add modal dialog for console commands (or just make a real console)
+* disable hotkeys when hcm gui is up (don't I already have code for input blocking? make sure it's hooked up to freecam)
+* add modal dialog for console commands (or just make a real console - steal scales' code)
+* Add option to render inside/outside/both of barrier tris - need normals? game defines a plane.. can we just calc from vertices, are they in order?
+		So for a triangle p1, p2, p3, if the vector A = p2 - p1 and the vector B = p3 - p1 then the normal N = A x B and can be calculated by:
+
+		Nx = Ay * Bz - Az * By
+		Ny = Az * Bx - Ax * Bz
+		Nz = Ax * By - Ay * Bx
+		This might not be necessary - just add option for culling direction to renderTris ?
+
 
 FUTURE TODO: 
 * upgrade sensitivity drift detector (actually do the float math and check for drift)

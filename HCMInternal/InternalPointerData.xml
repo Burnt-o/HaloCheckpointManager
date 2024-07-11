@@ -6647,7 +6647,9 @@
 	<!--#endregion InfiniteAmmo/BottomlessClip-->
 
 	<!--#region consoleCommand-->
-	<!--scan nw "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00"-->
+	<!--scan nw "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00"
+	or use IDA to check for xrefs to InterlockedPopEntrySList
+	-->
 	<VersionedEntry Name="sendCommandPointer" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -6683,11 +6685,9 @@
 			</Offsets>
 		</Version>
 
-		<!--not sure on this. maybe 10008 instead-->
 		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
-				<!--<Offset>0xCF2C</Offset>-->
 				<Offset>0x10008</Offset>
 			</Offsets>
 		</Version>
@@ -6722,6 +6722,89 @@
 			</Offsets>
 		</Version>
 	</VersionedEntry>
+
+	<VersionedEntry Name="commandOutputStringFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xACA5C4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6F82FC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x103D74</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1221C8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x82DB1</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x25B78F</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="commandOutputStringFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Parameters>
+				<pOutputString>rsp+0x30</pOutputString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Parameters>
+				<pOutputString>rsp+0x20</pOutputString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Parameters>
+				<pOutputString>rsp+0x30</pOutputString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Parameters>
+				<pOutputString>rsp+0x30</pOutputString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Parameters>
+				<pOutputString>r11+0x0</pOutputString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Parameters>
+				<pOutputString>r11+0x0</pOutputString>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
 	<!--#endregion consoleCommand-->
 
 
