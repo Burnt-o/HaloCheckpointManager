@@ -31,6 +31,8 @@ namespace SettingsEnums
 
 	enum class SoftCeilingRenderTypes { Bipeds, Vehicles, BipedsOrVehicles };
 
+	enum class SoftCeilingRenderDirection { Front, Back, Both };
+
 	enum class Display2DInfoAnchorEnum
 	{
 		TopLeft,

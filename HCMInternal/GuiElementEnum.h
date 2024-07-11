@@ -204,6 +204,7 @@
 	((softCeilingOverlayToggle, (THIRD_GEN)))\
 	((softCeilingOverlaySettings, (THIRD_GEN)))\
 		((softCeilingOverlayRenderTypes, (THIRD_GEN)))\
+		((softCeilingOverlayRenderDirection, (THIRD_GEN)))\
 		((softCeilingOverlayColorAccel, (THIRD_GEN)))\
 		((softCeilingOverlayColorSlippy, (THIRD_GEN)))\
 		((softCeilingOverlayColorKill, (THIRD_GEN)))\

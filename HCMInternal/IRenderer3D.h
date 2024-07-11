@@ -13,6 +13,13 @@ enum class TextureEnum
 	Crosshair
 };
 
+enum class CullingOption
+{
+	CullNone,
+	CullBack,
+	CullFront,
+};
+
 /// <summary>
 /// Provides functions for rendering in 3D. Implemented by Renderer3DImpl.h
 /// <see cref="Renderer3DImpl.h"/>
@@ -116,7 +123,7 @@ public:
 	/// <param name="vertexPositions">3x Float3 world position of the triangle vertices.</param>
 	/// <param name="color">Float4 of the colour to be drawn.</param>
 	/// <param name="texture">Optional enum of the texture to be drawn.</param>
-	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture = std::nullopt) = 0;
+	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, CullingOption cullingOption = CullingOption::CullNone, std::optional<TextureEnum> texture = std::nullopt) = 0;
 
 
 	/// <summary>
@@ -125,7 +132,7 @@ public:
 	/// <param name="model">Interface providing access to a VertexCollection and IndiceCollection of the triangle vertices (in sets of 3).</param>
 	/// <param name="color">Float4 of the colour to be drawn.</param>
 	/// <param name="texture">Optional enum of the texture to be drawn.</param>
-	virtual void drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture = std::nullopt) = 0;
+	virtual void drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, CullingOption cullingOption = CullingOption::CullNone, std::optional<TextureEnum> texture = std::nullopt) = 0;
 
 	/// <summary>
 	/// Draws an edge (line of the specified colour at the specified position.

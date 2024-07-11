@@ -100,6 +100,7 @@ private:
 
 
 	void setTexture(std::optional<TextureEnum> texture);
+	void setCullMode(CullingOption cullingOption);
 public:
 	Renderer3DImpl(GameState game, IDIContainer& dicon);
 	~Renderer3DImpl();
@@ -117,8 +118,8 @@ public:
 	virtual const SimpleMath::Vector3 getCameraPosition() override { return cameraPosition; };
 	virtual const DirectX::BoundingFrustum& getCameraFrustum() override { return frustumViewWorld; }
 
-	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture) override;
-	virtual void drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture) override;
+	virtual void drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, CullingOption cullingOption, std::optional<TextureEnum> texture) override;
+	virtual void drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, CullingOption cullingOption, std::optional<TextureEnum> texture) override;
 
 	virtual void drawEdge(const SimpleMath::Vector3& edgeStart, const SimpleMath::Vector3& edgeEnd, const SimpleMath::Vector4& color) override;
 	virtual void drawEdgeCollection(const IModelEdges* model, const SimpleMath::Vector4& color) override;

@@ -1490,6 +1490,13 @@ public:
 			nameof(softCeilingOverlayRenderTypes)
 		);
 
+	std::shared_ptr<BinarySetting<SettingsEnums::SoftCeilingRenderDirection>> softCeilingOverlayRenderDirection = std::make_shared<BinarySetting<SettingsEnums::SoftCeilingRenderDirection>>
+		(
+			SettingsEnums::SoftCeilingRenderDirection::Both,
+			[](SettingsEnums::SoftCeilingRenderDirection in) { return true; },
+			nameof(softCeilingOverlayRenderDirection)
+		);
+
 	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> softCeilingOverlayColorAccel = std::make_shared<BinarySetting<SimpleMath::Vector4>>
 		(
 			SimpleMath::Vector4{0.0f, 1.0f, 0.0f, 1.f}, // green

@@ -1172,6 +1172,7 @@ private:
 					(game, ToolTipCollection("Settings for the barrier overlay"), "Barrier Overlay Settings", headerChildElements
 						{
 						createNestedElement(GUIElementEnum::softCeilingOverlayRenderTypes),
+						createNestedElement(GUIElementEnum::softCeilingOverlayRenderDirection),
 						createNestedElement(GUIElementEnum::softCeilingOverlayColorAccel),
 						createNestedElement(GUIElementEnum::softCeilingOverlayColorSlippy),
 						createNestedElement(GUIElementEnum::softCeilingOverlayColorKill),
@@ -1182,6 +1183,11 @@ private:
 			case GUIElementEnum::softCeilingOverlayRenderTypes:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::SoftCeilingRenderTypes, 150.f>>
 					(game, ToolTipCollection("Whether to render barriers that apply to bipeds, vehicles, or either."), "Render Barriers Affecting:", settings->softCeilingOverlayRenderTypes));
+
+			case GUIElementEnum::softCeilingOverlayRenderDirection:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::SoftCeilingRenderDirection, 100.f>>
+					(game, ToolTipCollection("Whether to render the front of barriers, the back, or both."), "Render Barriers Direction:", settings->softCeilingOverlayRenderDirection));
+
 
 			case GUIElementEnum::softCeilingOverlayColorAccel:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>

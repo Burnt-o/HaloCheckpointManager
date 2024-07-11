@@ -113,6 +113,10 @@ private:
 			bool wantsVehicles = desiredSubjects == SettingsEnums::SoftCeilingRenderTypes::Vehicles || desiredSubjects == SettingsEnums::SoftCeilingRenderTypes::BipedsOrVehicles;
 			bool wantsBipeds = desiredSubjects == SettingsEnums::SoftCeilingRenderTypes::Bipeds || desiredSubjects == SettingsEnums::SoftCeilingRenderTypes::BipedsOrVehicles;
 
+			auto renderDirection = settings->softCeilingOverlayRenderDirection->GetValue();
+
+			auto cullingOption = renderDirection == SettingsEnums::SoftCeilingRenderDirection::Both ? CullingOption::CullNone :
+				renderDirection == SettingsEnums::SoftCeilingRenderDirection::Front ? CullingOption::CullBack : CullingOption::CullFront;
 
 			for (auto& softCeiling : *softCeilingDataLock.value().get())
 			{
@@ -120,7 +124,7 @@ private:
 				if (!isDesiredSubject)
 					continue; 
 
-				renderer->drawTriangleCollection(&softCeiling, softCeiling.colorSolid);
+				renderer->drawTriangleCollection(&softCeiling, softCeiling.colorSolid, cullingOption);
 				renderer->drawEdgeCollection(&softCeiling, softCeiling.colorWireframe);
 
 			}

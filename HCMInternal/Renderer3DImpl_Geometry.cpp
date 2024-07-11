@@ -26,11 +26,37 @@ void Renderer3DImpl<mGame>::setTexture(std::optional<TextureEnum> texture)
 
 }
 
+template<GameState::Value mGame>
+void Renderer3DImpl<mGame>::setCullMode(CullingOption cullingOption)
+{
+
+	switch (cullingOption)
+	{
+	case CullingOption::CullNone:
+		this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+			break;
+
+	case CullingOption::CullBack:
+		this->pDeviceContext->RSSetState(this->commonStates->CullClockwise());
+		break;
+
+	case CullingOption::CullFront:
+		this->pDeviceContext->RSSetState(this->commonStates->CullCounterClockwise());
+			break;
+
+	default:
+		throw HCMRuntimeException(std::format("Bad enum passed to setCullMode! int: {}", (int)cullingOption));
+
+	}
+
+}
 
 
 template<GameState::Value mGame>
 void Renderer3DImpl<mGame>::renderSphere(const SimpleMath::Vector3& position, const SimpleMath::Vector4& color, const float& scale, const bool& isWireframe)
 {
+	setTexture(std::nullopt);
+	setCullMode(CullingOption::CullNone);
 
 	// create position and scale transforms
 	auto resizeTransform = SimpleMath::Matrix::CreateScale(scale);
@@ -41,14 +67,15 @@ void Renderer3DImpl<mGame>::renderSphere(const SimpleMath::Vector3& position, co
 
 
 template<GameState::Value mGame>
-void Renderer3DImpl<mGame>::drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture)
+void Renderer3DImpl<mGame>::drawTriangle(const std::array<SimpleMath::Vector3, 3>& vertexPositions, const SimpleMath::Vector4& color, CullingOption cullingOption, std::optional<TextureEnum> texture)
 {
 
 	setTexture(texture);
 
+
 	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF); 
 	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
-	this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+	setCullMode(cullingOption);
 
 	this->primitiveBatchEffect->SetColorAndAlpha(color);
 	this->primitiveBatchEffect->Apply(pDeviceContext);
@@ -64,9 +91,10 @@ void Renderer3DImpl<mGame>::drawEdge(const SimpleMath::Vector3& edgeStart, const
 {
 	setTexture(std::nullopt);
 
+
 	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF);
 	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
-	this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+	setCullMode(CullingOption::CullNone);
 
 	this->primitiveBatchEffect->SetColorAndAlpha(color);
 	this->primitiveBatchEffect->Apply(this->pDeviceContext);
@@ -77,13 +105,14 @@ void Renderer3DImpl<mGame>::drawEdge(const SimpleMath::Vector3& edgeStart, const
 }
 
 template<GameState::Value mGame>
-void  Renderer3DImpl<mGame>::drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, std::optional<TextureEnum> texture)
+void  Renderer3DImpl<mGame>::drawTriangleCollection(const IModelTriangles* model, const SimpleMath::Vector4& color, CullingOption cullingOption, std::optional<TextureEnum> texture)
 {
 	setTexture(texture);
 
+
 	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF);
 	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
-	this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+	setCullMode(cullingOption);
 
 
 	this->primitiveBatchEffect->SetColorAndAlpha(color);
@@ -104,9 +133,10 @@ void  Renderer3DImpl<mGame>::drawEdgeCollection(const IModelEdges* model, const 
 	setTexture(std::nullopt);
 
 
+
 	this->pDeviceContext->OMSetBlendState(this->commonStates->AlphaBlend(), nullptr, 0xFFFFFFFF);
 	this->pDeviceContext->OMSetDepthStencilState(this->commonStates->DepthRead(), 0); // or depth default?
-	this->pDeviceContext->RSSetState(this->commonStates->CullNone());
+	setCullMode(CullingOption::CullNone);
 
 	this->primitiveBatchEffect->SetColorAndAlpha(color);
 	this->primitiveBatchEffect->Apply(this->pDeviceContext);

@@ -274,9 +274,9 @@ private:
 					else
 					{
 						if (cameraIsInsideTrigger)
-							renderer->drawTriangleCollection(&triggerData.model, triggerData.currentColor, interiorTexture);
+							renderer->drawTriangleCollection(&triggerData.model, triggerData.currentColor, CullingOption::CullNone, interiorTexture);
 						else
-							renderer->drawTriangleCollection(&triggerData.model, triggerData.currentColor, std::nullopt);
+							renderer->drawTriangleCollection(&triggerData.model, triggerData.currentColor, CullingOption::CullNone, std::nullopt);
 					}
 
 				}
