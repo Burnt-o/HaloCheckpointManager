@@ -36,7 +36,7 @@ private:
 
 
 
-	// for extracting command output strings
+	// for valid output
 	static void commandOutputStringHookFunction(SafetyHookContext& ctx)
 	{
 		if (!instance)
@@ -58,6 +58,7 @@ private:
 				throw HCMRuntimeException(std::format("Bad read of command string output characters! at {:X}", (uintptr_t)outputChars));
 
 			auto out = std::string(outputChars);
+			PLOG_DEBUG << "Firing engine output event with string: " << out;
 			instance->mEngineOutputEvent->fireEvent(out);
 		}
 		catch (HCMRuntimeException ex)

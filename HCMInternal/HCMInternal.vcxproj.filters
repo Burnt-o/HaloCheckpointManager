@@ -890,6 +890,9 @@
     <ClInclude Include="IFireCallbackListChanged.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
+    <ClInclude Include="EngineCommandErrorEvent.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1304,6 +1307,9 @@
       <Filter>Services\GUI</Filter>
     </ClCompile>
     <ClCompile Include="EngineCommandOutputEvent.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineCommandErrorEvent.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>

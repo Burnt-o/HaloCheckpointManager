@@ -238,6 +238,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="CommandConsoleManager.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
+    <ClInclude Include="EngineCommandErrorEvent.h" />
     <ClInclude Include="EngineCommandOutputEvent.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
@@ -501,6 +502,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CommandConsoleGUI.cpp" />
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="EngineCommand.cpp" />
+    <ClCompile Include="EngineCommandErrorEvent.cpp" />
     <ClCompile Include="EngineCommandOutputEvent.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />

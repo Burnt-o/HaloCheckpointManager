@@ -11,26 +11,16 @@ constexpr SimpleMath::Vector4 fontColor = { 1, 1, 1, 1 };
 
 void CommandConsoleGUI::clear_buffer()
 {
-
+	mCommandBuffer.clear();
 }
 
 void CommandConsoleGUI::clear_history()
 {
-	mCommandHistory.clear();
-	mCurrentIndex = 0;
+	mConsoleRecords.clear();
 }
 
 
-void CommandConsoleGUI::history_cursor_up()
-{
-	mCurrentIndex = std::clamp<int>(mCurrentIndex + 1, 0, (int)mCommandHistory.size());
-}
 
-
-void CommandConsoleGUI::history_cursor_down()
-{
-	mCurrentIndex = std::clamp<int>(mCurrentIndex - 1, 0, (int)mCommandHistory.size());
-}
 
 void CommandConsoleGUI::execute(bool clearBuffer)
 {
@@ -43,11 +33,10 @@ void CommandConsoleGUI::execute(bool clearBuffer)
 	command.erase(std::remove(command.begin(), command.end(), '\n'), command.end());
 	command.erase(std::remove(command.begin(), command.end(), '\r'), command.end());
 
-	mCommandHistory.push_back(command);
+	mConsoleRecords.push_back(ConsoleRecord(command, ConsoleRecord::Type::Command));
 
 	engineCommand->sendEngineCommand(command);
 
-	mCurrentIndex = 0;
 
 	if (clearBuffer)
 	{
@@ -56,11 +45,11 @@ void CommandConsoleGUI::execute(bool clearBuffer)
 
 }
 
-void CommandConsoleGUI::render_console()
+void CommandConsoleGUI::render_console_input()
 {
 	ImGui::AlignTextToFramePadding();
 	ImGui::SetNextItemWidth(100);
-	ImGui::Text("mcctas(");
+	ImGui::Text("Engine(");
 	ImGui::SameLine();
 
 	if (!ImGui::IsAnyItemActive())
@@ -72,48 +61,63 @@ void CommandConsoleGUI::render_console()
 	ImGuiInputTextFlags command_line_flags = ImGuiInputTextFlags_EnterReturnsTrue;
 	if (ImGui::InputText("##mCommandBuffer", &mCommandBuffer, command_line_flags)) {
 		execute(true);
+		needToScrollToBottom = true;
 	}
 }
 
+
+template<typename T>
+void pop_front(std::vector<T>& vec)
+{
+	assert(!vec.empty());
+	vec.erase(vec.begin());
+}
 
 void CommandConsoleGUI::render_console_output()
 {
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-	ImGui::BeginChild("ScrollingRegion##CommandConsoleGUI", ImVec2(720, 300), false, flags);
 
+	while (mConsoleRecords.size() > mMaxRecordHistory)
+		pop_front(mConsoleRecords);
 
-	for (auto& s : mLog) {
-		ImGui::Text(s.c_str());
-	}
+	ImGui::BeginChild("ScrollingRegion##CommandConsoleGUI", ImVec2(720, 300), false);
 
-	ImGui::EndChild();
-}
-
-void CommandConsoleGUI::render_history()
-{
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-	ImGui::BeginChild("ScrollingRegion##CommandConsoleGUI", ImVec2(720, 300), false, flags);
-
-	int id = 0;
-	for (auto s = mCommandHistory.cbegin(); s != mCommandHistory.cend(); s = std::next(s)) {
-		ImGui::PushID(id);
-		if (ImGui::Button("<")) {
-			if (mCurrentIndex >= 1 && mCommandHistory.size() > id) {
-				mCommandBuffer = mCommandHistory[id];
+	int commandID = 0;
+	for (auto& record : mConsoleRecords) {
+		switch (record.type)
+		{
+		case ConsoleRecord::Type::Command:
+			ImGui::PushID(commandID);
+			if (ImGui::Button("<"))
+			{
+				mCommandBuffer = record.str;
 			}
+			ImGui::SameLine();
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text(record.str.c_str());
+			ImGui::PopID();
+			commandID++;
+			break;
+
+		case ConsoleRecord::Type::Output:
+			ImGui::Text(record.str.c_str());
+			break;
+
+		case ConsoleRecord::Type::Error:
+			ImGui::TextColored({ 1, 0, 0, 1 }, record.str.c_str());
+			break;
 		}
-		ImGui::SameLine();
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text(s->c_str());
-		ImGui::PopID();
-		id++;
+
+		
 	}
 
-	ImGui::SetScrollHereY(1.0f);
+	if (needToScrollToBottom)
+	{
+		needToScrollToBottom = false;
+		ImGui::SetScrollHereY(1.0f);
+	}
 
 	ImGui::EndChild();
 }
-
 
 
 
@@ -123,9 +127,9 @@ void CommandConsoleGUI::render(SimpleMath::Vector2 screenSize)
 #ifndef HCM_DEBUG 
 #error "check these values"
 #endif
-	const float PADDING = 10.0f;
+	float PADDING = 10.0f;
 	const float MARGIN = 2.0f;
-	const float CONSOLE_HEIGHT = 40.0f;
+	const float CONSOLE_HEIGHT = 40.0f * (fontSize / 16.f);
 
 
 
@@ -144,7 +148,7 @@ void CommandConsoleGUI::render(SimpleMath::Vector2 screenSize)
 	ImVec2 window_pos_pivot = ImVec2(0.0f, 1.0f);
 
 	// Console Output Window
-	ImVec2 console_output_window_pos = ImVec2(PADDING, io.DisplaySize.y - PADDING - CONSOLE_HEIGHT - MARGIN - 300 - MARGIN);
+	ImVec2 console_output_window_pos = ImVec2(PADDING, io.DisplaySize.y - PADDING - CONSOLE_HEIGHT - MARGIN);
 	ImGui::SetNextWindowPos(console_output_window_pos, ImGuiCond_Always, window_pos_pivot);
 	ImGui::SetNextWindowBgAlpha(0.5f); // Transparent background
 	if (ImGui::Begin("MCCTAS Console Output##CommandConsoleGUI", nullptr, window_flags)) {
@@ -153,23 +157,14 @@ void CommandConsoleGUI::render(SimpleMath::Vector2 screenSize)
 	ImGui::End();
 
 
-	// History Window
-	ImVec2 history_window_pos = ImVec2(PADDING, io.DisplaySize.y - PADDING - CONSOLE_HEIGHT - MARGIN);
-	ImGui::SetNextWindowPos(history_window_pos, ImGuiCond_Always, window_pos_pivot);
-	ImGui::SetNextWindowBgAlpha(0.25f); // Transparent background
-	if (ImGui::Begin("MCCTAS Console History##CommandConsoleGUI", nullptr, window_flags)) {
-		render_history();
-	}
-	ImGui::End();
-
 	// Console input window
 	ImVec2 console_window_pos = ImVec2(PADDING, io.DisplaySize.y - PADDING);
 	ImGui::SetNextWindowPos(console_window_pos, ImGuiCond_Always, window_pos_pivot);
-	ImGui::SetNextWindowSize(ImVec2(screenSize.y - PADDING * 2, CONSOLE_HEIGHT));
+	ImGui::SetNextWindowSize(ImVec2(screenSize.x - PADDING * 2, CONSOLE_HEIGHT));
 	ImGui::SetNextWindowBgAlpha(0.25f); // Transparent background
 	if (ImGui::Begin("MCCTAS Console##CommandConsoleGUI", nullptr, window_flags))
 	{
-		render_console();
+		render_console_input();
 		
 	}
 	ImGui::End();
@@ -177,9 +172,18 @@ void CommandConsoleGUI::render(SimpleMath::Vector2 screenSize)
 	// Cleanup
 	if (color_style_count)
 		ImGui::PopStyleColor(color_style_count);
+
+
+
+
 }
 
 void CommandConsoleGUI::onCommandOutput(const std::string& outputString)
 {
-	mLog.push_back(outputString);
+	mConsoleRecords.push_back(ConsoleRecord(outputString, ConsoleRecord::Type::Output));
+}
+
+void CommandConsoleGUI::onCommandError(const std::string& outputString)
+{
+	mConsoleRecords.push_back(ConsoleRecord(outputString, ConsoleRecord::Type::Error));
 }

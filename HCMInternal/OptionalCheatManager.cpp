@@ -93,6 +93,7 @@
 #include "GetActiveStructureDesignTags.h"
 #include "TagReferenceReader.h"
 #include "EngineCommandOutputEvent.h"
+#include "EngineCommandErrorEvent.h"
 
 
 #include "DIContainer.h"

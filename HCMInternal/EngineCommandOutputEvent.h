@@ -4,6 +4,7 @@
 #include "DIContainer.h"
 #include "ObservedEvent.h"
 
+
 using EngineOutputEvent = eventpp::CallbackList<void(const std::string&)>;
 
 class EngineCommandOutputEventImpl {
@@ -14,7 +15,7 @@ public:
 class EngineCommandOutputEvent : public IOptionalCheat
 {
 private:
-	
+
 	std::unique_ptr<EngineCommandOutputEventImpl> pimpl;
 public:
 	EngineCommandOutputEvent(GameState game, IDIContainer& dicon);

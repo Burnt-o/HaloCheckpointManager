@@ -6805,6 +6805,92 @@
 		</Version>
 	</VersionedEntry>
 
+	<VersionedEntry Name="commandErrorStringFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB214F0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x6E1A41</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1027B9</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x120B91</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x82D3B</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0xCF8C1</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="commandErrorStringFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Parameters>
+				<pErrorString>rbx+0</pErrorString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Parameters>
+				<pErrorString>rdi+0</pErrorString>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Parameters>
+				<pErrorString>rdi</pErrorString>
+				<pErrorVariables>rsi+0</pErrorVariables>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Parameters>
+				<pErrorString>rdi+0</pErrorString>
+				<pErrorVariables>rsi+0</pErrorVariables>
+			</Parameters>
+		</Version>
+		
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Parameters>
+				<pErrorString>rdi+0</pErrorString>
+				<pErrorVariables>r14+0</pErrorVariables>
+			</Parameters>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Parameters>
+				<pErrorString>rdx+0</pErrorString>
+				<pErrorVariables>rsi+0</pErrorVariables>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
 	<!--#endregion EngineCommand-->
 
 
