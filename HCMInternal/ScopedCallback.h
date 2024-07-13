@@ -18,14 +18,12 @@ public:
 
 	ScopedCallback() = delete;
 
-	explicit ScopedCallback(std::weak_ptr <eventpp::CallbackList<ret(args...)>> pEvent, std::function<ret(args...)> functor)
+	explicit ScopedCallback(std::shared_ptr <eventpp::CallbackList<ret(args...)>> pEvent, std::function<ret(args...)> functor)
 		: m_pEventWeak(pEvent), mFunctor(functor)
 	{
-		auto m_pEvent = m_pEventWeak.lock();
-		if (!m_pEvent) throw HCMInitException("Bad weak ptr passed to ScopedCallback");
 
 		PLOG_DEBUG << "ScopedCallback constructor called";
-		mHandle = m_pEvent->append(mFunctor);
+		mHandle = pEvent->append(mFunctor);
 
 	}
 
