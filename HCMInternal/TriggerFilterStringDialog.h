@@ -36,8 +36,9 @@ public:
 	{
 		ImGui::Text("Trigger Name Filter List (exact match, semicolon seperated):");
 		//ImGui::InputTextMultiline("##TriggerFilterStringDialog", &currentReturnValue);
-
+		ImGui::PushTextWrapPos();
 		textEditor->Render("##TriggerFilterStringDialog", false, ImVec2(screenSize.x / 3.f, screenSize.y / 3.f), true);
+		ImGui::PopTextWrapPos();
 
 		ImGui::Dummy(ImVec2(10, 10));
 

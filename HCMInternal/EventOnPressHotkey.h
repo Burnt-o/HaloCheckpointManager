@@ -12,8 +12,8 @@ private:
 	std::shared_ptr<ActionEvent> mEvent;
 
 public:
-	explicit EventOnPressHotkey(std::shared_ptr<ActionEvent> actionEvent, RebindableHotkeyEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { })
-		: RebindableHotkey(hotkeyEnum, defaultBindings), mEvent(actionEvent)
+	explicit EventOnPressHotkey(std::shared_ptr<ActionEvent> actionEvent, RebindableHotkeyEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { }, bool ignoresHotkeyDisabler = false)
+		: RebindableHotkey(hotkeyEnum, defaultBindings, ignoresHotkeyDisabler), mEvent(actionEvent)
 	{
 	}
 

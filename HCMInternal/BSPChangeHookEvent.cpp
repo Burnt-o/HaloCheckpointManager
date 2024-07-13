@@ -13,4 +13,4 @@ BSPChangeHookEvent::BSPChangeHookEvent(GameState game, IDIContainer& dicon)
 }
 BSPChangeHookEvent::~BSPChangeHookEvent() = default;
 
-std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> BSPChangeHookEvent::getBSPChangeEvent() { throw; }
+std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(uint32_t)>>> BSPChangeHookEvent::getBSPChangeEvent() { throw; }

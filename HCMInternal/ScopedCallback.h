@@ -110,9 +110,9 @@ public:
 	ScopedCallback(const ScopedCallback& that) = delete;
 	ScopedCallback& operator=(const ScopedCallback& that) = delete;
 
-	// move is fine
-	ScopedCallback(ScopedCallback&& that) = default;
-	ScopedCallback& operator=(ScopedCallback&& that) = default;
+	// move is banned
+	ScopedCallback(ScopedCallback&& that) = delete;
+	ScopedCallback& operator=(ScopedCallback&& that) = delete;
 
 
 };

@@ -31,8 +31,8 @@ private:
 	SimpleMath::Vector2 mAnchorOffset;
 	static inline std::mutex addMessageMutex{};
 
-	std::optional<ScopedCallback<eventpp::CallbackList<void(float&)>>> fontSizeChangedCallback;
-	std::optional<ScopedCallback<eventpp::CallbackList<void(SimpleMath::Vector4&)>>> fontColorChangedCallback;
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(float&)>>> fontSizeChangedCallback;
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(SimpleMath::Vector4&)>>> fontColorChangedCallback;
 	float fontSize = 1.f;
 	SimpleMath::Vector4 fontColor{1.f, 0.2f, 0.0f, 1.f};
 	// funcs
@@ -59,8 +59,8 @@ public:
 
 	void setSettings(std::shared_ptr<SettingsStateAndEvents> settings) {
 		mSettingsWeak = settings; 
-		fontSizeChangedCallback = ScopedCallback<eventpp::CallbackList<void(float&)>>(settings->messagesFontSize->valueChangedEvent, [this](auto& n) { fontSize = n; });
-		fontColorChangedCallback = ScopedCallback<eventpp::CallbackList<void(SimpleMath::Vector4&)>>(settings->messagesFontColor->valueChangedEvent, [this](auto& n) { fontColor = n; });
+		fontSizeChangedCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(float&)>>>(settings->messagesFontSize->valueChangedEvent, [this](auto& n) { fontSize = n; });
+		fontColorChangedCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(SimpleMath::Vector4&)>>>(settings->messagesFontColor->valueChangedEvent, [this](auto& n) { fontColor = n; });
 
 		fontSize = settings->messagesFontSize->GetValue();
 		fontColor = settings->messagesFontColor->GetValue();

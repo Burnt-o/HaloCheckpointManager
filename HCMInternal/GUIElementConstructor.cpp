@@ -413,7 +413,8 @@ private:
 							createNestedElement(GUIElementEnum::setPlayerHealthSubheadingGUI),
 							createNestedElement(GUIElementEnum::skullToggleGUI),
 							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
-							createNestedElement(GUIElementEnum::engineCommandGUI),
+							createNestedElement(GUIElementEnum::consoleCommandGUI),
+							createNestedElement(GUIElementEnum::consoleCommandSettings),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -681,12 +682,47 @@ private:
 							"Copy Position to Clipboard",
 							settings->playerPositionToClipboardEvent));
 
-				case GUIElementEnum::engineCommandGUI:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputString>
-						(game, ToolTipCollection("Sends commands to the games console parser"), "Console command: ", settings->engineCommandString, settings->engineCommandEvent));
+				case GUIElementEnum::consoleCommandGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHotkeyOnly<103>>
+						(game, ToolTipCollection("Brings up the command console, allowing you to send engine commands"), RebindableHotkeyEnum::commandConsoleHotkey,
+							"Command Console Hotkey"));
+
+				case GUIElementEnum::consoleCommandSettings:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Settings for the command console"), "Command Console Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::consoleCommandPauseGame),
+							createNestedElement(GUIElementEnum::consoleCommandBlockInput),
+							createNestedElement(GUIElementEnum::consoleCommandFreeCursor),
+							createNestedElement(GUIElementEnum::consoleCommandFontSize),
+							createNestedElement(GUIElementEnum::consoleCommandExecuteBuffer),
+							}));
+
+					case GUIElementEnum::consoleCommandPauseGame:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Automatically pause the game when the command console is open"), std::nullopt, "Pause game when Console open", settings->consoleCommandPauseGame));
 
 
+					case GUIElementEnum::consoleCommandBlockInput:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Automatically block game input when the command console is open"), std::nullopt, "Block input when Console open", settings->consoleCommandBlockInput));
 
+					case GUIElementEnum::consoleCommandFreeCursor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+							(game, ToolTipCollection("Automatically free cursor when the command console is open"), std::nullopt, "Free cursor when Console open", settings->consoleCommandFreeCursor));
+
+
+					case GUIElementEnum::consoleCommandFontSize:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
+							(game, ToolTipCollection(""), "Font Size#Console", settings->consoleCommandFontSize));
+
+
+					case GUIElementEnum::consoleCommandExecuteBuffer:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Execute the command currently in the console (without clearing the console)"), RebindableHotkeyEnum::commandConsoleExecuteBuffer,
+								"Execute Command",
+								settings->commandConsoleExecuteBufferEvent));
+	
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, ToolTipCollection("Overlays that various information over the top of the game view"), "Overlays", headerChildElements

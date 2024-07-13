@@ -112,7 +112,13 @@
 		((setPlayerHealthValueGUI, (ALL_SUPPORTED_GAMES)))\
 	((skullToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((playerPositionToClipboardGUI, (ALL_SUPPORTED_GAMES)))\
-	((engineCommandGUI, (ALL_SUPPORTED_GAMES)))\
+	((consoleCommandGUI, (ALL_SUPPORTED_GAMES)))\
+	((consoleCommandSettings, (ALL_SUPPORTED_GAMES)))\
+		((consoleCommandPauseGame, (ALL_SUPPORTED_GAMES)))\
+		((consoleCommandBlockInput, (ALL_SUPPORTED_GAMES)))\
+		((consoleCommandFreeCursor, (ALL_SUPPORTED_GAMES)))\
+		((consoleCommandFontSize, (ALL_SUPPORTED_GAMES)))\
+		((consoleCommandExecuteBuffer, (ALL_SUPPORTED_GAMES)))\
 
 
 

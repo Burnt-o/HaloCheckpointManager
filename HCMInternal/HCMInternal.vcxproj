@@ -232,12 +232,13 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
-    <ClInclude Include="bitset_iter.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
+    <ClInclude Include="CommandConsoleGUI.h" />
+    <ClInclude Include="CommandConsoleManager.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
-    <ClInclude Include="earcut.hpp" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
+    <ClInclude Include="EngineCommandOutputEvent.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
     <ClInclude Include="GetActiveStructureDesignTags.h" />
@@ -257,11 +258,15 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="BSPSetChangeHookEvent.h" />
     <ClInclude Include="HideWatermarkCheck.h" />
     <ClInclude Include="HideWatermarkManager.h" />
+    <ClInclude Include="IFireCallbackListChanged.h" />
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="IModel.h" />
     <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
+    <ClInclude Include="ObservedScopedCallback.h" />
+    <ClInclude Include="ObservedEvent.h" />
+    <ClInclude Include="ObservedEventFactory.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
@@ -493,7 +498,10 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
+    <ClCompile Include="CommandConsoleGUI.cpp" />
+    <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="EngineCommand.cpp" />
+    <ClCompile Include="EngineCommandOutputEvent.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetCurrentZoneSet.cpp" />

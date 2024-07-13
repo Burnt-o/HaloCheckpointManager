@@ -10,7 +10,7 @@ class IEngineCommand
 {
 public:
 	virtual ~IEngineCommand() = default;
-	virtual std::optional<std::string> sendEngineCommand(std::string commandString) = 0;
+	virtual void sendEngineCommand(std::string commandString) = 0;
 };
 
 
@@ -30,7 +30,7 @@ public:
 	}
 
 
-	std::optional<std::string> sendEngineCommand(std::string commandString) { return pimpl->sendEngineCommand(commandString); }
+	void sendEngineCommand(std::string commandString) { return pimpl->sendEngineCommand(commandString); }
 
 
 };

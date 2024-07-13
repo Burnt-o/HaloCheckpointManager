@@ -411,9 +411,30 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::SkullToggler}
 		},
 
-	{ GUIElementEnum::engineCommandGUI,
-{OptionalCheatEnum::EngineCommand}
+	{ GUIElementEnum::consoleCommandGUI,
+{OptionalCheatEnum::CommandConsoleManager}
 	},
+
+	{ GUIElementEnum::consoleCommandSettings,
+{OptionalCheatEnum::CommandConsoleManager}
+	},
+
+
+{ GUIElementEnum::consoleCommandPauseGame,
+{OptionalCheatEnum::TogglePause}
+},
+
+{ GUIElementEnum::consoleCommandBlockInput,
+{OptionalCheatEnum::ToggleBlockInput}
+},
+
+	{ GUIElementEnum::consoleCommandFreeCursor,
+{OptionalCheatEnum::ToggleFreeCursor}
+	},
+
+
+
+
 
 #ifdef HCM_DEBUG
 

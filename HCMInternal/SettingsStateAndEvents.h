@@ -67,7 +67,8 @@ public:
 	std::shared_ptr<ActionEvent> dumpCheckpointEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> injectCoreEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> dumpCoreEvent = std::make_shared<ActionEvent>();
-	std::shared_ptr<ActionEvent> engineCommandEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> commandConsoleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> commandConsoleExecuteBufferEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> getObjectAddressEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> playerPositionToClipboardEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
@@ -394,13 +395,38 @@ public:
 			nameof(medusaToggle)
 		);
 
-	std::shared_ptr<BinarySetting<std::string>> engineCommandString = std::make_shared<BinarySetting<std::string>>
+
+
+	std::shared_ptr<BinarySetting<bool>> consoleCommandPauseGame = std::make_shared<BinarySetting<bool>>
 		(
-			"game_revert",
-			[](std::string in) { return true; },
-			nameof(engineCommandString)
+			true,
+			[](bool in) { return true; },
+			nameof(consoleCommandPauseGame)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> consoleCommandBlockInput = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(consoleCommandBlockInput)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> consoleCommandFreeCursor = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(consoleCommandFreeCursor)
+		);
+
+	std::shared_ptr<BinarySetting<float>> consoleCommandFontSize = std::make_shared<BinarySetting<float>>
+		(
+			16.f,
+			[](int in) { return in > 6.f; },
+			nameof(consoleCommandFontSize)
+		);
+
+
+	
 
 	std::shared_ptr<BinarySetting<uint32_t>> getObjectAddressDWORD = std::make_shared<BinarySetting<uint32_t>>
 		(
@@ -1593,7 +1619,6 @@ public:
 		GUIShowingPausesGame, 
 		pauseAlsoBlocksInput,
 		pauseAlsoFreesCursor,
-		engineCommandString,
 		getObjectAddressDWORD,
 		forceTeleportApplyToPlayer,
 		forceTeleportCustomObject,

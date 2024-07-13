@@ -4,15 +4,15 @@ maybe ? * Refactor triggerModel (triggerModel2 is wip)
 * add trigger names for h4
 
 * add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff)
-* disable hotkeys when hcm gui is up (don't I already have code for input blocking? make sure it's hooked up to freecam)
-* add modal dialog for console commands (or just make a real console - steal scales' code)
-* Add option to render inside/outside/both of barrier tris - need normals? game defines a plane.. can we just calc from vertices, are they in order?
-		So for a triangle p1, p2, p3, if the vector A = p2 - p1 and the vector B = p3 - p1 then the normal N = A x B and can be calculated by:
+// made this - need to hook it up to more stuff (if it works good)
 
-		Nx = Ay * Bz - Az * By
-		Ny = Az * Bx - Ax * Bz
-		Nz = Ax * By - Ay * Bx
-		This might not be necessary - just add option for culling direction to renderTris ?
+Add service for grabbing all known console commands / vars etc
+
+Look thru init messages - we shouldn't be having ScopedCallback destructors being called! probably lack of std::move. FIX! slows down init a lot. 
+Look thru shutdown message - why the fuck so many ~ScopedCallback bad weak ptrs? are they even a big deal? If not, get rid of the stacktrace message.
+
+btw eventpp already implemented scopedcallbacks - https://github.com/wqking/eventpp/blob/master/doc/scopedremover.md
+also the haslistener utility; may be extremely useful https://github.com/wqking/eventpp/blob/master/doc/eventutil.md
 
 
 FUTURE TODO: 

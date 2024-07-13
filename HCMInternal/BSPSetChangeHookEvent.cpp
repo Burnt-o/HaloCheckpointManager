@@ -5,6 +5,7 @@
 #include "GetCurrentBSPSet.h"
 #include "IMakeOrGetCheat.h"
 #include "SwitchBSPSet.h"
+#include "ObservedEventFactory.h"
 
 template<GameState::Value gameT>
 class BSPSetChangeHookEventTemplated : public IBSPSetChangeHookEvent
@@ -14,9 +15,18 @@ private:
 
 	std::shared_ptr< GetCurrentBSPSet> getCurrentBSPSet;
 	std::shared_ptr<ModuleMidHook> BSPSetChangeHook;
-	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> BSPSetChangeEvent = std::make_shared< eventpp::CallbackList<void(BSPSet)>>();
+	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEvent = ObservedEventFactory::makeObservedEvent<eventpp::CallbackList<void(BSPSet)>>();
+	std::unique_ptr<ScopedCallback<ActionEvent>> callbackListChangedEvent;
 
-	std::optional<ScopedCallback< eventpp::CallbackList<void(BSPSet)>>> forceBSPSetChangeEvent;
+
+	std::unique_ptr<ScopedCallback< eventpp::CallbackList<void(BSPSet)>>> forceBSPSetChangeEvent;
+
+
+	void onCallbackListChanged()
+	{
+		BSPSetChangeHook->setWantsToBeAttached(BSPSetChangeEvent->isEventSubscribed());
+	}
+
 
 	static void BSPSetChangeHookFunction(SafetyHookContext& ctx)
 	{
@@ -25,7 +35,7 @@ private:
 
 		try
 		{
-			instance->BSPSetChangeEvent->operator()(instance->getCurrentBSPSet->getCurrentBSPSet());
+			instance->BSPSetChangeEvent->fireEvent(instance->getCurrentBSPSet->getCurrentBSPSet());
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -43,13 +53,13 @@ public:
 		BSPSetChangeHook = ModuleMidHook::make(game.toModuleName(), BSPSetChangeFunction, BSPSetChangeHookFunction);
 		instance = this;
 
-		BSPSetChangeHook->setWantsToBeAttached(true);
+		callbackListChangedEvent = ObservedEventFactory::getCallbackListChangedCallback(BSPSetChangeEvent, [this]() {onCallbackListChanged(); });
 
 		// subscribe to SwitchBSPSet event that it fires when the user forces a BSP set change
 		try
 		{
 			auto SwitchBSPSetLock = resolveDependentCheat(SwitchBSPSet);
-			forceBSPSetChangeEvent = ScopedCallback< eventpp::CallbackList<void(BSPSet)>>(SwitchBSPSetLock->getBSPSetChangeEvent(), [this](BSPSet n) { BSPSetChangeEvent->operator()(n); });
+			forceBSPSetChangeEvent = std::make_unique<ScopedCallback< eventpp::CallbackList<void(BSPSet)>>>(SwitchBSPSetLock->getBSPSetChangeEvent(), [this](BSPSet n) { BSPSetChangeEvent->fireEvent(n); });
 		}
 		catch (HCMInitException ex)
 		{
@@ -58,7 +68,7 @@ public:
 
 	}
 
-	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> getBSPSetChangeEvent() {
+	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(BSPSet)>>> getBSPSetChangeEvent() {
 		return BSPSetChangeEvent;
 	}
 

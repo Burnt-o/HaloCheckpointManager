@@ -102,11 +102,15 @@ HotkeyManager::~HotkeyManager()
 
 void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen any time interval but this is convienent
 {
-	if (mHotkeyDisabler->serviceIsRequested()) return;
+	bool hotkeysShouldBeDisabled = mHotkeyDisabler->serviceIsRequested();
 
 
 	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllEventOnPressHotkeys())
 	{
+		if (hotkeysShouldBeDisabled && !hotkey->ignoresHotkeyDisabler)
+			continue;
+
+
 		for (auto& bindingSet : hotkey->getBindings())
 		{
 			if (HotkeyManagerImpl::shouldHotkeyActivate(bindingSet))

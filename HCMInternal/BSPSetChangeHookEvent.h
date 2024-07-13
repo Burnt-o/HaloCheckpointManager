@@ -3,14 +3,14 @@
 #include "IOptionalCheat.h"
 #include "DIContainer.h"
 #include "GameState.h"
-
+#include "ObservedEvent.h"
 
 using BSPSet = std::bitset<32>;
 
 class IBSPSetChangeHookEvent
 {
 public:
-	virtual std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> getBSPSetChangeEvent() = 0;
+	virtual std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(BSPSet)>>> getBSPSetChangeEvent() = 0;
 	virtual ~IBSPSetChangeHookEvent() = default;
 };
 
@@ -25,7 +25,7 @@ public:
 	BSPSetChangeHookEvent(GameState game, IDIContainer& dicon);
 	~BSPSetChangeHookEvent();
 
-	std::shared_ptr<eventpp::CallbackList<void(BSPSet)>> getBSPSetChangeEvent() { return pimpl->getBSPSetChangeEvent(); }
+	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(BSPSet)>>> getBSPSetChangeEvent() { return pimpl->getBSPSetChangeEvent(); }
 
 	virtual std::string_view getName() override { return nameof(BSPSetChangeHookEvent); }
 };

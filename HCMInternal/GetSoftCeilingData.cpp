@@ -218,8 +218,8 @@ private:
 	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlayWireframeTransparencyChangedCallback;
 
 	// bsp change callbacks. clear cache
-	std::optional<ScopedCallback<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEventCallback;
-	std::optional<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEventCallback;
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEventCallback;
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEventCallback;
 
 	// injected services
 	std::unique_ptr<ISoftCeilingDataFactory> mSoftCeilingDataFactory;
@@ -318,7 +318,8 @@ public:
 		try
 		{
 			auto BSPSetChangeEventHookLock = resolveDependentCheat(BSPSetChangeHookEvent);
-			BSPSetChangeEventCallback = ScopedCallback<eventpp::CallbackList<void(BSPSet)>>(BSPSetChangeEventHookLock->getBSPSetChangeEvent(), [this](BSPSet) { dataCacheValid = false; });
+			BSPSetChangeEventCallback = BSPSetChangeEventHookLock->getBSPSetChangeEvent()->subscribe([this](BSPSet) { dataCacheValid = false; });
+			
 		}
 		catch (HCMInitException ex)
 		{
@@ -327,8 +328,15 @@ public:
 
 		try
 		{
+
+#ifndef HCM_DEBUG
+#error this and the above callback should be getting set dynamically instead of on init right? or is softceilingdatacacher already a scoped object?
+#endif
+
 			auto ZoneSetChangeEventHookLock = resolveDependentCheat(ZoneSetChangeHookEvent);
-			ZoneSetChangeEventCallback = ScopedCallback<eventpp::CallbackList<void(uint32_t)>>(ZoneSetChangeEventHookLock->getZoneSetChangeEvent(), [this](uint32_t) { dataCacheValid = false; });
+			ZoneSetChangeEventCallback = ZoneSetChangeEventHookLock->getZoneSetChangeEvent()->subscribe([this](uint32_t) { dataCacheValid = false; });
+				
+				//ScopedCallback<eventpp::CallbackList<void(uint32_t)>>(ZoneSetChangeEventHookLock->getZoneSetChangeEvent(), [this](uint32_t) { dataCacheValid = false; });
 		}
 		catch (HCMInitException ex)
 		{

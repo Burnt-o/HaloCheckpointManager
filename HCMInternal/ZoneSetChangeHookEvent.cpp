@@ -4,6 +4,7 @@
 #include "PointerDataStore.h"
 #include "GetCurrentZoneSet.h"
 #include "IMakeOrGetCheat.h"
+#include "ObservedEventFactory.h"
 
 template<GameState::Value gameT>
 class ZoneSetChangeHookEventTemplated : public IZoneSetChangeHookEvent
@@ -13,7 +14,14 @@ private:
 
 	std::shared_ptr< GetCurrentZoneSet> getCurrentZoneSet;
 	std::shared_ptr<ModuleMidHook> ZoneSetChangeHook;
-	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> ZoneSetChangeEvent = std::make_shared< eventpp::CallbackList<void(uint32_t)>>();
+	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEvent = ObservedEventFactory::makeObservedEvent<eventpp::CallbackList<void(uint32_t)>>();
+	std::unique_ptr<ScopedCallback<ActionEvent>> callbackListChangedEvent;
+
+	void onCallbackListChanged()
+	{
+		ZoneSetChangeHook->setWantsToBeAttached(ZoneSetChangeEvent->isEventSubscribed());
+	}
+
 
 	static void ZoneSetChangeHookFunction(SafetyHookContext& ctx)
 	{
@@ -22,7 +30,7 @@ private:
 
 		try
 		{
-			instance->ZoneSetChangeEvent->operator()(instance->getCurrentZoneSet->getCurrentZoneSet());
+			instance->ZoneSetChangeEvent->fireEvent(instance->getCurrentZoneSet->getCurrentZoneSet());
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -40,10 +48,13 @@ public:
 		ZoneSetChangeHook = ModuleMidHook::make(game.toModuleName(), ZoneSetChangeFunction, ZoneSetChangeHookFunction);
 		instance = this;
 
-		ZoneSetChangeHook->setWantsToBeAttached(true);
+
+		callbackListChangedEvent = ObservedEventFactory::getCallbackListChangedCallback(ZoneSetChangeEvent, [this]() {onCallbackListChanged(); });
+
+
 	}
 
-	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> getZoneSetChangeEvent() {
+	virtual std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(uint32_t)>>> getZoneSetChangeEvent() override {
 		return ZoneSetChangeEvent;
 	}
 

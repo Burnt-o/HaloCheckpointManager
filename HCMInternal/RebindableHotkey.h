@@ -113,23 +113,27 @@ private:
 		return true;
 	}
 
+
+
 	public:
 		std::string_view getName() const { return magic_enum::enum_name(mHotkeyEnum); } // used in serialisation.
 		std::string_view getBindingText() const { return mBindingText; } // a user facing text string of what the hotkey is currently bound to.
 		std::string_view getBindingTextShort() const { return mBindingTextShort; } // a user facing text string of what the hotkey is currently bound to.
 
 		// actionEvent is what event to fire when hotkey activated. hotkeyName is just used for (de)serialisation. Bindings default to empty (unbound). BindingText and BindingTextShort are used in the GUI.
-		explicit RebindableHotkey(RebindableHotkeyEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { })
+		explicit RebindableHotkey(RebindableHotkeyEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { }, bool ignoresHotkeyDisabler = false)
 			:mHotkeyEnum(hotkeyEnum), 
 			//mBindings(std::erase_if(defaultBindings, [](const auto& bindingSet) { return bindingSet.empty(); })), // delete empty bindings (this shouldn't happen anyway)
 			mBindings(defaultBindings), // delete empty bindings (this shouldn't happen anyway)
 			mBindingText(generateBindingText(defaultBindings)), 
-			mBindingTextShort(generateBindingTextShort(mBindingText))
+			mBindingTextShort(generateBindingTextShort(mBindingText)),
+			ignoresHotkeyDisabler(ignoresHotkeyDisabler)
 		{
 		}
 
 		static inline constexpr  std::vector<std::vector<ImGuiKey>> noBindings() { return { {} }; }
 
+		const bool ignoresHotkeyDisabler;
 
 		bool isCurrentlyDown()
 		{

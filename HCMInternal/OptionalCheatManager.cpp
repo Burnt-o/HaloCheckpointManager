@@ -23,6 +23,7 @@
 #include "GetObjectAddress.h"
 #include "AIFreeze.h"
 #include "EngineCommand.h"
+#include "CommandConsoleManager.h"
 #include "GetCurrentDifficulty.h"
 #include "IgnoreCheckpointChecksum.h"
 #include "AdvanceTicks.h"
@@ -91,6 +92,7 @@
 #include "BSPSetChangeHookEvent.h"
 #include "GetActiveStructureDesignTags.h"
 #include "TagReferenceReader.h"
+#include "EngineCommandOutputEvent.h"
 
 
 #include "DIContainer.h"

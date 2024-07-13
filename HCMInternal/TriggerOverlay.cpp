@@ -158,7 +158,6 @@ private:
 			const float& triggerOverlayAlpha = settings->triggerOverlayAlpha->GetValue();
 			const float& triggerOverlayWireframeAlpha = settings->triggerOverlayWireframeAlpha->GetValue();
 
-			const auto now = std::chrono::steady_clock::now();
 
 			const uint32_t triggerOverlayCheckHitFalloff = settings->triggerOverlayCheckHitFalloff->GetValue();
 			const uint32_t triggerOverlayCheckMissFalloff = settings->triggerOverlayCheckMissFalloff->GetValue();

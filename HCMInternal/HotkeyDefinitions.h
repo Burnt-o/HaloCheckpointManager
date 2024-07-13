@@ -56,16 +56,27 @@ private:
 
 	typedef std::vector<std::vector<ImGuiKey>> vvk;
 
-#define initEventOnPressHotkey(enumName, hotkeyEvent, defaultBinding) \
+#define initEventOnPressHotkey_impl(enumName, hotkeyEvent, defaultBinding, ignoresHotkeyDisabler) \
 		{RebindableHotkeyEnum::enumName, std::make_shared<EventOnPressHotkey>\
 		(hotkeyEvent,\
 		RebindableHotkeyEnum::enumName,\
-		defaultBinding) }
+		defaultBinding,\
+		ignoresHotkeyDisabler) }
 
-#define initRebindableHotkey(enumName, defaultBinding) \
+#define initEventOnPressHotkey(enumName, hotkeyEvent, defaultBinding) initEventOnPressHotkey_impl(enumName, hotkeyEvent, defaultBinding, false)
+#define initEventOnPressHotkey_ignoreDisabler(enumName, hotkeyEvent, defaultBinding) initEventOnPressHotkey_impl(enumName, hotkeyEvent, defaultBinding, true)
+
+
+#define initRebindableHotkey_impl(enumName, defaultBinding, ignoresHotkeyDisabler) \
 		{RebindableHotkeyEnum::enumName, std::make_shared<RebindableHotkey>\
 		(RebindableHotkeyEnum::enumName,\
-		defaultBinding) }
+		defaultBinding,\
+		ignoresHotkeyDisabler) }
+
+#define initRebindableHotkey(enumName, defaultBinding) initRebindableHotkey_impl(enumName, defaultBinding, false)
+#define initRebindableHotkey_ignoreDisabler(enumName, defaultBinding) initRebindableHotkey_impl(enumName, defaultBinding, true)
+
+
 
 	// have to split up the counting here since BOOST_PP_TUPLE_SIZE can only count up to 64
 	static constexpr inline int allEventOnPressHotkeyEnumCount = BOOST_PP_TUPLE_SIZE((ALL_EVENTONPRESS_HOTKEYS)) + BOOST_PP_TUPLE_SIZE((SKULL_HOTKEYS));
@@ -254,7 +265,16 @@ private:
 			vvk{}),
 
 
+			initEventOnPressHotkey_ignoreDisabler(commandConsoleHotkey,
+			mSettings->commandConsoleHotkeyEvent,
+			vvk{ImGuiKey_F8}),
 
+
+			initEventOnPressHotkey(commandConsoleExecuteBuffer,
+			mSettings->commandConsoleExecuteBufferEvent,
+			vvk{}),
+
+			
 		initEventOnPressHotkey(setPlayerHealth,
 		mSettings->setPlayerHealthEvent,
 		vvk{}),

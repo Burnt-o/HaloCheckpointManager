@@ -48,7 +48,9 @@ switchBSPSet,\
 hideHUDToggle,\
 setPlayerHealth,\
 toggleWaypoint3D,\
-triggerOverlayToggleHotkey
+triggerOverlayToggleHotkey,\
+commandConsoleHotkey,\
+commandConsoleExecuteBuffer
 
 
 

@@ -10,10 +10,8 @@ public:
 	template <typename T>
 	static std::shared_ptr<ObservedEvent<T>> makeObservedEvent()
 	{
-		return std::make_shared< ObservedEvent<T>>
-			( // have to construct in place because make_shared doesn't have access to private constructor
-				std::move(ObservedEvent<T>())
-			);
+		std::shared_ptr<ObservedEvent<T>> pOE(new ObservedEvent<T>());
+		return std::move(pOE);
 	}
 
 	template <typename ret, typename... args>

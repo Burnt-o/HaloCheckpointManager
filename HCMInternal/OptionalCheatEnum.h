@@ -94,7 +94,9 @@ BSPChangeHookEvent,\
 ZoneSetChangeHookEvent,\
 BSPSetChangeHookEvent,\
 GetActiveStructureDesignTags,\
-TagReferenceReader
+TagReferenceReader,\
+CommandConsoleManager,\
+EngineCommandOutputEvent
 
 
 enum class OptionalCheatEnum {
