@@ -53,17 +53,31 @@ private:
 				pErrorString
 			};
 			auto* ctxInterpreter = instance->commandErrorStringFunctionContext.get();
-
-			// will be nullptr if there was no error. In which case return early.
-			uintptr_t errorCharsPointer = *ctxInterpreter->getParameterRef(ctx, (int)param::pErrorString);
-			if (errorCharsPointer == 0)
+			
+			try
 			{
-				PLOG_DEBUG << "no error";
+				// will be nullptr if there was no error. In which case return early.
+				uintptr_t errorCharsPointer = (uintptr_t)ctxInterpreter->getParameterRef(ctx, (int)param::pErrorString);
+				if (errorCharsPointer == 0)
+				{
+					PLOG_DEBUG << "no error";
+					return;
+				}
+
+				PLOG_DEBUG << "errorCharsPointer: " << std::hex << errorCharsPointer;
 			}
+			catch (HCMRuntimeException ex)
+			{
+				PLOG_DEBUG << "error parsing errorCharsPointer: " << ex.what();
+				return;
+			}
+
+
+
 
 			const char* errorChars = (const char*)ctxInterpreter->getParameterRef(ctx, (int)param::pErrorString);
 			if (IsBadReadPtr(errorChars, 4))
-				throw HCMRuntimeException(std::format("Bad read of command string output characters! at {:X}", (uintptr_t)errorChars));
+				throw HCMRuntimeException(std::format("Bad read of command string error characters! at {:X}", (uintptr_t)errorChars));
 
 
 
@@ -81,6 +95,7 @@ private:
 
 public:
 	EngineCommandErrorEventImplT(GameState game, IDIContainer& dicon)
+		: runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 
 		mEngineErrorEvent = ObservedEventFactory::makeObservedEvent<EngineErrorEvent>();

@@ -53,6 +53,25 @@ private:
 			};
 			auto* ctxInterpreter = instance->commandOutputStringFunctionContext.get();
 
+
+			try
+			{
+				// will be nullptr if there was no error. In which case return early.
+				uintptr_t outputCharsPointer = (uintptr_t)ctxInterpreter->getParameterRef(ctx, (int)param::pOutputString);
+				if (outputCharsPointer == 0)
+				{
+					PLOG_DEBUG << "no output";
+					return;
+				}
+
+				PLOG_DEBUG << "outputCharsPointer: " << std::hex << outputCharsPointer;
+			}
+			catch (HCMRuntimeException ex)
+			{
+				PLOG_DEBUG << "error parsing outputCharsPointer: " << ex.what();
+				return;
+			}
+
 			const char* outputChars = (const char*)ctxInterpreter->getParameterRef(ctx, (int)param::pOutputString);
 			if (IsBadReadPtr(outputChars, 4))
 				throw HCMRuntimeException(std::format("Bad read of command string output characters! at {:X}", (uintptr_t)outputChars));
@@ -71,6 +90,7 @@ private:
 
 public:
 	EngineCommandOutputEventImplT(GameState game, IDIContainer& dicon)
+		: runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
 	{
 
 		mEngineOutputEvent = ObservedEventFactory::makeObservedEvent<EngineOutputEvent>();

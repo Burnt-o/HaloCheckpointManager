@@ -6864,7 +6864,7 @@
 
 		<Version Version="1.3385.0.0" Game="Halo3">
 			<Parameters>
-				<pErrorString>rdi</pErrorString>
+				<pErrorString>rdi+0</pErrorString>
 				<pErrorVariables>rsi+0</pErrorVariables>
 			</Parameters>
 		</Version>

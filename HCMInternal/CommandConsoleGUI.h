@@ -31,18 +31,31 @@ class CommandConsoleGUI
 private:
 	std::shared_ptr<EngineCommand> engineCommand;
 
-	bool needToScrollToBottom = false;
+	bool needToScrollOutputToBottom = false; // set true on execute() to scroll output window to bottom
+	std::optional<std::string> queuedBufferUpdate; // when manually modifying the mCommandBuffer we need to do it in the inputTextCallback; put the new value here.
 
-	std::string mCommandBuffer;
-	std::vector<ConsoleRecord> mConsoleRecords;
-	int mMaxRecordHistory = 40;
+	std::string mCommandBuffer; // current console input string bound to by Imgui::InputText
+	std::vector<ConsoleRecord> mConsoleRecords; // console output strings
+	const int mMaxStoredRecords = 40;
 
+	std::vector<std::string> mCommandHistory; // previousuly inputed commands
+	std::optional<int> mCommandHistoryNavigationIndex;
+	const int mMaxStoredCommands = 20;
 
+	void processInputs();
+
+	void set_buffer(const std::string& str);
 	void clear_buffer();
 	void clear_history();
 
+	void navigateToHistoryOffset(int amount);
+	void pasteFromClipboard();
+
 	void render_console_input();
 	void render_console_output();
+
+	// see cpp
+	friend int inputTextCallback(ImGuiInputTextCallbackData* data);
 
 public:
 	float fontSize; // CommandConsoleManager will update this whenever the user changes the font size setting
