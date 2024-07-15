@@ -6762,7 +6762,7 @@
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
-				<Offset>0x25B78F</Offset>
+				<Offset>0x25B793</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -6800,7 +6800,7 @@
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Parameters>
-				<pOutputString>rax+0x0</pOutputString>
+				<pOutputString>r11+0x0</pOutputString>
 			</Parameters>
 		</Version>
 	</VersionedEntry>
