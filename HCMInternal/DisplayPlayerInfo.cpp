@@ -61,7 +61,8 @@ private:
 
 	// main callbacks
 	ScopedCallback<RenderEvent> mRenderEventCallback;
-	ScopedCallback<eventpp::CallbackList<void(uint32_t)>> mGameTickEventCallback;
+	std::shared_ptr<ObservedEvent<GameTickEvent>> mGameTickEvent;
+	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> mGameTickEventCallback; // only not null when display info running
 	ScopedCallback<ToggleEvent> mDisplayPlayerInfoToggleEventCallback;
 	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
 	ScopedCallback<eventpp::CallbackList<void(float&)>> display2DInfoFontSizeCallback;
@@ -118,7 +119,19 @@ private:
 	void onRenderEvent(SimpleMath::Vector2 screenSize)
 	{
 		LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
-		if (!isActive) return;
+		if (!isActive)
+		{
+			if (mGameTickEventCallback)
+				mGameTickEventCallback.reset();
+			return;
+		}
+		else
+		{
+			if (!mGameTickEventCallback)
+				mGameTickEventCallback = mGameTickEvent->subscribe([this](uint32_t t) { onGameTickEvent(t); });
+		}
+
+
 		LOG_ONCE(PLOG_DEBUG << "Rendering displayPlayerInfo data");
 		try
 		{
@@ -197,6 +210,9 @@ private:
 				isActive = false;
 				return;
 			}
+
+			
+
 
 			messagesGUI->addMessage(newValue ? "Enabling Player Info overlay." : "Disabling Player Info overlay");
 			isActive = newValue;
@@ -345,7 +361,7 @@ public:
 	DisplayPlayerInfoImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
 		mRenderEventCallback(dicon.Resolve<RenderEvent>().lock(), [this](SimpleMath::Vector2 ss) { onRenderEvent(ss); }),
-		mGameTickEventCallback(resolveDependentCheat(GameTickEventHook)->getGameTickEvent(), [this](uint32_t t) { onGameTickEvent(t); }),
+		mGameTickEvent(resolveDependentCheat(GameTickEventHook)->getGameTickEvent()),
 		mDisplayPlayerInfoToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->display2DInfoToggle->valueChangedEvent, [this](bool& n) {onDisplayPlayerInfoToggleEvent(n); }),
 		mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); }),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),

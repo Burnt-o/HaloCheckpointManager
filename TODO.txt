@@ -1,6 +1,5 @@
 
 3.1 TODO
-* add hotkey for barrier overlay
 Add service for grabbing all known console commands / vars etc - actually just put it all in a big .md file on the git
 
 * add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff, rendering stuff)

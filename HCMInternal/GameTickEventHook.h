@@ -3,6 +3,10 @@
 #include "IOptionalCheat.h"
 #include "DIContainer.h"
 #include "GameState.h"
+#include "ObservedEvent.h"
+
+using GameTickEvent = eventpp::CallbackList<void(uint32_t)>;
+
 class GameTickEventHook : public IOptionalCheat
 {
 public:
@@ -10,7 +14,7 @@ public:
 	{
 	public:
 		virtual ~GameTickEventHookImpl() = default;
-		virtual std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> getGameTickEvent() = 0;
+		virtual std::shared_ptr<ObservedEvent<GameTickEvent>> getGameTickEvent() = 0;
 		virtual uint32_t getCurrentGameTick() = 0;
 	};
 private:
@@ -20,7 +24,7 @@ private:
 public:
 	GameTickEventHook(GameState game, IDIContainer& dicon);
 	~GameTickEventHook();
-	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> getGameTickEvent();
+	std::shared_ptr<ObservedEvent<GameTickEvent>> getGameTickEvent();
 	uint32_t getCurrentGameTick();
 
 	std::string_view getName() override { return nameof(GameTickEventHook); }

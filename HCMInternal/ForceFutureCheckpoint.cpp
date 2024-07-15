@@ -28,7 +28,7 @@ private:
 
 			if (newValue)
 			{
-				gameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>>(gameTickEventHook->getGameTickEvent(), [this](uint32_t i) {onGameTickEventCallback(i); });
+				gameTickEventCallback = gameTickEventHook->getGameTickEvent()->subscribe([this](uint32_t i) {onGameTickEventCallback(i); });
 			}
 			else
 			{

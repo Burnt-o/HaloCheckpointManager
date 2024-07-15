@@ -267,7 +267,7 @@ Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 			if (shouldEnable)
 			{
 				lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
-				mGameTickEventCallback = std::make_unique<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>>(gameTickEventHook->getGameTickEvent(), [this](uint32_t i) {onGameTickEvent(i); });
+				mGameTickEventCallback = gameTickEventHook->getGameTickEvent()->subscribe([this](uint32_t i) {onGameTickEvent(i); });
 			}
 			else
 			{

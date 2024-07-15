@@ -2,40 +2,39 @@
 #include "GameTickEventHook.h"
 #include "ModuleHook.h"
 #include "PointerDataStore.h"
-#include "IMCCStateHook.h"
 #include "RuntimeExceptionHandler.h"
-
+#include "ObservedEventFactory.h"
 template <GameState::Value gameT>
 class GameTickEventHookTemplated : public GameTickEventHook::GameTickEventHookImpl
 {
 private:
 	GameState mGame;
 
-	static inline std::atomic_bool gameTickHookRunning = false;
+	static inline std::atomic_bool gameTickHookRunningMutex = false;
 	static inline GameTickEventHookTemplated<gameT>* instance = nullptr;
 
-	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> gameTickEvent = std::make_shared<eventpp::CallbackList<void(uint32_t)>>();
+	std::shared_ptr<ObservedEvent<GameTickEvent>> gameTickEvent;
+	std::unique_ptr<ScopedCallback<ActionEvent>> gameTickEventCallbackListChanged;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
-	ScopedCallback < eventpp::CallbackList<void(const MCCState&)>> mccStateChangedCallback;
 
-	void onMccStateChangedCallback(const MCCState&)
-	{
-		cacheValid = false;
-	}
 
 	std::unique_ptr<ModuleMidHook> tickIncrementHook;
 	std::shared_ptr<MultilevelPointer> tickCounter;
-	uint32_t* cachedTickCounter;
-	bool cacheValid = false;
+
+
+	void onGameTickEventCallbackListChanged()
+	{
+		tickIncrementHook->setWantsToBeAttached(gameTickEvent->isEventSubscribed());
+	}
 
 	static void tickIncrementHookFunction(SafetyHookContext& ctx)
 	{
 		static int errorCount = 0;
 		if (!instance) { PLOG_ERROR << "null GameTickEventHookTemplated instance"; return; }
-		ScopedAtomicBool lock(gameTickHookRunning);
+		ScopedAtomicBool lock(gameTickHookRunningMutex);
 		try
 		{
-			instance->gameTickEvent->operator()(instance->getCurrentGameTick());
+			instance->gameTickEvent->fireEvent(instance->getCurrentGameTick());
 			errorCount = 0;
 		}
 		catch (HCMRuntimeException ex)
@@ -55,7 +54,6 @@ public:
 	GameTickEventHookTemplated(GameState game, IDIContainer& dicon) 
 		: 
 		mGame(game),
-		mccStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onMccStateChangedCallback(n); }),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock())
 	{
 		if (instance) throw HCMInitException("Cannot have more than one GameTickEventHookTemplated per game");
@@ -63,36 +61,34 @@ public:
 		auto tickIncrementFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickIncrementFunction), game);
 		tickCounter = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickCounter), game);
 		tickIncrementHook = ModuleMidHook::make(game.toModuleName(), tickIncrementFunction, tickIncrementHookFunction); 
-		// hook starts disabled, will be enabled on first call to getGameTickEvent
+
+
+		gameTickEvent = ObservedEventFactory::makeObservedEvent<GameTickEvent>();
+		gameTickEventCallbackListChanged = ObservedEventFactory::getCallbackListChangedCallback(gameTickEvent, [this]() {onGameTickEventCallbackListChanged(); });
+
 
 		instance = this;
 	}
 
-	std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> getGameTickEvent()
+	std::shared_ptr<ObservedEvent<GameTickEvent>> getGameTickEvent()
 	{
-		tickIncrementHook->setWantsToBeAttached(true);
 		return gameTickEvent;
 	}
 
 	virtual uint32_t getCurrentGameTick() override
 	{
-		if (cacheValid == false)
-		{
-			uintptr_t temp;
-			if (tickCounter->resolve(&temp) == false) throw HCMRuntimeException(std::format("Could not resolve tickcounter: {}", MultilevelPointer::GetLastError()));
-			cachedTickCounter = (uint32_t*)temp;
-		}
-
-		return *cachedTickCounter;
+			uint32_t out;
+			if (!tickCounter->readData(&out)) throw HCMRuntimeException(std::format("Could not resolve tickcounter: {}", MultilevelPointer::GetLastError()));
+			return out;
 	}
 
 	~GameTickEventHookTemplated()
 	{
 		PLOG_DEBUG << "~GameTickEventHookTemplated";
-		if (gameTickHookRunning)
+		if (gameTickHookRunningMutex)
 		{
 			PLOG_INFO << "Waiting for gameTickHook to finish execution";
-			gameTickHookRunning.wait(true);
+			gameTickHookRunningMutex.wait(true);
 		}
 
 		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we unhook
@@ -125,6 +121,6 @@ GameTickEventHook::~GameTickEventHook()
 	PLOG_DEBUG << "~" << getName();
 }
 
-std::shared_ptr<eventpp::CallbackList<void(uint32_t)>> GameTickEventHook::getGameTickEvent() { return pimpl->getGameTickEvent();  }
+std::shared_ptr<ObservedEvent<GameTickEvent>> GameTickEventHook::getGameTickEvent() { return pimpl->getGameTickEvent();  }
 
 uint32_t GameTickEventHook::getCurrentGameTick() { return pimpl->getCurrentGameTick(); }
