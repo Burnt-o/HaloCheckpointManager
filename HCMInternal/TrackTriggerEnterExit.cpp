@@ -8,7 +8,6 @@
 #include "RuntimeExceptionHandler.h"
 #include "SettingsStateAndEvents.h"
 #include "GameTickEventHook.h"
-#include "IMCCStateHook.h"
 #include "UpdateTriggerLastChecked.h"
 
 template <GameState::Value gameT>
@@ -22,7 +21,6 @@ private:
 	std::weak_ptr< GetTriggerData> getTriggerDataWeak;
 	std::weak_ptr< SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr<GameTickEventHook> gameTickEventHookWeak;
-	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<UpdateTriggerLastChecked> updateTriggerLastCheckedWeak;
 	std::shared_ptr< RuntimeExceptionHandler> runtimeExceptions;
 
@@ -32,19 +30,15 @@ private:
 	ScopedCallback<ToggleEvent> triggerOverlayToggleCallback;
 	ScopedCallback<ToggleEvent> triggerOverlayMessageOnEnterCallback;
 	ScopedCallback<ToggleEvent> triggerOverlayMessageOnExitCallback;
-	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
 
 	void onSettingChanged()
 	{
 
 		try
 		{
-			lockOrThrow(mccStateHookWeak, mccStateHook);
-
 			lockOrThrow(settingsWeak, settings);
 
-			bool shouldEnableHook = mccStateHook->isGameCurrentlyPlaying((GameState)gameT) &&
-				settings->triggerOverlayToggle->GetValue() &&
+			bool shouldEnableHook = settings->triggerOverlayToggle->GetValue() &&
 				(settings->triggerOverlayMessageOnEnter->GetValue() || settings->triggerOverlayMessageOnExit->GetValue());
 
 			PLOG_DEBUG << "TrackTriggerEnterExitImpl setting to state: " << (shouldEnableHook ? "true" : "false");
@@ -148,11 +142,9 @@ public:
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook)),
-		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		triggerOverlayToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
 		triggerOverlayMessageOnEnterCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnEnter->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
 		triggerOverlayMessageOnExitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnExit->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) {onSettingChanged(); }),
 		updateTriggerLastCheckedWeak(resolveDependentCheat(UpdateTriggerLastChecked))
 	
 	{
