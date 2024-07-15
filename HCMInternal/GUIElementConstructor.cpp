@@ -715,7 +715,7 @@ private:
 
 					case GUIElementEnum::consoleCommandFontSize:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
-							(game, ToolTipCollection(""), "Font Size#Console", settings->consoleCommandFontSize));
+							(game, ToolTipCollection(""), "Font Size##Console", settings->consoleCommandFontSize));
 
 
 					case GUIElementEnum::consoleCommandExecuteBuffer:

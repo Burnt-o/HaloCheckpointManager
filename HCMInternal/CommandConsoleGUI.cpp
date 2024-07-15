@@ -70,6 +70,21 @@ void CommandConsoleGUI::pasteFromClipboard()
 }
 
 
+bool bannedCommand(std::string& command)
+{
+	// A few commands are deliberately removed for speedrun-integrity reasons. Most of them have the same or better functionality provided by HCM anyway.
+
+	std::string commandLower = command; // make copy
+	std::transform(commandLower.begin(), commandLower.end(), commandLower.begin(),
+		[](unsigned char c) { return std::tolower(c); }); // to lower case
+
+
+	return commandLower.contains("game_speed")
+		|| commandLower.contains("cheat_deathless_player")
+		|| commandLower.contains("game_tick_rate")
+		|| (commandLower.contains("object_cannot_die") && commandLower.contains("player"));
+
+}
 
 void CommandConsoleGUI::execute(bool clearBuffer)
 {
@@ -82,11 +97,25 @@ void CommandConsoleGUI::execute(bool clearBuffer)
 	command.erase(std::remove(command.begin(), command.end(), '\n'), command.end());
 	command.erase(std::remove(command.begin(), command.end(), '\r'), command.end());
 
+
+	
+
+
+
 	mConsoleRecords.push_back(ConsoleRecord(command, ConsoleRecord::Type::Command));
 	mCommandHistory.push_back(command);
 	try
 	{
-		engineCommand->sendEngineCommand(command);
+		if (!bannedCommand(command))
+		{
+			engineCommand->sendEngineCommand(command);
+		}
+		else
+		{
+#ifdef HCM_DEBUG
+			PLOG_DEBUG << "banned command was not executed: " << command;
+#endif
+		}
 	}
 	catch (HCMRuntimeException ex)
 	{
