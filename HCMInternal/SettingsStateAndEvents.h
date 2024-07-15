@@ -1734,7 +1734,11 @@ public:
 		waypoint3DGlobalSpriteColor,
 		waypoint3DGlobalLabelColor,
 		waypoint3DGlobalDistanceColor,
-		waypoint3DList
+		waypoint3DList,
+		consoleCommandFontSize,
+		consoleCommandFreeCursor,
+		consoleCommandBlockInput,
+		consoleCommandPauseGame,
 
 	};
 

@@ -8,11 +8,6 @@
 // Credit to Scales for letting me rip off his console implementation here https://github.com/Scaless/HaloTAS/blob/b9d55d2fe2aff2a1a654984d4d909b5cd14b8780/HaloTAS/MCCTAS/tas_console.h
 
 
-#ifndef HCM_DEBUG
-#error Need to add a destructor guard or something i think - rn the ScopedImFontScaler is getting fubared if hcm shutdown while console open
-#endif
-
-
 struct ConsoleRecord
 {
 	std::string str;
