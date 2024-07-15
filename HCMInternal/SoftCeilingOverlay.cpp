@@ -16,7 +16,7 @@ private:
 	// callbacks
 	std::unique_ptr<ScopedCallback<Render3DEvent>> mRenderEventCallback;
 	ScopedCallback<ToggleEvent> softCeilingOverlayToggleEventCallback;
-
+	std::unique_ptr< SoftCeilingDataProvider> softCeilingDataProvider; // null when disabled.
 
 	// injected services
 	std::weak_ptr<Render3DEventProvider> render3DEventProviderWeak;
@@ -40,6 +40,7 @@ private:
 				renderingMutex.wait(true);
 			}
 			mRenderEventCallback.reset();
+			softCeilingDataProvider.reset();
 			return;
 		}
 
@@ -51,8 +52,9 @@ private:
 			{
 				PLOG_DEBUG << "subscribing to render event!";
 				lockOrThrow(render3DEventProviderWeak, render3DEventProvider);
+				lockOrThrow(getSoftCeilingDataWeak, getSoftCeilingData)
 				mRenderEventCallback = render3DEventProvider->getRender3DEvent()->subscribe([this](GameState g, IRenderer3D* n) {onRenderEvent(g, n); });
-
+				softCeilingDataProvider = getSoftCeilingData->getSoftCeilingDataProvider(nameof(SoftCeilingOverlayImpl));
 			}
 			catch (HCMRuntimeException ex)
 			{
@@ -67,6 +69,7 @@ private:
 				renderingMutex.wait(true);
 			}
 			mRenderEventCallback.reset();
+			softCeilingDataProvider.reset();
 		}
 
 		try
@@ -98,11 +101,15 @@ private:
 
 			LOG_ONCE(PLOG_DEBUG << "acquiring soft ceiling data");
 
-			lockOrThrow(getSoftCeilingDataWeak, getSoftCeilingData);
-			auto softCeilingDataLock = getSoftCeilingData->getSoftCeilings();
+
+			if (!softCeilingDataProvider)
+				throw HCMRuntimeException(std::format("softCeilingDataProvider was null!")); // todo; figure out a neater way to handle errors
+
+			auto softCeilingDataLock = softCeilingDataProvider->getSoftCeilings();
+			LOG_ONCE(PLOG_DEBUG << "locking data..");
 
 			if (!softCeilingDataLock)
-				throw softCeilingDataLock.error(); // todo; figure out a neater way to handle errors
+				throw softCeilingDataLock.error();
 
 			LOG_ONCE(PLOG_DEBUG << "successfully acquired soft ceiling data");
 

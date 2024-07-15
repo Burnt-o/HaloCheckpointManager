@@ -1,8 +1,7 @@
 
 3.1 TODO
-Add service for grabbing all known console commands / vars etc - actually just put it all in a big .md file on the git
-
-* add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff, rendering stuff)
+* make GetSoftCeilingData a scoped service so bsp hoooks aren't always set
+* check if any other hooks getting set on init
 
 
 
@@ -42,7 +41,7 @@ templated scenario tag struct etc etc
 
 
 
-* Fix reach && ODST zoneset cheat -> split switch zoneset to seperate feature from switch bsp
+
 * fix tickadvance issues (caused by the scopedServiceRequest for pausing the game not always working properly)
 
 

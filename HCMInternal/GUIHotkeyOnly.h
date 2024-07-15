@@ -3,7 +3,7 @@
 #include "SettingsStateAndEvents.h"
 
 
-template <int pixelWidth>
+template <int pixelWidth = 63>
 class GUIHotkeyOnly : public IGUIElement {
 
 private:

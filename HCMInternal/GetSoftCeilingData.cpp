@@ -202,8 +202,11 @@ public:
 };
 
 
+
+
+
 template<GameState::Value mGame>
-class SoftCeilingDataCacher : public GetSoftCeilingDataUntemplated
+class SoftCeilingDataCacher : public IGetSoftCeilingDataImpl
 {
 private:
 	// callbacks
@@ -217,7 +220,7 @@ private:
 	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlaySolidTransparencyChangedCallback;
 	ScopedCallback < eventpp::CallbackList<void(float&)>> softCeilingOverlayWireframeTransparencyChangedCallback;
 
-	// bsp change callbacks. clear cache
+	// bsp change callbacks. clear cache. null when service isn't requested
 	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEventCallback;
 	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEventCallback;
 
@@ -226,6 +229,8 @@ private:
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::shared_ptr< SettingsStateAndEvents> settings;
 	std::shared_ptr< RuntimeExceptionHandler> runtimeExceptions;
+	std::optional<std::shared_ptr<BSPSetChangeHookEvent>> BSPSetChangeEventProvider;
+	std::optional<std::shared_ptr<ZoneSetChangeHookEvent>> ZoneSetChangeEventProvider;
 
 	// resolved data
 	libguarded::plain_guarded<SoftCeilingVector> softCeilingData = libguarded::plain_guarded<SoftCeilingVector>();
@@ -297,6 +302,7 @@ private:
 		return std::nullopt;
 	}
 
+
 public:
 
 	SoftCeilingDataCacher(GameState game, IDIContainer& dicon, std::unique_ptr<ISoftCeilingDataFactory> softCeilingDataFactory)
@@ -317,9 +323,7 @@ public:
 		// setup bsp change callbacks for clearing cache. these aren't required so no biggy if they fail.
 		try
 		{
-			auto BSPSetChangeEventHookLock = resolveDependentCheat(BSPSetChangeHookEvent);
-			BSPSetChangeEventCallback = BSPSetChangeEventHookLock->getBSPSetChangeEvent()->subscribe([this](BSPSet) { dataCacheValid = false; });
-			
+			BSPSetChangeEventProvider = resolveDependentCheat(BSPSetChangeHookEvent);
 		}
 		catch (HCMInitException ex)
 		{
@@ -328,15 +332,7 @@ public:
 
 		try
 		{
-
-#ifndef HCM_DEBUG
-#error this and the above callback should be getting set dynamically instead of on init right? or is softceilingdatacacher already a scoped object?
-#endif
-
-			auto ZoneSetChangeEventHookLock = resolveDependentCheat(ZoneSetChangeHookEvent);
-			ZoneSetChangeEventCallback = ZoneSetChangeEventHookLock->getZoneSetChangeEvent()->subscribe([this](uint32_t) { dataCacheValid = false; });
-				
-				//ScopedCallback<eventpp::CallbackList<void(uint32_t)>>(ZoneSetChangeEventHookLock->getZoneSetChangeEvent(), [this](uint32_t) { dataCacheValid = false; });
+			ZoneSetChangeEventProvider = resolveDependentCheat(ZoneSetChangeHookEvent);
 		}
 		catch (HCMInitException ex)
 		{
@@ -362,9 +358,51 @@ public:
 
 		return softCeilingData.lock();
 	}
-	
+
+	void updateRequestState(bool requested)
+	{
+		if (requested)
+		{
+			if (BSPSetChangeEventProvider.has_value())
+				BSPSetChangeEventCallback = BSPSetChangeEventProvider.value()->getBSPSetChangeEvent()->subscribe([this](BSPSet) { dataCacheValid = false; });
+
+			if (ZoneSetChangeEventProvider.has_value())
+				ZoneSetChangeEventCallback = ZoneSetChangeEventProvider.value()->getZoneSetChangeEvent()->subscribe([this](uint32_t) { dataCacheValid = false; });
+		}
+		else
+		{
+			BSPSetChangeEventCallback.reset();
+			ZoneSetChangeEventCallback.reset();
+		}
+	}
+
+
 
 };
+
+class SoftCeilingDataRequestManager : public TemplatedScopedServiceProvider<SoftCeilingDataProvider>
+{
+	std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl;
+
+public:
+
+	SoftCeilingDataRequestManager(std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl) : dataPimpl(dataPimpl) {}
+
+	virtual std::unique_ptr<SoftCeilingDataProvider> makeRequest(std::string callerID) override
+	{
+
+		return std::make_unique< SoftCeilingDataProvider>(
+			dataPimpl,
+			shared_from_this(),
+			callerID);
+	}
+
+	virtual void updateService() override
+	{
+		dataPimpl->updateRequestState(serviceIsRequested());
+	}
+};
+
 
 GetSoftCeilingData::GetSoftCeilingData(GameState gameImpl, IDIContainer& dicon)
 {
@@ -379,20 +417,32 @@ GetSoftCeilingData::GetSoftCeilingData(GameState gameImpl, IDIContainer& dicon)
 		break;
 
 	case GameState::Value::Halo3:
-		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3>>(gameImpl, dicon));
+	{
+		auto dataPimpl = std::make_shared<SoftCeilingDataCacher<GameState::Value::Halo3>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3>>(gameImpl, dicon));
+		pimpl = std::make_shared<SoftCeilingDataRequestManager>(dataPimpl);
 		break;
+	}
 
 	case GameState::Value::Halo3ODST:
-		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon));
+	{
+		auto dataPimpl = std::make_shared<SoftCeilingDataCacher<GameState::Value::Halo3ODST>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon));
+		pimpl = std::make_shared<SoftCeilingDataRequestManager>(dataPimpl);
 		break;
+	}
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::HaloReach>>(gameImpl, dicon));
+	{
+		auto dataPimpl = std::make_shared<SoftCeilingDataCacher<GameState::Value::HaloReach>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::HaloReach>>(gameImpl, dicon));
+		pimpl = std::make_shared<SoftCeilingDataRequestManager>(dataPimpl);
 		break;
+	}
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_unique<SoftCeilingDataCacher<GameState::Value::Halo4>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo4>>(gameImpl, dicon));
+	{
+		auto dataPimpl = std::make_shared<SoftCeilingDataCacher<GameState::Value::Halo4>>(gameImpl, dicon, std::make_unique<SoftCeilingDataFactoryImpl<GameState::Value::Halo4>>(gameImpl, dicon));
+		pimpl = std::make_shared<SoftCeilingDataRequestManager>(dataPimpl);
 		break;
+	}
 	default:
 		throw HCMInitException(std::format("{} not impl yet", nameof(GetSoftCeilingData)));
 	}

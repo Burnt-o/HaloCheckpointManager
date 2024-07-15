@@ -30,7 +30,7 @@ public:
 		mService->requestService(mCallerID);;
 	}
 
-	~ScopedServiceRequest()
+	virtual ~ScopedServiceRequest()
 	{
 		if (init)
 		{
@@ -75,5 +75,37 @@ public:
 
 	virtual void updateService() {} // function fired when callersRequestingService set changes
 	virtual ~GenericScopedServiceProvider() = default;
+
+};
+
+template<class ScopedRequestDerivedType> requires std::derived_from<ScopedRequestDerivedType, ScopedServiceRequest>
+class TemplatedScopedServiceProvider : public IProvideScopedRequests, public std::enable_shared_from_this<TemplatedScopedServiceProvider<ScopedRequestDerivedType>>
+{
+private:
+	std::set<std::string> callersRequestingService{};
+	virtual void requestService(std::string callerID) override
+	{
+		callersRequestingService.emplace(callerID);
+		updateService();
+	}
+
+	virtual void unrequestService(std::string callerID) override
+	{
+		callersRequestingService.erase(callerID);
+		updateService();
+	}
+
+
+public:
+
+	virtual std::unique_ptr<ScopedRequestDerivedType> makeRequest(std::string callerID) = 0;
+
+	bool serviceIsRequested()
+	{
+		return !callersRequestingService.empty();
+	}
+
+	virtual void updateService() {} // function fired when callersRequestingService set changes
+	virtual ~TemplatedScopedServiceProvider() = default;
 
 };
