@@ -6804,7 +6804,7 @@
 			</Parameters>
 		</Version>
 	</VersionedEntry>
-
+	
 	<VersionedEntry Name="commandErrorStringFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
@@ -6852,42 +6852,96 @@
 	<VersionedEntry Name="commandErrorStringFunctionContext" Type="MidhookContextInterpreter">
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Parameters>
-				<pErrorString>rbx+0</pErrorString>
+				<pOutputString>rbx+0</pOutputString>
 			</Parameters>
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Parameters>
-				<pErrorString>rdi+0</pErrorString>
+				<pOutputString>rdi+0</pOutputString>
 			</Parameters>
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo3">
 			<Parameters>
-				<pErrorString>rdi+0</pErrorString>
-				<pErrorVariables>rsi+0</pErrorVariables>
+				<pOutputString>rdi+0</pOutputString>
 			</Parameters>
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo3ODST">
 			<Parameters>
-				<pErrorString>rdi+0</pErrorString>
-				<pErrorVariables>rsi+0</pErrorVariables>
+				<pOutputString>rdi+0</pOutputString>
 			</Parameters>
 		</Version>
-		
+
 		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Parameters>
-				<pErrorString>rdi+0</pErrorString>
-				<pErrorVariables>r14+0</pErrorVariables>
+				<pOutputString>rdi+0</pOutputString>
 			</Parameters>
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Parameters>
-				<pErrorString>rdx+0</pErrorString>
-				<pErrorVariables>rsi+0</pErrorVariables>
+				<pOutputString>rdx+0</pOutputString>
 			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="helpOutputStringFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB318BC</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="helpOutputStringFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Parameters>
+				<pOutputString>rdi+0xD</pOutputString>
+				<stringLength>rax</stringLength>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+
+
+	<VersionedEntry Name="printOutputStringFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB317D1</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="printOutputStringFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Parameters>
+				<pOutputString>rdi+0xD</pOutputString>
+				<stringLength>rax</stringLength>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+
+
+	<!--without this patch the above hook won't get hit-->
+	<VersionedEntry Name="printOutputStringPatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0"  Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xB31743</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="printOutputStringPatchCode" Type="Vector" Typename="byte">
+		<!--nop the jb-->
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 

@@ -84,7 +84,15 @@ void CommandConsoleGUI::execute(bool clearBuffer)
 
 	mConsoleRecords.push_back(ConsoleRecord(command, ConsoleRecord::Type::Command));
 	mCommandHistory.push_back(command);
-	engineCommand->sendEngineCommand(command);
+	try
+	{
+		engineCommand->sendEngineCommand(command);
+	}
+	catch (HCMRuntimeException ex)
+	{
+		// not really halo script output but whatever
+		onHaloScriptOutput(std::format("HCM Error: {}", ex.what()), HSOutputType::Error);
+	}
 
 
 	if (clearBuffer)
@@ -243,15 +251,18 @@ void CommandConsoleGUI::render(SimpleMath::Vector2 screenSize)
 
 }
 
-void CommandConsoleGUI::onCommandOutput(const std::string& outputString)
+void CommandConsoleGUI::onHaloScriptOutput(const std::string& outputString, const HSOutputType& outputType)
 {
-	mConsoleRecords.push_back(ConsoleRecord(outputString, ConsoleRecord::Type::Output));
+	ConsoleRecord::Type recordType;
+
+	if (outputType == HSOutputType::Normal)
+		recordType = ConsoleRecord::Type::Output;
+	else if (outputType == HSOutputType::Error)
+		recordType = ConsoleRecord::Type::Error
+		;
+	mConsoleRecords.push_back(ConsoleRecord(outputString, recordType));
 }
 
-void CommandConsoleGUI::onCommandError(const std::string& outputString)
-{
-	mConsoleRecords.push_back(ConsoleRecord(outputString, ConsoleRecord::Type::Error));
-}
 
 void CommandConsoleGUI::processInputs()
 {

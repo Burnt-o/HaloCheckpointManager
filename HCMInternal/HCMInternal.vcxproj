@@ -238,8 +238,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="CommandConsoleManager.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
-    <ClInclude Include="EngineCommandErrorEvent.h" />
-    <ClInclude Include="EngineCommandOutputEvent.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
     <ClInclude Include="GetActiveStructureDesignTags.h" />
@@ -257,6 +255,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />
     <ClInclude Include="BSPSetChangeHookEvent.h" />
+    <ClInclude Include="HaloScriptOutputHookEvent.h" />
     <ClInclude Include="HideWatermarkCheck.h" />
     <ClInclude Include="HideWatermarkManager.h" />
     <ClInclude Include="IFireCallbackListChanged.h" />
@@ -502,8 +501,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CommandConsoleGUI.cpp" />
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="EngineCommand.cpp" />
-    <ClCompile Include="EngineCommandErrorEvent.cpp" />
-    <ClCompile Include="EngineCommandOutputEvent.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetCurrentZoneSet.cpp" />
@@ -512,6 +509,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetScenarioAddress.cpp" />
     <ClCompile Include="GetSoftCeilingData.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
+    <ClCompile Include="HaloScriptOutputHookEvent.cpp" />
     <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>

@@ -12,8 +12,7 @@
 #include "FreeMCCCursor.h"
 #include "IMakeOrGetCheat.h"
 #include "CommandConsoleGUI.h"
-#include "EngineCommandOutputEvent.h"
-#include "EngineCommandErrorEvent.h"
+#include "HaloScriptOutputHookEvent.h"
 
 class CommandConsoleManager::CommandConsoleManagerImpl
 {
@@ -28,8 +27,7 @@ private:
 
 	// events we'll subscribe to when console is open
 	std::shared_ptr<RenderEvent> renderEvent;
-	std::shared_ptr<ObservedEvent<EngineOutputEvent>> engineCommandOutputEvent;
-	std::shared_ptr<ObservedEvent<EngineErrorEvent>> engineCommandErrorEvent;
+	std::shared_ptr<ObservedEvent<HSOutputEvent>> haloScriptOutputEvent;
 	
 
 
@@ -47,8 +45,7 @@ private:
 	struct ConsoleScopedRequests
 	{
 		std::unique_ptr<ScopedCallback<RenderEvent>> renderEventCallback; // render console on each new frame
-		std::shared_ptr<ScopedCallback<EngineOutputEvent>> engineCommandOutputEventCallback; // log engine command output
-		std::shared_ptr<ScopedCallback<EngineErrorEvent>> engineCommandErrorEventCallback; // log engine command errors
+		std::shared_ptr<ScopedCallback<HSOutputEvent>> haloScriptOutputEventCallback; // callback to log halo script output
 		std::unique_ptr<ScopedServiceRequest> disableHotkeys; // disable hcm hotkeys
 		opScRqst pauseGame; // pause the game (if user checked the setting for it)
 		opScRqst blockInputs; // block game inputs (if user checked the setting for it)
@@ -126,8 +123,7 @@ private:
 
 					consoleScopedRequests = ConsoleScopedRequests(
 						std::move(renderEventCallback),
-						std::move(engineCommandOutputEvent->subscribe([this](const std::string& s) { commandConsole->onCommandOutput(s); })),
-						std::move(engineCommandErrorEvent->subscribe([this](const std::string& s) { commandConsole->onCommandError(s); })),
+						std::move(haloScriptOutputEvent->subscribe([this](const std::string& s, const HSOutputType& t) { commandConsole->onHaloScriptOutput(s, t); })),
 						std::move(hotkeyDisableRequest),
 						std::move(pauseRequest),
 						std::move(blockInputRequest),
@@ -192,11 +188,8 @@ public:
 		auto engineCommand = resolveDependentCheat(EngineCommand);
 		commandConsole = std::make_unique<CommandConsoleGUI>(engineCommand, dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandFontSize->GetValue());
 
-		auto engineCommandOutputEventProvider = resolveDependentCheat(EngineCommandOutputEvent);
-		engineCommandOutputEvent = engineCommandOutputEventProvider->getEngineCommandOutputEvent();
-
-		auto engineCommandErrorEventProvider = resolveDependentCheat(EngineCommandErrorEvent);
-		engineCommandErrorEvent = engineCommandErrorEventProvider->getEngineCommandErrorEvent();
+		auto haloScriptOutputEventProvider = resolveDependentCheat(HaloScriptOutputHookEvent);
+		haloScriptOutputEvent = haloScriptOutputEventProvider->getHaloScriptOutputEvent();
 
 	}
 

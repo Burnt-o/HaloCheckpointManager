@@ -881,16 +881,13 @@
     <ClInclude Include="ObservedEvent.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
-    <ClInclude Include="EngineCommandOutputEvent.h">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClInclude>
     <ClInclude Include="ObservedEventFactory.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
     <ClInclude Include="IFireCallbackListChanged.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
-    <ClInclude Include="EngineCommandErrorEvent.h">
+    <ClInclude Include="HaloScriptOutputHookEvent.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1306,10 +1303,7 @@
     <ClCompile Include="CommandConsoleGUI.cpp">
       <Filter>Services\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="EngineCommandOutputEvent.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="EngineCommandErrorEvent.cpp">
+    <ClCompile Include="HaloScriptOutputHookEvent.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>

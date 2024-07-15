@@ -4,7 +4,7 @@
 #include "GameState.h"
 #include "EngineCommand.h"
 #include "UnarySetting.h"
-#include "EngineCommandOutputEvent.h"
+#include "HaloScriptOutputHookEvent.h"
 // Credit to Scales for letting me rip off his console implementation here https://github.com/Scaless/HaloTAS/blob/b9d55d2fe2aff2a1a654984d4d909b5cd14b8780/HaloTAS/MCCTAS/tas_console.h
 
 
@@ -60,8 +60,8 @@ private:
 public:
 	float fontSize; // CommandConsoleManager will update this whenever the user changes the font size setting
 	void render(SimpleMath::Vector2 screenSize); // CommandConsoleManager sets callback to render event that invokes this
-	void onCommandOutput(const std::string& outputString); // CommandConsoleManager sets callback to console output event that invokes this
-	void onCommandError(const std::string& outputString); // CommandConsoleManager sets callback to console error event that invokes this
+	void onHaloScriptOutput(const std::string& outputString, const HSOutputType& outputType); // CommandConsoleManager sets callback to console output event that invokes this
+
 	void execute(bool clearBuffer); // CommandConsoleManager sets callback to execute event that invokes this. Also called by CommandConsoleGUI if user presses enter.
 
 	CommandConsoleGUI(
