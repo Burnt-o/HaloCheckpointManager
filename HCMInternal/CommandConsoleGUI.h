@@ -29,6 +29,8 @@ struct ConsoleRecord
 class CommandConsoleGUI
 {
 private:
+	std::atomic_bool renderingMutex = false;
+
 	std::shared_ptr<EngineCommand> engineCommand;
 
 	bool needToScrollOutputToBottom = false; // set true on execute() to scroll output window to bottom
@@ -70,5 +72,13 @@ public:
 		: engineCommand(engineCommand),
 		 fontSize(fontSize)
 	{
+	}
+
+	~CommandConsoleGUI()
+	{
+		if (renderingMutex)
+		{
+			renderingMutex.wait(true);
+		}
 	}
 };

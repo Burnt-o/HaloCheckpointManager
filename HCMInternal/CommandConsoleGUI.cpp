@@ -203,6 +203,8 @@ void CommandConsoleGUI::render_console_output()
 
 void CommandConsoleGUI::render(SimpleMath::Vector2 screenSize)
 {
+	ScopedAtomicBool lockRender(renderingMutex);
+	if (fontSize <= 0.f) return; // might happen during destruction
 
 	processInputs();
 

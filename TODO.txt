@@ -1,8 +1,6 @@
 
 3.1 TODO
-* make GetSoftCeilingData a scoped service so bsp hoooks aren't always set
-* check if any other hooks getting set on init. only ones should be MCCState ones.
-
+// uhhhhhhh
 
 
 
