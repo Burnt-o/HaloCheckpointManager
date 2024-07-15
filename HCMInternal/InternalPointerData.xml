@@ -9951,7 +9951,58 @@
 			<structureDesignReference>0x10</structureDesignReference>
 		</Version>
 	</VersionedEntry>
-	
+
+
+
+	<VersionedEntry Name="disableBarriersPatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1BB051</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1E28A5</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x155CE4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x219F40</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="disableBarriersPatchCode" Type="Vector" Typename="byte">
+		<!--generally speaking: just force a particular branch to be always taken around where the code is checking for barrier collision-->
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Data>0xEB, 0x61</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Data>0xEB, 0x61</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0xEB, 0x59</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Data>0xEB, 0x59</Data>
+		</Version>
+	</VersionedEntry>
 	<!--#endregion SoftCeilingOverlay-->
 
 

@@ -1,22 +1,18 @@
 
 3.1 TODO
-* add trigger names for h4
-ODST console is crashing on valid input
-Add service for grabbing all known console commands / vars etc
+* add soft ceiling disable cheat
+* add hotkey for barrier overlay
+Add service for grabbing all known console commands / vars etc - actually just put it all in a big .md file on the git
 
-* add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff)
-// made this - need to hook it up to more stuff (if it works good)
-
+* add observableCallback and impl for anything (optional) that sets hooks (gameTick, bsp stuff, rendering stuff)
 
 
-Look thru init messages - we shouldn't be having ScopedCallback destructors being called! probably lack of std::move. FIX! slows down init a lot. 
-Look thru shutdown message - why the fuck so many ~ScopedCallback bad weak ptrs? are they even a big deal? If not, get rid of the stacktrace message.
+
 
 btw eventpp already implemented scopedcallbacks - https://github.com/wqking/eventpp/blob/master/doc/scopedremover.md
 also the haslistener utility; may be extremely useful https://github.com/wqking/eventpp/blob/master/doc/eventutil.md
 
 command line randomly stops working? maybe because of game switch - bad ptr?
-try catch sendenginecommand
 
 
 FUTURE TODO: 

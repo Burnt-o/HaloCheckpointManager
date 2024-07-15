@@ -50,7 +50,8 @@ setPlayerHealth,\
 toggleWaypoint3D,\
 triggerOverlayToggleHotkey,\
 commandConsoleHotkey,\
-commandConsoleExecuteBuffer
+commandConsoleExecuteBuffer,\
+disableBarriers
 
 
 

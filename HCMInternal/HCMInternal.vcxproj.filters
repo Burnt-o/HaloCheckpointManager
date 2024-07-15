@@ -890,6 +890,9 @@
     <ClInclude Include="HaloScriptOutputHookEvent.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
+    <ClInclude Include="DisableBarriers.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1305,6 +1308,9 @@
     </ClCompile>
     <ClCompile Include="HaloScriptOutputHookEvent.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="DisableBarriers.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

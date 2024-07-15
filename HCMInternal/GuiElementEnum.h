@@ -119,6 +119,7 @@
 		((consoleCommandFreeCursor, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandFontSize, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandExecuteBuffer, (ALL_SUPPORTED_GAMES)))\
+	((disableBarriersToggle, (THIRD_GEN)))
 
 
 

@@ -7,6 +7,7 @@
 #include "RuntimeExceptionHandler.h"
 #include "ObservedEventFactory.h"
 
+// halo 1 has some extra hooks to capture more output. ran out of motivation to get that extra output working for the other games (shit is a pita to RE)
 template <GameState::Value gameT>
 class HaloScriptOutputHookEventImplHalo1 : public HaloScriptOutputHookEventImpl
 {
@@ -193,7 +194,7 @@ public:
 	virtual std::shared_ptr<ObservedEvent<HSOutputEvent>> getHaloScriptOutputEvent() override { return mHaloScriptOutputEvent; }
 };
 
-
+// sets two hooks, one that captures most (well, some) output, and one that captures error messages. 
 template <GameState::Value gameT>
 class HaloScriptOutputHookEventImplGeneric : public HaloScriptOutputHookEventImpl
 {
@@ -336,6 +337,8 @@ public:
 
 		mHaloScriptOutputEvent = ObservedEventFactory::makeObservedEvent<HSOutputEvent>();
 		mHaloScriptOutputEventSubscribersChangedCallback = ObservedEventFactory::getCallbackListChangedCallback(mHaloScriptOutputEvent, [this]() {onHaloScriptOutputEventSubscribersChanged(); });
+
+		assert(mHaloScriptOutputEvent->isEventSubscribed() == false);
 
 		instance = this;
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();

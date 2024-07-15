@@ -287,6 +287,10 @@ private:
 		mSettings->triggerOverlayToggleHotkeyEvent,
 		vvk{}),
 
+		initEventOnPressHotkey(disableBarriers,
+		mSettings->disableBarriersHotkeyEvent,
+		vvk{}),
+
 		/// skullllllllls
 		initEventOnPressHotkey(skullAngerHotkey,
 		mSettings->skullAngerToggleHotkeyEvent,
@@ -441,6 +445,8 @@ private:
 		vvk{}),
 
 
+
+		
 
 	};
 

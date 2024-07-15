@@ -93,6 +93,7 @@
 #include "GetActiveStructureDesignTags.h"
 #include "TagReferenceReader.h"
 #include "HaloScriptOutputHookEvent.h"
+#include "DisableBarriers.h"
 
 
 #include "DIContainer.h"

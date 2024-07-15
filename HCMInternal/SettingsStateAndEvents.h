@@ -53,7 +53,8 @@ public:
 	std::shared_ptr<ActionEvent> setPlayerHealthEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> toggleWaypoint3DHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> triggerOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
-
+	std::shared_ptr<ActionEvent> disableBarriersHotkeyEvent = std::make_shared<ActionEvent>();
+		
 
 	// events
 	std::shared_ptr<ActionEvent> showGUIFailures = std::make_shared<ActionEvent>();
@@ -1558,6 +1559,12 @@ public:
 			nameof(softCeilingOverlayWireframeTransparency)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> disableBarriersToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(disableBarriersToggle)
+		);
 
 
 	// settings that ought to be serialised/deserialised between HCM runs

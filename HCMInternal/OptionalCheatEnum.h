@@ -96,7 +96,8 @@ BSPSetChangeHookEvent,\
 GetActiveStructureDesignTags,\
 TagReferenceReader,\
 CommandConsoleManager,\
-HaloScriptOutputHookEvent
+HaloScriptOutputHookEvent,\
+DisableBarriers
 
 
 enum class OptionalCheatEnum {

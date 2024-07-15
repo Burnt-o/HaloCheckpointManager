@@ -415,6 +415,7 @@ private:
 							createNestedElement(GUIElementEnum::playerPositionToClipboardGUI),
 							createNestedElement(GUIElementEnum::consoleCommandGUI),
 							createNestedElement(GUIElementEnum::consoleCommandSettings),
+							createNestedElement(GUIElementEnum::disableBarriersToggle),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -723,6 +724,10 @@ private:
 								"Execute Command",
 								settings->commandConsoleExecuteBufferEvent));
 	
+				case GUIElementEnum::disableBarriersToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Disable Barriers (aka Soft Ceilings)"), RebindableHotkeyEnum::disableBarriers, "Disable Barriers", settings->disableBarriersToggle));
+
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, ToolTipCollection("Overlays that various information over the top of the game view"), "Overlays", headerChildElements
