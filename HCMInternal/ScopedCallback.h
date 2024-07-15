@@ -27,7 +27,7 @@ public:
 
 	}
 
-	~ScopedCallback()
+	virtual ~ScopedCallback()
 	{
 		PLOG_VERBOSE << "removing ScopedCallback";
 		auto m_pEvent = m_pEventWeak.lock();
