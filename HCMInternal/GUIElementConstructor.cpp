@@ -1206,7 +1206,7 @@ private:
 
 			case GUIElementEnum::softCeilingOverlayToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-					(game, ToolTipCollection("Renders Soft Ceilings (barriers)"), std::nullopt, "Barrier Overlay", settings->softCeilingOverlayToggle));
+					(game, ToolTipCollection("Renders Soft Ceilings (barriers)"), RebindableHotkeyEnum::softCeilingOverlayToggleHotkey, "Barrier Overlay", settings->softCeilingOverlayToggle));
 
 			case GUIElementEnum::softCeilingOverlaySettings:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>

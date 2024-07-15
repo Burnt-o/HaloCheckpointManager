@@ -287,6 +287,10 @@ private:
 		mSettings->triggerOverlayToggleHotkeyEvent,
 		vvk{}),
 
+		initEventOnPressHotkey(softCeilingOverlayToggleHotkey,
+		mSettings->softCeilingOverlayToggleHotkeyEvent,
+		vvk{}),
+
 		initEventOnPressHotkey(disableBarriers,
 		mSettings->disableBarriersHotkeyEvent,
 		vvk{}),

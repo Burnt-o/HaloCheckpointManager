@@ -51,7 +51,8 @@ toggleWaypoint3D,\
 triggerOverlayToggleHotkey,\
 commandConsoleHotkey,\
 commandConsoleExecuteBuffer,\
-disableBarriers
+disableBarriers,\
+softCeilingOverlayToggleHotkey
 
 
 
