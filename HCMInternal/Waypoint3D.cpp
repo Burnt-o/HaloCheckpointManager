@@ -196,7 +196,7 @@ private:
 			{
 
 				lockOrThrow(render3DEventProviderWeak, render3DEventProvider);
-				mRenderEventCallback = std::make_unique<ScopedCallback<Render3DEvent>>(render3DEventProvider->render3DEvent, [this](GameState g, IRenderer3D* n) {onRenderEvent(g, n); });
+				mRenderEventCallback = render3DEventProvider->getRender3DEvent()->subscribe([this](GameState g, IRenderer3D* n) {onRenderEvent(g, n); });
 
 			}
 			catch (HCMRuntimeException ex)

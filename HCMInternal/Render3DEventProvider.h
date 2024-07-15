@@ -6,9 +6,9 @@
 #include "IRenderer3D.h"
 #include "DirectXRenderEvent.h"
 #include "IMCCStateHook.h"
+#include "ObservedEvent.h"
 
-
-#define Render3DEvent eventpp::CallbackList<void(GameState, IRenderer3D*)>
+using Render3DEvent = eventpp::CallbackList<void(GameState, IRenderer3D*)>;
 
 // Fires a 3DRender event once per frame, passing a IRenderer3D by ref to subscribers.
 // Will not fire event if the event has no subscribers (skips expensive camera calculations).
@@ -26,10 +26,12 @@ private:
 	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
 
 	std::unique_ptr<IRenderer3D> p3DRenderer;
+	
+	std::shared_ptr<ObservedEvent<Render3DEvent>> mRender3DEvent;
 public:
 
 	// Consumers should avoid subscribing to the render3DEvent unless they actually need to (since event provider will skip expensively updating camera data every frame IF no one is subscribed)
-	std::shared_ptr<Render3DEvent> render3DEvent = std::make_shared<Render3DEvent>();
+	std::shared_ptr<ObservedEvent<Render3DEvent>> getRender3DEvent() { return mRender3DEvent; }
 	Render3DEventProvider(GameState game, IDIContainer& dicon);
 	~Render3DEventProvider();
 
