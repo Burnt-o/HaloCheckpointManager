@@ -12,7 +12,7 @@ private:
 	eventpp::CallbackList<ret(args...)>::Handle mHandle;
 	std::function<ret(args...)> mFunctor;
 
-
+	
 
 public:
 
@@ -33,34 +33,41 @@ public:
 		auto m_pEvent = m_pEventWeak.lock();
 		if (!m_pEvent)
 		{
+#ifdef HCM_DEBUG
 			std::stringstream buffer;
 			buffer << boost::stacktrace::basic_stacktrace();
 			PLOG_ERROR << "m_pEvent bad weak ptr on ScopedCallback destruction" << buffer.str();
+#else
+			PLOG_ERROR << "m_pEvent bad weak ptr on ScopedCallback destruction";
+#endif
 			return;
 		}
 
 		PLOG_VERBOSE << "removing ScopedCallback";
 		if (!m_pEvent.get())
 		{
+#ifdef HCM_DEBUG
 			std::stringstream buffer;
-			buffer << boost::stacktrace::stacktrace();
-			PLOG_ERROR << "null event?!!!" << buffer.str();
+			buffer << boost::stacktrace::basic_stacktrace();
+			PLOG_ERROR << "null event!!" << buffer.str();
+#else
+			PLOG_ERROR << "null event!!";
+#endif
 			return;
 		}
 
 		if (!mHandle)
 		{
+#ifdef HCM_DEBUG
 			std::stringstream buffer;
 			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "null handle?!?!!! " << buffer.str();
+			PLOG_ERROR << "null handle!!!!" << buffer.str();
+#else
+			PLOG_ERROR << "null handle!!!!";
+#endif
 				return;
 		}
 
-//#if HCM_DEBUG
-//		std::stringstream buffer;
-//		buffer << boost::stacktrace::basic_stacktrace();
-//		PLOG_VERBOSE << "attempting removal, stacktrace: " << buffer.str();
-//#endif
 
 		m_pEvent->remove(mHandle);
 		PLOG_DEBUG << "scoped callback removed";
