@@ -28,12 +28,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMInternalTests", "HCMInte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HaloScript Docs", "HaloScript Docs", "{4A8CDBF6-98AF-4671-A0A1-194A46A110B2}"
 	ProjectSection(SolutionItems) = preProject
-		Halo1.md = Halo1.md
-		Halo2.md = Halo2.md
-		Halo3.md = Halo3.md
-		Halo3ODST.md = Halo3ODST.md
-		Halo4.md = Halo4.md
-		HaloReach.md = HaloReach.md
+		HaloScript Docs\Halo1.md = HaloScript Docs\Halo1.md
+		HaloScript Docs\Halo2.md = HaloScript Docs\Halo2.md
+		HaloScript Docs\Halo3.md = HaloScript Docs\Halo3.md
+		HaloScript Docs\Halo3ODST.md = HaloScript Docs\Halo3ODST.md
+		HaloScript Docs\Halo4.md = HaloScript Docs\Halo4.md
+		HaloScript Docs\HaloReach.md = HaloScript Docs\HaloReach.md
 	EndProjectSection
 EndProject
 Global
