@@ -1,5 +1,7 @@
 **Halo 1 Script Commands:**  
 Please note that an entry being present here doesn't necessarily mean that it'll work - it may do nothing, or maybe even crash the game. 
+
+**TODO:** Remove items from this list that don't do anything or crash the game. Feel free to make a pull request!
 ```
 AVAILABLE FUNCTIONS:
 

@@ -1,6 +1,6 @@
 
 3.1 TODO
-// uhhhhhhh
+command console is being laggy and crashy? maybe only in debug due to scoped callback destruction?
 
 
 
