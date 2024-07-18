@@ -187,7 +187,7 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	// Section: Translation
-	auto cameraTranslationSpeed = frameDelta * mPositionSpeed;
+	auto cameraTranslationSpeed = mPositionSpeed;
 
 	if (cachedAnalogMoveLeftRight == nullptr || cachedAnalogMoveForwardBack == nullptr) throw HCMRuntimeException("null cachedAnalogMove pointers!");
 
