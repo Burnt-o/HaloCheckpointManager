@@ -1,44 +1,49 @@
 
-3.1.1 TODO
-FIX HOTKEY GUI ISSUES
-make free camera translation speed hotkeys only work when freecam enabled
-Add render distance filter for trigger overlay
+NEAR FUTURE TODO:
+FIX HOTKEY GUI ISSUES! just rewrite the thing
 fix obs bypass
+free cam for odst
+ 
+ why the fuck is frame delta fucking up camera speed in h3 but not the others?
+ ---- RELEASE as 3.1.1
+
+
+Add render distance filter for trigger overlay
+make free camera translation speed hotkeys only work when freecam enabled
+add OOB camera fix (third gen)
+snap factor of freecam doesn't respond to fps properly
 check odst camera pointer
 fix modal dialogs preventing alt tabs
-
+freeCamera for  hr, h4
+sprint Meter h4/hr
+freeCamera automation stuff 
+3d object info overlay
 
 FUTURE TODO: 
-* upgrade sensitivity drift detector (actually do the float math and check for drift)
-* Sprint Meter h4/hr
-* freeCamera for h3, 0d, hr, h4
-* freeCamera automation stuff 
-* 3d object info overlay
 * refactor GetPosition services into Quake/Havok nomenclature, and to use std::expected instead of throwing exceptions
 * display2dinfo ghosting info (desync/difference between quake and havok positions)
 * refactor a bunch of simple services to use std::expected
-	* !! add new cheaper virtual error type exposing a what()
-* bool script mode? (hacky implementation of scriptReader for ce-bool only? might not take too long if I'm really hacky)
+	* !! add new cheaper virtual error type exposing a what(). returning std::unexpected(Exception) is dumb/expensive af
 * several of my settings enums would be better represented as bitmasks
 
 
 * Some big refactoring:
 Replace ObjectTableRange & GetObjectAddress & GetObjectPhysics w/ ObjectPool. Concept of CommonObjectType, CommonUnitType, CommonBipdType etc, + game specialisations eg H1ObjectType, etc.
 	* use templated structs (need to double check that htis would work)
-TagRefernece concept and TagReference resolver.
 TagNameTable to replace GetTagName.
 DebugNameTable for triggers (except h1).. ergh h3+ are hard
 templated scenario tag struct etc etc
-
-
-
-
-
-
-
-
-
 * fix tickadvance issues (caused by the scopedServiceRequest for pausing the game not always working properly)
+	* scopedServiceRequests should no longer use caller id system and instead just setup a callback similiar to ObservedEvents
+
+
+
+
+
+
+
+
+
 
 
 
@@ -50,7 +55,7 @@ BACKBURNER (tasks to do eventually):
 * add loading the correct level if possible on inject / change level feature in general
 
 CODE CLEANUP (eventually eventually)
-* Refactor optionalCheats to not reference settings, instead provide all their functionality in public api - add Commander layer to bind settings-events to calling said api
+* Refactor optionalCheats to not reference settings, instead provide all their functionality in public api - add Commander (Presenter may be a better name) layer to bind settings-events to calling said api
 	* then pull out all optionalCheats (rename to mccService maybe) into seperate library that other devs/projects can use
 	* optinalCheatStore should return std::expected<mccService> instead of throwing InitException. Let caller throw if they choose to. 
 	* instead of all our optionalCheats storing weak_ptrs to dependent services, maybe they should just hold the optionalCheatStore and call that when they want something instead of lockOrThrow
