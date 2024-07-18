@@ -6986,10 +6986,10 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x131817</Offset>
+				<Offset>0x131840</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -7004,9 +7004,6 @@
 			<Offset>2</Offset>
 		</Version>
 
-		<Version Version="All" Game="Halo3">
-			<Offset>0</Offset>
-		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="thirdPersonRenderingFlagInterpreter" Type="MidhookFlagInterpreter">
@@ -7160,6 +7157,16 @@
 				<Offset>0x829053</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x2D20E7</Offset>
+			</Offsets>
+		</Version>
+
+
+
 	</VersionedEntry>
 
 	<VersionedEntry Name="hideHUDPatchFunction2" Type="MultilevelPointer::ModuleOffset">
@@ -7208,6 +7215,10 @@
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Data>0x85</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Data>0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 
@@ -7280,10 +7291,11 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x1805BD</Offset>
+				<Offset>0x17E3BC</Offset>
+				<!--<Offset>0x1805BD</Offset>-->
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -7482,6 +7494,9 @@
 		</Version>
 	</VersionedEntry>
 
+	
+
+
 
 	<VersionedEntry Name="freeCameraHalo2ExtraCode" Type="Vector" Typename="byte">
 		<!--just nop the call-->
@@ -7493,6 +7508,23 @@
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+	</VersionedEntry>
+
+	<!--stops game from overwriting fov data-->
+	<VersionedEntry Name="freeCameraHalo3ExtraFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0"  Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x18037B</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="freeCameraHalo3ExtraCode" Type="Vector" Typename="byte">
+		<!--just nop the call-->
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
 
@@ -7529,10 +7561,10 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x46BAA04</Offset>
+				<Offset>0x46BAA00</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -7570,7 +7602,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2229050</Offset>
@@ -7611,7 +7643,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x222904C</Offset>
@@ -7652,7 +7684,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2229054</Offset>
@@ -7693,7 +7725,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2229058</Offset>
@@ -7734,7 +7766,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2229054</Offset>
@@ -7775,7 +7807,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2229058</Offset>
@@ -7816,7 +7848,7 @@
 			</Offsets>
 		</Version>
 
-		<Version Version="1.3272.0.0" Game="Halo3">
+		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x2229064</Offset>
@@ -7915,6 +7947,13 @@
 				<Offset>0x6C4D01</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0xE4829</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="BlockPlayerCharacterInputFlagSetter" Type="MidhookFlagInterpreter">
@@ -7926,6 +7965,11 @@
 		<Version Version="All" Game="Halo2">
 			<rflag>zero</rflag>
 			<value>true</value>
+		</Version>
+
+		<Version Version="All" Game="Halo3">
+			<rflag>zero</rflag>
+			<value>false</value>
 		</Version>
 	</VersionedEntry>
 

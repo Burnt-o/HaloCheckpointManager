@@ -92,6 +92,41 @@ public:
 };
 
 
+template <GameState::Value gameT>
+class HideHUDImplH3 : public GenericScopedServiceProvider
+{
+private:
+	GameState mGame;
+
+
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook1;
+
+
+
+
+public:
+	HideHUDImplH3(GameState gameImpl, IDIContainer& dicon)
+		:
+		mGame(gameImpl)
+	{
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
+
+		auto hideHUDPatchFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction1), gameImpl);
+		auto hideHUDPatchCode1 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode1), gameImpl);
+		hideHUDPatchHook1 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction1, *hideHUDPatchCode1.get());
+
+	}
+
+	virtual void updateService() override
+	{
+		// attach if requested
+		PLOG_VERBOSE << "HideHUDImplH3::updateService";
+		safetyhook::ThreadFreezer freezeThreads{};
+		hideHUDPatchHook1->setWantsToBeAttached(serviceIsRequested());
+		PLOG_VERBOSE << "HideHUDImplH3::updateService DONE";
+	}
+};
+
 
 HideHUD::HideHUD(GameState gameImpl, IDIContainer& dicon)
 	:
@@ -111,15 +146,12 @@ HideHUD::HideHUD(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_shared<HideHUDImplH2<GameState::Value::Halo2>>(gameImpl, dicon);
 		break;
 
-	/*case GameState::Value::Halo2:
-		pimpl = std::make_unique<AIFreezeImpl<GameState::Value::Halo2>>(dicon);
-		break;
 
 	case GameState::Value::Halo3:
-		pimpl = std::make_unique<AIFreezeImpl<GameState::Value::Halo3>>(dicon);
+		pimpl = std::make_unique<HideHUDImplH3<GameState::Value::Halo3>>(gameImpl, dicon);
 		break;
 
-	case GameState::Value::Halo3ODST:
+	/*case GameState::Value::Halo3ODST:
 		pimpl = std::make_unique<AIFreezeImpl<GameState::Value::Halo3ODST>>(dicon);
 		break;
 
@@ -131,7 +163,7 @@ HideHUD::HideHUD(GameState gameImpl, IDIContainer& dicon)
 		pimpl = std::make_unique<AIFreezeImpl<GameState::Value::Halo4>>(dicon);
 		break;*/
 	default:
-		throw HCMInitException("not impl yet");
+		throw HCMInitException("not impl yet!");
 	}
 }
 

@@ -226,19 +226,19 @@ ThirdPersonRendering::ThirdPersonRendering(GameState gameImpl, IDIContainer& dic
 		pimpl = std::make_unique<ThirdPersonRenderingFlagImpl<GameState::Value::Halo3>>(gameImpl, dicon);
 		break;
 
-	//case GameState::Value::Halo3ODST:
-	//	pimpl = std::make_unique<ThirdPersonRenderingImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo3ODST:
+		pimpl = std::make_unique<ThirdPersonRenderingFlagImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+		break;
 
-	//case GameState::Value::HaloReach:
-	//	pimpl = std::make_unique<ThirdPersonRenderingImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::HaloReach:
+		pimpl = std::make_unique<ThirdPersonRenderingFlagImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
+		break;
 
-	//case GameState::Value::Halo4:
-	//	pimpl = std::make_unique<ThirdPersonRenderingImpl<GameState::Value::Halo4>>(gameImpl, dicon);
-	//	break;
+	case GameState::Value::Halo4:
+		pimpl = std::make_unique<ThirdPersonRenderingFlagImpl<GameState::Value::Halo4>>(gameImpl, dicon);
+		break;
 	default:
-		throw HCMInitException("not impl yet");
+		throw HCMInitException("not impl yet ?");
 	}
 }
 

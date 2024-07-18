@@ -1,13 +1,11 @@
 
-3.1 TODO
-command console is being laggy and crashy? maybe only in debug due to scoped callback destruction?
-
-
-
-btw eventpp already implemented scopedcallbacks - https://github.com/wqking/eventpp/blob/master/doc/scopedremover.md
-also the haslistener utility; may be extremely useful https://github.com/wqking/eventpp/blob/master/doc/eventutil.md
-
-command line randomly stops working? maybe because of game switch - bad ptr?
+3.1.1 TODO
+FIX HOTKEY GUI ISSUES
+make free camera translation speed hotkeys only work when freecam enabled
+Add render distance filter for trigger overlay
+fix obs bypass
+check odst camera pointer
+fix modal dialogs preventing alt tabs
 
 
 FUTURE TODO: 

@@ -178,9 +178,15 @@ Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 			if (lockedShield.has_value() == false) return;
 
 			// check shield not too far away
-			lockOrThrow(getObjectPhysicsWeak, getObjectPhysics);
 			lockOrThrow(getPlayerDatumWeak, getPlayerDatum);
-			auto playerPosition = *getObjectPhysics->getObjectPosition(getPlayerDatum->getPlayerDatum());
+			lockOrThrow(getObjectPhysicsWeak, getObjectPhysics);
+
+			auto playerDatum = getPlayerDatum->getPlayerDatum();
+			if (playerDatum.isNull()) // commonly happens if the player dies
+				return;
+
+			
+			auto playerPosition = *getObjectPhysics->getObjectPosition(playerDatum);
 			auto shieldPosition = *getObjectPhysics->getObjectPosition(lockedShield.value());
 
 			if (SimpleMath::Vector3::Distance(playerPosition, shieldPosition) > 1.5f)
