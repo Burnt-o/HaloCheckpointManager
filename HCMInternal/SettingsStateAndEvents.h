@@ -920,7 +920,7 @@ public:
 	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraBaseFOV = std::make_shared<BinarySetting<float>>
 		(
 			90.f,
-			[](float in) { return in > 0.f && in <= 120.f; }, 
+			[](float in) { return in > 0.f && in < 180.f; }, 
 			nameof(freeCameraUserInputCameraBaseFOV)
 		);
 

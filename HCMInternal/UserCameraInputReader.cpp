@@ -58,7 +58,7 @@ private:
 	float* cachedAnalogTurnUpDownMouse = nullptr; 
 	float* cachedAnalogTurnLeftRightGamepad = nullptr;
 	float* cachedAnalogTurnUpDownGamepad = nullptr;
-	bool* cachedIsMouseInput = nullptr;
+
 
 	bool cacheInitialised = false;
 
@@ -89,10 +89,7 @@ private:
 			if (!analogTurnLeftRightGamepad->resolve((uintptr_t*)&cachedAnalogTurnLeftRightGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRightGamepad: {}", MultilevelPointer::GetLastError()));
 			if (!analogTurnUpDownGamepad->resolve((uintptr_t*)&cachedAnalogTurnUpDownGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDownGamepad: {}", MultilevelPointer::GetLastError()));
 
-			if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo3)
-			{
-				if (!isMouseInput->resolve((uintptr_t*)&cachedIsMouseInput)) throw HCMRuntimeException(std::format("could not resolve isMouseInput: {}", MultilevelPointer::GetLastError()));
-			}
+
 
 		
 			LOG_ONCE(PLOG_DEBUG << "cache resolved"); // can you tell I had an issue here
@@ -187,7 +184,7 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	// Section: Translation
-	auto cameraTranslationSpeed = mPositionSpeed;
+	auto cameraTranslationSpeed = mPositionSpeed * 0.005f;
 
 	if (cachedAnalogMoveLeftRight == nullptr || cachedAnalogMoveForwardBack == nullptr) throw HCMRuntimeException("null cachedAnalogMove pointers!");
 
@@ -245,36 +242,12 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 
 	if (cachedAnalogTurnLeftRightMouse == nullptr || cachedAnalogTurnUpDownMouse == nullptr || cachedAnalogTurnLeftRightGamepad == nullptr || cachedAnalogTurnUpDownGamepad == nullptr) throw HCMRuntimeException("null cachedAnalogTurn pointers!");
 
-	float leftRightTurnAmount = 0.f;
-	float upDownTurnAmount = 0.f;
+	// mouse movements are already multiplied by frameDelta, so we need to unmultiply them
+	float leftRightTurnAmount = *cachedAnalogTurnLeftRightMouse * (1.f / frameDelta);
+	float upDownTurnAmount = *cachedAnalogTurnUpDownMouse * (1.f / frameDelta);
 
-
-	if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo3)
-	{
-		if (cachedIsMouseInput == nullptr) throw HCMRuntimeException("null cachedIsMouseInput pointers!");
-
-		if (*cachedIsMouseInput == true)
-		{
-			analogRotationSpeed = analogRotationSpeed * (1.f / frameDelta);
-		}
-
-
-		leftRightTurnAmount = *cachedAnalogTurnLeftRightMouse;
-		upDownTurnAmount = *cachedAnalogTurnUpDownMouse;
-
-	}
-	else if constexpr (gameT == GameState::Value::Halo2)
-	{
-
-		leftRightTurnAmount = *cachedAnalogTurnLeftRightMouse * (1.f / frameDelta);
-		upDownTurnAmount = *cachedAnalogTurnUpDownMouse * (1.f / frameDelta);
-
-		leftRightTurnAmount = leftRightTurnAmount + *cachedAnalogTurnLeftRightGamepad;
-		upDownTurnAmount = upDownTurnAmount + *cachedAnalogTurnUpDownGamepad;
-
-	}
-
-
+	leftRightTurnAmount = leftRightTurnAmount + *cachedAnalogTurnLeftRightGamepad;
+	upDownTurnAmount = upDownTurnAmount + *cachedAnalogTurnUpDownGamepad;
 
 
 
@@ -356,13 +329,13 @@ void UserCameraInputReaderImpl<gameT>::updateFOVTransform(const FreeCameraData& 
 	float scaleFactor = std::sqrt(fov) * 10.f;
 	if (cameraFOVIncreaseBinding->isCurrentlyDown())
 	{
-		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.0001f, 120.f);
+		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.0001f, 179.999f);
 	}
 
 	// decrease
 	if (cameraFOVDecreaseBinding->isCurrentlyDown())
 	{
-		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.0001f, 120.f);
+		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.0001f, 179.999f);
 	}
 }
 

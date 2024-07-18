@@ -742,8 +742,8 @@ private:
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
-	/*						createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
-							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),*/
+							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
+							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 						}));
 
 
@@ -1450,7 +1450,7 @@ private:
 
 
 						case GUIElementEnum::freeCameraUserInputCameraBaseFOV:
-							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 360.f)>>
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 179.9999f)>>
 								(game, ToolTipCollection("Field of view of the camera, in vertical degrees (assumes 16:9. same as in-game-menu) (before any adjustment by anchorFOVtoObjectDistance automation)"), "Base Field of View", settings->freeCameraUserInputCameraBaseFOV));
 
 						case GUIElementEnum::freeCameraUserInputCameraTranslationSpeed:
