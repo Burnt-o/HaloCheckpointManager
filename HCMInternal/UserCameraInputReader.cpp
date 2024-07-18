@@ -207,9 +207,9 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 		float zCubeSquared = zCube * zCube;
 
 		// map to sphere
-		auto xSphere = xCube * std::sqrtf(1 - (yCubeSquared / 2) - (zCubeSquared / 2) + ((yCubeSquared + zCubeSquared) / 3));
-		auto ySphere = yCube * std::sqrtf(1 - (zCubeSquared / 2) - (xCubeSquared / 2) + ((zCubeSquared + xCubeSquared) / 3));
-		auto zSphere = zCube * std::sqrtf(1 - (xCubeSquared / 2) - (yCubeSquared / 2) + ((xCubeSquared + yCubeSquared) / 3));
+		auto xSphere = xCube * std::sqrtf(1 - (yCubeSquared / 2) - (zCubeSquared / 2) + ((yCubeSquared * zCubeSquared) / 3));
+		auto ySphere = yCube * std::sqrtf(1 - (zCubeSquared / 2) - (xCubeSquared / 2) + ((zCubeSquared * xCubeSquared) / 3));
+		auto zSphere = zCube * std::sqrtf(1 - (xCubeSquared / 2) - (yCubeSquared / 2) + ((xCubeSquared * yCubeSquared) / 3));
 
 		// Forward/back
 		positionTransform = positionTransform + (freeCameraData.currentlookDirForward * cameraTranslationSpeed * xSphere);
