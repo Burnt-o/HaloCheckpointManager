@@ -87,6 +87,7 @@ private:
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
 	static inline std::shared_ptr<ModulePatch> freeCameraHalo2ExtraHook; // stupid halo 2 fix for FOV
+	static inline std::shared_ptr<ModulePatch> freeCameraHalo3ExtraHook; // stupid halo 3 fix for FOV
 
 	// data
 	bool needToResetCamera = true;
@@ -177,28 +178,32 @@ private:
 			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
 			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "frameDelta value: " << fd, fd = frameDelta);
 
+			// can be exactly zero if paused, but negative doesn't even make sense.
+			if (frameDelta < 0.f) throw HCMRuntimeException(std::format("negative frame delta?! that's unpossible! {} ", frameDelta));
 
-			if (frameDelta <= 0.f) throw HCMRuntimeException(std::format("non positive frame delta?! that's unpossible! {} ", frameDelta));
-
-			// adjust by speedhack setting
+			// adjust frameDelta by speedhack setting
 			{
 				LOG_ONCE(PLOG_VERBOSE << "adjusting frameDelta by speedhack multiplier");
 				lockOrThrow(speedhackWeak, speedhack);
-				frameDelta = frameDelta * (1.00 / speedhack->getCurrentSpeedMultiplier());
+				frameDelta = frameDelta * (1.00 / speedhack->getCurrentSpeedMultiplier()); // this is also why speedhack must never be zero
 				LOG_ONCE_CAPTURE(PLOG_VERBOSE << "speedhack-adjusted frameDelta value: " << fd, fd = frameDelta);
 			}
 
 			LOG_ONCE(PLOG_DEBUG << "reading user inputs and applying userControlledCamera transformations");
 
-			// rotate FIRST so position updater knows which direction is "forward/up/right" etc 
-			userControlledRotation.transformRotation(freeCameraData, frameDelta);
-			LOG_ONCE(PLOG_DEBUG << "userControlledRotation.transformRotation DONE");
+			if (frameDelta != 0.f) // this would cause division by zeros. frameDelta can be zero when game is paused.
+			{
+				// rotate FIRST so position updater knows which direction is "forward/up/right" etc 
+				userControlledRotation.transformRotation(freeCameraData, frameDelta);
+				LOG_ONCE(PLOG_DEBUG << "userControlledRotation.transformRotation DONE");
 
-			userControlledPosition.transformPosition(freeCameraData, frameDelta);
-			LOG_ONCE(PLOG_DEBUG << "userControlledPosition.transformPosition DONE");
+				userControlledPosition.transformPosition(freeCameraData, frameDelta);
+				LOG_ONCE(PLOG_DEBUG << "userControlledPosition.transformPosition DONE");
 
-			userControlledFOV.transformFOV(freeCameraData, frameDelta, targetFOVCopy);
-			LOG_ONCE(PLOG_DEBUG << "userControlledFOV.transformFOV DONE");
+				userControlledFOV.transformFOV(freeCameraData, frameDelta, targetFOVCopy);
+				LOG_ONCE(PLOG_DEBUG << "userControlledFOV.transformFOV DONE");
+			}
+
 
 			// must be after userControlled and before any other transformers
 			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "updating FOV setting with transformed value: " << fov, fov = targetFOVCopy);
@@ -270,6 +275,10 @@ private:
 				if constexpr (gameT == GameState::Value::Halo2)
 				{
 					freeCameraHalo2ExtraHook->setWantsToBeAttached(newValue);
+				}
+				else if constexpr (gameT == GameState::Value::Halo3)
+				{
+					freeCameraHalo3ExtraHook->setWantsToBeAttached(newValue);
 				}
 
 			}
@@ -670,6 +679,12 @@ public:
 			freeCameraHalo2ExtraHook = ModulePatch::make(game.toModuleName(), freeCameraHalo2ExtraFunction, *freeCameraHalo2ExtraCode.get());
 
 		}
+		else if constexpr (gameT == GameState::Value::Halo3)
+		{
+			auto freeCameraHalo3ExtraFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(freeCameraHalo3ExtraFunction), game);
+			auto freeCameraHalo3ExtraCode = ptr->getVectorData<byte>(nameof(freeCameraHalo3ExtraCode), game);
+			freeCameraHalo3ExtraHook = ModulePatch::make(game.toModuleName(), freeCameraHalo3ExtraFunction, *freeCameraHalo3ExtraCode.get());
+		}
 		   
 
 	}
@@ -691,6 +706,9 @@ public:
 
 		if (freeCameraHalo2ExtraHook)
 			freeCameraHalo2ExtraHook.reset();
+
+		if (freeCameraHalo3ExtraHook)
+			freeCameraHalo3ExtraHook.reset();
 
 		instance = nullptr;
 	}
