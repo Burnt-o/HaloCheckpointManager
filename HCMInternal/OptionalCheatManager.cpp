@@ -94,6 +94,7 @@
 #include "TagReferenceReader.h"
 #include "HaloScriptOutputHookEvent.h"
 #include "DisableBarriers.h"
+#include "GetPlayerDatumPresenter.h"
 
 
 #include "DIContainer.h"

@@ -15,7 +15,7 @@ struct Datum
 
 	friend std::ostream& operator<<(std::ostream& os, const Datum& dt)
 	{
-		os << std::hex << "0x" << std::uppercase << (uint32_t)dt << std::nouppercase;
+		os << std::hex << std::uppercase << (uint32_t)dt << std::nouppercase;
 		return os;
 	}
 

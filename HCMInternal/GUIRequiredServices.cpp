@@ -436,15 +436,20 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::ToggleFreeCursor}
 	},
 
+		{ GUIElementEnum::getPlayerDatumGUI,
+			{OptionalCheatEnum::GetPlayerDatumPresenter}
+		},
+
+
+			{ GUIElementEnum::getObjectAddressGUI,
+{OptionalCheatEnum::GetObjectAddressCLI}
+			},
+
 
 
 
 
 #ifdef HCM_DEBUG
-
-	{ GUIElementEnum::getObjectAddressGUI,
-		{OptionalCheatEnum::GetObjectAddressCLI}
-	},
 
 
 

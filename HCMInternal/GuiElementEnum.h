@@ -7,7 +7,7 @@
 // game set tuples
 #define ALL_SUPPORTED_GAMES Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
-#define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3, Halo3ODST
+#define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3
 #define THIRD_GEN Halo3, Halo3ODST, HaloReach, Halo4
 
 
@@ -266,12 +266,14 @@
 				((freeCameraUserInputCameraSetRotationFillCurrent, (FREE_CAMERA_SUPPORT)))\
 				((freeCameraUserInputCameraSetRotationCopy, (FREE_CAMERA_SUPPORT)))\
 				((freeCameraUserInputCameraSetRotationPaste, (FREE_CAMERA_SUPPORT)))\
-((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))
-
-
-#define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
+((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))\
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
+	((getPlayerDatumGUI, (ALL_SUPPORTED_GAMES)))\
+
+#define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
+((HCMDebugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+
 
 
 

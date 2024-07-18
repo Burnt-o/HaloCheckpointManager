@@ -97,7 +97,8 @@ GetActiveStructureDesignTags,\
 TagReferenceReader,\
 CommandConsoleManager,\
 HaloScriptOutputHookEvent,\
-DisableBarriers
+DisableBarriers,\
+GetPlayerDatumPresenter
 
 
 enum class OptionalCheatEnum {

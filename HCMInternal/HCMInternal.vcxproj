@@ -245,6 +245,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetCurrentBSPSet.h" />
     <ClInclude Include="GetCurrentZoneSet.h" />
     <ClInclude Include="GetDebugString.h" />
+    <ClInclude Include="GetPlayerDatumPresenter.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetScenarioAddress.h" />
     <ClInclude Include="GetSoftCeilingData.h" />

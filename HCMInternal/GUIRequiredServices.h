@@ -8,11 +8,11 @@
 ((cheatsHeadingGUI,(ALL_SUPPORTED_GAMES)))\
 ((overlaysHeadingGUI,(ALL_SUPPORTED_GAMES)))\
 ((cameraHeadingGUI,(ALL_SUPPORTED_GAMES)))\
-((theaterHeadingGUI,(Halo3,Halo3ODST,HaloReach,Halo4)))
-
-#define TOPGUIELEMENTS_DEBUG \
+((theaterHeadingGUI,(Halo3,Halo3ODST,HaloReach,Halo4)))\
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))
 
+#define TOPGUIELEMENTS_DEBUG \
+((HCMDebugHeadingGUI, (ALL_SUPPORTED_GAMES)))
 
 #ifdef HCM_DEBUG
 

@@ -742,7 +742,7 @@ private:
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
-							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
+							//createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
 							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 						}));
 
@@ -1825,15 +1825,18 @@ private:
 
 
 			
-#ifdef HCM_DEBUG
-
 
 			case GUIElementEnum::debugHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
-					(game, ToolTipCollection("Debug tools for HCM development"), "Debug", headerChildElements
+					(game, ToolTipCollection("Debug tools"), "Debug", headerChildElements
 						{ 
+						createNestedElement(GUIElementEnum::getPlayerDatumGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
 						}));
+
+				case GUIElementEnum::getPlayerDatumGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+						(game, ToolTipCollection("Copies the player datum to the clipboard"), std::nullopt, "Get Player Datum", settings->getPlayerDatumEvent));
 
 
 
@@ -1842,6 +1845,13 @@ private:
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
 
 
+#ifdef HCM_DEBUG
+
+				case GUIElementEnum::HCMDebugHeadingGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
+						(game, ToolTipCollection("Debug tools for HCM development"), "HCM Debug", headerChildElements
+							{
+						}));
 
 
 #endif
