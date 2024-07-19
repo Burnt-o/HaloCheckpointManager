@@ -10075,7 +10075,16 @@
 
 	<VersionedEntry Name="TriggerFilterLevelPresets" Type="LevelMapStringVector">
 		<Version Version="All">
-
+			<!--#region Halo 1-->
+			<_map_id_halo1_assault_on_the_control_room>
+				<BSPs>
+					bsp 3,0; bsp 0,1; bsp 1,10; bsp 10,2;
+				</BSPs>
+				<BansheeAndBSPs>
+					a1_trigger; a_bridge_trigger; bsp 3,0;
+					bsp 0,1; bsp 1,10; bsp 10,2;
+				</BansheeAndBSPs>
+			</_map_id_halo1_assault_on_the_control_room>
 			<_map_id_halo1_two_betrayals>
 				<BOOL>
 					e3_trigger; canyon3_base_trigger; canyon3_land_trigger; e6_trigger;
@@ -10106,7 +10115,14 @@
 					bsp 1,6; bsp 6,1; bsp 1,0;
 				</BOOLPlusBSPs>
 			</_map_id_halo1_two_betrayals>
-			
+			<_map_id_halo1_keyes>
+				<speedrun>
+					enc1_2; section6; enc6_2; enc6_3; 
+					section7; bsp 3,4; enc7_1; enc7_2; 
+					enc7_2b; enc7_2c;
+				</speedrun>
+			</_map_id_halo1_keyes>
+			<!--#endregion Halo 1-->
 			
 			
 		</Version>
