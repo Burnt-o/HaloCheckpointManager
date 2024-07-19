@@ -391,7 +391,8 @@ HRESULT D3D11Hook::newDX11PresentOBSBypass(IDXGISwapChain* pSwapChain, UINT Sync
 {
 	LOG_ONCE(PLOGV << "newDX11PresentOBSBypass");
 
-	ScopedAtomicBool lock(presentHookRunning);
+	// DON'T LOCK! already locked by present!
+	//ScopedAtomicBool lock(presentHookRunning);
 	auto d3d = instance;
 	if (!d3d)
 	{
@@ -612,7 +613,7 @@ void D3D11Hook::setOBSBypass(bool enabled)
 		{
 			if (presentHookRunning)
 			{
-				PLOG_INFO << "Waiting for presentHook to finish execution";
+				PLOG_INFO << "Waiting for presentHook to finish execution A";
 				presentHookRunning.wait(true);
 			}
 
@@ -632,7 +633,7 @@ void D3D11Hook::setOBSBypass(bool enabled)
 
 			if (presentHookRunning)
 			{
-				PLOG_INFO << "Waiting for presentHook to finish execution";
+				PLOG_INFO << "Waiting for presentHook to finish execution B";
 				presentHookRunning.wait(true);
 			}
 
