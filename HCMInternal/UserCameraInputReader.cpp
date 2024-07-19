@@ -49,7 +49,6 @@ private:
 	std::shared_ptr<MultilevelPointer> analogTurnUpDownMouse;
 	std::shared_ptr<MultilevelPointer> analogTurnLeftRightGamepad;
 	std::shared_ptr<MultilevelPointer> analogTurnUpDownGamepad;
-	std::shared_ptr<MultilevelPointer> isMouseInput;
 
 	// cached of above
 	float* cachedAnalogMoveLeftRight = nullptr;
@@ -144,10 +143,7 @@ public:
 		analogTurnLeftRightGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRightGamepad), game);
 		analogTurnUpDownGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDownGamepad), game);
 
-		if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo3)
-		{
-			isMouseInput = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(isMouseInput), game);
-		}
+
 
 
 		auto& hkd = dicon.Resolve < HotkeyDefinitions>().lock()->getAllRebindableHotkeys();
@@ -184,7 +180,14 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	// Section: Translation
-	auto cameraTranslationSpeed = mPositionSpeed * 0.005f;
+	float cameraTranslationSpeed = mPositionSpeed; 
+	if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo2)
+	{
+		// I'm not sure why h3 doesn't behave properly with this.
+		cameraTranslationSpeed = cameraTranslationSpeed * frameDelta;
+	}
+
+	
 
 	if (cachedAnalogMoveLeftRight == nullptr || cachedAnalogMoveForwardBack == nullptr) throw HCMRuntimeException("null cachedAnalogMove pointers!");
 
