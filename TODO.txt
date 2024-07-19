@@ -1,18 +1,7 @@
 
 NEAR FUTURE TODO:
-fix obs bypass
-free cam for odst
-	set camera data func
-	third person rendering
-	freeCameraHaloODST extra code -> refactor this shit to share the same name
-	frame delta
-	analog move left rights etc
-	block player char input 
- 
- why the fuck is frame delta fucking up camera speed in h3 but not the others?
-	fuck it we add gameT check
  ---- RELEASE as 3.1.1
-
+  freecam/speedhack crashes - step with vs debugger
 
 Add render distance filter for trigger overlay
 make free camera translation speed hotkeys only work when freecam enabled

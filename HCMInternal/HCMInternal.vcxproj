@@ -241,6 +241,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="FreeCameraFOVOverride.h" />
     <ClInclude Include="GetActiveStructureDesignTags.h" />
     <ClInclude Include="GetCurrentBSPSet.h" />
     <ClInclude Include="GetCurrentZoneSet.h" />
@@ -505,6 +506,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />
     <ClCompile Include="EngineCommand.cpp" />
+    <ClCompile Include="FreeCameraFOVOverride.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetCurrentZoneSet.cpp" />

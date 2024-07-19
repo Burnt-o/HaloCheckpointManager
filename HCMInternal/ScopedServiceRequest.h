@@ -65,6 +65,7 @@ public:
 
 	std::unique_ptr<ScopedServiceRequest> makeRequest(std::string callerID)
 	{
+		PLOG_DEBUG << "making GenericScopedServiceProvider request";
 		return std::make_unique<ScopedServiceRequest>(shared_from_this(), callerID);
 	}
 

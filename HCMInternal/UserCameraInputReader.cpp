@@ -49,6 +49,7 @@ private:
 	std::shared_ptr<MultilevelPointer> analogTurnUpDownMouse;
 	std::shared_ptr<MultilevelPointer> analogTurnLeftRightGamepad;
 	std::shared_ptr<MultilevelPointer> analogTurnUpDownGamepad;
+	std::shared_ptr<MultilevelPointer> isMouseInput;
 
 	// cached of above
 	float* cachedAnalogMoveLeftRight = nullptr;
@@ -57,7 +58,7 @@ private:
 	float* cachedAnalogTurnUpDownMouse = nullptr; 
 	float* cachedAnalogTurnLeftRightGamepad = nullptr;
 	float* cachedAnalogTurnUpDownGamepad = nullptr;
-
+	bool* cachedIsMouseInput = nullptr;
 
 	bool cacheInitialised = false;
 
@@ -73,7 +74,7 @@ private:
 		cachedAnalogTurnUpDownMouse = nullptr;
 		cachedAnalogTurnLeftRightGamepad = nullptr;
 		cachedAnalogTurnUpDownGamepad = nullptr;
-
+		cachedIsMouseInput = nullptr;
 		try
 		{
 			lockOrThrow(mccStateHookWeak, mccStateHook);
@@ -87,7 +88,7 @@ private:
 			if (!analogTurnUpDownMouse->resolve((uintptr_t*)&cachedAnalogTurnUpDownMouse)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDownMouse: {}", MultilevelPointer::GetLastError()));
 			if (!analogTurnLeftRightGamepad->resolve((uintptr_t*)&cachedAnalogTurnLeftRightGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnLeftRightGamepad: {}", MultilevelPointer::GetLastError()));
 			if (!analogTurnUpDownGamepad->resolve((uintptr_t*)&cachedAnalogTurnUpDownGamepad)) throw HCMRuntimeException(std::format("could not resolve analogTurnUpDownGamepad: {}", MultilevelPointer::GetLastError()));
-
+			if (!isMouseInput->resolve((uintptr_t*)&cachedIsMouseInput)) throw HCMRuntimeException(std::format("could not resolve isMouseInput: {}", MultilevelPointer::GetLastError()));
 
 
 		
@@ -116,6 +117,34 @@ private:
 	}
 
 
+
+	float getMoveLeftRight()
+	{
+		return *cachedAnalogMoveLeftRight;
+
+	}
+
+	float getMoveForwardBackward()
+	{
+		return *cachedAnalogMoveForwardBack;
+	}
+
+	float getTurnLeftRight(const float frameDelta)
+	{
+		if (*cachedIsMouseInput)
+			return *cachedAnalogTurnLeftRightMouse / frameDelta; 	// mouse movements are already multiplied by frameDelta, so we need to unmultiply them
+		else
+			return *cachedAnalogTurnLeftRightGamepad;
+	}
+
+	float getTurnUpDown(const float frameDelta)
+	{
+		if (*cachedIsMouseInput)
+			return *cachedAnalogTurnUpDownMouse / frameDelta; 	// mouse movements are already multiplied by frameDelta, so we need to unmultiply them
+		else
+			return *cachedAnalogTurnUpDownGamepad;
+	}
+
 public:
 
 	UserCameraInputReaderImpl(GameState game, IDIContainer& dicon)
@@ -142,7 +171,7 @@ public:
 		analogTurnUpDownMouse = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDownMouse), game);
 		analogTurnLeftRightGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnLeftRightGamepad), game);
 		analogTurnUpDownGamepad = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(analogTurnUpDownGamepad), game);
-
+		isMouseInput = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(isMouseInput), game);
 
 
 
@@ -183,8 +212,12 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	float cameraTranslationSpeed = mPositionSpeed; 
 	if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo2)
 	{
-		// I'm not sure why h3 doesn't behave properly with this.
+		// I'm not sure why third gen doesn't behave properly with this.
 		cameraTranslationSpeed = cameraTranslationSpeed * frameDelta;
+	}
+	else
+	{
+		cameraTranslationSpeed = cameraTranslationSpeed * 0.002f; // otherwise it's way too fast
 	}
 
 	
@@ -196,11 +229,11 @@ void UserCameraInputReaderImpl<gameT>::updatePositionTransform(const FreeCameraD
 	// In other words, call readRotationInput & transformRotations BEFORE reading position input, so that this code knows which way is "forward" when you press W, etc.
 
 	// Any inputs this frame?
-	if (*cachedAnalogMoveForwardBack != 0.f || *cachedAnalogMoveLeftRight != 0.f || cameraTranslateUpBinding->isCurrentlyDown() || cameraTranslateDownBinding->isCurrentlyDown())
+	if (getMoveForwardBackward() != 0.f || getMoveLeftRight() != 0.f || cameraTranslateUpBinding->isCurrentlyDown() || cameraTranslateDownBinding->isCurrentlyDown())
 	{
 		// To normalise inputs, what we need to do is map a unit cube of inputs [-1...1] to a unit sphere.
-		float xCube = *cachedAnalogMoveForwardBack;
-		float yCube = *cachedAnalogMoveLeftRight;
+		float xCube = getMoveForwardBackward();
+		float yCube = getMoveLeftRight();
 		float zCube = cameraTranslateUpBinding->isCurrentlyDown() ? 1.f : (cameraTranslateDownBinding->isCurrentlyDown() ? -1.f : 0.f);
 
 		//https://mathproofs.blogspot.com/2005/07/mapping-cube-to-sphere.html?m=1
@@ -243,14 +276,11 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 	auto analogRotationSpeed = frameDelta * mRotationSpeed;
 	auto digitalRotationSpeed = frameDelta * mRotationSpeed;
 
-	if (cachedAnalogTurnLeftRightMouse == nullptr || cachedAnalogTurnUpDownMouse == nullptr || cachedAnalogTurnLeftRightGamepad == nullptr || cachedAnalogTurnUpDownGamepad == nullptr) throw HCMRuntimeException("null cachedAnalogTurn pointers!");
+	if (cachedAnalogTurnLeftRightMouse == nullptr || cachedAnalogTurnUpDownMouse == nullptr || cachedAnalogTurnLeftRightGamepad == nullptr || cachedAnalogTurnUpDownGamepad == nullptr || cachedIsMouseInput == nullptr) throw HCMRuntimeException("null cachedAnalogTurn pointers!");
 
-	// mouse movements are already multiplied by frameDelta, so we need to unmultiply them
-	float leftRightTurnAmount = *cachedAnalogTurnLeftRightMouse * (1.f / frameDelta);
-	float upDownTurnAmount = *cachedAnalogTurnUpDownMouse * (1.f / frameDelta);
 
-	leftRightTurnAmount = leftRightTurnAmount + *cachedAnalogTurnLeftRightGamepad;
-	upDownTurnAmount = upDownTurnAmount + *cachedAnalogTurnUpDownGamepad;
+	float leftRightTurnAmount = getTurnLeftRight(frameDelta);
+	float upDownTurnAmount = getTurnUpDown(frameDelta);
 
 
 

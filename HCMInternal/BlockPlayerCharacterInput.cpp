@@ -11,7 +11,7 @@
 #include "safetyhook.hpp"
 
 template <GameState::Value gameT>
-class BlockPlayerCharacterInputImpl : public BlockPlayerCharacterInputImplUntemplated
+class BlockPlayerCharacterInputImplMidHook : public BlockPlayerCharacterInputImplUntemplated
 {
 private:
 
@@ -29,7 +29,7 @@ private:
 
 
 public:
-	BlockPlayerCharacterInputImpl(GameState gameImpl, IDIContainer& dicon)
+	BlockPlayerCharacterInputImplMidHook(GameState gameImpl, IDIContainer& dicon)
 
 	{
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
@@ -49,6 +49,33 @@ public:
 
 };
 
+template <GameState::Value gameT>
+class BlockPlayerCharacterInputImplPatch : public BlockPlayerCharacterInputImplUntemplated
+{
+private:
+	// hook
+	 std::shared_ptr<ModulePatch> BlockPlayerCharacterInputPatch;
+
+public:
+	BlockPlayerCharacterInputImplPatch(GameState game, IDIContainer& dicon)
+	{
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
+
+		auto BlockPlayerCharacterInputFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(BlockPlayerCharacterInputFunction), game);
+		auto BlockPlayerCharacterInputCode = ptr->getVectorData<byte>(nameof(BlockPlayerCharacterInputCode), game);
+		BlockPlayerCharacterInputPatch = ModulePatch::make(game.toModuleName(), BlockPlayerCharacterInputFunction, *BlockPlayerCharacterInputCode.get());
+
+	}
+
+	virtual void toggleBlockPlayerCharacterInput(bool enabled) override
+	{
+		safetyhook::ThreadFreezer threadFreezer;
+		BlockPlayerCharacterInputPatch->setWantsToBeAttached(enabled);
+	}
+
+};
+
+
 
 
 
@@ -59,27 +86,27 @@ BlockPlayerCharacterInput::BlockPlayerCharacterInput(GameState gameImpl, IDICont
 	switch (gameImpl)
 	{
 	case GameState::Value::Halo1:
-		pimpl = std::make_unique<BlockPlayerCharacterInputImpl<GameState::Value::Halo1>>(gameImpl, dicon);
+		pimpl = std::make_unique<BlockPlayerCharacterInputImplMidHook<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo2:
-		pimpl = std::make_unique<BlockPlayerCharacterInputImpl<GameState::Value::Halo2>>(gameImpl, dicon);
+		pimpl = std::make_unique<BlockPlayerCharacterInputImplMidHook<GameState::Value::Halo2>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo3:
-		pimpl = std::make_unique<BlockPlayerCharacterInputImpl<GameState::Value::Halo3>>(gameImpl, dicon);
+		pimpl = std::make_unique<BlockPlayerCharacterInputImplPatch<GameState::Value::Halo3>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo3ODST:
-		pimpl = std::make_unique<BlockPlayerCharacterInputImpl<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+		pimpl = std::make_unique<BlockPlayerCharacterInputImplPatch<GameState::Value::Halo3ODST>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<BlockPlayerCharacterInputImpl<GameState::Value::HaloReach>>(gameImpl, dicon);
+		pimpl = std::make_unique<BlockPlayerCharacterInputImplPatch<GameState::Value::HaloReach>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_unique<BlockPlayerCharacterInputImpl<GameState::Value::Halo4>>(gameImpl, dicon);
+		pimpl = std::make_unique<BlockPlayerCharacterInputImplPatch<GameState::Value::Halo4>>(gameImpl, dicon);
 		break;
 	default:
 		throw HCMInitException("not impl yet");

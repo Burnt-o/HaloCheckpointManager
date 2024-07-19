@@ -95,6 +95,7 @@
 #include "HaloScriptOutputHookEvent.h"
 #include "DisableBarriers.h"
 #include "GetPlayerDatumPresenter.h"
+#include "FreeCameraFOVOverride.h"
 
 
 #include "DIContainer.h"

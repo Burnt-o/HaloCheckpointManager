@@ -29,6 +29,7 @@
 #include "UserCameraInputReader.h"
 #include "GlobalKill.h"
 #include "ForceTeleport.h"
+#include "FreeCameraFOVOverride.h"
 
 template <GameState::Value gameT>  // templated so that each game gets a seperate instance of the static members
 class FreeCameraImpl : public FreeCameraImplUntemplated
@@ -84,14 +85,15 @@ private:
 	RotationTransformer userControlledRotation;
 	FOVTransformer userControlledFOV;
 
+	std::shared_ptr<FreeCameraFOVOverride> freeCameraFOVOverrideProvider;
+	std::unique_ptr<ScopedServiceRequest> freeCameraFOVOverrideRequest;
+
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
-	static inline std::shared_ptr<ModulePatch> freeCameraHalo2ExtraHook; // stupid halo 2 fix for FOV
-	static inline std::shared_ptr<ModulePatch> freeCameraHalo3ExtraHook; // stupid halo 3 fix for FOV
 
 	// data
 	bool needToResetCamera = true;
-	std::shared_ptr<MultilevelPointer> frameDeltaPointer;
+	std::shared_ptr<MultilevelPointer> gameFrameDeltaPointer;
 	
 	// event to fire on mcc state change (just set needToSetupCamera to true)
 	void onGameStateChange(const MCCState&)
@@ -175,7 +177,7 @@ private:
 
 			LOG_ONCE(PLOG_VERBOSE << "getting frameDelta");
 			float frameDelta;
-			if (!frameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve frameDeltaPointer");
+			if (!gameFrameDeltaPointer->readData(&frameDelta)) throw HCMRuntimeException("Could not resolve MCCFrameDeltaPointer");
 			LOG_ONCE_CAPTURE(PLOG_VERBOSE << "frameDelta value: " << fd, fd = frameDelta);
 
 			// can be exactly zero if paused, but negative doesn't even make sense.
@@ -272,14 +274,10 @@ private:
 					PLOG_DEBUG << "setCameraDataHook redirecting to new func at: " << std::hex << &setCameraDataHookFunction;
 				}
 
-				if constexpr (gameT == GameState::Value::Halo2)
-				{
-					freeCameraHalo2ExtraHook->setWantsToBeAttached(newValue);
-				}
-				else if constexpr (gameT == GameState::Value::Halo3)
-				{
-					freeCameraHalo3ExtraHook->setWantsToBeAttached(newValue);
-				}
+				if (newValue)
+					freeCameraFOVOverrideRequest = freeCameraFOVOverrideProvider->scopedRequest(nameof(FreeCameraImpl));
+				else if (freeCameraFOVOverrideRequest)
+					freeCameraFOVOverrideRequest.reset();
 
 			}
 
@@ -627,12 +625,12 @@ public:
 	
 		freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey(); }),
 		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); }),
-		freeCameraTeleportToCameraCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->freeCameraTeleportToCameraEvent, [this]() {onFreeCameraTeleportToCameraCallback(); })
-
+		freeCameraTeleportToCameraCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->freeCameraTeleportToCameraEvent, [this]() {onFreeCameraTeleportToCameraCallback(); }),
+		freeCameraFOVOverrideProvider(resolveDependentCheat(FreeCameraFOVOverride))
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
-		frameDeltaPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(frameDeltaPointer), game);
+		gameFrameDeltaPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameFrameDeltaPointer), game);
 		auto setCameraDataFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(setCameraDataFunction), game);
 		setCameraDataHook = ModuleMidHook::make(game.toModuleName(), setCameraDataFunction, setCameraDataHookFunction);
 
@@ -672,19 +670,6 @@ public:
 			PLOG_DEBUG << "failed to resolve optional dependent cheat forceTeleportOptionalWeak, error: " << ex.what();
 		}
 
-		if constexpr (gameT == GameState::Value::Halo2)
-		{
-			auto freeCameraHalo2ExtraFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(freeCameraHalo2ExtraFunction), game);
-			auto freeCameraHalo2ExtraCode = ptr->getVectorData<byte>(nameof(freeCameraHalo2ExtraCode), game);
-			freeCameraHalo2ExtraHook = ModulePatch::make(game.toModuleName(), freeCameraHalo2ExtraFunction, *freeCameraHalo2ExtraCode.get());
-
-		}
-		else if constexpr (gameT == GameState::Value::Halo3)
-		{
-			auto freeCameraHalo3ExtraFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(freeCameraHalo3ExtraFunction), game);
-			auto freeCameraHalo3ExtraCode = ptr->getVectorData<byte>(nameof(freeCameraHalo3ExtraCode), game);
-			freeCameraHalo3ExtraHook = ModulePatch::make(game.toModuleName(), freeCameraHalo3ExtraFunction, *freeCameraHalo3ExtraCode.get());
-		}
 		   
 
 	}
@@ -704,11 +689,8 @@ public:
 		if (setCameraDataHook)
 			setCameraDataHook.reset();
 
-		if (freeCameraHalo2ExtraHook)
-			freeCameraHalo2ExtraHook.reset();
-
-		if (freeCameraHalo3ExtraHook)
-			freeCameraHalo3ExtraHook.reset();
+		if (freeCameraFOVOverrideProvider)
+			freeCameraFOVOverrideProvider.reset();
 
 		instance = nullptr;
 	}

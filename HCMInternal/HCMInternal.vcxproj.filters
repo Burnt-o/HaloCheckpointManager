@@ -899,6 +899,9 @@
     <ClInclude Include="HotkeyRebindDialog.h">
       <Filter>Services\Hotkeys</Filter>
     </ClInclude>
+    <ClInclude Include="FreeCameraFOVOverride.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1320,6 +1323,9 @@
     </ClCompile>
     <ClCompile Include="HotkeyRebindDialog.cpp">
       <Filter>Services\Hotkeys</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCameraFOVOverride.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

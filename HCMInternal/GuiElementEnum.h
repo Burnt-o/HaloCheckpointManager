@@ -7,7 +7,7 @@
 // game set tuples
 #define ALL_SUPPORTED_GAMES Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
-#define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3
+#define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3, Halo3ODST
 #define THIRD_GEN Halo3, Halo3ODST, HaloReach, Halo4
 
 
