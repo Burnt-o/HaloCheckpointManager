@@ -216,9 +216,15 @@ void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotk
 	if (newBindings.empty())
 	{
 		PLOG_VERBOSE << "empty newBindings";
-		//hotkey->setBindings(hotkey->getBindings());
 		return;
 	}
+
+	if (newBindings.size() > 20)
+	{
+		PLOG_ERROR << "newBindings size was over 20 - probably from glitched command console hotkey bug";
+		return;
+	}
+
 	hotkey->setBindings(newBindings);
 
 	PLOG_VERBOSE << "hotkey loaded with " << newBindings.size() << " binding sets";
