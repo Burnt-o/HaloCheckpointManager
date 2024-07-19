@@ -95,9 +95,27 @@ private:
 	bool needToResetCamera = true;
 	std::shared_ptr<MultilevelPointer> gameFrameDeltaPointer;
 	
-	// event to fire on mcc state change (just set needToSetupCamera to true)
+	// event to fire on mcc state change (just set needToSetupCamera to true). also disable freecam.
 	void onGameStateChange(const MCCState&)
 	{
+		try
+		{
+			PLOG_DEBUG << "free camera onGameStateChange";
+			lockOrThrow(settingsWeak, settings);
+			if (settings->freeCameraToggle->GetValueDisplay())
+			{
+				settings->freeCameraToggle->GetValueDisplay() = false;
+				settings->freeCameraToggle->UpdateValueWithInput();
+			}
+
+				
+
+		}
+		catch (HCMRuntimeException ex)
+		{
+			runtimeExceptions->handleMessage(ex);
+		}
+
 		needToResetCamera = true;
 	}
 
@@ -234,7 +252,7 @@ private:
 		{
 
 			needToResetCamera = true; 
-			PLOG_DEBUG << "onToggleChange: newval: " << newValue;
+			PLOG_DEBUG << "onToggleChange: newval: " << (newValue ? "true" : "false");
 
 
 
@@ -630,7 +648,7 @@ public:
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
-		gameFrameDeltaPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameFrameDeltaPointer), game);
+		gameFrameDeltaPointer = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameFrameDeltaPointer));
 		auto setCameraDataFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(setCameraDataFunction), game);
 		setCameraDataHook = ModuleMidHook::make(game.toModuleName(), setCameraDataFunction, setCameraDataHookFunction);
 

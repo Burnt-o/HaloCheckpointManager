@@ -21,6 +21,7 @@ private:
 
 	virtual void updateService() override 
 	{
+		PLOG_DEBUG << "FreeCameraFOVOverrideImplModulePatch setting to state:" << (serviceIsRequested() ? "true" : "false");
 		freeCameraFOVOverridePatch->setWantsToBeAttached(serviceIsRequested());
 	}
 
