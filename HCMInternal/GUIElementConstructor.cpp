@@ -684,9 +684,9 @@ private:
 							settings->playerPositionToClipboardEvent));
 
 				case GUIElementEnum::consoleCommandGUI:
-					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHotkeyOnly<>>
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 						(game, ToolTipCollection("Brings up the command console, allowing you to send engine commands"), RebindableHotkeyEnum::commandConsoleHotkey,
-							"Command Console Hotkey"));
+							"Command Console", settings->commandConsoleHotkeyEvent));
 
 				case GUIElementEnum::consoleCommandSettings:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
