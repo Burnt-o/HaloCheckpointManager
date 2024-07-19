@@ -267,7 +267,7 @@ private:
 
 			initEventOnPressHotkey_ignoreDisabler(commandConsoleHotkey,
 			mSettings->commandConsoleHotkeyEvent,
-			vsk{ImGuiKey_F8}),
+			vsk{{ImGuiKey_F8}}),
 
 
 			initEventOnPressHotkey(commandConsoleExecuteBuffer,
