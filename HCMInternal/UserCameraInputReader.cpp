@@ -354,7 +354,16 @@ void UserCameraInputReaderImpl<gameT>::updateFOVTransform(const FreeCameraData& 
 	lockOrThrow(settingsWeak, settings);
 	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
-	float cameraFOVSpeed = mFOVSpeed * frameDelta;
+	float cameraFOVSpeed = mFOVSpeed;;
+	if constexpr (gameT == GameState::Value::Halo1 || gameT == GameState::Value::Halo2)
+	{
+		// I'm not sure why third gen doesn't behave properly with this.
+		cameraFOVSpeed = cameraFOVSpeed * frameDelta;
+	}
+	else
+	{
+		cameraFOVSpeed = cameraFOVSpeed * 0.002f; // otherwise it's way too fast
+	}
 
 	// Section: FOV
 	// we scale by power for smoother transition
