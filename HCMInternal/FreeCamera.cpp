@@ -545,6 +545,8 @@ private:
 			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
 
 			lockOrThrow(settingsWeak, settings);
+			if (settings->freeCameraToggle->GetValue() == false) return;
+
 			float factor = settings->freeCameraUserInputCameraTranslationSpeedChangeFactor->GetValue();
 			settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() = settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() * factor;
 			settings->freeCameraUserInputCameraTranslationSpeed->UpdateValueWithInput();
@@ -563,6 +565,8 @@ private:
 			if (mccStateHook->isGameCurrentlyPlaying(gameImpl) == false) return;
 
 			lockOrThrow(settingsWeak, settings);
+			if (settings->freeCameraToggle->GetValue() == false) return;
+
 			float factor = settings->freeCameraUserInputCameraTranslationSpeedChangeFactor->GetValue();
 			settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() = settings->freeCameraUserInputCameraTranslationSpeed->GetValueDisplay() / factor;
 			settings->freeCameraUserInputCameraTranslationSpeed->UpdateValueWithInput();
@@ -585,7 +589,8 @@ private:
 
 			if (settings->freeCameraToggle->GetValue() == false)
 			{
-				throw HCMRuntimeException("Can't do that while freecam is disabled!");
+				PLOG_ERROR << "Can't do that while freecam is disabled!";
+				return;
 			}
 
 			if (forceTeleportOptionalWeak.has_value() == false)
