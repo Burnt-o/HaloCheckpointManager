@@ -2,9 +2,22 @@
 #include "pch.h"
 #include "imgui.h"
 #include "HotkeysEnum.h"
+#include <numeric>
+
+template<typename valueType, typename Container>
+std::string contents_as_string(Container const& c,
+	std::string const& separator, std::function<std::string(valueType)> stringFunctor) {
+	if (c.size() == 0) return "";
+	auto fold_operation = [&separator, &stringFunctor](std::string const& accum,
+		auto const& item) {
+			return accum + separator + stringFunctor(item); };
+	return std::accumulate(std::next(std::begin(c)), std::end(c),
+		stringFunctor(*std::begin(c)), fold_operation);
+}
 
 
-
+// a set of buttons that all are pressed, triggers the hotkey
+using BindingCombo = std::set<ImGuiKey>;
 
 class RebindableHotkey  //represents hotkeys for keyboard, gamepad, and mouse that can be rebound
 {
@@ -12,97 +25,22 @@ public:
 	constexpr static inline int bindingTextLength = 9;
 	friend class HotkeyManagerImpl;
 	friend class HotkeyManager;
-	friend class HotkeyRendererImpl;
+
 private:
 
 	RebindableHotkeyEnum mHotkeyEnum;
 	std::string mBindingText; 
 	std::string mBindingTextShort;
 
-	std::vector<std::vector<ImGuiKey>> mBindings{}; // an ImGuiKey can be for either mouse, gamepad, or keyboard. Having a vector of them means we can do combo bindings, ie press "Shift + F1" to activate a hotkey. Also allows us to mix input types, ie "MouseLeft + F1".
-	// vector of vectors so user can do more than one set of bindings
+	std::vector<BindingCombo> mBindings{}; // an ImGuiKey can be for either mouse, gamepad, or keyboard. Having a vector of them means we can do combo bindings, ie press "Shift + F1" to activate a hotkey. Also allows us to mix input types, ie "MouseLeft + F1".
+	// vector of sets so user can do more than one set of bindings
 
 
 
-	const std::vector<std::vector<ImGuiKey>>& getBindings() 
-	{ 
-		return mBindings; 
-	}
-	void setBindings(const std::vector<std::vector<ImGuiKey>>& newBindings) 
-	{ 
-		PLOG_DEBUG << "setBindings called on " << magic_enum::enum_name(mHotkeyEnum);
-		mBindings = newBindings; 
-		mBindingText = generateBindingText(mBindings);
-		mBindingTextShort = generateBindingTextShort(mBindingText);
-	}
 
 
-	
 
-	static std::string generateBindingText(const std::vector<std::vector<ImGuiKey>>& bindings)
-	{
-		if (bindings.empty()) return "Unbound";
-
-		std::ostringstream out;
-
-		for (auto& binding : bindings)
-		{
-			std::ostringstream tempss;
-			if (binding.empty())
-			{
-				PLOG_ERROR << "a binding was empty. this shouldn't happen.";
-				return "Unbound?";
-			}
-			for (auto key : binding)
-			{
-				tempss << ImGui::GetKeyName(key) << " + ";
-			}
-			// remove last " + "
-			std::string temp1 = tempss.str();
-			temp1.resize(temp1.size() - 3);
-			out << temp1 << ", ";
-		}
-		// remove last ", "
-		std::string temp2 = out.str();
-		temp2.resize(temp2.size() - 2);
-
-		return temp2;
-	}
-
-	static std::string generateBindingTextShort(const std::string_view longStringView)
-	{
-		std::string shortString = longStringView.data();
-		if (shortString.length() > bindingTextLength) // truncate
-		{
-			shortString.resize(bindingTextLength);
-			// and replace last chars with ".." so user knows it was cut off
-			shortString.replace(shortString.size() - 2, 2, "..");
-		}
-		return shortString;
-	}
-
-	static std::string generateBindingTextSingle(const std::vector<ImGuiKey>& binding)
-	{
-		std::ostringstream out;
-		if (binding.empty())
-		{
-			return "Unbound";
-		}
-		for (auto key : binding)
-		{
-			out << ImGui::GetKeyName(key) << " + ";
-		}
-		// remove last " + "
-		std::string temp = out.str();
-		temp.resize(temp.size() - 3);
-		return temp;
-
-	}
-
-	// functions for serialising and deserialising are defined in HotkeyManager
-
-
-	bool bindingSetDown(const std::vector<ImGuiKey>& bindingSet)
+	bool bindingSetDown(const BindingCombo& bindingSet)
 	{
 		if (bindingSet.empty()) return false;
 
@@ -121,7 +59,7 @@ private:
 		std::string_view getBindingTextShort() const { return mBindingTextShort; } // a user facing text string of what the hotkey is currently bound to.
 
 		// actionEvent is what event to fire when hotkey activated. hotkeyName is just used for (de)serialisation. Bindings default to empty (unbound). BindingText and BindingTextShort are used in the GUI.
-		explicit RebindableHotkey(RebindableHotkeyEnum hotkeyEnum, std::vector<std::vector<ImGuiKey>> defaultBindings = { }, bool ignoresHotkeyDisabler = false)
+		explicit RebindableHotkey(RebindableHotkeyEnum hotkeyEnum, std::vector<BindingCombo> defaultBindings = { }, bool ignoresHotkeyDisabler = false)
 			:mHotkeyEnum(hotkeyEnum), 
 			//mBindings(std::erase_if(defaultBindings, [](const auto& bindingSet) { return bindingSet.empty(); })), // delete empty bindings (this shouldn't happen anyway)
 			mBindings(defaultBindings), // delete empty bindings (this shouldn't happen anyway)
@@ -144,5 +82,65 @@ private:
 				return false;
 		}
 
+		const std::vector<BindingCombo>& getBindings() const
+		{
+			return mBindings;
+		}
+
+		void setBindings(const std::vector<BindingCombo>& newBindings)
+		{
+			PLOG_DEBUG << "setBindings called on " << magic_enum::enum_name(mHotkeyEnum);
+			mBindings = newBindings;
+			mBindingText = generateBindingText(mBindings);
+			mBindingTextShort = generateBindingTextShort(mBindingText);
+		}
+
+
+		static std::string generateBindingText(const std::vector<BindingCombo>& bindings)
+		{
+			if (bindings.empty()) return "Unbound";
+
+
+			std::vector<std::string> comboStringVec;
+
+			std::function<std::string(ImGuiKey)> ImGuiKeyToString = [](ImGuiKey key) { return std::string(ImGui::GetKeyName(key)); };
+
+			for (auto& bindingCombo : bindings)
+			{
+				comboStringVec.push_back(contents_as_string(bindingCombo, " + ", ImGuiKeyToString));
+			}
+
+			std::function<std::string(std::string)> stringToString = [](auto s) { return s; };
+
+			return contents_as_string(comboStringVec, ", ", stringToString);
+		}
+
+		static std::string generateBindingTextShort(const std::string_view longStringView)
+		{
+			std::string shortString = longStringView.data();
+			if (shortString.length() > bindingTextLength) // truncate
+			{
+				shortString.resize(bindingTextLength);
+				// and replace last chars with ".." so user knows it was cut off
+				shortString.replace(shortString.size() - 2, 2, "..");
+			}
+			return shortString;
+		}
+
+		static std::string generateBindingTextSingle(const BindingCombo& binding)
+		{
+			std::ostringstream out;
+			if (binding.empty())
+			{
+				return "Unbound";
+			}
+
+			std::function<std::string(ImGuiKey)> ImGuiKeyToString = [](ImGuiKey key) { return std::string(ImGui::GetKeyName(key)); };
+
+			return contents_as_string(binding, " + ", ImGuiKeyToString);
+
+		}
+
+		// functions for serialising and deserialising are defined in HotkeyManager
 };
 

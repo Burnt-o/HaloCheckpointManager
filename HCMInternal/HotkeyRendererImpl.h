@@ -5,12 +5,12 @@
 #include "MessagesGUI.h"
 #include "HotkeyManager.h"
 #include "ScopedServiceRequest.h"
+#include "HotkeyRebindDialog.h"
 
 class HotkeyRendererImpl : public IHotkeyRendererImpl
 {
 private:
-	void beginHotkeyRebindDialog(std::shared_ptr<RebindableHotkey> hotkey);
-	void renderHotkeyRebindDialog(SimpleMath::Vector2);
+	void renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize);
 
 	// injected services
 	std::shared_ptr<MessagesGUI> messagesGUI;
@@ -19,10 +19,8 @@ private:
 	std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler;
 
 	//data
-	std::shared_ptr<RebindableHotkey> mHotkeyToManipulate;
-	int currentSelectedBindingForEditing = 0; // -1 means none selected
-	std::vector<std::vector<ImGuiKey>> tempBindingSet{};
-	std::optional<std::unique_ptr<ScopedServiceRequest>> hotkeyDisableRequest = std::nullopt;
+	std::unique_ptr<HotkeyRebindDialog> hotkeyRebindDialog; // null when no dialog open
+
 
 
 	// ImGuiManager Event reference and our handle to the append so we can remove it in destructor

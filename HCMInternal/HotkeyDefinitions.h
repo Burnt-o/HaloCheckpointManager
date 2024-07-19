@@ -54,7 +54,7 @@ public:
 private:
 	std::shared_ptr< SettingsStateAndEvents> mSettings;
 
-	typedef std::vector<std::vector<ImGuiKey>> vvk;
+	typedef std::vector<BindingCombo> vsk;
 
 #define initEventOnPressHotkey_impl(enumName, hotkeyEvent, defaultBinding, ignoresHotkeyDisabler) \
 		{RebindableHotkeyEnum::enumName, std::make_shared<EventOnPressHotkey>\
@@ -88,365 +88,365 @@ private:
 
 		initEventOnPressHotkey(toggleGUI,
 		mSettings->toggleGUIHotkeyEvent,
-		vvk{{ ImGuiKey_GraveAccent }}),
+		vsk{{ ImGuiKey_GraveAccent }}),
 
 		initEventOnPressHotkey(togglePause,
 		mSettings->togglePauseHotkeyEvent,
-		vvk{{ ImGuiKey_P }}),
+		vsk{{ ImGuiKey_P }}),
 
 		initEventOnPressHotkey(advanceTicks,
 		mSettings->advanceTicksEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(forceCheckpoint,
 		mSettings->forceCheckpointEvent,
-		vvk{{ ImGuiKey_F1 }}),
+		vsk{{ ImGuiKey_F1 }}),
 
 		initEventOnPressHotkey(forceRevert,
 		mSettings->forceRevertEvent,
-		vvk{{ ImGuiKey_F2 }}),
+		vsk{{ ImGuiKey_F2 }}),
 
 		initEventOnPressHotkey(forceDoubleRevert,
 		mSettings->forceDoubleRevertEvent,
-		vvk{{ ImGuiKey_F3 }}),
+		vsk{{ ImGuiKey_F3 }}),
 
 		initEventOnPressHotkey(forceCoreSave,
 		mSettings->forceCoreSaveEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(forceCoreLoad,
 		mSettings->forceCoreLoadEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(injectCheckpoint,
 		mSettings->injectCheckpointEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(dumpCheckpoint,
 		mSettings->dumpCheckpointEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(injectCore,
 		mSettings->injectCoreEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(dumpCore,
 		mSettings->dumpCoreEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(speedhack,
 		mSettings->speedhackHotkeyEvent,
-		vvk{{ ImGuiKey_F4 }}),
+		vsk{{ ImGuiKey_F4 }}),
 
 		initEventOnPressHotkey(invuln,
 		mSettings->invulnerabilityHotkeyEvent,
-		vvk{{ ImGuiKey_F5 }}),
+		vsk{{ ImGuiKey_F5 }}),
 
 		initEventOnPressHotkey(aiFreeze,
 		mSettings->aiFreezeHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(forceTeleport,
 		mSettings->forceTeleportEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(forceLaunch,
 		mSettings->forceLaunchEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(medusa,
 		mSettings->medusaHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(naturalCheckpointDisable,
 		mSettings->naturalCheckpointDisableHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 
 		initEventOnPressHotkey(infiniteAmmo,
 		mSettings->infiniteAmmoHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 
 		initEventOnPressHotkey(bottomlessClip,
 		mSettings->bottomlessClipHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 
 		initEventOnPressHotkey(display2DInfo,
 		mSettings->display2DInfoHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(freeCamera,
 		mSettings->freeCameraHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 				initEventOnPressHotkey(freeCameraTeleportToCameraHotkey,
 		mSettings->freeCameraGameInputDisableHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(freeCameraGameInputDisable,
 		mSettings->freeCameraTeleportToCameraEvent,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraCameraInputDisable,
 		mSettings->freeCameraCameraInputDisableHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
 		mSettings->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
 		mSettings->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraUserInputCameraSetPosition,
 		mSettings->freeCameraUserInputCameraSetPosition,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraUserInputCameraSetRotation,
 		mSettings->freeCameraUserInputCameraSetRotation,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraUserInputCameraMaintainVelocity,
 		mSettings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 			initEventOnPressHotkey(freeCameraUserInputCameraSetVelocity,
 		mSettings->freeCameraUserInputCameraSetVelocity,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(freeCameraAnchorPositionToObjectPosition,
 			mSettings->freeCameraAnchorPositionToObjectPositionHotkeyEvent,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(freeCameraAnchorPositionToObjectRotation,
 			mSettings->freeCameraAnchorPositionToObjectRotationHotkeyEvent,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(freeCameraAnchorRotationToObjectPosition,
 			mSettings->freeCameraAnchorRotationToObjectPositionHotkeyEvent,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(freeCameraAnchorRotationToObjectFacing,
 			mSettings->freeCameraAnchorRotationToObjectFacingHotkeyEvent,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(freeCameraAnchorFOVToObjectDistance,
 			mSettings->freeCameraAnchorFOVToObjectDistanceHotkeyEvent,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(editPlayerViewAngleSet,
 			mSettings->editPlayerViewAngleSet,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(editPlayerViewAngleAdjustHorizontal,
 			mSettings->editPlayerViewAngleAdjustHorizontal,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(editPlayerViewAngleAdjustVertical,
 			mSettings->editPlayerViewAngleAdjustVertical,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(switchBSP,
 			mSettings->switchBSPEvent,
-			vvk{}),
+			vsk{}),
 
 		initEventOnPressHotkey(switchBSPSet,
 			mSettings->switchBSPSetLoadSetEvent,
-			vvk{}),
+			vsk{}),
 
 
 
 
 		initEventOnPressHotkey(hideHUDToggle,
 			mSettings->hideHUDToggleHotkeyEvent,
-			vvk{}),
+			vsk{}),
 
 
 			initEventOnPressHotkey_ignoreDisabler(commandConsoleHotkey,
 			mSettings->commandConsoleHotkeyEvent,
-			vvk{ImGuiKey_F8}),
+			vsk{ImGuiKey_F8}),
 
 
 			initEventOnPressHotkey(commandConsoleExecuteBuffer,
 			mSettings->commandConsoleExecuteBufferEvent,
-			vvk{}),
+			vsk{}),
 
 			
 		initEventOnPressHotkey(setPlayerHealth,
 		mSettings->setPlayerHealthEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(toggleWaypoint3D,
 		mSettings->toggleWaypoint3DHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(triggerOverlayToggleHotkey,
 		mSettings->triggerOverlayToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(softCeilingOverlayToggleHotkey,
 		mSettings->softCeilingOverlayToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(disableBarriers,
 		mSettings->disableBarriersHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		/// skullllllllls
 		initEventOnPressHotkey(skullAngerHotkey,
 		mSettings->skullAngerToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullAssassinsHotkey,
 		mSettings->skullAssassinsToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullBlackEyeHotkey,
 		mSettings->skullBlackEyeToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullBlindHotkey,
 		mSettings->skullBlindToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullCatchHotkey,
 		mSettings->skullCatchToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullEyePatchHotkey,
 		mSettings->skullEyePatchToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullFamineHotkey,
 		mSettings->skullFamineToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullFogHotkey,
 		mSettings->skullFogToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullForeignHotkey,
 		mSettings->skullForeignToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullIronHotkey,
 		mSettings->skullIronToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullJackedHotkey,
 		mSettings->skullJackedToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullMasterblasterHotkey,
 		mSettings->skullMasterblasterToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullMythicHotkey,
 		mSettings->skullMythicToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullRecessionHotkey,
 		mSettings->skullRecessionToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullSoAngryHotkey,
 		mSettings->skullSoAngryToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullStreakingHotkey,
 		mSettings->skullStreakingToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullSwarmHotkey,
 		mSettings->skullSwarmToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullThatsJustWrongHotkey,
 		mSettings->skullThatsJustWrongToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullTheyComeBackHotkey,
 		mSettings->skullTheyComeBackToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullThunderstormHotkey,
 		mSettings->skullThunderstormToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullTiltHotkey,
 		mSettings->skullTiltToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullToughLuckHotkey,
 		mSettings->skullToughLuckToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullBandannaHotkey,
 		mSettings->skullBandannaToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullBondedPairHotkey,
 		mSettings->skullBondedPairToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullBoomHotkey,
 		mSettings->skullBoomToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullCowbellHotkey,
 		mSettings->skullCowbellToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullEnvyHotkey,
 		mSettings->skullEnvyToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullFeatherHotkey,
 		mSettings->skullFeatherToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullGhostHotkey,
 		mSettings->skullGhostToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullGruntBirthdayPartyHotkey,
 		mSettings->skullGruntBirthdayPartyToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullGruntFuneralHotkey,
 		mSettings->skullGruntFuneralToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullIWHBYDHotkey,
 		mSettings->skullIWHBYDToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullMalfunctionHotkey,
 		mSettings->skullMalfunctionToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullPinataHotkey,
 		mSettings->skullPinataToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullProphetBirthdayPartyHotkey,
 		mSettings->skullProphetBirthdayPartyToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullScarabHotkey,
 		mSettings->skullScarabToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullSputnikHotkey,
 		mSettings->skullSputnikToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 		initEventOnPressHotkey(skullAcrophobiaHotkey,
 		mSettings->skullAcrophobiaToggleHotkeyEvent,
-		vvk{}),
+		vsk{}),
 
 
 
@@ -458,22 +458,22 @@ private:
 	{
 
 						initRebindableHotkey(cameraTranslateUpBinding,
-			(vvk{{ ImGuiKey_Space}, { ImGuiKey_GamepadFaceDown }})),
+			(vsk{{ ImGuiKey_Space}, { ImGuiKey_GamepadFaceDown }})),
 
 						initRebindableHotkey(cameraTranslateDownBinding,
-			(vvk{{ ImGuiKey_LeftCtrl }, { ImGuiKey_GamepadL3}})),
+			(vsk{{ ImGuiKey_LeftCtrl }, { ImGuiKey_GamepadL3}})),
 
 						initRebindableHotkey(cameraRollLeftBinding,
-			(vvk{{ ImGuiKey_G }, { ImGuiKey_GamepadR1}})),
+			(vsk{{ ImGuiKey_G }, { ImGuiKey_GamepadR1}})),
 
 						initRebindableHotkey(cameraRollRightBinding,
-			(vvk{{ ImGuiKey_T }, { ImGuiKey_GamepadL1 }})),
+			(vsk{{ ImGuiKey_T }, { ImGuiKey_GamepadL1 }})),
 
 						initRebindableHotkey(cameraFOVIncreaseBinding,
-			(vvk{{ ImGuiKey_Y }, { ImGuiKey_GamepadL2 }})),
+			(vsk{{ ImGuiKey_Y }, { ImGuiKey_GamepadL2 }})),
 
 						initRebindableHotkey(cameraFOVDecreaseBinding,
-			(vvk{{ ImGuiKey_H }, { ImGuiKey_GamepadR2 }})),
+			(vsk{{ ImGuiKey_H }, { ImGuiKey_GamepadR2 }})),
 
 
 	};

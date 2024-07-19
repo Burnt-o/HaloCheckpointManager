@@ -260,6 +260,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="HaloScriptOutputHookEvent.h" />
     <ClInclude Include="HideWatermarkCheck.h" />
     <ClInclude Include="HideWatermarkManager.h" />
+    <ClInclude Include="HotkeyRebindDialog.h" />
     <ClInclude Include="IFireCallbackListChanged.h" />
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="IModel.h" />
@@ -513,6 +514,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetSoftCeilingData.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="HaloScriptOutputHookEvent.cpp" />
+    <ClCompile Include="HotkeyRebindDialog.cpp" />
     <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>

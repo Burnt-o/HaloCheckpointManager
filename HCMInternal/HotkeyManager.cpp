@@ -12,7 +12,7 @@
 
 class HotkeyManagerImpl {
 public:
-	static bool shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet);
+	static bool shouldHotkeyActivate(const BindingCombo& bindingSet);
 	static void serialiseHotkey(const std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node parent);
 	static void deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input);
 };
@@ -125,7 +125,7 @@ void HotkeyManager::pollInput()// we poll every frame. Really we could've chosen
 }
 
 
-bool inline HotkeyManagerImpl::shouldHotkeyActivate(const std::vector<ImGuiKey>& bindingSet)
+bool inline HotkeyManagerImpl::shouldHotkeyActivate(const BindingCombo& bindingSet)
 {
 
 	bool newPress = false;
@@ -170,13 +170,13 @@ void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotk
 
 	PLOG_VERBOSE << "Deserialising hotkey: " << magic_enum::enum_name(hotkey->mHotkeyEnum);
 
-	std::vector<std::vector<ImGuiKey>> newBindings;
+	std::vector<BindingCombo> newBindings;
 	if (input.first_child())
 	{
 		for (pugi::xml_node bindingSetNode = input.first_child(); bindingSetNode; bindingSetNode = bindingSetNode.next_sibling())
 		{
 
-			std::vector<ImGuiKey> thisBindingSet;
+			BindingCombo thisBindingSet;
 
 			if (bindingSetNode.first_child())
 			{
@@ -192,7 +192,7 @@ void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotk
 					{
 						// does GetKeyName throw if fed a bad int?
 						PLOG_VERBOSE << "adding key " << ImGui::GetKeyName((ImGuiKey)key) << " to binding set";
-						thisBindingSet.push_back((ImGuiKey)key);
+						thisBindingSet.insert((ImGuiKey)key);
 					}
 
 

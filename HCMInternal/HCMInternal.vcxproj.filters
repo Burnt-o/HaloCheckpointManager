@@ -896,6 +896,9 @@
     <ClInclude Include="GetPlayerDatumPresenter.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
+    <ClInclude Include="HotkeyRebindDialog.h">
+      <Filter>Services\Hotkeys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1314,6 +1317,9 @@
     </ClCompile>
     <ClCompile Include="DisableBarriers.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="HotkeyRebindDialog.cpp">
+      <Filter>Services\Hotkeys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
