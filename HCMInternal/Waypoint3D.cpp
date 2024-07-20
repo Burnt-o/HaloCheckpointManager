@@ -249,6 +249,8 @@ private:
 
 
 			lockOrThrow(settingsWeak, settings);
+			float renderDistance = settings->renderDistance3D->GetValue();
+			
 			if (settings->waypoint3DList->GetValue().listInUse)
 			{
 				LOG_ONCE(PLOG_DEBUG << "Waypoint3D::onRenderEvent waiting for waypoint list to no longer be locked");
@@ -281,10 +283,10 @@ private:
 				}
 
 				// test if filtered by render range
-				if (measurePlayerDistanceToObjectLocked.has_value() && settings->waypoint3DRenderRangeToggle->GetValue())
+				if (measurePlayerDistanceToObjectLocked.has_value())
 				{
 					auto distanceToCamera = measurePlayerDistanceToObjectLocked.value()->measure(waypoint.position);
-					if (distanceToCamera.has_value() && distanceToCamera.value() > settings->waypoint3DRenderRangeInput->GetValue()) continue; // beyond render range
+					if (distanceToCamera.has_value() && distanceToCamera.value() > renderDistance) continue; // beyond render range
 				}
 
 				float renderVerticalOffset = 0.f;

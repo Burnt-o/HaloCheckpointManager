@@ -27,7 +27,8 @@ template<GameState::Value mGame>
 class Renderer3DImpl : public IRenderer3D
 {
 private:
-	
+	float renderDistance;
+	ScopedCallback<eventpp::CallbackList<void(float&)>> renderDistanceChangedCallback;
 
 	struct CameraFrustumSidePlanes
 	{
@@ -51,6 +52,7 @@ private:
 	SimpleMath::Vector2 screenSize;
 	SimpleMath::Vector2 screenCenter;
 	DirectX::BoundingFrustum frustumViewWorld;
+
 
 	// These resources do not belong to us, they belong to the game - do not release them
 	ID3D11Device* pDevice; 

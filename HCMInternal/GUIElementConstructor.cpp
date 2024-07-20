@@ -732,6 +732,7 @@ private:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
 					(game, ToolTipCollection("Overlays that various information over the top of the game view"), "Overlays", headerChildElements
 						{ 
+							createNestedElement(GUIElementEnum::renderDistance3DGUI),
 							createNestedElement(GUIElementEnum::display2DInfoToggleGUI),
 							createNestedElement(GUIElementEnum::display2DInfoSettingsInfoSubheading),
 							createNestedElement(GUIElementEnum::display2DInfoSettingsVisualSubheading),
@@ -745,6 +746,11 @@ private:
 							//createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
 							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 						}));
+
+
+				case GUIElementEnum::renderDistance3DGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.1f, 1000.f, ImGuiSliderFlags_None)>>
+						(game, ToolTipCollection("How far objects render when using 3D overlays eg Trigger Overlay"), "3D Render Distance", settings->renderDistance3D));
 
 
 				case GUIElementEnum::display2DInfoToggleGUI:
@@ -982,8 +988,6 @@ private:
 						(game, ToolTipCollection("Custom Waypoint Settings"), "Custom Waypoint Settings", headerChildElements
 							{
 							createNestedElement(GUIElementEnum::waypoint3DGUIClampToggle),
-							createNestedElement(GUIElementEnum::waypoint3DGUIRenderRangeToggle),
-							createNestedElement(GUIElementEnum::waypoint3DGUIRenderRangeInput),
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalSpriteColor),
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalSpriteScale),
 							createNestedElement(GUIElementEnum::waypoint3DGUIGlobalLabelColor),
@@ -998,14 +1002,6 @@ private:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 							(game, ToolTipCollection("Clamps waypoints to the edge of the screen when you turn away from them"), std::nullopt, "Clamp to Screen", settings->waypoint3DClampToggle));
 
-
-					case GUIElementEnum::waypoint3DGUIRenderRangeToggle:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-							(game, ToolTipCollection("Toggles disabling rendering of waypoints that are too far away"), std::nullopt, "Render Range Filter", settings->waypoint3DRenderRangeToggle));
-
-					case GUIElementEnum::waypoint3DGUIRenderRangeInput:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
-							(game, ToolTipCollection("How far away (game units) does a waypoint need to be before disabling rendering?"), "Render Range", settings->waypoint3DRenderRangeInput));
 
 					case GUIElementEnum::waypoint3DGUIGlobalSpriteColor:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>

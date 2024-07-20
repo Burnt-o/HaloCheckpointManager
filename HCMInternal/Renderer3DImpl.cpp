@@ -2,6 +2,7 @@
 #include "Renderer3DImpl.h"
 #include "PointerDataStore.h"
 #include "TextureFactory.h"
+#include "SettingsStateAndEvents.h"
 /*
 
 See:
@@ -23,7 +24,9 @@ for the rest of the implementation
 	 messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 	 runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 	 getGameCameraDataWeak(resolveDependentCheat(GetGameCameraData)),
-	 mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); })
+	 mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); }),
+	 renderDistanceChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->renderDistance3D->valueChangedEvent, [this](float& n) {renderDistance = n; }),
+	 renderDistance(dicon.Resolve<SettingsStateAndEvents>().lock()->renderDistance3D->GetValue())
 {
 	 try
 	 {

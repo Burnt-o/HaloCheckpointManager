@@ -934,7 +934,7 @@ public:
 			3.f,
 			[](float in) { return true; }, // if the user wants to have a negative speed that's their perogative
 			nameof(freeCameraUserInputCameraTranslationSpeed)
-		);
+		); 
 	
 	std::shared_ptr<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>> freeCameraUserInputCameraTranslationInterpolator = std::make_shared<BinarySetting<SettingsEnums::FreeCameraInterpolationTypesEnum>>
 		(
@@ -1224,19 +1224,6 @@ public:
 			nameof(waypoint3DClampToggle)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> waypoint3DRenderRangeToggle = std::make_shared<BinarySetting<bool>>
-		(
-			false,
-			[](bool in) { return true; },
-			nameof(waypoint3DRenderRangeToggle)
-		);
-
-	std::shared_ptr<BinarySetting<float>> waypoint3DRenderRangeInput = std::make_shared<BinarySetting<float>>
-		(
-			100.f,
-			[](float in) { return in > 0.f; },
-			nameof(waypoint3DRenderRangeInput)
-		);
 
 	std::shared_ptr<BinarySetting<float>> waypoint3DGlobalSpriteScale = std::make_shared<BinarySetting<float>>
 		(
@@ -1571,10 +1558,18 @@ public:
 			nameof(disableBarriersToggle)
 		);
 
+	std::shared_ptr<BinarySetting<float>> renderDistance3D = std::make_shared<BinarySetting<float>>
+		(
+			1000.f,
+			[](float in) { return in >= 0.1f; }, 
+			nameof(renderDistance3D)
+		); 
+
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		renderDistance3D,
 		messagesFontSize,
 			messagesFontColor,
 		triggerOverlayFilterToggle,
@@ -1729,8 +1724,6 @@ public:
 		switchBSPSetUnloadIndex,
 		setPlayerHealthVec2,
 		waypoint3DClampToggle,
-		waypoint3DRenderRangeToggle,
-		waypoint3DRenderRangeInput,
 		waypoint3DGlobalSpriteScale,
 		waypoint3DGlobalLabelScale,
 		waypoint3DGlobalDistanceScale,

@@ -126,9 +126,6 @@ void once(T t, F f) {
 
 
 
-
-#define FAR_CLIP_3D 10000.f
-
 // it's a RECT but single-precision
 struct RECTF
 {

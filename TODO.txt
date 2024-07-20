@@ -1,6 +1,5 @@
 
 NEAR FUTURE TODO:
- ---- RELEASE as 3.1.1
   freecam/speedhack crashes - step with vs debugger
 
 Add render distance filter for trigger overlay
@@ -23,6 +22,12 @@ FUTURE TODO:
 * several of my settings enums would be better represented as bitmasks
 
 
+
+fix coop issues (display info doesn't work according to harc)
+fix GUIElement height calculation issues (eg freecamera simple/advanced subheadings)
+
+
+
 * Some big refactoring:
 Replace ObjectTableRange & GetObjectAddress & GetObjectPhysics w/ ObjectPool. Concept of CommonObjectType, CommonUnitType, CommonBipdType etc, + game specialisations eg H1ObjectType, etc.
 	* use templated structs (need to double check that htis would work)
@@ -31,6 +36,8 @@ DebugNameTable for triggers (except h1).. ergh h3+ are hard
 templated scenario tag struct etc etc
 * fix tickadvance issues (caused by the scopedServiceRequest for pausing the game not always working properly)
 	* scopedServiceRequests should no longer use caller id system and instead just setup a callback similiar to ObservedEvents
+
+
 
 
 

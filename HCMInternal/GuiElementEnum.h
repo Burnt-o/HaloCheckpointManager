@@ -126,6 +126,7 @@
 
 #define RELEASEGUIELEMENTS_ANDSUPPORTEDGAMES2 \
 ((overlaysHeadingGUI, (ALL_SUPPORTED_GAMES)))\
+	((renderDistance3DGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoToggleGUI, (ALL_SUPPORTED_GAMES)))\
 	((display2DInfoSettingsInfoSubheading, (ALL_SUPPORTED_GAMES)))\
 			((display2DInfoShowGameTick, (ALL_SUPPORTED_GAMES)))\
@@ -167,8 +168,6 @@
 	((waypoint3DGUIList, (ALL_SUPPORTED_GAMES)))\
 	((waypoint3DGUISettings, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIClampToggle, (ALL_SUPPORTED_GAMES)))\
-		((waypoint3DGUIRenderRangeToggle, (ALL_SUPPORTED_GAMES)))\
-		((waypoint3DGUIRenderRangeInput, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalSpriteColor, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalSpriteScale, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalLabelColor, (ALL_SUPPORTED_GAMES)))\
