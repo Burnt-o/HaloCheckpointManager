@@ -258,7 +258,7 @@ public:
 
 				LOG_ONCE(PLOG_DEBUG << "UpdateTriggerCheckHookFunction running first time");
 
-				bool wasSuccessfulCheck = instance->updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, uintptr_t>(triggerIndex, pEntityInfo);
+				bool wasSuccessfulCheck = instance->updateTriggerCheckHook->getInlineHook().fastcall<bool, uint32_t, uintptr_t>(triggerIndex, pEntityInfo);
 
 				LOG_ONCE(PLOG_DEBUG << "inline call succeeded");
 
@@ -335,7 +335,7 @@ public:
 
 				LOG_ONCE(PLOG_DEBUG << "UpdateTriggerCheckHookFunction running first time");
 
-				bool wasSuccessfulCheck = instance->updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, uint32_t, uintptr_t>(triggerIndex, unknown, pEntityInfo);
+				bool wasSuccessfulCheck = instance->updateTriggerCheckHook->getInlineHook().fastcall<bool, uint32_t, uint32_t, uintptr_t>(triggerIndex, unknown, pEntityInfo);
 
 				LOG_ONCE(PLOG_DEBUG << "inline call succeeded");
 
