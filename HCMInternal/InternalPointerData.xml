@@ -5541,6 +5541,7 @@
 			<shields>0xE7C</shields>
 			<healthCooldown>0xE48</healthCooldown>
 			<shieldCooldown>0xE78</shieldCooldown>
+			<equipmentDatum>0x374</equipmentDatum>
 		</Version>
 
 		<Version Version="All" Game="Halo4">
@@ -5553,6 +5554,8 @@
 			<shields>0x13EC</shields>
 			<healthCooldown>0x13B8</healthCooldown>
 			<shieldCooldown>0x13E8</shieldCooldown>
+			<equipmentDatum>0x664</equipmentDatum>
+			<heroAssistDatum>0xD40</heroAssistDatum>
 		</Version>
 	</VersionedEntry>
 
@@ -5566,6 +5569,31 @@
 			<healthCooldown>0x13B8</healthCooldown>
 		</Version>
 
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="equipmentDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="HaloReach">
+			<tagDatum>0x0</tagDatum>
+			<abilityPercent>0x1EC</abilityPercent>
+			<cooldownTicks>0x1DC</cooldownTicks>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<tagDatum>0x08</tagDatum>
+			<abilityPercent>0x544</abilityPercent>
+			<cooldownTicks>0x520</cooldownTicks>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="equipmentTagDataFields" Type="DynStructOffsetInfo">
+		<Version Version="All" Game="HaloReach">
+			<abilityMaxCooldownF>0x214</abilityMaxCooldownF>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
+			<abilityMaxCooldownF>0x2A4</abilityMaxCooldownF>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="vehicleDataFields" Type="DynStructOffsetInfo">
@@ -5825,6 +5853,14 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="tagTableCount" Type="MultilevelPointer::ModuleOffset">
+		<!--meta header+18-->
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x15e3b58</Offset>
+				<Offset>0x18</Offset>
+			</Offsets>
+		</Version>
 		<!--indexTableHeader+10-->
 		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>

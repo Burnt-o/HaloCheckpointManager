@@ -9,7 +9,7 @@
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
 #define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3, Halo3ODST
 #define THIRD_GEN Halo3, Halo3ODST, HaloReach, Halo4
-
+#define ABILITY_GAMES HaloReach, Halo4
 
 // interpolator macro for freecamera
 #define defFreeCameraInterpolator(name)\
@@ -216,6 +216,22 @@
 		((softCeilingOverlayColorKill, (THIRD_GEN)))\
 		((softCeilingOverlaySolidTransparency, (THIRD_GEN)))\
 		((softCeilingOverlayWireframeTransparency, (THIRD_GEN)))\
+	((abilityMeterOverlayToggle, (ABILITY_GAMES)))\
+	((abilityMeterOverlaySettings, (ABILITY_GAMES)))\
+			((abilityMeterHeroAssistToggle, (Halo4)))\
+			((abilityMeterAbilityAnchorCorner, (ABILITY_GAMES)))\
+			((abilityMeterAbilityScreenOffset, (ABILITY_GAMES)))\
+			((abilityMeterAbilitySize, (ABILITY_GAMES)))\
+			((abilityMeterAbilityBackgroundColor, (ABILITY_GAMES)))\
+			((abilityMeterAbilityForegroundColor, (ABILITY_GAMES)))\
+			((abilityMeterAbilityHighlightColor, (ABILITY_GAMES)))\
+			((abilityMeterCooldownToggle, (ABILITY_GAMES)))\
+				((abilityMeterCooldownAnchorCorner, (ABILITY_GAMES)))\
+				((abilityMeterCooldownScreenOffset, (ABILITY_GAMES)))\
+				((abilityMeterCooldownSize, (ABILITY_GAMES)))\
+				((abilityMeterCooldownBackgroundColor, (ABILITY_GAMES)))\
+				((abilityMeterCooldownForegroundColor, (ABILITY_GAMES)))\
+				((abilityMeterCooldownHighlightColor, (ABILITY_GAMES)))\
 ((cameraHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((hideHUDToggle, (FREE_CAMERA_SUPPORT)))\
 	((editPlayerViewAngleSubheading, (ALL_SUPPORTED_GAMES)))\
@@ -267,8 +283,10 @@
 				((freeCameraUserInputCameraSetRotationPaste, (FREE_CAMERA_SUPPORT)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))\
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
-	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
 	((getPlayerDatumGUI, (ALL_SUPPORTED_GAMES)))\
+	((getObjectAddressGUI, (ALL_SUPPORTED_GAMES)))\
+	((getTagAddressGUI, (ALL_SUPPORTED_GAMES)))\
+
 
 #define DEBUGGUIELEMENTS_ANDSUPPORTEDGAMES \
 ((HCMDebugHeadingGUI, (ALL_SUPPORTED_GAMES)))\

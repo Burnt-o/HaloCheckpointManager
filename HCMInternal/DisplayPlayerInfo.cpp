@@ -147,19 +147,19 @@ private:
 			SimpleMath::Vector2 displayInfoScreenPosition;
 			switch (settings->display2DInfoAnchorCorner->GetValue())
 			{
-			case SettingsEnums::Display2DInfoAnchorEnum::TopLeft:
+			case SettingsEnums::ScreenAnchorEnum::TopLeft:
 				displayInfoScreenPosition = cornerOffset ;
 				break;
 
-			case SettingsEnums::Display2DInfoAnchorEnum::TopRight:
+			case SettingsEnums::ScreenAnchorEnum::TopRight:
 				displayInfoScreenPosition = {screenSize.x - cornerOffset.x, cornerOffset.y};
 				break;
 
-			case SettingsEnums::Display2DInfoAnchorEnum::BottomRight:
+			case SettingsEnums::ScreenAnchorEnum::BottomRight:
 				displayInfoScreenPosition = { screenSize.x - cornerOffset.x, screenSize.y - cornerOffset.y };
 				break;
 
-			case SettingsEnums::Display2DInfoAnchorEnum::BottomLeft:
+			case SettingsEnums::ScreenAnchorEnum::BottomLeft:
 				displayInfoScreenPosition = { cornerOffset.x, screenSize.y - cornerOffset.y };
 				break;
 

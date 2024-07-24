@@ -33,7 +33,7 @@ namespace SettingsEnums
 
 	enum class SoftCeilingRenderDirection { Front, Back, Both };
 
-	enum class Display2DInfoAnchorEnum
+	enum class ScreenAnchorEnum
 	{
 		TopLeft,
 		TopRight,

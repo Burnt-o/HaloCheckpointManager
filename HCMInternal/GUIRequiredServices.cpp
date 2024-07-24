@@ -263,6 +263,14 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::SensDriftDetector,}
 		},
 
+			{ GUIElementEnum::abilityMeterOverlayToggle,
+{OptionalCheatEnum::AbilityMeterOverlay}
+	},
+
+	{ GUIElementEnum::abilityMeterOverlaySettings,
+{OptionalCheatEnum::AbilityMeterOverlay}
+},
+
 		{ GUIElementEnum::display2DInfoToggleGUI,
 		{OptionalCheatEnum::DisplayPlayerInfo, OptionalCheatEnum::GetPlayerDatum, OptionalCheatEnum::GetObjectAddress}
 	},
@@ -445,6 +453,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::GetObjectAddressCLI}
 			},
 
+			{ GUIElementEnum::getTagAddressGUI,
+{OptionalCheatEnum::GetTagAddressPresenter}
+			},
 
 
 

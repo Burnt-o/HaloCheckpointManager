@@ -1,15 +1,16 @@
+3.1.2 TODO:
+
+freeCamera for  hr, h4
+sprint Meter h4/hr
 
 NEAR FUTURE TODO:
   freecam/speedhack crashes - step with vs debugger
 
-Add render distance filter for trigger overlay
-make free camera translation speed hotkeys only work when freecam enabled
 add OOB camera fix (third gen)
 snap factor of freecam doesn't respond to fps properly
 check odst camera pointer
 fix modal dialogs preventing alt tabs
-freeCamera for  hr, h4
-sprint Meter h4/hr
+
 investigate project cartographer support
 freeCamera automation stuff 
 3d object info overlay
@@ -19,6 +20,8 @@ FUTURE TODO:
 * display2dinfo ghosting info (desync/difference between quake and havok positions)
 * refactor a bunch of simple services to use std::expected
 	* !! add new cheaper virtual error type exposing a what(). returning std::unexpected(Exception) is dumb/expensive af
+	* Could either user polymorphism as above, OR
+	* std::variant of error types with visitor pattern.. a lot more complicated and boilerplatey. The benefit is automatic (?) composition of error types (how to do this without exposing each depedent class? nah fuck it too complicated)
 * several of my settings enums would be better represented as bitmasks
 
 
@@ -59,6 +62,8 @@ BACKBURNER (tasks to do eventually):
 
 CODE CLEANUP (eventually eventually)
 * Refactor optionalCheats to not reference settings, instead provide all their functionality in public api - add Commander (Presenter may be a better name) layer to bind settings-events to calling said api
+	* services with internal state can impl a base class with getter/setters for state, templated by state object (perhaps a default state too)
+	* services that constantly run (ie toggle services) should expose an error event that the presenter can subscribe to and decide what to do on error
 	* then pull out all optionalCheats (rename to mccService maybe) into seperate library that other devs/projects can use
 	* optinalCheatStore should return std::expected<mccService> instead of throwing InitException. Let caller throw if they choose to. 
 	* instead of all our optionalCheats storing weak_ptrs to dependent services, maybe they should just hold the optionalCheatStore and call that when they want something instead of lockOrThrow

@@ -99,7 +99,10 @@ CommandConsoleManager,\
 HaloScriptOutputHookEvent,\
 DisableBarriers,\
 GetPlayerDatumPresenter,\
-FreeCameraFOVOverride
+FreeCameraFOVOverride,\
+GetAbilityData,\
+AbilityMeterOverlay,\
+GetTagAddressPresenter
 
 
 enum class OptionalCheatEnum {

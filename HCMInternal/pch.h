@@ -98,6 +98,7 @@ using namespace DirectX;
 
 // Custom utilities
 #include "CustomExceptions.h"
+#include "CustomErrors.h"
 #include "ControlDefs.h"
 #include "WindowsUtilities.h"
 #include "ScopedCallback.h"

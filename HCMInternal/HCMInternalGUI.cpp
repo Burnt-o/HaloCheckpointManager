@@ -125,7 +125,7 @@ void HCMInternalGUI::renderErrorDialog()
 	{
 
 		ImGui::TextWrapped("HCM encountered an error!");
-		ImGui::TextWrapped(errorsToDisplay.front().what().c_str());
+		ImGui::TextWrapped(errorsToDisplay.front().what());
 		ImGui::TextWrapped("");
 		ImGui::TextWrapped("Nerdy info for Burnt: ");
 
@@ -148,7 +148,7 @@ void HCMInternalGUI::renderErrorDialog()
 
 		if (ImGui::Button("Copy to clipboard"))
 		{
-			std::string copyText = errorsToDisplay.front().what() + "\n\n" + errorsToDisplay.front().source() + "\n\n" + errorsToDisplay.front().trace();
+			std::string copyText = std::format("{}\n\n{}\n\n{}", errorsToDisplay.front().what(), errorsToDisplay.front().source(), errorsToDisplay.front().trace());
 			ImGui::SetClipboardText(copyText.c_str());
 		}
 		ImGui::EndPopup();

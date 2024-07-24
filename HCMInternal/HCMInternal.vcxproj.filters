@@ -902,6 +902,18 @@
     <ClInclude Include="FreeCameraFOVOverride.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="GetAbilityData.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomErrors.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityMeterOverlay.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GetTagAddressPresenter.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1326,6 +1338,12 @@
     </ClCompile>
     <ClCompile Include="FreeCameraFOVOverride.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GetAbilityData.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityMeterOverlay.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

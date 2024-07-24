@@ -18,6 +18,9 @@ typedef eventpp::CallbackList<void(bool&)> ToggleEvent;
 #endif
 
 #define lockOrThrow(weak, shared) auto shared = weak.lock(); if (!shared) throw HCMRuntimeException(std::format("Bad weak ptr: {}", nameof(weak)));
+#define lockOrUnexpected(weak, shared) auto shared = weak.lock(); if (!shared) return std::unexpected(std::make_shared<BadWeakPtrError>(nameof(weak)));
+
+
 
 #ifdef HCM_DEBUG
 #define DEBUG_KEY_LOG(key, log) if (GetKeyState(key) & 0x8000) { log }

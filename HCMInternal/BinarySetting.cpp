@@ -82,7 +82,7 @@ template void BinarySetting<FreeCameraInterpolationTypesEnum>::deserialise(pugi:
 template void BinarySetting<TriggerRenderStyle>::deserialise(pugi::xml_node input);
 template void BinarySetting<TriggerInteriorStyle>::deserialise(pugi::xml_node input);
 template void BinarySetting<TriggerLabelStyle>::deserialise(pugi::xml_node input);
-template void BinarySetting<Display2DInfoAnchorEnum>::deserialise(pugi::xml_node input);
+template void BinarySetting<ScreenAnchorEnum>::deserialise(pugi::xml_node input);
 template void BinarySetting<SoftCeilingRenderTypes>::deserialise(pugi::xml_node input);
 template void BinarySetting<SoftCeilingRenderDirection>::deserialise(pugi::xml_node input);
 

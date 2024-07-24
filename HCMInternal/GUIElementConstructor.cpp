@@ -745,6 +745,8 @@ private:
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
 							//createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
 							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
+							createNestedElement(GUIElementEnum::abilityMeterOverlayToggle),
+							createNestedElement(GUIElementEnum::abilityMeterOverlaySettings),
 						}));
 
 
@@ -950,7 +952,7 @@ private:
 							}));
 
 					case GUIElementEnum::display2DInfoAnchorCorner:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::Display2DInfoAnchorEnum, 100.f>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::ScreenAnchorEnum, 100.f>>
 							(game, ToolTipCollection(""), "Corner to Anchor to", settings->display2DInfoAnchorCorner));
 
 					case GUIElementEnum::display2DInfoScreenOffset:
@@ -1255,6 +1257,97 @@ private:
 			case GUIElementEnum::sensDriftDetectorToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 					(game, ToolTipCollection("Prints a warning message whenever you move your mouse fast enough to cause a sensitivity manip to drift"), std::nullopt, "Sensitivity Drift Detector", settings->sensDriftDetectorToggle));
+
+
+			case GUIElementEnum::abilityMeterOverlayToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+					(game, ToolTipCollection("Renders an overlay with info about the player ability ability"), std::nullopt, "Ability Meter Toggle", settings->abilityMeterOverlayToggle));
+				// TODO: add hotkey
+
+			case GUIElementEnum::abilityMeterOverlaySettings:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+					(game, ToolTipCollection("Settings for the Ability Meter Overlay"), "Ability Meter Settings", headerChildElements
+						{
+							createNestedElement(GUIElementEnum::abilityMeterHeroAssistToggle),
+							createNestedElement(GUIElementEnum::abilityMeterAbilityAnchorCorner),
+							createNestedElement(GUIElementEnum::abilityMeterAbilityScreenOffset),
+							createNestedElement(GUIElementEnum::abilityMeterAbilitySize),
+							createNestedElement(GUIElementEnum::abilityMeterAbilityBackgroundColor),
+							createNestedElement(GUIElementEnum::abilityMeterAbilityForegroundColor),
+							createNestedElement(GUIElementEnum::abilityMeterAbilityHighlightColor),
+							createNestedElement(GUIElementEnum::abilityMeterCooldownToggle),
+						}));
+
+
+			case GUIElementEnum::abilityMeterHeroAssistToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+					(game, ToolTipCollection("Instead of showing your current ability data, shows your sprint data instead"), std::nullopt, "Show Sprint instead", settings->abilityMeterHeroAssistToggle));
+				// TODO: add hotkey
+
+
+					case GUIElementEnum::abilityMeterAbilityAnchorCorner:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::ScreenAnchorEnum, 100.f>>
+							(game, ToolTipCollection(""), "Corner to Anchor to##abilityAbility", settings->abilityMeterAbilityAnchorCorner));
+
+					case GUIElementEnum::abilityMeterAbilityScreenOffset:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 1600.f, 1000.f }, ImGuiSliderFlags_None) >>
+							(game, ToolTipCollection(""), "Pixel Offset from Corner##abilityAbility", settings->abilityMeterAbilityScreenOffset, "Horizontal", "Vertical"));
+
+					case GUIElementEnum::abilityMeterAbilitySize:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 500.f, 500.f }, ImGuiSliderFlags_None) >>
+							(game, ToolTipCollection(""), "Bar Size##abilityAbility", settings->abilityMeterAbilitySize, "Horizontal", "Vertical"));
+
+
+					case GUIElementEnum::abilityMeterAbilityBackgroundColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+							(game, ToolTipCollection(""), "Background Colour##abilityAbility", settings->abilityMeterAbilityBackgroundColor));
+
+					case GUIElementEnum::abilityMeterAbilityForegroundColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+							(game, ToolTipCollection(""), "Foreground Colour##abilityAbility", settings->abilityMeterAbilityForegroundColor));
+
+					case GUIElementEnum::abilityMeterAbilityHighlightColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+							(game, ToolTipCollection(""), "Highlight Colour##abilityAbility", settings->abilityMeterAbilityHighlightColor));
+
+
+
+					case GUIElementEnum::abilityMeterCooldownToggle:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+							(game, ToolTipCollection("Show the cooldown bar for your ability ability"), std::nullopt, "Ability Cooldown Bar", settings->abilityMeterCooldownToggle, headerChildElements
+								{
+								createNestedElement(GUIElementEnum::abilityMeterCooldownAnchorCorner),
+								createNestedElement(GUIElementEnum::abilityMeterCooldownScreenOffset),
+								createNestedElement(GUIElementEnum::abilityMeterCooldownSize),
+								createNestedElement(GUIElementEnum::abilityMeterCooldownBackgroundColor),
+								createNestedElement(GUIElementEnum::abilityMeterCooldownForegroundColor),
+								createNestedElement(GUIElementEnum::abilityMeterCooldownHighlightColor),
+								}));
+
+						case GUIElementEnum::abilityMeterCooldownAnchorCorner:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::ScreenAnchorEnum, 100.f>>
+								(game, ToolTipCollection(""), "Corner to Anchor to##abilityCooldown", settings->abilityMeterCooldownAnchorCorner));
+
+						case GUIElementEnum::abilityMeterCooldownScreenOffset:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 1600.f, 1000.f }, ImGuiSliderFlags_None) >>
+								(game, ToolTipCollection(""), "Pixel Offset from Corner##abilityCooldown", settings->abilityMeterCooldownScreenOffset, "Horizontal", "Vertical"));
+
+						case GUIElementEnum::abilityMeterCooldownSize:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 500.f, 500.f }, ImGuiSliderFlags_None) >>
+								(game, ToolTipCollection(""), "Bar Size##abilityCooldown", settings->abilityMeterCooldownSize, "Horizontal", "Vertical"));
+
+						case GUIElementEnum::abilityMeterCooldownBackgroundColor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+								(game, ToolTipCollection(""), "Background Colour##abilityCooldown", settings->abilityMeterCooldownBackgroundColor));
+
+						case GUIElementEnum::abilityMeterCooldownForegroundColor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+								(game, ToolTipCollection(""), "Foreground Colour##abilityCooldown", settings->abilityMeterCooldownForegroundColor));
+
+						case GUIElementEnum::abilityMeterCooldownHighlightColor:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+								(game, ToolTipCollection(""), "Highlight Colour##abilityCooldown", settings->abilityMeterCooldownHighlightColor));
+
 
 			case GUIElementEnum::cameraHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>
@@ -1828,6 +1921,7 @@ private:
 						{ 
 						createNestedElement(GUIElementEnum::getPlayerDatumGUI),
 						createNestedElement(GUIElementEnum::getObjectAddressGUI),
+						createNestedElement(GUIElementEnum::getTagAddressGUI),
 						}));
 
 				case GUIElementEnum::getPlayerDatumGUI:
@@ -1839,6 +1933,10 @@ private:
 				case GUIElementEnum::getObjectAddressGUI:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
 						(game, ToolTipCollection("Evaluates a main object datums address, copying it to the clipboard"), "Get Object Address: ", settings->getObjectAddressDWORD, settings->getObjectAddressEvent));
+
+				case GUIElementEnum::getTagAddressGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputDWORD<true>>
+						(game, ToolTipCollection("Finds the address of a tag by tag datum, copying it to the clipboard"), "Get Tag Address: ", settings->getTagAddressDWORD, settings->getTagAddressEvent));
 
 
 #ifdef HCM_DEBUG

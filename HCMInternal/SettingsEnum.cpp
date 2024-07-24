@@ -10,7 +10,7 @@ namespace SettingsEnums
 	template std::ostream& operator<< (std::ostream& out, const TriggerInteriorStyle& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const TriggerRenderStyle& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const TriggerLabelStyle& enumValue);
-	template std::ostream& operator<< (std::ostream& out, const Display2DInfoAnchorEnum& enumValue);
+	template std::ostream& operator<< (std::ostream& out, const ScreenAnchorEnum& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const SoftCeilingRenderTypes& enumValue);
 	template std::ostream& operator<< (std::ostream& out, const SoftCeilingRenderDirection& enumValue);
 }

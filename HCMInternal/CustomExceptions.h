@@ -40,17 +40,17 @@ public:
 		MandatoryLogging();
 	}
 
-	std::string what()
+	const char* what() const
 	{
-		return this->message;
+		return this->message.c_str();
 	}
 
-	std::string source()
+	std::string source() const
 	{
 		return this->sourceLocation;
 	}
 
-	std::string trace()
+	std::string trace() const
 	{
 		return this->stackTrace;
 	}

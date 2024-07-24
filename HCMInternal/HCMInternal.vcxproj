@@ -236,6 +236,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="CommandConsoleGUI.h" />
     <ClInclude Include="CommandConsoleManager.h" />
+    <ClInclude Include="CustomErrors.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="DisableBarriers.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
@@ -250,6 +251,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetScenarioAddress.h" />
     <ClInclude Include="GetSoftCeilingData.h" />
+    <ClInclude Include="GetAbilityData.h" />
+    <ClInclude Include="GetTagAddressPresenter.h" />
     <ClInclude Include="GetTriggerData.h" />
     <ClInclude Include="GUIColourPicker.h" />
     <ClInclude Include="GUIButtonAndBinaryInt.h" />
@@ -271,6 +274,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ObservedScopedCallback.h" />
     <ClInclude Include="ObservedEvent.h" />
     <ClInclude Include="ObservedEventFactory.h" />
+    <ClInclude Include="AbilityMeterOverlay.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
@@ -514,6 +518,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetPlayerTriggerPosition.cpp" />
     <ClCompile Include="GetScenarioAddress.cpp" />
     <ClCompile Include="GetSoftCeilingData.cpp" />
+    <ClCompile Include="GetAbilityData.cpp" />
     <ClCompile Include="GetTriggerData.cpp" />
     <ClCompile Include="HaloScriptOutputHookEvent.cpp" />
     <ClCompile Include="HotkeyRebindDialog.cpp" />
@@ -533,6 +538,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="AbilityMeterOverlay.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />

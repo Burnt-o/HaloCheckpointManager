@@ -96,6 +96,9 @@
 #include "DisableBarriers.h"
 #include "GetPlayerDatumPresenter.h"
 #include "FreeCameraFOVOverride.h"
+#include "GetAbilityData.h"
+#include "AbilityMeterOverlay.h"
+#include "GetTagAddressPresenter.h"
 
 
 #include "DIContainer.h"

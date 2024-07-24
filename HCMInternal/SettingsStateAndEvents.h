@@ -72,6 +72,7 @@ public:
 	std::shared_ptr<ActionEvent> commandConsoleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> commandConsoleExecuteBufferEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> getObjectAddressEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> getTagAddressEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> playerPositionToClipboardEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> forceTeleportAbsoluteFillCurrent = std::make_shared<ActionEvent>();
@@ -441,6 +442,13 @@ public:
 			nameof(getObjectAddressDWORD)
 		);
 
+	std::shared_ptr<BinarySetting<uint32_t>> getTagAddressDWORD = std::make_shared<BinarySetting<uint32_t>>
+		(
+			0xDEADBEEF,
+			[](uint32_t in) { return true; },
+			nameof(getTagAddressDWORD)
+		);
+
 	std::shared_ptr<BinarySetting<bool>> forceTeleportApplyToPlayer = std::make_shared<BinarySetting<bool>>
 		(
 			true,
@@ -780,10 +788,10 @@ public:
 		);
 
 
-	std::shared_ptr<BinarySetting<SettingsEnums::Display2DInfoAnchorEnum>> display2DInfoAnchorCorner = std::make_shared<BinarySetting<SettingsEnums::Display2DInfoAnchorEnum>>
+	std::shared_ptr<BinarySetting<SettingsEnums::ScreenAnchorEnum>> display2DInfoAnchorCorner = std::make_shared<BinarySetting<SettingsEnums::ScreenAnchorEnum>>
 		(
-			SettingsEnums::Display2DInfoAnchorEnum::BottomRight,
-			[](SettingsEnums::Display2DInfoAnchorEnum in) { return true; },
+			SettingsEnums::ScreenAnchorEnum::BottomRight,
+			[](SettingsEnums::ScreenAnchorEnum in) { return true; },
 			nameof(display2DInfoAnchorCorner)
 		);
 
@@ -1565,10 +1573,132 @@ public:
 			nameof(renderDistance3D)
 		); 
 
+	std::shared_ptr<BinarySetting<bool>> abilityMeterOverlayToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(abilityMeterOverlayToggle)
+		);
+
+	
+		std::shared_ptr<BinarySetting<bool>> abilityMeterHeroAssistToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(abilityMeterHeroAssistToggle)
+		);
+
+	std::shared_ptr<BinarySetting<SettingsEnums::ScreenAnchorEnum>> abilityMeterAbilityAnchorCorner = std::make_shared<BinarySetting<SettingsEnums::ScreenAnchorEnum>>
+		(
+			SettingsEnums::ScreenAnchorEnum::BottomRight,
+			[](SettingsEnums::ScreenAnchorEnum in) { return true; },
+			nameof(abilityMeterAbilityAnchorCorner)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> abilityMeterAbilityScreenOffset = std::make_shared<BinarySetting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2{800, 800},
+			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
+			nameof(abilityMeterAbilityScreenOffset)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> abilityMeterAbilitySize = std::make_shared<BinarySetting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2{400, 40},
+			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
+			nameof(abilityMeterAbilitySize)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> abilityMeterAbilityBackgroundColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.0f, 0.0f, 0.0f, 0.f}, // transparent
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(abilityMeterAbilityBackgroundColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> abilityMeterAbilityForegroundColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.3f, 0.3f, 1.0f, 0.7f}, // blue 
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(abilityMeterAbilityForegroundColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> abilityMeterAbilityHighlightColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.4f, 0.7f, 1.0f, 1.f}, // blue but more opaque
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(abilityMeterAbilityHighlightColor)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> abilityMeterCooldownToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(abilityMeterCooldownToggle)
+		);
+
+	std::shared_ptr<BinarySetting<SettingsEnums::ScreenAnchorEnum>> abilityMeterCooldownAnchorCorner = std::make_shared<BinarySetting<SettingsEnums::ScreenAnchorEnum>>
+		(
+			SettingsEnums::ScreenAnchorEnum::BottomRight,
+			[](SettingsEnums::ScreenAnchorEnum in) { return true; },
+			nameof(abilityMeterCooldownAnchorCorner)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> abilityMeterCooldownScreenOffset = std::make_shared<BinarySetting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2{800, 750},
+			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
+			nameof(abilityMeterCooldownScreenOffset)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> abilityMeterCooldownSize = std::make_shared<BinarySetting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2{400, 20},
+			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
+			nameof(abilityMeterCooldownSize)
+		);
+
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> abilityMeterCooldownBackgroundColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.0f, 0.0f, 0.0f, 0.f}, // transparent
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(abilityMeterCooldownBackgroundColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> abilityMeterCooldownForegroundColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.3f, 0.3f, 1.0f, 0.7f}, // blue 
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(abilityMeterCooldownForegroundColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> abilityMeterCooldownHighlightColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.4f, 0.7f, 1.0f, 1.f}, // blue but lighter and more opaque
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(abilityMeterCooldownHighlightColor)
+		);
+
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+
+
+			abilityMeterAbilityAnchorCorner,
+			abilityMeterAbilityScreenOffset,
+			abilityMeterAbilitySize,
+			abilityMeterAbilityBackgroundColor,
+			abilityMeterAbilityForegroundColor,
+			abilityMeterAbilityHighlightColor,
+			abilityMeterCooldownToggle,
+			abilityMeterCooldownAnchorCorner,
+			abilityMeterCooldownScreenOffset,
+			abilityMeterCooldownSize,
+			abilityMeterCooldownBackgroundColor,
+			abilityMeterCooldownForegroundColor,
+			abilityMeterCooldownHighlightColor,
 		renderDistance3D,
 		messagesFontSize,
 			messagesFontColor,
@@ -1627,6 +1757,7 @@ public:
 		pauseAlsoBlocksInput,
 		pauseAlsoFreesCursor,
 		getObjectAddressDWORD,
+				getTagAddressDWORD,
 		forceTeleportApplyToPlayer,
 		forceTeleportCustomObject,
 		forceTeleportAbsoluteVec3,
