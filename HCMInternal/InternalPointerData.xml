@@ -10265,11 +10265,30 @@
 			</_map_id_halo1_two_betrayals>
 			<_map_id_halo1_keyes>
 				<speedrun>
-					enc1_2; section6; enc6_2; enc6_3; 
-					section7; bsp 3,4; enc7_1; enc7_2; 
-					enc7_2b; enc7_2c;
+					enc1_1; enc1_2; section6; enc6_2;
+					enc6_3; section7; bsp 3,4; enc7_1;
+					enc7_2; enc7_2b; enc7_2c;
 				</speedrun>
 			</_map_id_halo1_keyes>
+			<_map_id_halo1_truth_and_reconciliation>
+				<speedrun>
+					area3_trigger; area4_trigger; area5_trigger; area5_dropship_trigger;
+					gravity_pad_teleport_trigger; gravity_trigger; grav_leftfront_safe;
+					muster_bay_top_entrance; hangar_trigger; bsp 1,2;
+					control_migration; bsp 2,3; prison_trigger; prison_save_trigger;
+					bsp 3,2;
+				</speedrun>
+			</_map_id_halo1_truth_and_reconciliation>
+			<_map_id_halo1_silent_cartographer>
+				<speedrun>
+					beach_2; shaftA_ledge_trigger; shaftA_entrance;
+					bsp0,1; bsp1,0;
+				</speedrun>
+				<speedrunSpawnGoldie>
+					beach_2; shaftA_beach; shaftA_platform; shaftA_ledge_trigger;
+					shaftA_entrance; bsp0,1; bsp1,0;
+				</speedrunSpawnGoldie>
+			</_map_id_halo1_silent_cartographer>
 			<!--#endregion Halo 1-->
 			
 			
