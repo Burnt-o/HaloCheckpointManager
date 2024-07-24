@@ -91,6 +91,47 @@ public:
 	}
 };
 
+template <GameState::Value gameT>
+class HideHUDImplDoublePatch : public GenericScopedServiceProvider
+{
+private:
+	GameState mGame;
+
+
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook1;
+	static inline std::shared_ptr<ModulePatch> hideHUDPatchHook2;
+
+
+
+
+public:
+	HideHUDImplDoublePatch(GameState gameImpl, IDIContainer& dicon)
+		:
+		mGame(gameImpl)
+	{
+		auto ptr = dicon.Resolve<PointerDataStore>().lock();
+
+		auto hideHUDPatchFunction1 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction1), gameImpl);
+		auto hideHUDPatchCode1 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode1), gameImpl);
+		hideHUDPatchHook1 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction1, *hideHUDPatchCode1.get());
+
+		auto hideHUDPatchFunction2 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(hideHUDPatchFunction2), gameImpl);
+		auto hideHUDPatchCode2 = ptr->getVectorData<byte>(nameof(hideHUDPatchCode2), gameImpl);
+		hideHUDPatchHook2 = ModulePatch::make(gameImpl.toModuleName(), hideHUDPatchFunction2, *hideHUDPatchCode2.get());
+
+	}
+
+	virtual void updateService() override
+	{
+		// attach if requested
+		PLOG_VERBOSE << "HideHUDImplDoublePatch::updateService";
+		safetyhook::ThreadFreezer freezeThreads{};
+		hideHUDPatchHook1->setWantsToBeAttached(serviceIsRequested());
+		hideHUDPatchHook2->setWantsToBeAttached(serviceIsRequested());
+		PLOG_VERBOSE << "HideHUDImplDoublePatch::updateService DONE";
+	}
+};
+
 
 
 HideHUD::HideHUD(GameState gameImpl, IDIContainer& dicon)
@@ -121,7 +162,7 @@ HideHUD::HideHUD(GameState gameImpl, IDIContainer& dicon)
 		break;
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<HideHUDImplSinglePatch<GameState::Value::HaloReach>>(gameImpl, dicon);
+		pimpl = std::make_unique<HideHUDImplDoublePatch<GameState::Value::HaloReach>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo4:

@@ -56,11 +56,11 @@ FreeCameraFOVOverride::FreeCameraFOVOverride(GameState gameImpl, IDIContainer& d
 		break;
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_shared<FreeCameraFOVOverrideImplModulePatch<GameState::Value::HaloReach>>(gameImpl, dicon);
+		pimpl = std::make_shared<FreeCameraFOVOverrideImplVoid<GameState::Value::HaloReach>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_shared<FreeCameraFOVOverrideImplModulePatch<GameState::Value::Halo4>>(gameImpl, dicon);
+		pimpl = std::make_shared<FreeCameraFOVOverrideImplVoid<GameState::Value::Halo4>>(gameImpl, dicon);
 		break;
 	default:
 		throw HCMInitException("not impl yet");

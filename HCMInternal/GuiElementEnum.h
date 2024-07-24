@@ -7,7 +7,7 @@
 // game set tuples
 #define ALL_SUPPORTED_GAMES Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
 #define ALL_GAMES_AND_MAINMENU Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4, NoGame
-#define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3, Halo3ODST
+#define FREE_CAMERA_SUPPORT Halo1, Halo2, Halo3, Halo3ODST, HaloReach, Halo4
 #define THIRD_GEN Halo3, Halo3ODST, HaloReach, Halo4
 #define ABILITY_GAMES HaloReach, Halo4
 
@@ -248,7 +248,7 @@
 	((freeCameraSettingsAdvancedSubheading, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraTeleportToCamera, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraThirdPersonRendering, (FREE_CAMERA_SUPPORT)))\
-		((freeCameraDisableScreenEffects, (Halo1, Halo2)))\
+		((freeCameraDisableScreenEffects, (Halo1, Halo2, HaloReach)))\
 		((freeCameraGameInputDisable, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraCameraInputDisable, (FREE_CAMERA_SUPPORT)))\
 		((freeCameraUserInputCameraSettings, (FREE_CAMERA_SUPPORT)))\
