@@ -602,6 +602,22 @@ private:
 
 
 			auto cameraPosition = userControlledPosition.getPositionTransformation();
+
+			if (settings->freeCameraTeleportToCameraSlightlyBehind->GetValue())
+			{
+				auto camRot = userControlledRotation.getRotationTransformation();
+				// convert euler to lookdir
+				SimpleMath::Vector3 cameraDirection =
+				{
+					std::cos(camRot.x) * std::cos(camRot.y),
+					std::sin(camRot.x) * std::cos(camRot.y),
+					std::sin(camRot.y)
+				};
+
+				// cam direction is a unit vector; one unit behind should be enough to make it not visible.
+				cameraPosition -= cameraDirection;
+			}
+
 			forceTeleport->teleportPlayerTo(cameraPosition);
 
 

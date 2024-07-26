@@ -1444,6 +1444,7 @@ private:
 						(game, ToolTipCollection("Advanced settings for Free Camera"), "Free Camera Advanced Settings", headerChildElements
 							{
 								createNestedElement(GUIElementEnum::freeCameraTeleportToCamera),
+								createNestedElement(GUIElementEnum::freeCameraTeleportToCameraSlightlyBehind),
 								createNestedElement(GUIElementEnum::freeCameraThirdPersonRendering),
 								createNestedElement(GUIElementEnum::freeCameraDisableScreenEffects),
 								createNestedElement(GUIElementEnum::freeCameraGameInputDisable),
@@ -1459,6 +1460,10 @@ private:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
 							(game, ToolTipCollection("Teleports the player to the cameras position"), RebindableHotkeyEnum::freeCameraTeleportToCameraHotkey, "Teleport to Camera", settings->freeCameraTeleportToCameraEvent));
 
+
+						case GUIElementEnum::freeCameraTeleportToCameraSlightlyBehind:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection("When teleporting to camera, instead put the player a little behind the camera"), std::nullopt, "(Teleport Behind Camera)", settings->freeCameraTeleportToCameraSlightlyBehind));
 
 
 					case GUIElementEnum::freeCameraThirdPersonRendering:

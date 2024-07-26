@@ -233,7 +233,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
-    <ClInclude Include="CameraHitsTriggers.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="CommandConsoleGUI.h" />
     <ClInclude Include="CommandConsoleManager.h" />
@@ -505,7 +504,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
-    <ClCompile Include="CameraHitsTriggers.cpp" />
     <ClCompile Include="CommandConsoleGUI.cpp" />
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />

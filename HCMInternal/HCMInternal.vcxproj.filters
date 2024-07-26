@@ -908,9 +908,6 @@
     <ClInclude Include="GetTagAddressPresenter.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="CameraHitsTriggers.h">
-      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1335,9 +1332,6 @@
     </ClCompile>
     <ClCompile Include="AbilityMeterOverlay.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraHitsTriggers.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

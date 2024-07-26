@@ -3,6 +3,8 @@
 freeCamera for  hr, h4
 sprint Meter h4/hr
 
+ai ignore player cheat
+
 NEAR FUTURE TODO:
   freecam/speedhack crashes - step with vs debugger
 

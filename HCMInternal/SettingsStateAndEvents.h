@@ -894,6 +894,16 @@ public:
 			nameof(freeCameraCameraInputDisable)
 		);
 
+
+	std::shared_ptr<BinarySetting<bool>> freeCameraTeleportToCameraSlightlyBehind = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(freeCameraTeleportToCameraSlightlyBehind)
+		);
+
+	
+
 	std::shared_ptr<BinarySetting<float>> freeCameraUserInputCameraTranslationSpeedChangeFactor = std::make_shared<BinarySetting<float>>
 		(
 			1.5f,
@@ -1826,6 +1836,7 @@ public:
 		freeCameraUserInputCameraFOVSpeed,
 		freeCameraUserInputCameraFOVInterpolator,
 		freeCameraUserInputCameraFOVInterpolatorLinearFactor,
+		freeCameraTeleportToCameraSlightlyBehind,
 		//freeCameraAnchorPositionToObjectPosition,
 		freeCameraAnchorPositionToObjectPositionObjectToTrackComboGroup,
 		freeCameraAnchorPositionToObjectPositionObjectToTrackCustomObjectDatum,
