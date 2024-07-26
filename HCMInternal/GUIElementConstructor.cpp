@@ -743,7 +743,7 @@ private:
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
-							//createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
+							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
 							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 							createNestedElement(GUIElementEnum::abilityMeterOverlayToggle),
 							createNestedElement(GUIElementEnum::abilityMeterOverlaySettings),

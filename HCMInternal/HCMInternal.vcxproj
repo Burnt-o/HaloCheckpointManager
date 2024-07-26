@@ -233,6 +233,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
+    <ClInclude Include="CameraHitsTriggers.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="CommandConsoleGUI.h" />
     <ClInclude Include="CommandConsoleManager.h" />
@@ -286,7 +287,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="PointerDataParser.h" />
     <ClInclude Include="PointerDataParserInstantiators.h" />
     <ClInclude Include="PointerDataStore.h" />
-    <ClInclude Include="PointInsideTrigger.h" />
     <ClInclude Include="Render3DEventProvider.h" />
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
@@ -312,7 +312,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="TriggerFilter.h" />
     <ClInclude Include="TriggerFilterModalDialogManager.h" />
     <ClInclude Include="TriggerFilterStringDialog.h" />
-    <ClInclude Include="TriggerModelOld.h" />
     <ClInclude Include="TriggerModel.h" />
     <ClInclude Include="TriggerNamesHardcoded.h" />
     <ClInclude Include="TriggerOverlay.h" />
@@ -506,6 +505,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
+    <ClCompile Include="CameraHitsTriggers.cpp" />
     <ClCompile Include="CommandConsoleGUI.cpp" />
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />
@@ -547,7 +547,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="PointerDataGetter.cpp" />
     <ClCompile Include="PointerDataParser.cpp" />
     <ClCompile Include="PointerDataStore.cpp" />
-    <ClCompile Include="PointInsideTrigger.cpp" />
     <ClCompile Include="Render3DEventProvider.cpp" />
     <ClCompile Include="Renderer3DImpl_Geometry.cpp" />
     <ClCompile Include="Renderer3DImpl_updateCameraData.cpp">
@@ -571,7 +570,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="TagTableRange.cpp" />
     <ClCompile Include="TrackTriggerEnterExit.cpp" />
     <ClCompile Include="TriggerFilter.cpp" />
-    <ClCompile Include="TriggerModelOld.cpp" />
     <ClCompile Include="TriggerModel.cpp" />
     <ClCompile Include="TriggerOverlay.cpp" />
     <ClCompile Include="UnarySetting.cpp" />

@@ -710,9 +710,6 @@
     <ClInclude Include="TriggerData.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
-    <ClInclude Include="TriggerModelOld.h">
-      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectTableRange.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
@@ -851,9 +848,6 @@
     <ClInclude Include="IModel.h">
       <Filter>Classes\3DModel</Filter>
     </ClInclude>
-    <ClInclude Include="PointInsideTrigger.h">
-      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
-    </ClInclude>
     <ClInclude Include="TriggerModel.h">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClInclude>
@@ -913,6 +907,9 @@
     </ClInclude>
     <ClInclude Include="GetTagAddressPresenter.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraHitsTriggers.h">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1225,9 +1222,6 @@
     <ClCompile Include="SettingsEnum.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
-    <ClCompile Include="TriggerModelOld.cpp">
-      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
-    </ClCompile>
     <ClCompile Include="TriggerFilter.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
@@ -1312,9 +1306,6 @@
     <ClCompile Include="GetActiveStructureDesignTags.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\SoftCeiling</Filter>
     </ClCompile>
-    <ClCompile Include="PointInsideTrigger.cpp">
-      <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
-    </ClCompile>
     <ClCompile Include="TriggerModel.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
@@ -1344,6 +1335,9 @@
     </ClCompile>
     <ClCompile Include="AbilityMeterOverlay.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraHitsTriggers.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

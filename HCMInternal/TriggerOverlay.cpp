@@ -11,6 +11,7 @@
 #include "GameTickEventHook.h"
 #include "IMessagesGUI.h"
 #include "GetPlayerTriggerPosition.h"
+#include "ScopedServiceRequest.h"
 
 using namespace SettingsEnums;
 
@@ -21,6 +22,10 @@ private:
 	// callbacks
 	std::unique_ptr<ScopedCallback<Render3DEvent>> mRenderEventCallback;
 	ScopedCallback<ToggleEvent> triggerOverlayToggleEventCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashHitCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashMissCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckHitCallback;
+	ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckMissCallback;
 
 	// injected services
 	std::weak_ptr<Render3DEventProvider> render3DEventProviderWeak;
@@ -32,6 +37,43 @@ private:
 	std::optional<std::weak_ptr< GetPlayerTriggerPosition>> getPlayerTriggerPositionOptionalWeak;
 	std::optional<std::weak_ptr<UpdateTriggerLastChecked>> updateTriggerLastCheckedOptionalWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
+
+	std::unique_ptr<ScopedServiceRequest> updateTriggerLastCheckedRequest;
+
+	void onUpdateTriggerLastCheckedSettingChanged()
+	{
+		if (updateTriggerLastCheckedOptionalWeak)
+		{
+			try
+			{
+				lockOrThrow(settingsWeak, settings);
+
+				bool shouldUpdateTriggers = settings->triggerOverlayToggle->GetValue()
+					&& (
+						settings->triggerOverlayCheckHitToggle->GetValue()
+						|| settings->triggerOverlayCheckMissToggle->GetValue()
+						|| settings->triggerOverlayMessageOnCheckHit->GetValue()
+						|| settings->triggerOverlayMessageOnCheckMiss->GetValue()
+						);
+
+				if (shouldUpdateTriggers)
+				{
+					lockOrThrow(updateTriggerLastCheckedOptionalWeak.value(), updateTriggerLastChecked);
+					updateTriggerLastCheckedRequest = updateTriggerLastChecked->makeRequest(nameof(TriggerOverlay));
+				}
+				else
+					updateTriggerLastCheckedRequest.reset();
+
+			}
+			catch (HCMRuntimeException ex)
+			{
+				updateTriggerLastCheckedRequest.reset();
+				runtimeExceptions->handleMessage(ex);
+			}
+		}
+		
+	}
+
 
 	// data
 	std::atomic_bool renderingMutex = false;
@@ -359,13 +401,16 @@ public:
 	TriggerOverlayImpl(GameState game, IDIContainer& dicon) :
 		render3DEventProviderWeak(resolveDependentCheat(Render3DEventProvider)),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
-		triggerOverlayToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) {onToggleChange(n); }),
+		triggerOverlayToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) {onToggleChange(n); onUpdateTriggerLastCheckedSettingChanged(); }),
+		triggerOverlayCheckFlashHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckHitToggle->valueChangedEvent, [this](bool& n) {onUpdateTriggerLastCheckedSettingChanged(); }),
+		triggerOverlayCheckFlashMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckMissToggle->valueChangedEvent, [this](bool& n) {onUpdateTriggerLastCheckedSettingChanged(); }),
+		triggerOverlayMessageOnCheckHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckHit->valueChangedEvent, [this](bool& n) {onUpdateTriggerLastCheckedSettingChanged(); }),
+		triggerOverlayMessageOnCheckMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckMiss->valueChangedEvent, [this](bool& n) {onUpdateTriggerLastCheckedSettingChanged(); }),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
-		
 	{
 
 		try
@@ -385,6 +430,8 @@ public:
 		{
 			PLOG_ERROR << "Trigger overlay could not resolve getPlayerTriggerPositionWeak, continuing anyway";
 		}
+
+
 	}
 
 	~TriggerOverlayImpl()

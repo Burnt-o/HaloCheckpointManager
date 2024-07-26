@@ -18,7 +18,7 @@
 
 
 template<GameState::Value mGame>
-class UpdateTriggerLastCheckedImplByIndex : public UpdateTriggerLastCheckedUntemplated
+class UpdateTriggerLastCheckedImplByIndex : public GenericScopedServiceProvider
 {
 private:
 
@@ -36,32 +36,11 @@ private:
 	std::shared_ptr<MultilevelPointer> pointInsideTriggerFunction;
 	std::atomic_bool destructionGuard = false;
 
-	// callbacks
-	ScopedCallback<ToggleEvent> triggerOverlayToggleCallback;
-	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashHitCallback;
-	ScopedCallback<ToggleEvent> triggerOverlayCheckFlashMissCallback;
-	ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckHitCallback;
-	ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckMissCallback;
 
-	int errorCount = 0;
 
-	void onSettingChanged()
+	virtual void updateService() override
 	{
-		errorCount = 0;
-		try
-		{
-			updateTriggerCheckHook->setWantsToBeAttached(settings->triggerOverlayToggle->GetValue()
-				&& (
-					settings->triggerOverlayCheckHitToggle->GetValue()
-					|| settings->triggerOverlayCheckMissToggle->GetValue()
-					|| settings->triggerOverlayMessageOnCheckHit->GetValue()
-					|| settings->triggerOverlayMessageOnCheckMiss->GetValue()
-					));
-		}
-		catch (HCMRuntimeException ex)
-		{
-			runtimeExceptions->handleMessage(ex);
-		}
+		updateTriggerCheckHook->setWantsToBeAttached(serviceIsRequested());
 	}
 
 
@@ -119,14 +98,6 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
-			instance->errorCount++;
-			if (instance->errorCount == 10)
-			{
-				instance->updateTriggerCheckHook->setWantsToBeAttached(false);
-				instance->settings->triggerOverlayToggle->GetValue() = false;
-				instance->settings->triggerOverlayToggle->UpdateValueWithInput();
-			}
-
 			instance->runtimeExceptions->handleMessage(ex);
 			return false;
 		}
@@ -140,11 +111,6 @@ public:
 		settings(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
-		triggerOverlayToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayCheckFlashHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckHitToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayCheckFlashMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckMissToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayMessageOnCheckHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckHit->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayMessageOnCheckMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckMiss->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
 		getPlayerDatum(resolveDependentCheat(GetPlayerDatum)),
 		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
 	{
@@ -169,29 +135,6 @@ public:
 		instance = nullptr;
 	}
 
-	//virtual bool isPointInsideTrigger(const SimpleMath::Vector3& worldPoint, const uintptr_t triggerData, const uint32_t triggerIndex) override
-	//{
-	//	uintptr_t pointInsideTriggerFunctionResolved;
-	//	if (!pointInsideTriggerFunction->resolve(&pointInsideTriggerFunctionResolved))
-	//		throw HCMRuntimeException(std::format("Failed to resolve pointInsideTriggerFunction, error: {}", MultilevelPointer::GetLastError()));
-
-	//	if constexpr (mGame == GameState::Value::Halo1)
-	//	{
-	//		typedef int64_t(*PointInsideTrigger_t)(uint16_t tIndex, const SimpleMath::Vector3* wPos);
-	//		PointInsideTrigger_t pointInsideTrigger_vptr;
-	//		pointInsideTrigger_vptr = static_cast<PointInsideTrigger_t>((void*)pointInsideTriggerFunctionResolved);
-	//		return pointInsideTrigger_vptr(triggerIndex, &worldPoint);
-	//	}
-	//	else if constexpr (mGame == GameState::Value::Halo2)
-	//	{
-	//		typedef int64_t(*PointInsideTrigger_t)(uintptr_t triggerDataPlus10, const SimpleMath::Vector3* wPos, uintptr_t triggerData);
-	//		PointInsideTrigger_t pointInsideTrigger_vptr;
-	//		pointInsideTrigger_vptr = static_cast<PointInsideTrigger_t>((void*)pointInsideTriggerFunctionResolved);
-	//		return pointInsideTrigger_vptr((triggerData + 0x10), &worldPoint, triggerData);
-	//	}
-
-	//}
-
 };
 
 
@@ -200,7 +143,7 @@ public:
 
 
 	template<GameState::Value mGame>
-	class UpdateTriggerLastCheckedImplEntityPointer : public UpdateTriggerLastCheckedUntemplated
+	class UpdateTriggerLastCheckedImplEntityPointer : public GenericScopedServiceProvider
 	{
 	private:
 
@@ -221,32 +164,9 @@ public:
 		std::shared_ptr<DynamicStruct<entityTriggerInfoDataFields>> entityTriggerInfoDataStruct;
 
 
-		// callbacks
-		ScopedCallback<ToggleEvent> triggerOverlayToggleCallback;
-		ScopedCallback<ToggleEvent> triggerOverlayCheckFlashHitCallback;
-		ScopedCallback<ToggleEvent> triggerOverlayCheckFlashMissCallback;
-		ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckHitCallback;
-		ScopedCallback<ToggleEvent> triggerOverlayMessageOnCheckMissCallback;
-
-		int errorCount = 0;
-
-		void onSettingChanged()
+		virtual void updateService() override
 		{
-			errorCount = 0;
-			try
-			{
-				updateTriggerCheckHook->setWantsToBeAttached(settings->triggerOverlayToggle->GetValue()
-					&& (
-						settings->triggerOverlayCheckHitToggle->GetValue()
-						|| settings->triggerOverlayCheckMissToggle->GetValue()
-						|| settings->triggerOverlayMessageOnCheckHit->GetValue()
-						|| settings->triggerOverlayMessageOnCheckMiss->GetValue()
-						));
-			}
-			catch (HCMRuntimeException ex)
-			{
-				runtimeExceptions->handleMessage(ex);
-			}
+			updateTriggerCheckHook->setWantsToBeAttached(serviceIsRequested());
 		}
 
 
@@ -311,16 +231,7 @@ public:
 			}
 			catch (HCMRuntimeException ex)
 			{
-				instance->errorCount++;
 				instance->runtimeExceptions->handleMessage(ex);
-
-				if (instance->errorCount == 10)
-				{
-					instance->updateTriggerCheckHook->setWantsToBeAttached(false);
-					instance->settings->triggerOverlayToggle->GetValue() = false;
-					instance->settings->triggerOverlayToggle->UpdateValueWithInput();
-				}
-
 				return false;
 			}
 
@@ -388,16 +299,7 @@ public:
 			}
 			catch (HCMRuntimeException ex)
 			{
-				instance->errorCount++;
 				instance->runtimeExceptions->handleMessage(ex);
-
-				if (instance->errorCount == 10)
-				{
-					instance->updateTriggerCheckHook->setWantsToBeAttached(false);
-					instance->settings->triggerOverlayToggle->GetValue() = false;
-					instance->settings->triggerOverlayToggle->UpdateValueWithInput();
-				}
-
 				return false;
 			}
 
@@ -409,11 +311,6 @@ public:
 		settings(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
-		triggerOverlayToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayCheckFlashHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckHitToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayCheckFlashMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayCheckMissToggle->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayMessageOnCheckHitCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckHit->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
-		triggerOverlayMessageOnCheckMissCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayMessageOnCheckMiss->valueChangedEvent, [this](bool& n) {onSettingChanged(); }),
 		getPlayerDatum(resolveDependentCheat(GetPlayerDatum)),
 		gameTickEventHookWeak(resolveDependentCheat(GameTickEventHook))
 	{
@@ -445,14 +342,6 @@ public:
 	}
 
 
-	//virtual bool isPointInsideTrigger(const SimpleMath::Vector3& worldPoint, const uintptr_t triggerData, const uint32_t triggerIndex) override
-	//{
-	//	if constexpr (mGame == GameState::Value::Halo3 || mGame == GameState::Value::Halo3ODST)
-	//		return updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, const SimpleMath::Vector3*>(triggerIndex, &worldPoint);
-	//	else if constexpr (mGame == GameState::Value::HaloReach || mGame == GameState::Value::Halo4)
-	//		return updateTriggerCheckHook->getInlineHook().call<bool, uint32_t, uint32_t, const SimpleMath::Vector3*>(triggerIndex, 0xFFFFFF, &worldPoint);
-	//}
-
 };
 
 
@@ -462,27 +351,27 @@ UpdateTriggerLastChecked::UpdateTriggerLastChecked(GameState gameImpl, IDIContai
 	switch (gameImpl)
 	{
 	case GameState::Value::Halo1:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImplByIndex<GameState::Value::Halo1>>(gameImpl, dicon);
+		pimpl = std::make_shared<UpdateTriggerLastCheckedImplByIndex<GameState::Value::Halo1>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo2:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImplByIndex<GameState::Value::Halo2>>(gameImpl, dicon);
+		pimpl = std::make_shared<UpdateTriggerLastCheckedImplByIndex<GameState::Value::Halo2>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo3:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo3>>(gameImpl, dicon);
+		pimpl = std::make_shared<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo3>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo3ODST:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo3ODST>>(gameImpl, dicon);
+		pimpl = std::make_shared<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo3ODST>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::HaloReach:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::HaloReach>>(gameImpl, dicon);
+		pimpl = std::make_shared<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::HaloReach>>(gameImpl, dicon);
 		break;
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_unique<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo4>>(gameImpl, dicon);
+		pimpl = std::make_shared<UpdateTriggerLastCheckedImplEntityPointer<GameState::Value::Halo4>>(gameImpl, dicon);
 		break;
 	default:
 		throw HCMInitException("not impl yet");

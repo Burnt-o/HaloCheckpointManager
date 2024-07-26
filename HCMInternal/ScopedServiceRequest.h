@@ -69,7 +69,7 @@ public:
 		return std::make_unique<ScopedServiceRequest>(shared_from_this(), callerID);
 	}
 
-	bool serviceIsRequested()
+	bool serviceIsRequested() const
 	{
 		return !callersRequestingService.empty();
 	}
