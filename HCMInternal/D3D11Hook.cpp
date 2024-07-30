@@ -483,13 +483,7 @@ D3D11Hook::~D3D11Hook()
 	if (m_pOriginalPresent)
 	{
 		PLOG_INFO << "~D3D11Hook()";
-		if (presentHookRunning)
-		{
-			PLOG_INFO << "Waiting for presentHook to finish execution";
-			presentHookRunning.wait(true);
-		}
 		PLOG_INFO << "Freezing threads";
-
 		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
 
 		PLOG_INFO << "Unpatching present pointer";
@@ -502,8 +496,16 @@ D3D11Hook::~D3D11Hook()
 			dxgiInternalPresentHook.reset();
 
 		PLOG_INFO << "Successfully unpatched present pointer!";
-		//std::unique_lock<std::mutex> lock(mDestructionGuard); // Hook functions lock this - so we block until they finish executing so they can access class members
 	}
+
+
+	if (presentHookRunning)
+	{
+		PLOG_INFO << "Waiting for presentHook to finish execution";
+		presentHookRunning.wait(true);
+	}
+	instance = nullptr;
+
 	// D3D resource releasing:
 	// need to call release on the device https://learn.microsoft.com/en-us/windows/win32/api/d3d9helper/nf-d3d9helper-idirect3dswapchain9-getdevice
 
@@ -511,7 +513,7 @@ D3D11Hook::~D3D11Hook()
 	safe_release(m_pDeviceContext);
 	safe_release(m_pMainRenderTargetView);
 
-	instance = nullptr;
+
 
 }
 
