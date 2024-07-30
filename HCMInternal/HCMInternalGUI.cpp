@@ -260,7 +260,7 @@ void HCMInternalGUI::onGUIShowingFreesMCCCursorChanged(bool& newval)
 {
 	if (newval && m_WindowOpen && mControlServices->freeMCCSCursorService.has_value() && !freeCursorRequest)
 	{
-		freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
+		freeCursorRequest = mControlServices->freeMCCSCursorService.value()->makeScopedRequest();
 	}
 	else if (!newval && m_WindowOpen && freeCursorRequest)
 	{
@@ -273,7 +273,7 @@ void HCMInternalGUI::onGUIShowingBlocksGameInputChanged(bool& newval)
 {
 	if (newval && m_WindowOpen && mControlServices->blockGameInputService.has_value() && !blockGameInputRequest)
 	{
-		blockGameInputRequest = mControlServices->blockGameInputService.value()->scopedRequest(nameof(HCMInternalGUI));
+		blockGameInputRequest = mControlServices->blockGameInputService.value()->makeScopedRequest();
 	}
 	else if (!newval && m_WindowOpen && blockGameInputRequest)
 	{
@@ -285,7 +285,7 @@ void HCMInternalGUI::onGUIShowingPausesGameChanged(bool& newval)
 {
 	if (newval && m_WindowOpen && mControlServices->pauseGameService.has_value() && !pauseGameRequest)
 	{
-		pauseGameRequest = mControlServices->pauseGameService.value()->scopedRequest(nameof(HCMInternalGUI));
+		pauseGameRequest = mControlServices->pauseGameService.value()->makeScopedRequest();
 	}
 	else if (!newval && m_WindowOpen && pauseGameRequest)
 	{
@@ -299,13 +299,13 @@ void HCMInternalGUI::onWindowJustOpened()
 	mSettings->GUIWindowOpen->UpdateValueWithInput();
 
 	if (mSettings->GUIShowingFreesCursor->GetValue() && mControlServices->freeMCCSCursorService.has_value())
-		freeCursorRequest = mControlServices->freeMCCSCursorService.value()->scopedRequest(nameof(HCMInternalGUI));
+		freeCursorRequest = mControlServices->freeMCCSCursorService.value()->makeScopedRequest();
 
 	if (mSettings->GUIShowingBlocksInput->GetValue() && mControlServices->blockGameInputService.has_value())
-		blockGameInputRequest = mControlServices->blockGameInputService.value()->scopedRequest(nameof(HCMInternalGUI));
+		blockGameInputRequest = mControlServices->blockGameInputService.value()->makeScopedRequest();
 
 	if (mSettings->GUIShowingPausesGame->GetValue() && mControlServices->pauseGameService.has_value())
-		pauseGameRequest = mControlServices->pauseGameService.value()->scopedRequest(nameof(HCMInternalGUI));
+		pauseGameRequest = mControlServices->pauseGameService.value()->makeScopedRequest();
 }
 
 void HCMInternalGUI::onWindowJustClosed()

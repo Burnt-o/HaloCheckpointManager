@@ -11,11 +11,11 @@
 #include "GameTickEventHook.h"
 #include "IMessagesGUI.h"
 #include "GetPlayerTriggerPosition.h"
-#include "ScopedServiceRequest.h"
+#include "ScopedRequestProvider.h"
 
 using namespace SettingsEnums;
 
-template<GameState::Value mGame>
+template<GameState::Value gameT>
 class TriggerOverlayImpl : public TriggerOverlayUntemplated 
 {
 private:
@@ -38,11 +38,20 @@ private:
 	std::optional<std::weak_ptr<UpdateTriggerLastChecked>> updateTriggerLastCheckedOptionalWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
-	std::unique_ptr<ScopedServiceRequest> updateTriggerLastCheckedRequest;
+	std::shared_ptr<ScopedRequestToken> updateTriggerLastCheckedRequest;
 
 	void onUpdateTriggerLastCheckedSettingChanged()
 	{
-		if (updateTriggerLastCheckedOptionalWeak)
+		lockOrThrow(mccStateHookWeak, mccStateHook);
+		if (mccStateHook->isGameCurrentlyPlaying((GameState)gameT) == false)
+		{
+			PLOG_DEBUG << "Game not playing so unrequesting updateTriggerLastChecked";
+			updateTriggerLastCheckedRequest.reset();
+			return;
+		}
+
+
+		if (updateTriggerLastCheckedOptionalWeak.has_value())
 		{
 			try
 			{
@@ -56,13 +65,18 @@ private:
 						|| settings->triggerOverlayMessageOnCheckMiss->GetValue()
 						);
 
+				PLOG_DEBUG << "shouldUpdateTriggers: " << (shouldUpdateTriggers ? "true" : "false");
+
 				if (shouldUpdateTriggers)
 				{
 					lockOrThrow(updateTriggerLastCheckedOptionalWeak.value(), updateTriggerLastChecked);
-					updateTriggerLastCheckedRequest = updateTriggerLastChecked->makeRequest(nameof(TriggerOverlay));
+					updateTriggerLastCheckedRequest = updateTriggerLastChecked->makeScopedRequest();
 				}
 				else
+				{
 					updateTriggerLastCheckedRequest.reset();
+				}
+					
 
 			}
 			catch (HCMRuntimeException ex)
@@ -81,7 +95,7 @@ private:
 	void onToggleChange(bool& newValue)
 	{
 		lockOrThrow(mccStateHookWeak, mccStateHook);
-		if (mccStateHook->isGameCurrentlyPlaying(mGame) == false)
+		if (mccStateHook->isGameCurrentlyPlaying((GameState)gameT) == false)
 		{
 			if (renderingMutex)
 			{
@@ -134,7 +148,7 @@ private:
 	// new frame, render
 	void onRenderEvent(GameState game, IRenderer3D* renderer)
 	{
-		if (game.operator GameState::Value() != mGame) return;
+		if (game.operator GameState::Value() != gameT) return;
 
 
 
@@ -210,7 +224,7 @@ private:
 			lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
 			 uint32_t currentTick = gameTickEventHook->getCurrentGameTick();
 
-			 if (mGame == GameState::Value::Halo2)
+			 if (gameT == GameState::Value::Halo2)
 				 currentTick--;
 
 

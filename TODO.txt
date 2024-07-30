@@ -1,4 +1,13 @@
 3.1.2 TODO:
+pause game not working in h4
+triggers crashing h3/h4 vypr
+random revert crashes harc
+
+h3/odst triggers/camera flickering
+finish reach freecam
+do h4 freecam
+
+
 
 freeCamera for  hr, h4
 sprint Meter h4/hr

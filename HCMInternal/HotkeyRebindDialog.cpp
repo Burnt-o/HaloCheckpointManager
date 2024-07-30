@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-HotkeyRebindDialog::HotkeyRebindDialog(std::shared_ptr<RebindableHotkey> hotkeyToChange, std::unique_ptr<ScopedServiceRequest> hotkeyDisableRequest)
+HotkeyRebindDialog::HotkeyRebindDialog(std::shared_ptr<RebindableHotkey> hotkeyToChange, std::shared_ptr<ScopedRequestToken> hotkeyDisableRequest)
 	: mHotkeyToChange(hotkeyToChange), mHotkeyDisableRequest(std::move(hotkeyDisableRequest)), workingBindingSet(hotkeyToChange->getBindings())
 {
 	PLOG_DEBUG << "opening popup for Rebind Hotkey";

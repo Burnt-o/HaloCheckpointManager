@@ -17,7 +17,7 @@
 class CommandConsoleManager::CommandConsoleManagerImpl
 {
 private:
-	typedef std::optional<std::unique_ptr<ScopedServiceRequest>> opScRqst;
+	typedef std::optional<std::shared_ptr<ScopedRequestToken>> opScRqst;
 
 	// callbacks
 	ScopedCallback<ActionEvent> commandConsoleHotkeyEventCallback;
@@ -32,7 +32,7 @@ private:
 
 
 	// injected services
-	std::weak_ptr<GenericScopedServiceProvider> hotkeyDisablerWeak;
+	std::weak_ptr<TokenScopedServiceProvider> hotkeyDisablerWeak;
 	std::optional<std::weak_ptr<PauseGame>> pauseGameOptionalWeak;
 	std::optional<std::weak_ptr<BlockGameInput>> blockGameInputOptionalWeak;
 	std::optional < std::weak_ptr<FreeMCCCursor>> freeCursorOptionalWeak;
@@ -46,7 +46,7 @@ private:
 	{
 		std::unique_ptr<ScopedCallback<RenderEvent>> renderEventCallback; // render console on each new frame
 		std::shared_ptr<ScopedCallback<HSOutputEvent>> haloScriptOutputEventCallback; // callback to log halo script output
-		std::unique_ptr<ScopedServiceRequest> disableHotkeys; // disable hcm hotkeys
+		std::shared_ptr<ScopedRequestToken> disableHotkeys; // disable hcm hotkeys
 		opScRqst pauseGame; // pause the game (if user checked the setting for it)
 		opScRqst blockInputs; // block game inputs (if user checked the setting for it)
 		opScRqst freeCursor; // free the cursor (if user checked the setting for it)
@@ -99,25 +99,25 @@ private:
 					if (settings->consoleCommandPauseGame->GetValue() && pauseGameOptionalWeak.has_value())
 					{
 						lockOrThrow(pauseGameOptionalWeak.value(), pauseGame);
-						pauseRequest = pauseGame->scopedRequest(nameof(CommandConsoleManagerImpl));
+						pauseRequest = pauseGame->makeScopedRequest();
 					}
 
 					opScRqst blockInputRequest = std::nullopt;
 					if (settings->consoleCommandBlockInput->GetValue() && blockGameInputOptionalWeak.has_value())
 					{
 						lockOrThrow(blockGameInputOptionalWeak.value(), blockGameInput);
-						blockInputRequest = blockGameInput->scopedRequest(nameof(CommandConsoleManagerImpl));
+						blockInputRequest = blockGameInput->makeScopedRequest();
 					}
 
 					opScRqst freeCursorRequest = std::nullopt;
 					if (settings->consoleCommandFreeCursor->GetValue() && freeCursorOptionalWeak.has_value())
 					{
 						lockOrThrow(freeCursorOptionalWeak.value(), freeCursor);
-						freeCursorRequest = freeCursor->scopedRequest(nameof(CommandConsoleManagerImpl));
+						freeCursorRequest = freeCursor->makeScopedRequest();
 					}
 
 					lockOrThrow(hotkeyDisablerWeak, hotkeyDisabler);
-					auto hotkeyDisableRequest = hotkeyDisabler->makeRequest(nameof(CommandConsoleManagerImpl));
+					auto hotkeyDisableRequest = hotkeyDisabler->makeScopedRequest();
 
 					std::unique_ptr< ScopedCallback<RenderEvent>> renderEventCallback(new ScopedCallback<RenderEvent>(renderEvent, [this](SimpleMath::Vector2 ss) { commandConsole->render(ss); }));
 

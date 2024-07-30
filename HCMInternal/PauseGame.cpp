@@ -3,29 +3,33 @@
 #include "ModuleHook.h"
 #include "MidhookContextInterpreter.h"
 
+// to avoid ambiguity of updateService, these intermediate classes rename those functions
+class IPauseService : public TokenScopedServiceProvider
+{ 
+public: 
+	~IPauseService() = default; 
+	virtual void updateService() override { updatePauseService(); }
+	virtual void updatePauseService() {}
+};
+class IOverridePauseService : public TokenScopedServiceProvider
+{
+public:
+	~IOverridePauseService() = default;
+	virtual void updateService() override { updateOverrideService(); }
+	virtual void updateOverrideService() {}
+};
 
 
-
-
-class PauseGame::PauseGameImpl : public IProvideScopedRequests
+class PauseGame::PauseGameImpl : public IPauseService, public IOverridePauseService
 {
 private:
-	static inline PauseGameImpl* instance = nullptr;
-
-	std::set<std::string> callersRequestingBlockedInput{};
 	std::vector<std::unique_ptr<ModulePatch>> pauseGamePatches;
-
-
-
-	bool isOverriden = false;
 
 public:
 	std::map<GameState, HCMInitException> serviceFailures;
 
 	PauseGameImpl(std::shared_ptr<PointerDataStore> ptr)
 	{
-		if (instance) throw HCMInitException("Cannot have more than one PauseGameImpl");
-
 		for (auto game : AllSupportedGames)
 		{
 			try
@@ -53,105 +57,31 @@ public:
 			throw HCMInitException(std::format("Could not construct any game implementations\n{}", oss.str()));
 		}
 
-
-		instance = this;
 	}
 
 	~PauseGameImpl()
 	{
 		PLOG_DEBUG << "~" << nameof(PauseGameImpl);
-
-		instance = nullptr;
 	}
-	void requestService(std::string callerID)
+	
+
+	std::shared_ptr<ScopedRequestToken> makeRegularScopedRequest() { return IPauseService::makeScopedRequest(); }
+	std::shared_ptr<ScopedRequestToken> makeOverrideScopedRequest() { return IOverridePauseService::makeScopedRequest(); }
+
+	void combinedUpdateService()
 	{
-		callersRequestingBlockedInput.insert(callerID);
-		if (callersRequestingBlockedInput.empty() == false && !isOverriden)
+		bool requested = this->IPauseService::serviceIsRequested() && !this->IOverridePauseService::serviceIsRequested();
+
+		for (auto& patch : pauseGamePatches)
 		{
-			for (auto& patch : pauseGamePatches)
-			{
-				patch->setWantsToBeAttached(true);
-			}
+			patch->setWantsToBeAttached(requested);
 		}
+
 	}
 
-	void unrequestService(std::string callerID)
-	{
-		callersRequestingBlockedInput.erase(callerID);
-		if (callersRequestingBlockedInput.empty() == true)
-		{
-			for (auto& patch : pauseGamePatches)
-			{
-				patch->setWantsToBeAttached(false);
-			}
-		}
-	}
-
-
-	void setOverride(bool overrideValue)
-	{
-		isOverriden = overrideValue;
-		if (overrideValue)
-		{
-			for (auto& patch : pauseGamePatches)
-			{
-				patch->setWantsToBeAttached(false);
-			}
-		}
-		else
-		{
-			if (callersRequestingBlockedInput.empty() == false)
-			{
-				for (auto& patch : pauseGamePatches)
-				{
-					patch->setWantsToBeAttached(true);
-				}
-			}
-		}
-	}
-
+	virtual void updatePauseService() override { combinedUpdateService(); }
+	virtual void updateOverrideService() override { combinedUpdateService(); }
 };
-
-class PauseGame::OverridePauseGameImpl : public IProvideScopedRequests
-{
-private:
-
-	std::set<std::string> callersRequestingBlockedInput{};
-	std::weak_ptr<PauseGame::PauseGameImpl> pauseGameImpl;
-
-public:
-	void requestService(std::string callerID)
-	{
-		PLOG_DEBUG << "OverridePauseGameImpl requested";
-		callersRequestingBlockedInput.insert(callerID);
-		if (callersRequestingBlockedInput.empty() == false)
-		{
-			auto pauseLock = pauseGameImpl.lock();
-			if (!pauseLock) { PLOG_ERROR << "bad pauseGameImpl weak ptr"; return; }
-			pauseLock->setOverride(true);
-		}
-	}
-
-	void unrequestService(std::string callerID)
-	{
-		PLOG_DEBUG << "OverridePauseGameImpl unrequested";
-		callersRequestingBlockedInput.erase(callerID);
-		if (callersRequestingBlockedInput.empty() == true)
-		{
-			auto pauseLock = pauseGameImpl.lock();
-			if (!pauseLock) { PLOG_ERROR << "bad pauseGameImpl weak ptr"; return; }
-			pauseLock->setOverride(false);
-		}
-	}
-
-	OverridePauseGameImpl(std::weak_ptr<PauseGame::PauseGameImpl> pauseGameImp)
-		: pauseGameImpl(pauseGameImp)
-	{
-
-	}
-
-};
-
 
 
 
@@ -160,15 +90,12 @@ public:
 
 
 PauseGame::PauseGame(std::shared_ptr<PointerDataStore> ptr)
-	: pimpl(std::make_shared< PauseGameImpl>(ptr)),
-	 overridePimpl(std::make_shared< OverridePauseGameImpl>(pimpl))
-
+	: pimpl(std::make_shared< PauseGameImpl>(ptr))
 {}
 
 PauseGame::~PauseGame() = default;
 
-std::unique_ptr<ScopedServiceRequest> PauseGame::scopedRequest(std::string callerID) { return std::make_unique<ScopedServiceRequest>(pimpl, callerID); }
-
-std::unique_ptr<ScopedServiceRequest> PauseGame::scopedOverrideRequest(std::string callerID) { return std::make_unique<ScopedServiceRequest>(overridePimpl, callerID); }
+std::shared_ptr<ScopedRequestToken> PauseGame::makeScopedRequest() { return pimpl->makeRegularScopedRequest(); }
+std::shared_ptr<ScopedRequestToken> PauseGame::makeOverrideScopedRequest() { return pimpl->makeOverrideScopedRequest(); }
 
 std::map<GameState, HCMInitException>& PauseGame::getServiceFailures() { return pimpl->serviceFailures; }

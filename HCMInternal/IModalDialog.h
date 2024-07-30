@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "ScopedServiceRequest.h"
+#include "ScopedRequestProvider.h"
 #include "imgui.h"
 #include "imgui_stdlib.h"
 
@@ -18,7 +18,7 @@ private:
 	bool isOpen = true;
 	bool emergencyClose = false;
 	bool needToBeginDialog = true;
-	std::optional<std::unique_ptr<ScopedServiceRequest>> hotkeyDisableRequest = std::nullopt;
+	std::optional<std::shared_ptr<ScopedRequestToken>> hotkeyDisableRequest = std::nullopt;
 
 protected:
 	std::string mDialogTitle;
@@ -31,9 +31,9 @@ public:
 	{
 	}
 
-	void disableHotkeys(std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler)
+	void disableHotkeys(std::shared_ptr<TokenScopedServiceProvider> hotkeyDisabler)
 	{
-		hotkeyDisableRequest = hotkeyDisabler->makeRequest(std::format("{}:{}", nameof(IModalDialogReturner), mDialogTitle));
+		hotkeyDisableRequest = hotkeyDisabler->makeScopedRequest();
 	}
 
 	void queueEmergencyClose()

@@ -57,7 +57,7 @@ private:
 
 
 
-	std::unique_ptr<ScopedServiceRequest> pauseOverrideRequest; 
+	std::shared_ptr<ScopedRequestToken> pauseOverrideRequest; 
 
 
 	// primary event callback
@@ -89,7 +89,7 @@ private:
 
 			advanceTicksCount = settings->advanceTicksCount->GetValue();
 			mGameTickEventCallback = gameTickEventHook->getGameTickEvent()->subscribe([this](uint32_t i) {onGameTickEvent(i); });
-			pauseOverrideRequest = pauseService->scopedOverrideRequest(nameof(AdvanceTicks::AdvanceTicksImpl));
+			pauseOverrideRequest = pauseService->makeOverrideScopedRequest();
 
 
 			messagesGUI->addMessage(std::format("Advancing {} tick{}.", advanceTicksCount, advanceTicksCount == 1 ? "" : "s"));

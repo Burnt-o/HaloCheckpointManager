@@ -86,7 +86,7 @@ private:
 	FOVTransformer userControlledFOV;
 
 	std::shared_ptr<FreeCameraFOVOverride> freeCameraFOVOverrideProvider;
-	std::unique_ptr<ScopedServiceRequest> freeCameraFOVOverrideRequest;
+	std::shared_ptr<ScopedRequestToken> freeCameraFOVOverrideRequest;
 
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;
@@ -293,7 +293,7 @@ private:
 				}
 
 				if (newValue)
-					freeCameraFOVOverrideRequest = freeCameraFOVOverrideProvider->scopedRequest(nameof(FreeCameraImpl));
+					freeCameraFOVOverrideRequest = freeCameraFOVOverrideProvider->makeScopedRequest();
 				else if (freeCameraFOVOverrideRequest)
 					freeCameraFOVOverrideRequest.reset();
 

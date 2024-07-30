@@ -18,7 +18,7 @@
 
 
 template<GameState::Value mGame>
-class UpdateTriggerLastCheckedImplByIndex : public GenericScopedServiceProvider
+class UpdateTriggerLastCheckedImplByIndex : public TokenScopedServiceProvider
 {
 private:
 
@@ -40,6 +40,7 @@ private:
 
 	virtual void updateService() override
 	{
+		PLOG_DEBUG << "UpdateTriggerLastCheckedImplByIndex serviceIsRequested ? " << (serviceIsRequested() ? "true" : "false");
 		updateTriggerCheckHook->setWantsToBeAttached(serviceIsRequested());
 	}
 
@@ -143,7 +144,7 @@ public:
 
 
 	template<GameState::Value mGame>
-	class UpdateTriggerLastCheckedImplEntityPointer : public GenericScopedServiceProvider
+	class UpdateTriggerLastCheckedImplEntityPointer : public TokenScopedServiceProvider
 	{
 	private:
 
@@ -166,6 +167,7 @@ public:
 
 		virtual void updateService() override
 		{
+			PLOG_DEBUG << "UpdateTriggerLastCheckedImplEntityPointer serviceIsRequested ? " << (serviceIsRequested() ? "true" : "false");
 			updateTriggerCheckHook->setWantsToBeAttached(serviceIsRequested());
 		}
 

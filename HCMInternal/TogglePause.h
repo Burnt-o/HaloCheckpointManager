@@ -23,7 +23,7 @@ private:
 	std::weak_ptr<PauseGame> pauseGameServiceWeak; // actual implementation is over here
 
 	// data
-	std::unique_ptr<ScopedServiceRequest> pauseRequest;
+	std::shared_ptr<ScopedRequestToken> pauseRequest;
 
 
 
@@ -57,7 +57,7 @@ public:
 			if (newValue)
 			{
 				lockOrThrow(pauseGameServiceWeak, pauseGameService)
-				pauseRequest = pauseGameService->scopedRequest(mGame.toString() + nameof(TogglePause));
+				pauseRequest = pauseGameService->makeScopedRequest();
 			}
 			else
 			{

@@ -3,7 +3,7 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "ScopedServiceRequest.h"
+#include "ScopedRequestProvider.h"
 #include "IMCCStateHook.h"
 #include "RuntimeExceptionHandler.h"
 #include "IMessagesGUI.h"
@@ -12,7 +12,7 @@ class HideHUD : public IOptionalCheat
 {
 private:
 	GameState mGame;
-	std::shared_ptr<GenericScopedServiceProvider> pimpl; // must be shared because of shared_from_this
+	std::shared_ptr<TokenScopedServiceProvider> pimpl; // must be shared because of shared_from_this
 
 	// event callbacks
 	ScopedCallback <ToggleEvent> mHideHUDToggleCallbackHandle;
@@ -22,7 +22,7 @@ private:
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
-	std::optional<std::unique_ptr<ScopedServiceRequest>> currentServiceRequest = std::nullopt; // starts null. null means hideHUD isn't requesting pimpls services.
+	std::optional<std::shared_ptr<ScopedRequestToken>> currentServiceRequest = std::nullopt; // starts null. null means hideHUD isn't requesting pimpls services.
 
 	void onHideHUDToggleEvent(bool& newValue)
 	{
@@ -39,7 +39,7 @@ private:
 
 			if (newValue)
 			{
-				currentServiceRequest = pimpl->makeRequest(std::format("{}:{}", nameof(HideHUD), mGame.toString()));
+				currentServiceRequest = pimpl->makeScopedRequest();
 			}
 			else
 			{
@@ -58,8 +58,8 @@ public:
 
 	~HideHUD();
 
-	std::string_view getName() override { return nameof(AdvanceTicks); }
+	std::string_view getName() override { return nameof(HideHUD); }
 
-	std::unique_ptr<ScopedServiceRequest> makeRequest(std::string callerID) { return pimpl->makeRequest(callerID); }
+	std::shared_ptr<ScopedRequestToken> makeScopedRequest() { return pimpl->makeScopedRequest(); }
 
 };

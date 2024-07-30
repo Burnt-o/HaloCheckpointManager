@@ -16,7 +16,7 @@ private:
 	// callbacks
 	std::unique_ptr<ScopedCallback<Render3DEvent>> mRenderEventCallback;
 	ScopedCallback<ToggleEvent> softCeilingOverlayToggleEventCallback;
-	std::unique_ptr< SoftCeilingDataProvider> softCeilingDataProvider; // null when disabled.
+	std::shared_ptr< SoftCeilingDataProvider> softCeilingDataProvider; // null when disabled.
 
 	// injected services
 	std::weak_ptr<Render3DEventProvider> render3DEventProviderWeak;
@@ -53,8 +53,8 @@ private:
 				PLOG_DEBUG << "subscribing to render event!";
 				lockOrThrow(render3DEventProviderWeak, render3DEventProvider);
 				lockOrThrow(getSoftCeilingDataWeak, getSoftCeilingData)
+				softCeilingDataProvider = getSoftCeilingData->getSoftCeilingDataProvider();
 				mRenderEventCallback = render3DEventProvider->getRender3DEvent()->subscribe([this](GameState g, IRenderer3D* n) {onRenderEvent(g, n); });
-				softCeilingDataProvider = getSoftCeilingData->getSoftCeilingDataProvider(nameof(SoftCeilingOverlayImpl));
 			}
 			catch (HCMRuntimeException ex)
 			{

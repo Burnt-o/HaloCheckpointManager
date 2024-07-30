@@ -24,7 +24,7 @@ private:
 	std::weak_ptr<BlockGameInput> blockInputServiceWeak; // actual implementation is over here
 
 	// data
-	std::unique_ptr<ScopedServiceRequest> blockInputRequest;
+	std::shared_ptr<ScopedRequestToken> blockInputRequest;
 
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)
@@ -37,7 +37,7 @@ private:
 			if (newValue && mSettings->pauseAlsoBlocksInput->GetValue())
 			{
 				lockOrThrow(blockInputServiceWeak, blockInputService);
-				blockInputRequest = blockInputService->scopedRequest(mGame.toString() + nameof(ToggleBlockInput));
+				blockInputRequest = blockInputService->makeScopedRequest();
 			}
 			else
 			{

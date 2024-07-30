@@ -24,7 +24,7 @@ private:
 	std::weak_ptr<FreeMCCCursor> freeCursorServiceWeak; // actual implementation is over here
 
 	// data
-	std::unique_ptr<ScopedServiceRequest> freeCursorRequest;
+	std::shared_ptr<ScopedRequestToken> freeCursorRequest;
 
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)
@@ -37,7 +37,7 @@ private:
 			if (newValue && mSettings->pauseAlsoFreesCursor->GetValue())
 			{
 				lockOrThrow(freeCursorServiceWeak, freeCursorService);
-				freeCursorRequest = freeCursorService->scopedRequest(mGame.toString() + nameof(ToggleFreeCursor));
+				freeCursorRequest = freeCursorService->makeScopedRequest();
 			}
 			else
 			{

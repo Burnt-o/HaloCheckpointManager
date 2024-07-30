@@ -17,9 +17,9 @@ public:
 	std::optional<std::shared_ptr<PauseGame>> pauseGameService = std::nullopt;
 	std::optional<HCMInitException> pauseGameServiceFailure = std::nullopt;
 
-	std::shared_ptr< GenericScopedServiceProvider> hotkeyDisabler;
+	std::shared_ptr< TokenScopedServiceProvider> hotkeyDisabler;
 
-	ControlServiceContainer(std::shared_ptr<PointerDataStore> ptr, std::shared_ptr< GenericScopedServiceProvider> hotkeyDisabler)
+	ControlServiceContainer(std::shared_ptr<PointerDataStore> ptr, std::shared_ptr< TokenScopedServiceProvider> hotkeyDisabler)
 		: hotkeyDisabler(hotkeyDisabler)
 	{
 		try

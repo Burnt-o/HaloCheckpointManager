@@ -275,6 +275,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ObservedEvent.h" />
     <ClInclude Include="ObservedEventFactory.h" />
     <ClInclude Include="AbilityMeterOverlay.h" />
+    <ClInclude Include="ScopedRequestProvider.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
@@ -425,7 +426,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScopedAtomicBool.h" />
     <ClInclude Include="ScopedCallback.h" />
-    <ClInclude Include="ScopedServiceRequest.h" />
+    <ClInclude Include="ScopedRequestToken.h" />
     <ClInclude Include="SharedMemoryInternal.h" />
     <ClInclude Include="ToggleBlockInput.h" />
     <ClInclude Include="ToggleFreeCursor.h" />

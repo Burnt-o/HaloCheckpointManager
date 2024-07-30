@@ -184,7 +184,7 @@
 //	std::weak_ptr<ForceRevert> forceRevertWeak;
 //
 //
-//	std::unique_ptr<ScopedServiceRequest> pauseOverrideRequest;
+//	std::unique_ptr<ScopedRequestToken> pauseOverrideRequest;
 //	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(int)>>> mGameTickEventCallback;
 //
 //	void onCarrierBumpAnalyserToggle(bool& newStateValue)

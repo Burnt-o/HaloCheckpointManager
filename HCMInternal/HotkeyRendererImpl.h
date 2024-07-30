@@ -4,7 +4,7 @@
 #include "HotkeyDefinitions.h"
 #include "MessagesGUI.h"
 #include "HotkeyManager.h"
-#include "ScopedServiceRequest.h"
+#include "ScopedRequestProvider.h"
 #include "HotkeyRebindDialog.h"
 
 class HotkeyRendererImpl : public IHotkeyRendererImpl
@@ -16,7 +16,7 @@ private:
 	std::shared_ptr<MessagesGUI> messagesGUI;
 	std::shared_ptr<HotkeyManager> hotkeyManager;
 	std::shared_ptr<HotkeyDefinitions> hotkeyDefinitions;
-	std::shared_ptr<GenericScopedServiceProvider> hotkeyDisabler;
+	std::shared_ptr<TokenScopedServiceProvider> hotkeyDisabler;
 
 	//data
 	std::unique_ptr<HotkeyRebindDialog> hotkeyRebindDialog; // null when no dialog open
@@ -29,7 +29,7 @@ private:
 public:
 	virtual void renderHotkey(std::optional<RebindableHotkeyEnum>, int pixelWidth) override;
 
-	HotkeyRendererImpl(std::shared_ptr<RenderEvent> renderEvent, std::shared_ptr<MessagesGUI> mes, std::shared_ptr<HotkeyManager> hkm, std::shared_ptr<HotkeyDefinitions> hkd, std::shared_ptr<GenericScopedServiceProvider> hkDisabler)
+	HotkeyRendererImpl(std::shared_ptr<RenderEvent> renderEvent, std::shared_ptr<MessagesGUI> mes, std::shared_ptr<HotkeyManager> hkm, std::shared_ptr<HotkeyDefinitions> hkd, std::shared_ptr<TokenScopedServiceProvider> hkDisabler)
 		: messagesGUI(mes),
 		hotkeyManager(hkm),
 		hotkeyDefinitions(hkd),

@@ -1,36 +1,18 @@
 #pragma once
-#include "ScopedServiceRequest.h"
+#include "ScopedRequestProvider.h"
 #include "PointerDataStore.h"
-class BlockGameInput
+
+class BlockGameInput 
 {
-public:
-	class BlockGameInputImpl;
 private:
-	std::shared_ptr< BlockGameInputImpl> pimpl;
+	std::shared_ptr<TokenScopedServiceProvider> pimpl;
 public:
 
 	BlockGameInput(std::shared_ptr<PointerDataStore> ptr);
 	~BlockGameInput();
 
 
-	std::unique_ptr<ScopedServiceRequest> scopedRequest(std::string callerID);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	std::shared_ptr<ScopedRequestToken> makeScopedRequest() {
+		return pimpl->makeScopedRequest();
+	}
 };

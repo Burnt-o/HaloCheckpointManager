@@ -38,7 +38,7 @@ private:
 	static inline int thirdPersonRenderingValueToSet;
 
 	// hide hud service request
-	std::optional<std::unique_ptr<ScopedServiceRequest>> hideHUDServiceRequest = std::nullopt;
+	std::optional<std::shared_ptr<ScopedRequestToken>> hideHUDServiceRequest = std::nullopt;
 
 
 public:
@@ -71,7 +71,7 @@ public:
 			if (enabled)
 			{
 				lockOrThrow(hideHUDWeak, hideHUD);
-				hideHUDServiceRequest = hideHUD->makeRequest(std::format("{}:{}", nameof(ThirdPersonRenderingInlineImpl), mGame.toString()));
+				hideHUDServiceRequest = hideHUD->makeScopedRequest();
 			}
 			else
 			{
@@ -112,7 +112,7 @@ private:
 	static inline std::shared_ptr< MidhookFlagInterpreter> thirdPersonRenderingFlagInterpreter;
 
 	// hide hud service request
-	std::optional<std::unique_ptr<ScopedServiceRequest>> hideHUDServiceRequest = std::nullopt;
+	std::optional<std::shared_ptr<ScopedRequestToken>> hideHUDServiceRequest = std::nullopt;
 
 public:
 	ThirdPersonRenderingFlagImpl(GameState game, IDIContainer& dicon)
@@ -143,7 +143,7 @@ public:
 			if (enabled)
 			{
 				lockOrThrow(hideHUDWeak, hideHUD);
-				hideHUDServiceRequest = hideHUD->makeRequest(std::format("{}:{}", nameof(ThirdPersonRenderingInlineImpl), mGame.toString()));
+				hideHUDServiceRequest = hideHUD->makeScopedRequest();
 			}
 			else
 			{

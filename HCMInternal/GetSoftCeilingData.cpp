@@ -380,22 +380,15 @@ public:
 
 };
 
-class SoftCeilingDataRequestManager : public TemplatedScopedServiceProvider<SoftCeilingDataProvider>
+class SoftCeilingDataRequestManager : public ScopedServiceProvider<SoftCeilingDataProvider>
 {
 	std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl;
 
 public:
 
-	SoftCeilingDataRequestManager(std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl) : dataPimpl(dataPimpl) {}
-
-	virtual std::unique_ptr<SoftCeilingDataProvider> makeRequest(std::string callerID) override
-	{
-
-		return std::make_unique< SoftCeilingDataProvider>(
-			dataPimpl,
-			shared_from_this(),
-			callerID);
-	}
+	SoftCeilingDataRequestManager(std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl) 
+		: dataPimpl(dataPimpl), 
+		ScopedServiceProvider<SoftCeilingDataProvider>([dataPimpl]() { return new SoftCeilingDataProvider(dataPimpl); }) {}
 
 	virtual void updateService() override
 	{

@@ -38,7 +38,7 @@ void HotkeyRendererImpl::renderHotkey(std::optional<RebindableHotkeyEnum> hotkey
 		{	
 			ImGui::PopID(); // pop id before creating dialog
 			PLOG_DEBUG << "creating hotkeyRebindDialog";
-			hotkeyRebindDialog = std::make_unique<HotkeyRebindDialog>(hotkey, hotkeyDisabler->makeRequest(nameof(HotkeyRendererImpl)));
+			hotkeyRebindDialog = std::make_unique<HotkeyRebindDialog>(hotkey, hotkeyDisabler->makeScopedRequest());
 		}
 		else
 		{
