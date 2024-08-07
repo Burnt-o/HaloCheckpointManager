@@ -37,7 +37,7 @@ public:
 				if (!sfom->contains(fieldName)) throw HCMInitException(std::format("stringFieldOffsetMap for {} was missing field: {}", ecn, fieldName));
 
 				// get the int offset from the DynStructOffsetInfo and assign it to our DynamicStruct 
-				fom->insert_or_assign(field, sfom->at(fieldName));
+				fom->at(magic_enum::enum_integer(this_fieldEnum)) = sfom->at(fieldName);
 			});
 		return outDynStruct;
 	}
@@ -73,7 +73,7 @@ public:
 				if (!sfom->contains(fieldName)) throw HCMInitException(std::format("stringFieldOffsetMap for {} was missing field: {}", ecn, fieldName));
 				
 				// get the int offset from the DynStructOffsetInfo and assign it to our DynamicStruct 
-				fom->insert_or_assign(field, sfom->at(fieldName));
+				fom->at(magic_enum::enum_integer(this_fieldEnum)) = sfom->at(fieldName);
 			});
 		return outDynStruct;
 	}

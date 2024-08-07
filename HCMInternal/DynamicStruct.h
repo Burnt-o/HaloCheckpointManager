@@ -10,7 +10,7 @@ class DynamicStruct
 
 
 	typedef int fieldOffset;
-	std::unordered_map<fieldEnum, fieldOffset> fieldOffsetMap{};
+	std::array<fieldOffset, magic_enum::enum_count<fieldEnum>()> fieldOffsetMap{};
 
 
 
@@ -18,11 +18,7 @@ public:
 	template<typename fieldType>
 	fieldType* field(fieldEnum whichField) // is there a way I could check that the fieldType matches with the enum? would probably require recursion
 	{
-		if (!fieldOffsetMap.contains(whichField)) throw HCMRuntimeException("?!");
-		uintptr_t pField = currentBaseAddress + fieldOffsetMap.at(whichField);
-
-		// CLIENT MUST CHECK, if they want to that is
-		//if (IsBadReadPtr((void*)pField, sizeof(fieldType))) throw HCMRuntimeException(std::format("Bad read ptr at field: {}, address: 0x{:X}", magic_enum::enum_name(whichField), pField));
+		uintptr_t pField = currentBaseAddress + fieldOffsetMap.at(magic_enum::enum_integer(whichField));
 
 		return (fieldType*)pField;
 	}
