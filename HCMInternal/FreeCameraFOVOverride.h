@@ -3,14 +3,14 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "ScopedRequestProvider.h"
+#include "SharedRequestProvider.h"
 
 
 class FreeCameraFOVOverride : public IOptionalCheat
 {
 private:
 	// shared for shared_from_this
-	std::shared_ptr<TokenScopedServiceProvider> pimpl;
+	std::shared_ptr<TokenSharedRequestProvider> pimpl;
 public:
 	FreeCameraFOVOverride(GameState gameImpl, IDIContainer& dicon);
 	~FreeCameraFOVOverride();
@@ -18,7 +18,7 @@ public:
 	std::string_view getName() override { return nameof(FreeCameraFOVOverride); }
 
 	// overrides the games FOV set-func while held 
-	std::shared_ptr<ScopedRequestToken> makeScopedRequest() {
+	std::shared_ptr<SharedRequestToken> makeScopedRequest() {
 		return pimpl->makeScopedRequest();
 	} 
 };

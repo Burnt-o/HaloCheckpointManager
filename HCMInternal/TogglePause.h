@@ -23,7 +23,7 @@ private:
 	std::weak_ptr<PauseGame> pauseGameServiceWeak; // actual implementation is over here
 
 	// data
-	std::shared_ptr<ScopedRequestToken> pauseRequest;
+	std::shared_ptr<SharedRequestToken> pauseRequest;
 
 
 

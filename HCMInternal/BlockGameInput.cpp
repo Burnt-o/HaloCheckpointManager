@@ -7,7 +7,7 @@
 
 
 
-class BlockGameInputImpl : public TokenScopedServiceProvider
+class BlockGameInputImpl : public TokenSharedRequestProvider
 {
 private:
 

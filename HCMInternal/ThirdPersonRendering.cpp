@@ -38,7 +38,7 @@ private:
 	static inline int thirdPersonRenderingValueToSet;
 
 	// hide hud service request
-	std::optional<std::shared_ptr<ScopedRequestToken>> hideHUDServiceRequest = std::nullopt;
+	std::optional<std::shared_ptr<SharedRequestToken>> hideHUDServiceRequest = std::nullopt;
 
 
 public:
@@ -112,7 +112,7 @@ private:
 	static inline std::shared_ptr< MidhookFlagInterpreter> thirdPersonRenderingFlagInterpreter;
 
 	// hide hud service request
-	std::optional<std::shared_ptr<ScopedRequestToken>> hideHUDServiceRequest = std::nullopt;
+	std::optional<std::shared_ptr<SharedRequestToken>> hideHUDServiceRequest = std::nullopt;
 
 public:
 	ThirdPersonRenderingFlagImpl(GameState game, IDIContainer& dicon)

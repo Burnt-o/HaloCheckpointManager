@@ -5,7 +5,7 @@
 #include "MultilevelPointer.h"
 
 template <GameState::Value gameT>
-class FreeCameraFOVOverrideImplVoid : public TokenScopedServiceProvider
+class FreeCameraFOVOverrideImplVoid : public TokenSharedRequestProvider
 {
 public:
 	// does nothing lol
@@ -13,7 +13,7 @@ public:
 };
 
 template <GameState::Value gameT>
-class FreeCameraFOVOverrideImplModulePatch : public TokenScopedServiceProvider
+class FreeCameraFOVOverrideImplModulePatch : public TokenSharedRequestProvider
 {
 private:
 

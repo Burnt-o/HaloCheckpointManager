@@ -32,34 +32,34 @@ private:
 		std::optional<std::shared_ptr< FreeMCCCursor>> mFreeMCCCursorService;
 		std::optional<std::shared_ptr< BlockGameInput>> mBlockGameInputService;
 		std::optional<std::shared_ptr< PauseGame>> mPauseGameService;
-		std::shared_ptr<TokenScopedServiceProvider> mHotkeyDisabler;
+		std::shared_ptr<TokenSharedRequestProvider> mHotkeyDisabler;
 
 		std::shared_ptr<GUIServiceInfo> guiFailures;
 
-		std::tuple<std::shared_ptr<ScopedRequestToken>, std::shared_ptr<ScopedRequestToken>, std::shared_ptr<ScopedRequestToken>> getScopedRequests()
+		std::tuple<std::shared_ptr<SharedRequestToken>, std::shared_ptr<SharedRequestToken>, std::shared_ptr<SharedRequestToken>> getScopedRequests()
 		{
-			std::shared_ptr<ScopedRequestToken> scopedFreeCursorRequest;
+			std::shared_ptr<SharedRequestToken> scopedFreeCursorRequest;
 			if (mFreeMCCCursorService.has_value())
 			{
 				PLOG_DEBUG << "ModalDialogRenderer requesting freeMCCCursor";
 				scopedFreeCursorRequest = mFreeMCCCursorService.value()->makeScopedRequest();
 			}
 
-			std::shared_ptr<ScopedRequestToken> scopedBlockInputRequest;
+			std::shared_ptr<SharedRequestToken> scopedBlockInputRequest;
 			if (mBlockGameInputService.has_value())
 			{
 				PLOG_DEBUG << "ModalDialogRenderer requesting blockGameInput";
 				scopedBlockInputRequest = mBlockGameInputService.value()->makeScopedRequest();
 			}
 
-			std::shared_ptr<ScopedRequestToken> scopedPauseRequest;
+			std::shared_ptr<SharedRequestToken> scopedPauseRequest;
 			if (mPauseGameService.has_value())
 			{
 				PLOG_DEBUG << "ModalDialogRenderer requesting pauseGame";
 				scopedPauseRequest = mPauseGameService.value()->makeScopedRequest();
 			}
 
-			return std::tuple<std::shared_ptr<ScopedRequestToken>, std::shared_ptr<ScopedRequestToken>, std::shared_ptr<ScopedRequestToken>>
+			return std::tuple<std::shared_ptr<SharedRequestToken>, std::shared_ptr<SharedRequestToken>, std::shared_ptr<SharedRequestToken>>
 			{ std::move(scopedFreeCursorRequest) , std::move(scopedBlockInputRequest), std::move(scopedPauseRequest) };
 		}
 
@@ -149,7 +149,7 @@ public:
 
 	}
 
-	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<TokenScopedServiceProvider> hotkeyDisabler)
+	ModalDialogRendererImpl(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<TokenSharedRequestProvider> hotkeyDisabler)
 		: mImGuiRenderCallbackHandle(pRenderEvent, [this](SimpleMath::Vector2 screenSize) {onImGuiRenderEvent(screenSize); }),
 		mFreeMCCCursorService(controlServiceContainer->freeMCCSCursorService),
 		mBlockGameInputService(controlServiceContainer->blockGameInputService),
@@ -160,7 +160,7 @@ public:
 };
 
 
-ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<TokenScopedServiceProvider> hotkeyDisabler)
+ModalDialogRenderer::ModalDialogRenderer(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<ControlServiceContainer> controlServiceContainer, std::shared_ptr<TokenSharedRequestProvider> hotkeyDisabler)
 	: pimpl(std::make_unique<ModalDialogRendererImpl>(pRenderEvent, controlServiceContainer, hotkeyDisabler))
 	{}
 

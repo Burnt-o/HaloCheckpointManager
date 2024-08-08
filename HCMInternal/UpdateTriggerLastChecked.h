@@ -3,7 +3,7 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
-#include "ScopedRequestProvider.h"
+#include "SharedRequestProvider.h"
 
 
 
@@ -11,13 +11,13 @@ class UpdateTriggerLastChecked : public IOptionalCheat
 {
 private:
 
-	std::shared_ptr<TokenScopedServiceProvider> pimpl;
+	std::shared_ptr<TokenSharedRequestProvider> pimpl;
 
 public:
 	UpdateTriggerLastChecked(GameState gameImpl, IDIContainer& dicon);
 	~UpdateTriggerLastChecked();
 
-	std::shared_ptr<ScopedRequestToken> makeScopedRequest() {
+	std::shared_ptr<SharedRequestToken> makeScopedRequest() {
 		return pimpl->makeScopedRequest();
 	}
 

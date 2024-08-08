@@ -17,7 +17,7 @@
 class CommandConsoleManager::CommandConsoleManagerImpl
 {
 private:
-	typedef std::optional<std::shared_ptr<ScopedRequestToken>> opScRqst;
+	typedef std::optional<std::shared_ptr<SharedRequestToken>> opScRqst;
 
 	// callbacks
 	ScopedCallback<ActionEvent> commandConsoleHotkeyEventCallback;
@@ -32,7 +32,7 @@ private:
 
 
 	// injected services
-	std::weak_ptr<TokenScopedServiceProvider> hotkeyDisablerWeak;
+	std::weak_ptr<TokenSharedRequestProvider> hotkeyDisablerWeak;
 	std::optional<std::weak_ptr<PauseGame>> pauseGameOptionalWeak;
 	std::optional<std::weak_ptr<BlockGameInput>> blockGameInputOptionalWeak;
 	std::optional < std::weak_ptr<FreeMCCCursor>> freeCursorOptionalWeak;
@@ -46,7 +46,7 @@ private:
 	{
 		std::unique_ptr<ScopedCallback<RenderEvent>> renderEventCallback; // render console on each new frame
 		std::shared_ptr<ScopedCallback<HSOutputEvent>> haloScriptOutputEventCallback; // callback to log halo script output
-		std::shared_ptr<ScopedRequestToken> disableHotkeys; // disable hcm hotkeys
+		std::shared_ptr<SharedRequestToken> disableHotkeys; // disable hcm hotkeys
 		opScRqst pauseGame; // pause the game (if user checked the setting for it)
 		opScRqst blockInputs; // block game inputs (if user checked the setting for it)
 		opScRqst freeCursor; // free the cursor (if user checked the setting for it)

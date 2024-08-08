@@ -866,7 +866,7 @@
     <ClInclude Include="ScopedCallback.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
-    <ClInclude Include="ScopedRequestToken.h">
+    <ClInclude Include="SharedRequestToken.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
     <ClInclude Include="ObservedScopedCallback.h">
@@ -908,7 +908,7 @@
     <ClInclude Include="GetTagAddressPresenter.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="ScopedRequestProvider.h">
+    <ClInclude Include="SharedRequestProvider.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
   </ItemGroup>

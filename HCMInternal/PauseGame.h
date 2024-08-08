@@ -1,5 +1,5 @@
 #pragma once
-#include "ScopedRequestProvider.h"
+#include "SharedRequestProvider.h"
 #include "PointerDataStore.h"
 class PauseGame
 {
@@ -12,8 +12,8 @@ public:
 	~PauseGame();
 
 	std::map<GameState, HCMInitException>& getServiceFailures();
-	std::shared_ptr<ScopedRequestToken> makeScopedRequest(); // pauses the game while held (unless overridden)
-	std::shared_ptr<ScopedRequestToken> makeOverrideScopedRequest(); // overrides any current pauses while held (used by advanceTicks cheat)
+	std::shared_ptr<SharedRequestToken> makeScopedRequest(); // pauses the game while held (unless overridden)
+	std::shared_ptr<SharedRequestToken> makeOverrideScopedRequest(); // overrides any current pauses while held (used by advanceTicks cheat)
 
 };
 

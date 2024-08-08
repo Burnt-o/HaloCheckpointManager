@@ -6,7 +6,7 @@
 #include "PointerDataStore.h"
 
 template <GameState::Value gameT>
-class HideHUDImplH1 : public TokenScopedServiceProvider
+class HideHUDImplH1 : public TokenSharedRequestProvider
 {
 private:
 	GameState mGame;
@@ -57,7 +57,7 @@ public:
 
 
 template <GameState::Value gameT>
-class HideHUDImplSinglePatch : public TokenScopedServiceProvider
+class HideHUDImplSinglePatch : public TokenSharedRequestProvider
 {
 private:
 	GameState mGame;
@@ -92,7 +92,7 @@ public:
 };
 
 template <GameState::Value gameT>
-class HideHUDImplDoublePatch : public TokenScopedServiceProvider
+class HideHUDImplDoublePatch : public TokenSharedRequestProvider
 {
 private:
 	GameState mGame;

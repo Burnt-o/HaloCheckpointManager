@@ -24,7 +24,7 @@ private:
 	std::weak_ptr<BlockGameInput> blockInputServiceWeak; // actual implementation is over here
 
 	// data
-	std::shared_ptr<ScopedRequestToken> blockInputRequest;
+	std::shared_ptr<SharedRequestToken> blockInputRequest;
 
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)

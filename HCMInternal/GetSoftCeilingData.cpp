@@ -380,7 +380,7 @@ public:
 
 };
 
-class SoftCeilingDataRequestManager : public ScopedServiceProvider<SoftCeilingDataProvider>
+class SoftCeilingDataRequestManager : public SharedRequestProvider<SoftCeilingDataProvider>
 {
 	std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl;
 
@@ -388,7 +388,7 @@ public:
 
 	SoftCeilingDataRequestManager(std::shared_ptr< IGetSoftCeilingDataImpl> dataPimpl) 
 		: dataPimpl(dataPimpl), 
-		ScopedServiceProvider<SoftCeilingDataProvider>([dataPimpl]() { return new SoftCeilingDataProvider(dataPimpl); }) {}
+		SharedRequestProvider<SoftCeilingDataProvider>([dataPimpl]() { return new SoftCeilingDataProvider(dataPimpl); }) {}
 
 	virtual void updateService() override
 	{

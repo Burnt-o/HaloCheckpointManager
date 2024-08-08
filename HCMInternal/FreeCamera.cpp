@@ -86,7 +86,7 @@ private:
 	FOVTransformer userControlledFOV;
 
 	std::shared_ptr<FreeCameraFOVOverride> freeCameraFOVOverrideProvider;
-	std::shared_ptr<ScopedRequestToken> freeCameraFOVOverrideRequest;
+	std::shared_ptr<SharedRequestToken> freeCameraFOVOverrideRequest;
 
 	// hooks
 	static inline std::shared_ptr<ModuleMidHook> setCameraDataHook;

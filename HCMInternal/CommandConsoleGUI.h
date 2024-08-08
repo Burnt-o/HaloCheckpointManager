@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "ScopedRequestProvider.h"
+#include "SharedRequestProvider.h"
 #include "GameState.h"
 #include "EngineCommand.h"
 #include "UnarySetting.h"

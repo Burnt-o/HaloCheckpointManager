@@ -11,7 +11,7 @@
 #include "GameTickEventHook.h"
 #include "IMessagesGUI.h"
 #include "GetPlayerTriggerPosition.h"
-#include "ScopedRequestProvider.h"
+#include "SharedRequestProvider.h"
 
 using namespace SettingsEnums;
 
@@ -38,7 +38,7 @@ private:
 	std::optional<std::weak_ptr<UpdateTriggerLastChecked>> updateTriggerLastCheckedOptionalWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
-	std::shared_ptr<ScopedRequestToken> updateTriggerLastCheckedRequest;
+	std::shared_ptr<SharedRequestToken> updateTriggerLastCheckedRequest;
 
 	void onUpdateTriggerLastCheckedSettingChanged()
 	{

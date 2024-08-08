@@ -4,14 +4,14 @@
 #include "MidhookContextInterpreter.h"
 
 // to avoid ambiguity of updateService, these intermediate classes rename those functions
-class IPauseService : public TokenScopedServiceProvider
+class IPauseService : public TokenSharedRequestProvider
 { 
 public: 
 	~IPauseService() = default; 
 	virtual void updateService() override { updatePauseService(); }
 	virtual void updatePauseService() {}
 };
-class IOverridePauseService : public TokenScopedServiceProvider
+class IOverridePauseService : public TokenSharedRequestProvider
 {
 public:
 	~IOverridePauseService() = default;
@@ -65,8 +65,8 @@ public:
 	}
 	
 
-	std::shared_ptr<ScopedRequestToken> makeRegularScopedRequest() { return IPauseService::makeScopedRequest(); }
-	std::shared_ptr<ScopedRequestToken> makeOverrideScopedRequest() { return IOverridePauseService::makeScopedRequest(); }
+	std::shared_ptr<SharedRequestToken> makeRegularScopedRequest() { return IPauseService::makeScopedRequest(); }
+	std::shared_ptr<SharedRequestToken> makeOverrideScopedRequest() { return IOverridePauseService::makeScopedRequest(); }
 
 	void combinedUpdateService()
 	{
@@ -95,7 +95,7 @@ PauseGame::PauseGame(std::shared_ptr<PointerDataStore> ptr)
 
 PauseGame::~PauseGame() = default;
 
-std::shared_ptr<ScopedRequestToken> PauseGame::makeScopedRequest() { return pimpl->makeRegularScopedRequest(); }
-std::shared_ptr<ScopedRequestToken> PauseGame::makeOverrideScopedRequest() { return pimpl->makeOverrideScopedRequest(); }
+std::shared_ptr<SharedRequestToken> PauseGame::makeScopedRequest() { return pimpl->makeRegularScopedRequest(); }
+std::shared_ptr<SharedRequestToken> PauseGame::makeOverrideScopedRequest() { return pimpl->makeOverrideScopedRequest(); }
 
 std::map<GameState, HCMInitException>& PauseGame::getServiceFailures() { return pimpl->serviceFailures; }

@@ -5,7 +5,7 @@
 #include "DIContainer.h"
 #include "SoftCeilingData.h"
 #include "CsLibGuarded\cs_plain_guarded.h"
-#include "ScopedRequestProvider.h"
+#include "SharedRequestProvider.h"
 
 typedef std::vector<SoftCeilingData> SoftCeilingVector;
 typedef libguarded::plain_guarded<SoftCeilingVector>::handle SoftCeilingVectorLock;
@@ -19,12 +19,12 @@ public:
 	virtual void updateRequestState(bool requested) = 0;
 };
 
-class SoftCeilingDataProvider : public ScopedRequestToken
+class SoftCeilingDataProvider : public SharedRequestToken
 {
 private:
 	std::shared_ptr<IGetSoftCeilingDataImpl> dataPimpl;
 public:
-	SoftCeilingDataProvider(std::shared_ptr<IGetSoftCeilingDataImpl> dataProvider) : ScopedRequestToken(), dataPimpl(dataProvider) {}
+	SoftCeilingDataProvider(std::shared_ptr<IGetSoftCeilingDataImpl> dataProvider) : SharedRequestToken(), dataPimpl(dataProvider) {}
 	std::expected<SoftCeilingVectorLock, HCMRuntimeException> getSoftCeilings() { return dataPimpl->getSoftCeilings(); }
 };
 
@@ -34,7 +34,7 @@ class GetSoftCeilingData : public IOptionalCheat
 {
 private:
 	// must be shared for request management
-	std::shared_ptr<ScopedServiceProvider<SoftCeilingDataProvider>> pimpl;
+	std::shared_ptr<SharedRequestProvider<SoftCeilingDataProvider>> pimpl;
 public:
 
 	GetSoftCeilingData(GameState gameImpl, IDIContainer& dicon);

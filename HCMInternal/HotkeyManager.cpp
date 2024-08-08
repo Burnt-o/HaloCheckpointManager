@@ -19,7 +19,7 @@ public:
 
 
 
-HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath, std::shared_ptr<TokenScopedServiceProvider> hotkeyDisabler)
+HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath, std::shared_ptr<TokenSharedRequestProvider> hotkeyDisabler)
 	: mHotkeyDefinitions(pHotkeyDefinitions),
 	mImGuiRenderCallbackHandle(pRenderEvent, [this](SimpleMath::Vector2) { pollInput(); }), 	// setup render callback to poll hotkeys every frame
 	mHotkeyDisabler(hotkeyDisabler)

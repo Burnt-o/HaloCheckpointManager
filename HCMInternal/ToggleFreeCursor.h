@@ -24,7 +24,7 @@ private:
 	std::weak_ptr<FreeMCCCursor> freeCursorServiceWeak; // actual implementation is over here
 
 	// data
-	std::shared_ptr<ScopedRequestToken> freeCursorRequest;
+	std::shared_ptr<SharedRequestToken> freeCursorRequest;
 
 	// primary event callback
 	void onTogglePauseChanged(bool& newValue)

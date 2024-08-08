@@ -57,7 +57,7 @@ private:
 
 
 
-	std::shared_ptr<ScopedRequestToken> pauseOverrideRequest; 
+	std::shared_ptr<SharedRequestToken> pauseOverrideRequest; 
 
 
 	// primary event callback

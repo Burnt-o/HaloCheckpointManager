@@ -18,7 +18,7 @@
 
 
 template<GameState::Value mGame>
-class UpdateTriggerLastCheckedImplByIndex : public TokenScopedServiceProvider
+class UpdateTriggerLastCheckedImplByIndex : public TokenSharedRequestProvider
 {
 private:
 
@@ -144,7 +144,7 @@ public:
 
 
 	template<GameState::Value mGame>
-	class UpdateTriggerLastCheckedImplEntityPointer : public TokenScopedServiceProvider
+	class UpdateTriggerLastCheckedImplEntityPointer : public TokenSharedRequestProvider
 	{
 	private:
 

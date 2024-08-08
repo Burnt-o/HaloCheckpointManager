@@ -6,7 +6,7 @@
 
 
 
-class FreeMCCCursorImpl : public TokenScopedServiceProvider
+class FreeMCCCursorImpl : public TokenSharedRequestProvider
 {
 private:
 	static inline FreeMCCCursorImpl* instance = nullptr;

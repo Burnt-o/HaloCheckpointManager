@@ -96,7 +96,7 @@ public:
 
 
             // setup some optional services mainly related to controls, eg freeing the cursor, pausing the game, etc
-            auto hotkeyDisabler = std::make_shared< TokenScopedServiceProvider>();
+            auto hotkeyDisabler = std::make_shared< TokenSharedRequestProvider>();
             auto control = std::make_shared<ControlServiceContainer>(ptrStore, hotkeyDisabler);
 
      

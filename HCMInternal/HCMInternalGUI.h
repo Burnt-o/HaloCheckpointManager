@@ -23,15 +23,15 @@ private:
 
 	void onGUIShowingFreesMCCCursorChanged(bool& newval);
 	ScopedCallback<ToggleEvent> mGUIShowingFreesMCCCursorCallbackHandle;
-	std::shared_ptr<ScopedRequestToken> freeCursorRequest;
+	std::shared_ptr<SharedRequestToken> freeCursorRequest;
 
 	void onGUIShowingBlocksGameInputChanged(bool& newval);
 	ScopedCallback<ToggleEvent> mGUIShowingBlocksGameInputCallbackHandle;
-	std::shared_ptr<ScopedRequestToken> blockGameInputRequest;
+	std::shared_ptr<SharedRequestToken> blockGameInputRequest;
 
 	void onGUIShowingPausesGameChanged(bool& newval);
 	ScopedCallback<ToggleEvent> mGUIShowingPausesGameCallbackHandle;
-	std::shared_ptr<ScopedRequestToken> pauseGameRequest;
+	std::shared_ptr<SharedRequestToken> pauseGameRequest;
 
 	//injected services
 	std::shared_ptr<IMCCStateHook> mccStateHook;
