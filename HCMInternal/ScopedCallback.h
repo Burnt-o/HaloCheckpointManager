@@ -6,111 +6,30 @@ template <typename ret, typename... args>
 class ScopedCallback<eventpp::CallbackList<ret(args...)>>
 {
 private:
-	//using MyFunc = std::function<ret(args...)>;
-
 	std::weak_ptr <eventpp::CallbackList<ret(args...)>> m_pEventWeak;
 	eventpp::CallbackList<ret(args...)>::Handle mHandle;
-	std::function<ret(args...)> mFunctor;
-
-	
-
 public:
 
 	ScopedCallback() = delete;
 
 	explicit ScopedCallback(std::shared_ptr <eventpp::CallbackList<ret(args...)>> pEvent, std::function<ret(args...)> functor)
-		: m_pEventWeak(pEvent), mFunctor(functor)
-	{
-
-		PLOG_DEBUG << "ScopedCallback constructor called";
-		mHandle = pEvent->append(mFunctor);
-
-	}
+		: m_pEventWeak(pEvent), mHandle(pEvent->append(functor)) {}
 
 	virtual ~ScopedCallback()
 	{
-		PLOG_VERBOSE << "removing ScopedCallback";
 		auto m_pEvent = m_pEventWeak.lock();
-		if (!m_pEvent)
-		{
-#ifdef HCM_DEBUG
-			std::stringstream buffer;
-			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "m_pEvent bad weak ptr on ScopedCallback destruction" << buffer.str();
-#else
-			PLOG_ERROR << "m_pEvent bad weak ptr on ScopedCallback destruction";
-#endif
-			return;
-		}
-
-		PLOG_VERBOSE << "removing ScopedCallback";
-		if (!m_pEvent.get())
-		{
-#ifdef HCM_DEBUG
-			std::stringstream buffer;
-			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "null event!!" << buffer.str();
-#else
-			PLOG_ERROR << "null event!!";
-#endif
-			return;
-		}
-
-		if (!mHandle)
-		{
-#ifdef HCM_DEBUG
-			std::stringstream buffer;
-			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "null handle!!!!" << buffer.str();
-#else
-			PLOG_ERROR << "null handle!!!!";
-#endif
-				return;
-		}
-
-
-		m_pEvent->remove(mHandle);
-		PLOG_DEBUG << "scoped callback removed";
+		if (m_pEvent && mHandle)
+			m_pEvent->remove(mHandle);
 	}
 
-	void removeCallback() // used in class destructors with destruction guards, prevents any new calls of functor
+	void removeCallback() // used in class destructors with destruction guards to prevent any new calls of functor
 	{
 		auto m_pEvent = m_pEventWeak.lock();
-		if (!m_pEvent)
-		{
-			std::stringstream buffer;
-			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "m_pEvent bad weak ptr on ScopedCallback removeCallback" << buffer.str();
-			return;
-		}
+		if (m_pEvent && mHandle)
+			m_pEvent->remove(mHandle);
 
-		PLOG_VERBOSE << "removing ScopedCallback";
-		if (!m_pEvent.get())
-		{
-			std::stringstream buffer;
-			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "null event?!!!" << buffer.str();
-			return;
-		}
-
-		if (!mHandle)
-		{
-			std::stringstream buffer;
-			buffer << boost::stacktrace::basic_stacktrace();
-			PLOG_ERROR << "null handle?!?!!!" << buffer.str();
-				return;
-		}
-//
-//#if HCM_DEBUG
-//		std::stringstream buffer;
-//		buffer << boost::stacktrace::basic_stacktrace();
-//		PLOG_VERBOSE << "attempting removal, stacktrace: " << buffer.str();
-//#endif
-
-
-		m_pEvent->remove(mHandle);
-
-		PLOG_DEBUG << "scoped callback removed";
+		// to prevent double-removal
+		m_pEventWeak.reset();
 	}
 
 	// copy is banned

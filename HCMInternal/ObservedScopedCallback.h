@@ -22,32 +22,40 @@ template <typename ret, typename... args>
 class ObservedScopedCallback;
 
 template <typename ret, typename... args>
-class ObservedScopedCallback<eventpp::CallbackList<ret(args...)>> : public ScopedCallback<eventpp::CallbackList<ret(args...)>>
+class ObservedScopedCallback<eventpp::CallbackList<ret(args...)>> : ScopedCallback<eventpp::CallbackList<ret(args...)>>
 {
 private:
 	std::weak_ptr<IFireCallbackListChanged> mObserver;
 
-	friend class ObservedEvent<eventpp::CallbackList<ret(args...) >> ; // only provided by ObservedEvents
+	friend class ObservedEvent<eventpp::CallbackList<ret(args...) >> ; // can only be constructed by ObservedEvents
 
 	explicit ObservedScopedCallback(std::shared_ptr <eventpp::CallbackList<ret(args...)>> pEvent, std::function<ret(args...)> functor, std::shared_ptr<IFireCallbackListChanged> observer)
 		: ScopedCallback<eventpp::CallbackList<ret(args...)>>(pEvent, functor), mObserver(observer)
 	{
-		PLOG_DEBUG << "ObservedScopedCallback constructor called";
 	}
 
 
 public:
 	~ObservedScopedCallback()
 	{
-		PLOG_DEBUG << "~ObservedScopedCallback destructor called";
 		// unsubscribe the scoped callback first so the callbackList->isEmpty is accurate!
 		this->removeCallback();
 		
 		auto observer = mObserver.lock();
 		if (observer)
 			observer->getCallbackListChangedEvent()->operator()();
-		else
-			PLOG_ERROR << "null weak ptr to observer on ObservedScopedCallback destruction";
+	}
+
+	void removeObservedCallback()
+	{
+		this->removeCallback();
+
+		auto observer = mObserver.lock();
+		if (observer)
+			observer->getCallbackListChangedEvent()->operator()();
+
+		// to prevent double-removal
+		mObserver.reset();
 	}
 
 	// copy is banned
