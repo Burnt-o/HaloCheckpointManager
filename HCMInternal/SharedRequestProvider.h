@@ -22,6 +22,8 @@ public:
 			mRequest = shared;
 			updateService();
 			return shared;
+
+
 		}
 		else
 		{
@@ -36,7 +38,14 @@ public:
 	}
 
 	virtual void updateService() {} // function fired when new SharedRequestToken created or last one expires. override this to act on the new serviceIsRequested().
-	virtual ~SharedRequestProvider() = default;
+	virtual ~SharedRequestProvider()
+	{
+		// if token outlives provider, the deleter would call a garbade updateService! so wait for token to die first.
+		while (mRequest.expired() == false)
+		{
+			Sleep(1);
+		}
+	}
 
 	SharedRequestProvider(std::function<SharedRequestDerivedType* ()> requestFactory) : mRequestFactory(std::move(requestFactory)) {}
 
