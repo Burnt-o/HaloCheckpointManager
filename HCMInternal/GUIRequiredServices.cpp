@@ -431,6 +431,9 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::CommandConsoleManager}
 	},
 
+					{ GUIElementEnum::consoleCommandOutputEvent,
+{OptionalCheatEnum::HaloScriptOutputHookEvent}
+					},
 
 { GUIElementEnum::consoleCommandPauseGame,
 {OptionalCheatEnum::TogglePause}

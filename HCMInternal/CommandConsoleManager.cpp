@@ -27,7 +27,7 @@ private:
 
 	// events we'll subscribe to when console is open
 	std::shared_ptr<RenderEvent> renderEvent;
-	std::shared_ptr<ObservedEvent<HSOutputEvent>> haloScriptOutputEvent;
+	std::optional<std::shared_ptr<ObservedEvent<HSOutputEvent>>> haloScriptOutputEvent;
 	
 
 
@@ -45,7 +45,7 @@ private:
 	struct ConsoleScopedRequests
 	{
 		std::unique_ptr<ScopedCallback<RenderEvent>> renderEventCallback; // render console on each new frame
-		std::shared_ptr<ScopedCallback<HSOutputEvent>> haloScriptOutputEventCallback; // callback to log halo script output
+		std::optional<std::shared_ptr<ScopedCallback<HSOutputEvent>>> haloScriptOutputEventCallback; // callback to log halo script output
 		std::shared_ptr<SharedRequestToken> disableHotkeys; // disable hcm hotkeys
 		opScRqst pauseGame; // pause the game (if user checked the setting for it)
 		opScRqst blockInputs; // block game inputs (if user checked the setting for it)
@@ -123,7 +123,7 @@ private:
 
 					consoleScopedRequests = ConsoleScopedRequests(
 						std::move(renderEventCallback),
-						std::move(haloScriptOutputEvent->subscribe([this](const std::string& s, const HSOutputType& t) { commandConsole->onHaloScriptOutput(s, t); })),
+						haloScriptOutputEvent ? std::make_optional<std::shared_ptr<ScopedCallback<HSOutputEvent>>>(haloScriptOutputEvent.value()->subscribe([this](const std::string& s, const HSOutputType& t) { commandConsole->onHaloScriptOutput(s, t); })) : std::nullopt,
 						std::move(hotkeyDisableRequest),
 						std::move(pauseRequest),
 						std::move(blockInputRequest),
@@ -188,8 +188,15 @@ public:
 		auto engineCommand = resolveDependentCheat(EngineCommand);
 		commandConsole = std::make_unique<CommandConsoleGUI>(engineCommand, dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandFontSize->GetValue());
 
-		auto haloScriptOutputEventProvider = resolveDependentCheat(HaloScriptOutputHookEvent);
-		haloScriptOutputEvent = haloScriptOutputEventProvider->getHaloScriptOutputEvent();
+		try
+		{
+			auto haloScriptOutputEventProvider = resolveDependentCheat(HaloScriptOutputHookEvent);
+			haloScriptOutputEvent = haloScriptOutputEventProvider->getHaloScriptOutputEvent();
+		}
+		catch (HCMInitException ex)
+		{
+			PLOG_ERROR << "Failed to resolve hs output event provider, continuing anyway. Error: " << ex.what();
+		}
 
 	}
 

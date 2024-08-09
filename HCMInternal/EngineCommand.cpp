@@ -34,6 +34,9 @@ public:
 		uintptr_t pEngine;
 		if (!gameEnginePointer->resolve(&pEngine)) throw HCMRuntimeException("Could not resolve pointer to gameEngine");
 
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pCommand: 0x" << std::hex << p, p = pCommand);
+		LOG_ONCE_CAPTURE(PLOG_DEBUG << "pEngine: 0x" << std::hex << p, p = pEngine);
+
 		typedef void(*EngineCommand_t)(uintptr_t pEngine, const char* commandString);
 		EngineCommand_t engine_command_vptr;
 		engine_command_vptr = static_cast<EngineCommand_t>((void*)pCommand);

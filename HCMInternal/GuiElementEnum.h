@@ -114,6 +114,7 @@
 	((playerPositionToClipboardGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandGUI, (ALL_SUPPORTED_GAMES)))\
 	((consoleCommandSettings, (ALL_SUPPORTED_GAMES)))\
+		((consoleCommandOutputEvent, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandPauseGame, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandBlockInput, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandFreeCursor, (ALL_SUPPORTED_GAMES)))\

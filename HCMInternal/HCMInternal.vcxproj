@@ -257,6 +257,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUIColourPicker.h" />
     <ClInclude Include="GUIButtonAndBinaryInt.h" />
     <ClInclude Include="GUIInputMultilineString.h" />
+    <ClInclude Include="GUIInvisible.h" />
     <ClInclude Include="GUILabel.h" />
     <ClInclude Include="GUISkullToggle.h" />
     <ClInclude Include="GUIWaypointList.h" />

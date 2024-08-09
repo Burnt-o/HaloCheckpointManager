@@ -6659,10 +6659,15 @@
 	<!--#endregion InfiniteAmmo/BottomlessClip-->
 
 	<!--#region EngineCommand-->
-	<!--scan nw "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00"
-	or use IDA to check for xrefs to InterlockedPopEntrySList
-	-->
+	<!--use IDA to check for xrefs to InterlockedPopEntrySList-->
 	<VersionedEntry Name="sendCommandPointer" Type="MultilevelPointer::ModuleOffset">
+		<!--scan nw "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00"-->
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x925C0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
@@ -6676,6 +6681,13 @@
 			</Offsets>
 		</Version>
 
+		<!--48 89 5c 24 08 57 48 83 ec 20 48 8d 0d ** ** ** ** 48 8b fa-->
+		<!--<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x3B1D0</Offset>
+			</Offsets>
+		</Version>-->
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6683,6 +6695,13 @@
 			</Offsets>
 		</Version>
 
+		<!--48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00-->
+		<!--<Version Version="1.2448.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x23E54</Offset>
+			</Offsets>
+		</Version>-->
 		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -6690,6 +6709,13 @@
 			</Offsets>
 		</Version>
 
+		<!--48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 48 8b f9 48 8b f2 48 81 c1 40 04 00 00-->
+		<!--<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x129AC</Offset>
+			</Offsets>
+		</Version>-->
 		<Version Version="1.3385.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
@@ -6697,6 +6723,13 @@
 			</Offsets>
 		</Version>
 
+		<!--48 85 d2 0f ** ** ** ** ** 48 8b c4 48 89 58 08 48 89 68 10 -->
+		<!--<Version Version="1.2448.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x12430</Offset>
+			</Offsets>
+		</Version>-->
 		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -6704,6 +6737,12 @@
 			</Offsets>
 		</Version>
 
+		<!--<Version Version="1.2448.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x4226C</Offset>
+			</Offsets>
+		</Version>-->
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -6714,6 +6753,12 @@
 
 	<!--put bp on halo1.CreateGameEngine. step out when it gets hit and see addy moved into rax immediately after, ptr scan for that-->
 	<VersionedEntry Name="gameEnginePointer" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03A24FD8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFDAB8</Offset>
@@ -6736,6 +6781,12 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="commandOutputStringFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAE66BA</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>
 			<Offsets>
@@ -6743,6 +6794,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x776EAC</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
@@ -6750,6 +6807,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x140AE7</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
@@ -6757,6 +6820,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0xF3B27</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
@@ -6780,37 +6849,37 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="commandOutputStringFunctionContext" Type="MidhookContextInterpreter">
-		<Version Version="1.3385.0.0" Game="Halo1">
+		<Version Version="All" Game="Halo1">
 			<Parameters>
 				<pOutputString>rsp+0x30</pOutputString>
 			</Parameters>
 		</Version>
 
-		<Version Version="1.3385.0.0" Game="Halo2">
+		<Version Version="All" Game="Halo2">
 			<Parameters>
 				<pOutputString>rsp+0x20</pOutputString>
 			</Parameters>
 		</Version>
 
-		<Version Version="1.3385.0.0" Game="Halo3">
+		<Version Version="All" Game="Halo3">
 			<Parameters>
 				<pOutputString>rsp+0x30</pOutputString>
 			</Parameters>
 		</Version>
 
-		<Version Version="1.3385.0.0" Game="Halo3ODST">
+		<Version Version="All" Game="Halo3ODST">
 			<Parameters>
 				<pOutputString>rsp+0x30</pOutputString>
 			</Parameters>
 		</Version>
 
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Parameters>
 				<pOutputString>rax+0x0</pOutputString>
 			</Parameters>
 		</Version>
 
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Parameters>
 				<pOutputString>r11+0x0</pOutputString>
 			</Parameters>

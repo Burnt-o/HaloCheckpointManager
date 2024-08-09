@@ -33,6 +33,7 @@
 #include "GUISkullToggle.h"
 #include "GUILabel.h"
 #include "GUIButtonAndBinaryInt.h"
+#include "GUIInvisible.h"
 
 
 
@@ -692,12 +693,17 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
 						(game, ToolTipCollection("Settings for the command console"), "Command Console Settings", headerChildElements
 							{
+							createNestedElement(GUIElementEnum::consoleCommandOutputEvent),
 							createNestedElement(GUIElementEnum::consoleCommandPauseGame),
 							createNestedElement(GUIElementEnum::consoleCommandBlockInput),
 							createNestedElement(GUIElementEnum::consoleCommandFreeCursor),
 							createNestedElement(GUIElementEnum::consoleCommandFontSize),
 							createNestedElement(GUIElementEnum::consoleCommandExecuteBuffer),
 							}));
+
+				case GUIElementEnum::consoleCommandOutputEvent:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared< GUIInvisible>(game, ToolTipCollection(""), "Console Command Output"));
+
 
 					case GUIElementEnum::consoleCommandPauseGame:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>

@@ -911,6 +911,9 @@
     <ClInclude Include="SharedRequestProvider.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
+    <ClInclude Include="GUIInvisible.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
