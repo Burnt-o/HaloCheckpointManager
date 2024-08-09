@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Render3DEventProvider.h"
 #include "Renderer3DImpl.h"
-#include "ObservedEventFactory.h"
+
 
 
 void Render3DEventProvider::onDirectXRenderEvent(ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView)
@@ -35,7 +35,6 @@ Render3DEventProvider::Render3DEventProvider(GameState gameImpl, IDIContainer& d
 	mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& s) {onGameStateChanged(s); }),
 	directXRenderEventCallback(dicon.Resolve<DirectXRenderEvent>().lock(), [this](ID3D11Device* pDevice, ID3D11DeviceContext* pDeviceContext, SimpleMath::Vector2 screenSize, ID3D11RenderTargetView* pMainRenderTargetView) { onDirectXRenderEvent(pDevice, pDeviceContext, screenSize, pMainRenderTargetView); })
 {
-	mRender3DEvent = ObservedEventFactory::makeObservedEvent<Render3DEvent>();
 
 	switch (gameImpl)
 	{

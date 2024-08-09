@@ -1,16 +1,10 @@
 #pragma once
 #include "pch.h"
 #include "ScopedCallback.h"
-#include "IFireCallbackListChanged.h"
+#include "SharedRequestToken.h"
+
 // A wrapper for eventpp callbacks. Whenever a client makes or destroys a callback to an event, the wrapper fires an onCallbackListChanged event.
 // Scoped: callback unsubscribes from event in destructor.
-
-
-template <typename ret, typename... args>
-class ScopedCallback;
-
-template <typename ret, typename... args>
-class ScopedCallback<eventpp::CallbackList<ret(args...)>>;
 
 template <typename ret, typename... args>
 class ObservedEvent;
@@ -25,12 +19,12 @@ template <typename ret, typename... args>
 class ObservedScopedCallback<eventpp::CallbackList<ret(args...)>> : ScopedCallback<eventpp::CallbackList<ret(args...)>>
 {
 private:
-	std::weak_ptr<IFireCallbackListChanged> mObserver;
+	std::shared_ptr<SharedRequestToken> mToken;
 
-	friend class ObservedEvent<eventpp::CallbackList<ret(args...) >> ; // can only be constructed by ObservedEvents
 
-	explicit ObservedScopedCallback(std::shared_ptr <eventpp::CallbackList<ret(args...)>> pEvent, std::function<ret(args...)> functor, std::shared_ptr<IFireCallbackListChanged> observer)
-		: ScopedCallback<eventpp::CallbackList<ret(args...)>>(pEvent, functor), mObserver(observer)
+	friend class ObservedEvent<eventpp::CallbackList<ret(args...) >>; // can only be constructed by ObservedEvents
+	explicit ObservedScopedCallback(std::shared_ptr <eventpp::CallbackList<ret(args...)>> pEvent, std::function<ret(args...)> functor, std::shared_ptr<SharedRequestToken> token)
+		: ScopedCallback<eventpp::CallbackList<ret(args...)>>(pEvent, functor), mToken(token)
 	{
 	}
 
@@ -40,22 +34,18 @@ public:
 	{
 		// unsubscribe the scoped callback first so the callbackList->isEmpty is accurate!
 		this->removeCallback();
-		
-		auto observer = mObserver.lock();
-		if (observer)
-			observer->getCallbackListChangedEvent()->operator()();
+
+		if (mToken)
+			mToken.reset();
 	}
+
 
 	void removeObservedCallback()
 	{
 		this->removeCallback();
 
-		auto observer = mObserver.lock();
-		if (observer)
-			observer->getCallbackListChangedEvent()->operator()();
-
-		// to prevent double-removal
-		mObserver.reset();
+		if (mToken)
+			mToken.reset();
 	}
 
 	// copy is banned
@@ -65,6 +55,4 @@ public:
 	// move is fine
 	ObservedScopedCallback(ObservedScopedCallback&& that) = default;
 	ObservedScopedCallback& operator=(ObservedScopedCallback&& that) = default;
-
-
 };

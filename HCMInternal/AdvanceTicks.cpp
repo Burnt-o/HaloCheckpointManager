@@ -78,14 +78,6 @@ private:
 				return;
 			}
 
-			// need to destroy old ones BEFORE constructing new ones
-			mGameTickEventCallback.reset();
-			pauseOverrideRequest.reset();
-
-			// something is going wrong here. on any call but the first the mGameTIckEventCallback binding fails, somehow
-			// why? the event is absolutely firing. Why is the binding failing?
-			// I mean I could fix this by only binding once but I really don't want to have to do that
-			// it looks like the scoped call back is just instantly auto-destructing
 
 			advanceTicksCount = settings->advanceTicksCount->GetValue();
 			mGameTickEventCallback = gameTickEventHook->getGameTickEvent()->subscribe([this](uint32_t i) {onGameTickEvent(i); });

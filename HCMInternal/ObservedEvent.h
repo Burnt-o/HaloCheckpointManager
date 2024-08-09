@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "ObservedScopedCallback.h"
-#include "IFireCallbackListChanged.h"
+#include "SharedRequestProvider.h"
 // A wrapper for eventpp events. Whenever a client makes or destroys a callback to an event, the wrapper fires an onCallbackListChanged event.
 
 
@@ -10,33 +10,41 @@ template <typename ret, typename... args>
 class ObservedEvent;
 
 template <typename ret, typename... args>
-class ObservedEvent< eventpp::CallbackList<ret(args...)>> : public IFireCallbackListChanged, public std::enable_shared_from_this< ObservedEvent< eventpp::CallbackList<ret(args...)>>>
+class ObservedEvent< eventpp::CallbackList<ret(args...)>> : TokenSharedRequestProvider
 {
 private:
-	std::shared_ptr<eventpp::CallbackList<ret(args...)>> mEvent = std::make_shared< eventpp::CallbackList<ret(args...)>>();
-	std::shared_ptr<ActionEvent> callbackListChangedEvent = std::make_shared< eventpp::CallbackList<void()>>();
+	std::unique_ptr<ScopedCallback<ActionEvent>> initOnCallbackListChanged;
 
-	friend class ObservedEventFactory;
-	explicit ObservedEvent() {}
-	std::unique_ptr<ScopedCallback<ActionEvent>> getCallbackListChangedCallback(std::function<void()> functor)
+	std::shared_ptr<eventpp::CallbackList<ret(args...)>> mEvent = std::make_shared< eventpp::CallbackList<ret(args...)>>();
+	std::shared_ptr<ActionEvent> callbackListChangedEvent = std::make_shared<ActionEvent>();
+
+
+	virtual void updateService() override 
 	{
-		return std::make_unique<ScopedCallback<ActionEvent>>(callbackListChangedEvent, functor);
+		callbackListChangedEvent->operator()();
 	}
+
 public:
+	explicit ObservedEvent() {}
+
+	explicit ObservedEvent(std::function<void()> onCallbackListChanged)
+	{
+		initOnCallbackListChanged = std::make_unique<ScopedCallback<ActionEvent>>(callbackListChangedEvent, onCallbackListChanged);
+	}
 
 	std::unique_ptr<ScopedCallback<eventpp::CallbackList<ret(args...)>>> subscribe(std::function<ret(args...)> functor)
 	{
 		// create the callback before firing so observer can get accurate count of how many subscribers there are
-		std::unique_ptr<ScopedCallback<eventpp::CallbackList<ret(args...)>>> out ( 
-			new ObservedScopedCallback<eventpp::CallbackList<ret(args...)>>(mEvent, functor, this->shared_from_this()) // have to create object in place because std::make_unique doesn't have access to the private constructor
+		std::unique_ptr<ScopedCallback<eventpp::CallbackList<ret(args...)>>> out(
+			new ObservedScopedCallback<eventpp::CallbackList<ret(args...)>>(mEvent, functor, this->makeScopedRequest()) // have to create object in place because std::make_unique doesn't have access to the private constructor
 		);
-		callbackListChangedEvent->operator()();
 		return std::move(out);
 	}
 
-	bool isEventSubscribed() const { return !mEvent->empty(); }
+	bool isEventSubscribed() const {
+		return this->serviceIsRequested(); }
 
-	virtual std::shared_ptr<eventpp::CallbackList<void()>> getCallbackListChangedEvent() override {
+	std::shared_ptr<ActionEvent> getCallbackListChangedEvent() {
 		return callbackListChangedEvent;
 	}
 

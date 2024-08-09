@@ -5,7 +5,7 @@
 #include "MultilevelPointer.h"
 #include "MidhookContextInterpreter.h"
 #include "RuntimeExceptionHandler.h"
-#include "ObservedEventFactory.h"
+
 
 // halo 1 has some extra hooks to capture more output. ran out of motivation to get that extra output working for the other games (shit is a pita to RE)
 template <GameState::Value gameT>
@@ -18,7 +18,6 @@ private:
 
 	// main event we provide
 	std::shared_ptr<ObservedEvent<HSOutputEvent>> mHaloScriptOutputEvent;
-	std::unique_ptr<ScopedCallback<ActionEvent>> mHaloScriptOutputEventSubscribersChangedCallback;
 
 
 	// data
@@ -155,11 +154,10 @@ private:
 
 public:
 	HaloScriptOutputHookEventImplHalo1(GameState game, IDIContainer& dicon)
-		: runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
+		: runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		mHaloScriptOutputEvent(std::make_shared<ObservedEvent<HSOutputEvent>>([this]() {onHaloScriptOutputEventSubscribersChanged(); }))
 	{
 
-		mHaloScriptOutputEvent = ObservedEventFactory::makeObservedEvent<HSOutputEvent>();
-		mHaloScriptOutputEventSubscribersChangedCallback = ObservedEventFactory::getCallbackListChangedCallback(mHaloScriptOutputEvent, [this]() {onHaloScriptOutputEventSubscribersChanged(); });
 
 		instance = this;
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
@@ -205,7 +203,6 @@ private:
 
 	// main event we provide
 	std::shared_ptr<ObservedEvent<HSOutputEvent>> mHaloScriptOutputEvent;
-	std::unique_ptr<ScopedCallback<ActionEvent>> mHaloScriptOutputEventSubscribersChangedCallback;
 
 
 	// data
@@ -332,11 +329,10 @@ private:
 
 public:
 	HaloScriptOutputHookEventImplGeneric(GameState game, IDIContainer& dicon)
-		: runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
+		: runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		mHaloScriptOutputEvent(std::make_shared<ObservedEvent<HSOutputEvent>>([this]() {onHaloScriptOutputEventSubscribersChanged(); }))
 	{
 
-		mHaloScriptOutputEvent = ObservedEventFactory::makeObservedEvent<HSOutputEvent>();
-		mHaloScriptOutputEventSubscribersChangedCallback = ObservedEventFactory::getCallbackListChangedCallback(mHaloScriptOutputEvent, [this]() {onHaloScriptOutputEventSubscribersChanged(); });
 
 		assert(mHaloScriptOutputEvent->isEventSubscribed() == false);
 

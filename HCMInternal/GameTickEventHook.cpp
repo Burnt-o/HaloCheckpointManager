@@ -3,7 +3,7 @@
 #include "ModuleHook.h"
 #include "PointerDataStore.h"
 #include "RuntimeExceptionHandler.h"
-#include "ObservedEventFactory.h"
+
 template <GameState::Value gameT>
 class GameTickEventHookTemplated : public GameTickEventHook::GameTickEventHookImpl
 {
@@ -24,6 +24,7 @@ private:
 
 	void onGameTickEventCallbackListChanged()
 	{
+		PLOG_DEBUG << "eeeeeettt";
 		tickIncrementHook->setWantsToBeAttached(gameTickEvent->isEventSubscribed());
 	}
 
@@ -54,17 +55,14 @@ public:
 	GameTickEventHookTemplated(GameState game, IDIContainer& dicon) 
 		: 
 		mGame(game),
-		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock())
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock()),
+		gameTickEvent(std::make_shared<ObservedEvent<GameTickEvent>>([this]() {onGameTickEventCallbackListChanged(); }))
 	{
 		if (instance) throw HCMInitException("Cannot have more than one GameTickEventHookTemplated per game");
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto tickIncrementFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickIncrementFunction), game);
 		tickCounter = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(tickCounter), game);
 		tickIncrementHook = ModuleMidHook::make(game.toModuleName(), tickIncrementFunction, tickIncrementHookFunction); 
-
-
-		gameTickEvent = ObservedEventFactory::makeObservedEvent<GameTickEvent>();
-		gameTickEventCallbackListChanged = ObservedEventFactory::getCallbackListChangedCallback(gameTickEvent, [this]() {onGameTickEventCallbackListChanged(); });
 
 
 		instance = this;

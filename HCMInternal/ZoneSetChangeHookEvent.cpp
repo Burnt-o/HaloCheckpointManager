@@ -4,7 +4,7 @@
 #include "PointerDataStore.h"
 #include "GetCurrentZoneSet.h"
 #include "IMakeOrGetCheat.h"
-#include "ObservedEventFactory.h"
+
 
 template<GameState::Value gameT>
 class ZoneSetChangeHookEventTemplated : public IZoneSetChangeHookEvent
@@ -14,8 +14,7 @@ private:
 
 	std::shared_ptr< GetCurrentZoneSet> getCurrentZoneSet;
 	std::shared_ptr<ModuleMidHook> ZoneSetChangeHook;
-	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEvent = ObservedEventFactory::makeObservedEvent<eventpp::CallbackList<void(uint32_t)>>();
-	std::unique_ptr<ScopedCallback<ActionEvent>> callbackListChangedEvent;
+	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(uint32_t)>>> ZoneSetChangeEvent;
 
 	void onCallbackListChanged()
 	{
@@ -41,15 +40,13 @@ private:
 	}
 public:
 	ZoneSetChangeHookEventTemplated(GameState game, IDIContainer& dicon)
-		: getCurrentZoneSet(resolveDependentCheat(GetCurrentZoneSet))
+		: getCurrentZoneSet(resolveDependentCheat(GetCurrentZoneSet)),
+		ZoneSetChangeEvent(std::make_shared<ObservedEvent<eventpp::CallbackList<void(uint32_t)>>>([this]() {onCallbackListChanged(); }))
 	{
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto ZoneSetChangeFunction = ptr->getData < std::shared_ptr<MultilevelPointer>>(nameof(ZoneSetChangeFunction), game);
 		ZoneSetChangeHook = ModuleMidHook::make(game.toModuleName(), ZoneSetChangeFunction, ZoneSetChangeHookFunction);
 		instance = this;
-
-
-		callbackListChangedEvent = ObservedEventFactory::getCallbackListChangedCallback(ZoneSetChangeEvent, [this]() {onCallbackListChanged(); });
 
 
 	}

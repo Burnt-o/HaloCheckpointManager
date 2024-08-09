@@ -875,9 +875,6 @@
     <ClInclude Include="ObservedEvent.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>
-    <ClInclude Include="ObservedEventFactory.h">
-      <Filter>Classes\Events</Filter>
-    </ClInclude>
     <ClInclude Include="IFireCallbackListChanged.h">
       <Filter>Classes\Events</Filter>
     </ClInclude>

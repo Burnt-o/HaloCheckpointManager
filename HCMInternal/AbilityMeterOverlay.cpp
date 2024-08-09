@@ -18,7 +18,7 @@ private:
 	std::unique_ptr<ScopedCallback<RenderEvent>> mRenderEventCallback; // only not null when running
 	std::shared_ptr<RenderEvent> mRenderEvent;
 
-	std::unique_ptr<ScopedCallback<eventpp::CallbackList<void(uint32_t)>>> mGameTickEventCallback; // only not null when running
+	std::unique_ptr<ScopedCallback<GameTickEvent>> mGameTickEventCallback; // only not null when running
 	std::shared_ptr<ObservedEvent<GameTickEvent>> mGameTickEvent;
 
 

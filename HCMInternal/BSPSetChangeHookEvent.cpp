@@ -5,7 +5,7 @@
 #include "GetCurrentBSPSet.h"
 #include "IMakeOrGetCheat.h"
 #include "SwitchBSPSet.h"
-#include "ObservedEventFactory.h"
+
 
 template<GameState::Value gameT>
 class BSPSetChangeHookEventTemplated : public IBSPSetChangeHookEvent
@@ -15,8 +15,7 @@ private:
 
 	std::shared_ptr< GetCurrentBSPSet> getCurrentBSPSet;
 	std::shared_ptr<ModuleMidHook> BSPSetChangeHook;
-	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEvent = ObservedEventFactory::makeObservedEvent<eventpp::CallbackList<void(BSPSet)>>();
-	std::unique_ptr<ScopedCallback<ActionEvent>> callbackListChangedEvent;
+	std::shared_ptr<ObservedEvent<eventpp::CallbackList<void(BSPSet)>>> BSPSetChangeEvent;
 
 
 	std::unique_ptr<ScopedCallback< eventpp::CallbackList<void(BSPSet)>>> forceBSPSetChangeEvent;
@@ -46,14 +45,14 @@ private:
 	}
 public:
 	BSPSetChangeHookEventTemplated(GameState game, IDIContainer& dicon)
-		: getCurrentBSPSet(resolveDependentCheat(GetCurrentBSPSet))
+		: getCurrentBSPSet(resolveDependentCheat(GetCurrentBSPSet)),
+		BSPSetChangeEvent(std::make_shared< ObservedEvent<eventpp::CallbackList<void(BSPSet)>>>([this]() {onCallbackListChanged(); }))
 	{
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto BSPSetChangeFunction = ptr->getData < std::shared_ptr<MultilevelPointer>>(nameof(BSPSetChangeFunction), game);
 		BSPSetChangeHook = ModuleMidHook::make(game.toModuleName(), BSPSetChangeFunction, BSPSetChangeHookFunction);
 		instance = this;
 
-		callbackListChangedEvent = ObservedEventFactory::getCallbackListChangedCallback(BSPSetChangeEvent, [this]() {onCallbackListChanged(); });
 
 		// subscribe to SwitchBSPSet event that it fires when the user forces a BSP set change
 		try

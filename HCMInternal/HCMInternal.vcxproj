@@ -274,7 +274,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="ObservedScopedCallback.h" />
     <ClInclude Include="ObservedEvent.h" />
-    <ClInclude Include="ObservedEventFactory.h" />
     <ClInclude Include="AbilityMeterOverlay.h" />
     <ClInclude Include="SharedRequestProvider.h" />
     <ClInclude Include="TextureFactory.h" />

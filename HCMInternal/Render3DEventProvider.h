@@ -27,7 +27,7 @@ private:
 
 	std::unique_ptr<IRenderer3D> p3DRenderer;
 	
-	std::shared_ptr<ObservedEvent<Render3DEvent>> mRender3DEvent;
+	std::shared_ptr<ObservedEvent<Render3DEvent>> mRender3DEvent = std::make_shared<ObservedEvent<Render3DEvent>>();
 public:
 
 	// Consumers should avoid subscribing to the render3DEvent unless they actually need to (since event provider will skip expensively updating camera data every frame IF no one is subscribed)

@@ -9,14 +9,14 @@ class IPauseService : public TokenSharedRequestProvider
 public: 
 	~IPauseService() = default; 
 	virtual void updateService() override { updatePauseService(); }
-	virtual void updatePauseService() {}
+	virtual void updatePauseService() = 0;
 };
 class IOverridePauseService : public TokenSharedRequestProvider
 {
 public:
 	~IOverridePauseService() = default;
 	virtual void updateService() override { updateOverrideService(); }
-	virtual void updateOverrideService() {}
+	virtual void updateOverrideService() = 0;
 };
 
 
@@ -70,7 +70,10 @@ public:
 
 	void combinedUpdateService()
 	{
+		PLOG_DEBUG << "this->IPauseService::serviceIsRequested(): " << (this->IPauseService::serviceIsRequested() ? "true" : "false");
+		PLOG_DEBUG << "this->IOverridePauseService::serviceIsRequested(): " << (this->IOverridePauseService::serviceIsRequested() ? "true" : "false");
 		bool requested = this->IPauseService::serviceIsRequested() && !this->IOverridePauseService::serviceIsRequested();
+		PLOG_DEBUG << "requested: " << (requested ? "true" : "false");
 
 		for (auto& patch : pauseGamePatches)
 		{
