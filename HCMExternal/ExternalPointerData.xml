@@ -116,7 +116,22 @@
 	<!-- #region Halo 3-->
 	<Entry Type="int">
 		<Name>H3_CheckpointData_LevelCode</Name>
-		<Version Version="All">
+		<Version Version="1.2448.0.0">
+			<Offset>0x167</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x167</Offset>
+		</Version>
+		<Version Version="1.3073.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.3251.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Offset>0x187</Offset>
+		</Version>
+		<Version Version="1.3385.0.0">
 			<Offset>0x187</Offset>
 		</Version>
 	</Entry>
