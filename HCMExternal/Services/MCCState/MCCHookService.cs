@@ -134,10 +134,10 @@ namespace HCMExternal.Services.MCCHookService
                         Log.Debug("Detected MCC Version: " + mccVersionTemp);
 
 
-                        // If winstore, the GetVersionInfo call will only partially succeed. But winstore can't downpatch, so we know it's the latest MCC version.
-                        if (checkProcessType(MCCHookState.MCCProcess) == HaloProcessType.MCCWinstore)
+                        // If winstore, the GetVersionInfo will probably fail to retrieve the FileVersion. But winstore can't downpatch, so we know it's the latest MCC version.
+                        if (mccVersionTemp == null && checkProcessType(MCCHookState.MCCProcess) == HaloProcessType.MCCWinstore)
                         {
-                            Log.Verbose("WinStore detected, setting fileVersion to latest: " + mDataPointersService.HighestSupportedMCCVersion);
+                            Log.Verbose("WinStore detected, setting mcc version to latest: " + mDataPointersService.HighestSupportedMCCVersion);
                             mccVersionTemp = mDataPointersService.HighestSupportedMCCVersion;
                         }
 
