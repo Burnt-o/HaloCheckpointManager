@@ -71,7 +71,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                         }
                         else if (MCCHookStateViewModel.State.MCCVersion != null) //otherwise set it to version of MCC that HCM is attached to
                         {
-                            checkpointVersionGuess = MCCHookStateViewModel.State.MCCVersion.FileVersion;
+                            checkpointVersionGuess = MCCHookStateViewModel.State.MCCVersion;
                             Log.Verbose("setting ver string to current attached version: " + checkpointVersionGuess);
                         }
                         else if (this.DataPointersService.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git

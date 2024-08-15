@@ -6759,6 +6759,12 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03B80E78</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFDAB8</Offset>

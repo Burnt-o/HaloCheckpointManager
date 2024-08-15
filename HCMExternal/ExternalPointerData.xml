@@ -2,14 +2,45 @@
 
 <Root>
 	<!--If current HCM version isn't one of these, the user will be prompted that an update is available-->
-<LatestHCMVersions>
-	<Entry>3.1.1.0</Entry>
-</LatestHCMVersions>
+	<LatestHCMVersions>
+		<Entry>3.1.1.0</Entry>
+	</LatestHCMVersions>
 
 	<!--If the current HCM is one of these, HCM will refuse to start and the user will be prompted to update-->
 	<ObsoleteHCMVersions>
 		<Entry>1.9.9</Entry>
 	</ObsoleteHCMVersions>
+
+	<!--Highest MCC version. Used for WinStore version detection. Winstore can't downpatch so is always latest patch.-->
+	<HighestSupportedVersion>
+		<Entry>1.3385.0.0</Entry>
+	</HighestSupportedVersion>
+
+
+<!-- Safety flag. 0 when MCC is still loading in, 1 after that. Is ROUGHLY 0x90 bytes behind the game engine pointer-->
+	<!--can scan nw "4c 8b 4c c1 08 4d 85 c9", go up a bit (add -> je -> mov) to where it moves a val in from r12-->
+	<Entry Type="int">
+		<Name>Steam_MCCInitialisationFlagOffset</Name>
+		<Version Version="1.2448.0.0">
+			<Offset>0x3A24EF0</Offset>
+		</Version>
+		<Version Version="1.2645.0.0">
+			<Offset>0x3B80E20</Offset>
+		</Version>
+		<Version Version="1.3272.0.0">
+			<Offset>0x3FFDA28</Offset>
+		</Version>
+		<Version Version="1.3385.0.0">
+			<Offset>0x3FFCA18</Offset>
+		</Version>
+	</Entry>
+
+	<Entry Type="int">
+		<Name>WinStore_MCCInitialisationFlagOffset</Name>
+		<Version Version="1.3385.0.0">
+			<Offset>0x3E4AFC8</Offset>
+		</Version>
+	</Entry>
 
 	<!--Data for decoding useful information from checkpoint files-->
 	<!-- #region Halo 1-->

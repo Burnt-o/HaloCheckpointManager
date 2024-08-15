@@ -21,6 +21,7 @@ namespace HCMExternal.Models
         MCCNotFound, // MCC process not found
         MCCAccessError, // Couldn't access MCC process - Admin priv issue
         MCCEACError, // EAC (easy anti-cheat) was running, user needs to launch MCC with eac disabled.
+        StateMachineException, // Exceptions in the state machine
         InternalInjecting, // HCMExternal is currently trying to inject HCMInternal
         InternalInjectError, // Something went wrong injecting HCMInternal
         InternalInitialising, // HCMExternal is waiting for HCMInternal to initialise
@@ -50,9 +51,9 @@ namespace HCMExternal.Models
              set { _MCCProcess = value; OnPropertyChanged(); }
         }
 
-        // What version of MCC are we connected to? Null if no MCC
-        private  FileVersionInfo? _MCCVersion = null;
-        public  FileVersionInfo? MCCVersion
+        // What version of MCC are we connected to? Null if no MCC or unable to detect version. 10 char string of format "X.XXXX.X.X"
+        private string? _MCCVersion = null;
+        public string? MCCVersion
         {
             get { return _MCCVersion; }
              set { _MCCVersion = value; OnPropertyChanged(); }

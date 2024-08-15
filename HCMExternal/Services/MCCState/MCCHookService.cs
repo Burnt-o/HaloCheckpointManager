@@ -12,6 +12,7 @@ using System.Windows;
 using HCMExternal.ViewModels;
 using NtApiDotNet;
 using System.IO;
+using HCMExternal.Services.DataPointersServiceNS;
 
 namespace HCMExternal.Services.MCCHookService
 {
@@ -26,7 +27,6 @@ namespace HCMExternal.Services.MCCHookService
         private MCCHookState MCCHookState { 
             get { return mMCCHookStateViewModel.State; } 
             set { mMCCHookStateViewModel.State = value; }
-        
         }
 
         // last injection error
@@ -34,6 +34,7 @@ namespace HCMExternal.Services.MCCHookService
         private bool debugPrivilegeEnabled = false;
 
         // injected service
+        private DataPointersService mDataPointersService { get; init; }
         private InterprocService mInterprocService { get; init; }
         private MCCHookStateViewModel mMCCHookStateViewModel { get; init; }
         private ErrorDialogViewModel mErrorDialogViewModel { get; init; }
@@ -43,8 +44,9 @@ namespace HCMExternal.Services.MCCHookService
 
 
         // Constructor
-        public MCCHookService(InterprocService ips, MCCHookStateViewModel vm, ErrorDialogViewModel errorDialogVM)
+        public MCCHookService(InterprocService ips, MCCHookStateViewModel vm, ErrorDialogViewModel errorDialogVM, DataPointersService dps)
         {
+            mDataPointersService = dps;
             mInterprocService = ips;
             mMCCHookStateViewModel = vm;
             vm.ShowErrorEvent += ShowHCMInternalErrorDialog;
@@ -73,6 +75,12 @@ namespace HCMExternal.Services.MCCHookService
             try
             {
                 StateMachineLoop();
+            }
+            catch(Exception ex)
+            {
+                lastInjectionError = "HCM had an internal exception in it's MCC Hook State Machine! \n\n" + "Exception details: \n" + ex.Message + "\n" + ex.Source + "\n\n" + "See HCMExternal.log for more info";
+                AdvanceStateMachine(MCCHookStateEnum.StateMachineException);
+                ShowHCMInternalErrorDialog();
             }
             finally
             {
@@ -111,15 +119,29 @@ namespace HCMExternal.Services.MCCHookService
                     
                     MCCHookState.MCCProcess = GetMCCProcess(); // try to find the mcc process
                     if (MCCHookState.MCCProcess == null) // failed, try again next time
+                    {
                         break;
+                    }
 
-
+                    string? mccVersionTemp = null;
                     try
                     {
-                        Log.Verbose("Getting mcc version information from filepath: " 
-                            + MCCHookState.MCCProcess.GetImageFilePath(false) 
+                        var mccFileName = MCCHookState.MCCProcess.GetImageFilePath(false);
+                        Log.Verbose("Getting mcc version information from filepath: "
+                            + mccFileName
                             );
-                        MCCHookState.MCCVersion = FileVersionInfo.GetVersionInfo(MCCHookState.MCCProcess.GetImageFilePath(false));
+                        mccVersionTemp = FileVersionInfo.GetVersionInfo(mccFileName)?.FileVersion;
+                        Log.Debug("Detected MCC Version: " + mccVersionTemp);
+
+
+                        // If winstore, the GetVersionInfo call will only partially succeed. But winstore can't downpatch, so we know it's the latest MCC version.
+                        if (checkProcessType(MCCHookState.MCCProcess) == HaloProcessType.MCCWinstore)
+                        {
+                            Log.Verbose("WinStore detected, setting fileVersion to latest: " + mDataPointersService.HighestSupportedMCCVersion);
+                            mccVersionTemp = mDataPointersService.HighestSupportedMCCVersion;
+                        }
+
+
                     }
                     catch (FileNotFoundException ex)
                     {
@@ -127,11 +149,31 @@ namespace HCMExternal.Services.MCCHookService
                             + ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
                     }
 
-                    logAccessInformation(MCCHookState.MCCProcess, _mccAccessInfo);
+                    var mccInit = isMCCInitialised(MCCHookState.MCCProcess, mccVersionTemp);
 
-
-                    AdvanceStateMachine(MCCHookStateEnum.InternalInjecting); // advance to next state (inject HCMInternal)
+                    if (mccInit == false)
+                    {
+                        Log.Verbose("MCC is not properly initialised yet, waiting..");
+                    }
+                    else if (mccInit == true)
+                    {
+                        Log.Verbose("MCC is initialised");
+                        MCCHookState.MCCVersion = mccVersionTemp;
+                        logAccessInformation(MCCHookState.MCCProcess, _mccAccessInfo);
+                        AdvanceStateMachine(MCCHookStateEnum.InternalInjecting); // advance to next state (inject HCMInternal)
+                    }
+                    else
+                    {
+                        Log.Error("Failed to check MCC initialisation state");
+#if !HCM_DEBUG
+                        Log.Verbose("But continuing anyway");
+                        MCCHookState.MCCVersion = mccVersionTemp;
+                        logAccessInformation(MCCHookState.MCCProcess, _mccAccessInfo);                       
+                        AdvanceStateMachine(MCCHookStateEnum.InternalInjecting); // advance to next state (inject HCMInternal)
+#endif
+                    }
                     break;
+
 
                 case MCCHookStateEnum.MCCAccessError:
                     // Do nothing
@@ -141,8 +183,22 @@ namespace HCMExternal.Services.MCCHookService
                     // Do nothing
                     break;
 
+                case MCCHookStateEnum.StateMachineException:
+                    // Do nothing
+                    break;
+
                 case MCCHookStateEnum.InternalInjecting:
-                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((UInt32)MCCHookState.MCCProcess?.ProcessId);
+                    var pid = MCCHookState.MCCProcess?.ProcessId;
+                    if (pid == null)
+                    {
+                        lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + "Process ID was null!"
+                        + "\nAccess Rights Debugging: \n" + _mccAccessInfo;
+                        AdvanceStateMachine(MCCHookStateEnum.InternalInjectError);
+                        ShowHCMInternalErrorDialog();
+                        break;
+                    }
+
+                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((UInt32)pid);
                     
 
                     if (injectionResult.successFlag)
@@ -151,9 +207,9 @@ namespace HCMExternal.Services.MCCHookService
                     }
                     else
                     {
-                        AdvanceStateMachine(MCCHookStateEnum.InternalInjectError);
                         lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + injectionResult.errorString
-                            + "\nAccess Rights Debugging: \n" + _mccAccessInfo;
+                         + "\nAccess Rights Debugging: \n" + _mccAccessInfo;
+                        AdvanceStateMachine(MCCHookStateEnum.InternalInjectError);
                         ShowHCMInternalErrorDialog(); 
                     }
                     break;
@@ -239,7 +295,7 @@ namespace HCMExternal.Services.MCCHookService
         public void ShowHCMInternalErrorDialog()
         {
             Log.Verbose("ShowHCMInternalErrorDialog");
-            Log.Error(lastInjectionError ?? "null error");
+            Log.Error(lastInjectionError ?? "No error info to display, for some reason?!");
             var result = mErrorDialogViewModel.RaiseShowErrorDialogEvent(lastInjectionError);
             if (result == false)
             {
@@ -372,6 +428,94 @@ namespace HCMExternal.Services.MCCHookService
 
             Log.Verbose("MCC last exit time was " + (DateTime.Now - _lastMCCExit) + " seconds ago");
             return (DateTime.Now - _lastMCCExit) < TimeSpan.FromSeconds(6);
+        }
+
+        private enum HaloProcessType
+        {
+            MCCSteam,
+            MCCWinstore,
+            Other,
+        };
+
+        private HaloProcessType checkProcessType(NtProcess process)
+        {
+            switch (process.Name.ToLower())
+            {
+                case "mcc-win64-shipping.exe":
+                    return HaloProcessType.MCCSteam;
+
+                case "mcc-win64-winstore-shipping.exe":
+                case "mccwinstore-win64-shipping.exe":
+                    return HaloProcessType.MCCWinstore;
+
+                default:
+                    return HaloProcessType.Other;
+            }
+        }
+
+
+        private bool? isMCCInitialised(NtProcess mccProcess, string? mccVersion)
+        {
+
+            string MCCInitFlagPointerString = "MCCInitialisationFlagOffset";
+            switch (checkProcessType(mccProcess))
+            {
+                case HaloProcessType.MCCSteam:
+                    MCCInitFlagPointerString = "Steam_" + MCCInitFlagPointerString;
+                    break;
+
+                case HaloProcessType.MCCWinstore:
+                    MCCInitFlagPointerString = "WinStore_" + MCCInitFlagPointerString;
+                    break;
+
+                default:
+                    Log.Verbose("Non-MCC Halo process type, assuming initialised");
+                    return true;
+            }
+
+
+            if (mccVersion == null)
+            {
+                Log.Error("Lacked mcc version info, skipping mcc initialising check");
+                return null;
+            }
+
+            int? MCCInitFlagOffset = (int?)mDataPointersService.GetPointer(MCCInitFlagPointerString, mccVersion);
+
+            if (MCCInitFlagOffset == null)
+            {
+                Log.Error("Could not resolve mcc initialisation flag");
+                return null;
+            }
+
+            try
+            {
+                // need to elevate from QueryLimitedInformation to Read
+                using (var procRead = NtProcess.Open(mccProcess.ProcessId, ProcessAccessRights.VmRead | ProcessAccessRights.QueryLimitedInformation))
+                {
+                    Log.Debug("MCC base address: 0x" + procRead.ImageBaseAddress.ToString("X"));
+                    Log.Debug("MCCInitFlagOffset: 0x" + MCCInitFlagOffset.Value.ToString("X"));
+                    System.Byte flagValue = procRead.ReadMemory<System.Byte>((long)((ulong)procRead.ImageBaseAddress + (ulong)MCCInitFlagOffset.Value));
+
+
+                    if (flagValue == 0)
+                        return false;
+                    if (flagValue == 1)
+                        return true;
+
+                    Log.Error("Invalid MCC init flag value: " + flagValue.ToString());
+                    return null;
+                }
+               
+            }
+            catch(Exception e) 
+            { 
+            Log.Error("Exception while reading MCC initialisation flag: "+ e.Message);
+                return null;
+            }
+
+
+
         }
 
     }

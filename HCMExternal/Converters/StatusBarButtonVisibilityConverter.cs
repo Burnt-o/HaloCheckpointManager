@@ -29,6 +29,7 @@ namespace HCMExternal.Converters
                 case MCCHookStateEnum.InternalException:
                 case MCCHookStateEnum.MCCAccessError:
                 case MCCHookStateEnum.MCCEACError:
+                case MCCHookStateEnum.StateMachineException:
                     return Visibility.Visible;
 
                 default:
