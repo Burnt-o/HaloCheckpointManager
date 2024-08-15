@@ -3142,39 +3142,6 @@
 		<Version Version="1.2448.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
-				<Offset>0x1C748C0</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.2645.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
-				<Offset>0x1FB5B40</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.3073.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
-				<Offset>0x2056D70</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.3272.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
-				<Offset>0x20850F0</Offset>
-			</Offsets>
-		</Version>
-		<Version Version="1.3385.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
-				<Offset>0x2094CD8</Offset>
-			</Offsets>
-		</Version>
-	</VersionedEntry>
-
-	<VersionedEntry Name="loadedBSP2" Type="MultilevelPointer::ModuleOffset">
-		<Version Version="1.2448.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
 				<Offset>0x1C84BF8</Offset>
 			</Offsets>
 		</Version>
@@ -3194,6 +3161,39 @@
 			<Module>halo3odst.dll</Module>
 			<Offsets>
 				<Offset>0x2094CD8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2094CD8</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="loadedBSP2" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1C748C0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2645.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1FB5B40</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3073.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2056D70</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3272.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20850F0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo3ODST">
@@ -3540,7 +3540,7 @@
 				<Offset>0x3F0274</Offset>
 				<Length>0xC</Length>
 			</PreserveLocation>
-		</Version>
+		</Version>		
 		<Version Version="1.2645.0.0" Game="Halo3ODST">
 			<PreserveLocation>
 				<Offset>0x48101C</Offset>
