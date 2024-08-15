@@ -3690,11 +3690,19 @@
 				<Offset>0x4F6EF8</Offset>
 				<Length>4</Length>
 			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x4E6A7C</Offset>
+				<Length>0x3B0</Length>
+			</PreserveLocation>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo4">
 			<PreserveLocation>
 				<Offset>0x55CF18</Offset>
 				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x54CA94</Offset>
+				<Length>0x3B0</Length>
 			</PreserveLocation>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo4">
@@ -3702,17 +3710,29 @@
 				<Offset>0x5971D0</Offset>
 				<Length>4</Length>
 			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x58804C</Offset>
+				<Length>0x3B0</Length>
+			</PreserveLocation>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<PreserveLocation>
 				<Offset>0x5981D0</Offset>
 				<Length>4</Length>
 			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x58904C</Offset>
+				<Length>0x3B0</Length>
+			</PreserveLocation>
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<PreserveLocation>
 				<Offset>0x5981D0</Offset>
 				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x58904C</Offset>
+				<Length>0x3B0</Length>
 			</PreserveLocation>
 		</Version>
 	</VersionedEntry>
