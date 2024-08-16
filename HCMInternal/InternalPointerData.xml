@@ -3514,6 +3514,10 @@
 				<Offset>0x48364E</Offset>
 				<Length>2</Length>
 			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x470274</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
 		</Version>
 	</VersionedEntry>
 
