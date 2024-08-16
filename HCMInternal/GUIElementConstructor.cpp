@@ -417,6 +417,8 @@ private:
 							createNestedElement(GUIElementEnum::consoleCommandGUI),
 							createNestedElement(GUIElementEnum::consoleCommandSettings),
 							createNestedElement(GUIElementEnum::disableBarriersToggle),
+							createNestedElement(GUIElementEnum::soundClassGainAdjusterToggle),
+							createNestedElement(GUIElementEnum::soundClassGainAdjusterSettings),
 						}));
 
 				case GUIElementEnum::speedhackGUI:
@@ -733,6 +735,47 @@ private:
 				case GUIElementEnum::disableBarriersToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 						(game, ToolTipCollection("Disable Barriers (aka Soft Ceilings)"), RebindableHotkeyEnum::disableBarriers, "Disable Barriers", settings->disableBarriersToggle));
+
+				case GUIElementEnum::soundClassGainAdjusterToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Adjust in-game volume levels by sound type"), std::nullopt, "Sound Gain Adjuster", settings->soundClassGainAdjusterToggle));
+
+				case GUIElementEnum::soundClassGainAdjusterSettings:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Settings for in-game volume levels"), "Sound Gain Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::soundClassGainDialog),
+							createNestedElement(GUIElementEnum::soundClassGainAmbience),
+							createNestedElement(GUIElementEnum::soundClassGainWeapons),
+							createNestedElement(GUIElementEnum::soundClassGainVehicles),
+							createNestedElement(GUIElementEnum::soundClassGainMusic),
+							createNestedElement(GUIElementEnum::soundClassGainOther),
+							}));
+
+					case GUIElementEnum::soundClassGainDialog:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 1.f)>>
+							(game, ToolTipCollection(""), "Dialog##SoundGainAdjuster", settings->soundClassGainDialog));
+
+					case GUIElementEnum::soundClassGainAmbience:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 1.f)>>
+							(game, ToolTipCollection(""), "Ambience##SoundGainAdjuster", settings->soundClassGainAmbience));
+
+					case GUIElementEnum::soundClassGainWeapons:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 1.f)>>
+							(game, ToolTipCollection(""), "Weapons##SoundGainAdjuster", settings->soundClassGainWeapons));
+
+					case GUIElementEnum::soundClassGainVehicles:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 1.f)>>
+							(game, ToolTipCollection(""), "Vehicles##SoundGainAdjuster", settings->soundClassGainVehicles));
+
+					case GUIElementEnum::soundClassGainMusic:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 1.f)>>
+							(game, ToolTipCollection(""), "Music##SoundGainAdjuster", settings->soundClassGainMusic));
+
+					case GUIElementEnum::soundClassGainOther:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(0.f, 1.f)>>
+							(game, ToolTipCollection("Footsteps, devices/machines, certain scripted sounds, and miscellaneous"), "Other##SoundGainAdjuster", settings->soundClassGainOther));
+
 
 			case GUIElementEnum::overlaysHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

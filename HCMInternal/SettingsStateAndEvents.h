@@ -1691,10 +1691,65 @@ public:
 		);
 
 
+
+	std::shared_ptr<BinarySetting<float>> soundClassGainDialog = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(soundClassGainDialog)
+		);
+
+	std::shared_ptr<BinarySetting<float>> soundClassGainAmbience = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(soundClassGainAmbience)
+		);
+
+	std::shared_ptr<BinarySetting<float>> soundClassGainWeapons = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(soundClassGainWeapons)
+		);
+
+	std::shared_ptr<BinarySetting<float>> soundClassGainVehicles = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(soundClassGainVehicles)
+		);
+
+	std::shared_ptr<BinarySetting<float>> soundClassGainMusic = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(soundClassGainMusic)
+		);
+
+	std::shared_ptr<BinarySetting<float>> soundClassGainOther = std::make_shared<BinarySetting<float>>
+		(
+			1.f,
+			[](float in) { return in >= 0.f && in <= 1.f; },
+			nameof(soundClassGainOther)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> soundClassGainAdjusterToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(soundClassGainAdjusterToggle)
+		);
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
-
+		soundClassGainDialog,
+			soundClassGainAmbience,
+			soundClassGainWeapons,
+			soundClassGainVehicles,
+			soundClassGainMusic,
+			soundClassGainOther,
 
 			abilityMeterAbilityAnchorCorner,
 			abilityMeterAbilityScreenOffset,

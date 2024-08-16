@@ -120,7 +120,15 @@
 		((consoleCommandFreeCursor, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandFontSize, (ALL_SUPPORTED_GAMES)))\
 		((consoleCommandExecuteBuffer, (ALL_SUPPORTED_GAMES)))\
-	((disableBarriersToggle, (THIRD_GEN)))
+	((disableBarriersToggle, (THIRD_GEN)))\
+	((soundClassGainAdjusterToggle, (Halo1)))\
+	((soundClassGainAdjusterSettings, (Halo1)))\
+		((soundClassGainDialog, (Halo1)))\
+		((soundClassGainAmbience, (Halo1)))\
+		((soundClassGainWeapons, (Halo1)))\
+		((soundClassGainVehicles, (Halo1)))\
+		((soundClassGainMusic, (Halo1)))\
+		((soundClassGainOther, (Halo1)))
 
 
 

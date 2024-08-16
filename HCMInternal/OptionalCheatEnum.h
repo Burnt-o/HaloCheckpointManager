@@ -102,7 +102,8 @@ GetPlayerDatumPresenter,\
 FreeCameraFOVOverride,\
 GetAbilityData,\
 AbilityMeterOverlay,\
-GetTagAddressPresenter
+GetTagAddressPresenter,\
+SoundClassGain
 
 
 enum class OptionalCheatEnum {

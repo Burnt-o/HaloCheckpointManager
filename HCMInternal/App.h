@@ -41,6 +41,7 @@ class App {
 public:
 	App(HMODULE dllHandle)
 	{
+        GlobalKill::reviveMe();
         GlobalKill::HCMInternalModuleHandle = dllHandle;
 
         std::shared_ptr<UnhandledExceptionHandler> unhandled; // init later, but we need it to be the last thing to go out of scope

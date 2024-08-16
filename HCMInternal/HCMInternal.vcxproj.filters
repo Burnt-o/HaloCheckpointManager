@@ -911,6 +911,9 @@
     <ClInclude Include="GUIInvisible.h">
       <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
+    <ClInclude Include="SoundClassGain.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1334,6 +1337,9 @@
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
     <ClCompile Include="AbilityMeterOverlay.cpp">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundClassGain.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
   </ItemGroup>

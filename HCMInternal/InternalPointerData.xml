@@ -10489,6 +10489,26 @@
 		</Version>
 	</VersionedEntry>
 	<!--#endregion SoftCeilingOverlay-->
+	
+	
+	<VersionedEntry Name="loadSoundClassGainArrayFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<!--<Offset>0xBBA4FE</Offset>-->
+				<Offset>0xBBA588</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="loadSoundClassGainArrayFunctionContext" Type="MidhookContextInterpreter">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Parameters>
+				<pSoundClassGainArray>rax</pSoundClassGainArray>
+			</Parameters>
+		</Version>
+	</VersionedEntry>
+	
 
 
 </root>

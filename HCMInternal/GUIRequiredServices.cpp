@@ -461,6 +461,14 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 			},
 
 
+			{ GUIElementEnum::soundClassGainAdjusterToggle,
+{OptionalCheatEnum::SoundClassGain}
+			},
+
+				{ GUIElementEnum::soundClassGainAdjusterSettings,
+{OptionalCheatEnum::SoundClassGain}
+				},
+
 
 
 #ifdef HCM_DEBUG

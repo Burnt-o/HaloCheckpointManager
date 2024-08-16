@@ -276,6 +276,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ObservedEvent.h" />
     <ClInclude Include="AbilityMeterOverlay.h" />
     <ClInclude Include="SharedRequestProvider.h" />
+    <ClInclude Include="SoundClassGain.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
@@ -538,6 +539,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="AbilityMeterOverlay.cpp" />
+    <ClCompile Include="SoundClassGain.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />

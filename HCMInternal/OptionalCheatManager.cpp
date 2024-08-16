@@ -99,6 +99,7 @@
 #include "GetAbilityData.h"
 #include "AbilityMeterOverlay.h"
 #include "GetTagAddressPresenter.h"
+#include "SoundClassGain.h"
 
 
 #include "DIContainer.h"
