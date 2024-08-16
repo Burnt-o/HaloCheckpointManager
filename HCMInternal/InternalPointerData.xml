@@ -3384,6 +3384,10 @@
 				<Offset>0x400E2C</Offset>
 				<Length>8</Length>
 			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x3F0274</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo3">
 			<PreserveLocation>
@@ -3409,6 +3413,10 @@
 			<PreserveLocation>
 				<Offset>0x4852FE</Offset>
 				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x470274</Offset>
+				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
 		<Version Version="1.2862.0.0" Game="Halo3">
@@ -3514,7 +3522,7 @@
 				<Offset>0x48364E</Offset>
 				<Length>2</Length>
 			</PreserveLocation>
-			<PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
 				<Offset>0x470274</Offset>
 				<Length>0xC</Length>
 			</PreserveLocation>
@@ -3540,7 +3548,7 @@
 				<Length>2</Length>
 			</PreserveLocation>
 			<!--search "68 61 6C 6F 33 6F 64 73 74 5C 6D 61 70 73 5C 73 63 31 30 30", on tayari. it's in the big block before it up to the FF's-->
-			<PreserveLocation>
+			<PreserveLocation> 
 				<Offset>0x3F0274</Offset>
 				<Length>0xC</Length>
 			</PreserveLocation>
@@ -3645,6 +3653,10 @@
 				<Offset>0x58FD00</Offset>
 				<Length>16</Length>
 			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x570278</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
 		</Version>
 		<Version Version="1.2645.0.0" Game="HaloReach">
 			<PreserveLocation>
@@ -3654,6 +3666,10 @@
 			<PreserveLocation>
 				<Offset>0x5DFD00</Offset>
 				<Length>16</Length>
+			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x5C0278</Offset>
+				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
 		<Version Version="1.3073.0.0" Game="HaloReach">
@@ -3685,6 +3701,10 @@
 				<Offset>0x5DF5F0</Offset>
 				<Length>16</Length>
 			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x5C026E</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
 		</Version>
 	</VersionedEntry>
 
@@ -3698,6 +3718,10 @@
 				<Offset>0x4E6A7C</Offset>
 				<Length>0x3B0</Length>
 			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x4B829C</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo4">
 			<PreserveLocation>
@@ -3707,6 +3731,10 @@
 			<PreserveLocation>
 				<Offset>0x54CA94</Offset>
 				<Length>0x3B0</Length>
+			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x51E29C</Offset>
+				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo4">
@@ -3737,6 +3765,10 @@
 			<PreserveLocation>
 				<Offset>0x58904C</Offset>
 				<Length>0x3B0</Length>
+			</PreserveLocation>
+			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x55B29C</Offset>
+				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
 	</VersionedEntry>
