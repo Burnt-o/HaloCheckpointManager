@@ -166,7 +166,7 @@ HideHUD::HideHUD(GameState gameImpl, IDIContainer& dicon)
 		break;
 
 	case GameState::Value::Halo4:
-		pimpl = std::make_unique<HideHUDImplSinglePatch<GameState::Value::Halo4>>(gameImpl, dicon);
+		pimpl = std::make_unique<HideHUDImplDoublePatch<GameState::Value::Halo4>>(gameImpl, dicon);
 		break;
 	default:
 		throw HCMInitException("not impl yet!");

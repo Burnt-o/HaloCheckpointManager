@@ -7149,6 +7149,13 @@
 				<Offset>0xC57A5</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x10BD55</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -7175,6 +7182,11 @@
 		</Version>
 
 		<Version Version="All" Game="HaloReach">
+			<rflag>zero</rflag>
+			<value>false</value>
+		</Version>
+
+		<Version Version="All" Game="Halo4">
 			<rflag>zero</rflag>
 			<value>false</value>
 		</Version>
@@ -7344,6 +7356,13 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x375B69</Offset>
+			</Offsets>
+		</Version>
+
 	</VersionedEntry>
 
 	<VersionedEntry Name="hideHUDPatchFunction2" Type="MultilevelPointer::ModuleOffset">
@@ -7365,6 +7384,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x26CDC8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x3759DE</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -7413,6 +7439,10 @@
 		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="hideHUDPatchCode2" Type="Vector" Typename="byte">
@@ -7424,6 +7454,10 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -7509,6 +7543,13 @@
 				<Offset>0x344e5</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x611AF</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -7574,7 +7615,7 @@
 			<Module>halo4.dll</Module>
 			<Offsets>
 				<Offset>0x01B1E658</Offset>
-				<Offset>0x89C</Offset>
+				<Offset>0x9DC</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -7616,15 +7657,15 @@
 		<Version Version="All" Game="HaloReach">
 			<position>0x0</position>
 			<velocity>0x10</velocity>
-			<FOV>0x40</FOV>
+			<FOV>0x6C</FOV>
 			<lookDirForward>0x28</lookDirForward>
 			<lookDirUp>0x34</lookDirUp>
 		</Version>
 
 		<Version Version="All" Game="Halo4">
 			<position>0x0</position>
-			<velocity>0x40</velocity>
-			<FOV>0x24</FOV>
+			<velocity>0x10</velocity>
+			<FOV>0x78</FOV>
 			<lookDirForward>0x28</lookDirForward>
 			<lookDirUp>0x34</lookDirUp>
 		</Version>
@@ -7893,6 +7934,13 @@
 				<Offset>0x28806D4</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E96104</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="analogMoveForwardBack" Type="MultilevelPointer::ModuleOffset">
@@ -7948,6 +7996,13 @@
 				<Offset>0x28806D0</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E96100</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="analogTurnLeftRightMouse" Type="MultilevelPointer::ModuleOffset">
@@ -7997,10 +8052,17 @@
 			</Offsets>
 		</Version>
 		
-				<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x28806D8</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E96108</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -8052,10 +8114,17 @@
 			</Offsets>
 		</Version>
 		
-				<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x28806DC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E9610C</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -8113,6 +8182,13 @@
 				<Offset>0x28806D8</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E96108</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="analogTurnUpDownGamepad" Type="MultilevelPointer::ModuleOffset">
@@ -8162,10 +8238,17 @@
 			</Offsets>
 		</Version>
 		
-				<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="1.3385.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x28806DC</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E9610C</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -8223,6 +8306,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x288070C</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x2E96134</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
@@ -8350,6 +8440,13 @@
 				<Offset>0x343DD</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x610EC</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="BlockPlayerCharacterInputCode" Type="Vector" Typename="byte">
@@ -8363,6 +8460,10 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
