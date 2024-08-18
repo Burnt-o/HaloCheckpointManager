@@ -1545,6 +1545,7 @@ private:
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraTranslationInterpolator),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationSpeed),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationInterpolator),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationScalesToFOV),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVSpeed),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVInterpolator),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPosition),
@@ -1645,6 +1646,12 @@ private:
 									}
 							));
 
+
+						case GUIElementEnum::freeCameraUserInputCameraRotationScalesToFOV:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection("When enabled, rotation sensitivity will be lowered when your FOV is lowered."), std::nullopt, "Rotation speed scales w/ FOV", settings->freeCameraUserInputCameraRotationScalesToFOV));
+
+
 						case GUIElementEnum::freeCameraUserInputCameraRotationInterpolatorLinearFactor:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f, ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat | ImGuiSliderFlags_Logarithmic)>>
 								(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##UserInputCameraRotation", settings->freeCameraUserInputCameraRotationInterpolatorLinearFactor));
@@ -1664,6 +1671,11 @@ private:
 										headerChildElements{ createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVInterpolatorLinearFactor) }
 									}
 							));
+
+						case GUIElementEnum::freeCameraUserInputCameraNonLinearFOV:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection("Makes changing FOV with the hotkey non-linear, so it's slower it very high or very low values."), std::nullopt, "Non-Linear FOV", settings->freeCameraUserInputCameraNonLinearFOV));
+
 
 						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolatorLinearFactor:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f, ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat | ImGuiSliderFlags_Logarithmic)>>

@@ -273,6 +273,13 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 	if (settings->freeCameraCameraInputDisable->GetValue()) return;
 
 	// Section: Rotation
+
+	// Scale by FOV: small fovs rotate slower. will only apply to pitch and yaw, not roll!
+	float FOVScaleFactor = 1.f;
+	if (settings->freeCameraUserInputCameraRotationScalesToFOV->GetValue())
+		FOVScaleFactor = freeCameraData.currentFOV / 180.f;
+
+
 	auto analogRotationSpeed = frameDelta * mRotationSpeed;
 	auto digitalRotationSpeed = frameDelta * mRotationSpeed;
 
@@ -298,8 +305,8 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 		float yawProportion = std::cos(eulerRoll); // hmmm
 		float pitchProportion = std::sin(eulerRoll) * -1.f;
 
-		eulerYaw = (eulerYaw + (analogRotationSpeed * leftRightTurnAmount * yawProportion));
-		eulerPitch = (eulerPitch + (analogRotationSpeed * leftRightTurnAmount * pitchProportion));
+		eulerYaw = (eulerYaw + (analogRotationSpeed * leftRightTurnAmount * yawProportion * FOVScaleFactor));
+		eulerPitch = (eulerPitch + (analogRotationSpeed * leftRightTurnAmount * pitchProportion * FOVScaleFactor));
 	}
 
 
@@ -317,12 +324,12 @@ void UserCameraInputReaderImpl<gameT>::updateRotationTransform(const FreeCameraD
 		float pitchProportion = std::cos(eulerRoll);
 		float yawProportion = std::sin(eulerRoll);
 
-		eulerPitch = (eulerPitch + (analogRotationSpeed * upDownTurnAmount * -1.f * pitchProportion));
-		eulerYaw = (eulerYaw + (analogRotationSpeed * upDownTurnAmount * -1.f * yawProportion));
+		eulerPitch = (eulerPitch + (analogRotationSpeed * upDownTurnAmount * -1.f * pitchProportion * FOVScaleFactor));
+		eulerYaw = (eulerYaw + (analogRotationSpeed * upDownTurnAmount * -1.f * yawProportion * FOVScaleFactor));
 
 	}
 
-	// Roll: means rotating around local FORWARD axis.
+	// Roll: means rotating around local FORWARD axis. Does not have FOVScaling. 
 	if (cameraRollLeftBinding->isCurrentlyDown())
 	{
 		eulerRoll = eulerRoll + digitalRotationSpeed * -1.f;
@@ -365,16 +372,24 @@ void UserCameraInputReaderImpl<gameT>::updateFOVTransform(const FreeCameraData& 
 		cameraFOVSpeed = cameraFOVSpeed * 0.002f; // otherwise it's way too fast
 	}
 
+
+	 
+	float scaleFactor = 1.f;
+	if (settings->freeCameraUserInputCameraNonLinearFOV->GetValue())
+	{
+		// Scaling for slower transitions at very low (0) and very high FOV (180) values
+		scaleFactor = (90.f - (std::abs(fov - 90.f))) / 90.f; // gives a value from 0 to 1, with 0 meaning we're near 0 or 180 degrees FOV, 1 meaning we're near 90 degrees FOV
+		scaleFactor *= 200.f; // tone it down a little bit 
+	}
+
 	// Section: FOV
-	// we scale by power for smoother transition
-	// increase
-	float scaleFactor = std::sqrt(fov) * 10.f;
+	// increase FOV
 	if (cameraFOVIncreaseBinding->isCurrentlyDown())
 	{
 		fov = std::clamp(fov + (cameraFOVSpeed * scaleFactor), 0.0001f, 179.999f);
 	}
 
-	// decrease
+	// decrease FOV
 	if (cameraFOVDecreaseBinding->isCurrentlyDown())
 	{
 		fov = std::clamp(fov - (cameraFOVSpeed * scaleFactor), 0.0001f, 179.999f);

@@ -213,15 +213,19 @@ private:
 
 			if (frameDelta != 0.f) // this would cause division by zeros. frameDelta can be zero when game is paused.
 			{
-				// rotate FIRST so position updater knows which direction is "forward/up/right" etc 
+				// we will scale rotation sensitivity by fov value so fov transform first
+				userControlledFOV.transformFOV(freeCameraData, frameDelta, targetFOVCopy);
+				LOG_ONCE(PLOG_DEBUG << "userControlledFOV.transformFOV DONE");
+				freeCameraData.currentFOV = targetFOVCopy;
+
+				// rotate before position so that the position transformer knows which direction is "forward/up/right" etc 
 				userControlledRotation.transformRotation(freeCameraData, frameDelta);
 				LOG_ONCE(PLOG_DEBUG << "userControlledRotation.transformRotation DONE");
 
 				userControlledPosition.transformPosition(freeCameraData, frameDelta);
 				LOG_ONCE(PLOG_DEBUG << "userControlledPosition.transformPosition DONE");
 
-				userControlledFOV.transformFOV(freeCameraData, frameDelta, targetFOVCopy);
-				LOG_ONCE(PLOG_DEBUG << "userControlledFOV.transformFOV DONE");
+
 			}
 
 

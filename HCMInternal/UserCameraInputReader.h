@@ -16,11 +16,14 @@ class UserCameraInputReader : public IOptionalCheat, public IUpdatePositionTrans
 private:
 	std::unique_ptr< IUserCameraInputReaderImpl> pimpl; // todo; working on hooking this up to multilevel pointer to read analog inputs
 
-	virtual void updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform) override;
-
-	virtual void updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll) override;
 
 	virtual void updateFOVTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& fov) override;
+	virtual void updateRotationTransform(const FreeCameraData& freeCameraData, const float frameDelta, float& eulerYaw, float& eulerPitch, float& eulerRoll) override;
+	virtual void updatePositionTransform(const FreeCameraData& freeCameraData, const float frameDelta, SimpleMath::Vector3& positionTransform) override;
+
+
+
+
 
 
 public:

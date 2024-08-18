@@ -1178,6 +1178,20 @@ public:
 			nameof(freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> freeCameraUserInputCameraRotationScalesToFOV = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(freeCameraRotationSensivitiyScalesToFOV)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> freeCameraUserInputCameraNonLinearFOV = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(freeCameraUserInputCameraNonLinearFOV)
+		);
+
 	std::shared_ptr<BinarySetting<int>> switchBSPIndex = std::make_shared<BinarySetting<int>>
 		(
 			0,
@@ -1915,6 +1929,8 @@ public:
 		freeCameraAnchorFOVToObjectDistanceObjectToTrackManualPositionVec3,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolator,
 		freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor,
+		freeCameraUserInputCameraRotationScalesToFOV,
+		freeCameraUserInputCameraNonLinearFOV,
 		switchBSPIndex,
 		switchBSPSetLoadSet,
 		switchBSPSetLoadIndex,
