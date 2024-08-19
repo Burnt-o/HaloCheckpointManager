@@ -375,12 +375,24 @@ void UserCameraInputReaderImpl<gameT>::updateFOVTransform(const FreeCameraData& 
 
 	 
 	float scaleFactor = 1.f;
-	if (settings->freeCameraUserInputCameraNonLinearFOV->GetValue())
+
+	// Scale FOV transition speed to be slower when at LOW (0) FOV values.
+	if (settings->freeCameraUserInputCameraNonLinearFOVAtMinimum->GetValue())
 	{
-		// Scaling for slower transitions at very low (0) and very high FOV (180) values
-		scaleFactor = (90.f - (std::abs(fov - 90.f))) / 90.f; // gives a value from 0 to 1, with 0 meaning we're near 0 or 180 degrees FOV, 1 meaning we're near 90 degrees FOV
-		scaleFactor *= 200.f; // tone it down a little bit 
+		auto lowScaleFactor =  (180.f - (std::abs(fov - 180.f))) / 180.f; // 0 when fov near 0, 1 when fov near 180.
+		scaleFactor = scaleFactor * lowScaleFactor;
+		scaleFactor *= 2.f; // speed it up a bit overall to account for this extra scaling slowness.
 	}
+
+	// Scale FOV transition speed to be slower when at HIGH (180 deg) FOV values.
+	if (settings->freeCameraUserInputCameraNonLinearFOVAtMaximum->GetValue())
+	{
+		auto highScaleFactor = ((std::abs(fov - 180.f))) / 180.f; // 0 when fov near 180, 1 when fov near 0.
+		scaleFactor = scaleFactor * highScaleFactor;
+		scaleFactor *= 2.f; // speed it up a bit overall to account for this extra scaling slowness.
+	}
+	scaleFactor = std::max(scaleFactor, 0.000001f); // having actually zero as a value would be bad. 
+	scaleFactor *= 100.f; // speed it up more, base value was the wrong order of magnitude
 
 	// Section: FOV
 	// increase FOV

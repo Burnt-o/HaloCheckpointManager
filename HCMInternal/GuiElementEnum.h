@@ -280,7 +280,8 @@
 			((freeCameraUserInputCameraRotationScalesToFOV, (FREE_CAMERA_SUPPORT)))\
 			((freeCameraUserInputCameraFOVSpeed, (FREE_CAMERA_SUPPORT)))\
 			defFreeCameraInterpolator(UserInputCameraFOV)\
-			((freeCameraUserInputCameraNonLinearFOV, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraNonLinearFOVAtMinimum, (FREE_CAMERA_SUPPORT)))\
+			((freeCameraUserInputCameraNonLinearFOVAtMaximum, (FREE_CAMERA_SUPPORT)))\
 			((freeCameraUserInputCameraSetPosition, (FREE_CAMERA_SUPPORT)))\
 			((freeCameraUserInputCameraSetPositionChildren, (FREE_CAMERA_SUPPORT)))\
 				((freeCameraUserInputCameraSetPositionVec3, (FREE_CAMERA_SUPPORT)))\

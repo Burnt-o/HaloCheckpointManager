@@ -1548,6 +1548,8 @@ private:
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraRotationScalesToFOV),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVSpeed),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraFOVInterpolator),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraNonLinearFOVAtMinimum),
+									createNestedElement(GUIElementEnum::freeCameraUserInputCameraNonLinearFOVAtMaximum),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPosition),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetPositionChildren),
 									createNestedElement(GUIElementEnum::freeCameraUserInputCameraSetRotation),
@@ -1672,10 +1674,13 @@ private:
 									}
 							));
 
-						case GUIElementEnum::freeCameraUserInputCameraNonLinearFOV:
+						case GUIElementEnum::freeCameraUserInputCameraNonLinearFOVAtMinimum:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-								(game, ToolTipCollection("Makes changing FOV with the hotkey non-linear, so it's slower it very high or very low values."), std::nullopt, "Non-Linear FOV", settings->freeCameraUserInputCameraNonLinearFOV));
+								(game, ToolTipCollection("Makes changing FOV with the hotkey non-linear, so it transitions slower at very low FOV values."), std::nullopt, "Non-Linear FOV at 0 degrees", settings->freeCameraUserInputCameraNonLinearFOVAtMinimum));
 
+						case GUIElementEnum::freeCameraUserInputCameraNonLinearFOVAtMaximum:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection("Makes changing FOV with the hotkey non-linear, so it transitions slower at very high FOV values."), std::nullopt, "Non-Linear FOV at 180 degrees", settings->freeCameraUserInputCameraNonLinearFOVAtMaximum));
 
 						case GUIElementEnum::freeCameraUserInputCameraFOVInterpolatorLinearFactor:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam(0.f, 1.f, ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat | ImGuiSliderFlags_Logarithmic)>>
