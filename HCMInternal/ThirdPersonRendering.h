@@ -3,19 +3,15 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
+#include "SharedRequestProvider.h"
 
 // enables 3rd person rendering of the players model, and hides game UI
 
-class ThirdPersonRenderingImplUntemplated 
-{ 
-public: 
-	virtual ~ThirdPersonRenderingImplUntemplated() = default; 
-	virtual void toggleThirdPersonRendering(bool enabled) = 0;
-};
+
 class ThirdPersonRendering : public IOptionalCheat
 {
 private:
-	std::unique_ptr<ThirdPersonRenderingImplUntemplated> pimpl;
+	std::unique_ptr<TokenSharedRequestProvider> pimpl;
 
 
 public:
@@ -25,6 +21,9 @@ public:
 
 	std::string_view getName() override { return nameof(ThirdPersonRendering); }
 
-	void toggleThirdPersonRendering(bool enabled);
+	// engages third person rendering while held 
+	std::shared_ptr<SharedRequestToken> makeScopedRequest() {
+		return pimpl->makeScopedRequest();
+	} 
 
 };

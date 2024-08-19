@@ -87,7 +87,7 @@ public:
 	}
 
 	virtual std::string_view getName() override {
-		return nameof(GetObjectAddressCLI);
+		return nameof(GetTagAddressPresenter);
 	}
 
 	~GetTagAddressPresenter()

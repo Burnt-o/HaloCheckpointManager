@@ -11,7 +11,7 @@
 #include "safetyhook.hpp"
 
 template <GameState::Value gameT>
-class DisableScreenEffectsImpl : public DisableScreenEffectsImplUntemplated
+class DisableScreenEffectsImpl : public TokenSharedRequestProvider
 {
 private:
 
@@ -30,11 +30,12 @@ public:
 
 	}
 
-	virtual void toggleDisableScreenEffects(bool enabled) override
+	virtual void updateService() override
 	{
 		safetyhook::ThreadFreezer threadFreezer;
-		disableScreenEffectsHook->setWantsToBeAttached(enabled);
+		disableScreenEffectsHook->setWantsToBeAttached(serviceIsRequested());
 	}
+
 
 };
 
@@ -79,5 +80,3 @@ DisableScreenEffects::~DisableScreenEffects()
 {
 	PLOG_DEBUG << "~" << getName();
 }
-
-void DisableScreenEffects::toggleDisableScreenEffects(bool enabled) { return pimpl->toggleDisableScreenEffects(enabled); }

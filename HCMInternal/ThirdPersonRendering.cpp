@@ -14,7 +14,7 @@
 #include "HideHUD.h"
 
 template <GameState::Value gameT>
-class ThirdPersonRenderingInlineImpl : public ThirdPersonRenderingImplUntemplated
+class ThirdPersonRenderingInlineImpl : public TokenSharedRequestProvider
 {
 private:
 	GameState mGame;
@@ -59,30 +59,28 @@ public:
 
 	}
 
-	virtual void toggleThirdPersonRendering(bool enabled) override
+
+	virtual void updateService() override
 	{
 		try
 		{
-			{
-				safetyhook::ThreadFreezer threadFreezer;
-				thirdPersonRenderingHook->setWantsToBeAttached(enabled);
-			}
-
-			if (enabled)
+			safetyhook::ThreadFreezer threadFreezer;
+			if (serviceIsRequested())
 			{
 				lockOrThrow(hideHUDWeak, hideHUD);
 				hideHUDServiceRequest = hideHUD->makeScopedRequest();
+				thirdPersonRenderingHook->setWantsToBeAttached(true);
 			}
 			else
 			{
 				hideHUDServiceRequest = std::nullopt;
+				thirdPersonRenderingHook->setWantsToBeAttached(false);
 			}
 		}
 		catch (HCMRuntimeException ex)
 		{
 			runtimeExceptions->handleMessage(ex);
 		}
-		
 	}
 
 };
@@ -90,7 +88,7 @@ public:
 
 
 template <GameState::Value gameT>
-class ThirdPersonRenderingFlagImpl : public ThirdPersonRenderingImplUntemplated
+class ThirdPersonRenderingFlagImpl : public TokenSharedRequestProvider
 {
 private:
 	GameState mGame;
@@ -131,80 +129,33 @@ public:
 
 	}
 
-	virtual void toggleThirdPersonRendering(bool enabled) override
+	virtual void updateService() override
 	{
 		try
 		{
-			{
-				safetyhook::ThreadFreezer threadFreezer;
-				thirdPersonRenderingHook->setWantsToBeAttached(enabled);
-			}
-
-			if (enabled)
+			safetyhook::ThreadFreezer threadFreezer;
+			if (serviceIsRequested())
 			{
 				lockOrThrow(hideHUDWeak, hideHUD);
 				hideHUDServiceRequest = hideHUD->makeScopedRequest();
+				thirdPersonRenderingHook->setWantsToBeAttached(true);
 			}
 			else
 			{
 				hideHUDServiceRequest = std::nullopt;
+				thirdPersonRenderingHook->setWantsToBeAttached(false);
 			}
 		}
 		catch (HCMRuntimeException ex)
 		{
 			runtimeExceptions->handleMessage(ex);
 		}
-
 	}
+
 
 };
 
 
-//template <GameState::Value gameT>
-//class ThirdPersonRenderingContextImpl : public ThirdPersonRenderingImplUntemplated
-//{
-//private:
-//
-//
-//	// main hook function
-//	static void thirdPersonRenderingHookFunction(SafetyHookContext& ctx)
-//	{
-//			enum class param
-//			{
-//				ValueToSet
-//			};
-//			auto* ctxInterpreter = thirdPersonRenderingContextInterpreter.get();
-//
-//			auto* valRef = ctxInterpreter->getParameterRef(ctx, (int)param::ValueToSet);
-//			*valRef = thirdPersonRenderingValueToSet;
-//
-//	}
-//
-//	// hook
-//	static inline std::shared_ptr<ModuleMidHook> thirdPersonRenderingHook;
-//	static inline int thirdPersonRenderingValueToSet;
-//	static inline std::shared_ptr< MidhookContextInterpreter> thirdPersonRenderingContextInterpreter;
-//
-//public:
-//	ThirdPersonRenderingContextImpl(GameState gameImpl, IDIContainer& dicon)
-//
-//	{
-//		auto ptr = dicon.Resolve<PointerDataStore>().lock();
-//
-//		auto thirdPersonRenderingFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(thirdPersonRenderingFunction), gameImpl);
-//		thirdPersonRenderingContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(thirdPersonRenderingContextInterpreter), gameImpl);
-//		thirdPersonRenderingValueToSet = *ptr->getData<std::shared_ptr<int64_t>>(nameof(thirdPersonRenderingValueToSet), gameImpl).get();
-//		thirdPersonRenderingHook = ModuleMidHook::make(gameImpl.toModuleName(), thirdPersonRenderingFunction, thirdPersonRenderingHookFunction);
-//
-//	}
-//
-//	virtual void toggleThirdPersonRendering(bool enabled) override
-//	{
-//		safetyhook::ThreadFreezer threadFreezer;
-//		thirdPersonRenderingHook->setWantsToBeAttached(enabled);
-//	}
-//
-//};
 
 
 
@@ -246,5 +197,3 @@ ThirdPersonRendering::~ThirdPersonRendering()
 {
 		PLOG_DEBUG << "~" << getName();
 }
-
-void ThirdPersonRendering::toggleThirdPersonRendering(bool enabled) { return pimpl->toggleThirdPersonRendering(enabled); }

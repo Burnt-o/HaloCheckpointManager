@@ -154,11 +154,15 @@ public:
 		PLOG_DEBUG << "~OptionalCheatStore";
 		// important: the cheat collection must be destroyed before the dicon, so the cheat destructors are still guarenteed access to their services
 
-#ifndef HCM_DEBUG 
-#error can we call the clear operation multi-threadingly so as to avoid issues with blocking destructors?
-#endif
+		for (auto& [info, cheat] : *cheatCollection.get())
+		{
+			PLOG_DEBUG << "Releasing reference to: " << cheat->getName();
+			cheat.reset();
+		}
 
-		cheatCollection->clear();
+
+
+		cheatCollection.reset();
 		PLOG_DEBUG << "finished clearing cheat collection";
 		// now the only pointers to the optionalCheats are those that point inwardly rats' nest style
 	}

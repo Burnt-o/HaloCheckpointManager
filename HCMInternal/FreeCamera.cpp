@@ -69,23 +69,31 @@ private:
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
 	std::weak_ptr<Speedhack> speedhackWeak;
-	std::shared_ptr<GetGameCameraData> getGameCameraData;
-	std::shared_ptr<UpdateGameCameraData> updateGameCameraData;
+	std::weak_ptr<GetGameCameraData> getGameCameraDataWeak;
+	std::weak_ptr<UpdateGameCameraData> updateGameCameraDataWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
+#ifndef HCM_DEBUG
+#error maybe we should make more of these shared ptrs into weak ptrs for destruction reasons.
+#error or just add a check for GlobalKill in the freecam loop.
+#endif
+
 	std::optional<std::weak_ptr< DisableScreenEffects>> disableScreenEffectsOptionalWeak;
+	std::shared_ptr<SharedRequestToken> disableScreenEffectsRequest;
 	std::optional<std::weak_ptr< ThirdPersonRendering>> thirdPersonRenderingOptionalWeak;
+	std::shared_ptr<SharedRequestToken> thirdPersonRenderingRequest;
 	std::optional<std::weak_ptr< BlockPlayerCharacterInput>> blockPlayerCharacterInputOptionalWeak;
+	std::shared_ptr<SharedRequestToken> blockPlayerCharacterInputRequest;
 
 	std::optional<std::weak_ptr<ForceTeleport>> forceTeleportOptionalWeak;
 
 
-	std::shared_ptr<UserCameraInputReader> userCameraInputReader;
+	std::weak_ptr<UserCameraInputReader> userCameraInputReaderWeak;
 	PositionTransformer userControlledPosition;
 	RotationTransformer userControlledRotation;
 	FOVTransformer userControlledFOV;
 
-	std::shared_ptr<FreeCameraFOVOverride> freeCameraFOVOverrideProvider;
+	std::weak_ptr<FreeCameraFOVOverride> freeCameraFOVOverrideProviderWeak;
 	std::shared_ptr<SharedRequestToken> freeCameraFOVOverrideRequest;
 
 	// hooks
@@ -172,8 +180,15 @@ private:
 
 		try
 		{
+			if (GlobalKill::isKillSet())
+			{
+				onFreeCameraToggleChange(false);
+				return;
+			}
+
 
 			LOG_ONCE(PLOG_VERBOSE << "getting game camera data");
+			lockOrThrow(getGameCameraDataWeak, getGameCameraData);
 			auto gameCameraData = getGameCameraData->getGameCameraData();
 
 			// "world" absolute data. Gets transformed into final position/rotation by cameraTransformers.
@@ -236,6 +251,7 @@ private:
 			LOG_ONCE(PLOG_VERBOSE << "fov setting updated");
 
 			LOG_ONCE(PLOG_DEBUG << "updating game camera");
+			lockOrThrow(updateGameCameraDataWeak, updateGameCameraData);
 			updateGameCameraData->updateGameCameraData(gameCameraData, freeCameraData, targetFOVCopy);
 			LOG_ONCE(PLOG_DEBUG << "updating game camera DONE");
 		}
@@ -250,7 +266,7 @@ private:
 
 
 	// setting toggle event callback
-	void onFreeCameraToggleChange(bool& newValue)
+	void onFreeCameraToggleChange(bool newValue)
 	{
 		try
 		{
@@ -264,21 +280,33 @@ private:
 			{
 				lockOrThrow(settingsWeak, settings);
 				lockOrThrow(thirdPersonRenderingOptionalWeak.value(), thirdPersonRendering);
-				thirdPersonRendering->toggleThirdPersonRendering(settings->freeCameraThirdPersonRendering->GetValue() && newValue);
+				
+				if (newValue && settings->freeCameraThirdPersonRendering->GetValue())
+					thirdPersonRenderingRequest = thirdPersonRendering->makeScopedRequest();
+				else
+					thirdPersonRenderingRequest.reset();
 			}
 
 			if (disableScreenEffectsOptionalWeak.has_value())
 			{
 				lockOrThrow(settingsWeak, settings);
 				lockOrThrow(disableScreenEffectsOptionalWeak.value(), disableScreenEffects);
-				disableScreenEffects->toggleDisableScreenEffects(settings->freeCameraDisableScreenEffects->GetValue() && newValue);
+
+				if (newValue && settings->freeCameraDisableScreenEffects->GetValue())
+					disableScreenEffectsRequest = disableScreenEffects->makeScopedRequest();
+				else
+					disableScreenEffectsRequest.reset();
 			}
 
 			if (blockPlayerCharacterInputOptionalWeak.has_value())
 			{
 				lockOrThrow(settingsWeak, settings);
 				lockOrThrow(blockPlayerCharacterInputOptionalWeak.value(), blockPlayerCharacterInput);
-				blockPlayerCharacterInput->toggleBlockPlayerCharacterInput(settings->freeCameraGameInputDisable->GetValue() && newValue);
+
+				if (newValue && settings->freeCameraGameInputDisable->GetValue())
+					blockPlayerCharacterInputRequest = blockPlayerCharacterInput->makeScopedRequest();
+				else
+					blockPlayerCharacterInputRequest.reset();
 			}
 
 			// set hooks 
@@ -297,7 +325,10 @@ private:
 				}
 
 				if (newValue)
+				{
+					lockOrThrow(freeCameraFOVOverrideProviderWeak, freeCameraFOVOverrideProvider);
 					freeCameraFOVOverrideRequest = freeCameraFOVOverrideProvider->makeScopedRequest();
+				}
 				else if (freeCameraFOVOverrideRequest)
 					freeCameraFOVOverrideRequest.reset();
 
@@ -308,7 +339,6 @@ private:
 			lockOrThrow(mccStateHookWeak, mccStateHook);
 			if (mccStateHook->isGameCurrentlyPlaying(gameT))
 			{
-
 				lockOrThrow(messagesGUIWeak, messagesGUI)
 				messagesGUI->addMessage(newValue ? "Free Camera enabled." : "Free Camera disabled.");
 			}
@@ -316,6 +346,10 @@ private:
 		}
 		catch (HCMRuntimeException ex)
 		{
+			thirdPersonRenderingRequest.reset();
+			blockPlayerCharacterInputRequest.reset();
+			disableScreenEffectsRequest.reset();
+			freeCameraFOVOverrideRequest.reset();
 			runtimeExceptions->handleMessage(ex);
 			try
 			{
@@ -341,7 +375,11 @@ private:
 			if (settings->freeCameraToggle->GetValue()) // only need to bother flipping if freeCamera is enabled
 			{
 				lockOrThrow(thirdPersonRenderingOptionalWeak.value(), thirdPersonRendering);
-				thirdPersonRendering->toggleThirdPersonRendering(newValue);
+
+				if (newValue)
+					thirdPersonRenderingRequest = thirdPersonRendering->makeScopedRequest();
+				else
+					thirdPersonRenderingRequest.reset();
 			}
 		}
 		catch (HCMRuntimeException ex)
@@ -360,7 +398,11 @@ private:
 			if (settings->freeCameraToggle->GetValue()) // only need to bother flipping if freeCamera is enabled
 			{
 				lockOrThrow(disableScreenEffectsOptionalWeak.value(), disableScreenEffects);
-				disableScreenEffects->toggleDisableScreenEffects(newValue);
+
+				if (newValue)
+					disableScreenEffectsRequest = disableScreenEffects->makeScopedRequest();
+				else
+					disableScreenEffectsRequest.reset();
 			}
 		}
 		catch (HCMRuntimeException ex)
@@ -379,7 +421,11 @@ private:
 			if (settings->freeCameraToggle->GetValue()) // only need to bother flipping if freeCamera is enabled
 			{
 				lockOrThrow(blockPlayerCharacterInputOptionalWeak.value(), blockPlayerCharacterInput);
-				blockPlayerCharacterInput->toggleBlockPlayerCharacterInput(newValue);
+
+				if (newValue)
+					blockPlayerCharacterInputRequest = blockPlayerCharacterInput->makeScopedRequest();
+				else
+					blockPlayerCharacterInputRequest.reset();
 			}
 		}
 		catch (HCMRuntimeException ex)
@@ -643,19 +689,19 @@ public:
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
-		getGameCameraData(resolveDependentCheat(GetGameCameraData)),
+		getGameCameraDataWeak(resolveDependentCheat(GetGameCameraData)),
 		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
-		updateGameCameraData(resolveDependentCheat(UpdateGameCameraData)),
-		userCameraInputReader(resolveDependentCheat(UserCameraInputReader)),
+		updateGameCameraDataWeak(resolveDependentCheat(UpdateGameCameraData)),
+		userCameraInputReaderWeak(resolveDependentCheat(UserCameraInputReader)),
 		speedhackWeak(resolveDependentCheat(Speedhack)),
 		mFreeCameraToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraToggle->valueChangedEvent, [this](bool& n) { onFreeCameraToggleChange(n); }),
 		mThirdPersonRenderingToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraThirdPersonRendering->valueChangedEvent, [this](bool& n) { onThirdPersonRenderingChange(n); }),
 		mDisableScreenEffectsToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraDisableScreenEffects->valueChangedEvent, [this](bool& n) { onDisableScreenEffectsChange(n); }),
 		mBlockPlayerCharacterInputToggleCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraGameInputDisable->valueChangedEvent, [this](bool& n) { onBlockPlayerCharacterInputChange(n); }),
 		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& state) { onGameStateChange(state); }),
-		userControlledPosition(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolatorLinearFactor),
-		userControlledRotation(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolatorLinearFactor),
-		userControlledFOV(userCameraInputReader, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolator, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolatorLinearFactor),
+		userControlledPosition(userCameraInputReaderWeak.lock(), settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraTranslationInterpolatorLinearFactor),
+		userControlledRotation(userCameraInputReaderWeak.lock(), settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolator, settingsWeak.lock()->freeCameraUserInputCameraRotationInterpolatorLinearFactor),
+		userControlledFOV(userCameraInputReaderWeak.lock(), settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolator, settingsWeak.lock()->freeCameraUserInputCameraFOVInterpolatorLinearFactor),
 
 		freeCameraUserInputCameraSetPositionCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetPosition, [this]() { onFreeCameraUserInputCameraSetPosition(); }),
 		freeCameraUserInputCameraSetPositionFillCurrentCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraSetPositionFillCurrent, [this]() { onFreeCameraUserInputCameraSetPositionFillCurrent(); }),
@@ -669,7 +715,7 @@ public:
 		freeCameraUserInputCameraIncreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraIncreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraIncreaseTranslationSpeedHotkey(); }),
 		freeCameraUserInputCameraDecreaseTranslationSpeedHotkeyCallback(dicon.Resolve< SettingsStateAndEvents>().lock()->freeCameraUserInputCameraDecreaseTranslationSpeedHotkey, [this]() { onFreeCameraUserInputCameraDecreaseTranslationSpeedHotkey(); }),
 		freeCameraTeleportToCameraCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->freeCameraTeleportToCameraEvent, [this]() {onFreeCameraTeleportToCameraCallback(); }),
-		freeCameraFOVOverrideProvider(resolveDependentCheat(FreeCameraFOVOverride))
+		freeCameraFOVOverrideProviderWeak(resolveDependentCheat(FreeCameraFOVOverride))
 	{
 		instance = this;
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
@@ -719,6 +765,7 @@ public:
 
 	~FreeCameraImpl()
 	{
+		PLOG_DEBUG << "~FreeCameraImpl";
 		// safety check that hook isn't running
 		if (hookIsRunning)
 		{
@@ -732,8 +779,6 @@ public:
 		if (setCameraDataHook)
 			setCameraDataHook.reset();
 
-		if (freeCameraFOVOverrideProvider)
-			freeCameraFOVOverrideProvider.reset();
 
 		instance = nullptr;
 	}
@@ -780,5 +825,6 @@ FreeCamera::FreeCamera(GameState gameImpl, IDIContainer& dicon)
 
 FreeCamera::~FreeCamera()
 {
+	PLOG_DEBUG << "FreeCamera destructor was called! are we not cleaning up?";
 	PLOG_DEBUG << "~" << getName();
 }

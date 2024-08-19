@@ -10,8 +10,10 @@
 #include "MultilevelPointer.h"
 #include "safetyhook.hpp"
 
+
+
 template <GameState::Value gameT>
-class BlockPlayerCharacterInputImplMidHook : public BlockPlayerCharacterInputImplUntemplated
+class BlockPlayerCharacterInputImplMidHook :  public TokenSharedRequestProvider
 {
 private:
 
@@ -41,16 +43,18 @@ public:
 
 	}
 
-	virtual void toggleBlockPlayerCharacterInput(bool enabled) override
+	virtual void updateService() override
 	{
 		safetyhook::ThreadFreezer threadFreezer;
-		BlockPlayerCharacterInputHook->setWantsToBeAttached(enabled);
+		BlockPlayerCharacterInputHook->setWantsToBeAttached(serviceIsRequested());
 	}
+
+
 
 };
 
 template <GameState::Value gameT>
-class BlockPlayerCharacterInputImplPatch : public BlockPlayerCharacterInputImplUntemplated
+class BlockPlayerCharacterInputImplPatch :  public TokenSharedRequestProvider
 {
 private:
 	// hook
@@ -67,11 +71,12 @@ public:
 
 	}
 
-	virtual void toggleBlockPlayerCharacterInput(bool enabled) override
+	virtual void updateService() override
 	{
 		safetyhook::ThreadFreezer threadFreezer;
-		BlockPlayerCharacterInputPatch->setWantsToBeAttached(enabled);
+		BlockPlayerCharacterInputPatch->setWantsToBeAttached(serviceIsRequested());
 	}
+
 
 };
 
@@ -117,5 +122,3 @@ BlockPlayerCharacterInput::~BlockPlayerCharacterInput()
 {
 	PLOG_DEBUG << "~" << getName();
 }
-
-void BlockPlayerCharacterInput::toggleBlockPlayerCharacterInput(bool enabled) { return pimpl->toggleBlockPlayerCharacterInput(enabled); }

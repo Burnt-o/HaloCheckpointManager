@@ -3,19 +3,13 @@
 #include "IOptionalCheat.h"
 #include "GameState.h"
 #include "DIContainer.h"
+#include "SharedRequestProvider.h"
 
-
-class DisableScreenEffectsImplUntemplated
-{
-public:
-	virtual ~DisableScreenEffectsImplUntemplated() = default;
-	virtual void toggleDisableScreenEffects(bool enabled) = 0;
-};
 
 class DisableScreenEffects : public IOptionalCheat
 {
 private:
-	std::unique_ptr<DisableScreenEffectsImplUntemplated> pimpl;
+	std::unique_ptr<TokenSharedRequestProvider> pimpl;
 
 
 public:
@@ -25,6 +19,9 @@ public:
 
 	std::string_view getName() override { return nameof(DisableScreenEffects); }
 
-	void toggleDisableScreenEffects(bool enabled); // true means screen effects are disabled
+	// disables screen effects while held 
+	std::shared_ptr<SharedRequestToken> makeScopedRequest() {
+		return pimpl->makeScopedRequest();
+	} 
 
 };
