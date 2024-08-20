@@ -110,7 +110,7 @@ public:
 	}
 };
 
-// Halo 1 is a module patch + a module nop call patch
+// Halo 1 is 2 module patches + a module nop call patch
 class DisableFogImplHalo1 : public DisableFog::DisableFogImpl
 {
 private:
@@ -118,11 +118,13 @@ private:
 
 	std::shared_ptr<ModulePatch> disableFogPatchHook;
 	std::shared_ptr<ModulePatch> disableFogPatchHook2;
+	std::shared_ptr<ModulePatch> disableFogPatchHook3;
 
 	void onDisableFogToggleChanged(bool newValue)
 	{
 		disableFogPatchHook->setWantsToBeAttached(newValue);
 		disableFogPatchHook2->setWantsToBeAttached(newValue);
+		disableFogPatchHook3->setWantsToBeAttached(newValue);
 	}
 
 
@@ -137,7 +139,11 @@ public:
 		disableFogPatchHook = ModulePatch::make(gameImpl.toModuleName(), disableFogPatchFunction, *disableFogPatchCode.get());
 
 		auto disableFogPatchFunction2 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(disableFogPatchFunction2), gameImpl);
-		disableFogPatchHook2 = ModulePatch::makeNOPCall(gameImpl.toModuleName(), disableFogPatchFunction2);
+		auto disableFogPatchCode2 = ptr->getVectorData<byte>(nameof(disableFogPatchCode2), gameImpl);
+		disableFogPatchHook2 = ModulePatch::make(gameImpl.toModuleName(), disableFogPatchFunction2, *disableFogPatchCode2.get());
+
+		auto disableFogPatchFunction3 = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(disableFogPatchFunction3), gameImpl);
+		disableFogPatchHook3 = ModulePatch::makeNOPCall(gameImpl.toModuleName(), disableFogPatchFunction3);
 	}
 };
 
