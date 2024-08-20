@@ -169,6 +169,7 @@ private:
 public:
 	CommandConsoleManagerImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
+		commandConsole(std::make_unique<CommandConsoleGUI>(resolveDependentCheat(EngineCommand), dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandFontSize->GetValue())),
 		commandConsoleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->commandConsoleHotkeyEvent, [this]() { onCommandConsoleHotkeyEvent(); }),
 		commandConsoleExecuteBufferEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->commandConsoleExecuteBufferEvent, [this]() { commandConsole->execute(false); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
@@ -184,9 +185,6 @@ public:
 		pauseGameOptionalWeak = controls->pauseGameService;
 		blockGameInputOptionalWeak = controls->blockGameInputService;
 		freeCursorOptionalWeak = controls->freeMCCSCursorService;
-
-		auto engineCommand = resolveDependentCheat(EngineCommand);
-		commandConsole = std::make_unique<CommandConsoleGUI>(engineCommand, dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandFontSize->GetValue());
 
 		try
 		{
