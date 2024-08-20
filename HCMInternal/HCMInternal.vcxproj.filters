@@ -1351,6 +1351,9 @@
     <ClCompile Include="ChangeOOBBackground.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="DisableFog.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

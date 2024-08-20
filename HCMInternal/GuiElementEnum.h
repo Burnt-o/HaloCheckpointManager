@@ -296,6 +296,7 @@
 				((freeCameraUserInputCameraSetRotationPaste, (FREE_CAMERA_SUPPORT)))\
 	((changeOOBBackgroundToggle, (Halo3)))\
 		((changeOOBBackgroundColor, (Halo3)))\
+	((disableFogToggle, (ALL_SUPPORTED_GAMES)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))\
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((getPlayerDatumGUI, (ALL_SUPPORTED_GAMES)))\

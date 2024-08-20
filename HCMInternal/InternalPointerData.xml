@@ -10636,5 +10636,95 @@
 		</Version>
 	</VersionedEntry>
 
-	
+	<VersionedEntry Name="disableFogPatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xAE09DF</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0x7E2996</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x1C52DB</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1F94C3</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x26CAC4</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x375813</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="disableFogPatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Data>0xE9, 0x10, 0x01, 0x00, 0x00, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Data>0xEB, 0x0A</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Data>0xE9, 0x1E, 0x02, 0x00, 0x00</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Data>0xE9, 0x1E, 0x02, 0x00, 0x00</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="disableFogPatchFunction2" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0xBBD39A</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x1F8BE7</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x26CAD5</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+
+	<VersionedEntry Name="disableFogPatchCode2" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Data>0xE9, 0xF9, 0x00, 0x00, 0x00</Data>
+		</Version>
+	</VersionedEntry>
 </root>

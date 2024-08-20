@@ -1408,6 +1408,7 @@ private:
 							createNestedElement(GUIElementEnum::freeCameraSettingsSimpleSubheading),
 							createNestedElement(GUIElementEnum::freeCameraSettingsAdvancedSubheading),
 							createNestedElement(GUIElementEnum::changeOOBBackgroundToggle),
+							createNestedElement(GUIElementEnum::disableFogToggle),
 						}));
 
 			case GUIElementEnum::hideHUDToggle:
@@ -1989,6 +1990,12 @@ private:
 					case GUIElementEnum::changeOOBBackgroundColor:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
 							(game, ToolTipCollection(""), "Background Colour##OOBBackgroundColor", settings->changeOOBBackgroundColor));
+
+
+				case GUIElementEnum::disableFogToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection(""), std::nullopt, "Disable Fog", settings->disableFogToggle));
+
 
 			case GUIElementEnum::theaterHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

@@ -474,6 +474,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::ChangeOOBBackground}
 	},
 
+		{ GUIElementEnum::disableFogToggle,
+{OptionalCheatEnum::DisableFog}
+		},
+
 
 
 #ifdef HCM_DEBUG

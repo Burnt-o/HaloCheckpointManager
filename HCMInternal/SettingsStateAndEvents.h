@@ -1777,6 +1777,14 @@ public:
 		);
 
 
+	std::shared_ptr<BinarySetting<bool>> disableFogToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(disableFogToggle)
+		);
+
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{

@@ -512,6 +512,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CommandConsoleGUI.cpp" />
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />
+    <ClCompile Include="DisableFog.cpp" />
     <ClCompile Include="EngineCommand.cpp" />
     <ClCompile Include="FreeCameraFOVOverride.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />

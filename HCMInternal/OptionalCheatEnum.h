@@ -104,7 +104,8 @@ GetAbilityData,\
 AbilityMeterOverlay,\
 GetTagAddressPresenter,\
 SoundClassGain,\
-ChangeOOBBackground
+ChangeOOBBackground,\
+DisableFog
 
 
 enum class OptionalCheatEnum {

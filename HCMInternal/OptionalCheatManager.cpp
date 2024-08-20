@@ -101,6 +101,7 @@
 #include "GetTagAddressPresenter.h"
 #include "SoundClassGain.h"
 #include "ChangeOOBBackground.h"
+#include "DisableFog.h"
 
 
 #include "DIContainer.h"
