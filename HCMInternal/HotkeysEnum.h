@@ -52,7 +52,8 @@ triggerOverlayToggleHotkey,\
 commandConsoleHotkey,\
 commandConsoleExecuteBuffer,\
 disableBarriers,\
-softCeilingOverlayToggleHotkey
+softCeilingOverlayToggleHotkey,\
+abilityMeterToggleHotkey
 
 
 

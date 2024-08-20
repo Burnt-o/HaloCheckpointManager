@@ -26,6 +26,7 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mtriggerOverlayToggleHotkeyEventCallbackHangle;
 	ScopedCallback<ActionEvent> mdisableBarriersHotkeyEventCallbackHangle;
 	ScopedCallback<ActionEvent> msoftCeilingOverlayToggleHotkeyEventCallbackHandle;
+	ScopedCallback<ActionEvent> mabilityMeterToggleHotkeyEventCallbackHandle;
 
 public:
 	HotkeyEventsLambdas(std::shared_ptr< SettingsStateAndEvents> settings)
@@ -47,7 +48,8 @@ public:
 		mtoggleWaypoint3DHotkeyEventCallbackHandle(settings->toggleWaypoint3DHotkeyEvent, [boolsetting = settings->waypoint3DToggle]() { boolsetting->flipBoolSetting(); }),
 		mtriggerOverlayToggleHotkeyEventCallbackHangle(settings->triggerOverlayToggleHotkeyEvent, [boolsetting = settings->triggerOverlayToggle]() {boolsetting->flipBoolSetting(); }),
 		mdisableBarriersHotkeyEventCallbackHangle(settings->disableBarriersHotkeyEvent, [boolsettings = settings->disableBarriersToggle]() {boolsettings->flipBoolSetting(); }),
-		msoftCeilingOverlayToggleHotkeyEventCallbackHandle(settings->softCeilingOverlayToggleHotkeyEvent, [boolsetting = settings->softCeilingOverlayToggle]() {boolsetting->flipBoolSetting(); })
+		msoftCeilingOverlayToggleHotkeyEventCallbackHandle(settings->softCeilingOverlayToggleHotkeyEvent, [boolsetting = settings->softCeilingOverlayToggle]() {boolsetting->flipBoolSetting(); }),
+		mabilityMeterToggleHotkeyEventCallbackHandle(settings->abilityMeterToggleHotkeyEvent, [boolsetting = settings->abilityMeterOverlayToggle]() {boolsetting->flipBoolSetting(); })
 
 	{ PLOG_DEBUG << "HotkeyEvents con"; }
 

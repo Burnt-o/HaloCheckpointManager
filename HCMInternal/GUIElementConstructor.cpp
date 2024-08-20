@@ -792,8 +792,8 @@ private:
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
-							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
-							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
+							//createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
+							//createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 							createNestedElement(GUIElementEnum::abilityMeterOverlayToggle),
 							createNestedElement(GUIElementEnum::abilityMeterOverlaySettings),
 						}));
@@ -1310,7 +1310,7 @@ private:
 
 			case GUIElementEnum::abilityMeterOverlayToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-					(game, ToolTipCollection("Renders an overlay with info about the player ability ability"), std::nullopt, "Ability Meter Toggle", settings->abilityMeterOverlayToggle));
+					(game, ToolTipCollection("Renders an overlay with info about the player ability ability"), RebindableHotkeyEnum::abilityMeterToggleHotkey, "Ability Meter Toggle", settings->abilityMeterOverlayToggle));
 				// TODO: add hotkey
 
 			case GUIElementEnum::abilityMeterOverlaySettings:

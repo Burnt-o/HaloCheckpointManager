@@ -257,11 +257,15 @@ private:
 			mSettings->switchBSPSetLoadSetEvent,
 			vsk{}),
 
-
+			
 
 
 		initEventOnPressHotkey(hideHUDToggle,
 			mSettings->hideHUDToggleHotkeyEvent,
+			vsk{}),
+
+			initEventOnPressHotkey(abilityMeterToggleHotkey,
+			mSettings->abilityMeterToggleHotkeyEvent,
 			vsk{}),
 
 
