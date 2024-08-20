@@ -294,6 +294,8 @@
 				((freeCameraUserInputCameraSetRotationFillCurrent, (FREE_CAMERA_SUPPORT)))\
 				((freeCameraUserInputCameraSetRotationCopy, (FREE_CAMERA_SUPPORT)))\
 				((freeCameraUserInputCameraSetRotationPaste, (FREE_CAMERA_SUPPORT)))\
+	((changeOOBBackgroundToggle, (Halo3)))\
+		((changeOOBBackgroundColor, (Halo3)))\
 ((theaterHeadingGUI, (Halo3,Halo3ODST,HaloReach,Halo4)))\
 ((debugHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((getPlayerDatumGUI, (ALL_SUPPORTED_GAMES)))\

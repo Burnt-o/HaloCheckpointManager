@@ -100,6 +100,7 @@
 #include "AbilityMeterOverlay.h"
 #include "GetTagAddressPresenter.h"
 #include "SoundClassGain.h"
+#include "ChangeOOBBackground.h"
 
 
 #include "DIContainer.h"

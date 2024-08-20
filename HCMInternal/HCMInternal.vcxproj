@@ -233,12 +233,14 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
+    <ClInclude Include="ChangeOOBBackground.h" />
     <ClInclude Include="CheckpointDumpNameDialog.h" />
     <ClInclude Include="CommandConsoleGUI.h" />
     <ClInclude Include="CommandConsoleManager.h" />
     <ClInclude Include="CustomErrors.h" />
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="DisableBarriers.h" />
+    <ClInclude Include="DisableFog.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
@@ -506,6 +508,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
   <ItemGroup>
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
+    <ClCompile Include="ChangeOOBBackground.cpp" />
     <ClCompile Include="CommandConsoleGUI.cpp" />
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />

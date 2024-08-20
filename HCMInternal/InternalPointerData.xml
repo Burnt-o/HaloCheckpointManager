@@ -10609,7 +10609,32 @@
 			</Parameters>
 		</Version>
 	</VersionedEntry>
+
+
+
+	<VersionedEntry Name="OOBBackgroundEnablePatchFunction" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x278AEE</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="OOBBackgroundEnablePatchCode" Type="Vector" Typename="byte">
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Data>0x11</Data>
+		</Version>
+	</VersionedEntry>
+
+	<VersionedEntry Name="OOBBackgroundColorPointer" Type="MultilevelPointer::ModuleOffset">
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x278B06</Offset>
+			</Offsets>
+		</Version>
+	</VersionedEntry>
+
 	
-
-
 </root>

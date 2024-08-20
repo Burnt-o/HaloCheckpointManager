@@ -1762,9 +1762,25 @@ public:
 			nameof(soundClassGainAdjusterToggle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> changeOOBBackgroundToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(changeOOBBackgroundToggle)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> changeOOBBackgroundColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{0.235f, 0.106f, 0.553f, 1.f}, // default value used by halo 3
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(changeOOBBackgroundColor)
+		);
+
+
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
 	{
+		changeOOBBackgroundColor,
 		soundClassGainDialog,
 			soundClassGainAmbience,
 			soundClassGainWeapons,

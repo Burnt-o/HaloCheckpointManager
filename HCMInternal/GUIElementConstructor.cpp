@@ -1407,6 +1407,7 @@ private:
 							createNestedElement(GUIElementEnum::freeCameraToggleGUI),
 							createNestedElement(GUIElementEnum::freeCameraSettingsSimpleSubheading),
 							createNestedElement(GUIElementEnum::freeCameraSettingsAdvancedSubheading),
+							createNestedElement(GUIElementEnum::changeOOBBackgroundToggle),
 						}));
 
 			case GUIElementEnum::hideHUDToggle:
@@ -1978,6 +1979,16 @@ private:
 									(game, ToolTipCollection("0 to 1 value controlling smoothness of the input. Low values make the camera sluggish, high values make it fast and snappy."), "Snap Factor##freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor", settings->freeCameraAnchorFOVToObjectDistanceFOVInterpolatorLinearFactor));
 */
 				
+				case GUIElementEnum::changeOOBBackgroundToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::ShowWhenTrue, false>>
+						(game, ToolTipCollection("Allows you to change the background colour of the void when out-of-bounds"), std::nullopt, "Override OOB Background Color", settings->changeOOBBackgroundToggle, 
+							headerChildElements{
+								createNestedElement(GUIElementEnum::changeOOBBackgroundColor),
+							}));
+
+					case GUIElementEnum::changeOOBBackgroundColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPicker<true>>
+							(game, ToolTipCollection(""), "Background Colour##OOBBackgroundColor", settings->changeOOBBackgroundColor));
 
 			case GUIElementEnum::theaterHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

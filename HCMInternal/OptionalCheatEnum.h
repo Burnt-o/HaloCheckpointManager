@@ -103,7 +103,8 @@ FreeCameraFOVOverride,\
 GetAbilityData,\
 AbilityMeterOverlay,\
 GetTagAddressPresenter,\
-SoundClassGain
+SoundClassGain,\
+ChangeOOBBackground
 
 
 enum class OptionalCheatEnum {
