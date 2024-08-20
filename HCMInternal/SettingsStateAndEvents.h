@@ -55,8 +55,8 @@ public:
 	std::shared_ptr<ActionEvent> triggerOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> softCeilingOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> disableBarriersHotkeyEvent = std::make_shared<ActionEvent>();
-		
-
+	std::shared_ptr<ActionEvent> abilityMeterToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	
 	// events
 	std::shared_ptr<ActionEvent> showGUIFailures = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> advanceTicksEvent = std::make_shared<ActionEvent>();

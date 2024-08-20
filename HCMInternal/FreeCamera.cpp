@@ -73,11 +73,6 @@ private:
 	std::weak_ptr<UpdateGameCameraData> updateGameCameraDataWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
-#ifndef HCM_DEBUG
-#error maybe we should make more of these shared ptrs into weak ptrs for destruction reasons.
-#error or just add a check for GlobalKill in the freecam loop.
-#endif
-
 	std::optional<std::weak_ptr< DisableScreenEffects>> disableScreenEffectsOptionalWeak;
 	std::shared_ptr<SharedRequestToken> disableScreenEffectsRequest;
 	std::optional<std::weak_ptr< ThirdPersonRendering>> thirdPersonRenderingOptionalWeak;
