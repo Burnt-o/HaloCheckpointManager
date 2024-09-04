@@ -10521,6 +10521,54 @@
 					shaftA_entrance; bsp0,1; bsp1,0;
 				</speedrunSpawnGoldie>
 			</_map_id_halo1_silent_cartographer>
+			<_map_id_halo1_pillar_of_autumn>
+				<easySpeedrun>
+					bsp0,1; bsp1,2; bsp2,3; bsp3,4; bsp4,5; bsp5,6;
+					final_trigger_1; end_trigger; bridge_trigger_1;
+					bridge_all;final_trigger_11; final_trigger_12; red_square;
+					yellow_square;
+				</easySpeedrun>
+				<legSpeedrun>
+					bsp0,1; bsp1,2; bsp2,3; bsp3,4; bsp4,5; bsp5,6;
+					final_trigger_1; end_trigger; bridge_trigger_1;
+					bridge_all; final_trigger_6; final_trigger_7;
+				</legSpeedrun>
+			</_map_id_halo1_pillar_of_autumn>
+			<_map_id_halo1_halo>
+				<speedrun>
+					lz_lifeboat; first_arrival; cave_exit; bsp 0,1; 
+					cliff_2; cliff_inside_left_bottom; rubble_1; rubble_attack;
+					river_2; river_attack; river_retreat; first_fort_lz; first_pipe_lz; first_back_lz;
+					plant_trigger; cliff_left_fort_second_floor;
+				</speedrun>
+			</map_id_halo1_halo>
+			<_map_id_halo1_343_guilty_spark>
+				<speedrun>
+					bsp 0,1; int_a_trigger; bsp 1,3; int_b_trigger;
+					bsp 3,4; killitall; bsp 4,5; swamp_b_trigger_a1;
+					swamp_b_trigger_a2; swamp_b_trigger_b; swamp_b_trigger_c;
+					monitor_trigger; int_b_lift_d_trigger;
+				</speedrun>
+			</_map_id_halo1_343_guilty_spark>
+			<_map_id_halo1_library>
+				<speedrun>
+					bsp 0,1; bsp 1,2; bsp 2,3; section2; 
+					section3_trigger; section4_trigger; section5_trigger;
+					section6_trigger; section7_trigger; enc7_4_trigger;
+					enc7_5_trigger; enc7_9_trigger; finale; 
+					floor1_door1_trigger; enc3_4_trigger; enc3_6_trigger;
+					enc5_5_trigger; enc5_6_trigger; enc6_3_trigger; enc6_4_trigger;
+				</speedrun>
+			</_map_id_halo1_library>
+			<_map_id_halo1_maw>
+				<speedrun>
+					section1; enc1_4; bsp 0,1; bsp 1,2;
+					bsp 2,3; bsp 3,4; section5; enc5_2;
+					enc5_3; bsp; 4,5; bsp 5,6; bsp 6,7;
+					section7; enc7_1; enc7_7; grand_finale;
+					enc5_1_main;
+				</speedrun>
+			</_map_id_halo1_maw>
 			<!--#endregion Halo 1-->
 			
 			
