@@ -10541,7 +10541,7 @@
 					river_2; river_attack; river_retreat; first_fort_lz; first_pipe_lz; first_back_lz;
 					plant_trigger; cliff_left_fort_second_floor;
 				</speedrun>
-			</map_id_halo1_halo>
+			</_map_id_halo1_halo>
 			<_map_id_halo1_343_guilty_spark>
 				<speedrun>
 					bsp 0,1; int_a_trigger; bsp 1,3; int_b_trigger;
@@ -10570,8 +10570,6 @@
 				</speedrun>
 			</_map_id_halo1_maw>
 			<!--#endregion Halo 1-->
-			
-			
 		</Version>
 	</VersionedEntry>
 
