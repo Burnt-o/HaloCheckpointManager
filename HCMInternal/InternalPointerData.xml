@@ -10550,7 +10550,7 @@
 					monitor_trigger; int_b_lift_d_trigger;
 				</speedrun>
 			</_map_id_halo1_343_guilty_spark>
-			<_map_id_halo1_library>
+			<_map_id_halo1_the_library>
 				<speedrun>
 					bsp 0,1; bsp 1,2; bsp 2,3; section2; 
 					section3_trigger; section4_trigger; section5_trigger;
@@ -10559,8 +10559,8 @@
 					floor1_door1_trigger; enc3_4_trigger; enc3_6_trigger;
 					enc5_5_trigger; enc5_6_trigger; enc6_3_trigger; enc6_4_trigger;
 				</speedrun>
-			</_map_id_halo1_library>
-			<_map_id_halo1_maw>
+			</_map_id_halo1_the_library>
+			<_map_id_halo1_the_maw>
 				<speedrun>
 					section1; enc1_4; bsp 0,1; bsp 1,2;
 					bsp 2,3; bsp 3,4; section5; enc5_2;
@@ -10568,9 +10568,10 @@
 					section7; enc7_1; enc7_7; grand_finale;
 					enc5_1_main;
 				</speedrun>
-			</_map_id_halo1_maw>
+			</_map_id_halo1_the_maw>
 			<!--#endregion Halo 1-->
-		</Version>
+		
+	</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="structureBSPsMetaDataFields" Type="DynStructOffsetInfo">
