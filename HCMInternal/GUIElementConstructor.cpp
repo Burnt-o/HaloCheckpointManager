@@ -1116,11 +1116,16 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIToggleWithChildren<GUIToggleWithChildrenParameters::AlwaysShowChildren, false>>
 						(game, ToolTipCollection("Filter which triggers to show by name"), std::nullopt, "Filter Triggers by Name", settings->triggerOverlayFilterToggle, headerChildElements
 							{
+							createNestedElement(GUIElementEnum::triggerOverlayFilterExactMatch),
 							createNestedElement(GUIElementEnum::triggerOverlayFilterStringDialog),
 							createNestedElement(GUIElementEnum::triggerOverlayFilterCountLabel),
 							createNestedElement(GUIElementEnum::triggerOverlayFilterStringCopy),
 							createNestedElement(GUIElementEnum::triggerOverlayFilterStringPaste),
 							}));
+
+				case GUIElementEnum::triggerOverlayFilterExactMatch:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Trigger names must exactly match. If disabled, trigger names that contain an entry in the list will also be shown."), std::nullopt, "Exact Match##TriggerOverlayFilter", settings->triggerOverlayFilterExactMatch));
 
 				case GUIElementEnum::triggerOverlayFilterStringDialog:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>

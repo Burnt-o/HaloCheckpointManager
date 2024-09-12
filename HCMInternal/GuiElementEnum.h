@@ -187,6 +187,7 @@
 	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
 	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\
+			((triggerOverlayFilterExactMatch, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayFilterStringDialog, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayFilterCountLabel, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayFilterStringCopy, (ALL_SUPPORTED_GAMES)))\

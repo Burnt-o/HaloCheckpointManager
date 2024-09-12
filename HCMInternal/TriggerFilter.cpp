@@ -27,6 +27,7 @@ private:
 	ScopedCallback< eventpp::CallbackList<void(const MCCState&)>> MCCStateChangedCallback;
 	ScopedCallback<eventpp::CallbackList<void(std::string& newValue)>> filterStringChangedCallback;
 	ScopedCallback<ToggleEvent> filterToggleChangedCallback;
+	ScopedCallback<ToggleEvent> filterExactMatchChangedCallback;
 	ScopedCallback<ToggleEvent> triggerOverlayToggleCallback;
 	ScopedCallback<eventpp::CallbackList<void(void)>> triggerDataChangedCallback;
 
@@ -83,12 +84,17 @@ private:
 					return;
 				}
 
+				std::function<bool(std::string, std::string)> filterMatchesTriggerName = settings->triggerOverlayFilterExactMatch->GetValue() ?
+					[](std::string triggerName, std::string filterEntry) { return triggerName == filterEntry; } :
+					[](std::string triggerName, std::string filterEntry) { return triggerName.contains(filterEntry); };
+
+
 				for (auto& filterName : delimitedTriggerFilter)
 				{
 					for (auto& [triggerPointer, triggerData] : *allTriggerData.get())
 					{
 						
-						if (triggerData.name == filterName.first)
+						if (filterMatchesTriggerName(triggerData.name, filterName.first))
 						{
 							filterName.second = true;
 							filteredTriggerData->emplace(triggerPointer, triggerData);
@@ -149,6 +155,7 @@ public:
 		: mGame(game),
 		filterStringChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterString->valueChangedEvent, [this](const std::string& n) {onFilterStringChanged(n); }),
 		filterToggleChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterToggle->valueChangedEvent, [this](bool& n) {onToggleChanged(); }),
+		filterExactMatchChangedCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayFilterExactMatch->valueChangedEvent, [this](bool& n) {onToggleChanged(); }),
 		triggerOverlayToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->triggerOverlayToggle->valueChangedEvent, [this](bool& n) {onToggleChanged(); }),
 		getTriggerDataWeak(resolveDependentCheat(GetTriggerData)),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),

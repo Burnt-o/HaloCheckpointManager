@@ -1340,6 +1340,12 @@ public:
 			nameof(triggerOverlayFilterCountLabel)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> triggerOverlayFilterExactMatch = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(triggerOverlayFilterExactMatch)
+		);
 
 	std::shared_ptr<BinarySetting<std::string>> triggerOverlayFilterString = std::make_shared<BinarySetting<std::string>>
 		(
