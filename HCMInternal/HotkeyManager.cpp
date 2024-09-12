@@ -14,7 +14,7 @@ class HotkeyManagerImpl {
 public:
 	static bool shouldHotkeyActivate(const BindingCombo& bindingSet);
 	static void serialiseHotkey(const std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node parent);
-	static void deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input);
+	static std::optional<std::vector<BindingCombo>> deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input);
 };
 
 
@@ -54,7 +54,9 @@ HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::sha
 
 			for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllRebindableHotkeys())
 			{
-				HotkeyManagerImpl::deserialiseHotkey(hotkey, hotkeyConfig.child(hotkey->getName().data()));
+				auto deserialisedBindings = HotkeyManagerImpl::deserialiseHotkey(hotkey, hotkeyConfig.child(hotkey->getName().data()));
+				if (deserialisedBindings.has_value())
+					hotkey->setBindings(deserialisedBindings.value());
 			}
 		}
 	}
@@ -160,12 +162,14 @@ void HotkeyManagerImpl::serialiseHotkey(const std::shared_ptr<RebindableHotkey> 
 
 }
 
-void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input)
+
+std::optional<std::vector<BindingCombo>> HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotkey, pugi::xml_node input)
 {
+
 	if (!input)
 	{
 		PLOG_ERROR << "could not deserialise hotkey " << hotkey->getName() << ", no config data found";
-		return;
+		return std::nullopt;
 	}
 
 	PLOG_VERBOSE << "Deserialising hotkey: " << magic_enum::enum_name(hotkey->mHotkeyEnum);
@@ -216,16 +220,16 @@ void HotkeyManagerImpl::deserialiseHotkey(std::shared_ptr<RebindableHotkey> hotk
 	if (newBindings.empty())
 	{
 		PLOG_VERBOSE << "empty newBindings";
-		return;
+		return std::vector<BindingCombo>{}; // empty
 	}
 
 	if (newBindings.size() > 20)
 	{
 		PLOG_ERROR << "newBindings size was over 20 - probably from glitched command console hotkey bug";
-		return;
+		return std::vector<BindingCombo>{}; // empty
 	}
 
-	hotkey->setBindings(newBindings);
+	return newBindings;
 
 	PLOG_VERBOSE << "hotkey loaded with " << newBindings.size() << " binding sets";
 
