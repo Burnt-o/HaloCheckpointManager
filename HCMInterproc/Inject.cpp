@@ -4,6 +4,8 @@
 #include "WinHandle.h"
 #include "SharedMemoryExternal.h"
 #include "WindowsUtilities.h"
+#include <winternl.h>
+#include <Psapi.h>
 
 
 class InjectionException : public std::exception {

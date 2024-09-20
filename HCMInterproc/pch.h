@@ -9,9 +9,6 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
-#include <Psapi.h>
-#include <winternl.h>
-#include <Dbghelp.h>
 
 #include <map>
 #include <string>
@@ -19,7 +16,6 @@
 #include <fstream>
 #include <memory>
 #include <array>
-#include <TlHelp32.h>
 
 
 // logging
@@ -28,6 +24,5 @@
 #include <plog\Formatters\TxtFormatter.h>
 #include <plog/Formatters/FuncMessageFormatter.h>
 
-//boost
 
 #endif //PCH_H
