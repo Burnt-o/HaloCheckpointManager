@@ -27,7 +27,9 @@ namespace HCMExternal
             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
             Log.Logger = new LoggerConfiguration()
+#if HCM_DEBUG
                 .MinimumLevel.Verbose().WriteTo.Debug()
+#endif
                 .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt",
                 flushToDiskInterval: TimeSpan.FromSeconds(3))
                 .CreateLogger();
