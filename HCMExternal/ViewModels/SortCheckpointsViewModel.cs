@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HCMExternal.ViewModels.Interfaces;
-using System.Windows;
-using System.Collections.ObjectModel;
-using HCMExternal.Services;
-using System.Windows.Input;
-using HCMExternal.ViewModels.Commands;
-using HCMExternal.Models;
+﻿using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Services.CheckpointServiceNS;
-using HCMExternal.Helpers.DictionariesNS;
+using HCMExternal.ViewModels.Commands;
+using HCMExternal.ViewModels.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace HCMExternal.ViewModels
 {
@@ -42,15 +37,15 @@ namespace HCMExternal.ViewModels
         private ICommand _accept;
         public ICommand Accept
         {
-            get { return _accept ?? (_accept = new RelayCommand(o => { AcceptAction(); }, o => { return true; })); }
-            set { _accept = value; }
+            get => _accept ?? (_accept = new RelayCommand(o => { AcceptAction(); }, o => { return true; }));
+            set => _accept = value;
         }
 
         private ICommand _cancel;
         public ICommand Cancel
         {
-            get { return _cancel ?? (_cancel = new RelayCommand(o => { CancelAction(); }, o => { return true; })); }
-            set { _cancel = value; }
+            get => _cancel ?? (_cancel = new RelayCommand(o => { CancelAction(); }, o => { return true; }));
+            set => _cancel = value;
         }
 
         public CheckpointService CheckpointServices { get; init; }
@@ -61,8 +56,8 @@ namespace HCMExternal.ViewModels
         public SortCheckpointsViewModel(CheckpointService checkpointServices, CheckpointViewModel checkpointViewModel)
         {
             FolderName = "???";
-            this.CheckpointServices = checkpointServices;
-            this.CheckpointViewModel = checkpointViewModel;
+            CheckpointServices = checkpointServices;
+            CheckpointViewModel = checkpointViewModel;
 
             ComboBoxOptions = new ObservableCollection<ICompareCheckpoints>()
             {
@@ -86,23 +81,27 @@ namespace HCMExternal.ViewModels
 
         public void AcceptAction()
         {
-            if (!Enum.IsDefined(typeof(HaloTabEnum), CheckpointViewModel.SelectedGame)) return;
+            if (!Enum.IsDefined(typeof(HaloTabEnum), CheckpointViewModel.SelectedGame))
+            {
+                return;
+            }
             // get data together then call service, then close window
             //get data
-            List<Tuple<ICompareCheckpoints, bool>> comparers = new();
-
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(Sort1, Sort1Reverse));
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(Sort2, Sort2Reverse));
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(Sort3, Sort3Reverse));
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(Sort4, Sort4Reverse));
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(Sort5, Sort5Reverse));
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(Sort6, Sort6Reverse));
-            comparers.Add(new Tuple<ICompareCheckpoints, bool>(new SortLastWriteTime(), Sort7Reverse));
-
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            List<Tuple<ICompareCheckpoints, bool>> comparers = new()
             {
-                CheckpointServices.SortCheckpoints(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.CheckpointCollection, comparers, (HaloTabEnum)CheckpointViewModel.SelectedGame);
-            CheckpointViewModel.RefreshCheckpointList();
+                new Tuple<ICompareCheckpoints, bool>(Sort1, Sort1Reverse),
+                new Tuple<ICompareCheckpoints, bool>(Sort2, Sort2Reverse),
+                new Tuple<ICompareCheckpoints, bool>(Sort3, Sort3Reverse),
+                new Tuple<ICompareCheckpoints, bool>(Sort4, Sort4Reverse),
+                new Tuple<ICompareCheckpoints, bool>(Sort5, Sort5Reverse),
+                new Tuple<ICompareCheckpoints, bool>(Sort6, Sort6Reverse),
+                new Tuple<ICompareCheckpoints, bool>(new SortLastWriteTime(), Sort7Reverse)
+            };
+
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                CheckpointServices.SortCheckpoints(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.CheckpointCollection, comparers, CheckpointViewModel.SelectedGame);
+                CheckpointViewModel.RefreshCheckpointList();
 
 
                 CloseAction();
@@ -111,7 +110,7 @@ namespace HCMExternal.ViewModels
 
         public void CancelAction()
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            Application.Current.Dispatcher.Invoke(delegate
             {
                 CloseAction();
             });

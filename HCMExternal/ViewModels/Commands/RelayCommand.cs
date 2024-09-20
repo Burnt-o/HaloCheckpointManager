@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Threading;
-using System.Diagnostics;
 
 namespace HCMExternal.ViewModels.Commands
 {
 
     public class RelayCommand : ICommand
     {
-        private Action<object?> execute;
-        private Func<object?, bool> canExecute;
+        private readonly Action<object?> execute;
+        private readonly Func<object?, bool> canExecute;
 
 
         public event EventHandler? CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
 
         public RelayCommand(Action<object?> execute, Func<object?, bool> canExecute = null)
@@ -30,7 +27,7 @@ namespace HCMExternal.ViewModels.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return this.canExecute == null || this.canExecute(parameter);
+            return canExecute == null || canExecute(parameter);
         }
 
         public async void Execute(object? parameter)
@@ -40,7 +37,7 @@ namespace HCMExternal.ViewModels.Commands
 
             try
             {
-                var task = Task.Factory.StartNew(() => { this.execute(parameter); });
+                Task task = Task.Factory.StartNew(() => { execute(parameter); });
                 await task;
             }
             catch (Exception ex)

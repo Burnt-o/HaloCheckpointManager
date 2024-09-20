@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NtApiDotNet;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using NtApiDotNet;
 
 namespace HCMExternal.Models
 {
@@ -37,7 +31,7 @@ namespace HCMExternal.Models
         private MCCHookStateEnum _state = MCCHookStateEnum.MCCNotFound;
         public MCCHookStateEnum State
         {
-            get { return _state; }
+            get => _state;
             set { _state = value; OnPropertyChanged(); }
         }
 
@@ -47,16 +41,16 @@ namespace HCMExternal.Models
         private NtProcess? _MCCProcess = null;
         public NtProcess? MCCProcess
         {
-            get { return _MCCProcess; }
-             set { _MCCProcess = value; OnPropertyChanged(); }
+            get => _MCCProcess;
+            set { _MCCProcess = value; OnPropertyChanged(); }
         }
 
         // What version of MCC are we connected to? Null if no MCC or unable to detect version. 10 char string of format "X.XXXX.X.X"
         private string? _MCCVersion = null;
         public string? MCCVersion
         {
-            get { return _MCCVersion; }
-             set { _MCCVersion = value; OnPropertyChanged(); }
+            get => _MCCVersion;
+            set { _MCCVersion = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

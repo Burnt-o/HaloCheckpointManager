@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using HCMExternal.ViewModels;
-using Serilog;
-using Microsoft.Extensions.DependencyInjection;
+﻿using HCMExternal.Services.CheckpointServiceNS;
 using HCMExternal.Services.DataPointersServiceNS;
-using HCMExternal.Services.CheckpointServiceNS;
-using HCMExternal.Views;
-using System.Diagnostics;
 using HCMExternal.Services.InterprocServiceNS;
 using HCMExternal.Services.MCCHookService;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using HCMExternal.ViewModels;
+using HCMExternal.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using System;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using static System.Net.WebRequestMethods;
-using System.Windows.Threading;
+using System.Windows;
 
 namespace HCMExternal
 {
@@ -37,7 +28,7 @@ namespace HCMExternal
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose().WriteTo.Debug()
-                .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt", 
+                .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt",
                 flushToDiskInterval: TimeSpan.FromSeconds(3))
                 .CreateLogger();
             Log.Information("Logging started");
@@ -91,7 +82,7 @@ namespace HCMExternal
             // TODO: check for required files/folders
 
             // Tell DataPointersService to load data
-            var dataPointersService = _serviceProvider.GetService<DataPointersService>();
+            DataPointersService? dataPointersService = _serviceProvider.GetService<DataPointersService>();
             if (dataPointersService == null) { }
             // Create collection of all our needed data and load them from the online repository
             string pointerErrors = "";
@@ -109,7 +100,7 @@ namespace HCMExternal
 
 
             // Check if current version of HCM is obsolete
-            if (dataPointersService.ObsoleteHCMVersions.Contains(this.CurrentHCMVersion))
+            if (dataPointersService.ObsoleteHCMVersions.Contains(CurrentHCMVersion))
             {
                 //Tell the user this version of HCM is deprecated and the new version must be downloaded
 
@@ -127,9 +118,9 @@ namespace HCMExternal
 
             // Check if there's a newer version of HCM available
             Log.Debug($"dataPointersService.LatestHCMVersions.Count: {dataPointersService.LatestHCMVersions.Count}");
-            Log.Debug($"dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion): {dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion)}");
-            Log.Debug($"this.CurrentHCMVersion: {this.CurrentHCMVersion}");
-            if (dataPointersService.LatestHCMVersions.Count > 0 && !dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion))
+            Log.Debug($"dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion): {dataPointersService.LatestHCMVersions.Contains(CurrentHCMVersion)}");
+            Log.Debug($"this.CurrentHCMVersion: {CurrentHCMVersion}");
+            if (dataPointersService.LatestHCMVersions.Count > 0 && !dataPointersService.LatestHCMVersions.Contains(CurrentHCMVersion))
             {
                 //Tell the user a new HCM version exists and ask them if they would like to download it (send them to github release page)
                 if (!(MessageBox.Show("A newer version of HCM exists, probably with bugfixes or new features.\nWould you like to go to the HCM releases page now?", "Download HCM update?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))
@@ -156,18 +147,18 @@ namespace HCMExternal
 
             // Setup theming
             string appTheme = HCMExternal.Properties.Settings.Default.DarkMode ? "Dark" : "Light";
-            this.Resources.MergedDictionaries[0].Source = new Uri($"/Themes/{appTheme}.xaml", UriKind.Relative);
+            Resources.MergedDictionaries[0].Source = new Uri($"/Themes/{appTheme}.xaml", UriKind.Relative);
 
-            var mainWindow = _serviceProvider.GetService<MainWindow>();
+            MainWindow? mainWindow = _serviceProvider.GetService<MainWindow>();
             mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
-            mainWindow.Title = "HaloCheckpointManager " + (this.CurrentHCMVersion.Length > 4 ? this.CurrentHCMVersion.Substring(0, 5) : this.CurrentHCMVersion);
+            mainWindow.Title = "HaloCheckpointManager " + (CurrentHCMVersion.Length > 4 ? CurrentHCMVersion.Substring(0, 5) : CurrentHCMVersion);
             mainWindow.Show();
 
             //var errorDialog = _serviceProvider.GetService<ErrorDialogView>();
             //errorDialog.DataContext = _serviceProvider.GetService<ErrorDialogViewModel>();
 
             // Tell MCCHookService to begin trying to hook to MCC
-            var mcchook = _serviceProvider.GetService<MCCHookService>();
+            MCCHookService? mcchook = _serviceProvider.GetService<MCCHookService>();
             mcchook.BeginStateMachineLoop();
         }
 
@@ -221,56 +212,56 @@ namespace HCMExternal
             #region Have File Access?
             //Check if HCM has file access to it's local directory. We test this by making a temporary subdirectory, checking it exists, then deleting it.
 
-                try
+            try
+            {
+                string localFolder = Directory.GetCurrentDirectory();
+                string testFolder = localFolder + $@"\testDir";
+
+                DirectoryInfo obj = Directory.CreateDirectory(testFolder);
+
+                if (Directory.Exists(testFolder))
                 {
-                    string localFolder = Directory.GetCurrentDirectory();
-                    string testFolder = localFolder + $@"\testDir";
-
-                    var obj = Directory.CreateDirectory(testFolder);
-
-                    if (Directory.Exists(testFolder))
-                    {
-                        Directory.Delete(testFolder, false);
-                    }
-                    else
-                    {
-                    throw new Exception("Test directory didn't exist: " + testFolder);
-                    }
-
+                    Directory.Delete(testFolder, false);
                 }
-                catch (Exception ex)
+                else
                 {
+                    throw new Exception("Test directory didn't exist: " + testFolder);
+                }
+
+            }
+            catch (Exception ex)
+            {
                 ex.Data.Add("UserMessage",
                      "HCM needs file read/write permissions in it's local directory." +
                     "\nDouble check the security permissions of the directory HCM is stored inside."
                     + "\n\nError: " + ex.ToString()
                     );
                 throw;
-                }
-      
+            }
+
             #endregion
 
             #region Have Required Folders?
             //Check if we have the required files and folders. Create them with default values if we don't, only returns false if it still failed to create them.
 
 
-                foreach (var folder in _requiredFolders)
+            foreach (string folder in _requiredFolders)
+            {
+                string folderPath = Directory.GetCurrentDirectory() + $@"\{folder}";
+                try
                 {
-                    var folderPath = Directory.GetCurrentDirectory() + $@"\{folder}";
-                    try
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-                    catch (Exception ex)
-                    {
+                    Directory.CreateDirectory(folderPath);
+                }
+                catch (Exception ex)
+                {
                     ex.Data.Add("UserMessage",
                     "HCM tried to create it's required working directories but failed." +
                     "\nDouble check the security permissions of the directory HCM is stored inside."
                     + "\n\nError: " + ex.ToString()
                     );
                     throw;
-                    }
                 }
+            }
 
 
             #endregion
@@ -278,40 +269,40 @@ namespace HCMExternal
             #region Have Required Files?
             //Check if we have the required assemblies, like BurntMemory.dll, etc. Get's a list of missing files if any are missing.
 
-                string missingAssemblies = "";
-                foreach (var assembly in _requiredAssemblies)
+            string missingAssemblies = "";
+            foreach (string assembly in _requiredAssemblies)
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), assembly);
+                if (!System.IO.File.Exists(filePath))
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), assembly);
-                    if (!System.IO.File.Exists(filePath))
+                    missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly;
+                }
+                else
+                {
+                    // file exists: check that it has the current version information
+                    FileVersionInfo assemblyVersion = FileVersionInfo.GetVersionInfo(filePath);
+                    string versionString = string.Format("{0}.{1}.{2}.{3}", assemblyVersion.FileMajorPart,
+                                                                        assemblyVersion.FileMinorPart,
+                                                                          assemblyVersion.FileBuildPart,
+                                                                          assemblyVersion.FilePrivatePart);
+                    if (versionString != CurrentHCMVersion)
                     {
-                        missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly;
+                        missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly + "(wrong file version! was " + versionString + ")";
                     }
-                    else
-                    {
-                        // file exists: check that it has the current version information
-                        FileVersionInfo assemblyVersion = FileVersionInfo.GetVersionInfo(filePath);
-                        string versionString = string.Format("{0}.{1}.{2}.{3}", assemblyVersion.FileMajorPart,
-                                                                            assemblyVersion.FileMinorPart,
-                                                                              assemblyVersion.FileBuildPart,
-                                                                              assemblyVersion.FilePrivatePart);
-                        if (versionString != this.CurrentHCMVersion)
-                        {
-                            missingAssemblies = missingAssemblies + (missingAssemblies == "" ? "" : ", ") + assembly + "(wrong file version! was " + versionString +")";
-                        }
-                }
-                    
-
                 }
 
-                if (missingAssemblies != "")
-                {
+
+            }
+
+            if (missingAssemblies != "")
+            {
                 throw new Exception("HCM is missing required files from it's local directory!" +
                     "\nYou may have to re-download HCM to get the required files."
                     + "\n\nMissing files: " + missingAssemblies);
-                }
+            }
 
 
-            
+
             #endregion
 
         }

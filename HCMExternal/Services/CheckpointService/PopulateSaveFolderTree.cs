@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using System.IO;
-using System.Collections.ObjectModel;
+﻿using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Models;
-using HCMExternal.Helpers.DictionariesNS;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
     public partial class CheckpointService
     {
-        
+
         /// <summary>
         /// Populates the saveFolder tree for a specified game -that's the root Folder and all folders underneath- into the saveFolderCollection observed by CheckpointViewModel.
         /// </summary>
@@ -56,14 +55,14 @@ namespace HCMExternal.Services.CheckpointServiceNS
                 foreach (DirectoryInfo subFolderInfoNested in subFolderInfo)
                 {
                     // Recursion woo
-                    subFolders.Add(GetAllFoldersUnder(subFolderInfoNested, thisPath) );
+                    subFolders.Add(GetAllFoldersUnder(subFolderInfoNested, thisPath));
                 }
                 string folderName = folderInfo.Name;
                 string folderPath = folderInfo.FullName;
                 DateTime? createdDateTime = folderInfo.CreationTime;
                 //Convert List to OC
                 ObservableCollection<SaveFolder> subFoldersOC = new(subFolders);
-                subFoldersOC = new (subFoldersOC.OrderBy(c => c.CreatedOn));
+                subFoldersOC = new(subFoldersOC.OrderBy(c => c.CreatedOn));
                 return new SaveFolder(folderPath, folderName, subFoldersOC, parentPath, createdDateTime);
             }
 
@@ -80,6 +79,6 @@ namespace HCMExternal.Services.CheckpointServiceNS
     }
 
 
-   
+
 
 }

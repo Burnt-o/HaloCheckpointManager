@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HCMExternal.Models;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Media;
-using HCMExternal.Models;
-using HCMExternal.ViewModels;
 
 namespace HCMExternal.Converters
 {
@@ -19,9 +13,9 @@ namespace HCMExternal.Converters
         {
 
             if (value == null || !(value is MCCHookStateEnum))
+            {
                 return (Visibility.Hidden);
-
-
+            }
 
             switch ((MCCHookStateEnum)value)
             {
@@ -33,13 +27,13 @@ namespace HCMExternal.Converters
                     return Visibility.Visible;
 
                 default:
-                case MCCHookStateEnum.MCCNotFound: 
-                case MCCHookStateEnum.InternalInjecting: 
-                case MCCHookStateEnum.InternalInitialising: 
+                case MCCHookStateEnum.MCCNotFound:
+                case MCCHookStateEnum.InternalInjecting:
+                case MCCHookStateEnum.InternalInitialising:
                 case MCCHookStateEnum.InternalSuccess:
                     return Visibility.Hidden;
 
-               
+
             }
 
 

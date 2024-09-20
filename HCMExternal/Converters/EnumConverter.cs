@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
 using System.Globalization;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Diagnostics;
-using HCMExternal.Helpers.DictionariesNS;
 
 namespace HCMExternal.Converters
 {
@@ -17,7 +9,9 @@ namespace HCMExternal.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
+            {
                 return null;
+            }
 
             if (targetType.IsEnum)
             {

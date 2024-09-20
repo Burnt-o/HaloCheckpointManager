@@ -18,8 +18,10 @@ namespace HCMExternal.ViewModels.Interfaces
             }
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private static bool? _isInDesignMode;
 
@@ -34,7 +36,7 @@ namespace HCMExternal.ViewModels.Interfaces
             {
                 if (!_isInDesignMode.HasValue)
                 {
-                    var prop = DesignerProperties.IsInDesignModeProperty;
+                    DependencyProperty prop = DesignerProperties.IsInDesignModeProperty;
                     _isInDesignMode
                         = (bool)DependencyPropertyDescriptor
                         .FromProperty(prop, typeof(FrameworkElement))

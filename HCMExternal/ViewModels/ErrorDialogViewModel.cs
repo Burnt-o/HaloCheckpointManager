@@ -1,11 +1,6 @@
 ﻿using Serilog;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Runtime.CompilerServices;
 
 namespace HCMExternal.ViewModels
@@ -15,7 +10,7 @@ namespace HCMExternal.ViewModels
         private string _errorMessage = "not set";
         public string ErrorMessage
         {
-            get { return _errorMessage; }
+            get => _errorMessage;
             set { _errorMessage = value; OnPropertyChanged(nameof(ErrorMessage)); }
         }
 
@@ -24,7 +19,7 @@ namespace HCMExternal.ViewModels
 
         public event ReturnBoolEventHandler ShowErrorDialogAndAskRetryEvent;
 
-        public bool RaiseShowErrorDialogEvent(string ? InErrorMessage)
+        public bool RaiseShowErrorDialogEvent(string? InErrorMessage)
         {
             ErrorMessage = InErrorMessage ?? "null";
 
@@ -32,10 +27,11 @@ namespace HCMExternal.ViewModels
             {
                 Log.Verbose("ShowErrorDialogAndAskRetryEvent");
 
-                return HCMExternal.App.Current.Dispatcher.Invoke((Func<bool>)delegate { // Need to make sure it's run on the UI thread
+                return HCMExternal.App.Current.Dispatcher.Invoke(delegate
+                { // Need to make sure it's run on the UI thread
                     return ShowErrorDialogAndAskRetryEvent(this, new EventArgs()); // note the event is returning a bool
                 });
-                
+
             }
             else
             {

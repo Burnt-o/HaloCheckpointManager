@@ -1,13 +1,8 @@
-﻿using System;
+﻿using HCMExternal.Helpers.DictionariesNS;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
-using HCMExternal.Models;
-using HCMExternal.Helpers;
-using HCMExternal.Helpers.DictionariesNS;
 
 namespace HCMExternal.Converters
 {
@@ -17,7 +12,9 @@ namespace HCMExternal.Converters
         {
             string? valueString = value as string;
             if (valueString == null)
+            {
                 return "???";
+            }
 
 
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
@@ -27,15 +24,15 @@ namespace HCMExternal.Converters
 
             // Must be within bounds of array
 
-                var stringMapper = Dictionaries.GameToLevelInfoDictionary[game];
-                if (stringMapper.ContainsKey(valueString))
-                {
-                    return stringMapper[valueString].FullName;
-                }
-                else
-                {
-                    return "???";
-                }
+            Dictionary<string, Dictionaries.LevelInfo> stringMapper = Dictionaries.GameToLevelInfoDictionary[game];
+            if (stringMapper.ContainsKey(valueString))
+            {
+                return stringMapper[valueString].FullName;
+            }
+            else
+            {
+                return "???";
+            }
 
 
 

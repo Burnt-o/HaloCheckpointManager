@@ -11,11 +11,11 @@ namespace HCMExternal.ViewModels
 
         public MCCHookStateViewModel MCCHookStateViewModel { get; init; }
 
-        public MainViewModel(CheckpointViewModel checkpointViewModel, MCCHookStateViewModel hookState) 
+        public MainViewModel(CheckpointViewModel checkpointViewModel, MCCHookStateViewModel hookState)
         {
             Log.Verbose("MainViewModel constructing");
-            this.CheckpointViewModel = checkpointViewModel;
-            this.MCCHookStateViewModel = hookState;
+            CheckpointViewModel = checkpointViewModel;
+            MCCHookStateViewModel = hookState;
         }
 
     }

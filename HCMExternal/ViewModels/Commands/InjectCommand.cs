@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Serilog;
+using System;
 using System.Windows.Input;
-using HCMExternal.Models;
-using HCMExternal.ViewModels;
-using System.Diagnostics;
-using HCMExternal.Services;
-using Serilog;
 
 
 namespace HCMExternal.ViewModels.Commands
@@ -55,7 +47,7 @@ namespace HCMExternal.ViewModels.Commands
 
         public void RaiseCanExecuteChanged()
         {
-            App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+            App.Current.Dispatcher.Invoke(delegate // Need to make sure it's run on the UI thread
             {
                 _canExecuteChanged?.Invoke(this, EventArgs.Empty);
             });

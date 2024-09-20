@@ -1,9 +1,7 @@
-﻿using System;
-
-using System.IO;
-using System.Diagnostics;
-using HCMExternal.Models;
+﻿using HCMExternal.Models;
 using Serilog;
+using System;
+using System.IO;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -18,7 +16,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <exception cref="InvalidOperationException"></exception>
         public void NewFolder(SaveFolder SelectedSaveFolder)
         {
-            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath)) throw new Exception("Can't create new folder - parent folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath))
+            {
+                throw new Exception("Can't create new folder - parent folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+            }
 
 
             // Ask user what they want to name the folder
@@ -27,20 +28,25 @@ namespace HCMExternal.Services.CheckpointServiceNS
                                                        $"New Folder",
                                                        -1, -1);
 
-            if (userInput == null) return; //They clicked the cancel button
+            if (userInput == null)
+            {
+                return; //They clicked the cancel button
+            }
 
             string proposedFolder = SelectedSaveFolder.SaveFolderPath + "\\" + userInput;
             Log.Debug("proposed new folder: " + proposedFolder);
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
-            if (userInput == "" || Directory.Exists(proposedFolder)) throw new InvalidOperationException("Failed to create new savefolder; was your new name valid and unique?");
+            if (userInput == "" || Directory.Exists(proposedFolder))
+            {
+                throw new InvalidOperationException("Failed to create new savefolder; was your new name valid and unique?");
+            }
 
-
-                Directory.CreateDirectory(proposedFolder);
+            Directory.CreateDirectory(proposedFolder);
 
 
 
 
         }
     }
-   
+
 }

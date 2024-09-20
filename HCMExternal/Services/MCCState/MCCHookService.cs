@@ -1,18 +1,14 @@
 ﻿using HCMExternal.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using HCMExternal.Services.DataPointersServiceNS;
 using HCMExternal.Services.InterprocServiceNS;
-using System.Runtime.CompilerServices;
-using Serilog;
-using System.Windows;
 using HCMExternal.ViewModels;
 using NtApiDotNet;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using HCMExternal.Services.DataPointersServiceNS;
+using System.Linq;
 
 namespace HCMExternal.Services.MCCHookService
 {
@@ -24,14 +20,15 @@ namespace HCMExternal.Services.MCCHookService
     {
 
         // store of current state (in MCCHookStateViewModel)
-        private MCCHookState MCCHookState { 
-            get { return mMCCHookStateViewModel.State; } 
-            set { mMCCHookStateViewModel.State = value; }
+        private MCCHookState MCCHookState
+        {
+            get => mMCCHookStateViewModel.State;
+            set => mMCCHookStateViewModel.State = value;
         }
 
         // last injection error
         private string? lastInjectionError;
-        private bool debugPrivilegeEnabled = false;
+        private readonly bool debugPrivilegeEnabled = false;
 
         // injected service
         private DataPointersService mDataPointersService { get; init; }
@@ -40,7 +37,7 @@ namespace HCMExternal.Services.MCCHookService
         private ErrorDialogViewModel mErrorDialogViewModel { get; init; }
 
         // Timer to loop State machine
-        private System.Threading.Timer StateMachineLoopTimer;
+        private readonly System.Threading.Timer StateMachineLoopTimer;
 
 
         // Constructor
@@ -50,7 +47,7 @@ namespace HCMExternal.Services.MCCHookService
             mInterprocService = ips;
             mMCCHookStateViewModel = vm;
             vm.ShowErrorEvent += ShowHCMInternalErrorDialog;
-            
+
             mErrorDialogViewModel = errorDialogVM;
 
             // Timer does not start immediately; only when BeginStateMachineLoop is called.
@@ -66,9 +63,9 @@ namespace HCMExternal.Services.MCCHookService
 
         private int stateMachineIsBusy = 0;
         // discards args, interlocks to prevent multiple StateMachineLoops running simultaneously
-        private void StateMachineLoopEventHandler(object? nullarg) 
+        private void StateMachineLoopEventHandler(object? nullarg)
         {
-            if (System.Threading.Interlocked.CompareExchange(ref this.stateMachineIsBusy, 1, 0) == 1)
+            if (System.Threading.Interlocked.CompareExchange(ref stateMachineIsBusy, 1, 0) == 1)
             {
                 return;
             }
@@ -76,7 +73,7 @@ namespace HCMExternal.Services.MCCHookService
             {
                 StateMachineLoop();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 lastInjectionError = "HCM had an internal exception in it's MCC Hook State Machine! \n\n" + "Exception details: \n" + ex.Message + "\n" + ex.Source + "\n\n" + "See HCMExternal.log for more info";
                 AdvanceStateMachine(MCCHookStateEnum.StateMachineException);
@@ -84,7 +81,7 @@ namespace HCMExternal.Services.MCCHookService
             }
             finally
             {
-                this.stateMachineIsBusy = 0;
+                stateMachineIsBusy = 0;
             }
 
         }
@@ -98,7 +95,7 @@ namespace HCMExternal.Services.MCCHookService
             Shutdown = 3,
         }
 
-        private StringWriter _mccAccessInfo = new();
+        private readonly StringWriter _mccAccessInfo = new();
 
 
         // main loop parsing MCCHookState and advancing the state machine
@@ -116,7 +113,7 @@ namespace HCMExternal.Services.MCCHookService
                         ShowHCMInternalErrorDialog();
                         return;
                     }
-                    
+
                     MCCHookState.MCCProcess = GetMCCProcess(); // try to find the mcc process
                     if (MCCHookState.MCCProcess == null) // failed, try again next time
                     {
@@ -126,7 +123,7 @@ namespace HCMExternal.Services.MCCHookService
                     string? mccVersionTemp = null;
                     try
                     {
-                        var mccFileName = MCCHookState.MCCProcess.GetImageFilePath(false);
+                        string mccFileName = MCCHookState.MCCProcess.GetImageFilePath(false);
                         Log.Verbose("Getting mcc version information from filepath: "
                             + mccFileName
                             );
@@ -145,11 +142,11 @@ namespace HCMExternal.Services.MCCHookService
                     }
                     catch (FileNotFoundException ex)
                     {
-                        Log.Error("Could not get file version info of MCC, proceeding anyway. Error: \n" 
+                        Log.Error("Could not get file version info of MCC, proceeding anyway. Error: \n"
                             + ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace);
                     }
 
-                    var mccInit = isMCCInitialised(MCCHookState.MCCProcess, mccVersionTemp);
+                    bool? mccInit = isMCCInitialised(MCCHookState.MCCProcess, mccVersionTemp);
 
                     if (mccInit == false)
                     {
@@ -188,7 +185,7 @@ namespace HCMExternal.Services.MCCHookService
                     break;
 
                 case MCCHookStateEnum.InternalInjecting:
-                    var pid = MCCHookState.MCCProcess?.ProcessId;
+                    int? pid = MCCHookState.MCCProcess?.ProcessId;
                     if (pid == null)
                     {
                         lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + "Process ID was null!"
@@ -198,8 +195,8 @@ namespace HCMExternal.Services.MCCHookService
                         break;
                     }
 
-                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((UInt32)pid);
-                    
+                    (bool successFlag, string errorString) injectionResult = mInterprocService.Setup((uint)pid);
+
 
                     if (injectionResult.successFlag)
                     {
@@ -210,7 +207,7 @@ namespace HCMExternal.Services.MCCHookService
                         lastInjectionError = "HCM failed to inject its internal module into the game! \nMore info in HCMExternal.log file. Error message: \n" + injectionResult.errorString
                          + "\nAccess Rights Debugging: \n" + _mccAccessInfo;
                         AdvanceStateMachine(MCCHookStateEnum.InternalInjectError);
-                        ShowHCMInternalErrorDialog(); 
+                        ShowHCMInternalErrorDialog();
                     }
                     break;
 
@@ -296,7 +293,7 @@ namespace HCMExternal.Services.MCCHookService
         {
             Log.Verbose("ShowHCMInternalErrorDialog");
             Log.Error(lastInjectionError ?? "No error info to display, for some reason?!");
-            var result = mErrorDialogViewModel.RaiseShowErrorDialogEvent(lastInjectionError);
+            bool result = mErrorDialogViewModel.RaiseShowErrorDialogEvent(lastInjectionError);
             if (result == false)
             {
                 // User doesn't want to retry injection, do nothing
@@ -318,9 +315,9 @@ namespace HCMExternal.Services.MCCHookService
                     foreach (string desiredProcessName in MCCProcessNames)
                     {
 
-     
-                        
-                        if (String.Equals(process.Name, desiredProcessName, StringComparison.OrdinalIgnoreCase)) // must be mcc
+
+
+                        if (string.Equals(process.Name, desiredProcessName, StringComparison.OrdinalIgnoreCase)) // must be mcc
                         {
                             if (process.IsDeleting)
                             {
@@ -337,7 +334,9 @@ namespace HCMExternal.Services.MCCHookService
                             }
 
                             if (MCCExitedTooRecently())
+                            {
                                 continue;
+                            }
 
                             return true;
                         }
@@ -346,7 +345,7 @@ namespace HCMExternal.Services.MCCHookService
                 }
 
 
-                var validMCCprocesses = NtProcess.GetProcesses(ProcessAccessRights.QueryLimitedInformation).Where(filterToValidMCC);
+                IEnumerable<NtProcess> validMCCprocesses = NtProcess.GetProcesses(ProcessAccessRights.QueryLimitedInformation).Where(filterToValidMCC);
 
 
                 if (validMCCprocesses.Any())
@@ -365,7 +364,7 @@ namespace HCMExternal.Services.MCCHookService
                     Log.Verbose("No process found");
                     return null;
                 }
-  
+
             }
             catch (Exception ex)
             {
@@ -379,7 +378,7 @@ namespace HCMExternal.Services.MCCHookService
         {
             foreach (Process process in Process.GetProcesses())
             {
-                if (String.Equals(process.ProcessName, "EasyAntiCheat",
+                if (string.Equals(process.ProcessName, "EasyAntiCheat",
                  StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
@@ -400,19 +399,21 @@ namespace HCMExternal.Services.MCCHookService
                 writer.WriteLine("MCC Protection.Level: " + mccHandle.Protection.Level);
                 writer.WriteLine("MCC Protection.Audit: " + mccHandle.Protection.Audit);
 
-                var mccIntegrity = mccHandle.GetIntegrityLevel(false);
-                var hcmIntegrity = NtProcess.Current.GetIntegrityLevel(false);
+                NtResult<TokenIntegrityLevel> mccIntegrity = mccHandle.GetIntegrityLevel(false);
+                NtResult<TokenIntegrityLevel> hcmIntegrity = NtProcess.Current.GetIntegrityLevel(false);
 
                 writer.WriteLine("hcm IntegrityLevel: " + (hcmIntegrity.IsSuccess ? hcmIntegrity.Result : "Could not read integrity level"));
                 writer.WriteLine("MCC IntegrityLevel: " + (mccIntegrity.IsSuccess ? mccIntegrity.Result : "Could not read integrity level"));
 
-                var mccHandleReadControl = NtProcess.Open(mccHandle.ProcessId, ProcessAccessRights.ReadControl, false);
+                NtResult<NtProcess> mccHandleReadControl = NtProcess.Open(mccHandle.ProcessId, ProcessAccessRights.ReadControl, false);
                 if (mccHandleReadControl.IsSuccess)
+                {
                     writer.WriteLine("MCC maximum access: " + mccHandleReadControl.Result.GetMaximumAccess());
+                }
                 else
+                {
                     writer.WriteLine("Could not check MCC maximum access: " + mccHandleReadControl.Status);
-
-                
+                }
             }
             catch (NtException ex)
             {
@@ -424,7 +425,10 @@ namespace HCMExternal.Services.MCCHookService
         private DateTime? _lastMCCExit = null;
         private bool MCCExitedTooRecently()
         {
-            if (_lastMCCExit == null) return false;
+            if (_lastMCCExit == null)
+            {
+                return false;
+            }
 
             Log.Verbose("MCC last exit time was " + (DateTime.Now - _lastMCCExit) + " seconds ago");
             return (DateTime.Now - _lastMCCExit) < TimeSpan.FromSeconds(6);
@@ -491,26 +495,31 @@ namespace HCMExternal.Services.MCCHookService
             try
             {
                 // need to elevate from QueryLimitedInformation to Read
-                using (var procRead = NtProcess.Open(mccProcess.ProcessId, ProcessAccessRights.VmRead | ProcessAccessRights.QueryLimitedInformation))
+                using (NtProcess procRead = NtProcess.Open(mccProcess.ProcessId, ProcessAccessRights.VmRead | ProcessAccessRights.QueryLimitedInformation))
                 {
                     Log.Debug("MCC base address: 0x" + procRead.ImageBaseAddress.ToString("X"));
                     Log.Debug("MCCInitFlagOffset: 0x" + MCCInitFlagOffset.Value.ToString("X"));
-                    System.Byte flagValue = procRead.ReadMemory<System.Byte>((long)((ulong)procRead.ImageBaseAddress + (ulong)MCCInitFlagOffset.Value));
+                    byte flagValue = procRead.ReadMemory<byte>((long)((ulong)procRead.ImageBaseAddress + (ulong)MCCInitFlagOffset.Value));
 
 
                     if (flagValue == 0)
+                    {
                         return false;
+                    }
+
                     if (flagValue == 1)
+                    {
                         return true;
+                    }
 
                     Log.Error("Invalid MCC init flag value: " + flagValue.ToString());
                     return null;
                 }
-               
+
             }
-            catch(Exception e) 
-            { 
-            Log.Error("Exception while reading MCC initialisation flag: "+ e.Message);
+            catch (Exception e)
+            {
+                Log.Error("Exception while reading MCC initialisation flag: " + e.Message);
                 return null;
             }
 

@@ -1,15 +1,12 @@
-﻿using HCMExternal.ViewModels.Interfaces;
+﻿using GongSolutions.Wpf.DragDrop;
 using HCMExternal.Models;
+using HCMExternal.ViewModels.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-
 using System.Windows;
-using System;
-
 using System.Windows.Data;
-using GongSolutions.Wpf.DragDrop;
-
-using System.Collections.Generic;
 
 
 namespace HCMExternal.ViewModels
@@ -62,7 +59,7 @@ namespace HCMExternal.ViewModels
                 {
                     dropInfo.Effects = DragDropEffects.Move;
                     //TODO: figure out why this wigs out with treeview, unlike the highlight adorner
-                    
+
                     dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
 
                 }
@@ -94,15 +91,21 @@ namespace HCMExternal.ViewModels
             {
                 //Grab the collection view (checkpoints in order of LWT)
                 ListCollectionView checkpointCollectionView = (ListCollectionView)CollectionViewSource
-                    .GetDefaultView(this.CheckpointCollection);
+                    .GetDefaultView(CheckpointCollection);
 
                 // Need to cap the new index as dropInfo uses count + 1 if dragging to the bottom of list
                 int newIndex = Math.Min(dropInfo.InsertIndex, checkpointCollectionView.Count - 1);
                 int oldIndex = checkpointCollectionView.IndexOf(dropInfo.Data);
 
-                if (newIndex == oldIndex) return; // No move (user dragged it back to itself)
+                if (newIndex == oldIndex)
+                {
+                    return; // No move (user dragged it back to itself)
+                }
 
-                if (oldIndex < 0) return; // Shouldn't happen
+                if (oldIndex < 0)
+                {
+                    return; // Shouldn't happen
+                }
 
                 //Create a list of the checkpoints and their associated LWTs (in order) from the collectionView
                 List<Checkpoint> listCheckpoints = new();
@@ -122,10 +125,10 @@ namespace HCMExternal.ViewModels
 
                 // Pass the two lists to checkpointmodel to actually apply the LWTs to the files.
                 // The new list of checkpoints gets the old list of LWTs, thus reordering them
-                this.CheckpointServices.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
+                CheckpointServices.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
 
                 // Refresh the list
-                this.RefreshCheckpointList();
+                RefreshCheckpointList();
             }
 
 
@@ -143,9 +146,15 @@ namespace HCMExternal.ViewModels
                     int newIndex = Math.Min(dropInfo.InsertIndex, thisLevel.Count);
                     int oldIndex = thisLevel.IndexOf(dropInfo.Data as SaveFolder);
 
-                    if (newIndex == oldIndex) return; // No move (user dragged it back to itself)
+                    if (newIndex == oldIndex)
+                    {
+                        return; // No move (user dragged it back to itself)
+                    }
 
-                    if (oldIndex < 0) return; // Shouldn't happen
+                    if (oldIndex < 0)
+                    {
+                        return; // Shouldn't happen
+                    }
 
                     //Create a list of the SaveFolders and their associated createdOns (in order) from the collectionView
                     List<SaveFolder> listSaveFolders = new();
@@ -165,10 +174,10 @@ namespace HCMExternal.ViewModels
 
                     // Pass the two lists to checkpointmodel to actually apply the createdOns to the folders.
                     // The new list of saveFolders gets the old list of createdOnss, thus reordering them
-                    this.CheckpointServices.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
+                    CheckpointServices.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
 
                     // Refresh the tree
-                    this.RefreshSaveFolderTree();
+                    RefreshSaveFolderTree();
 
                 }
             }

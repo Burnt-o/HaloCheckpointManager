@@ -1,6 +1,6 @@
-﻿using System;
+﻿using HCMExternal.Models;
+using System;
 using System.IO;
-using HCMExternal.Models;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -18,11 +18,17 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <exception cref="InvalidOperationException"></exception>
         public void RenameCheckpoint(SaveFolder SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
         {
-            if (SelectedCheckpoint == null) throw new Exception("Can't rename - no checkpoint selected");
+            if (SelectedCheckpoint == null)
+            {
+                throw new Exception("Can't rename - no checkpoint selected");
+            }
 
             string oldsavePath = SelectedSaveFolder.SaveFolderPath + "//" + SelectedCheckpoint.CheckpointName + ".bin";
 
-            if (!File.Exists(oldsavePath)) throw new Exception("Can't rename - original file didn't actually exist at path " + oldsavePath);
+            if (!File.Exists(oldsavePath))
+            {
+                throw new Exception("Can't rename - original file didn't actually exist at path " + oldsavePath);
+            }
 
             // Ask user what they want to name the checkpoint file
             string? userInput = Microsoft.VisualBasic.Interaction.InputBox(@"Must be unique, no illegal characters",
@@ -30,16 +36,21 @@ namespace HCMExternal.Services.CheckpointServiceNS
                                                        $"{SelectedCheckpoint.CheckpointName}",
                                                        -1, -1);
 
-            if (userInput == string.Empty) return; //They clicked the cancel button
+            if (userInput == string.Empty)
+            {
+                return; //They clicked the cancel button
+            }
 
             string proposedSave = (SelectedSaveFolder?.SaveFolderPath + $"\\{userInput}.bin");
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
-            if (File.Exists(proposedSave)) throw new InvalidOperationException("Failed to rename checkpoint; checkpoint by that name already exists");
-
+            if (File.Exists(proposedSave))
+            {
+                throw new InvalidOperationException("Failed to rename checkpoint; checkpoint by that name already exists");
+            }
 
             File.Move(oldsavePath, proposedSave); // will throw if the filename was invalid
 
         }
     }
-   
+
 }

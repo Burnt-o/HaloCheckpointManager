@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using System.Diagnostics;
 using System.IO;
-using Serilog;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace HCMExternal.Services.DataPointersServiceNS
 {
@@ -18,7 +18,7 @@ namespace HCMExternal.Services.DataPointersServiceNS
     public class DataPointersService
     {
 
-        private Dictionary<string, Dictionary<string, Object>> PointerData { get; set; } = new()
+        private Dictionary<string, Dictionary<string, object>> PointerData { get; set; } = new()
         {
         };
 
@@ -58,7 +58,7 @@ namespace HCMExternal.Services.DataPointersServiceNS
                 success = pointerVersionDictionary.TryGetValue("All", out object? allPointer);
                 if (success && allPointer != null)
                 {
-                    return (object)allPointer;
+                    return allPointer;
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace HCMExternal.Services.DataPointersServiceNS
                     success = pointerVersionDictionary.TryGetValue(pointerVersion, out object? pointer);
                     if (success && pointer != null)
                     {
-                        return (object)pointer;
+                        return pointer;
                     }
                 }
             }
@@ -81,11 +81,11 @@ namespace HCMExternal.Services.DataPointersServiceNS
 
 
 
-            public void LoadPointerDataFromSource(out string failedReads)
-            {
-                string? xml = null;
-                string localPointerDataPath = Directory.GetCurrentDirectory() + "\\ExternalPointerData.xml";
-                failedReads = "";
+        public void LoadPointerDataFromSource(out string failedReads)
+        {
+            string? xml = null;
+            string localPointerDataPath = Directory.GetCurrentDirectory() + "\\ExternalPointerData.xml";
+            failedReads = "";
 
             // Debug mode to use local data file 
 #if HCM_DEBUG 
@@ -119,144 +119,166 @@ namespace HCMExternal.Services.DataPointersServiceNS
 
             // Download the xml from git
 
-                if (xml == null || !xml.Any()) throw new Exception("Couldn't find pointerdata!");
+            if (xml == null || !xml.Any())
+            {
+                throw new Exception("Couldn't find pointerdata!");
+            }
 
-                // Deserialise
-                XDocument doc = XDocument.Parse(xml);
+            // Deserialise
+            XDocument doc = XDocument.Parse(xml);
 
-                if (doc.Root == null) throw new Exception("Something went wrong parsing the Pointer data xml file; 'doc.Root' was null.");
+            if (doc.Root == null)
+            {
+                throw new Exception("Something went wrong parsing the Pointer data xml file; 'doc.Root' was null.");
+            }
 
-                foreach (XElement entry in doc.Root.Elements())
+            foreach (XElement entry in doc.Root.Elements())
+            {
+                try
                 {
-                    try
+                    object? entryObject = null;
+                    string? entryName = null;
+                    string? entryVersion = null;
+
+                    if (entry.Name == "HighestSupportedVersion")
                     {
-                        object? entryObject = null;
-                        string? entryName = null;
-                        string? entryVersion = null;
-
-                        if (entry.Name == "HighestSupportedVersion")
-                        {
-                            this.HighestSupportedMCCVersion = entry.Value == null || entry.Value == "" ? null : entry.Value;
-                            Log.Debug("Loaded HighestSupportedMCCVersion, value: " + this.HighestSupportedMCCVersion);
-                        }
-
-                        // We'll get rid of "LatestHCMVersion" in favour of "LatestHCMVersions" once 2.0.6 is deprecated
-                        else if (entry.Name == "LatestHCMVersions")
-                        {
-                            if (entry.Value != null && entry.Value != "")
-                            {
-
-                                foreach (XElement ver in entry.Elements().Where(x => x.Name == "Entry"))
-                                {
-                                    this.LatestHCMVersions.Add(ver.Value);
-                                }
-                            }
-                            this.LatestHCMVersion = entry.Value == null || entry.Value == "" ? null : entry.Value;
-                            Log.Debug("Loaded LatestHCMVersions, value: " + this.LatestHCMVersion);
-                        }
-                        else if (entry.Name == "ObsoleteHCMVersions")
-                        {
-                            if (entry.Value != null && entry.Value != "")
-                            {
-                                foreach (XElement ver in entry.Elements().Where(x => x.Name == "Entry"))
-                                {
-                                    this.ObsoleteHCMVersions.Add(ver.Value);
-                                }
-                            }
-                        }
-                        else if (entry.Name == "Entry")
-                        {
-                            string entryType = entry.Attribute("Type").Value;
-                            entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
-                            foreach (XElement VersionEntry in entry.Elements().Where(x => x.Name == "Version"))
-                            {
-                                entryVersion = VersionEntry.Attribute("Version").Value;
-                                entryObject = ParseObject(VersionEntry, entryType);
-                                StoreObject(entryName, entryVersion, entryObject);
-                            }
-                        }
-
+                        HighestSupportedMCCVersion = entry.Value == null || entry.Value == "" ? null : entry.Value;
+                        Log.Debug("Loaded HighestSupportedMCCVersion, value: " + HighestSupportedMCCVersion);
                     }
-                    catch (Exception ex)
+
+                    // We'll get rid of "LatestHCMVersion" in favour of "LatestHCMVersions" once 2.0.6 is deprecated
+                    else if (entry.Name == "LatestHCMVersions")
                     {
-                        failedReads = failedReads + "\n" + "Error processing an entry in pointerdata, " + ex.ToString() + ", entry.name: " + entry.Element("Name")?.Value + ", entry.Value: " + entry.Value;
-                        Log.Error("Error processing an entry in pointerdata, " + ex.ToString());
-                        continue;
+                        if (entry.Value != null && entry.Value != "")
+                        {
+
+                            foreach (XElement ver in entry.Elements().Where(x => x.Name == "Entry"))
+                            {
+                                LatestHCMVersions.Add(ver.Value);
+                            }
+                        }
+                        LatestHCMVersion = entry.Value == null || entry.Value == "" ? null : entry.Value;
+                        Log.Debug("Loaded LatestHCMVersions, value: " + LatestHCMVersion);
+                    }
+                    else if (entry.Name == "ObsoleteHCMVersions")
+                    {
+                        if (entry.Value != null && entry.Value != "")
+                        {
+                            foreach (XElement ver in entry.Elements().Where(x => x.Name == "Entry"))
+                            {
+                                ObsoleteHCMVersions.Add(ver.Value);
+                            }
+                        }
+                    }
+                    else if (entry.Name == "Entry")
+                    {
+                        string entryType = entry.Attribute("Type").Value;
+                        entryName = entry.Element("Name") == null ? null : entry.Element("Name")?.Value;
+                        foreach (XElement VersionEntry in entry.Elements().Where(x => x.Name == "Version"))
+                        {
+                            entryVersion = VersionEntry.Attribute("Version").Value;
+                            entryObject = ParseObject(VersionEntry, entryType);
+                            StoreObject(entryName, entryVersion, entryObject);
+                        }
                     }
 
                 }
-
+                catch (Exception ex)
+                {
+                    failedReads = failedReads + "\n" + "Error processing an entry in pointerdata, " + ex.ToString() + ", entry.name: " + entry.Element("Name")?.Value + ", entry.Value: " + entry.Value;
+                    Log.Error("Error processing an entry in pointerdata, " + ex.ToString());
+                    continue;
+                }
 
             }
-             private object ParseObject(XElement entry, string type)
+
+
+        }
+        private object ParseObject(XElement entry, string type)
+        {
+            object? returnObject = null;
+            switch (type)
             {
-                object? returnObject = null;
-                switch (type)
-                {
-                    case "int":
-                        returnObject = ParseHexNumberInt(entry.Element("Offset")?.Value);
-                        break;
+                case "int":
+                    returnObject = ParseHexNumberInt(entry.Element("Offset")?.Value);
+                    break;
 
-                    case "string":
-                        returnObject = entry.Element("Value")?.Value;
-                        break;
+                case "string":
+                    returnObject = entry.Element("Value")?.Value;
+                    break;
 
-                    default:
-                        throw new ArgumentException("Didn't recognise type of datapointer entry, " + type);
-                }
-                if (returnObject == null) throw new Exception("Failed to parse returnObject but not sure why");
-                return returnObject;
+                default:
+                    throw new ArgumentException("Didn't recognise type of datapointer entry, " + type);
             }
-
-            private void StoreObject(string entryName, string entryVersion, object entryObject)
+            if (returnObject == null)
             {
-                if (entryObject == null) throw new Exception("entryObject was somehow null at StoreObject");
-                if (entryObject.GetType() == typeof(System.Xml.Linq.XElement)) throw new Exception("Accidentally parsed XElement");
-
-
-
-                if (PointerData.ContainsKey(entryName))
-                {
-                    PointerData[entryName].Add(entryVersion, entryObject);
-                }
-                else
-                {
-                    Dictionary<string, Object> versionDictionary = new();
-                    versionDictionary.Add(entryVersion, entryObject);
-                    PointerData.Add(entryName, versionDictionary);
-                }
-
-
-                Log.Verbose("Added new object to pointer dictionary, name: " + entryName + ", version: " + entryVersion + ", type: " + entryObject.GetType().ToString());
-
+                throw new Exception("Failed to parse returnObject but not sure why");
             }
 
+            return returnObject;
+        }
 
-
-            private int ParseHexNumberInt(string? s)
+        private void StoreObject(string entryName, string entryVersion, object entryObject)
+        {
+            if (entryObject == null)
             {
-                if (s == null)
-                    throw new Exception("int was null");
-
-                if (s == "0x0" || s == "0") return 0;
-
-                int sign = 1;
-                if (s.StartsWith("-"))
-                {
-                    sign = -1;
-                    s = s.Substring(1);
-                }
-
-
-                return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) * sign : Convert.ToInt32(s) * sign;
+                throw new Exception("entryObject was somehow null at StoreObject");
             }
-           
+
+            if (entryObject.GetType() == typeof(System.Xml.Linq.XElement))
+            {
+                throw new Exception("Accidentally parsed XElement");
+            }
+
+            if (PointerData.ContainsKey(entryName))
+            {
+                PointerData[entryName].Add(entryVersion, entryObject);
+            }
+            else
+            {
+                Dictionary<string, object> versionDictionary = new()
+                {
+                    { entryVersion, entryObject }
+                };
+                PointerData.Add(entryName, versionDictionary);
+            }
 
 
+            Log.Verbose("Added new object to pointer dictionary, name: " + entryName + ", version: " + entryVersion + ", type: " + entryObject.GetType().ToString());
 
         }
 
 
 
-    
+        private int ParseHexNumberInt(string? s)
+        {
+            if (s == null)
+            {
+                throw new Exception("int was null");
+            }
+
+            if (s == "0x0" || s == "0")
+            {
+                return 0;
+            }
+
+            int sign = 1;
+            if (s.StartsWith("-"))
+            {
+                sign = -1;
+                s = s.Substring(1);
+            }
+
+
+            return s.StartsWith("0x") ? Convert.ToInt32(s.Substring(2), 16) * sign : Convert.ToInt32(s) * sign;
+        }
+
+
+
+
+    }
+
+
+
+
 }

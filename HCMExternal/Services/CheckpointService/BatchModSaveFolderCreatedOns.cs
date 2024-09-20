@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using HCMExternal.Models;
-using System.IO;
-using System.Diagnostics;
+﻿using HCMExternal.Models;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {

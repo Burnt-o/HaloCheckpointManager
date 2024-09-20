@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
-using System.IO;
-using HCMExternal.Models;
+﻿using HCMExternal.Models;
 using Serilog;
+using System;
+using System.IO;
+using System.Text;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -24,7 +24,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
                 return;
             }
 
-            if (SelectedCheckpoint == null) throw new Exception("Can't edit checkpoint game version - no checkpoint selected");
+            if (SelectedCheckpoint == null)
+            {
+                throw new Exception("Can't edit checkpoint game version - no checkpoint selected");
+            }
 
             string oldversion = SelectedCheckpoint.GameVersion != null ? SelectedCheckpoint.GameVersion.ToString() : string.Empty;
 
@@ -34,14 +37,22 @@ namespace HCMExternal.Services.CheckpointServiceNS
                                                        $"{oldversion}",
                                                        -1, -1);
 
-            if (userInput == "") return; //They clicked the cancel button
+            if (userInput == "")
+            {
+                return; //They clicked the cancel button
+            }
 
             // Some basic but not comprehensive checks that the user inputted a valid value (trycatch will find the rest of invalids)
-            if (userInput == null || userInput.Length != 10 || !userInput.StartsWith("1.")) throw new InvalidOperationException("Failed to edit checkpoint version; was your new version string 10 chars long and in the corect format?");
-
+            if (userInput == null || userInput.Length != 10 || !userInput.StartsWith("1."))
+            {
+                throw new InvalidOperationException("Failed to edit checkpoint version; was your new version string 10 chars long and in the corect format?");
+            }
 
             string savePath = SelectedSaveFolder.SaveFolderPath + "//" + SelectedCheckpoint.CheckpointName + ".bin";
-            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath) || !File.Exists(savePath)) throw new Exception("Somehow the file was invalid, so version string couldn't be edited");
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath) || !File.Exists(savePath))
+            {
+                throw new Exception("Somehow the file was invalid, so version string couldn't be edited");
+            }
 
             //read checkpoint data from file
             byte[] checkpointData = File.ReadAllBytes(savePath);
@@ -58,12 +69,14 @@ namespace HCMExternal.Services.CheckpointServiceNS
 
             //re-apply last-write-time
             if (lwt != null)
-            { 
-            FileInfo fileInfo = new FileInfo(savePath);
-                fileInfo.LastWriteTime = lwt.Value;
+            {
+                FileInfo fileInfo = new FileInfo(savePath)
+                {
+                    LastWriteTime = lwt.Value
+                };
             }
 
         }
     }
-   
+
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -15,16 +11,13 @@ namespace HCMExternal.Models
         private string _checkpointName;
         public string CheckpointName // Actual filename of the checkpoint.bin file.
         {
-        get
-            {
-                return _checkpointName;
-            }
+            get => _checkpointName;
             set
             {
                 _checkpointName = value;
                 OnPropertyChanged();
             }
-        } 
+        }
         public string? LevelName { get; set; } // Name of the level as 3-letter-code
         public int? Difficulty { get; set; } // Difficulty of the game, 0 for Easy, 3 for Legendary
         public int? GameTickCount { get; set; } // How many ticks the game was along when the checkpoint was made
@@ -34,7 +27,7 @@ namespace HCMExternal.Models
         public DateTime? ModifiedOn { get; set; } // Used for sorting checkpoints
 
 
-       
+
 
         public Checkpoint(string checkpointName, string? levelName, int? difficulty, int? gameTickCount, string? gameVersion, DateTime? createdOn, DateTime? modifiedOn)
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace HCMExternal.Helpers.DictionariesNS
 {
@@ -64,8 +60,8 @@ namespace HCMExternal.Helpers.DictionariesNS
 
             public LevelInfo(string fullName, int levelPosition)
             {
-                this.FullName = fullName;
-                this.LevelPosition = levelPosition;
+                FullName = fullName;
+                LevelPosition = levelPosition;
             }
         }
 

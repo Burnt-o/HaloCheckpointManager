@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HCMExternal.Models;
+using System;
 using System.IO;
-using System.Diagnostics;
 using System.Windows;
-using HCMExternal.Models;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -21,7 +16,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <exception cref="Exception"></exception>
         public void DeleteFolder(SaveFolder SelectedSaveFolder)
         {
-            if(!Directory.Exists(SelectedSaveFolder.SaveFolderPath)) throw new Exception("Can't delete - selected save folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+            if (!Directory.Exists(SelectedSaveFolder.SaveFolderPath))
+            {
+                throw new Exception("Can't delete - selected save folder didn't actually exist at path " + SelectedSaveFolder.SaveFolderPath);
+            }
 
             //We want to count how many checkpoints are in this folder and sub-folders so we can warn the user that they may be about to delete many checkpoints.
 
@@ -32,15 +30,15 @@ namespace HCMExternal.Services.CheckpointServiceNS
                 + "\n" + "This will delete " + checkpointCount + " checkpoint(s) contained within, as well as any other files."
                 , "HCM - Delete folder?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-               Directory.Delete(SelectedSaveFolder.SaveFolderPath, true);
+                Directory.Delete(SelectedSaveFolder.SaveFolderPath, true);
             }
 
-                
+
 
 
 
 
         }
     }
-   
+
 }

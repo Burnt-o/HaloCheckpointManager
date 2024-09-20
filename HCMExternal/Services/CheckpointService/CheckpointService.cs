@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HCMExternal.Services.DataPointersServiceNS;
+﻿using HCMExternal.Services.DataPointersServiceNS;
 using HCMExternal.ViewModels;
 
 
@@ -18,7 +13,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
         public DataPointersService DataPointersService { get; init; }
         public MCCHookStateViewModel MCCHookStateViewModel { get; init; }
 
-        public CheckpointService(DataPointersService dps, MCCHookStateViewModel hookVM) 
+        public CheckpointService(DataPointersService dps, MCCHookStateViewModel hookVM)
         {
             DataPointersService = dps;
             MCCHookStateViewModel = hookVM;

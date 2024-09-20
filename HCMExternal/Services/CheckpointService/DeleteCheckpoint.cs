@@ -1,6 +1,6 @@
-﻿using System.IO;
-using HCMExternal.Models;
+﻿using HCMExternal.Models;
 using Serilog;
+using System.IO;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -15,7 +15,10 @@ namespace HCMExternal.Services.CheckpointServiceNS
         /// <param name="SelectedCheckpoint">The checkpoint to delete.</param>
         public void DeleteCheckpoint(SaveFolder SelectedSaveFolder, Checkpoint? SelectedCheckpoint)
         {
-            if (SelectedCheckpoint == null) return;
+            if (SelectedCheckpoint == null)
+            {
+                return;
+            }
 
             string savePath = SelectedSaveFolder.SaveFolderPath + "//" + SelectedCheckpoint.CheckpointName + ".bin";
 
@@ -29,5 +32,5 @@ namespace HCMExternal.Services.CheckpointServiceNS
 
         }
     }
-   
+
 }

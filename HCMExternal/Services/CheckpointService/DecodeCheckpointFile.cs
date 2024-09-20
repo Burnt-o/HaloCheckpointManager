@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Diagnostics;
+﻿using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Models;
-using HCMExternal.Helpers.DictionariesNS;
 using Serilog;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 
@@ -74,9 +70,9 @@ namespace HCMExternal.Services.CheckpointServiceNS
                             checkpointVersionGuess = MCCHookStateViewModel.State.MCCVersion;
                             Log.Verbose("setting ver string to current attached version: " + checkpointVersionGuess);
                         }
-                        else if (this.DataPointersService.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git
+                        else if (DataPointersService.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git
                         {
-                            checkpointVersionGuess = this.DataPointersService.HighestSupportedMCCVersion;
+                            checkpointVersionGuess = DataPointersService.HighestSupportedMCCVersion;
                         }
                         else
                         {
@@ -93,7 +89,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetLevelCode = (int?)this.DataPointersService.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
+                                int? offsetLevelCode = (int?)DataPointersService.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -102,7 +98,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                                     checkpointLevelCode = checkpointLevelCode.Substring(checkpointLevelCode.LastIndexOf("\\") + 1);
                                     checkpointLevelCode = checkpointLevelCode.Substring(checkpointLevelCode.LastIndexOf("\\") + 1);
                                     char[] exceptions = new char[] { '_' };
-                                    checkpointLevelCode = String.Concat(checkpointLevelCode.Where(ch => Char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
+                                    checkpointLevelCode = string.Concat(checkpointLevelCode.Where(ch => char.IsLetterOrDigit(ch) || exceptions?.Contains(ch) == true));
                                     Log.Verbose("\\nlevelcode4: " + checkpointLevelCode);
                                 }
                             }
@@ -112,7 +108,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetGameTickCount = (int?)this.DataPointersService.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
+                                int? offsetGameTickCount = (int?)DataPointersService.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -127,13 +123,13 @@ namespace HCMExternal.Services.CheckpointServiceNS
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetDifficulty = (int?)this.DataPointersService.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
+                                int? offsetDifficulty = (int?)DataPointersService.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
                                     readBinary.BaseStream.Seek((long)offsetDifficulty, SeekOrigin.Begin);
                                     // read 1 byte as int
-                                    checkpointDifficulty = (int)readBinary.ReadBytes(1)[0];
+                                    checkpointDifficulty = readBinary.ReadBytes(1)[0];
                                 }
                             }
                             catch { checkpointDifficulty = null; }

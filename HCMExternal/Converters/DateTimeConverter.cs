@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
 using System.Windows.Data;
-using HCMExternal.Models;
 namespace HCMExternal.Converters
 {
     public class DateTimeConverter : IValueConverter
@@ -14,10 +9,12 @@ namespace HCMExternal.Converters
         {
             DateTime? valueDateTime = (DateTime?)value;
             if (valueDateTime == null)
+            {
                 return "???";
+            }
 
             DateTime valueDateTimeNotNull = (DateTime)valueDateTime;
-           string date = valueDateTimeNotNull.ToString("d");
+            string date = valueDateTimeNotNull.ToString("d");
             string time = valueDateTimeNotNull.ToString("HH:mm:ss");
 
             return date + " " + time;

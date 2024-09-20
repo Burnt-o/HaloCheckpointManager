@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Diagnostics;
+﻿using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Models;
-using System.Collections.ObjectModel;
 using Serilog;
-using HCMExternal.Helpers.DictionariesNS;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 
 namespace HCMExternal.Services.CheckpointServiceNS
 {
@@ -31,7 +30,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
             }
 
             List<Checkpoint> UnsortedCheckpoints = new(CheckpointCollection);
-            
+
             comparers.Reverse();
 
             Log.Information("Sorting checkpoints in " + SelectedSaveFolder.SaveFolderPath);
@@ -39,7 +38,11 @@ namespace HCMExternal.Services.CheckpointServiceNS
             foreach (Tuple<ICompareCheckpoints, bool> comparer in comparers)
             {
                 Log.Debug("Sorting by comparer: " + comparer.Item1.Name);
-                if (comparer.Item1.GetType() == typeof(SortNothing)) continue;
+                if (comparer.Item1.GetType() == typeof(SortNothing))
+                {
+                    continue;
+                }
+
                 if (comparer.Item1.GetType() == typeof(SortLevel))
                 {
                     (comparer.Item1 as SortLevel).gameIndex = gameIndex;
@@ -59,7 +62,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
 
             //now actually write the LastWriteTimes to reflect the new order
             List<DateTime> DateTimesToAssign = new();
-            foreach(Checkpoint checkpoint in UnsortedCheckpoints)
+            foreach (Checkpoint checkpoint in UnsortedCheckpoints)
             { DateTimesToAssign.Add(checkpoint.ModifiedOn.Value); }
 
             DateTimesToAssign.Sort();
@@ -71,10 +74,15 @@ namespace HCMExternal.Services.CheckpointServiceNS
             for (int i = 0; i < UnsortedCheckpoints.Count; i++)
             {
                 string filePath = SelectedSaveFolder.SaveFolderPath + "\\" + UnsortedCheckpoints[i].CheckpointName + ".bin";
-                if (!File.Exists(filePath)) throw new Exception("File didn't exist at path: " + filePath);
+                if (!File.Exists(filePath))
+                {
+                    throw new Exception("File didn't exist at path: " + filePath);
+                }
 
-                FileInfo fileInfo = new FileInfo(filePath);
-                fileInfo.LastWriteTime = DateTimesToAssign[i];
+                FileInfo fileInfo = new FileInfo(filePath)
+                {
+                    LastWriteTime = DateTimesToAssign[i]
+                };
 
 
             }
@@ -88,51 +96,66 @@ namespace HCMExternal.Services.CheckpointServiceNS
         }
     }
 
-
-    class SortAlphabetical : NullComparer, ICompareCheckpoints
+    internal class SortAlphabetical : NullComparer, ICompareCheckpoints
     {
         public string Name { get; init; } = "Name of Checkpoint";
 
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
-            if (NullCompare(x, y, out int nullint)) return nullint;
+            if (NullCompare(x, y, out int nullint))
+            {
+                return nullint;
+            }
 
             return x.CheckpointName.CompareTo(y.CheckpointName);
         }
     }
 
-    class SortVersion : NullComparer, ICompareCheckpoints
+    internal class SortVersion : NullComparer, ICompareCheckpoints
     {
         public string Name { get; init; } = "Game Version";
 
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
-            if (NullCompare(x, y, out int nullint)) return nullint;
-            if (NullCompare(x.GameVersion, y.GameVersion, out int nullint2)) return nullint2;
+            if (NullCompare(x, y, out int nullint))
+            {
+                return nullint;
+            }
+
+            if (NullCompare(x.GameVersion, y.GameVersion, out int nullint2))
+            {
+                return nullint2;
+            }
 
             return x.GameVersion.CompareTo(y.GameVersion);
         }
     }
 
-    class SortDifficulty : NullComparer, ICompareCheckpoints
+    internal class SortDifficulty : NullComparer, ICompareCheckpoints
     {
         public string Name { get; init; } = "Difficulty";
 
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
-            if (NullCompare(x, y, out int nullint)) return nullint;
-            if (NullCompare(x.Difficulty, y.Difficulty, out int nullint2)) return nullint2;
+            if (NullCompare(x, y, out int nullint))
+            {
+                return nullint;
+            }
 
+            if (NullCompare(x.Difficulty, y.Difficulty, out int nullint2))
+            {
+                return nullint2;
+            }
 
             return x.Difficulty.Value.CompareTo(y.Difficulty.Value);
         }
     }
 
-    class SortLevel : NullComparer,  ICompareCheckpoints
+    internal class SortLevel : NullComparer, ICompareCheckpoints
     {
         public HaloTabEnum gameIndex { get; set; }
         public string Name { get; init; } = "Level Order";
-        
+
         //Here we're sorting by the actual level order in the campaign. SP missions have positive integer values, MP/unknown have value of -1
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
@@ -142,7 +165,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                 Log.Error("One of the actual checkpoints was null, x: " + x.ToString() + ", y: " + y.ToString());
                 return nullint;
             }
-                
+
             if (NullCompare(x.LevelName, y.LevelName, out int nullint2))
             {
                 Log.Verbose("x.LevelName: " + x.LevelName);
@@ -150,7 +173,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                 return nullint2;
 
             }
-                
+
             int? xOrder = null;
             int? yOrder = null;
 
@@ -179,7 +202,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
                 Log.Error("One of the orderings was null: x: " + xOrder + ", y: " + yOrder + ", x.LevelName: " + x.LevelName + ", y.Levelname: " + y.LevelName + ", x.LevelName.Length: " + x.LevelName.Length + ", y.LevelName.Length: " + y.LevelName.Length);
                 return nullint3;
             }
-                
+
 
             return (xOrder.Value.CompareTo(yOrder.Value));
 
@@ -187,29 +210,41 @@ namespace HCMExternal.Services.CheckpointServiceNS
         }
     }
 
-    class SortCreationTime : NullComparer,  ICompareCheckpoints
+    internal class SortCreationTime : NullComparer, ICompareCheckpoints
     {
         public string Name { get; init; } = "File Creation Time";
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
-            if (NullCompare(x, y, out int nullint)) return nullint;
-            if (NullCompare(x.CreatedOn, y.CreatedOn, out int nullint2)) return nullint2;
+            if (NullCompare(x, y, out int nullint))
+            {
+                return nullint;
+            }
 
-
+            if (NullCompare(x.CreatedOn, y.CreatedOn, out int nullint2))
+            {
+                return nullint2;
+            }
 
             return x.CreatedOn.Value.CompareTo(y.CreatedOn.Value);
         }
     }
 
-    class SortInGameTime : NullComparer,  ICompareCheckpoints
+    internal class SortInGameTime : NullComparer, ICompareCheckpoints
     {
         public string Name { get; init; } = "In Game Time";
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
 
 
-            if (NullCompare(x, y, out int nullint)) return nullint;
-            if (NullCompare(x.GameTickCount, y.GameTickCount, out int nullint2)) return nullint2;
+            if (NullCompare(x, y, out int nullint))
+            {
+                return nullint;
+            }
+
+            if (NullCompare(x.GameTickCount, y.GameTickCount, out int nullint2))
+            {
+                return nullint2;
+            }
 
             Log.Verbose("SortIGT: x " + x.GameTickCount);
             Log.Verbose("SortIGT: y " + y.GameTickCount);
@@ -218,14 +253,20 @@ namespace HCMExternal.Services.CheckpointServiceNS
         }
     }
 
-    class SortLastWriteTime : NullComparer,  ICompareCheckpoints
+    internal class SortLastWriteTime : NullComparer, ICompareCheckpoints
     {
         public string Name { get; init; } = "Current Order";
         public int Compare(Checkpoint? x, Checkpoint? y)
         {
-            if (NullCompare(x, y, out int nullint)) return nullint;
-            if (NullCompare(x.ModifiedOn, y.ModifiedOn, out int nullint2)) return nullint2;
+            if (NullCompare(x, y, out int nullint))
+            {
+                return nullint;
+            }
 
+            if (NullCompare(x.ModifiedOn, y.ModifiedOn, out int nullint2))
+            {
+                return nullint2;
+            }
 
             return x.ModifiedOn.Value.CompareTo(y.ModifiedOn.Value);
         }
@@ -240,7 +281,7 @@ namespace HCMExternal.Services.CheckpointServiceNS
         }
     }
 
-    abstract class NullComparer
+    internal abstract class NullComparer
     {
         public bool NullCompare(object? x, object? y, out int returnval)
         {

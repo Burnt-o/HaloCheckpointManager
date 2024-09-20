@@ -1,21 +1,14 @@
-﻿using HCMExternal.Services.CheckpointServiceNS;
+﻿using HCMExternal.Helpers.DictionariesNS;
+using HCMExternal.Properties;
 using HCMExternal.ViewModels;
+using HCMExternal.ViewModels.Commands;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
-using HCMExternal.ViewModels.Commands;
-using HCMExternal.Helpers.DictionariesNS;
 using System.Windows;
-using System.Runtime.CompilerServices;
-using System.Data.Common;
-using System.Runtime.InteropServices.Marshalling;
-using HCMExternal.Properties;
-using System.IO;
-using System.Diagnostics.Eventing.Reader;
 
 namespace HCMExternal.Services.InterprocServiceNS
 {
@@ -36,7 +29,7 @@ namespace HCMExternal.Services.InterprocServiceNS
         private PFN_LOGCALLBACK DEL_LOGCALLBACK;
 
         [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
-        private static partial void updateSelectedCheckpoint([MarshalAs(UnmanagedType.Bool)]bool nullData, int game = 0, string name = "", string path = "", string levelcode = "", string gameVersion = "", int difficulty = 0);
+        private static partial void updateSelectedCheckpoint([MarshalAs(UnmanagedType.Bool)] bool nullData, int game = 0, string name = "", string path = "", string levelcode = "", string gameVersion = "", int difficulty = 0);
 
         [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
         private static partial void updateSelectedFolder(
@@ -48,8 +41,8 @@ namespace HCMExternal.Services.InterprocServiceNS
         string SFnameH4, string SFpathH4);
 
         [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
-        private static partial UInt16 initSharedMemory(
-            [MarshalAs(UnmanagedType.Bool)] bool CPnullData, 
+        private static partial ushort initSharedMemory(
+            [MarshalAs(UnmanagedType.Bool)] bool CPnullData,
             int CPgame, string CPname, string CPpath, string CPlevelcode, string CPgameVersion, int CPdifficulty,
             string SFnameH1, string SFpathH1,
             string SFnameH2, string SFpathH2,
@@ -67,7 +60,7 @@ namespace HCMExternal.Services.InterprocServiceNS
 
 
 
-        [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal(UInt32 mccProcessID, StringBuilder str, int len);
+        [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal(uint mccProcessID, StringBuilder str, int len);
 
         public InterprocService(CheckpointViewModel checkpointViewModel)
         {
@@ -102,15 +95,15 @@ namespace HCMExternal.Services.InterprocServiceNS
             CheckpointViewModel.SelectedSaveFolder = CheckpointViewModel.SelectedSaveFolder;
 
             // get info on init cp and sf
-            var cp = CheckpointViewModel.SelectedCheckpoint;
-            var sf = CheckpointViewModel.SelectedSaveFolder;
+            Models.Checkpoint? cp = CheckpointViewModel.SelectedCheckpoint;
+            Models.SaveFolder sf = CheckpointViewModel.SelectedSaveFolder;
 
-            var H1sf = getGameSFData(HaloTabEnum.Halo1);
-            var H2sf = getGameSFData(HaloTabEnum.Halo2);
-            var H3sf = getGameSFData(HaloTabEnum.Halo3);
-            var ODsf = getGameSFData(HaloTabEnum.Halo3ODST);
-            var HRsf = getGameSFData(HaloTabEnum.HaloReach);
-            var H4sf = getGameSFData(HaloTabEnum.Halo4);
+            (string, string) H1sf = getGameSFData(HaloTabEnum.Halo1);
+            (string, string) H2sf = getGameSFData(HaloTabEnum.Halo2);
+            (string, string) H3sf = getGameSFData(HaloTabEnum.Halo3);
+            (string, string) ODsf = getGameSFData(HaloTabEnum.Halo3ODST);
+            (string, string) HRsf = getGameSFData(HaloTabEnum.HaloReach);
+            (string, string) H4sf = getGameSFData(HaloTabEnum.Halo4);
 
             Log.Information("Initialising save folder shared memory with: \n" +
                     H1sf.Item2 + "\n" +
@@ -121,9 +114,9 @@ namespace HCMExternal.Services.InterprocServiceNS
                     H4sf.Item2 + "\n"
                 );
 
-            UInt16 sharedMemoryInit;
+            ushort sharedMemoryInit;
             // is data good
-            if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null) 
+            if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null)
             {
                 sharedMemoryInit = initSharedMemory(true, 0, "", "", "", "", 0, // null cp data
                     H1sf.Item1, H1sf.Item2,
@@ -132,11 +125,11 @@ namespace HCMExternal.Services.InterprocServiceNS
                     ODsf.Item1, ODsf.Item2,
                     HRsf.Item1, HRsf.Item2,
                     H4sf.Item1, H4sf.Item2
-                    ); 
+                    );
             }
-            else 
+            else
             {
-                sharedMemoryInit = initSharedMemory(false, 
+                sharedMemoryInit = initSharedMemory(false,
                     (int)CheckpointViewModel.SelectedGame, cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "", cp.Difficulty ?? 0,
                     H1sf.Item1, H1sf.Item2,
                     H2sf.Item1, H2sf.Item2,
@@ -151,7 +144,7 @@ namespace HCMExternal.Services.InterprocServiceNS
             {
                 Log.Error("Failed to init shared memory!");
             }
-            else 
+            else
             {
                 Log.Information("Shared memory initialised");
             }
@@ -170,10 +163,10 @@ namespace HCMExternal.Services.InterprocServiceNS
             //    );
 
             Log.Verbose("Current directory: " + Directory.GetCurrentDirectory());
-            var currentBaseDirectory = Directory.GetCurrentDirectory();
+            string currentBaseDirectory = Directory.GetCurrentDirectory();
 
-            var rootFolder = currentBaseDirectory + @"\Saves\" + Dictionaries.GameToRootFolderPath[game];
-            var dir = Settings.Default.LastSelectedFolder[(int)game]; // need to try catch this and return root folder on failure. 
+            string rootFolder = currentBaseDirectory + @"\Saves\" + Dictionaries.GameToRootFolderPath[game];
+            string? dir = Settings.Default.LastSelectedFolder[(int)game]; // need to try catch this and return root folder on failure. 
 
             Log.Verbose("The last selected folder for game: " + game + " was " + Settings.Default.LastSelectedFolder[(int)game]);
 
@@ -192,32 +185,37 @@ namespace HCMExternal.Services.InterprocServiceNS
             return (Path.GetFileName(dir), dir);
         }
 
-      
+
 
 
         private void CheckpointViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 if (e.PropertyName == nameof(CheckpointViewModel.SelectedCheckpoint))
                 {
                     Log.Verbose("sending new cp info");
-                    var cp = CheckpointViewModel.SelectedCheckpoint;
-                    var sf = CheckpointViewModel.SelectedSaveFolder;
+                    Models.Checkpoint? cp = CheckpointViewModel.SelectedCheckpoint;
+                    Models.SaveFolder sf = CheckpointViewModel.SelectedSaveFolder;
                     Log.Verbose(string.Format("Sending new checkpoint info to internal, null cp: {0}, null sf: {1}", cp == null ? "true" : "false", ", null sf:" + sf == null ? "true" : "false"));
                     if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null)
+                    {
                         updateSelectedCheckpoint(true);
+                    }
                     else
+                    {
                         updateSelectedCheckpoint(false, Dictionaries.HaloTabEnumToInternalIndex(CheckpointViewModel.SelectedGame), cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "", cp.Difficulty ?? 0);
+                    }
                 }
                 else if (e.PropertyName == nameof(CheckpointViewModel.SelectedSaveFolder))
                 {
 
-                    var H1sf = getGameSFData(HaloTabEnum.Halo1);
-                    var H2sf = getGameSFData(HaloTabEnum.Halo2);
-                    var H3sf = getGameSFData(HaloTabEnum.Halo3);
-                    var ODsf = getGameSFData(HaloTabEnum.Halo3ODST);
-                    var HRsf = getGameSFData(HaloTabEnum.HaloReach);
-                    var H4sf = getGameSFData(HaloTabEnum.Halo4);
+                    (string, string) H1sf = getGameSFData(HaloTabEnum.Halo1);
+                    (string, string) H2sf = getGameSFData(HaloTabEnum.Halo2);
+                    (string, string) H3sf = getGameSFData(HaloTabEnum.Halo3);
+                    (string, string) ODsf = getGameSFData(HaloTabEnum.Halo3ODST);
+                    (string, string) HRsf = getGameSFData(HaloTabEnum.HaloReach);
+                    (string, string) H4sf = getGameSFData(HaloTabEnum.Halo4);
 
                     Log.Information("Updating save folder shared memory with: \n" +
                     H1sf.Item2 + "\n" +
@@ -229,7 +227,7 @@ namespace HCMExternal.Services.InterprocServiceNS
                 );
 
                     Log.Verbose("sending new sf info");
-                    var sf = CheckpointViewModel.SelectedSaveFolder;
+                    Models.SaveFolder sf = CheckpointViewModel.SelectedSaveFolder;
                     Log.Verbose(string.Format("Sending new saveFolder info to internal: {0}", sf == null ? "null!" : sf.SaveFolderPath));
                     updateSelectedFolder(
                     H1sf.Item1, H1sf.Item2,
@@ -240,12 +238,12 @@ namespace HCMExternal.Services.InterprocServiceNS
                     H4sf.Item1, H4sf.Item2);
                 }
             });
-           
+
 
         }
 
 
-        public (bool, string) Setup(UInt32 mccProcessID)
+        public (bool, string) Setup(uint mccProcessID)
         {
             StringBuilder sb = new StringBuilder(1000);
             return (SetupInternal(mccProcessID, sb, sb.Capacity), sb.ToString());
@@ -264,7 +262,7 @@ namespace HCMExternal.Services.InterprocServiceNS
             Log.Verbose("HCMInterproc: " + message);
         }
 
-    
+
 
 
 

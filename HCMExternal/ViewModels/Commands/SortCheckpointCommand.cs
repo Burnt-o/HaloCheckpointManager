@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using HCMExternal.Models;
-using HCMExternal.ViewModels;
-using System.Diagnostics;
-using HCMExternal.Services.CheckpointServiceNS;
+﻿using HCMExternal.Services.CheckpointServiceNS;
 using HCMExternal.Views;
+using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace HCMExternal.ViewModels.Commands
 {
@@ -17,8 +10,8 @@ namespace HCMExternal.ViewModels.Commands
     {
         internal SortCheckpointCommand(CheckpointViewModel checkpointViewModel, CheckpointService checkpointServices)
         {
-            this.CheckpointViewModel = checkpointViewModel;
-            this.CheckpointServices = checkpointServices;
+            CheckpointViewModel = checkpointViewModel;
+            CheckpointServices = checkpointServices;
         }
 
         public CheckpointViewModel CheckpointViewModel { get; init; }
@@ -34,9 +27,12 @@ namespace HCMExternal.ViewModels.Commands
         {
             try
             {
-                Application.Current.Dispatcher.Invoke((Action)delegate {
-                    SortCheckpointsView win = new(CheckpointServices, CheckpointViewModel);
-                    win.Owner = App.Current.MainWindow; // makes the dialog be centers on the main window
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    SortCheckpointsView win = new(CheckpointServices, CheckpointViewModel)
+                    {
+                        Owner = App.Current.MainWindow // makes the dialog be centers on the main window
+                    };
                     win.ShowDialog();
                 });
 
@@ -51,7 +47,7 @@ namespace HCMExternal.ViewModels.Commands
 
         public void RaiseCanExecuteChanged()
         {
-            App.Current.Dispatcher.Invoke((Action)delegate // Need to make sure it's run on the UI thread
+            App.Current.Dispatcher.Invoke(delegate // Need to make sure it's run on the UI thread
             {
                 _canExecuteChanged?.Invoke(this, EventArgs.Empty);
             });
