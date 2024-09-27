@@ -16,9 +16,13 @@ namespace HCMExternal.Converters
             }
 
             int gameTicks = (int)value;
-            if (gameTicks <= 0) // To avoid dividing 0 later. Should never be negative unless there was an error reading the checkpoint data.
+            if (gameTicks < 0) // To avoid dividing 0 later. Should never be negative unless there was an error reading the checkpoint data.
             {
                 return "???";
+            }
+            else if (gameTicks == 0)
+            {
+                return "00:00";
             }
 
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
