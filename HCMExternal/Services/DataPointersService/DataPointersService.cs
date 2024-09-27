@@ -1,9 +1,15 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Security.Policy;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using System.Xml.Linq;
 
 namespace HCMExternal.Services.DataPointersServiceNS
@@ -87,45 +93,36 @@ namespace HCMExternal.Services.DataPointersServiceNS
             string localPointerDataPath = Directory.GetCurrentDirectory() + "\\ExternalPointerData.xml";
             failedReads = "";
 
-            // Debug mode to use local data file 
+
 #if HCM_DEBUG
-            Debug.Assert(File.Exists(localPointerDataPath));
-            Log.Information("Grabbing xml data from local dev machine");
-            xml = File.ReadAllText(localPointerDataPath);
-
-#else
-            // Old code use to try downloading the file from the git but Anti-Viruses don't like that
-            /*
-            try
-            {
-                string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMExternal/ExternalPointerData.xml";
-                System.Net.WebClient client = new System.Net.WebClient();
-                xml = client.DownloadString(url);
-
-                //Write the contents to local PointerData.xml for offline use
-                if (File.Exists(localPointerDataPath)) File.Delete(localPointerDataPath);
-                File.WriteAllText(localPointerDataPath, xml);
-            }
-            catch
-            {
-                // Couldn't grab online data, try offline backup
-                Log.Information("Couldn't find online xml data, trying local backup");
-                if (File.Exists(localPointerDataPath))
-                {
-                    Log.Information("Grabbing local xml data");
-                    xml = File.ReadAllText(localPointerDataPath);
-                }
-            }
-            */
-
-
-            // New code: load from embedded xml file
+// Debug mode to use local data file as embedded resource
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HCMExternal.ExternalPointerData.xml");
             if (stream != null)
             {
                 StreamReader reader = new StreamReader(stream);
                 xml = reader.ReadToEnd();
             }
+
+#else
+
+            try
+            {
+                var client = new System.Net.Http.HttpClient();
+                xml = client.GetStringAsync("https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMExternal/ExternalPointerData.xml").Result;
+            }
+            catch (HttpRequestException e)
+            {
+                Log.Error("Couldn't resolve github external pointer data, error: " + e.Message);
+                // Couldn't grab online data, read offline embedded resource instead
+                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HCMExternal.ExternalPointerData.xml");
+                if (stream != null)
+                {
+                    StreamReader reader = new StreamReader(stream);
+                    xml = reader.ReadToEnd();
+                }
+            }
+
+
 
 #endif
 
