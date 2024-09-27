@@ -5,7 +5,7 @@
 #include "WindowsUtilities.h"
 
 #include "App.h"
-
+#include "MCCInitialisationCheck.h"
 
 
 // Main Execution Loop
@@ -21,6 +21,11 @@ void RealMain(HMODULE dllHandle)
 DWORD WINAPI MainThread(HMODULE hDLL)
 {
 
+    while (MCCInitialisationCheck(hDLL).value() == false)
+    {
+        Sleep(100);
+    }
+
     RealMain(hDLL);
 
     Sleep(200);
@@ -34,19 +39,9 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 )
 {
 
-    DWORD dwThreadID;
-
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
-        CreateThread(0, 0x1000, (LPTHREAD_START_ROUTINE)MainThread, hModule, 0, &dwThreadID);
-    }
-
-    switch (ul_reason_for_call)
+    if (ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
-    case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
+        CreateThread(0, 0x1000, (LPTHREAD_START_ROUTINE)MainThread, hModule, 0, NULL);
     }
 
     return TRUE;

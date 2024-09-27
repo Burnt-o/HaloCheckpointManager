@@ -1,14 +1,15 @@
 ﻿using HCMExternal.Helpers.DictionariesNS;
+using HCMExternal.Models;
 using HCMExternal.Properties;
 using HCMExternal.ViewModels;
 using HCMExternal.ViewModels.Commands;
 using Serilog;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+
 
 namespace HCMExternal.Services.InterprocServiceNS
 {
@@ -18,14 +19,14 @@ namespace HCMExternal.Services.InterprocServiceNS
         private CheckpointViewModel CheckpointViewModel;
 
 
-        private delegate void PFN_ERRORCALLBACK(string str);
+        private delegate void PFN_ERRORCALLBACK([MarshalAs(UnmanagedType.LPWStr)] string str);
         [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ErrorEventSubscribe(PFN_ERRORCALLBACK callback);
+        private static extern void ErrorEvent_Subscribe(PFN_ERRORCALLBACK callback);
         private PFN_ERRORCALLBACK DEL_ERRORCALLBACK;
 
         private delegate void PFN_LOGCALLBACK([MarshalAs(UnmanagedType.LPWStr)] string str);
         [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void LogEventSubscribe(PFN_LOGCALLBACK callback);
+        private static extern void LogEvent_Subscribe(PFN_LOGCALLBACK callback);
         private PFN_LOGCALLBACK DEL_LOGCALLBACK;
 
         [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
@@ -41,7 +42,7 @@ namespace HCMExternal.Services.InterprocServiceNS
         string SFnameH4, string SFpathH4);
 
         [LibraryImport("HCMInterproc.DLL", StringMarshallingCustomType = typeof(Utf8StringMarshaller))]
-        private static partial ushort initSharedMemory(
+        private static partial ushort initialiseInterproc(
             [MarshalAs(UnmanagedType.Bool)] bool CPnullData,
             int CPgame, string CPname, string CPpath, string CPlevelcode, string CPgameVersion, int CPdifficulty,
             string SFnameH1, string SFpathH1,
@@ -56,11 +57,15 @@ namespace HCMExternal.Services.InterprocServiceNS
         private static partial void queueInjectCommand();
 
         [LibraryImport("HCMInterproc.DLL")]
-        public static partial int getHCMInternalStatusFlag();
+        private static partial void resetStateMachine();
 
+        public void resetStateMachineEx() { resetStateMachine(); }
 
+        private delegate void PFN_SMSTATUSCALLBACK(int state);
+        [DllImport("HCMInterproc.DLL", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void HookStateChangedEvent_Subscribe(PFN_SMSTATUSCALLBACK callback);
+        private PFN_SMSTATUSCALLBACK DEL_SMSTATUSCALLBACK;
 
-        [DllImport("HCMInterproc.dll")] private static extern bool SetupInternal(uint mccProcessID, StringBuilder str, int len);
 
         public InterprocService(CheckpointViewModel checkpointViewModel)
         {
@@ -71,29 +76,44 @@ namespace HCMExternal.Services.InterprocServiceNS
 
 
             // NOTE: do NOT put temporaries into the subscribes. They will eventually get garbage collected, then Interproc will eventually call them leading to KABOOM. I learned the hard way.
+            Log.Verbose("Got this far 0");
 
             // Subscribe to interproc events
             DEL_ERRORCALLBACK = new PFN_ERRORCALLBACK(ERRORCALLBACK);
-            ErrorEventSubscribe(DEL_ERRORCALLBACK);
+            ErrorEvent_Subscribe(DEL_ERRORCALLBACK);
 
+
+            Log.Verbose("Got this far 1");
             DEL_LOGCALLBACK = new PFN_LOGCALLBACK(LOGCALLBACK);
-            LogEventSubscribe(DEL_LOGCALLBACK);
+            LogEvent_Subscribe(DEL_LOGCALLBACK);
+
+            Log.Verbose("Got this far 2");
+            DEL_SMSTATUSCALLBACK = new PFN_SMSTATUSCALLBACK(SMSTATUSCALLBACK);
+            HookStateChangedEvent_Subscribe(DEL_SMSTATUSCALLBACK);
 
             //DumpCommand.DumpEvent += () => 
             //{
             //    Log.Information("Sending dump command to internal");
             //    sendDumpCommand();
             //};
+
+            Log.Verbose("Got this far 3");
             InjectCommand.InjectEvent += () =>
             {
                 Log.Information("Sending inject command to internal");
                 queueInjectCommand();
             };
 
-            // Since InterprocService is created after CheckpointViewModel, the deserialised first selected checkpoint & savefolder events will be missed. So we need to manually fire them here.
-            CheckpointViewModel.SelectedCheckpoint = CheckpointViewModel.SelectedCheckpoint;
-            CheckpointViewModel.SelectedSaveFolder = CheckpointViewModel.SelectedSaveFolder;
+            Log.Verbose("Got this far 4");
 
+            // Since InterprocService is created after CheckpointViewModel, the deserialised first selected checkpoint & savefolder events will be missed. So we need to manually fire them here.
+            //CheckpointViewModel.SelectedCheckpoint = CheckpointViewModel.SelectedCheckpoint;
+            //CheckpointViewModel.SelectedSaveFolder = CheckpointViewModel.SelectedSaveFolder;
+
+        }
+
+        public void initInterproc()
+        {
             // get info on init cp and sf
             Models.Checkpoint? cp = CheckpointViewModel.SelectedCheckpoint;
             Models.SaveFolder sf = CheckpointViewModel.SelectedSaveFolder;
@@ -114,11 +134,11 @@ namespace HCMExternal.Services.InterprocServiceNS
                     H4sf.Item2 + "\n"
                 );
 
-            ushort sharedMemoryInit;
+            ushort interprocInit;
             // is data good
             if (cp == null || cp.CheckpointName == null || sf == null || sf.SaveFolderName == null || sf.SaveFolderPath == null)
             {
-                sharedMemoryInit = initSharedMemory(true, 0, "", "", "", "", 0, // null cp data
+                interprocInit = initialiseInterproc(true, 0, "", "", "", "", 0, // null cp data
                     H1sf.Item1, H1sf.Item2,
                     H2sf.Item1, H2sf.Item2,
                     H3sf.Item1, H3sf.Item2,
@@ -129,7 +149,7 @@ namespace HCMExternal.Services.InterprocServiceNS
             }
             else
             {
-                sharedMemoryInit = initSharedMemory(false,
+                interprocInit = initialiseInterproc(false,
                     (int)CheckpointViewModel.SelectedGame, cp.CheckpointName, sf.SaveFolderPath + "\\" + cp.CheckpointName + ".bin", cp.LevelName ?? "", cp.GameVersion ?? "", cp.Difficulty ?? 0,
                     H1sf.Item1, H1sf.Item2,
                     H2sf.Item1, H2sf.Item2,
@@ -140,16 +160,15 @@ namespace HCMExternal.Services.InterprocServiceNS
                     );
             }
 
-            if (sharedMemoryInit == 0)
+            if (interprocInit == 0)
             {
                 Log.Error("Failed to init shared memory!");
+                throw new System.Exception("Failed to initialise interproc service!");
             }
             else
             {
                 Log.Information("Shared memory initialised");
             }
-
-
         }
 
         // first return is directory name, second return is directory path
@@ -243,18 +262,35 @@ namespace HCMExternal.Services.InterprocServiceNS
         }
 
 
-        public (bool, string) Setup(uint mccProcessID)
+        // basically we're just converting from the callback to a c# style event
+
+        public class StatusMachineStatusChangedEventArgs : EventArgs
         {
-            StringBuilder sb = new StringBuilder(1000);
-            return (SetupInternal(mccProcessID, sb, sb.Capacity), sb.ToString());
+           public MCCHookStateEnum state { get; set; }
         }
+
+        public class InterprocErrorEventArgs : EventArgs
+        {
+            public string message { get; set; }
+        }
+
+
+        public event EventHandler<StatusMachineStatusChangedEventArgs> StateMachineStatusChanged;
+        public event EventHandler<InterprocErrorEventArgs> InterprocError;
+
 
 
 
         private void ERRORCALLBACK(string message)
         {
-            Log.Error("A HCMInterproc error occured: " + message);
-            MessageBox.Show("An internal error occured: \n\n" + message + "\nLet Burnt know on discord. If the error keeps occuring, try disabling advanced cheats in settings.");
+            Log.Verbose("Handling interproc error event with message: " + message);
+            EventHandler<InterprocErrorEventArgs> handler = InterprocError;
+            if (handler != null)
+            {
+                InterprocErrorEventArgs args = new InterprocErrorEventArgs();
+                args.message = message;
+                handler(this, args);
+            }
         }
 
         private void LOGCALLBACK(string message)
@@ -262,6 +298,17 @@ namespace HCMExternal.Services.InterprocServiceNS
             Log.Verbose("HCMInterproc: " + message);
         }
 
+        private void SMSTATUSCALLBACK(int status)
+        {
+            Log.Verbose("Handling interproc state machine status changed event with new status: " + status);
+            EventHandler<StatusMachineStatusChangedEventArgs> handler = StateMachineStatusChanged;
+            if (handler != null && Enum.IsDefined(typeof(MCCHookStateEnum), status))
+            {
+                StatusMachineStatusChangedEventArgs args = new StatusMachineStatusChangedEventArgs();
+                args.state = (MCCHookStateEnum)status;
+                handler(this, args);
+            }
+        }
 
 
 

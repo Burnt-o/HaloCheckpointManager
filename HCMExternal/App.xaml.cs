@@ -156,12 +156,11 @@ namespace HCMExternal
             mainWindow.Title = "HaloCheckpointManager " + (CurrentHCMVersion.Length > 4 ? CurrentHCMVersion.Substring(0, 5) : CurrentHCMVersion);
             mainWindow.Show();
 
-            //var errorDialog = _serviceProvider.GetService<ErrorDialogView>();
-            //errorDialog.DataContext = _serviceProvider.GetService<ErrorDialogViewModel>();
+           var ips = _serviceProvider.GetService<InterprocService>();
+            _serviceProvider.GetService<MCCHookService>();
 
-            // Tell MCCHookService to begin trying to hook to MCC
-            MCCHookService? mcchook = _serviceProvider.GetService<MCCHookService>();
-            mcchook.BeginStateMachineLoop();
+            ips.initInterproc();
+
         }
 
 

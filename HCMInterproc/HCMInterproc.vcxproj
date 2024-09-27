@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;_DEBUG;HCMINTERPROC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;HCM_DEBUG;_DEBUG;HCMINTERPROC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -152,10 +152,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Events.h" />
-    <ClInclude Include="ExportedFuncs.h" />
+    <ClInclude Include="FindProcess.h" />
+    <ClInclude Include="HookStateMachine.h" />
+    <ClInclude Include="InitInterproc.h" />
+    <ClInclude Include="SharedMemoryExports.h" />
     <ClInclude Include="ExternalInfo.h" />
-    <ClInclude Include="HaloEnums.h" />
-    <ClInclude Include="Inject.h" />
+    <ClInclude Include="HookStateEnum.h" />
+    <ClInclude Include="ImbueInternal.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SharedMemoryExternal.h" />
@@ -165,8 +168,10 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Events.cpp" />
-    <ClCompile Include="HaloEnums.cpp" />
-    <ClCompile Include="Inject.cpp" />
+    <ClCompile Include="FindProcess.cpp" />
+    <ClCompile Include="HookStateMachine.cpp" />
+    <ClCompile Include="ImbueInternal.cpp" />
+    <ClCompile Include="InitInterproc.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

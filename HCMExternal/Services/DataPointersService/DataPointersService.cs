@@ -1,9 +1,9 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace HCMExternal.Services.DataPointersServiceNS
@@ -88,12 +88,14 @@ namespace HCMExternal.Services.DataPointersServiceNS
             failedReads = "";
 
             // Debug mode to use local data file 
-#if HCM_DEBUG 
+#if HCM_DEBUG
             Debug.Assert(File.Exists(localPointerDataPath));
             Log.Information("Grabbing xml data from local dev machine");
             xml = File.ReadAllText(localPointerDataPath);
 
 #else
+            // Old code use to try downloading the file from the git but Anti-Viruses don't like that
+            /*
             try
             {
                 string url = "https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMExternal/ExternalPointerData.xml";
@@ -113,6 +115,16 @@ namespace HCMExternal.Services.DataPointersServiceNS
                     Log.Information("Grabbing local xml data");
                     xml = File.ReadAllText(localPointerDataPath);
                 }
+            }
+            */
+
+
+            // New code: load from embedded xml file
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HCMExternal.ExternalPointerData.xml");
+            if (stream != null)
+            {
+                StreamReader reader = new StreamReader(stream);
+                xml = reader.ReadToEnd();
             }
 
 #endif

@@ -1,25 +1,10 @@
 #pragma once
-//#include "SharedMemoryExternal.h"
 #include "SharedMemoryExternal.h"
-
+#include "pch.h"
 extern "C"
 {
 
-	__declspec(dllexport) extern int getHCMInternalStatusFlag()
-	{
-		if (!g_SharedMemoryExternal.get())
-		{
-			PLOG_ERROR << "g_SharedMemoryExternal not initialised!";
-			return (int)HCMInternalStatus::Error;
-		}
 
-		if (!g_SharedMemoryExternal->HCMInternalStatusFlag)
-		{
-			PLOG_ERROR << "g_SharedMemoryExternal->HCMInternalStatusFlag was null!";
-			return (int)HCMInternalStatus::Error;
-		}
-		return *g_SharedMemoryExternal->HCMInternalStatusFlag;
-	}
 
 
 	__declspec(dllexport) extern void queueInjectCommand()
@@ -83,37 +68,7 @@ extern "C"
 		g_SharedMemoryExternal->selectedH4FolderPath->assign(SFpathH4);
 	}
 
-	__declspec(dllexport) extern uint16_t initSharedMemory(
-		bool CPnullData,
-		int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,
-		const char* SFnameH1, const char* SFpathH1,
-		const char* SFnameH2, const char* SFpathH2,
-		const char* SFnameH3, const char* SFpathH3,
-		const char* SFnameOD, const char* SFpathOD,
-		const char* SFnameHR, const char* SFpathHR,
-		const char* SFnameH4, const char* SFpathH4
-	)
-	{
-		PLOG_INFO << "Attempting to init shared memory";
-		try
-		{
-			g_SharedMemoryExternal = std::make_unique<SharedMemoryExternal>(CPnullData, 
-				CPgame, CPname, CPpath, CPlevelcode, CPgameVersion, CPdifficulty,
-				SFnameH1, SFpathH1,
-				SFnameH2, SFpathH2,
-				SFnameH3, SFpathH3,
-				SFnameOD, SFpathOD,
-				SFnameHR, SFpathHR,
-				SFnameH4, SFpathH4);
-			PLOG_INFO << "Success!";
-			return true;
-		}
-		catch (std::exception ex)
-		{
-			PLOG_ERROR << "Failure! " << ex.what();
-			return false;
-		}
-	}
+
 
 
 }

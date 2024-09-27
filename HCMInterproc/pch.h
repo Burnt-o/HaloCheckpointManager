@@ -17,12 +17,14 @@
 #include <memory>
 #include <array>
 
+#include "magic_enum_all.hpp" // enum reflection https://github.com/Neargye/magic_enum
 
 // logging
 #include <plog\Log.h>
 #include <plog/Initializers/ConsoleInitializer.h>
 #include <plog\Formatters\TxtFormatter.h>
 #include <plog/Formatters/FuncMessageFormatter.h>
+
 
 
 #endif //PCH_H

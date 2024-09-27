@@ -1,11 +1,13 @@
 #include "pch.h"
-#include "Inject.h"
+#include "ImbueInternal.h"
 #include "Events.h"
 #include "WinHandle.h"
 #include "SharedMemoryExternal.h"
 #include "WindowsUtilities.h"
 #include <winternl.h>
 #include <Psapi.h>
+#include <processthreadsapi.h>
+
 
 
 class InjectionException : public std::exception {
@@ -31,12 +33,10 @@ constexpr auto dllName = "HCMInternal";
 constexpr WCHAR wdllChars[] = L"HCMInternal.dll";
 
 
-
-bool SetupInternal(DWORD mccPID, char* errorMessage, int errorMessageCapacity)
+// throws InjectionException on failure
+void SetupInternal(DWORD mccPID)
 {
 	PLOG_DEBUG << "SetupInternal running";
-	try
-	{
 
 		if (!g_SharedMemoryExternal.get())
 		{
@@ -80,22 +80,12 @@ bool SetupInternal(DWORD mccPID, char* errorMessage, int errorMessageCapacity)
 		if (!processContainsModule(mccPID, std::wstring(wdllChars)))
 		{
 			PLOG_ERROR << "Process didn't appear to contain HCMInternal after injecting!";
-			return true; // cooooould return false instead, but the issue could be with processContainsModule func and not the injection
 		}
 		else
 		{
 			PLOG_INFO << "Confirmed that MCC contains HCMInternal!";
 		}
 
-		return true;
-
-	}
-	catch (InjectionException ex)
-	{
-		std::string exTruncated = ex.what().substr(0, errorMessageCapacity - 1);
-		strcpy_s(errorMessage, errorMessageCapacity, exTruncated.c_str());
-		return false;
-	}
 
 }
 
@@ -340,3 +330,15 @@ void InjectModule(DWORD pid, std::string dllFilePath)
 
 
 
+std::optional<std::wstring> imbueInternal(HandlePtr& mccHandle)
+{
+	try
+	{
+		SetupInternal(GetProcessId(mccHandle.get()));
+		return std::nullopt;
+	}
+	catch (InjectionException ex)
+	{
+		return str_to_wstr(ex.what());
+	}
+}

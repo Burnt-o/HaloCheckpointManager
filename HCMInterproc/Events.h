@@ -1,20 +1,28 @@
 #pragma once
-
+#include "HookStateEnum.h"
 
 extern "C"
 {
 
-	typedef int64_t(*PFN_HEARTBEATCALLBACK)();
-	__declspec(dllexport) void HeartbeatEventSubscribe(PFN_HEARTBEATCALLBACK callback);
-	int64_t HeartbeatEventInvoke();
+	// External displays a little 
+	typedef void (*pHookStateChangedEvent_Callback)(const HookStateEnum newHookState);
+	__declspec(dllexport) void HookStateChangedEvent_Subscribe(pHookStateChangedEvent_Callback callback);
+	void HookStateChangedEvent_Invoke(const HookStateEnum newHookState);
 
-	typedef void (*PFN_ERRORCALLBACK)(const char* error_str);
-	__declspec(dllexport) void ErrorEventSubscribe(PFN_ERRORCALLBACK callback);
-	void ErrorEventInvoke(const char* error_str);
 
-	typedef void (*PFN_LOGCALLBACK)(const wchar_t* log_str);
-	__declspec(dllexport) void LogEventSubscribe(PFN_LOGCALLBACK callback);
-	void LogEventInvoke(const wchar_t* log_str);
+
+	// Interproc logging pipes thru back to HCMExternal
+	typedef void (*pLogEvent_Callback)(const wchar_t* log_str);
+	__declspec(dllexport) void LogEvent_Subscribe(pLogEvent_Callback callback);
+	void LogEvent_Invoke(const wchar_t* log_str);
+
+
+	// Message will be displayed to user in External dialog 
+	typedef void (*pErrorEvent_Callback)(const wchar_t* error_str);
+	__declspec(dllexport) void ErrorEvent_Subscribe(pErrorEvent_Callback callback);
+	void ErrorEvent_Invoke(const wchar_t* error_str);
+
+
 
 
 }

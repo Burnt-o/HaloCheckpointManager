@@ -17,6 +17,7 @@ enum class HCMInternalStatus
 	Initialising = 0,
 	AllGood = 1,
 	Error = 2,
+	Shutdown = 3
 };
 
 
@@ -73,7 +74,33 @@ public:
 
 	int* HCMInternalStatusFlag;
 
+
 };
 
 
-extern std::unique_ptr<SharedMemoryExternal> g_SharedMemoryExternal; // starts uninit, created by exportedFunction initSharedMemory
+extern std::unique_ptr<SharedMemoryExternal> g_SharedMemoryExternal; // starts uninitialised, created in inititialiseInterproc
+
+static HCMInternalStatus getHCMInternalStatusFlag()
+{
+	if (!g_SharedMemoryExternal.get())
+	{
+		PLOG_ERROR << "g_SharedMemoryExternal not initialised! t.getHCMInternalStatusFlag";
+		return HCMInternalStatus::Error;
+	}
+
+	if (!g_SharedMemoryExternal->HCMInternalStatusFlag)
+	{
+		PLOG_ERROR << "g_SharedMemoryExternal->HCMInternalStatusFlag was null! t.getHCMInternalStatusFlag";
+		return HCMInternalStatus::Error;
+	}
+
+	int readFlag = *g_SharedMemoryExternal->HCMInternalStatusFlag;
+
+	if (!magic_enum::enum_contains<HCMInternalStatus>(readFlag))
+	{
+		PLOG_ERROR << "invalid HCMInternalStatus by readFlag: " << readFlag;
+		return HCMInternalStatus::Error;
+	}
+
+	return (HCMInternalStatus)readFlag; 
+}

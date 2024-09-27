@@ -101,7 +101,7 @@ namespace HCMExternal.ViewModels
 
         private readonly SynchronizationContext _syncContext;
         private CheckpointService CheckpointServices { get; init; }
-        public CheckpointViewModel(CheckpointService cs, MCCHookStateViewModel hookStateVM)
+        public CheckpointViewModel(CheckpointService cs)
         {
             _syncContext = SynchronizationContext.Current;
             Log.Verbose("CheckpointViewModel constructing");
@@ -122,19 +122,6 @@ namespace HCMExternal.ViewModels
 
             view.CustomSort = new SortCheckpointsByLastWriteTime();
 
-
-            // Subscribe to changes in hookstate so we can tell CheckpointModel to refreshList w/ new version guess on checkpoint files
-            hookStateVM.State.PropertyChanged += (o, i) =>
-            {
-                if (i.PropertyName == nameof(MCCHookState.MCCVersion)) // we only care about changes in currently attached mcc version
-                {
-                    HCMExternal.App.Current.Dispatcher.Invoke(delegate // Need to make sure it's run on the UI thread
-                    {
-                        RefreshCheckpointList();
-                    });
-                }
-
-            };
 
 
             // Setup FileSystemWatcher to monitor save folders for changes

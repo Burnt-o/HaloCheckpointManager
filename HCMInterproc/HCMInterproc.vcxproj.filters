@@ -1,72 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="HookState">
+      <UniqueIdentifier>{24ba1598-6b4c-4b8f-a75e-e85b8bad4d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exports">
+      <UniqueIdentifier>{8fbbd65e-2660-4754-8551-a4456c071f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{00a1e23f-3c69-4c84-ad6a-5be3b3fbb40a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SharedMemory">
+      <UniqueIdentifier>{1634b839-ac74-495b-bb61-f0fccf0c7e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Injection">
+      <UniqueIdentifier>{418bb279-884a-4ebe-b4b5-2d2f4531f772}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Inject.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="HookStateEnum.h">
+      <Filter>HookState</Filter>
     </ClInclude>
     <ClInclude Include="Events.h">
-      <Filter>Source Files</Filter>
+      <Filter>Exports</Filter>
     </ClInclude>
-    <ClInclude Include="WinHandle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsUtilities.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HaloEnums.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExportedFuncs.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExternalInfo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SharedMemoryExternal.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="SharedMemoryExports.h">
+      <Filter>Exports</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="WinHandle.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsUtilities.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedMemoryExternal.h">
+      <Filter>SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="ExternalInfo.h">
+      <Filter>SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="ImbueInternal.h">
+      <Filter>Injection</Filter>
+    </ClInclude>
+    <ClInclude Include="HookStateMachine.h">
+      <Filter>HookState</Filter>
+    </ClInclude>
+    <ClInclude Include="FindProcess.h">
+      <Filter>HookState</Filter>
+    </ClInclude>
+    <ClInclude Include="InitInterproc.h">
+      <Filter>Exports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Events.cpp">
+      <Filter>Exports</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Global</Filter>
     </ClCompile>
-    <ClCompile Include="Inject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Events.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Global</Filter>
     </ClCompile>
     <ClCompile Include="WindowsUtilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HaloEnums.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Global</Filter>
     </ClCompile>
     <ClCompile Include="SharedMemoryExternal.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="ImbueInternal.cpp">
+      <Filter>Injection</Filter>
+    </ClCompile>
+    <ClCompile Include="HookStateMachine.cpp">
+      <Filter>HookState</Filter>
+    </ClCompile>
+    <ClCompile Include="FindProcess.cpp">
+      <Filter>HookState</Filter>
+    </ClCompile>
+    <ClCompile Include="InitInterproc.cpp">
+      <Filter>Exports</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

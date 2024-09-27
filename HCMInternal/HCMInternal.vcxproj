@@ -272,6 +272,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="IModalDialog.h" />
     <ClInclude Include="IModel.h" />
     <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h" />
+    <ClInclude Include="MCCInitialisationCheck.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
     <ClInclude Include="ObservedScopedCallback.h" />
@@ -543,6 +544,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="AbilityMeterOverlay.cpp" />
+    <ClCompile Include="MCCInitialisationCheck.cpp" />
     <ClCompile Include="SoundClassGain.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />

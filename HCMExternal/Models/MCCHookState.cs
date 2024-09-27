@@ -1,5 +1,4 @@
-﻿using NtApiDotNet;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace HCMExternal.Models
@@ -35,23 +34,6 @@ namespace HCMExternal.Models
             set { _state = value; OnPropertyChanged(); }
         }
 
-
-
-        // Handle to valid MCC process with PROCESS_QUERY_LIMITED_INFORMATION
-        private NtProcess? _MCCProcess = null;
-        public NtProcess? MCCProcess
-        {
-            get => _MCCProcess;
-            set { _MCCProcess = value; OnPropertyChanged(); }
-        }
-
-        // What version of MCC are we connected to? Null if no MCC or unable to detect version. 10 char string of format "X.XXXX.X.X"
-        private string? _MCCVersion = null;
-        public string? MCCVersion
-        {
-            get => _MCCVersion;
-            set { _MCCVersion = value; OnPropertyChanged(); }
-        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

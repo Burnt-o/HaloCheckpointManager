@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 // So I don't have to worry about whether I forgot a "CloseHandle" or not
 // https://stackoverflow.com/a/34405788

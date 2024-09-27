@@ -920,6 +920,9 @@
     <ClInclude Include="ChangeOOBBackground.h">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="MCCInitialisationCheck.h">
+      <Filter>Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1353,6 +1356,9 @@
     </ClCompile>
     <ClCompile Include="DisableFog.cpp">
       <Filter>Services\OptionalCheats\Implementations\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MCCInitialisationCheck.cpp">
+      <Filter>Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
