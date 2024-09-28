@@ -104,15 +104,16 @@ namespace HCMExternal.Services.DataPointersServiceNS
             }
 
 #else
-
+            // Download the xml from git for latest version
             try
             {
                 var client = new System.Net.Http.HttpClient();
                 xml = client.GetStringAsync("https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMExternal/ExternalPointerData.xml").Result;
             }
-            catch (HttpRequestException e)
+            catch 
             {
-                Log.Error("Couldn't resolve github external pointer data, error: " + e.Message);
+                // otherwise use embedded resource
+                Log.Error("Couldn't resolve github external pointer data");
                 // Couldn't grab online data, read offline embedded resource instead
                 var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HCMExternal.ExternalPointerData.xml");
                 if (stream != null)
@@ -126,7 +127,7 @@ namespace HCMExternal.Services.DataPointersServiceNS
 
 #endif
 
-            // Download the xml from git
+            
 
             if (xml == null || !xml.Any())
             {
