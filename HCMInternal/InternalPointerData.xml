@@ -9048,7 +9048,7 @@
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="skullAssassinPointer" Type="MultilevelPointer::Derived">
+	<VersionedEntry Name="skullAssassinsPointer" Type="MultilevelPointer::Derived">
 		<Version Version="All" Game="Halo2">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>-0x9</LastOffsetAdjustment>
