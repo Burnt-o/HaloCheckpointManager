@@ -2,16 +2,21 @@
 <root>
 
 	
-	<!--Supported game versions-->
+	<!--Supported game versions. HCM will forcibly fail to initialize if MCC version isn't one of these.-->
 	<SupportedGameVersions>
 		<Entry>1.2448.0.0</Entry>
 		<Entry>1.2645.0.0</Entry>
 		<Entry>1.3272.0.0</Entry>
 		<Entry>1.3385.0.0</Entry>
 	</SupportedGameVersions>
-	
-	
-	
+
+
+	<!--Supported HCM Versions. User will be informed via message that a newer version is available, if the current HCM version isn't one of these.-->
+	<SupportedHCMVersions>
+		<Entry>3.1.4.0</Entry>
+		<Entry>3.1.3.0</Entry>
+		<Entry>3.1.2.0</Entry>
+	</SupportedHCMVersions>
 	
 	
 	

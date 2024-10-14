@@ -17,9 +17,6 @@
     <Filter Include="Interfaces">
       <UniqueIdentifier>{e2b4f4de-ecde-4fd0-b550-cd9418577881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Definitions">
-      <UniqueIdentifier>{3e929823-9bb9-423f-b811-bbee94da77be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Services\OptionalCheats">
       <UniqueIdentifier>{837d1078-0fa6-48f6-a483-88e1205c2f94}</UniqueIdentifier>
     </Filter>
@@ -100,6 +97,9 @@
     </Filter>
     <Filter Include="Classes\Events">
       <UniqueIdentifier>{e1b10632-8e97-4ede-af4a-05418c747a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Definitions">
+      <UniqueIdentifier>{3e929823-9bb9-423f-b811-bbee94da77be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -923,6 +923,12 @@
     <ClInclude Include="MCCInitialisationCheck.h">
       <Filter>Global</Filter>
     </ClInclude>
+    <ClInclude Include="GetHCMVersion.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="PointerDataTypes.h">
+      <Filter>Services\PointerData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1359,6 +1365,9 @@
     </ClCompile>
     <ClCompile Include="MCCInitialisationCheck.cpp">
       <Filter>Global</Filter>
+    </ClCompile>
+    <ClCompile Include="GetHCMVersion.cpp">
+      <Filter>Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

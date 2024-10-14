@@ -2,73 +2,71 @@
 #include "pugixml.hpp"
 #include "IGetMCCVersion.h"
 #include "GameState.h"
-#include "PointerDataStore.h"
-// s parses the InternalPointerData.xml into the data that will go into PointerDataStore.
-class PointerDataParser
+#include "MultilevelPointer.h"
+
+namespace PointerDataParser
 {
-public:
+
 	typedef std::tuple<std::string, std::optional<GameState>> DataKey;
-private:
 
-    // to prevent getting mixed up during dev
-    //class VersionEntry : public pugi::xml_node {};
-    //class VersionCollection : public pugi::xml_node {};
+	// statically parses the InternalPointerData.xml into the dataMap that will go into PointerDataStore.
+	// throws HCMInitExceptions if something goes wrong
+	std::map<DataKey, std::any> parseVersionedData(std::shared_ptr<IGetMCCVersion> getMCCVer, const std::string& xmlDocument);
 
-    typedef pugi::xml_node VersionEntry;
-    typedef pugi::xml_node VersionCollection;
-    
-	// sub functions
-    bool entryIsCorrectMCCVersion(VersionEntry versionEntry);
-    bool entryIsCorrectProcessType(VersionEntry versionEntry);
-    std::optional<GameState> getEntryGame(VersionEntry versionEntry);
+	std::expected<std::vector<std::string>, std::string> parseSupportedMCCVersions(const std::string& xmlDocument) noexcept;
 
-    template <typename T> void emplaceObject(T& object, VersionEntry versionEntry);
+	std::expected<std::vector<std::string>, std::string> parseSupportedHCMVersions(const std::string& xmlDocument) noexcept;
 
+	namespace detail
+	{
+		using namespace pugi;
 
-    void processVersionedEntry(VersionEntry versionEntry, std::string versionEntryType, std::string versionEntryName, std::string versionEntryVectorType);
+		typedef std::tuple<std::string, std::optional<GameState>> DataKey;
+		typedef std::map<DataKey, std::any> DataStore;
+		typedef std::map<DataKey, std::any>& DataStoreRef;
 
-    enum class MultilevelPointerType {
-        ExeOffset,
-        ModuleOffset,
-        BaseOffset,
-        Invalid
-    };
+		typedef pugi::xml_node VersionEntry;
+		typedef pugi::xml_node VersionCollection;
 
-    typedef std::tuple<MultilevelPointerType, std::vector<int64_t>, std::string, bitOffsetT> MLPConstructionArgs;
-    MLPConstructionArgs getConstructionArgs(VersionEntry versionEntry);
-    void instantiateMultilevelPointer(VersionEntry versionEntry);
+		// sub functions
+		bool entryIsCorrectMCCVersion(VersionEntry versionEntry, std::shared_ptr<IGetMCCVersion> getMCCVer);
+		bool entryIsCorrectProcessType(VersionEntry versionEntry, std::shared_ptr<IGetMCCVersion> getMCCVer);
+		std::optional<GameState> getEntryGame(VersionEntry versionEntry);
 
-    void instantiateMidhookContextInterpreter(VersionEntry versionEntry);
-    template <typename T>  void instantiateVectorFloat(VersionEntry versionEntry);
-    template <typename T> void instantiateVectorInteger(VersionEntry versionEntry);
-    void instantiateVectorString(VersionEntry versionEntry);
-    void instantiateInjectRequirements(VersionEntry versionEntry);
-    void instantiatePreserveLocations(VersionEntry versionEntry);
-    void instantiateOffsetLengthPair(VersionEntry versionEntry);
-    void instantiateInt64_t(VersionEntry versionEntry);
-    void instantiateDynStructOffsetInfo(VersionEntry versionEntry);
-    void instantiateMidhookFlagInterpreter(VersionEntry versionEntry);
-    void instantiateLevelMapStringVector(VersionEntry versionEntry);
+		// put an object into the data map
+		template <typename T> void emplaceData(T& data, VersionEntry versionEntry, DataStoreRef dataStore);
+
+		// this function is run on each versionEntry in the document, instantiating whichever data type is represented
+		void processVersionedEntry(VersionEntry versionEntry, std::string versionEntryType, std::string versionEntryName, std::string versionEntryVectorType, std::shared_ptr<IGetMCCVersion> getMCCVer, DataStoreRef dataStore);
 
 
-    //template <typename T> 
-    //T instantiateObject(VersionEntry versionEntry);
+		// MultilevelPointers have sub-types that require different data fields & constructor args
+		enum class MultilevelPointerType {
+			ExeOffset,
+			ModuleOffset,
+			BaseOffset,
+			Invalid
+		};
 
-    //template <typename T>  
-    //std::vector<T> instantiateVectorFloat(VersionEntry versionEntry);
-    //template <typename T> 
-    //std::vector<T> instantiateVectorInteger(VersionEntry versionEntry);
-
-	// data members
-	std::shared_ptr<IGetMCCVersion> mGetMCCver;
-	std::map<DataKey, std::any>& mDataStoreToLoad;
-	const std::string& mXMLDocument;
-public: 
+		typedef std::tuple<MultilevelPointerType, std::vector<int64_t>, std::string, bitOffsetT> MLPConstructionArgs;
+		MLPConstructionArgs getConstructionArgs(VersionEntry versionEntry);
+		std::shared_ptr<MultilevelPointer> instantiateMultilevelPointer(VersionEntry versionEntry, std::shared_ptr<IGetMCCVersion> getMCCVer);
 
 
-	PointerDataParser(std::shared_ptr<IGetMCCVersion> ver, std::shared_ptr< PointerDataStore> pointerStore, const std::string& xmlDocument)
-		: mGetMCCver(ver), mDataStoreToLoad(pointerStore->mDataStore), mXMLDocument(xmlDocument){}
+		template <typename T> T instantiateData(VersionEntry versionEntry);
 
-	void parse();
+		template <typename T> std::shared_ptr<std::vector<T>> instantiateVectorData(VersionEntry versionEntry);
+
+
+
+
+
+	}
+
 };
+
+
+
+
+
 

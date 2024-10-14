@@ -1,15 +1,9 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Animation;
 using System.Xml.Linq;
 
 namespace HCMExternal.Services.DataPointersServiceNS
@@ -94,8 +88,7 @@ namespace HCMExternal.Services.DataPointersServiceNS
             failedReads = "";
 
 
-#if HCM_DEBUG
-// Debug mode to use local data file as embedded resource
+            // grab embedded resource file in assembly
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HCMExternal.ExternalPointerData.xml");
             if (stream != null)
             {
@@ -103,31 +96,6 @@ namespace HCMExternal.Services.DataPointersServiceNS
                 xml = reader.ReadToEnd();
             }
 
-#else
-            // Download the xml from git for latest version
-            try
-            {
-                var client = new System.Net.Http.HttpClient();
-                xml = client.GetStringAsync("https://raw.githubusercontent.com/Burnt-o/HaloCheckpointManager/master/HCMExternal/ExternalPointerData.xml").Result;
-            }
-            catch 
-            {
-                // otherwise use embedded resource
-                Log.Error("Couldn't resolve github external pointer data");
-                // Couldn't grab online data, read offline embedded resource instead
-                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HCMExternal.ExternalPointerData.xml");
-                if (stream != null)
-                {
-                    StreamReader reader = new StreamReader(stream);
-                    xml = reader.ReadToEnd();
-                }
-            }
-
-
-
-#endif
-
-            
 
             if (xml == null || !xml.Any())
             {

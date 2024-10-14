@@ -1,15 +1,56 @@
 #pragma once
 struct VersionInfo
 {
+public:
+	// Data members
 	DWORD major, minor, build, revision;
-	friend std::ostream& operator << (std::ostream& o, VersionInfo const& a)
+
+
+	constexpr int compare(const VersionInfo& other) const noexcept
+	{
+        if (major != other.major) {
+            return major - other.major;
+        }
+
+        if (minor != other.minor) {
+            return minor - other.minor;
+        }
+
+        if (build != other.build) {
+            return build - other.build;
+        }
+
+		return revision - other.revision;
+    
+	}
+
+
+	friend std::ostream& operator << (std::ostream& o, VersionInfo const& a) noexcept
 	{
 		o << std::format("{}.{}.{}.{}", a.major, a.minor, a.build, a.revision);
 		return o;
 	}
 
-	bool operator == (const VersionInfo& other)
+	constexpr std::strong_ordering operator<=>(const VersionInfo& other) const noexcept
 	{
+		int compVal = compare(other);
+		if (compVal == 0)
+			return std::strong_ordering::equal;
+		if (compVal > 0)
+			return std::strong_ordering::greater;
+		return std::strong_ordering::less;
+	}
+
+	bool operator==(const VersionInfo& other) const noexcept {
 		return major == other.major && minor == other.minor && build == other.build && revision == other.revision;
 	}
+
+	operator std::string() const noexcept
+	{
+		std::stringstream ss;
+		ss << this;
+		return ss.str();
+	}
+
 };
+

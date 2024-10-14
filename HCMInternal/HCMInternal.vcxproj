@@ -249,6 +249,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GetCurrentBSPSet.h" />
     <ClInclude Include="GetCurrentZoneSet.h" />
     <ClInclude Include="GetDebugString.h" />
+    <ClInclude Include="GetHCMVersion.h" />
     <ClInclude Include="GetPlayerDatumPresenter.h" />
     <ClInclude Include="GetPlayerTriggerPosition.h" />
     <ClInclude Include="GetScenarioAddress.h" />
@@ -278,6 +279,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ObservedScopedCallback.h" />
     <ClInclude Include="ObservedEvent.h" />
     <ClInclude Include="AbilityMeterOverlay.h" />
+    <ClInclude Include="PointerDataTypes.h" />
     <ClInclude Include="SharedRequestProvider.h" />
     <ClInclude Include="SoundClassGain.h" />
     <ClInclude Include="TextureFactory.h" />
@@ -520,6 +522,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetCurrentZoneSet.cpp" />
     <ClCompile Include="GetDebugString.cpp" />
+    <ClCompile Include="GetHCMVersion.cpp" />
     <ClCompile Include="GetPlayerTriggerPosition.cpp" />
     <ClCompile Include="GetScenarioAddress.cpp" />
     <ClCompile Include="GetSoftCeilingData.cpp" />

@@ -8,7 +8,6 @@
 
 
 
-
 	std::shared_ptr<IModalDialogVoid> ModalDialogFactory::makeFailedOptionalCheatServicesDialog
 	(std::shared_ptr<GUIServiceInfo> guiFailures)
 	{

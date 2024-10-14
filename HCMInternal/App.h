@@ -35,6 +35,7 @@
 #include "OBSBypassManager.h"
 #include "ModalDialogFactory.h"
 #include "HideWatermarkManager.h"
+#include "GetHCMVersion.h"
 class App {
 
 
@@ -86,12 +87,27 @@ public:
             auto mhm = std::make_unique<ModuleHookManager>(); PLOGV << "mhm init"; // is a static singleton still.. blah 
             auto ver = std::make_shared<GetMCCVersion>(); PLOGV << "ver init";// gets the version of MCC that we're currently injected into
 
-            auto ptrStore = std::make_shared<PointerDataStore>(); PLOGV << "ptrStore init"; // stores dynamic (version & game specific) pointer data
+
+            // load dynamic (version & game specific) pointer data
+            // latest data is pulled from github page
+            std::string pointerXMLData = PointerDataGetter::getXMLDocument(dirPath);
+
+            // parse it into a keyed map of data
+            auto dataMap = PointerDataParser::parseVersionedData(ver, pointerXMLData);
+
+            // store it 
+            auto ptrStore = std::make_shared<PointerDataStore>(dataMap); PLOGV << "ptrStore init";
+
+
+            // Is this version of MCC supported according to the pointer data? Exception if not.
+            if (auto suppV = PointerDataParser::parseSupportedMCCVersions(pointerXMLData); !suppV.has_value() || std::ranges::find(suppV.value(), ver->getMCCVersionAsString()) == suppV.value().end())
             {
-                // latest data is pulled from github page
-                std::string pointerXMLData = PointerDataGetter::getXMLDocument(dirPath);
-                auto ptrParse = std::make_shared<PointerDataParser>(ver, ptrStore, pointerXMLData); PLOGV << "ptrParse init";
-                ptrParse->parse(); // parse & load everything up into the ptrStore
+                if (suppV.has_value())
+                    throw HCMInitException(std::format("The current version of MCC ({}) is not yet supported by HCM! ", ver->getMCCVersionAsString()) +
+                        "\nYou'll have to wait for Burnt to update it if HCM just got a patch," +
+                        "\nor if you're on an old MCC patch, kindly ask him to add support.");
+                else
+                    throw HCMInitException(std::format("Failed to parse currently supported MCC versions, error: {}", suppV.error()));
             }
 
 
@@ -153,7 +169,7 @@ public:
             PLOG_INFO << "All services succesfully initialized! Entering main loop";
             Sleep(100);
 
-            std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage("HCM successfully initialised!");
+            std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage("HCM successfully initialised!\n");
 
             std::thread modalFailureWindowThread;
             if (!guifail->getFailureMessagesMap().empty())
@@ -162,6 +178,30 @@ public:
                 modalFailureWindowThread = std::thread{ ([modal = modal, guifail]() { Sleep(500); modal->showVoidDialog(ModalDialogFactory::makeFailedOptionalCheatServicesDialog(guifail)); }) };
                 modalFailureWindowThread.detach();
             }
+
+            // Is this version of HCM up to date? We'll warn the user if not
+            auto currentHCMVersion = getHCMVersion();
+            if (!currentHCMVersion)
+            {
+                std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage(std::format("Could not determine own HCM version, error: {}\nSkipping check for newer HCM versions.\n", currentHCMVersion.error()));
+            }
+            else
+            {
+                PLOG_INFO << "Current HCM Version: " << currentHCMVersion.value();
+                if (auto suppV = PointerDataParser::parseSupportedHCMVersions(pointerXMLData); !suppV.has_value() || std::ranges::find(suppV.value(), currentHCMVersion.value().operator std::string()) == suppV.value().end())
+                {
+                    if (suppV.has_value())
+                    {
+                        std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage("A newer version of HCM exists, probably with bugfixes or new features.\nFind it at github.com/Burnt-o/HaloCheckpointManager/releases\n");
+                    }
+                    else
+                    {
+                        std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage(std::format("Failed to parse currently supported HCM versions, error: {}\nSkipping check for newer HCM versions.\n", suppV.error()));
+                    }
+
+                }
+            }
+            
 
             sharedMem->setStatusFlag(HCMInternalStatus::AllGood);
 
@@ -173,6 +213,7 @@ public:
 
             if (modalFailureWindowThread.joinable())
                 modalFailureWindowThread.join();
+
 
             sharedMem->setStatusFlag(HCMInternalStatus::Shutdown);
         }

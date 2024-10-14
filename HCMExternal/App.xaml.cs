@@ -101,40 +101,6 @@ namespace HCMExternal
             { ShowError("Some pointers failed to load. Yell at Burnt for making typos.\n" + pointerErrors); }
 
 
-            // Check if current version of HCM is obsolete
-            if (dataPointersService.ObsoleteHCMVersions.Contains(CurrentHCMVersion))
-            {
-                //Tell the user this version of HCM is deprecated and the new version must be downloaded
-
-                MessageBox.Show("Your version of HCM is obsolete, please update from the releases page. Shutting down.", "HaloCheckpointManager Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-
-                //Take them to the release page
-                System.Diagnostics.Process.Start(new ProcessStartInfo
-                {
-                    FileName = "https://github.com/Burnt-o/HaloCheckpointManager/releases",
-                    UseShellExecute = true
-                });
-                System.Windows.Application.Current.Shutdown();
-                return;
-            }
-
-            // Check if there's a newer version of HCM available
-            Log.Debug($"dataPointersService.LatestHCMVersions.Count: {dataPointersService.LatestHCMVersions.Count}");
-            Log.Debug($"dataPointersService.LatestHCMVersions.Contains(this.CurrentHCMVersion): {dataPointersService.LatestHCMVersions.Contains(CurrentHCMVersion)}");
-            Log.Debug($"this.CurrentHCMVersion: {CurrentHCMVersion}");
-            if (dataPointersService.LatestHCMVersions.Count > 0 && !dataPointersService.LatestHCMVersions.Contains(CurrentHCMVersion))
-            {
-                //Tell the user a new HCM version exists and ask them if they would like to download it (send them to github release page)
-                if (!(MessageBox.Show("A newer version of HCM exists, probably with bugfixes or new features.\nWould you like to go to the HCM releases page now?", "Download HCM update?", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))
-                {
-                    //User clicked yes, so take them to the release page
-                    System.Diagnostics.Process.Start(new ProcessStartInfo
-                    {
-                        FileName = "https://github.com/Burnt-o/HaloCheckpointManager/releases",
-                        UseShellExecute = true
-                    });
-                }
-            }
 
             try
             {
