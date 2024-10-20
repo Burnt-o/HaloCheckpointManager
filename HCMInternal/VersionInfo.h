@@ -6,6 +6,15 @@ public:
 	DWORD major, minor, build, revision;
 
 
+	std::expected<VersionInfo, std::string> fromString(std::string versionInfoString)
+	{
+		VersionInfo out;
+		if (sscanf_s(versionInfoString.c_str(), "%d.%d.%d.%d", &out.major, &out.minor, &out.build, &out.revision) != 4)
+			return std::unexpected("Failed to parse version string");
+		else
+			return out;
+	}
+
 	constexpr int compare(const VersionInfo& other) const noexcept
 	{
         if (major != other.major) {
@@ -48,8 +57,8 @@ public:
 	operator std::string() const noexcept
 	{
 		std::stringstream ss;
-		ss << this;
-		return ss.str();
+		ss << *this;
+		return ss.str(); // Need to make copy of the string- implicit conversion will return junk data
 	}
 
 };

@@ -83,21 +83,16 @@ std::string getShortName(std::string in)
 
 VersionInfo getFileVersion(const char* filename)
 {
-	DWORD dwHandle, size = GetFileVersionInfoSizeA(filename, &dwHandle);
+	DWORD size = GetFileVersionInfoSizeA(filename, NULL);
 	if (size == 0)
-	{
 		throw HCMInitException(std::format("fileInfoVersionSize was zero, error: {}", GetLastError()));
-
-	}
 
 	std::vector<char> buffer;
 	buffer.reserve(size);
 
 
-	if (!GetFileVersionInfoA(filename, dwHandle, size, buffer.data()))
-	{
+	if (!GetFileVersionInfoA(filename, NULL, size, buffer.data()))
 		throw HCMInitException(std::format("GetFileVersionInfoA failed, error: {}", GetLastError()));
-	}
 
 	VS_FIXEDFILEINFO* pvi;
 	size = sizeof(VS_FIXEDFILEINFO);
@@ -106,10 +101,11 @@ VersionInfo getFileVersion(const char* filename)
 		throw HCMInitException(std::format("VerQueryValueA failed, error: {}", GetLastError()));
 	}
 
-	return VersionInfo{ pvi->dwProductVersionMS >> 16,
-		pvi->dwFileVersionMS & 0xFFFF,
-			pvi->dwFileVersionLS >> 16,
-			pvi->dwFileVersionLS & 0xFFFF
+	return VersionInfo{ 
+		HIWORD(pvi->dwFileVersionMS),
+		LOWORD(pvi->dwFileVersionMS),
+		HIWORD(pvi->dwFileVersionLS),
+		LOWORD(pvi->dwFileVersionLS)
 	};
 
 

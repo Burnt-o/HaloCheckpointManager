@@ -7,7 +7,7 @@
 namespace PointerDataParser
 {
 
-    std::expected<std::vector<std::string>, std::string> parseSupportedMCCVersions(const std::string& xmlDocument) noexcept
+    std::expected<std::set<std::string>, std::string> parseSupportedMCCVersions(const std::string& xmlDocument) noexcept
     {
         using namespace pugi;
         xml_document doc;
@@ -28,15 +28,15 @@ namespace PointerDataParser
         if (!supportedGameVersions)
             return std::unexpected("Could not find document element by name SupportedGameVersions");
 
-        std::vector<std::string> out;
+        std::set<std::string> out;
         for (xml_node supportedVersion = supportedGameVersions.first_child(); supportedVersion; supportedVersion = supportedVersion.next_sibling())
         {
-            out.push_back(supportedVersion.text().as_string());
+            out.insert(supportedVersion.text().as_string());
         }
         return out;
     }
 
-    std::expected<std::vector<std::string>, std::string> parseSupportedHCMVersions(const std::string& xmlDocument) noexcept
+    std::expected<std::set<std::string>, std::string> parseSupportedHCMVersions(const std::string& xmlDocument) noexcept
     {
         using namespace pugi;
         xml_document doc;
@@ -57,10 +57,10 @@ namespace PointerDataParser
         if (!supportedHCMVersions)
             return std::unexpected("Could not find document element by name SupportedGameVersions");
 
-        std::vector<std::string> out;
+        std::set<std::string> out;
         for (xml_node supportedVersion = supportedHCMVersions.first_child(); supportedVersion; supportedVersion = supportedVersion.next_sibling())
         {
-            out.push_back(supportedVersion.text().as_string());
+            out.insert(supportedVersion.text().as_string());
         }
         return out;
     }

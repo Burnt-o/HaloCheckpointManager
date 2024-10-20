@@ -3,25 +3,13 @@
 #include "GlobalKill.h"
 #include "boost\scope_exit.hpp"
 
-//
-//// https://learn.microsoft.com/en-us/windows/win32/menurc/vs-versioninfo
-//typedef struct {
-//	WORD             wLength;
-//	WORD             wValueLength;
-//	WORD             wType;
-//	WCHAR            szKey[];
-//	WORD             Padding1;
-//	VS_FIXEDFILEINFO Value;
-//	WORD             Padding2;
-//	WORD             Children;
-//} VS_VERSIONINFO;
+
+// https://learn.microsoft.com/en-us/windows/win32/menurc/vs-versioninfo
+
 
 std::expected<VersionInfo, std::string> getHCMVersion()
 {
-
-	//static_assert(false && "replace with this https://gist.github.com/wbenny/479f4bf3f7853a404d9341d0e7237f8e https://github.com/Dravion/HMSInfo/blob/master/HMSInfo/versioninfo.cpp")
-
-
+	// https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource
 
 	auto& HCMModule = GlobalKill::HCMInternalModuleHandle;
 
@@ -58,10 +46,10 @@ std::expected<VersionInfo, std::string> getHCMVersion()
 			return std::unexpected(std::format("version info structure had invalid signature! Observed: 0x{:X}, expected: 0x{:X}", lpFixedInfo->dwSignature, 0xFEEF04BD));
 
 		return VersionInfo(
-			HIWORD(lpFixedInfo->dwFileDateMS),
-			LOWORD(lpFixedInfo->dwFileDateMS),
-			HIWORD(lpFixedInfo->dwFileDateLS),
-			LOWORD(lpFixedInfo->dwFileDateLS)
+			HIWORD(lpFixedInfo->dwFileVersionMS),
+			LOWORD(lpFixedInfo->dwFileVersionMS),
+			HIWORD(lpFixedInfo->dwFileVersionLS),
+			LOWORD(lpFixedInfo->dwFileVersionLS)
 		);
 	}
 	else
@@ -70,18 +58,7 @@ std::expected<VersionInfo, std::string> getHCMVersion()
 	}
 
 
-	//if (versionInfo->wLength != sizeof(VS_VERSIONINFO))
-	//	return std::unexpected(std::format("unexpected versionInfo length, observed: {}, expected: {}", versionInfo->wLength, sizeof(VS_VERSIONINFO)));
 
-	//if (versionInfo->wValueLength == 0)
-	//	return std::unexpected(std::format("No data associated with this version info structure!"));
-
-	//if (wcscmp(&versionInfo->szKey, L"VS_VERSION_INFO") != 0)
-	//	return std::unexpected(std::format("version info structure had invalid szKey!"));
-
-
-
-	// https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource
 
 
 }

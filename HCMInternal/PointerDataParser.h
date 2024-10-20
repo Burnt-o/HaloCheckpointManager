@@ -13,9 +13,9 @@ namespace PointerDataParser
 	// throws HCMInitExceptions if something goes wrong
 	std::map<DataKey, std::any> parseVersionedData(std::shared_ptr<IGetMCCVersion> getMCCVer, const std::string& xmlDocument);
 
-	std::expected<std::vector<std::string>, std::string> parseSupportedMCCVersions(const std::string& xmlDocument) noexcept;
+	std::expected<std::set<std::string>, std::string> parseSupportedMCCVersions(const std::string& xmlDocument) noexcept;
 
-	std::expected<std::vector<std::string>, std::string> parseSupportedHCMVersions(const std::string& xmlDocument) noexcept;
+	std::expected<std::set<std::string>, std::string> parseSupportedHCMVersions(const std::string& xmlDocument) noexcept;
 
 	namespace detail
 	{

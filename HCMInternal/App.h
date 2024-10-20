@@ -100,7 +100,7 @@ public:
 
 
             // Is this version of MCC supported according to the pointer data? Exception if not.
-            if (auto suppV = PointerDataParser::parseSupportedMCCVersions(pointerXMLData); !suppV.has_value() || std::ranges::find(suppV.value(), ver->getMCCVersionAsString()) == suppV.value().end())
+            if (auto suppV = PointerDataParser::parseSupportedMCCVersions(pointerXMLData); !suppV.has_value() || suppV.value().find(ver->getMCCVersionAsString().data()) == suppV.value().end())
             {
                 if (suppV.has_value())
                     throw HCMInitException(std::format("The current version of MCC ({}) is not yet supported by HCM! ", ver->getMCCVersionAsString()) +
@@ -121,6 +121,7 @@ public:
             auto imm = std::make_shared<ImGuiManager>(d3d, d3d->presentHookEvent); PLOGV << "imm init"; // sets up imgui context and fires off imgui render events
 
             auto mes = std::make_shared<MessagesGUI>(ImVec2{ 20, 20 }, imm->ForegroundRenderEvent); PLOGV << "mes init";// renders temporary messages to the screen
+            auto imes = std::reinterpret_pointer_cast<IMessagesGUI>(mes);
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
             auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
             auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
@@ -169,7 +170,7 @@ public:
             PLOG_INFO << "All services succesfully initialized! Entering main loop";
             Sleep(100);
 
-            std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage("HCM successfully initialised!\n");
+            imes->addMessage("HCM successfully initialised!\n");
 
             std::thread modalFailureWindowThread;
             if (!guifail->getFailureMessagesMap().empty())
@@ -183,20 +184,21 @@ public:
             auto currentHCMVersion = getHCMVersion();
             if (!currentHCMVersion)
             {
-                std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage(std::format("Could not determine own HCM version, error: {}\nSkipping check for newer HCM versions.\n", currentHCMVersion.error()));
+                imes->addMessage(std::format("Could not determine own HCM version, error: {}\nSkipping check for newer HCM versions.\n", currentHCMVersion.error()));
             }
             else
             {
                 PLOG_INFO << "Current HCM Version: " << currentHCMVersion.value();
-                if (auto suppV = PointerDataParser::parseSupportedHCMVersions(pointerXMLData); !suppV.has_value() || std::ranges::find(suppV.value(), currentHCMVersion.value().operator std::string()) == suppV.value().end())
+                if (auto suppV = PointerDataParser::parseSupportedHCMVersions(pointerXMLData); !suppV.has_value() || suppV.value().find(currentHCMVersion.value().operator std::string()) == suppV.value().end())
                 {
                     if (suppV.has_value())
                     {
-                        std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage("A newer version of HCM exists, probably with bugfixes or new features.\nFind it at github.com/Burnt-o/HaloCheckpointManager/releases\n");
+                        imes->addMessage("A newer version of HCM exists, probably with bugfixes or new features.\nFind it at github.com/Burnt-o/HaloCheckpointManager/releases\n");
+                        PLOG_DEBUG << "Supported versions:"; for (auto& v : suppV.value()) { PLOG_DEBUG << v; }
                     }
                     else
                     {
-                        std::reinterpret_pointer_cast<IMessagesGUI>(mes)->addMessage(std::format("Failed to parse currently supported HCM versions, error: {}\nSkipping check for newer HCM versions.\n", suppV.error()));
+                        imes->addMessage(std::format("Failed to parse currently supported HCM versions, error: {}\nSkipping check for newer HCM versions.\n", suppV.error()));
                     }
 
                 }
@@ -204,6 +206,15 @@ public:
             
 
             sharedMem->setStatusFlag(HCMInternalStatus::AllGood);
+
+            assert(VersionInfo(3, 1, 1, 1) > VersionInfo(3, 1, 1, 0) && "ee");
+            assert(VersionInfo(4, 1, 1, 1) > VersionInfo(3, 1, 1, 2) && "EEEE");
+            PLOG_DEBUG << VersionInfo(3, 1, 1, 1).operator std::string();
+            PLOG_DEBUG << "a: " << VersionInfo(3, 1, 1, 1).operator std::string().length();
+            PLOG_DEBUG << "3.1.1.1";
+            PLOG_DEBUG << "b: " << std::string("3.1.1.1").length();
+            assert(VersionInfo(3, 1, 1, 1).operator std::string() == "3.1.1.1");
+
 
             // We live in this loop 99% of the time
             while (!GlobalKill::isKillSet()) {
