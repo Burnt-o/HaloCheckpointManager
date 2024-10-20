@@ -30,8 +30,7 @@ namespace HCMExternal
 #if HCM_DEBUG
                 .MinimumLevel.Verbose().WriteTo.Debug()
 #endif
-                .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt",
-                flushToDiskInterval: TimeSpan.FromSeconds(3))
+                .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt")
                 .CreateLogger();
             Log.Information("Logging started");
 

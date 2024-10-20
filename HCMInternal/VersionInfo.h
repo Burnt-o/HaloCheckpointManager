@@ -57,8 +57,8 @@ public:
 	operator std::string() const noexcept
 	{
 		std::stringstream ss;
-		ss << *this;
-		return ss.str(); // Need to make copy of the string- implicit conversion will return junk data
+		ss << *this; // dereference or you'll just output the memory address of this
+		return ss.str(); 
 	}
 
 };
