@@ -113,7 +113,12 @@ private:
 
 		lockOrThrow(getObjectPhysicsWeak, getObjectPhysics);
 		lockOrThrow(getPlayerDatumWeak, getPlayerDatum);
-		auto playerPosition = *getObjectPhysics->getObjectPosition(getPlayerDatum->getPlayerDatum());
+		auto playerDatum = getPlayerDatum->getPlayerDatum();
+
+		if (playerDatum.isNull())
+			return std::nullopt;
+
+		auto playerPosition = *getObjectPhysics->getObjectPosition(playerDatum);
 
 		// find all shield objects
 		for (auto& object : objectRange)
