@@ -101,6 +101,15 @@
     <Filter Include="Classes\Definitions">
       <UniqueIdentifier>{3e929823-9bb9-423f-b811-bbee94da77be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Includes\soloud">
+      <UniqueIdentifier>{28bb7ecb-bec9-443b-9012-df605bd6b9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\type_safe">
+      <UniqueIdentifier>{8e095301-396e-423f-bdfb-54cff888c81e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\type_safe\detail">
+      <UniqueIdentifier>{836ccd33-f930-42c4-aeab-2a007dccca89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -934,6 +943,105 @@
     </ClInclude>
     <ClInclude Include="AudioPlayer.h">
       <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\arithmetic_policy.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\boolean.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\bounded_type.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\compact_optional.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\config.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\constrained_type.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\deferred_construction.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\downcast.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\flag.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\flag_set.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\floating_point.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\index.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\integer.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\narrow_cast.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\optional.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\optional_ref.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\output_parameter.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\reference.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\strong_typedef.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\tagged_union.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\types.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\variant.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\visitor.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\aligned_union.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\all_of.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\assert.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\assign_or_construct.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\constant_parser.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\copy_move_control.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\force_inline.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\is_nothrow_swappable.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\map_invoke.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\detail\variant_impl.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
