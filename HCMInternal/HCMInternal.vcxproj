@@ -91,6 +91,9 @@
     <VcpkgUseMD>false</VcpkgUseMD>
     <VcpkgTriplet>x64-windows-static</VcpkgTriplet>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -231,6 +234,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AudioPlayer.h" />
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="ChangeOOBBackground.h" />
@@ -510,6 +514,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ZoneSetChangeHookEvent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
     <ClCompile Include="ChangeOOBBackground.cpp" />
@@ -696,6 +701,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <None Include="dds2.bin" />
     <None Include="includes\ImGuiColorTextEdit\LICENSE" />
     <None Include="includes\ImGuiColorTextEdit\README.md" />
+    <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HCMInternal.rc" />

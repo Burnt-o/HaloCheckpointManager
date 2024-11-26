@@ -932,6 +932,9 @@
     <ClInclude Include="map.h">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="AudioPlayer.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1375,6 +1378,9 @@
     <ClCompile Include="RevertEventHook.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
+    <ClCompile Include="AudioPlayer.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -1386,6 +1392,9 @@
     </None>
     <None Include="includes\ImGuiColorTextEdit\LICENSE">
       <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </None>
+    <None Include="vcpkg.json">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -22,35 +22,8 @@ To build the source yourself, grab the latest version of [Visual Studio](https:/
  * Desktop development with C++  
  * Windows 10 SDK (or higher)
     
-You'll also need several C++ libraries for HCMInternal and HCMInterproc to compile. It'll be easiest to install them using vcpkg.
-       
-[Install vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?source=recommendations&pivots=shell-cmd) by:   
-cloning the vcpkg repository to some new folder (you'll probably need a few dozen gigs of space free),  
-running the bootstrap script,   
-adding vcpkg to your system path variable,  
-and running "vcpkg integrate install" to integrate it with your Visual Studio.  
-
-Then run the following commands one at a time:
-
-vcpkg install plog:x64-windows  
-vcpkg install boost-interprocess:x64-windows
-vcpkg install openssl:x64-windows-static
-vcpkg install ms-gsl:x64-windows-static
-vcpkg install plog:x64-windows-static  
-vcpkg install eventpp:x64-windows-static  
-vcpkg install imgui[dx11-binding,win32-binding]:x64-windows-static  
-vcpkg install pugixml:x64-windows-static  
-vcpkg install curl[non-http,schannel,ssl,sspi]:x64-windows-static  
-vcpkg install boost-stacktrace:x64-windows-static  
-vcpkg install boost-algorithm:x64-windows-static  
-vcpkg install boost-iostreams:x64-windows-static  
-vcpkg install boost-assign:x64-windows-static  
-vcpkg install boost-bimap:x64-windows-static  
-vcpkg install boost-interprocess:x64-windows-static  
-vcpkg install magic-enum:x64-windows-static  
-vcpkg install directxtk:x64-windows-static  
-vcpkg install libguarded:x64-windows-static  
-
+HCM uses vcpkg manifest files for C++ dependecies. With Visual Studio this should all be automatic. 
+I haven't tried building outside of this VS environment so YMMV if you try otherwise. 
 
 This project also makes heavy use of the amazing SafetyHook by cursey. You can think of it as like "Microsoft Detours but if it didn't suck". I've included the release I'm using in this repository so you shouldn't need to worry about it.
 
