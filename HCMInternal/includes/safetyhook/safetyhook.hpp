@@ -1053,6 +1053,16 @@ namespace safetyhook {
 
 } // namespace safetyhook
 
+#include <functional>
+
+namespace safetyhook
+{
+    /// @brief Executes a function while all other threads are frozen.
+/// @param run_fn The function to run while all other threads are frozen.
+    void freeze_and_execute(const std::function<void()>& run_fn);
+}// namespace safetyhook
+
+
 using SafetyHookContext = safetyhook::Context;
 using SafetyHookInline = safetyhook::InlineHook;
 using SafetyHookMid = safetyhook::MidHook;

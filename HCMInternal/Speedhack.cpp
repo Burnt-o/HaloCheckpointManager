@@ -39,7 +39,6 @@ public:
 			if (newToggleValue)
 			{
 				{
-					safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
 					setSpeed(currentSpeedSetting);
 					currentSpeedForReading = currentSpeedSetting;
 				}
@@ -49,7 +48,6 @@ public:
 			else
 			{
 				{
-					safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
 					setSpeed(1.00);
 					currentSpeedForReading = 1.00;
 				}
@@ -76,7 +74,6 @@ public:
 				PLOG_DEBUG << "SpeedhackImpl recevied updateSetting event, value: " << newSpeedValue;
 
 				{
-					safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
 					setSpeed(newSpeedValue);
 					currentSpeedForReading = newSpeedValue;
 				}
@@ -120,7 +117,6 @@ public:
 	}
 	~SpeedhackImpl()
 	{
-		safetyhook::ThreadFreezer freezeThreads; // We want to prevent game from reading the value right as we're setting it or else it might get NaN
 		setSpeed(1.00);
 		PLOG_DEBUG << "~SpeedhackImpl()";
 	}

@@ -27,7 +27,6 @@ private:
 	// TODO: callbacks for options
 
 	// locked when being updated or rendering. 
-	// TODO: how does this atomic thing work?
 	std::atomic<std::optional<AbilityData>> abilityData = std::nullopt;
 	pHCMError lastError;
 

@@ -45,7 +45,6 @@ public:
 
 	virtual void updateService() override
 	{
-		safetyhook::ThreadFreezer threadFreezer;
 		BlockPlayerCharacterInputHook->setWantsToBeAttached(serviceIsRequested());
 	}
 
@@ -73,7 +72,6 @@ public:
 
 	virtual void updateService() override
 	{
-		safetyhook::ThreadFreezer threadFreezer;
 		BlockPlayerCharacterInputPatch->setWantsToBeAttached(serviceIsRequested());
 	}
 

@@ -111,9 +111,10 @@ void ModuleMidHook::attach()
 	PLOG_VERBOSE << "mHookFunction: " << std::hex << this->mHookFunction;
 	PLOG_VERBOSE << "this->mMidhook: " << this->mMidHook.operator bool();
 
-	safetyhook::ThreadFreezer freezeThreads;
-	PLOG_VERBOSE << "threads frozen";
-	this->mMidHook = safetyhook::create_mid((void*)pOriginalFunction, this->mHookFunction);
+	safetyhook::freeze_and_execute([this, pOriginalFunction]() {
+		this->mMidHook = safetyhook::create_mid((void*)pOriginalFunction, this->mHookFunction);
+		});
+
 	PLOG_DEBUG << "mid_hook successfully attached: " << this->getAssociatedModule();
 }
 
@@ -137,9 +138,12 @@ void ModuleMidHook::detach()
 		return;
 	}
 
-	safetyhook::ThreadFreezer freezeThreads;
-	PLOG_VERBOSE << "threads frozen";
-	this->mMidHook = {};
+	safetyhook::freeze_and_execute([this]()
+		{
+			this->mMidHook = {};
+		}
+	);
+
 	PLOG_DEBUG << "successfully detached " << this->getAssociatedModule();
 }
 
@@ -169,10 +173,14 @@ void ModulePatch::attach()
 
 	logErrorReturn(currentBytes != mOriginalBytes, "Current bytes did not match original bytes");
 
-	safetyhook::ThreadFreezer freezeThreads;
-	PLOG_VERBOSE << "threads frozen";
+	safetyhook::freeze_and_execute(
+		[this]() {
+			if (mOriginalFunction->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false) {
+			 PLOG_ERROR << std::format("Failed to patch new bytes: {}", MultilevelPointer::GetLastError());
+			};
+		}
+	);
 
-	logErrorReturn(mOriginalFunction->writeArrayData(mPatchedBytes.data(), mPatchedBytes.size(), true) == false, std::format("Failed to patch new bytes: {}", MultilevelPointer::GetLastError()));
 }
 
 void ModulePatch::detach()
@@ -190,10 +198,14 @@ void ModulePatch::detach()
 
 	logErrorReturn(currentBytes != mPatchedBytes, "Current bytes did not match patched bytes")
 
-		safetyhook::ThreadFreezer freezeThreads;
-	PLOG_VERBOSE << "threads frozen";
+		safetyhook::freeze_and_execute(
+			[this]() {
+				if (mOriginalFunction->writeArrayData(mOriginalBytes.data(), mOriginalBytes.size(), true) == false) {
+					PLOG_ERROR << std::format("Failed to restore original bytes: {}", MultilevelPointer::GetLastError());
+				};
+			}
+		);
 
-	logErrorReturn(mOriginalFunction->writeArrayData(mOriginalBytes.data(), mOriginalBytes.size(), true) == false, "Failed to restore original bytes");
 
 }
 

@@ -7,6 +7,7 @@
 
 #include "Renderer2D.h"
 #include "Lapua.h"
+#include "safetyhook.hpp"
 
 
 
@@ -484,18 +485,22 @@ D3D11Hook::~D3D11Hook()
 	{
 		PLOG_INFO << "~D3D11Hook()";
 		PLOG_INFO << "Freezing threads";
-		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
+		safetyhook::freeze_and_execute([this]() { // freeze threads while we patch vmt
 
-		PLOG_INFO << "Unpatching present pointer";
-		// rewrite the pointers to go back to the original value
-		patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
-		// resizeBuffers too
-		patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
 
-		if (dxgiInternalPresentHook)
-			dxgiInternalPresentHook.reset();
+			PLOG_INFO << "Unpatching present pointer";
+			// rewrite the pointers to go back to the original value
+			patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
+			// resizeBuffers too
+			patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
 
-		PLOG_INFO << "Successfully unpatched present pointer!";
+			if (dxgiInternalPresentHook)
+				dxgiInternalPresentHook.reset();
+
+			PLOG_INFO << "Successfully unpatched present pointer!";
+
+			}); 
+
 	}
 
 
@@ -521,7 +526,7 @@ D3D11Hook::~D3D11Hook()
 void D3D11Hook::beginHook()
 {
 	PLOG_DEBUG << "beginning vmt hook";
-	safetyhook::ThreadFreezer threadFreezer; // freeze threads while we patch vmt
+
 
 	// set up d3d11 hook. This requires us to get the vmt of Present and ResizeBuffers functions. 
 		   // There are two ways to do this: One is to just get a pointer to this from our pointer data. 
@@ -596,11 +601,19 @@ void D3D11Hook::beginHook()
 
 
 	PLOG_DEBUG << "rewriting present pointer";
-	// Rewrite the present pointer to instead point to our newPresent
-	// Need access tho!
-	patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
-	// resizeBuffers too
-	patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
+
+
+	// freeze threads while we patch vmt
+	safetyhook::freeze_and_execute([this]() {
+
+		// Rewrite the present pointer to instead point to our newPresent
+		// Need access tho!
+		patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
+		// resizeBuffers too
+		patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
+
+		});
+
 }
 
 
@@ -619,8 +632,6 @@ void D3D11Hook::setOBSBypass(bool enabled)
 				presentHookRunning.wait(true);
 			}
 
-			PLOG_INFO << "Freezing threads";
-			safetyhook::ThreadFreezer threadFreezer; // freeze threads while we create hook
 
 			lockOrThrow(pointerDataStoreWeak, ptr);
 			auto dxgiInternalPresentFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(dxgiInternalPresentFunction));
@@ -639,8 +650,6 @@ void D3D11Hook::setOBSBypass(bool enabled)
 				presentHookRunning.wait(true);
 			}
 
-			PLOG_INFO << "Freezing threads";
-			safetyhook::ThreadFreezer threadFreezer; // freeze threads while we reset hook
 
 			dxgiInternalPresentHook.reset();
 		}

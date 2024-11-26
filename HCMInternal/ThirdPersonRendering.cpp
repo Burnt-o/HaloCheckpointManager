@@ -64,7 +64,6 @@ public:
 	{
 		try
 		{
-			safetyhook::ThreadFreezer threadFreezer;
 			if (serviceIsRequested())
 			{
 				lockOrThrow(hideHUDWeak, hideHUD);
@@ -133,7 +132,6 @@ public:
 	{
 		try
 		{
-			safetyhook::ThreadFreezer threadFreezer;
 			if (serviceIsRequested())
 			{
 				lockOrThrow(hideHUDWeak, hideHUD);

@@ -1,6 +1,6 @@
 #pragma once
 #include "MultilevelPointer.h"
-
+#include "safetyhook.hpp"
 
 // A small wrapper for safetyhooks InlineHook and MidHook, for hooks to dynamically loaded/unloaded modules
 // For use with ModuleHookManager

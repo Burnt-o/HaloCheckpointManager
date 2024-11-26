@@ -97,6 +97,8 @@ using ThreadContext = void*;
 void execute_while_frozen(const std::function<void()>& run_fn,
     const std::function<void(ThreadId, ThreadHandle, ThreadContext)>& visit_fn = {});
 
+void freeze_and_execute(const std::function<void()>& run_fn) { execute_while_frozen(run_fn); }
+
 /// @brief Will modify the context of a thread's IP to point to a new address if its IP is at the old address.
 /// @param ctx The thread context to modify.
 /// @param old_ip The old IP address.

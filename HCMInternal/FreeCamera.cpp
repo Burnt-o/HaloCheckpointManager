@@ -307,8 +307,7 @@ private:
 			// set hooks 
 			{
 				LOG_ONCE(PLOG_VERBOSE << "freezing threads as we update setCameraDataHook");
-				safetyhook::ThreadFreezer threadFreezer; 
-				Sleep(3);
+
 
 				LOG_ONCE(PLOG_VERBOSE << "setCameraDataHook->setWantsToBeAttached()")
 				setCameraDataHook->setWantsToBeAttached(newValue);
@@ -769,7 +768,6 @@ public:
 		}
 
 
-		safetyhook::ThreadFreezer freezeThreads;
 
 		if (setCameraDataHook)
 			setCameraDataHook.reset();

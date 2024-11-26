@@ -42,12 +42,10 @@ public:
 	{
 		// attach if requested
 		PLOG_VERBOSE << "HideHUDImplH1::updateService";
-		safetyhook::ThreadFreezer freezeThreads;
-		Sleep(1);
+
 
 
 		bool newState = serviceIsRequested();
-		safetyhook::ThreadFreezer freeze{};
 		hideHUDPatchHook1->setWantsToBeAttached(newState);
 		hideHUDPatchHook2->setWantsToBeAttached(newState);
 		hideHUDPatchHook3->setWantsToBeAttached(newState);
@@ -85,7 +83,6 @@ public:
 	{
 		// attach if requested
 		PLOG_VERBOSE << "HideHUDImplSinglePatch::updateService";
-		safetyhook::ThreadFreezer freezeThreads{};
 		hideHUDPatchHook1->setWantsToBeAttached(serviceIsRequested());
 		PLOG_VERBOSE << "HideHUDImplSinglePatch::updateService DONE";
 	}
@@ -125,7 +122,6 @@ public:
 	{
 		// attach if requested
 		PLOG_VERBOSE << "HideHUDImplDoublePatch::updateService";
-		safetyhook::ThreadFreezer freezeThreads{};
 		hideHUDPatchHook1->setWantsToBeAttached(serviceIsRequested());
 		hideHUDPatchHook2->setWantsToBeAttached(serviceIsRequested());
 		PLOG_VERBOSE << "HideHUDImplDoublePatch::updateService DONE";

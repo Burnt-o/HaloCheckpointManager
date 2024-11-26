@@ -32,7 +32,6 @@ public:
 
 	virtual void updateService() override
 	{
-		safetyhook::ThreadFreezer threadFreezer;
 		disableScreenEffectsHook->setWantsToBeAttached(serviceIsRequested());
 	}
 

@@ -89,10 +89,9 @@ public:
 			gameTickHookRunningMutex.wait(true);
 		}
 
-		safetyhook::ThreadFreezer threadFreezer; // freeze threads while we unhook
 		tickIncrementHook.reset();
 
-
+		instance = nullptr;
 	}
 };
 
