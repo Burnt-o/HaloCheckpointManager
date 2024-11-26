@@ -1,6 +1,5 @@
 {
   "dependencies": [
-
     "openssl",
     "ms-gsl",
     "plog",
@@ -10,10 +9,10 @@
       "features": [
           "dx11-binding", 
           "win32-binding"
-        ] 
+        ]
     },
     "pugixml",
-        {
+    {
       "name": "curl",
       "features": [
           "non-http",
@@ -22,13 +21,13 @@
           "sspi"
       ] 
     },
-    "curl",
     "boost-stacktrace",
     "boost-algorithm",
     "boost-iostreams",
     "boost-assign",
     "boost-bimap",
     "boost-interprocess",
+    "boost-scope-exit",
     "magic-enum",
     "directxtk",
     "libguarded",
