@@ -32,7 +32,7 @@ uintptr_t* MidhookContextInterpreter::getParameterRef(SafetyHookContext& ctx, in
 			uintptr_t follow = (uintptr_t)(ptr + offset);
 			if (IsBadReadPtr((void*)follow, 8))
 			{
-				throw HCMRuntimeException(std::format("bad read in midhookcontextinterpreter! next: {}, ptr: {}, offset: {}", follow, ptr, offset));
+				throw HCMRuntimeException(std::format("bad read in midhookcontextinterpreter! next: {}, ptr: {:X}, offset: {}, register index: {}", follow, ptr, offset, thisParameter.getRegIndex()));
 			}
 
 			if (i == 0)
