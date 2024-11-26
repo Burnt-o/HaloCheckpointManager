@@ -10080,19 +10080,20 @@
 		</Version>
 	</VersionedEntry>
 
-	<VersionedEntry Name="mouseMovementFunction" Type="MultilevelPointer::ModuleOffset">
-		<Version Version="1.3385.0.0" Game="Halo1">
-			<Module>halo1.dll</Module>
+	<VersionedEntry Name="mouseMovementFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0xADDA7E</Offset>
+				<Offset>0x87A479</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="mouseMovementContextInterpreter" Type="MidhookContextInterpreter">
-		<Version Version="All" Game="Halo1">
+		<Version Version="All" ProcessType="Steam">
 			<Parameters>
-				<pCurrentMouseMovement>rax</pCurrentMouseMovement>
+				<pObservedAngleDelta>xmm3a</pObservedAngleDelta>
+				<pQueuedDots>rsi+0x30</pQueuedDots>
+				<pSensitivitySetting>xmm2a</pSensitivitySetting>
 			</Parameters>
 		</Version>
 	</VersionedEntry>

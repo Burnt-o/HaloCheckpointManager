@@ -56,6 +56,7 @@ public:
 	std::shared_ptr<ActionEvent> softCeilingOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> disableBarriersHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> abilityMeterToggleHotkeyEvent = std::make_shared<ActionEvent>();
+
 	
 	// events
 	std::shared_ptr<ActionEvent> showGUIFailures = std::make_shared<ActionEvent>();
@@ -109,7 +110,7 @@ public:
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringCopyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> triggerOverlayFilterStringPasteEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> getPlayerDatumEvent = std::make_shared<ActionEvent>();
-
+	std::shared_ptr<ActionEvent> sensResetCountsEvent = std::make_shared<ActionEvent>();
 
 	
 
@@ -1533,12 +1534,6 @@ public:
 			nameof(shieldInputPrinterToggle)
 		);
 
-	std::shared_ptr<BinarySetting<bool>> sensDriftDetectorToggle = std::make_shared<BinarySetting<bool>>
-		(
-			false,
-			[](bool in) { return true; },
-			nameof(sensDriftDetectorToggle)
-		);
 
 	std::shared_ptr<BinarySetting<bool>> softCeilingOverlayToggle = std::make_shared<BinarySetting<bool>>
 		(
@@ -1790,6 +1785,94 @@ public:
 			nameof(disableFogToggle)
 		);
 
+	
+
+		std::shared_ptr<BinarySetting<bool>> sensDriftOverlayToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensDriftOverlayToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensOverDotFrameToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(sensOverDotFrameToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensMessageOnOverDotToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensMessageOnOverDotToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensSoundOnOverDotToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensSoundOnOverDotToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensSubpixelDriftToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(sensSubpixelDriftFrameToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensMessageOnSubpixelDriftToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensMessageOnSubpixelDriftToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensSoundOnSubpixelDriftToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensSoundOnSubpixelDriftToggle)
+		);
+
+	std::shared_ptr<BinarySetting<bool>> sensResetCountOnRevertToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(sensResetCountOnRevertToggle)
+		);
+
+
+	std::shared_ptr<BinarySetting<SettingsEnums::ScreenAnchorEnum>> sensAnchorCorner = std::make_shared<BinarySetting<SettingsEnums::ScreenAnchorEnum>>
+		(
+			SettingsEnums::ScreenAnchorEnum::BottomRight,
+			[](SettingsEnums::ScreenAnchorEnum in) { return true; },
+			nameof(sensAnchorCorner)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector2>> sensScreenOffset = std::make_shared<BinarySetting<SimpleMath::Vector2>>
+		(
+			SimpleMath::Vector2{400, 400},
+			[](SimpleMath::Vector2 in) { return in.x >= 0 && in.y >= 0; }, // no negative offsets
+			nameof(sensScreenOffset)
+		);
+
+	std::shared_ptr<BinarySetting<float>> sensFontSize = std::make_shared<BinarySetting<float>>
+		(
+			16.f,
+			[](int in) { return in > 6.f; },
+			nameof(sensFontSize)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> sensFontColour = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{1.00f, 0.60f, 0.25f, 1.00f}, // a nice orange colour that matches the rest of the gui
+			[](SimpleMath::Vector4 in) { return in.x >= 0 && in.y >= 0 && in.z >= 0 && in.w >= 0 && in.x <= 1 && in.y <= 1 && in.z <= 1 && in.w <= 1; }, // range 0.f ... 1.f 
+			nameof(sensFontColour)
+		);
+
+
 
 	// settings that ought to be serialised/deserialised between HCM runs
 	std::vector<std::shared_ptr<SerialisableSetting>> allSerialisableOptions
@@ -1801,6 +1884,21 @@ public:
 			soundClassGainVehicles,
 			soundClassGainMusic,
 			soundClassGainOther,
+
+
+
+			sensOverDotFrameToggle,
+			sensMessageOnOverDotToggle,
+			sensSoundOnOverDotToggle,
+			sensSubpixelDriftToggle,
+			sensMessageOnSubpixelDriftToggle,
+			sensSoundOnSubpixelDriftToggle,
+			sensResetCountOnRevertToggle,
+			sensAnchorCorner,
+			sensScreenOffset,
+			sensFontSize,
+			sensFontColour,
+
 
 			abilityMeterAbilityAnchorCorner,
 			abilityMeterAbilityScreenOffset,

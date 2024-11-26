@@ -794,10 +794,11 @@ private:
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
 #ifdef HCM_DEBUG
 							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
-							createNestedElement(GUIElementEnum::sensDriftDetectorToggle),
 #endif
 							createNestedElement(GUIElementEnum::abilityMeterOverlayToggle),
 							createNestedElement(GUIElementEnum::abilityMeterOverlaySettings),
+							createNestedElement(GUIElementEnum::sensDriftOverlayToggle),
+							createNestedElement(GUIElementEnum::sensDriftOverlaySettings),
 						}));
 
 
@@ -1310,15 +1311,9 @@ private:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 					(game, ToolTipCollection("Locks onto nearest deployable shield; when shield disabled, prints which tick you pressed movement inputs"), std::nullopt, "Shield Input Printer", settings->shieldInputPrinterToggle));
 
-			case GUIElementEnum::sensDriftDetectorToggle:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-					(game, ToolTipCollection("Prints a warning message whenever you move your mouse fast enough to cause a sensitivity manip to drift"), std::nullopt, "Sensitivity Drift Detector", settings->sensDriftDetectorToggle));
-
-
 			case GUIElementEnum::abilityMeterOverlayToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
 					(game, ToolTipCollection("Renders an overlay with info about the player ability ability"), RebindableHotkeyEnum::abilityMeterToggleHotkey, "Ability Meter Toggle", settings->abilityMeterOverlayToggle));
-				// TODO: add hotkey
 
 			case GUIElementEnum::abilityMeterOverlaySettings:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
@@ -1335,37 +1330,35 @@ private:
 						}));
 
 
-			case GUIElementEnum::abilityMeterHeroAssistToggle:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
-					(game, ToolTipCollection("Instead of showing your current ability data, shows your sprint data instead"), std::nullopt, "Show Sprint instead", settings->abilityMeterHeroAssistToggle));
-				// TODO: add hotkey
+				case GUIElementEnum::abilityMeterHeroAssistToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Instead of showing your current ability data, shows your sprint data instead"), std::nullopt, "Show Sprint instead", settings->abilityMeterHeroAssistToggle));
 
 
-					case GUIElementEnum::abilityMeterAbilityAnchorCorner:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::ScreenAnchorEnum, 100.f>>
-							(game, ToolTipCollection(""), "Corner to Anchor to##abilityAbility", settings->abilityMeterAbilityAnchorCorner));
+				case GUIElementEnum::abilityMeterAbilityAnchorCorner:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::ScreenAnchorEnum, 100.f>>
+						(game, ToolTipCollection(""), "Corner to Anchor to##abilityAbility", settings->abilityMeterAbilityAnchorCorner));
 
-					case GUIElementEnum::abilityMeterAbilityScreenOffset:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 1600.f, 1000.f }, ImGuiSliderFlags_None) >>
-							(game, ToolTipCollection(""), "Pixel Offset from Corner##abilityAbility", settings->abilityMeterAbilityScreenOffset, "Horizontal", "Vertical"));
+				case GUIElementEnum::abilityMeterAbilityScreenOffset:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 1600.f, 1000.f }, ImGuiSliderFlags_None) >>
+						(game, ToolTipCollection(""), "Pixel Offset from Corner##abilityAbility", settings->abilityMeterAbilityScreenOffset, "Horizontal", "Vertical"));
 
-					case GUIElementEnum::abilityMeterAbilitySize:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 500.f, 500.f }, ImGuiSliderFlags_None) >>
-							(game, ToolTipCollection(""), "Bar Size##abilityAbility", settings->abilityMeterAbilitySize, "Horizontal", "Vertical"));
+				case GUIElementEnum::abilityMeterAbilitySize:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 500.f, 500.f }, ImGuiSliderFlags_None) >>
+						(game, ToolTipCollection(""), "Bar Size##abilityAbility", settings->abilityMeterAbilitySize, "Horizontal", "Vertical"));
 
 
-					case GUIElementEnum::abilityMeterAbilityBackgroundColor:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
-							(game, ToolTipCollection(""), "Background Colour##abilityAbility", settings->abilityMeterAbilityBackgroundColor));
+				case GUIElementEnum::abilityMeterAbilityBackgroundColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+						(game, ToolTipCollection(""), "Background Colour##abilityAbility", settings->abilityMeterAbilityBackgroundColor));
 
-					case GUIElementEnum::abilityMeterAbilityForegroundColor:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
-							(game, ToolTipCollection(""), "Foreground Colour##abilityAbility", settings->abilityMeterAbilityForegroundColor));
+				case GUIElementEnum::abilityMeterAbilityForegroundColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+						(game, ToolTipCollection(""), "Foreground Colour##abilityAbility", settings->abilityMeterAbilityForegroundColor));
 
-					case GUIElementEnum::abilityMeterAbilityHighlightColor:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
-							(game, ToolTipCollection(""), "Highlight Colour##abilityAbility", settings->abilityMeterAbilityHighlightColor));
-
+				case GUIElementEnum::abilityMeterAbilityHighlightColor:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+						(game, ToolTipCollection(""), "Highlight Colour##abilityAbility", settings->abilityMeterAbilityHighlightColor));
 
 
 					case GUIElementEnum::abilityMeterCooldownToggle:
@@ -1403,6 +1396,86 @@ private:
 						case GUIElementEnum::abilityMeterCooldownHighlightColor:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
 								(game, ToolTipCollection(""), "Highlight Colour##abilityCooldown", settings->abilityMeterCooldownHighlightColor));
+
+			case GUIElementEnum::sensDriftOverlayToggle:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+					(game, ToolTipCollection("Renders an overlay with information about sensitivity drift (misalignment of sensitivity manipulations)"), std::nullopt, "Sensitivity Drift Overlay", settings->sensDriftOverlayToggle));
+
+			case GUIElementEnum::sensDriftOverlaySettings:
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+					(game, ToolTipCollection("Settings for the Sensitivity Drift Overlay"), "Sensitivity Drift Settings", headerChildElements
+						{
+							createNestedElement(GUIElementEnum::sensOverDotFrameToggle),
+							createNestedElement(GUIElementEnum::sensMessageOnOverDotToggle),
+							createNestedElement(GUIElementEnum::sensSoundOnOverDotToggle),
+							createNestedElement(GUIElementEnum::sensSubpixelDriftToggle),
+							createNestedElement(GUIElementEnum::sensMessageOnSubpixelDriftToggle),
+							createNestedElement(GUIElementEnum::sensSoundOnSubpixelDriftToggle),
+							createNestedElement(GUIElementEnum::sensResetCountAction),
+							createNestedElement(GUIElementEnum::sensResetCountOnRevertToggle),
+							createNestedElement(GUIElementEnum::sensAnchorCorner),
+							createNestedElement(GUIElementEnum::sensScreenOffset),
+							createNestedElement(GUIElementEnum::sensFontSize),
+							createNestedElement(GUIElementEnum::sensFontColour),
+						}));
+
+
+
+				case GUIElementEnum::sensOverDotFrameToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Over-Dots are how many more Dots than 1 that you did in a single frame.\nE.g. two dots in one frame is one overdot. Overdots have a chance of causing subpixel drift."), std::nullopt, "Over-Dot Count Overlay", settings->sensOverDotFrameToggle));
+
+				case GUIElementEnum::sensMessageOnOverDotToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Print a message to the top left when an Over-Dot occurs."), std::nullopt, "Print Message on Over-Dot", settings->sensMessageOnOverDotToggle));
+
+				case GUIElementEnum::sensSoundOnOverDotToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Play a beeping sound when an Over-Dot occurs."), std::nullopt, "Play sound on Over-Dot", settings->sensSoundOnOverDotToggle));
+
+
+
+
+				case GUIElementEnum::sensSubpixelDriftToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("."), std::nullopt, "Subpixel Drift Count Overlay", settings->sensSubpixelDriftToggle));
+
+				case GUIElementEnum::sensMessageOnSubpixelDriftToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Print a message to the top left when subpixel drift occurs."), std::nullopt, "Print Message on Subpixel Drift", settings->sensMessageOnSubpixelDriftToggle));
+
+				case GUIElementEnum::sensSoundOnSubpixelDriftToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Play a beeping sound when subpixel drift occurs."), std::nullopt, "Play sound on Subpixel Drift", settings->sensSoundOnSubpixelDriftToggle));
+
+
+				case GUIElementEnum::sensResetCountAction:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+						(game, ToolTipCollection("Resets the overlays counters of over-dot frames and sub-pixel drift"), RebindableHotkeyEnum::sensResetCountHotkey, "Reset counts", settings->sensResetCountsEvent));
+
+
+				case GUIElementEnum::sensResetCountOnRevertToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Automatically overlay counters when reverting to a checkpoint/core-save"), std::nullopt, "Auto reset counts on revert", settings->sensResetCountOnRevertToggle));
+
+
+				case GUIElementEnum::sensAnchorCorner:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIComboEnum<SettingsEnums::ScreenAnchorEnum, 100.f>>
+						(game, ToolTipCollection(""), "Corner to Anchor to", settings->sensAnchorCorner));
+
+				case GUIElementEnum::sensScreenOffset:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIVec2 < false, false, 0, SliderParam<SimpleMath::Vector2>({ 0.f, 0.f }, { 1600.f, 1000.f }, ImGuiSliderFlags_None) >>
+						(game, ToolTipCollection(""), "Pixel Offset from Corner", settings->sensScreenOffset, "Horizontal", "Vertical"));
+
+
+				case GUIElementEnum::sensFontSize:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
+						(game, ToolTipCollection(""), "Info Font Size", settings->sensFontSize));
+
+				case GUIElementEnum::sensFontColour:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<true>>
+						(game, ToolTipCollection(""), "Colour#2dinfo", settings->sensFontColour));
+
 
 
 			case GUIElementEnum::cameraHeadingGUI:

@@ -752,7 +752,7 @@
     <ClInclude Include="EnumClass.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="SensDriftDetector.h">
+    <ClInclude Include="SensDriftOverlay.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
     <ClInclude Include="GUILabel.h">
@@ -763,9 +763,6 @@
     </ClInclude>
     <ClInclude Include="TriggerFilterStringDialog.h">
       <Filter>Services\GUI\ModalDialogs</Filter>
-    </ClInclude>
-    <ClInclude Include="map.h">
-      <Filter>Includes\safetyhook</Filter>
     </ClInclude>
     <ClInclude Include="includes\safetyhook\safetyhook.hpp">
       <Filter>Includes\safetyhook</Filter>
@@ -928,6 +925,12 @@
     </ClInclude>
     <ClInclude Include="PointerDataTypes.h">
       <Filter>Services\PointerData</Filter>
+    </ClInclude>
+    <ClInclude Include="RevertEventHook.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1252,7 +1255,7 @@
     <ClCompile Include="ShieldInputPrinter.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="SensDriftDetector.cpp">
+    <ClCompile Include="SensDriftOverlay.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
     <ClCompile Include="includes\safetyhook\safetyhook.cpp">
@@ -1368,6 +1371,9 @@
     </ClCompile>
     <ClCompile Include="GetHCMVersion.cpp">
       <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="RevertEventHook.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

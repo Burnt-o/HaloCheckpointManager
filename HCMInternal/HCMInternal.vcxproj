@@ -280,6 +280,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ObservedEvent.h" />
     <ClInclude Include="AbilityMeterOverlay.h" />
     <ClInclude Include="PointerDataTypes.h" />
+    <ClInclude Include="RevertEventHook.h" />
     <ClInclude Include="SharedRequestProvider.h" />
     <ClInclude Include="SoundClassGain.h" />
     <ClInclude Include="TextureFactory.h" />
@@ -297,7 +298,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="Renderer3DImpl.h" />
     <ClInclude Include="RenderTextHelper.h" />
     <ClInclude Include="ScopedImFontScaler.h" />
-    <ClInclude Include="SensDriftDetector.h" />
+    <ClInclude Include="SensDriftOverlay.h" />
     <ClInclude Include="SerialisableSetting.h" />
     <ClInclude Include="SettingsEnums.h" />
     <ClInclude Include="ShieldInputPrinter.h" />
@@ -548,6 +549,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </ClCompile>
     <ClCompile Include="AbilityMeterOverlay.cpp" />
     <ClCompile Include="MCCInitialisationCheck.cpp" />
+    <ClCompile Include="RevertEventHook.cpp" />
     <ClCompile Include="SoundClassGain.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
@@ -569,7 +571,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="Renderer3DImpl_WorldToScreen.cpp" />
     <ClCompile Include="RenderTextHelper.cpp" />
     <ClCompile Include="ScopedImFontScaler.cpp" />
-    <ClCompile Include="SensDriftDetector.cpp" />
+    <ClCompile Include="SensDriftOverlay.cpp" />
     <ClCompile Include="SettingsEnum.cpp" />
     <ClCompile Include="ShieldInputPrinter.cpp" />
     <ClCompile Include="SkullToggler.cpp" />

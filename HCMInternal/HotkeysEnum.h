@@ -53,7 +53,8 @@ commandConsoleHotkey,\
 commandConsoleExecuteBuffer,\
 disableBarriers,\
 softCeilingOverlayToggleHotkey,\
-abilityMeterToggleHotkey
+abilityMeterToggleHotkey,\
+sensResetCountHotkey
 
 
 

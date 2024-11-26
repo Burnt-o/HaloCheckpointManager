@@ -79,7 +79,6 @@ TriggerFilter,\
 GetPlayerTriggerPosition,\
 TrackTriggerEnterExit,\
 ShieldInputPrinter,\
-SensDriftDetector,\
 TriggerFilterModalDialogManager,\
 GetScenarioAddress,\
 GetDebugString,\
@@ -105,7 +104,9 @@ AbilityMeterOverlay,\
 GetTagAddressPresenter,\
 SoundClassGain,\
 ChangeOOBBackground,\
-DisableFog
+DisableFog,\
+SensDriftOverlay,\
+RevertEventHook
 
 
 enum class OptionalCheatEnum {

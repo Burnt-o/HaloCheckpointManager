@@ -47,11 +47,11 @@
 #include <concepts>
 #include <numbers>
 #include <bitset>
+#include <expected>
 
 
 // External Libraries
 #include "gsl\gsl" //https://github.com/microsoft/GSL
-// hooking
 #include "safetyhook.hpp"
 
 

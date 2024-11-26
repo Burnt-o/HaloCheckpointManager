@@ -259,9 +259,19 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 		{OptionalCheatEnum::ShieldInputPrinter,}
 		},
 
-					{ GUIElementEnum::sensDriftDetectorToggle,
-		{OptionalCheatEnum::SensDriftDetector,}
+					{ GUIElementEnum::sensDriftOverlayToggle,
+		{OptionalCheatEnum::SensDriftOverlay,}
 		},
+
+
+	{ GUIElementEnum::sensDriftOverlaySettings,
+{OptionalCheatEnum::SensDriftOverlay,}
+	},
+
+
+	{ GUIElementEnum::sensResetCountOnRevertToggle,
+{OptionalCheatEnum::RevertEventHook,}
+	},
 
 			{ GUIElementEnum::abilityMeterOverlayToggle,
 {OptionalCheatEnum::AbilityMeterOverlay}

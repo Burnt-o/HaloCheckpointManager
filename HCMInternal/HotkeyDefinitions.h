@@ -268,6 +268,12 @@ private:
 			mSettings->abilityMeterToggleHotkeyEvent,
 			vsk{}),
 
+			initEventOnPressHotkey(sensResetCountHotkey,
+			mSettings->sensResetCountsEvent,
+			vsk{}),
+
+			
+
 
 			initEventOnPressHotkey_ignoreDisabler(commandConsoleHotkey,
 			mSettings->commandConsoleHotkeyEvent,
