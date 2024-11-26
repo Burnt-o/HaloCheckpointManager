@@ -216,20 +216,20 @@
 			((triggerOverlayPositionScale, (ALL_SUPPORTED_GAMES)))\
 			((triggerOverlayPositionWireframe, (ALL_SUPPORTED_GAMES)))\
 	((shieldInputPrinterToggle, (Halo1)))\
-	((sensDriftOverlayToggle, (ALL_SUPPORTED_GAMES)))\
-	((sensDriftOverlaySettings, (ALL_SUPPORTED_GAMES)))\
-		((sensOverDotFrameToggle, (ALL_SUPPORTED_GAMES)))\
-			((sensMessageOnOverDotToggle, (ALL_SUPPORTED_GAMES)))\
-			((sensSoundOnOverDotToggle, (ALL_SUPPORTED_GAMES)))\
-		((sensSubpixelDriftToggle, (ALL_SUPPORTED_GAMES)))\
-			((sensMessageOnSubpixelDriftToggle, (ALL_SUPPORTED_GAMES)))\
-			((sensSoundOnSubpixelDriftToggle, (ALL_SUPPORTED_GAMES)))\
-		((sensResetCountAction, (ALL_SUPPORTED_GAMES)))\
-		((sensResetCountOnRevertToggle, (ALL_SUPPORTED_GAMES)))\
-		((sensAnchorCorner, (ALL_SUPPORTED_GAMES)))\
-		((sensScreenOffset, (ALL_SUPPORTED_GAMES)))\
-		((sensFontSize, (ALL_SUPPORTED_GAMES)))\
-		((sensFontColour, (ALL_SUPPORTED_GAMES)))\
+	((sensDriftOverlayToggle, (Halo1)))\
+	((sensDriftOverlaySettings, (Halo1)))\
+		((sensOverDotFrameToggle, (Halo1)))\
+			((sensMessageOnOverDotToggle, (Halo1)))\
+			((sensSoundOnOverDotToggle, (Halo1)))\
+		((sensSubpixelDriftToggle, (Halo1)))\
+			((sensMessageOnSubpixelDriftToggle, (Halo1)))\
+			((sensSoundOnSubpixelDriftToggle, (Halo1)))\
+		((sensResetCountAction, (Halo1)))\
+		((sensResetCountOnRevertToggle, (Halo1)))\
+		((sensAnchorCorner, (Halo1)))\
+		((sensScreenOffset, (Halo1)))\
+		((sensFontSize, (Halo1)))\
+		((sensFontColour, (Halo1)))\
 	((softCeilingOverlayToggle, (THIRD_GEN)))\
 	((softCeilingOverlaySettings, (THIRD_GEN)))\
 		((softCeilingOverlayRenderTypes, (THIRD_GEN)))\

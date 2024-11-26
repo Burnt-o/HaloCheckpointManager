@@ -15,4 +15,8 @@ public:
 	std::shared_ptr<SharedRequestToken> makeScopedRequest() {
 		return pimpl->makeScopedRequest();
 	}
+
+	bool serviceIsRequested() {
+		return pimpl->serviceIsRequested();
+	}
 };

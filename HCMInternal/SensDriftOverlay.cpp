@@ -15,6 +15,7 @@
 #include "IMessagesGUI.h"
 #include "GetPlayerViewAngle.h"
 #include "PointerDataStore.h"
+#include "ControlServiceContainer.h"
 
 // helper funcs
 
@@ -106,7 +107,7 @@ private:
 
 	std::shared_ptr<ModuleMidHook> mouseMovementHook;
 	std::shared_ptr<MidhookContextInterpreter> mouseMovementContextInterpreter;
-
+	std::shared_ptr<MultilevelPointer> gameInputIsActive;
 
 	struct LeftRightCounter
 	{
@@ -128,6 +129,8 @@ private:
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::optional<std::weak_ptr<RevertEventHook>> revertEventHookOptionalWeak;
 	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
+
+	std::optional<std::weak_ptr<BlockGameInput>> blockGameInputOptionalWeak;
 
 	int lastOverDot = 0;
 	int lastSubpixelDrift = 0;
@@ -151,12 +154,19 @@ private:
 
 		try
 		{
-#ifndef HCM_DEBUG
-			static_assert(false & "TODO: bail early if mouse input is being ignored by game");
-#endif
+			// bail early if the game isn't correctly accepting input (menu pause)
+			byte gameInputIsActiveFlag;
+			if (!instance->gameInputIsActive->readData(&gameInputIsActiveFlag) || gameInputIsActiveFlag != 1 )
+				return;
 
+			// bail early if the game isn't correctly accepting input (hcm blocking game input)
+			if (instance->blockGameInputOptionalWeak.has_value())
+			{
+				lockOrThrow(instance->blockGameInputOptionalWeak.value(), blockGameInput)
 
-			LOG_ONCE(PLOG_DEBUG << "mouseMovementHookFunction");
+					if (blockGameInput->serviceIsRequested())
+						return;
+			}
 
 			enum class param
 			{
@@ -166,6 +176,7 @@ private:
 			};
 			auto* ctxInterpreter = instance->mouseMovementContextInterpreter.get();
 
+			
 
 
 				LOG_ONCE_CAPTURE(PLOG_DEBUG << "pQueuedDots: " << p, p = ctxInterpreter->getParameterRef(ctx, (int)param::pQueuedDots))
@@ -217,12 +228,15 @@ private:
 						PLOG_DEBUG << "subpixelDistance " << subpixelDistance;
 
 						instance->subpixelDriftCount.totalLeftCount += subpixelDistance;
+						// directions here are flipped from above; left overdots give right subpixel drift
 						if (subpixelDistance > 0)
-							instance->subpixelDriftCount.rightCount += abs(subpixelDistance);
-						else
 							instance->subpixelDriftCount.leftCount += abs(subpixelDistance);
+						else
+							instance->subpixelDriftCount.rightCount += abs(subpixelDistance);
 
-						instance->subpixelDriftAngle += (double)perfectNewAngle - (double)actualNewAngle;
+
+
+						instance->subpixelDriftAngle += (double)actualNewAngle - (double)perfectNewAngle;
 					}
 				}
 			}
@@ -434,7 +448,8 @@ public:
 		mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) {onMCCStateChangedEvent(n); }),
 		mRenderEvent(dicon.Resolve<RenderEvent>()),
 		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
-		mResetCountEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->sensResetCountsEvent, [this]() { resetCounts();  })
+		mResetCountEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->sensResetCountsEvent, [this]() { resetCounts();  }),
+		blockGameInputOptionalWeak(dicon.Resolve<ControlServiceContainer>().lock()->blockGameInputService)
 	{
 		try
 		{
@@ -450,6 +465,7 @@ public:
 		auto mouseMovementFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(mouseMovementFunction), game);
 		mouseMovementHook = ModuleMidHook::make(game.toModuleName(), mouseMovementFunction, mouseMovementHookFunction);
 		mouseMovementContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(mouseMovementContextInterpreter), game);
+		gameInputIsActive = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameInputIsActive), game);
 
 
 		instance = this;
@@ -491,11 +507,12 @@ SensDriftOverlay::SensDriftOverlay(GameState game, IDIContainer& dicon)
 	switch (game)
 	{
 	case GameState::Value::Halo1: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo1>>(game, dicon); break;
-	case GameState::Value::Halo2: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo2>>(game, dicon); break;
-	case GameState::Value::Halo3: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo3>>(game, dicon); break;
-	case GameState::Value::Halo3ODST: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo3ODST>>(game, dicon); break;
-	case GameState::Value::HaloReach: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::HaloReach>>(game, dicon); break;
-	case GameState::Value::Halo4: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo4>>(game, dicon); break;
+	//case GameState::Value::Halo2: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo2>>(game, dicon); break;
+	//case GameState::Value::Halo3: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo3>>(game, dicon); break;
+	//case GameState::Value::Halo3ODST: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo3ODST>>(game, dicon); break;
+	//case GameState::Value::HaloReach: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::HaloReach>>(game, dicon); break;
+	//case GameState::Value::Halo4: pimpl = std::make_unique<SensDriftOverlayImpl<GameState::Value::Halo4>>(game, dicon); break;
+	default: throw HCMInitException("Not impl");
 	}
 }
 
