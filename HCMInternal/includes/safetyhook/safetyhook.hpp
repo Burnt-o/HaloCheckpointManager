@@ -34,12 +34,16 @@
 
 #pragma once
 
+#ifndef SAFETYHOOK_USE_CXXMODULES
 #include <cstdint>
 #include <expected>
 #include <memory>
 #include <mutex>
 #include <utility>
 #include <vector>
+#else
+import std.compat;
+#endif
 
 
 //
@@ -56,11 +60,15 @@
 
 #pragma once
 
+#ifndef SAFETYHOOK_USE_CXXMODULES
 #include <cstdint>
 #include <expected>
 #include <memory>
 #include <mutex>
 #include <vector>
+#else
+import std.compat;
+#endif
 
 namespace safetyhook {
 class Allocator;
@@ -79,9 +87,13 @@ public:
     /// @note This is called automatically when the Allocation object is destroyed.
     void free();
 
+    /// @brief Returns a pointer to the data of the allocation.
+    /// @return Pointer to the data of the allocation.
+    [[nodiscard]] uint8_t* data() const noexcept { return m_address; }
+
     /// @brief Returns the address of the allocation.
     /// @return The address of the allocation.
-    [[nodiscard]] uintptr_t address() const noexcept { return m_address; }
+    [[nodiscard]] uintptr_t address() const noexcept { return (uintptr_t)m_address; }
 
     /// @brief Returns the size of the allocation.
     /// @return The size of the allocation.
@@ -89,16 +101,16 @@ public:
 
     /// @brief Tests if the allocation is valid.
     /// @return True if the allocation is valid, false otherwise.
-    explicit operator bool() const noexcept { return m_address != 0 && m_size != 0; }
+    explicit operator bool() const noexcept { return m_address != nullptr && m_size != 0; }
 
 protected:
     friend Allocator;
 
-    Allocation(std::shared_ptr<Allocator> allocator, uintptr_t address, size_t size) noexcept;
+    Allocation(std::shared_ptr<Allocator> allocator, uint8_t* address, size_t size) noexcept;
 
 private:
     std::shared_ptr<Allocator> m_allocator{};
-    uintptr_t m_address{};
+    uint8_t* m_address{};
     size_t m_size{};
 };
 
@@ -131,27 +143,27 @@ public:
     [[nodiscard]] std::expected<Allocation, Error> allocate(size_t size);
 
     /// @brief Allocates memory near a target address.
-    /// @param desired_address The target address.
+    /// @param desired_addresses The target address.
     /// @param size The size of the allocation.
     /// @param max_distance The maximum distance from the target address.
     /// @return The Allocation or an Allocator::Error if the allocation failed.
     [[nodiscard]] std::expected<Allocation, Error> allocate_near(
-        const std::vector<uintptr_t>& desired_addresses, size_t size, size_t max_distance = 0x7FFF'FFFF);
+        const std::vector<uint8_t*>& desired_addresses, size_t size, size_t max_distance = 0x7FFF'FFFF);
 
 protected:
     friend Allocation;
 
-    void free(uintptr_t address, size_t size);
+    void free(uint8_t* address, size_t size);
 
 private:
     struct FreeNode {
         std::unique_ptr<FreeNode> next{};
-        uintptr_t start{};
-        uintptr_t end{};
+        uint8_t* start{};
+        uint8_t* end{};
     };
 
     struct Memory {
-        uintptr_t address{};
+        uint8_t* address{};
         size_t size{};
         std::unique_ptr<FreeNode> freelist{};
 
@@ -164,15 +176,164 @@ private:
     Allocator() = default;
 
     [[nodiscard]] std::expected<Allocation, Error> internal_allocate_near(
-        const std::vector<uintptr_t>& desired_addresses, size_t size, size_t max_distance = 0x7FFF'FFFF);
-    void internal_free(uintptr_t address, size_t size);
+        const std::vector<uint8_t*>& desired_addresses, size_t size, size_t max_distance = 0x7FFF'FFFF);
+    void internal_free(uint8_t* address, size_t size);
 
-    void combine_adjacent_freenodes(Memory& memory);
-    [[nodiscard]] std::expected<uintptr_t, Error> allocate_nearby_memory(
-        const std::vector<uintptr_t>& desired_addresses, size_t size, size_t max_distance);
-    [[nodiscard]] bool in_range(
-        uintptr_t address, const std::vector<uintptr_t>& desired_addresses, size_t max_distance);
+    static void combine_adjacent_freenodes(Memory& memory);
+    [[nodiscard]] static std::expected<uint8_t*, Error> allocate_nearby_memory(
+        const std::vector<uint8_t*>& desired_addresses, size_t size, size_t max_distance);
+    [[nodiscard]] static bool in_range(
+        uint8_t* address, const std::vector<uint8_t*>& desired_addresses, size_t max_distance);
 };
+} // namespace safetyhook
+
+//
+// Header: safetyhook/common.hpp
+//
+// Include stack:
+//   - safetyhook.hpp
+//   - safetyhook/easy.hpp
+//   - safetyhook/inline_hook.hpp
+//
+
+#pragma once
+
+#if defined(_MSC_VER)
+#define SAFETYHOOK_COMPILER_MSVC 1
+#define SAFETYHOOK_COMPILER_GCC 0
+#define SAFETYHOOK_COMPILER_CLANG 0
+#elif defined(__GNUC__)
+#define SAFETYHOOK_COMPILER_MSVC 0
+#define SAFETYHOOK_COMPILER_GCC 1
+#define SAFETYHOOK_COMPILER_CLANG 0
+#elif defined(__clang__)
+#define SAFETYHOOK_COMPILER_MSVC 0
+#define SAFETYHOOK_COMPILER_GCC 0
+#define SAFETYHOOK_COMPILER_CLANG 1
+#else
+#error "Unsupported compiler"
+#endif
+
+#if SAFETYHOOK_COMPILER_MSVC
+#if defined(_M_IX86)
+#define SAFETYHOOK_ARCH_X86_32 1
+#define SAFETYHOOK_ARCH_X86_64 0
+#elif defined(_M_X64)
+#define SAFETYHOOK_ARCH_X86_32 0
+#define SAFETYHOOK_ARCH_X86_64 1
+#else
+#error "Unsupported architecture"
+#endif
+#elif SAFETYHOOK_COMPILER_GCC || SAFETYHOOK_COMPILER_CLANG
+#if defined(__i386__)
+#define SAFETYHOOK_ARCH_X86_32 1
+#define SAFETYHOOK_ARCH_X86_64 0
+#elif defined(__x86_64__)
+#define SAFETYHOOK_ARCH_X86_32 0
+#define SAFETYHOOK_ARCH_X86_64 1
+#else
+#error "Unsupported architecture"
+#endif
+#endif
+
+#if defined(_WIN32)
+#define SAFETYHOOK_OS_WINDOWS 1
+#define SAFETYHOOK_OS_LINUX 0
+#elif defined(__linux__)
+#define SAFETYHOOK_OS_WINDOWS 0
+#define SAFETYHOOK_OS_LINUX 1
+#else
+#error "Unsupported OS"
+#endif
+
+#if SAFETYHOOK_OS_WINDOWS
+#if SAFETYHOOK_COMPILER_MSVC
+#define SAFETYHOOK_CCALL __cdecl
+#define SAFETYHOOK_STDCALL __stdcall
+#define SAFETYHOOK_FASTCALL __fastcall
+#define SAFETYHOOK_THISCALL __thiscall
+#elif SAFETYHOOK_COMPILER_GCC || SAFETYHOOK_COMPILER_CLANG
+#define SAFETYHOOK_CCALL __attribute__((cdecl))
+#define SAFETYHOOK_STDCALL __attribute__((stdcall))
+#define SAFETYHOOK_FASTCALL __attribute__((fastcall))
+#define SAFETYHOOK_THISCALL __attribute__((thiscall))
+#endif
+#else
+#define SAFETYHOOK_CCALL
+#define SAFETYHOOK_STDCALL
+#define SAFETYHOOK_FASTCALL
+#define SAFETYHOOK_THISCALL
+#endif
+
+#if SAFETYHOOK_COMPILER_MSVC
+#define SAFETYHOOK_NOINLINE __declspec(noinline)
+#elif SAFETYHOOK_COMPILER_GCC || SAFETYHOOK_COMPILER_CLANG
+#define SAFETYHOOK_NOINLINE __attribute__((noinline))
+#endif
+
+//
+// Header: safetyhook/utility.hpp
+//
+// Include stack:
+//   - safetyhook.hpp
+//   - safetyhook/easy.hpp
+//   - safetyhook/inline_hook.hpp
+//
+
+#pragma once
+
+#ifndef SAFETYHOOK_USE_CXXMODULES
+#include <algorithm>
+#include <cstdint>
+#include <optional>
+#include <type_traits>
+#else
+import std.compat;
+#endif
+
+namespace safetyhook {
+template <typename T> constexpr void store(uint8_t* address, const T& value) {
+    std::copy_n(reinterpret_cast<const uint8_t*>(&value), sizeof(T), address);
+}
+
+template <typename T>
+concept FnPtr = requires(T f) { std::is_pointer_v<T>&& std::is_function_v<std::remove_pointer_t<T>>; };
+
+bool is_executable(uint8_t* address);
+
+class UnprotectMemory {
+public:
+    UnprotectMemory() = delete;
+    ~UnprotectMemory();
+    UnprotectMemory(const UnprotectMemory&) = delete;
+    UnprotectMemory(UnprotectMemory&& other) noexcept;
+    UnprotectMemory& operator=(const UnprotectMemory&) = delete;
+    UnprotectMemory& operator=(UnprotectMemory&& other) noexcept;
+
+private:
+    friend std::optional<UnprotectMemory> unprotect(uint8_t*, size_t);
+
+    UnprotectMemory(uint8_t* address, size_t size, uint32_t original_protection)
+        : m_address{address}, m_size{size}, m_original_protection{original_protection} {}
+
+    uint8_t* m_address{};
+    size_t m_size{};
+    uint32_t m_original_protection{};
+};
+
+[[nodiscard]] std::optional<UnprotectMemory> unprotect(uint8_t* address, size_t size);
+
+template <typename T> constexpr T align_up(T address, size_t align) {
+    const auto unaligned_address = (uintptr_t)address;
+    const auto aligned_address = (unaligned_address + align - 1) & ~(align - 1);
+    return (T)aligned_address;
+}
+
+template <typename T> constexpr T align_down(T address, size_t align) {
+    const auto unaligned_address = (uintptr_t)address;
+    const auto aligned_address = unaligned_address & ~(align - 1);
+    return (T)aligned_address;
+}
 } // namespace safetyhook
 
 namespace safetyhook {
@@ -188,12 +349,14 @@ public:
             SHORT_JUMP_IN_TRAMPOLINE,              ///< The trampoline contains a short jump.
             IP_RELATIVE_INSTRUCTION_OUT_OF_RANGE,  ///< An IP-relative instruction is out of range.
             UNSUPPORTED_INSTRUCTION_IN_TRAMPOLINE, ///< An unsupported instruction was found in the trampoline.
+            FAILED_TO_UNPROTECT,                   ///< Failed to unprotect memory.
+            NOT_ENOUGH_SPACE,                      ///< Not enough space to create the hook.
         } type;
 
         /// @brief Extra information about the error.
         union {
             Allocator::Error allocator_error; ///< Allocator error information.
-            uintptr_t ip;                     ///< IP of the problematic instruction.
+            uint8_t* ip;                      ///< IP of the problematic instruction.
         };
 
         /// @brief Create a BAD_ALLOCATION error.
@@ -206,30 +369,40 @@ public:
         /// @brief Create a FAILED_TO_DECODE_INSTRUCTION error.
         /// @param ip The IP of the problematic instruction.
         /// @return The new FAILED_TO_DECODE_INSTRUCTION error.
-        [[nodiscard]] static Error failed_to_decode_instruction(uintptr_t ip) {
+        [[nodiscard]] static Error failed_to_decode_instruction(uint8_t* ip) {
             return {.type = FAILED_TO_DECODE_INSTRUCTION, .ip = ip};
         }
 
         /// @brief Create a SHORT_JUMP_IN_TRAMPOLINE error.
         /// @param ip The IP of the problematic instruction.
         /// @return The new SHORT_JUMP_IN_TRAMPOLINE error.
-        [[nodiscard]] static Error short_jump_in_trampoline(uintptr_t ip) {
+        [[nodiscard]] static Error short_jump_in_trampoline(uint8_t* ip) {
             return {.type = SHORT_JUMP_IN_TRAMPOLINE, .ip = ip};
         }
 
         /// @brief Create a IP_RELATIVE_INSTRUCTION_OUT_OF_RANGE error.
         /// @param ip The IP of the problematic instruction.
         /// @return The new IP_RELATIVE_INSTRUCTION_OUT_OF_RANGE error.
-        [[nodiscard]] static Error ip_relative_instruction_out_of_range(uintptr_t ip) {
+        [[nodiscard]] static Error ip_relative_instruction_out_of_range(uint8_t* ip) {
             return {.type = IP_RELATIVE_INSTRUCTION_OUT_OF_RANGE, .ip = ip};
         }
 
         /// @brief Create a UNSUPPORTED_INSTRUCTION_IN_TRAMPOLINE error.
         /// @param ip The IP of the problematic instruction.
         /// @return The new UNSUPPORTED_INSTRUCTION_IN_TRAMPOLINE error.
-        [[nodiscard]] static Error unsupported_instruction_in_trampoline(uintptr_t ip) {
+        [[nodiscard]] static Error unsupported_instruction_in_trampoline(uint8_t* ip) {
             return {.type = UNSUPPORTED_INSTRUCTION_IN_TRAMPOLINE, .ip = ip};
         }
+
+        /// @brief Create a FAILED_TO_UNPROTECT error.
+        /// @param ip The IP of the problematic instruction.
+        /// @return The new FAILED_TO_UNPROTECT error.
+        [[nodiscard]] static Error failed_to_unprotect(uint8_t* ip) { return {.type = FAILED_TO_UNPROTECT, .ip = ip}; }
+
+        /// @brief Create a NOT_ENOUGH_SPACE error.
+        /// @param ip The IP of the problematic instruction.
+        /// @return The new NOT_ENOUGH_SPACE error.
+        [[nodiscard]] static Error not_enough_space(uint8_t* ip) { return {.type = NOT_ENOUGH_SPACE, .ip = ip}; }
     };
 
     /// @brief Create an inline hook.
@@ -246,7 +419,9 @@ public:
     /// @return The InlineHook or an InlineHook::Error if an error occurred.
     /// @note This will use the default global Allocator.
     /// @note If you don't care about error handling, use the easy API (safetyhook::create_inline).
-    [[nodiscard]] static std::expected<InlineHook, Error> create(uintptr_t target, uintptr_t destination);
+    [[nodiscard]] static std::expected<InlineHook, Error> create(FnPtr auto target, FnPtr auto destination) {
+        return create(reinterpret_cast<void*>(target), reinterpret_cast<void*>(destination));
+    }
 
     /// @brief Create an inline hook with a given Allocator.
     /// @param allocator The allocator to use.
@@ -264,7 +439,9 @@ public:
     /// @return The InlineHook or an InlineHook::Error if an error occurred.
     /// @note If you don't care about error handling, use the easy API (safetyhook::create_inline).
     [[nodiscard]] static std::expected<InlineHook, Error> create(
-        const std::shared_ptr<Allocator>& allocator, uintptr_t target, uintptr_t destination);
+        const std::shared_ptr<Allocator>& allocator, FnPtr auto target, FnPtr auto destination) {
+        return create(allocator, reinterpret_cast<void*>(target), reinterpret_cast<void*>(destination));
+    }
 
     InlineHook() = default;
     InlineHook(const InlineHook&) = delete;
@@ -278,13 +455,21 @@ public:
     /// @note This is called automatically in the destructor.
     void reset();
 
+    /// @brief Get a pointer to the target.
+    /// @return A pointer to the target.
+    [[nodiscard]] uint8_t* target() const { return m_target; }
+
     /// @brief Get the target address.
     /// @return The target address.
-    [[nodiscard]] uintptr_t target() const { return m_target; }
+    [[nodiscard]] uintptr_t target_address() const { return reinterpret_cast<uintptr_t>(m_target); }
+
+    /// @brief Get a pointer ot the destination.
+    /// @return A pointer to the destination.
+    [[nodiscard]] uint8_t* destination() const { return m_destination; }
 
     /// @brief Get the destination address.
     /// @return The destination address.
-    [[nodiscard]] size_t destination() const { return m_destination; }
+    [[nodiscard]] uintptr_t destination_address() const { return reinterpret_cast<uintptr_t>(m_destination); }
 
     /// @brief Get the trampoline Allocation.
     /// @return The trampoline Allocation.
@@ -298,6 +483,10 @@ public:
     /// @tparam T The type of the function pointer.
     /// @return The address of the trampoline to call the original function.
     template <typename T> [[nodiscard]] T original() const { return reinterpret_cast<T>(m_trampoline.address()); }
+
+    /// @brief Returns a vector containing the original bytes of the target function.
+    /// @return A vector of the original bytes of the target function.
+    [[nodiscard]] const auto& original_bytes() const { return m_original_bytes; }
 
     /// @brief Calls the original function.
     /// @tparam RetT The return type of the function.
@@ -318,7 +507,7 @@ public:
     /// @note This function will use the __cdecl calling convention.
     template <typename RetT = void, typename... Args> RetT ccall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__cdecl*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(SAFETYHOOK_CCALL*)(Args...)>()(args...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -329,7 +518,7 @@ public:
     /// @note This function will use the __thiscall calling convention.
     template <typename RetT = void, typename... Args> RetT thiscall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__thiscall*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(SAFETYHOOK_THISCALL*)(Args...)>()(args...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -340,7 +529,7 @@ public:
     /// @note This function will use the __stdcall calling convention.
     template <typename RetT = void, typename... Args> RetT stdcall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__stdcall*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(SAFETYHOOK_STDCALL*)(Args...)>()(args...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -351,7 +540,7 @@ public:
     /// @note This function will use the __fastcall calling convention.
     template <typename RetT = void, typename... Args> RetT fastcall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__fastcall*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(SAFETYHOOK_FASTCALL*)(Args...)>()(args...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -361,7 +550,7 @@ public:
     /// @return The result of calling the original function.
     /// @note This function will use the default calling convention set by your compiler.
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
-    // safety or are worried about the performance cost of locking the mutex.
+    /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_call(Args... args) {
         return original<RetT (*)(Args...)>()(args...);
     }
@@ -373,9 +562,9 @@ public:
     /// @return The result of calling the original function.
     /// @note This function will use the __cdecl calling convention.
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
-    // safety or are worried about the performance cost of locking the mutex.
+    /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_ccall(Args... args) {
-        return original<RetT(__cdecl*)(Args...)>()(args...);
+        return original<RetT(SAFETYHOOK_CCALL*)(Args...)>()(args...);
     }
 
     /// @brief Calls the original function.
@@ -385,9 +574,9 @@ public:
     /// @return The result of calling the original function.
     /// @note This function will use the __thiscall calling convention.
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
-    // safety or are worried about the performance cost of locking the mutex.
+    /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_thiscall(Args... args) {
-        return original<RetT(__thiscall*)(Args...)>()(args...);
+        return original<RetT(SAFETYHOOK_THISCALL*)(Args...)>()(args...);
     }
 
     /// @brief Calls the original function.
@@ -397,9 +586,9 @@ public:
     /// @return The result of calling the original function.
     /// @note This function will use the __stdcall calling convention.
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
-    // safety or are worried about the performance cost of locking the mutex.
+    /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_stdcall(Args... args) {
-        return original<RetT(__stdcall*)(Args...)>()(args...);
+        return original<RetT(SAFETYHOOK_STDCALL*)(Args...)>()(args...);
     }
 
     /// @brief Calls the original function.
@@ -409,24 +598,26 @@ public:
     /// @return The result of calling the original function.
     /// @note This function will use the __fastcall calling convention.
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
-    // safety or are worried about the performance cost of locking the mutex.
+    /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_fastcall(Args... args) {
-        return original<RetT(__fastcall*)(Args...)>()(args...);
+        return original<RetT(SAFETYHOOK_FASTCALL*)(Args...)>()(args...);
     }
 
 private:
-    uintptr_t m_target{};
-    uintptr_t m_destination{};
+    friend class MidHook;
+
+    uint8_t* m_target{};
+    uint8_t* m_destination{};
     Allocation m_trampoline{};
     std::vector<uint8_t> m_original_bytes{};
     uintptr_t m_trampoline_size{};
     std::recursive_mutex m_mutex{};
 
     std::expected<void, Error> setup(
-        const std::shared_ptr<Allocator>& allocator, uintptr_t target, uintptr_t destination);
+        const std::shared_ptr<Allocator>& allocator, uint8_t* target, uint8_t* destination);
     std::expected<void, Error> e9_hook(const std::shared_ptr<Allocator>& allocator);
 
-#ifdef _M_X64
+#if SAFETYHOOK_ARCH_X86_64
     std::expected<void, Error> ff_hook(const std::shared_ptr<Allocator>& allocator);
 #endif
 
@@ -447,8 +638,12 @@ private:
 
 #pragma once
 
+#ifndef SAFETYHOOK_USE_CXXMODULES
 #include <cstdint>
 #include <memory>
+#else
+import std.compat;
+#endif
 
 
 //
@@ -465,23 +660,43 @@ private:
 
 #pragma once
 
+#ifndef SAFETYHOOK_USE_CXXMODULES
 #include <cstdint>
+#else
+import std.compat;
+#endif
+
 
 namespace safetyhook {
+union Xmm {
+    uint8_t u8[16];
+    uint16_t u16[8];
+    uint32_t u32[4];
+    uint64_t u64[2];
+    float f32[4];
+    double f64[2];
+};
+
 /// @brief Context structure for 64-bit MidHook.
 /// @details This structure is used to pass the context of the hooked function to the destination allowing full access
 /// to the 64-bit registers at the moment the hook is called.
-/// @note The structure only provides access to integer registers.
+/// @note rip will point to a trampoline containing the replaced instruction(s).
+/// @note rsp is read-only. Modifying it will have no effect. Use trampoline_rsp to modify rsp if needed but make sure
+/// the top of the stack is the rip you want to resume at.
 struct Context64 {
-    uintptr_t rflags, r15, r14, r13, r12, r11, r10, r9, r8, rdi, rsi, rdx, rcx, rbx, rax, rbp, rsp;
+    Xmm xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15;
+    uintptr_t rflags, r15, r14, r13, r12, r11, r10, r9, r8, rdi, rsi, rdx, rcx, rbx, rax, rbp, rsp, trampoline_rsp, rip;
 };
 
 /// @brief Context structure for 32-bit MidHook.
 /// @details This structure is used to pass the context of the hooked function to the destination allowing full access
 /// to the 32-bit registers at the moment the hook is called.
-/// @note The structure only provides access to integer registers.
+/// @note eip will point to a trampoline containing the replaced instruction(s).
+/// @note esp is read-only. Modifying it will have no effect. Use trampoline_esp to modify esp if needed but make sure
+/// the top of the stack is the eip you want to resume at.
 struct Context32 {
-    uintptr_t eflags, edi, esi, edx, ecx, ebx, eax, ebp, esp;
+    Xmm xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7;
+    uintptr_t eflags, edi, esi, edx, ecx, ebx, eax, ebp, esp, trampoline_esp, eip;
 };
 
 /// @brief Context structure for MidHook.
@@ -489,9 +704,9 @@ struct Context32 {
 /// to the registers at the moment the hook is called.
 /// @note The structure is different depending on architecture.
 /// @note The structure only provides access to integer registers.
-#ifdef _M_X64
+#if SAFETYHOOK_ARCH_X86_64
 using Context = Context64;
-#else
+#elif SAFETYHOOK_ARCH_X86_32
 using Context = Context32;
 #endif
 
@@ -536,37 +751,42 @@ public:
 
     /// @brief Creates a new MidHook object.
     /// @param target The address of the function to hook.
-    /// @param destination The destination function.
+    /// @param destination_fn The destination function.
     /// @return The MidHook object or a MidHook::Error if an error occurred.
     /// @note This will use the default global Allocator.
     /// @note If you don't care about error handling, use the easy API (safetyhook::create_mid).
-    [[nodiscard]] static std::expected<MidHook, Error> create(void* target, MidHookFn destination);
+    [[nodiscard]] static std::expected<MidHook, Error> create(void* target, MidHookFn destination_fn);
 
     /// @brief Creates a new MidHook object.
     /// @param target The address of the function to hook.
-    /// @param destination The destination function.
+    /// @param destination_fn The destination function.
     /// @return The MidHook object or a MidHook::Error if an error occurred.
     /// @note This will use the default global Allocator.
     /// @note If you don't care about error handling, use the easy API (safetyhook::create_mid).
-    [[nodiscard]] static std::expected<MidHook, Error> create(uintptr_t target, MidHookFn destination);
+    [[nodiscard]] static std::expected<MidHook, Error> create(FnPtr auto target, MidHookFn destination_fn) {
+        return create(reinterpret_cast<void*>(target), destination_fn);
+    }
 
     /// @brief Creates a new MidHook object with a given Allocator.
     /// @param allocator The Allocator to use.
     /// @param target The address of the function to hook.
-    /// @param destination The destination function.
+    /// @param destination_fn The destination function.
     /// @return The MidHook object or a MidHook::Error if an error occurred.
     /// @note If you don't care about error handling, use the easy API (safetyhook::create_mid).
     [[nodiscard]] static std::expected<MidHook, Error> create(
-        const std::shared_ptr<Allocator>& allocator, void* target, MidHookFn destination);
+        const std::shared_ptr<Allocator>& allocator, void* target, MidHookFn destination_fn);
 
     /// @brief Creates a new MidHook object with a given Allocator.
+    /// @tparam T The type of the function to hook.
     /// @param allocator The Allocator to use.
     /// @param target The address of the function to hook.
-    /// @param destination The destination function.
+    /// @param destination_fn The destination function.
     /// @return The MidHook object or a MidHook::Error if an error occurred.
     /// @note If you don't care about error handling, use the easy API (safetyhook::create_mid).
     [[nodiscard]] static std::expected<MidHook, Error> create(
-        const std::shared_ptr<Allocator>& allocator, uintptr_t target, MidHookFn destination);
+        const std::shared_ptr<Allocator>& allocator, FnPtr auto target, MidHookFn destination_fn) {
+        return create(allocator, reinterpret_cast<void*>(target), destination_fn);
+    }
 
     MidHook() = default;
     MidHook(const MidHook&) = delete;
@@ -580,13 +800,21 @@ public:
     /// @note This is called automatically in the destructor.
     void reset();
 
-    /// @brief Get the target address.
-    /// @return The target address.
-    [[nodiscard]] uintptr_t target() const { return m_target; }
+    /// @brief Get a pointer to the target.
+    /// @return A pointer to the target.
+    [[nodiscard]] uint8_t* target() const { return m_target; }
+
+    /// @brief Get the address of the target.
+    /// @return The address of the target.
+    [[nodiscard]] uintptr_t target_address() const { return reinterpret_cast<uintptr_t>(m_target); }
 
     /// @brief Get the destination function.
     /// @return The destination function.
     [[nodiscard]] MidHookFn destination() const { return m_destination; }
+
+    /// @brief Returns a vector containing the original bytes of the target function.
+    /// @return A vector of the original bytes of the target function.
+    [[nodiscard]] const auto& original_bytes() const { return m_hook.m_original_bytes; }
 
     /// @brief Tests if the hook is valid.
     /// @return true if the hook is valid, false otherwise.
@@ -594,90 +822,235 @@ public:
 
 private:
     InlineHook m_hook{};
-    uintptr_t m_target{};
+    uint8_t* m_target{};
     Allocation m_stub{};
     MidHookFn m_destination{};
 
     std::expected<void, Error> setup(
-        const std::shared_ptr<Allocator>& allocator, uintptr_t target, MidHookFn destination);
+        const std::shared_ptr<Allocator>& allocator, uint8_t* target, MidHookFn destination);
 };
 } // namespace safetyhook
 
-namespace safetyhook {
-/// @brief Easy to use API for creating an InlineHook.
-/// @param target The address of the function to hook.
-/// @param destination The address of the destination function.
-/// @return The InlineHook object.
-InlineHook create_inline(void* target, void* destination);
-
-/// @brief Easy to use API for creating an InlineHook.
-/// @param target The address of the function to hook.
-/// @param destination The address of the destination function.
-/// @return The InlineHook object.
-InlineHook create_inline(uintptr_t target, uintptr_t destination);
-
-/// @brief Easy to use API for creating a MidHook.
-/// @param target the address of the function to hook.
-/// @param destination The destination function.
-/// @return The MidHook object.
-MidHook create_mid(void* target, MidHookFn destination);
-
-/// @brief Easy to use API for creating a MidHook.
-/// @param target the address of the function to hook.
-/// @param destination The destination function.
-/// @return The MidHook object.
-MidHook create_mid(uintptr_t target, MidHookFn destination);
-} // namespace safetyhook
-
 //
-// Header: safetyhook/thread_freezer.hpp
+// Header: safetyhook/vmt_hook.hpp
 //
 // Include stack:
 //   - safetyhook.hpp
+//   - safetyhook/easy.hpp
 //
 
-/// @file safetyhook/thread_freezer.hpp
-/// @brief A class for freezing all threads in the process.
+/// @file safetyhook/vmt_hook.hpp
+/// @brief VMT hooking classes
 
 #pragma once
 
+#ifndef SAFETYHOOK_USE_CXXMODULES
 #include <cstdint>
-#include <vector>
+#include <expected>
+#include <unordered_map>
+#else
+import std.compat;
+#endif
 
-#include <Windows.h>
 
 namespace safetyhook {
-
-/// @brief A class for freezing all threads in the process.
-class ThreadFreezer final {
+/// @brief A hook class that allows for hooking a single method in a VMT.
+class VmHook final {
 public:
-    ThreadFreezer(ThreadFreezer&) = delete;
-    ThreadFreezer(ThreadFreezer&&) noexcept = default;
-    ThreadFreezer& operator=(ThreadFreezer&) = delete;
-    ThreadFreezer& operator=(ThreadFreezer&&) noexcept = default;
+    VmHook() = default;
+    VmHook(const VmHook&) = delete;
+    VmHook(VmHook&& other) noexcept;
+    VmHook& operator=(const VmHook&) = delete;
+    VmHook& operator=(VmHook&& other) noexcept;
+    ~VmHook();
 
-    /// @brief Constructs a new ThreadFreezer object.
-    /// @note This freezes all threads in the process except the current thread.
-    ThreadFreezer();
+    /// @brief Removes the hook.
+    void reset();
 
-    /// @brief Destructs the ThreadFreezer object.
-    /// @note This unfreezes all threads in the process.
-    ~ThreadFreezer();
+    /// @brief Gets the original method pointer.
+    template <typename T> [[nodiscard]] T original() const { return reinterpret_cast<T>(m_original_vm); }
 
-    /// @brief Fixes any threads that are currently on `old_ip` and sets them to `new_ip`.
-    /// @param old_ip The old instruction pointer.
-    /// @param new_ip The new instruction pointer.
-    void fix_ip(uintptr_t old_ip, uintptr_t new_ip);
+    /// @brief Calls the original method.
+    /// @tparam RetT The return type of the method.
+    /// @tparam Args The argument types of the method.
+    /// @param args The arguments to pass to the method.
+    /// @return The return value of the method.
+    /// @note This will call the original method with the default calling convention.
+    template <typename RetT = void, typename... Args> RetT call(Args... args) {
+        return original<RetT (*)(Args...)>()(args...);
+    }
+
+    /// @brief Calls the original method with the __cdecl calling convention.
+    /// @tparam RetT The return type of the method.
+    /// @tparam Args The argument types of the method.
+    /// @param args The arguments to pass to the method.
+    /// @return The return value of the method.
+    template <typename RetT = void, typename... Args> RetT ccall(Args... args) {
+        return original<RetT(SAFETYHOOK_CCALL*)(Args...)>()(args...);
+    }
+
+    /// @brief Calls the original method with the __thiscall calling convention.
+    /// @tparam RetT The return type of the method.
+    /// @tparam Args The argument types of the method.
+    /// @param args The arguments to pass to the method.
+    /// @return The return value of the method.
+    template <typename RetT = void, typename... Args> RetT thiscall(Args... args) {
+        return original<RetT(SAFETYHOOK_THISCALL*)(Args...)>()(args...);
+    }
+
+    /// @brief Calls the original method with the __stdcall calling convention.
+    /// @tparam RetT The return type of the method.
+    /// @tparam Args The argument types of the method.
+    /// @param args The arguments to pass to the method.
+    /// @return The return value of the method.
+    template <typename RetT = void, typename... Args> RetT stdcall(Args... args) {
+        return original<RetT(SAFETYHOOK_STDCALL*)(Args...)>()(args...);
+    }
+
+    /// @brief Calls the original method with the __fastcall calling convention.
+    /// @tparam RetT The return type of the method.
+    /// @tparam Args The argument types of the method.
+    /// @param args The arguments to pass to the method.
+    /// @return The return value of the method.
+    template <typename RetT = void, typename... Args> RetT fastcall(Args... args) {
+        return original<RetT(SAFETYHOOK_FASTCALL*)(Args...)>()(args...);
+    }
 
 private:
-    struct FrozenThread {
-        uint32_t thread_id{};
-        HANDLE handle{};
-        CONTEXT ctx{};
+    friend class VmtHook;
+
+    uint8_t* m_original_vm{};
+    uint8_t* m_new_vm{};
+    uint8_t** m_vmt_entry{};
+
+    // This keeps the allocation alive until the hook is destroyed.
+    std::shared_ptr<Allocation> m_new_vmt_allocation{};
+
+    void destroy();
+};
+
+/// @brief A hook class that copies an entire VMT for a given object and replaces it.
+class VmtHook final {
+public:
+    /// @brief Error type for VmtHook.
+    struct Error {
+        /// @brief The type of error.
+        enum : uint8_t {
+            BAD_ALLOCATION, ///< An error occurred while allocating memory.
+        } type;
+
+        /// @brief Extra error information.
+        union {
+            Allocator::Error allocator_error; ///< Allocator error information.
+        };
+
+        /// @brief Create a BAD_ALLOCATION error.
+        /// @param err The Allocator::Error that failed.
+        /// @return The new BAD_ALLOCATION error.
+        [[nodiscard]] static Error bad_allocation(Allocator::Error err) {
+            return {.type = BAD_ALLOCATION, .allocator_error = err};
+        }
     };
 
-    std::vector<FrozenThread> m_frozen_threads{};
+    /// @brief Creates a new VmtHook object. Will clone the VMT of the given object and replace it.
+    /// @param object The object to hook.
+    /// @return The VmtHook object or a VmtHook::Error if an error occurred.
+    [[nodiscard]] static std::expected<VmtHook, Error> create(void* object);
+
+    VmtHook() = default;
+    VmtHook(const VmtHook&) = delete;
+    VmtHook(VmtHook&& other) noexcept;
+    VmtHook& operator=(const VmtHook&) = delete;
+    VmtHook& operator=(VmtHook&& other) noexcept;
+    ~VmtHook();
+
+    /// @brief Applies the hook.
+    /// @param object The object to apply the hook to.
+    /// @note This will replace the VMT of the object with the new VMT. You can apply the hook to multiple objects.
+    void apply(void* object);
+
+    /// @brief Removes the hook.
+    /// @param object The object to remove the hook from.
+    void remove(void* object);
+
+    /// @brief Removes the hook from all objects.
+    void reset();
+
+    /// @brief Hooks a method in the VMT.
+    /// @param index The index of the method to hook.
+    /// @param new_function The new function to use.
+    [[nodiscard]] std::expected<VmHook, Error> hook_method(size_t index, FnPtr auto new_function) {
+        VmHook hook{};
+
+        ++index; // Skip RTTI pointer.
+        hook.m_original_vm = m_new_vmt[index];
+        store(reinterpret_cast<uint8_t*>(&hook.m_new_vm), new_function);
+        hook.m_vmt_entry = &m_new_vmt[index];
+        hook.m_new_vmt_allocation = m_new_vmt_allocation;
+        m_new_vmt[index] = hook.m_new_vm;
+
+        return hook;
+    }
+
+private:
+    // Map of object instance to their original VMT.
+    std::unordered_map<void*, uint8_t**> m_objects{};
+
+    // The allocation is a shared_ptr, so it can be shared with VmHooks to ensure the memory is kept alive.
+    std::shared_ptr<Allocation> m_new_vmt_allocation{};
+    uint8_t** m_new_vmt{};
+
+    void destroy();
 };
+} // namespace safetyhook
+
+namespace safetyhook {
+/// @brief Easy to use API for creating an InlineHook.
+/// @param target The address of the function to hook.
+/// @param destination The address of the destination function.
+/// @return The InlineHook object.
+[[nodiscard]] InlineHook create_inline(void* target, void* destination);
+
+/// @brief Easy to use API for creating an InlineHook.
+/// @param target The address of the function to hook.
+/// @param destination The address of the destination function.
+/// @return The InlineHook object.
+[[nodiscard]] InlineHook create_inline(FnPtr auto target, FnPtr auto destination) {
+    return create_inline(reinterpret_cast<void*>(target), reinterpret_cast<void*>(destination));
+}
+
+/// @brief Easy to use API for creating a MidHook.
+/// @param target the address of the function to hook.
+/// @param destination The destination function.
+/// @return The MidHook object.
+[[nodiscard]] MidHook create_mid(void* target, MidHookFn destination);
+
+/// @brief Easy to use API for creating a MidHook.
+/// @param target the address of the function to hook.
+/// @param destination The destination function.
+/// @return The MidHook object.
+[[nodiscard]] MidHook create_mid(FnPtr auto target, MidHookFn destination) {
+    return create_mid(reinterpret_cast<void*>(target), destination);
+}
+
+/// @brief Easy to use API for creating a VmtHook.
+/// @param object The object to hook.
+/// @return The VmtHook object.
+[[nodiscard]] VmtHook create_vmt(void* object);
+
+/// @brief Easy to use API for creating a VmHook.
+/// @param vmt The VmtHook to use to create the VmHook.
+/// @param index The index of the method to hook.
+/// @param destination The destination function.
+/// @return The VmHook object.
+[[nodiscard]] VmHook create_vm(VmtHook& vmt, size_t index, FnPtr auto destination) {
+    if (auto hook = vmt.hook_method(index, destination)) {
+        return std::move(*hook);
+    } else {
+        return {};
+    }
+}
+
 } // namespace safetyhook
 
 using SafetyHookContext = safetyhook::Context;
@@ -685,4 +1058,5 @@ using SafetyHookInline = safetyhook::InlineHook;
 using SafetyHookMid = safetyhook::MidHook;
 using SafetyInlineHook [[deprecated("Use SafetyHookInline instead.")]] = safetyhook::InlineHook;
 using SafetyMidHook [[deprecated("Use SafetyHookMid instead.")]] = safetyhook::MidHook;
-using SafetyThreadFreezer = safetyhook::ThreadFreezer;
+using SafetyHookVmt = safetyhook::VmtHook;
+using SafetyHookVm = safetyhook::VmHook;
