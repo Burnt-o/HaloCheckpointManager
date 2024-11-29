@@ -54,7 +54,8 @@ commandConsoleExecuteBuffer,\
 disableBarriers,\
 softCeilingOverlayToggleHotkey,\
 abilityMeterToggleHotkey,\
-sensResetCountHotkey
+sensResetCountHotkey,\
+sensDriftOverlayToggleHotkey
 
 
 

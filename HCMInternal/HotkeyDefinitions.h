@@ -272,8 +272,10 @@ private:
 			mSettings->sensResetCountsEvent,
 			vsk{}),
 
+			initEventOnPressHotkey(sensDriftOverlayToggleHotkey,
+				mSettings->sensDriftOverlayToggleHotkeyEvent,
+				vsk{}),
 			
-
 
 			initEventOnPressHotkey_ignoreDisabler(commandConsoleHotkey,
 			mSettings->commandConsoleHotkeyEvent,

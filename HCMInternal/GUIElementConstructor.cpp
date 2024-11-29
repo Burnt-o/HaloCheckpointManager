@@ -1398,8 +1398,8 @@ private:
 								(game, ToolTipCollection(""), "Highlight Colour##abilityCooldown", settings->abilityMeterCooldownHighlightColor));
 
 			case GUIElementEnum::sensDriftOverlayToggle:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-					(game, ToolTipCollection("Renders an overlay with information about sensitivity drift (misalignment of sensitivity manipulations)"), std::nullopt, "Sensitivity Drift Overlay", settings->sensDriftOverlayToggle));
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+					(game, ToolTipCollection("Renders an overlay with information about sensitivity drift (misalignment of sensitivity manipulations)"), RebindableHotkeyEnum::sensDriftOverlayToggleHotkey, "Sensitivity Drift Overlay", settings->sensDriftOverlayToggle));
 
 			case GUIElementEnum::sensDriftOverlaySettings:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
