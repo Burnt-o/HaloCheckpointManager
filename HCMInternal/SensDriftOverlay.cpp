@@ -385,6 +385,7 @@ private:
 				}
 			}
 
+			resetCounts();
 			mouseMovementHook->setWantsToBeAttached(true);
 		}
 		else
