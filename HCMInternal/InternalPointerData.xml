@@ -10086,16 +10086,23 @@
 				<Offset>0x87A479</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
+			<Offsets>
+				<Offset>0x85E1A1</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="mouseMovementContextInterpreter" Type="MidhookContextInterpreter">
-		<Version Version="All" ProcessType="Steam">
+		<Version Version="All">
 			<Parameters>
 				<pObservedAngleDelta>xmm3a</pObservedAngleDelta>
 				<pQueuedDots>rsi+0x30</pQueuedDots>
 				<pSensitivitySetting>xmm2a</pSensitivitySetting>
 			</Parameters>
 		</Version>
+		
 	</VersionedEntry>
 
 	<VersionedEntry Name="revertFunction" Type="MultilevelPointer::ModuleOffset">
