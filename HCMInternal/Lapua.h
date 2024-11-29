@@ -5,9 +5,6 @@
 // The exact nature of this detection vector is intentionally slightly obfuscated. Anyone codey enough for that could easily achieve bad goals a myriad other ways so no biggie.
 
 
-#define ResourceType(x) std::string("WA") + #x
-#define resConsume(arg1, arg2) s##arg1##Play##arg2##ou##arg1
-
 class Lapua
 {
 private:
@@ -15,7 +12,7 @@ private:
 	std::unique_ptr<LapuaImpl> pimpl;
 
 public:
-	Lapua(HMODULE dllHandle);
+	Lapua();
 	~Lapua();
 
 	static inline bool lapuaGood = true;

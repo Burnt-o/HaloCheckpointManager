@@ -1431,7 +1431,7 @@ private:
 
 				case GUIElementEnum::sensSoundOnOverDotToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, ToolTipCollection("Play a beeping sound when an Over-Dot occurs."), std::nullopt, "Play sound on Over-Dot", settings->sensSoundOnOverDotToggle));
+						(game, ToolTipCollection("Play a beeping sound when an Over-Dot occurs."), std::nullopt, "Play annoying sound on Over-Dot", settings->sensSoundOnOverDotToggle));
 
 
 
@@ -1446,7 +1446,7 @@ private:
 
 				case GUIElementEnum::sensSoundOnSubpixelDriftToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-						(game, ToolTipCollection("Play a beeping sound when subpixel drift occurs."), std::nullopt, "Play sound on Subpixel Drift", settings->sensSoundOnSubpixelDriftToggle));
+						(game, ToolTipCollection("Play a beeping sound when subpixel drift occurs."), std::nullopt, "Play annoying sound on Subpixel Drift", settings->sensSoundOnSubpixelDriftToggle));
 
 
 				case GUIElementEnum::sensResetCountAction:

@@ -89,6 +89,12 @@ END
 
 IDR_WAVE1               WAVE                    "lapua.wav"
 
+IDR_WAVE2               WAVE                    "GeigerClickA.wav"
+
+IDR_WAVE3               WAVE                    "GeigerClickB.wav"
+
+IDR_WAVE4               WAVE                    "Beatrice.wav"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -30,7 +30,6 @@
     "boost-scope-exit",
     "magic-enum",
     "directxtk",
-    "libguarded",
-    "miniaudio"
+    "libguarded"
   ]
 }

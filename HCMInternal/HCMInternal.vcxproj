@@ -136,7 +136,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;$(ProjectDir)includes\geometric-tools</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\SoLoud\include;$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;$(ProjectDir)includes\geometric-tools</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -193,7 +193,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;$(ProjectDir)includes\geometric-tools</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\SoLoud\include;$(ProjectDir)includes\safetyhook;$(ProjectDir)includes;$(ProjectDir)includes\geometric-tools</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -234,7 +234,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AudioPlayer.h" />
+    <ClInclude Include="Beeper.h" />
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="ChangeOOBBackground.h" />
@@ -310,6 +310,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="includes\type_safe\types.hpp" />
     <ClInclude Include="includes\type_safe\variant.hpp" />
     <ClInclude Include="includes\type_safe\visitor.hpp" />
+    <ClInclude Include="ManagedResource.h" />
     <ClInclude Include="MCCInitialisationCheck.h" />
     <ClInclude Include="InjectionWarningDialog.h" />
     <ClInclude Include="IRenderer3D.h" />
@@ -547,7 +548,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="ZoneSetChangeHookEvent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="BSPChangeHookEvent.cpp" />
     <ClCompile Include="BSPSetChangeHookEvent.cpp" />
     <ClCompile Include="ChangeOOBBackground.cpp" />
@@ -747,6 +747,11 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <Image Include="Waypoint3DReticle.png" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="Beatrice.wav" />
+    <Media Include="GeigerClick1.wav" />
+    <Media Include="GeigerClick2.wav" />
+    <Media Include="GeigerClickA.wav" />
+    <Media Include="GeigerClickB.wav" />
     <Media Include="lapua.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

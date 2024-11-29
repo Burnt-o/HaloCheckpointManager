@@ -36,6 +36,7 @@
 #include "ModalDialogFactory.h"
 #include "HideWatermarkManager.h"
 #include "GetHCMVersion.h"
+
 class App {
 
 
@@ -162,7 +163,7 @@ public:
 
             auto hb = std::make_shared<HeartbeatTimer>(sharedMem, settings); PLOGV << "hb init";
 
-            auto lap = std::make_shared<Lapua>(dllHandle); PLOGV << "lapua init";
+            auto lap = std::make_shared<Lapua>(); PLOGV << "lapua init";
             auto obsBypass = std::make_shared<OBSBypassManager>(d3d, settings->OBSBypassToggle, exp); PLOGV << "obsBypass init";
             auto hideWatermark = std::make_shared<HideWatermarkManager>(settings->hideWatermark, exp); PLOGV << "hideWatermark init";
             d3d->beginHook();

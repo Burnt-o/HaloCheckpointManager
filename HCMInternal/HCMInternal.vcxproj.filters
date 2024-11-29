@@ -101,14 +101,14 @@
     <Filter Include="Classes\Definitions">
       <UniqueIdentifier>{3e929823-9bb9-423f-b811-bbee94da77be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Includes\soloud">
-      <UniqueIdentifier>{28bb7ecb-bec9-443b-9012-df605bd6b9f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Includes\type_safe">
       <UniqueIdentifier>{8e095301-396e-423f-bdfb-54cff888c81e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Includes\type_safe\detail">
       <UniqueIdentifier>{836ccd33-f930-42c4-aeab-2a007dccca89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crap">
+      <UniqueIdentifier>{9f29f421-494c-47ad-afeb-a0b4e0d93422}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -463,7 +463,6 @@
     <ClInclude Include="ToolTipCollection.h">
       <Filter>Services\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="NaturalCheckpointDisable.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
@@ -941,9 +940,6 @@
     <ClInclude Include="map.h">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="AudioPlayer.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="includes\type_safe\arithmetic_policy.hpp">
       <Filter>Includes\type_safe</Filter>
     </ClInclude>
@@ -1042,6 +1038,15 @@
     </ClInclude>
     <ClInclude Include="includes\type_safe\detail\variant_impl.hpp">
       <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>crap</Filter>
+    </ClInclude>
+    <ClInclude Include="ManagedResource.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Beeper.h">
+      <Filter>Services</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1486,12 +1491,8 @@
     <ClCompile Include="RevertEventHook.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
-    <ClCompile Include="AudioPlayer.cpp">
-      <Filter>Services</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="dds2.bin">
       <Filter>Resource Files</Filter>
     </None>
@@ -1503,6 +1504,9 @@
     </None>
     <None Include="vcpkg.json">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cpp.hint">
+      <Filter>crap</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1516,16 +1520,39 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="lapua.dds" />
-    <Image Include="lapua2.dds" />
     <Image Include="Waypoint3DReticle.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Waypoint3DReticle.dds" />
-    <Image Include="TriggerPatternedTexture.dds" />
+    <Image Include="lapua.dds">
+      <Filter>crap</Filter>
+    </Image>
+    <Image Include="lapua2.dds">
+      <Filter>crap</Filter>
+    </Image>
+    <Image Include="TriggerPatternedTexture.dds">
+      <Filter>crap</Filter>
+    </Image>
+    <Image Include="Waypoint3DReticle.dds">
+      <Filter>crap</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="lapua.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="GeigerClick1.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="GeigerClick2.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="GeigerClickA.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="GeigerClickB.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Beatrice.wav">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

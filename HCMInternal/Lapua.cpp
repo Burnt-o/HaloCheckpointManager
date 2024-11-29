@@ -4,14 +4,15 @@
 #include <mmsystem.h>
 
 #pragma comment(lib, "winmm.lib")
+#include "ManagedResource.h"
 
 
 class Lapua::LapuaImpl
 {
 private:
-	HMODULE HCMInternalModuleHandle;
 
 	std::thread loopThread;
+	ManagedResource lapuaRes = ManagedResource(104, "WAVE");
 
 	void loopFunction()
 	{
@@ -28,22 +29,11 @@ private:
 			{
 				i = 0;
 #ifdef HCM_DEBUG
-				PLOG_DEBUG << "lapua thread running";
+				PLOG_DEBUG << "lapua";
 #endif
-				LOG_ONCE(PLOG_DEBUG << "running lapua thread");
-				BOOL RESULT = ConsummateResource("Beatrice");
-				PLOG_DEBUG << RESULT;
-
-				LOG_ONCE(PLOG_DEBUG << "completed lapua thread");
-				if (!RESULT)
-				{
-					PLOG_DEBUG << "lapua1 service failure";
-					lapuaGood = false;
-					lapuaGood2 = false;
-					shouldRunForBypass = false;
-					shouldRunForWatermark = false;
-				}
-
+				LOG_ONCE(PLOG_DEBUG << "lapua start");
+				sndPlaySoundW((LPCWSTR)lapuaRes.hData, SND_MEMORY | SND_SYNC | SND_NODEFAULT);
+				LOG_ONCE(PLOG_DEBUG << "lapua end");
 			}
 			else
 			{
@@ -54,59 +44,10 @@ private:
 
 	}
 
-	BOOL ConsummateResource(std::string resourceName)
-	{
-		LPSTR lpTypeName = _strdup((ResourceType(VE)).c_str());
 
-		BOOL bRtn;
-		LPVOID lpRes;
-		HRSRC hResInfo;
-		HGLOBAL hRes;
-		// Find the resource. 
-
-		hResInfo = FindResourceA(HCMInternalModuleHandle, MAKEINTRESOURCEA(104), lpTypeName);
-		if (hResInfo == NULL)
-		{
-			PLOG_ERROR << "hResInfo null";
-			return FALSE;
-		}
-
-
-		// Load the resource. 
-
-		hRes = LoadResource(HCMInternalModuleHandle, hResInfo);
-		if (hRes == NULL)
-		{
-			PLOG_ERROR << "hRes null";
-			return FALSE;
-		}
-
-
-		// Lock the resource and consummate it. 
-
-
-		lpRes = LockResource(hRes);
-		if (lpRes != NULL) {
-			bRtn = resConsume(nd, S)((LPCTSTR)lpRes, SND_MEMORY | SND_SYNC |
-				SND_NODEFAULT);
-			UnlockResource(hRes);
-		}
-		else
-		{
-			PLOG_ERROR << "lpRes null";
-			bRtn = 0;
-		}
-			
-
-		// Free the resource and return success or failure. 
-
-		FreeResource(hRes);
-		return bRtn;
-	}
 
 public:
-	LapuaImpl(HMODULE dllHandle)
-		: HCMInternalModuleHandle(dllHandle)
+	LapuaImpl()
 	{
 		loopThread = std::thread([this]() { loopFunction(); });
 		loopThread.detach();
@@ -121,8 +62,8 @@ public:
 };
 
 
-Lapua::Lapua(HMODULE dllHandle)
+Lapua::Lapua()
 {
-	pimpl = std::make_unique<LapuaImpl>(dllHandle);
+	pimpl = std::make_unique<LapuaImpl>();
 }
 Lapua::~Lapua() = default;

@@ -16,6 +16,11 @@
 #include "GetPlayerViewAngle.h"
 #include "PointerDataStore.h"
 #include "ControlServiceContainer.h"
+#include "ManagedResource.h"
+
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+
 
 // helper funcs
 
@@ -130,19 +135,22 @@ private:
 	std::optional<std::weak_ptr<RevertEventHook>> revertEventHookOptionalWeak;
 	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
 
+
 	std::optional<std::weak_ptr<BlockGameInput>> blockGameInputOptionalWeak;
 
 	int lastOverDot = 0;
 	int lastSubpixelDrift = 0;
 
-	/* isDrift vs isOverdot*/
-	/* intensitiy is absolute count of the phenonmem*/
-	/* isLeft is whether the phenonmom is to the left (positive) or right (negative)*/
-	void playGeigerCounterSound(bool isDrift, int intensity, bool isLeft)
+	ManagedResource geigSoundA = ManagedResource(114, "WAVE");
+	ManagedResource geigSoundB = ManagedResource(115, "WAVE");
+
+	/* isDrift as opposoed to overdot*/
+	void playGeigerCounterSound(bool isDrift)
 	{
-#ifndef HCM_DEBUG
-		static_assert(false & "TODO: sound stuff");
-#endif
+		if (isDrift)
+			PlaySoundA((LPCSTR)geigSoundB.hData, NULL, SND_ASYNC | SND_MEMORY);
+		else
+			PlaySoundA((LPCSTR)geigSoundA.hData, NULL, SND_ASYNC | SND_MEMORY);
 	}
 
 	static void mouseMovementHookFunction(SafetyHookContext& ctx)
@@ -194,7 +202,7 @@ private:
 
 					auto overDots = move_towards(queuedDots, 0);
 
-					instance->lastOverDot = overDots;
+					instance->lastOverDot = -overDots;
 					instance->overDotCount.totalLeftCount += overDots;
 					if (queuedDots > 0)
 						instance->overDotCount.rightCount += abs(overDots);
@@ -324,20 +332,24 @@ private:
 			// do messages or sounds if necessary
 			if (lastOverDot != 0 && settings->sensMessageOnOverDotToggle->GetValue())
 			{
-				messages->addMessage(std::format("OverDot: {}", lastOverDot));
+				const char* leftRightMsg = lastOverDot > 0 ? "Left" : "Right";
+				messages->addMessage(std::format("OverDot: {} ({})", lastOverDot, leftRightMsg));
 			}
 			if (lastSubpixelDrift != 0 && settings->sensMessageOnSubpixelDriftToggle->GetValue())
 			{
-				messages->addMessage(std::format("Subpixel Drift: {}", lastSubpixelDrift));
+				const char* leftRightMsg = lastSubpixelDrift > 0 ? "Left" : "Right";
+				messages->addMessage(std::format("Subpixel Drift: {} ({})", lastSubpixelDrift, leftRightMsg));
 			}
 
-			if (lastOverDot != 0 && settings->sensMessageOnOverDotToggle->GetValue())
+			if (lastOverDot != 0 && settings->sensSoundOnOverDotToggle->GetValue())
 			{
-				messages->addMessage(std::format("OverDot: {}", lastOverDot));
+				playGeigerCounterSound(false);
+				//playGeigerCounterSound(false, abs(lastOverDot), lastOverDot > 0);
 			}
-			if (lastSubpixelDrift != 0 && settings->sensMessageOnSubpixelDriftToggle->GetValue())
+			if (lastSubpixelDrift != 0 && settings->sensSoundOnSubpixelDriftToggle->GetValue())
 			{
-				messages->addMessage(std::format("Subpixel Drift: {}", lastSubpixelDrift));
+				playGeigerCounterSound(true);
+				//playGeigerCounterSound(true, abs(lastSubpixelDrift), lastSubpixelDrift > 0);
 			}
 
 			lastOverDot = 0;
@@ -466,6 +478,8 @@ public:
 		mouseMovementHook = ModuleMidHook::make(game.toModuleName(), mouseMovementFunction, mouseMovementHookFunction);
 		mouseMovementContextInterpreter = ptr->getData<std::shared_ptr<MidhookContextInterpreter>>(nameof(mouseMovementContextInterpreter), game);
 		gameInputIsActive = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(gameInputIsActive), game);
+
+
 
 
 		instance = this;
