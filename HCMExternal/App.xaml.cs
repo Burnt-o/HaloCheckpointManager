@@ -30,7 +30,7 @@ namespace HCMExternal
 #if HCM_DEBUG
                 .MinimumLevel.Verbose().WriteTo.Debug()
 #endif
-                .MinimumLevel.Verbose().WriteTo.File($"HCMExternal_Logging_{timestamp}.txt",
+                .MinimumLevel.Verbose().WriteTo.File($"Logs\\HCMExternal_Logging_{timestamp}.txt",
                 flushToDiskInterval: TimeSpan.FromSeconds(3))
                 .CreateLogger();
             Log.Information("Logging started");
@@ -155,6 +155,7 @@ namespace HCMExternal
         //Required folders that HCM needs to be able to run. We can try to create these if they don't exist already.
         private static readonly string[] _requiredFolders =
             {
+            @"Logs",
             @"Saves",
             @"Saves\Halo 1",
             @"Saves\Halo 2",

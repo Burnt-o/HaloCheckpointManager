@@ -34,7 +34,7 @@ void Logging::initConsoleLogging()
 
      SYSTEMTIME t;
      GetSystemTime(&t);
-     logFileDestination = dirPath;
+     logFileDestination = dirPath + "Logs\\";
      logFileDestination += std::format("{}_{:04}{:02}{:02}_{:02}{:02}{:02}.txt", logFileName, t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
    
 
