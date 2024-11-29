@@ -747,7 +747,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <Image Include="Waypoint3DReticle.png" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="Beatrice.wav" />
     <Media Include="GeigerClick1.wav" />
     <Media Include="GeigerClick2.wav" />
     <Media Include="GeigerClickA.wav" />

@@ -1552,8 +1552,5 @@
     <Media Include="GeigerClickB.wav">
       <Filter>Resource Files</Filter>
     </Media>
-    <Media Include="Beatrice.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
   </ItemGroup>
 </Project>

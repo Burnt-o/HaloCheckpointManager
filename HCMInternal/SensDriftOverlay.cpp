@@ -100,10 +100,9 @@ private:
 	std::shared_ptr<RenderEvent> mRenderEvent;
 
 	std::unique_ptr<ScopedCallback<ActionEvent>> mRevertEventCallback; // only not null when running
-	std::optional<std::shared_ptr<ActionEvent>> mRevertEvent; 
 
 	ScopedCallback<ActionEvent> mResetCountEventCallback;
-
+	ScopedCallback<ActionEvent> editPlayerViewAngleSetCallback;
 
 	ScopedCallback<ToggleEvent> sensDriftOverlayToggleEventCallback;
 	ScopedCallback<eventpp::CallbackList<void(const MCCState&)>> mGameStateChangedCallback;
@@ -399,7 +398,7 @@ private:
 
 	void resetCounts()
 	{
-		// reset counts (atomically)
+		// reset counts 
 		overDotCount = LeftRightCounter();
 		subpixelDriftCount = LeftRightCounter();
 		subpixelDriftAngle = 0;
@@ -461,7 +460,8 @@ public:
 		mRenderEvent(dicon.Resolve<RenderEvent>()),
 		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
 		mResetCountEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->sensResetCountsEvent, [this]() { resetCounts();  }),
-		blockGameInputOptionalWeak(dicon.Resolve<ControlServiceContainer>().lock()->blockGameInputService)
+		blockGameInputOptionalWeak(dicon.Resolve<ControlServiceContainer>().lock()->blockGameInputService),
+		editPlayerViewAngleSetCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->editPlayerViewAngleSet, [this]() { resetCounts(); })
 	{
 		try
 		{

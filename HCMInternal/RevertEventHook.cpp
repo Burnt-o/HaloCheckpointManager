@@ -37,8 +37,11 @@ private:
 
 public:
 	RevertEventHookTemplated(GameState game, IDIContainer& dicon)
+		:
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>().lock()),
+		revertEvent(std::make_shared<ObservedEvent<ActionEvent>>([this]() {onRevertEventCallbackListChanged(); }))
 	{
-		if (instance) throw HCMInitException("Cannot have more than one GameTickEventHookTemplated per game");
+		if (instance) throw HCMInitException("Cannot have more than one RevertEventHookTemplated per game");
 
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		auto revertFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(revertFunction), game);
