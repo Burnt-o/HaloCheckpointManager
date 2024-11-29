@@ -65,12 +65,12 @@ HotkeyManager::HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::sha
 
 }
 
-HotkeyManager::~HotkeyManager()
+void HotkeyManager::saveHotkeysToFile()
 {
-	PLOG_VERBOSE << "~HotkeyManager() serialising " << mHotkeyDefinitions->getAllRebindableHotkeys().size() << " hotkeys";
+	PLOG_VERBOSE << "HotkeyManager serialising " << mHotkeyDefinitions->getAllRebindableHotkeys().size() << " hotkeys";
 	// serialise hotkeys
 	pugi::xml_document hotkeyConfig;
-	
+
 	for (auto& [hotkeyEnum, hotkey] : mHotkeyDefinitions->getAllRebindableHotkeys())
 	{
 		HotkeyManagerImpl::serialiseHotkey(hotkey, hotkeyConfig);
@@ -89,6 +89,12 @@ HotkeyManager::~HotkeyManager()
 	{
 		PLOG_INFO << "Successfully saved hotkey file!";
 	}
+}
+
+HotkeyManager::~HotkeyManager()
+{
+	PLOG_VERBOSE << "~HotkeyManager";
+	saveHotkeysToFile();
 
 	for (auto& thread : mFireEventThreads)
 	{

@@ -60,6 +60,14 @@ void HotkeyRendererImpl::renderHotkeyRebindDialog(SimpleMath::Vector2 screenSize
 
 		// close if done
 		if (hotkeyRebindDialog->isFinished())
+		{
+			PLOG_DEBUG << "closing Hotkey Rebind Dialog";
 			hotkeyRebindDialog.reset();
+			hotkeyManager->saveHotkeysToFile();
+
+		}
+			
+
+
 	}
 }

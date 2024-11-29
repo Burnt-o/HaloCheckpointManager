@@ -26,5 +26,7 @@ public:
 	HotkeyManager(std::shared_ptr<RenderEvent> pRenderEvent, std::shared_ptr<HotkeyDefinitions> pHotkeyDefinitions, std::shared_ptr<IMessagesGUI> messagesGUI, std::string dirPath, std::shared_ptr<TokenSharedRequestProvider> hotkeyDisabler);
 	~HotkeyManager();
 
+	void saveHotkeysToFile();
+
 };
 
