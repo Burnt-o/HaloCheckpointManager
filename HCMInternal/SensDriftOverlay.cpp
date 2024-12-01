@@ -366,7 +366,10 @@ private:
 				ss << "  Left: " << subpixelDriftCount.leftCount << std::endl;
 				ss << "  Right: " << subpixelDriftCount.rightCount << std::endl;
 				ss << "  LeftTotal: " << subpixelDriftCount.totalLeftCount << std::endl;
-				ss << "  Angle: " << subpixelDriftAngle << std::endl;
+				if (settings->sensSubpixelDriftSciNotationToggle->GetValue())
+					ss << "  Angle: " << subpixelDriftAngle << std::endl;
+				else
+					ss << "  Angle: " << std::fixed << std::setprecision(10) << subpixelDriftAngle << std::endl;
 			}
 
 			// render it
@@ -390,12 +393,10 @@ private:
 			if (lastOverDot != 0 && settings->sensSoundOnOverDotToggle->GetValue())
 			{
 				playGeigerCounterSound(false);
-				//playGeigerCounterSound(false, abs(lastOverDot), lastOverDot > 0);
 			}
 			if (lastSubpixelDrift != 0 && settings->sensSoundOnSubpixelDriftToggle->GetValue())
 			{
 				playGeigerCounterSound(true);
-				//playGeigerCounterSound(true, abs(lastSubpixelDrift), lastSubpixelDrift > 0);
 			}
 
 			lastOverDot = 0;

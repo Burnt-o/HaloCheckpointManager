@@ -1838,6 +1838,16 @@ public:
 			nameof(sensSoundOnSubpixelDriftToggle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> sensSubpixelDriftSciNotationToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(sensSubpixelDriftSciNotationToggle)
+		);
+
+
+	
+
 	std::shared_ptr<BinarySetting<bool>> sensResetCountOnRevertToggle = std::make_shared<BinarySetting<bool>>
 		(
 			true,
@@ -1895,6 +1905,7 @@ public:
 			sensSubpixelDriftToggle,
 			sensMessageOnSubpixelDriftToggle,
 			sensSoundOnSubpixelDriftToggle,
+			sensSubpixelDriftSciNotationToggle,
 			sensResetCountOnRevertToggle,
 			sensAnchorCorner,
 			sensScreenOffset,

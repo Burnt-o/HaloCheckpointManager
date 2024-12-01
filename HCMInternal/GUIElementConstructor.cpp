@@ -1411,12 +1411,15 @@ private:
 							createNestedElement(GUIElementEnum::sensSubpixelDriftToggle),
 							createNestedElement(GUIElementEnum::sensMessageOnSubpixelDriftToggle),
 							createNestedElement(GUIElementEnum::sensSoundOnSubpixelDriftToggle),
+							createNestedElement(GUIElementEnum::sensSubpixelDriftSciNotationToggle),
 							createNestedElement(GUIElementEnum::sensResetCountAction),
 							createNestedElement(GUIElementEnum::sensResetCountOnRevertToggle),
 							createNestedElement(GUIElementEnum::sensAnchorCorner),
 							createNestedElement(GUIElementEnum::sensScreenOffset),
 							createNestedElement(GUIElementEnum::sensFontSize),
 							createNestedElement(GUIElementEnum::sensFontColour),
+
+							
 						}));
 
 
@@ -1447,6 +1450,10 @@ private:
 				case GUIElementEnum::sensSoundOnSubpixelDriftToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 						(game, ToolTipCollection("Play a beeping sound when subpixel drift occurs."), std::nullopt, "Play annoying sound on Subpixel Drift", settings->sensSoundOnSubpixelDriftToggle));
+
+				case GUIElementEnum::sensSubpixelDriftSciNotationToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Whether to use scientific notation like \"1.59e-6\" vs \"0.00000159\"."), std::nullopt, "Display subpixel drift angle in scientific notation", settings->sensSubpixelDriftSciNotationToggle));
 
 
 				case GUIElementEnum::sensResetCountAction:
