@@ -65,26 +65,60 @@ long cardinal_float_distance(float a, float b)
 }
 
 // if no subpixel drift were to occur (one dot per frame)
-float calc_perfect_new_viewangle(float currentSensitivity, float previousViewAngle, int dotCount)
+float calc_perfect_viewangle_delta(float currentSensitivity, int dotCount)
 {
-	// order matters
-	float increment = currentSensitivity * 0.02222222276f;
+	// order of operations matters here
+	float increment = currentSensitivity;
+	increment *= 0.02222222276;
 	increment *= 3.141592741f;
 	increment /= 180.f;
 
-	// flip sign if appropiate
-	increment *= (dotCount > 0) ? -1.f : 1.f; 
+	float va_delta = 0;
 
-	float outViewAngle = previousViewAngle;
-
-	for (int i = 0; i < abs(dotCount); i++)
+	if (dotCount > 0)
 	{
-		outViewAngle += increment;
+		for (int i = 0; i < abs(dotCount); i++)
+		{
+			va_delta += increment;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < abs(dotCount); i++)
+		{
+			va_delta -= increment;
+		}
 	}
 
-	return outViewAngle;
+
+	return va_delta;
 
 
+}
+
+int floatToInt(float in)
+{
+	return *reinterpret_cast<int*>(&in);
+}
+
+
+// modulo a number with 2pi (6.28). In the way MCC does it so the math matches
+float MCCModTwoPi(float in)
+{
+	constexpr float twoPiRadians = 6.283185482f;
+	constexpr float negtwoPiRadians = -6.283185482f;
+
+	while (in < 0.f)
+	{
+		in += twoPiRadians;
+	}
+
+	while (in > twoPiRadians)
+	{
+		in += negtwoPiRadians;
+	}
+
+	return in;
 }
 
 template<GameState::Value gameT>
@@ -192,7 +226,13 @@ private:
 
 
 			// drift only possible if more than one dot (in either direction) in a frame.
-			if (abs(queuedDots) > 1)
+
+				int overDotThreshold = 1;
+#ifdef HCM_DEBUG
+				overDotThreshold = 0;
+#endif
+
+			if (abs(queuedDots) > overDotThreshold)
 			{
 				LOG_ONCE(PLOG_DEBUG << "Overdot event!");
 				// overdot calculations
@@ -218,8 +258,11 @@ private:
 
 					auto previousViewAngle = getPlayerViewAngle->getPlayerViewAngle().x;
 
-					auto perfectNewAngle = calc_perfect_new_viewangle(sensitivitySetting, previousViewAngle, queuedDots);
-					float actualNewAngle = previousViewAngle - observedAngleDelta; // yeah it's actually a subtraction - right dots are positive. left angle increase is positive.
+
+					float perfect_viewangle_delta = calc_perfect_viewangle_delta(sensitivitySetting, queuedDots);
+
+					auto perfectNewAngle = MCCModTwoPi(previousViewAngle - perfect_viewangle_delta);
+					float actualNewAngle = MCCModTwoPi(previousViewAngle - observedAngleDelta); // yeah it's actually a subtraction - right dots are positive. left angle increase is positive.
 
 
 
@@ -230,9 +273,11 @@ private:
 						instance->lastSubpixelDrift = subpixelDistance;
 
 #ifdef HCM_DEBUG
-						PLOG_DEBUG << "observedAngleDelta " << observedAngleDelta;
-						PLOG_DEBUG << "perfectNewAngle " << perfectNewAngle;
-						PLOG_DEBUG << "actualNewAngle " << actualNewAngle;
+						PLOG_DEBUG << "queuedDots: " << queuedDots;
+						PLOG_DEBUG << "observedAngleDelta " <<  shortestStringRepresentation(observedAngleDelta);
+						PLOG_DEBUG << "perfect_viewangle_delta " << shortestStringRepresentation(perfect_viewangle_delta);
+						PLOG_DEBUG << "perfectNewAngle " << shortestStringRepresentation(perfectNewAngle) << "(" << floatToInt(perfectNewAngle) << ")";
+						PLOG_DEBUG << "actualNewAngle " << shortestStringRepresentation(actualNewAngle) << "(" << floatToInt(actualNewAngle) << ")";
 						PLOG_DEBUG << "subpixelDistance " << subpixelDistance;
 #endif
 
