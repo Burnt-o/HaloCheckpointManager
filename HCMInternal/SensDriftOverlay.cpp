@@ -229,10 +229,12 @@ private:
 						auto subpixelDistance = cardinal_float_distance(perfectNewAngle, actualNewAngle);
 						instance->lastSubpixelDrift = subpixelDistance;
 
+#ifdef HCM_DEBUG
 						PLOG_DEBUG << "observedAngleDelta " << observedAngleDelta;
 						PLOG_DEBUG << "perfectNewAngle " << perfectNewAngle;
 						PLOG_DEBUG << "actualNewAngle " << actualNewAngle;
 						PLOG_DEBUG << "subpixelDistance " << subpixelDistance;
+#endif
 
 						instance->subpixelDriftCount.totalLeftCount += subpixelDistance;
 						// directions here are flipped from above; left overdots give right subpixel drift
