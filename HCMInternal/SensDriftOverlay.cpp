@@ -21,6 +21,12 @@
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 
+#pragma float_control(push)
+#pragma float_control(precise)
+
+// Without above pragmas, implicit conversions to double can happen during certain float arithmetic
+
+
 
 // helper funcs
 
@@ -64,43 +70,6 @@ long cardinal_float_distance(float a, float b)
 	return be - ae;
 }
 
-// if no subpixel drift were to occur (one dot per frame)
-float calc_perfect_viewangle_delta(float currentSensitivity, int dotCount)
-{
-	// order of operations matters here
-	float increment = currentSensitivity;
-	increment *= 0.02222222276;
-	increment *= 3.141592741f;
-	increment /= 180.f;
-
-	float va_delta = 0;
-
-	if (dotCount > 0)
-	{
-		for (int i = 0; i < abs(dotCount); i++)
-		{
-			va_delta += increment;
-		}
-	}
-	else
-	{
-		for (int i = 0; i < abs(dotCount); i++)
-		{
-			va_delta -= increment;
-		}
-	}
-
-
-	return va_delta;
-
-
-}
-
-int floatToInt(float in)
-{
-	return *reinterpret_cast<int*>(&in);
-}
-
 
 // modulo a number with 2pi (6.28). In the way MCC does it so the math matches
 float MCCModTwoPi(float in)
@@ -120,6 +89,49 @@ float MCCModTwoPi(float in)
 
 	return in;
 }
+
+
+
+
+// if no subpixel drift were to occur (one dot per frame)
+ float calc_perfect_viewangle(float currentSensitivity, float prevViewAngle, int dotCount)
+{
+	// order of operations matters here
+	float increment = currentSensitivity;
+	increment *= 0.02222222276f;
+	increment *= 3.141592741f;
+	increment /= 180.f;
+
+
+	float newViewAngle = prevViewAngle;
+	if (dotCount > 0)
+	{
+		for (int i = 0; i < abs(dotCount); i++)
+		{
+			newViewAngle = MCCModTwoPi(newViewAngle - increment);
+		}
+	}
+	else
+	{
+		for (int i = 0; i < abs(dotCount); i++)
+		{
+			newViewAngle = MCCModTwoPi(newViewAngle + increment);
+		}
+	}
+
+
+	return newViewAngle;
+
+
+}
+
+
+int floatToInt(float in)
+{
+	return *reinterpret_cast<int*>(&in);
+}
+
+
 
 template<GameState::Value gameT>
 class SensDriftOverlayImpl : public SensDriftOverlayUntemplated
@@ -189,7 +201,7 @@ private:
 	static void mouseMovementHookFunction(SafetyHookContext& ctx)
 	{
 
-		if (!instance) PLOG_FATAL << "null instance!";
+		if (!instance) { PLOG_FATAL << "null instance!"; return; };
 
 		ScopedAtomicBool lock(mouseMovementHookRunningMutex);
 
@@ -259,11 +271,18 @@ private:
 					auto previousViewAngle = getPlayerViewAngle->getPlayerViewAngle().x;
 
 
-					float perfect_viewangle_delta = calc_perfect_viewangle_delta(sensitivitySetting, queuedDots);
-
-					auto perfectNewAngle = MCCModTwoPi(previousViewAngle - perfect_viewangle_delta);
+					float perfectNewAngle = calc_perfect_viewangle(sensitivitySetting, previousViewAngle, queuedDots);
 					float actualNewAngle = MCCModTwoPi(previousViewAngle - observedAngleDelta); // yeah it's actually a subtraction - right dots are positive. left angle increase is positive.
 
+
+					if ((previousViewAngle - observedAngleDelta) != actualNewAngle)
+					{
+#ifdef HCM_DEBUG
+						// I haven't got the math correct for wraparounds atm so ignoring this case..
+						PLOG_DEBUG << "Wraparound occured";
+#endif
+						return;
+					}
 
 
 					if (perfectNewAngle != actualNewAngle)
@@ -275,7 +294,6 @@ private:
 #ifdef HCM_DEBUG
 						PLOG_DEBUG << "queuedDots: " << queuedDots;
 						PLOG_DEBUG << "observedAngleDelta " <<  shortestStringRepresentation(observedAngleDelta);
-						PLOG_DEBUG << "perfect_viewangle_delta " << shortestStringRepresentation(perfect_viewangle_delta);
 						PLOG_DEBUG << "perfectNewAngle " << shortestStringRepresentation(perfectNewAngle) << "(" << floatToInt(perfectNewAngle) << ")";
 						PLOG_DEBUG << "actualNewAngle " << shortestStringRepresentation(actualNewAngle) << "(" << floatToInt(actualNewAngle) << ")";
 						PLOG_DEBUG << "subpixelDistance " << subpixelDistance;
@@ -290,7 +308,7 @@ private:
 
 
 
-						instance->subpixelDriftAngle += (double)actualNewAngle - (double)perfectNewAngle;
+						instance->subpixelDriftAngle -= (double)perfectNewAngle - (double)actualNewAngle;
 					}
 				}
 			}
@@ -580,3 +598,6 @@ SensDriftOverlay::SensDriftOverlay(GameState game, IDIContainer& dicon)
 }
 
 SensDriftOverlay::~SensDriftOverlay() = default;
+
+
+#pragma float_control(pop)
