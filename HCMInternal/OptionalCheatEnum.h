@@ -106,7 +106,8 @@ SoundClassGain,\
 ChangeOOBBackground,\
 DisableFog,\
 SensDriftOverlay,\
-RevertEventHook
+RevertEventHook,\
+ForceMissionRestart
 
 
 enum class OptionalCheatEnum {

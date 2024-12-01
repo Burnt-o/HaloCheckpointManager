@@ -12,6 +12,7 @@
 
 
 	<!--Supported HCM Versions. User will be informed via message that a newer version is available, if the current HCM version isn't one of these.-->
+	<!--IMPORTANT! Must update in both External AND Internal xmls-->
 	<SupportedHCMVersions>
 		<Entry>3.1.4.0</Entry>
 		<Entry>3.1.3.0</Entry>
@@ -1821,6 +1822,58 @@
 
 	</VersionedEntry>
 	<!--#endregion forceCoreLoadFlag-->
+
+	<!-- #region forceMissionRestartFlag-->
+	<VersionedEntry Name="forceMissionRestartFlag" Type="MultilevelPointer::ModuleOffset">
+
+		<Version Version="1.3385.0.0" Game="Halo1">
+			<Module>halo1.dll</Module>
+			<Offsets>
+				<Offset>0x2B23700</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3385.0.0" Game="Halo2">
+			<Module>halo2.dll</Module>
+			<Offsets>
+				<Offset>0xE6FD7C</Offset>
+			</Offsets>
+		</Version>
+
+
+		<Version Version="1.3385.0.0" Game="Halo3">
+			<Module>halo3.dll</Module>
+			<Offsets>
+				<Offset>0x20B86A8</Offset>
+			</Offsets>
+		</Version>
+
+
+		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x20FF6B8</Offset>
+			</Offsets>
+		</Version>
+
+		<!--inconsistent-->
+		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263eb28</Offset>
+			</Offsets>
+		</Version>
+
+		<!--inconsistent-->
+		<Version Version="1.3385.0.0" Game="Halo4">
+			<Module>halo4.dll</Module>
+			<Offsets>
+				<Offset>0x293DE28</Offset>
+			</Offsets>
+		</Version>
+
+	</VersionedEntry>
+	<!-- #endregion forceMissionRestartFlag-->
 
 	<!-- #region currentLevelCode-->
 	<VersionedEntry Name="currentLevelCode" Type="MultilevelPointer::ModuleOffset">

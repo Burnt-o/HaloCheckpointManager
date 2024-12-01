@@ -116,6 +116,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 	{OptionalCheatEnum::ForceFutureCheckpoint, OptionalCheatEnum::ForceCheckpoint, OptionalCheatEnum::GameTickEventHook}
 	},
 
+	{ GUIElementEnum::forceMissionRestartGUI,
+	{OptionalCheatEnum::ForceMissionRestart}
+	},
+
 	
 	{GUIElementEnum::speedhackGUI,
 			{OptionalCheatEnum::Speedhack} 

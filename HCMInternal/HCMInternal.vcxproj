@@ -248,6 +248,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
+    <ClInclude Include="ForceMissionRestart.h" />
     <ClInclude Include="FreeCameraFOVOverride.h" />
     <ClInclude Include="GetActiveStructureDesignTags.h" />
     <ClInclude Include="GetCurrentBSPSet.h" />

@@ -69,6 +69,7 @@
 		((forceFutureCheckpointToggle, (ALL_SUPPORTED_GAMES)))\
 		((forceFutureCheckpointTick, (ALL_SUPPORTED_GAMES)))\
 		((forceFutureCheckpointFill, (ALL_SUPPORTED_GAMES)))\
+	((forceMissionRestartGUI, (Halo1, Halo2, Halo3, Halo3ODST)))\
 ((cheatsHeadingGUI, (ALL_SUPPORTED_GAMES)))\
 	((speedhackGUI, (ALL_SUPPORTED_GAMES)))\
 	((invulnGUI, (ALL_SUPPORTED_GAMES)))\

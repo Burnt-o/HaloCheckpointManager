@@ -1048,6 +1048,9 @@
     <ClInclude Include="Beeper.h">
       <Filter>Services</Filter>
     </ClInclude>
+    <ClInclude Include="ForceMissionRestart.h">
+      <Filter>Services\OptionalCheats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

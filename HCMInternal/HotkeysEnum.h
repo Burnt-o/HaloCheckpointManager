@@ -15,6 +15,7 @@ injectCheckpoint,\
 dumpCheckpoint,\
 injectCore,\
 dumpCore,\
+forceMissionRestart,\
 speedhack,\
 invuln,\
 aiFreeze,\

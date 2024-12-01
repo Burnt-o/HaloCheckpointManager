@@ -239,6 +239,8 @@ private:
 							createNestedElement(GUIElementEnum::dumpCoreSettingsSubheading),
 							createNestedElement(GUIElementEnum::naturalCheckpointDisableGUI),
 							createNestedElement(GUIElementEnum::forceFutureCheckpointGUI),
+							createNestedElement(GUIElementEnum::forceMissionRestartGUI),
+							
 						}));
 
 				case GUIElementEnum::forceCheckpointGUI:
@@ -392,7 +394,10 @@ private:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
 						(game, ToolTipCollection("Sets the tick for 5 seconds from now, giving you enough time to communicate with your coop partner which tick to use"), std::nullopt, "Set for 5s from now", settings->forceFutureCheckpointFillEvent));
 
-					
+				case GUIElementEnum::forceMissionRestartGUI:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+						(game, ToolTipCollection("Forces the mission to restart, same as doing it from the pause menu"), RebindableHotkeyEnum::forceMissionRestart, "Force Mission Restart", settings->forceMissionRestartEvent));
+
 
 			case GUIElementEnum::cheatsHeadingGUI:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIHeading>

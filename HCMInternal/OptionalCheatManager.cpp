@@ -103,6 +103,7 @@
 #include "SoundClassGain.h"
 #include "ChangeOOBBackground.h"
 #include "DisableFog.h"
+#include "ForceMissionRestart.h"
 
 
 #include "DIContainer.h"

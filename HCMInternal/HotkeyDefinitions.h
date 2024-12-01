@@ -134,6 +134,10 @@ private:
 		mSettings->dumpCoreEvent,
 		vsk{}),
 
+				initEventOnPressHotkey(forceMissionRestart,
+		mSettings->forceMissionRestartEvent,
+		vsk{}),
+
 		initEventOnPressHotkey(speedhack,
 		mSettings->speedhackHotkeyEvent,
 		vsk{{ ImGuiKey_F4 }}),
