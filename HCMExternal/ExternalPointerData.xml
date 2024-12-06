@@ -2,9 +2,9 @@
 
 <Root>
 	<!--If current HCM version isn't one of these, the user will be prompted that an update is available-->
+	<!--IMPORTANT! Must update in both External AND Internal xmls-->
 	<LatestHCMVersions>
-		<Entry>3.1.3.0</Entry>
-		<Entry>3.1.2.0</Entry>
+		<Entry>3.1.5.0</Entry>
 	</LatestHCMVersions>
 
 	<!--If the current HCM is one of these, HCM will refuse to start and the user will be prompted to update-->

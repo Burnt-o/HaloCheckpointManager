@@ -1,8 +1,3 @@
-## 3.1.5 TODO: 
-* Folderize crash dumps  
-* make mission restart feature use game engine virtual funcs
-* Settings to serialise on change instead of on-shutdown
-
 
 ## 3.1.6 TODO:
 * Finish shield input printer.
@@ -18,6 +13,7 @@
 * Fix modal dialogs preventing alt tabs
 * Fix coop issues (display info doesn't work according to harc) - this requires a larger rework of how we handle player data (see code cleanup)
 * Fix GUIElement height calculation issues (eg freecamera simple/advanced subheadings cause the gui to freak out). There's gotta be a better structural solution than the manual calculation I do rn? Need to read the imgui docs more lol. Will probably need to rework how my "group" GUI elements work.
+* Settings don't serialise on forceful shutdown or crash.
 
 ## Features to implement (eventually):
 * Investigate project cartographer support. This would require a LARGE rework of a lot of code.
