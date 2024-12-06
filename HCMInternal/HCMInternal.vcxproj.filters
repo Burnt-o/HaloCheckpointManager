@@ -856,9 +856,6 @@
     <ClInclude Include="TextureResource.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="EngineCommand.h">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClInclude>
     <ClInclude Include="CommandConsoleManager.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
@@ -1042,11 +1039,17 @@
     <ClInclude Include="Beeper.h">
       <Filter>Services</Filter>
     </ClInclude>
-    <ClInclude Include="ForceMissionRestart.h">
-      <Filter>Services\OptionalCheats</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngineDetail.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ForceMissionRestart.h">
+      <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngineFunctions.h">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1446,9 +1449,6 @@
     <ClCompile Include="TriggerModel.cpp">
       <Filter>Services\OptionalCheats\Implementations\3D\Trigger</Filter>
     </ClCompile>
-    <ClCompile Include="EngineCommand.cpp">
-      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
-    </ClCompile>
     <ClCompile Include="CommandConsoleManager.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
@@ -1489,6 +1489,12 @@
       <Filter>Services</Filter>
     </ClCompile>
     <ClCompile Include="RevertEventHook.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngineDetail.cpp">
+      <Filter>Services\OptionalCheats\Implementations\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngineFunctions.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
   </ItemGroup>

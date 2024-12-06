@@ -250,6 +250,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
     <ClInclude Include="ForceMissionRestart.h" />
     <ClInclude Include="FreeCameraFOVOverride.h" />
+    <ClInclude Include="GameEngineFunctions.h" />
+    <ClInclude Include="GameEngineDetail.h" />
     <ClInclude Include="GetActiveStructureDesignTags.h" />
     <ClInclude Include="GetCurrentBSPSet.h" />
     <ClInclude Include="GetCurrentZoneSet.h" />
@@ -398,7 +400,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="CameraTransformer.h" />
     <ClInclude Include="GameCameraData.h" />
     <ClInclude Include="Conduit_ITCFont.h" />
-    <ClInclude Include="EngineCommand.h" />
     <ClInclude Include="ControlServiceContainer.h" />
     <ClInclude Include="LinearSmoother.h" />
     <ClInclude Include="DifficultyEnum.h" />
@@ -556,8 +557,9 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />
     <ClCompile Include="DisableFog.cpp" />
-    <ClCompile Include="EngineCommand.cpp" />
     <ClCompile Include="FreeCameraFOVOverride.cpp" />
+    <ClCompile Include="GameEngineDetail.cpp" />
+    <ClCompile Include="GameEngineFunctions.cpp" />
     <ClCompile Include="GetActiveStructureDesignTags.cpp" />
     <ClCompile Include="GetCurrentBSPSet.cpp" />
     <ClCompile Include="GetCurrentZoneSet.cpp" />

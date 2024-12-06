@@ -18,8 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		README.md = README.md
-		TODO.txt = TODO.txt
 		updateVersionInfo.ps1 = updateVersionInfo.ps1
+		TODO.md = TODO.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HCMSpeedhack", "HCMSpeedhack\HCMSpeedhack.vcxproj", "{BFF1240A-449C-44A1-BEBB-F95AB31FC1E6}"

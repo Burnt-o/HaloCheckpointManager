@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CommandConsoleManager.h"
-#include "EngineCommand.h"
+
 
 #include "IMCCStateHook.h"
 #include "IMessagesGUI.h"
@@ -13,6 +13,7 @@
 #include "IMakeOrGetCheat.h"
 #include "CommandConsoleGUI.h"
 #include "HaloScriptOutputHookEvent.h"
+#include "GameEngineFunctions.h"
 
 class CommandConsoleManager::CommandConsoleManagerImpl
 {
@@ -169,7 +170,7 @@ private:
 public:
 	CommandConsoleManagerImpl(GameState game, IDIContainer& dicon)
 		: mGame(game),
-		commandConsole(std::make_unique<CommandConsoleGUI>(resolveDependentCheat(EngineCommand), dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandFontSize->GetValue())),
+		commandConsole(std::make_unique<CommandConsoleGUI>(resolveDependentCheat(GameEngineFunctions), dicon.Resolve<SettingsStateAndEvents>().lock()->consoleCommandFontSize->GetValue())),
 		commandConsoleHotkeyEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->commandConsoleHotkeyEvent, [this]() { onCommandConsoleHotkeyEvent(); }),
 		commandConsoleExecuteBufferEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->commandConsoleExecuteBufferEvent, [this]() { commandConsole->execute(false); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),

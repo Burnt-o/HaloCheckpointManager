@@ -6900,6 +6900,41 @@
 		</Version>
 	</VersionedEntry>
 
+	<!--
+	based on WinterSquires work on AlphaRing
+	https://github.com/WinterSquire/AlphaRing/blob/1ac8f1156c95db9ce70d2f9dd3ffab89827c5b19/src/mcc/CGameEngine.h#L48
+	but squeezed into my dynamic struct system so I can account for different MCC versions possibly changing the layout.
+	-->
+	<VersionedEntry Name="gameEngineCommonFunctionTableFields" Type="DynStructOffsetInfo">
+		<Version Version="1.3385.0.0" ProcessType="Steam">
+			<free>0x0</free>
+			<render_init>0x8</render_init>
+			<game_start>0x10</game_start>
+			<set_event>0x18</set_event>
+			<execute_command>0x48</execute_command>
+		</Version>
+		<Version Version="1.3385.0.0" ProcessType="WinStore">
+			<free>0x0</free>
+			<render_init>0x8</render_init>
+			<game_start>0x10</game_start>
+			<set_event>0x18</set_event>
+			<execute_command>0x48</execute_command>
+		</Version>
+
+	</VersionedEntry>
+	
+		<VersionedEntry Name="gameEngineFunctionTablePointer" Type="MultilevelPointer::Derived">
+			<Version Version="All">
+				<Base>gameEnginePointer</Base>
+				<IndexedOffsetOverride>
+					<Index>2</Index>
+					<Override>0</Override>
+				</IndexedOffsetOverride>
+			</Version>
+	</VersionedEntry>
+
+
+
 	<VersionedEntry Name="commandOutputStringFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.2448.0.0" Game="Halo1">
 			<Module>halo1.dll</Module>

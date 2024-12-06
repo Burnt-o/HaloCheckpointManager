@@ -34,6 +34,7 @@
 * Unmacro the OptionalCheatManager/HotkeyManager shennanigans. That code is seriously bad. 
 	* Seriously just remove any macros more complicated than a single line. BOOST_PP shit all needs to go.
 	* It makes code impossible to read or edit, all for the "benefit" of saving me having to copy paste a few lines every time I add a new feature.
+	* We can templateify the enumToType lookup
 * Folderize source files in a sensible hierarchy instead of just using vstudio filters. This will make the github repo easier to read too. 
 * Add a "Presenter" layer between OptionalCheats and SettingsStateAndEvents. Right now OC's are tightly coupled to setting events (ie toggling a functionality on a bool setting switching state via the valueChanged event). This is poor design and makes it impossible for anyone else to reuse my code.
 	* Instead OC's should expose all their functionality in their header files. "Presenter" service should subscribe to the events, and will then call the appropiate functionality in the OC.
@@ -62,12 +63,14 @@
 	* Settings GetValue should not be used to set value (unreference, make seperate set value method)
 	* Cleanup how GetValue vs GetValueDisplay work and who can use them (clean up unarySettings vs binarySettings)
 * Refactor how PlayerData/PlayerDatum works entirely to account for there being multiple different players
+* Add a class that's basically just a wrapper for "GetPointerToX"
+	* Or not idk
+* Rework Multilevelpointers w/ std::expected
+* Rework hook system so that hooks will not apply during loading screens
+	* Thread safety-fy with scoped mutexes in game tick calls? That can get complicated but is probably "correct"
 * TagNameTable to replace GetTagName.
 * Figure out what's broken with advanceTicks/pause scopedService. Probably our pause-override-request system is dumb af.
 * templated scenario tag struct etc etc
-* Move away from runtime pointer data system into hard coded pointer data with different compiled HCMInternals for each supported MCC version (?) 
-	* I don't know if this is a good idea or not.. Maybe if I was doing HCM all over from scratch in 2025 where MCC doesn't get updates anymore that's how I'd do it.
-		* But if it ain't broke don't fix it.
 * resolveDependentCheat macro should take game as arg
 * formatter pass
 * compiler warning pass
@@ -75,8 +78,11 @@
 * update unit tests to actually work
 * Investigate alternate build environments - I'd like to get HCM building entirely in a github Runner eventually
 	* This could lead to code-signing in the future which would stop all the Windows Defender issues people have
-
-
+* I don't like the spamming of "if (game-this-implementation-is-for == not-currently-playing) return;"
+	* Need to come up with a solution at the event/gui level so that only the appropiate game-impl gets called 
+* A lot of boilerplate shitty "features" can be merged. Ie force cp/revert/mission restart could all be GameEngine stuff, instead of duplicating game engine stuff
+	* We really need to put more faith that are optionalCheat construction won't fail cos yknow. For current patch it never will. For other patches we should start implementing more stuff anyway. And mcc is never gonna get updated again prolly
+	* That doesn't mean we should switch to a hard-coded system though. I kinda like the abstraction of the dynamic system as long as you hide the impl details from the user
 
 
 ## Low priority stuff that I would like to implement if it weren't a lot of work and I weren't really lazy

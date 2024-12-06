@@ -6,6 +6,7 @@
 #include "IMessagesGUI.h"
 #include "SettingsStateAndEvents.h"
 #include "RuntimeExceptionHandler.h"
+#include "GameEngineFunctions.h"
 class ForceMissionRestart : public IOptionalCheat
 {
 private:
@@ -18,10 +19,11 @@ private:
 	// injected services
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::weak_ptr<IMessagesGUI> messagesGUIWeak;
+	std::weak_ptr<GameEngineFunctions> gameEngineFunctionsWeak;
 	std::shared_ptr<RuntimeExceptionHandler> runtimeExceptions;
 
-	//data
-	std::shared_ptr<MultilevelPointer> forceMissionRestartFlag;
+
+
 
 	// primary event callback
 	void onForceMissionRestart()
@@ -30,13 +32,15 @@ private:
 		try
 		{
 			lockOrThrow(mccStateHookWeak, mccStateHook);
-			lockOrThrow(messagesGUIWeak, messagesGUI);
+
 			if (mccStateHook->isGameCurrentlyPlaying(mGame) == false) return;
 			PLOG_DEBUG << "Force MissionRestart called";
-
-			byte enableFlag = 1;
-			if (!forceMissionRestartFlag->writeData(&enableFlag)) throw HCMRuntimeException(std::format("Failed to write MissionRestart flag {}", MultilevelPointer::GetLastError()));
+			lockOrThrow(messagesGUIWeak, messagesGUI);
+			lockOrThrow(gameEngineFunctionsWeak, gameEngineFunctions);
+			
 			messagesGUI->addMessage("Mission restart forced.");
+			gameEngineFunctions->RestartLevel();
+
 		}
 		catch (HCMRuntimeException ex)
 		{
@@ -48,15 +52,16 @@ private:
 
 public:
 
-	ForceMissionRestart(GameState gameImpl, IDIContainer& dicon)
-		: mGame(gameImpl),
+	ForceMissionRestart(GameState game, IDIContainer& dicon)
+		: mGame(game),
 		mForceMissionRestartCallbackHandle(dicon.Resolve<SettingsStateAndEvents>().lock()->forceMissionRestartEvent, [this]() {onForceMissionRestart(); }),
 		mccStateHookWeak(dicon.Resolve<IMCCStateHook>()),
 		messagesGUIWeak(dicon.Resolve<IMessagesGUI>()),
-		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>())
+		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
+		gameEngineFunctionsWeak(resolveDependentCheat(GameEngineFunctions))
 	{
-		auto ptr = dicon.Resolve<PointerDataStore>().lock();
-		forceMissionRestartFlag = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(forceMissionRestartFlag), mGame);
+
+	
 	}
 
 	~ForceMissionRestart()

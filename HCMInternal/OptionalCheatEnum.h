@@ -30,7 +30,6 @@ AIFreeze,\
 Medusa,\
 ForceTeleport,\
 ForceLaunch,\
-EngineCommand,\
 GetObjectPhysics,\
 GetHavokComponent,\
 GetHavokAnchorPoint,\
@@ -107,7 +106,9 @@ ChangeOOBBackground,\
 DisableFog,\
 SensDriftOverlay,\
 RevertEventHook,\
-ForceMissionRestart
+ForceMissionRestart,\
+GameEngineDetail,\
+GameEngineFunctions
 
 
 enum class OptionalCheatEnum {

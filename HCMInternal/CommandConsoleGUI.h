@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "SharedRequestProvider.h"
 #include "GameState.h"
-#include "EngineCommand.h"
+#include "GameEngineFunctions.h"
 #include "UnarySetting.h"
 #include "HaloScriptOutputHookEvent.h"
 // Credit to Scales for letting me rip off his console implementation here https://github.com/Scaless/HaloTAS/blob/b9d55d2fe2aff2a1a654984d4d909b5cd14b8780/HaloTAS/MCCTAS/tas_console.h
@@ -26,7 +26,7 @@ class CommandConsoleGUI
 private:
 	std::atomic_bool renderingMutex = false;
 
-	std::shared_ptr<EngineCommand> engineCommand;
+	std::shared_ptr<GameEngineFunctions> engineCommand;
 
 	bool needToScrollOutputToBottom = false; // set true on execute() to scroll output window to bottom
 	std::optional<std::string> queuedBufferUpdate; // when manually modifying the mCommandBuffer we need to do it in the inputTextCallback; put the new value here.
@@ -62,7 +62,7 @@ public:
 	void execute(bool clearBuffer); // CommandConsoleManager sets callback to execute event that invokes this. Also called by CommandConsoleGUI if user presses enter.
 
 	CommandConsoleGUI(
-		std::shared_ptr<EngineCommand> engineCommand, 
+		std::shared_ptr<GameEngineFunctions> engineCommand, 
 		float fontSize)
 		: engineCommand(engineCommand),
 		 fontSize(fontSize)

@@ -108,7 +108,7 @@ void CommandConsoleGUI::execute(bool clearBuffer)
 	{
 		if (!bannedCommand(command))
 		{
-			engineCommand->sendEngineCommand(command);
+			engineCommand->SendCommand(command.c_str());
 		}
 		else
 		{

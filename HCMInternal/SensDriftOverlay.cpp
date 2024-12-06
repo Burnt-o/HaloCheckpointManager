@@ -25,7 +25,8 @@
 #pragma float_control(precise)
 
 // Without above pragmas, implicit conversions to double can happen during certain float arithmetic
-
+// This would cause our arithmetic to deviate from MCC's float arithmetic, which would be bad!
+// We are after all, trying to precisely measure tiny floating point rounding errors.
 
 
 // helper funcs

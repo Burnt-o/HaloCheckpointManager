@@ -22,7 +22,6 @@
 #include "GetPlayerDatum.h"
 #include "GetObjectAddress.h"
 #include "AIFreeze.h"
-#include "EngineCommand.h"
 #include "CommandConsoleManager.h"
 #include "GetCurrentDifficulty.h"
 #include "IgnoreCheckpointChecksum.h"
@@ -103,6 +102,8 @@
 #include "SoundClassGain.h"
 #include "ChangeOOBBackground.h"
 #include "DisableFog.h"
+#include "GameEngineFunctions.h"
+#include "GameEngineDetail.h"
 #include "ForceMissionRestart.h"
 
 
