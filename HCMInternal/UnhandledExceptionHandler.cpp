@@ -15,7 +15,7 @@ void UnhandledExceptionHandler::make_minidump(EXCEPTION_POINTERS* e)
 	SYSTEMTIME t;
 	GetSystemTime(&t);
 	std::string dumpFilePath = std::format(
-		"{}HCMInternal_CRASHDUMP_{:04}{:02}{:02}_{:02}{:02}{:02}.dmp",
+		"{}Logs\\HCMInternal_CRASHDUMP_{:04}{:02}{:02}_{:02}{:02}{:02}.dmp",
 		mDirPath,
 		t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
@@ -23,7 +23,15 @@ void UnhandledExceptionHandler::make_minidump(EXCEPTION_POINTERS* e)
 	auto hFile = CreateFileA(dumpFilePath.c_str(), GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
+		auto createFileError = GetLastError();
 		PLOG_FATAL << "Failed to create crash dump file at " << dumpFilePath;
+		MessageBoxA(
+			NULL,
+			std::format("HCM Internal experienced an unhandled crash. It was unable to output a crash dump file to ({}), error code: {}", dumpFilePath, createFileError).c_str(),
+			"Halo Checkpoint Manager crash (failed to crashdump)",
+			MB_OK
+		);
+
 		return;
 	}
 
