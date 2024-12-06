@@ -27,7 +27,7 @@ public:
 		initTime = ss.str();
 
 		// setup log file 
-		logFilePath = dirPath + logFileName;
+		logFilePath = dirPath + "Logs\\" + logFileName;
 		if (!fileExists(logFilePath))
 		{
 			// create the file w/ explanation
