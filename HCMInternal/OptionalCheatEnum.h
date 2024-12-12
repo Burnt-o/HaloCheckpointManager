@@ -52,6 +52,7 @@ ThirdPersonRendering,\
 BlockPlayerCharacterInput,\
 GetCurrentRNG,\
 EditPlayerViewAngle,\
+EditPlayerViewAngleID,\
 SwitchBSP,\
 GetCurrentBSP,\
 DisableScreenEffects,\

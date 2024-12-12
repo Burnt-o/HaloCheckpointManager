@@ -253,6 +253,18 @@ private:
 			mSettings->editPlayerViewAngleAdjustVertical,
 			vsk{}),
 
+			initEventOnPressHotkey(editPlayerViewAngleIDSet,
+				mSettings->editPlayerViewAngleIDSet,
+				vsk{}),
+
+			initEventOnPressHotkey(editPlayerViewAngleIDAdjustNegative,
+				mSettings->editPlayerViewAngleIDAdjustNegative,
+				vsk{}),
+
+			initEventOnPressHotkey(editPlayerViewAngleIDAdjustPositive,
+				mSettings->editPlayerViewAngleIDAdjustPositive,
+				vsk{}),
+
 		initEventOnPressHotkey(switchBSP,
 			mSettings->switchBSPEvent,
 			vsk{}),

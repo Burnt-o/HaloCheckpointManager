@@ -44,6 +44,9 @@ freeCameraAnchorFOVToObjectDistance,\
 editPlayerViewAngleSet,\
 editPlayerViewAngleAdjustHorizontal,\
 editPlayerViewAngleAdjustVertical,\
+editPlayerViewAngleIDSet,\
+editPlayerViewAngleIDAdjustNegative,\
+editPlayerViewAngleIDAdjustPositive,\
 switchBSP,\
 switchBSPSet,\
 hideHUDToggle,\

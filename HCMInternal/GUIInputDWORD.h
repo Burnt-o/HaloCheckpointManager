@@ -37,7 +37,7 @@ public:
 
 		ImGui::SetNextItemWidth(100);
 
-		if (ImGui::InputScalar(mLabelText.c_str(), ImGuiDataType_U32, &mOptionDWORD->GetValueDisplay(), NULL, NULL, "%04X"))
+		if (ImGui::InputScalar(mLabelText.c_str(), ImGuiDataType_U32, &mOptionDWORD->GetValueDisplay(), NULL, NULL, asHexadecimal ? "%04X" : NULL))
 		{
 				mOptionDWORD->UpdateValueWithInput();
 				PLOG_VERBOSE << "GUIInputDWORD firing input event, value: " << std::hex << mOptionDWORD->GetValue();

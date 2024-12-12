@@ -1507,6 +1507,7 @@ private:
 						{ 
 							createNestedElement(GUIElementEnum::hideHUDToggle),
 							createNestedElement(GUIElementEnum::editPlayerViewAngleSubheading),
+							createNestedElement(GUIElementEnum::editPlayerViewAngleIDSubheading),
 							createNestedElement(GUIElementEnum::freeCameraToggleGUI),
 							createNestedElement(GUIElementEnum::freeCameraSettingsSimpleSubheading),
 							createNestedElement(GUIElementEnum::freeCameraSettingsAdvancedSubheading),
@@ -1570,6 +1571,62 @@ private:
 					case GUIElementEnum::editPlayerViewAngleAdjustFactor:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<>>
 							(game, ToolTipCollection("Amount to nudge by when using above functions"), "Nudge Amount##editPlayerViewAngleAdjustFactor", settings->editPlayerViewAngleAdjustFactor));
+
+
+
+
+				case GUIElementEnum::editPlayerViewAngleIDSubheading:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Edit the view angle of the player"), "Edit View Angle Subpixel ID", headerChildElements
+							{
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDSet),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDInt),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDFillCurrent),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDCopy),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDPaste),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDAdjustNegative),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDAdjustPositive),
+								createNestedElement(GUIElementEnum::editPlayerViewAngleIDAdjustFactor),
+							}));
+
+					case GUIElementEnum::editPlayerViewAngleIDSet:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Set player horizontal view direction to the specified subpixel ID"), RebindableHotkeyEnum::editPlayerViewAngleIDSet, "Set subpixel to: ##editPlayerViewAngleIDSet", settings->editPlayerViewAngleIDSet));
+
+					case GUIElementEnum::editPlayerViewAngleIDInt:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIInputInt<>>
+							(game, ToolTipCollection("Rotation of the player"), "Subpixel ID: ##editPlayerViewAngleIDInt", settings->editPlayerViewAngleIDInt));
+
+
+					case GUIElementEnum::editPlayerViewAngleIDFillCurrent:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+							(game, ToolTipCollection("Fill data above with players current horizontal sub pixel"), std::nullopt, "Fill with Current##editPlayerViewAngleIDFillCurrent", settings->editPlayerViewAngleIDFillCurrent));
+
+
+					case GUIElementEnum::editPlayerViewAngleIDCopy:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+							(game, ToolTipCollection("Copy subpixel to the clipboard"), std::nullopt, "Copy to Clipboard##editPlayerViewAngleIDCopy", settings->editPlayerViewAngleIDCopy));
+
+
+					case GUIElementEnum::editPlayerViewAngleIDPaste:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<false>>
+							(game, ToolTipCollection("Paste in subpixel from the clipboard"), std::nullopt, "Paste from Clipboard##editPlayerViewAngleIDPaste", settings->editPlayerViewAngleIDPaste));
+
+
+					case GUIElementEnum::editPlayerViewAngleIDAdjustNegative:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Decrease the current subpixel ID by the number below"), RebindableHotkeyEnum::editPlayerViewAngleIDAdjustNegative, "Decrease Subpixel##editPlayerViewAngleIDAdjustNegative", settings->editPlayerViewAngleIDAdjustNegative));
+
+
+					case GUIElementEnum::editPlayerViewAngleIDAdjustPositive:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleButton<true>>
+							(game, ToolTipCollection("Increase the current subpixel ID by the number below"), RebindableHotkeyEnum::editPlayerViewAngleIDAdjustPositive, "Increase Subpixel##editPlayerViewAngleIDAdjustPositive", settings->editPlayerViewAngleIDAdjustPositive));
+
+
+					case GUIElementEnum::editPlayerViewAngleIDAdjustFactor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<>>
+							(game, ToolTipCollection("Amount to decrease/increase by when using above functions"), "Nudge Amount##editPlayerViewAngleIDAdjustFactor", settings->editPlayerViewAngleIDAdjustFactor));
+
 
 
 				case GUIElementEnum::freeCameraToggleGUI:

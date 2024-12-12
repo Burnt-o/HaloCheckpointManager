@@ -246,6 +246,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DisableBarriers.h" />
     <ClInclude Include="DisableFog.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
+    <ClInclude Include="EditPlayerViewAngleID.h" />
     <ClInclude Include="EnumClass.h" />
     <ClInclude Include="FailedOptionalCheatServicesDialog.h" />
     <ClInclude Include="ForceMissionRestart.h" />
@@ -365,6 +366,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="TriggerOverlay.h" />
     <ClInclude Include="UnarySetting.h" />
     <ClInclude Include="UpdateTriggerLastChecked.h" />
+    <ClInclude Include="ViewAngleToSubpixelID.h" />
     <ClInclude Include="WaypointList.h" />
     <ClInclude Include="Waypoint3D.h" />
     <ClInclude Include="AdvanceTicks.h" />
@@ -557,6 +559,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="CommandConsoleManager.cpp" />
     <ClCompile Include="DisableBarriers.cpp" />
     <ClCompile Include="DisableFog.cpp" />
+    <ClCompile Include="EditPlayerViewAngleID.cpp" />
     <ClCompile Include="FreeCameraFOVOverride.cpp" />
     <ClCompile Include="GameEngineDetail.cpp" />
     <ClCompile Include="GameEngineFunctions.cpp" />

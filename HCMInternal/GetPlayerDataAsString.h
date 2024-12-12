@@ -7,6 +7,7 @@
 #include "GetPlayerDatum.h"
 #include "GetPlayerViewAngle.h"
 #include "GetBipedsVehicleDatum.h"
+#include "ViewAngleToSubpixelID.h"
 
 //https://stackoverflow.com/a/43482688
 struct separate_thousands : std::numpunct<char> {
@@ -58,19 +59,11 @@ public:
 				lockOrThrow(getPlayerViewAngleIDOptionalWeak.value(), getPlayerViewAngle);
 				const auto currentViewAngle = getPlayerViewAngle->getPlayerViewAngle();
 
-
-
-				// The smallest subpixel the game will represent your view angle is 0. This is the 0th subpixel.
-				// the next smallest is 1.175494351E-38, which when reinterpreted as an int is 8388608. This is the 1st subpixel.
-				// int interpretations are just straight increments from here to 6.28f, therefore:
-				const uint32_t subpixelID = *reinterpret_cast<const uint32_t*>(&currentViewAngle.x) - 8388607;
-
 				// get thousands seperator to make number easier to read
 				auto prevLocale = ss.imbue(thousandsSeperatedLocale);
-				ss << " Subpixel ID: " << subpixelID << std::endl;
+				ss << " Subpixel ID: " << ViewAngleToSubpixelID(currentViewAngle.x) << std::endl;
 				ss.imbue(prevLocale); // pop locale
 
-				// Fun fact: the highest subpixel id (aka the count of achieveable subpixels, minus one) is 
 			}
 
 			if (getObjectPhysicsOptionalWeakPos.has_value())

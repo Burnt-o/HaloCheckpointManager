@@ -55,6 +55,7 @@
 #include "BlockPlayerCharacterInput.h"
 #include "GetCurrentRNG.h"
 #include "EditPlayerViewAngle.h"
+#include "EditPlayerViewAngleID.h"
 #include "SwitchBSP.h"
 #include "GetCurrentBSP.h"
 #include "DisableScreenEffects.h"

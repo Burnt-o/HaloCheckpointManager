@@ -392,6 +392,10 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::EditPlayerViewAngle}
 	},
 
+		{ GUIElementEnum::editPlayerViewAngleIDSubheading,
+{OptionalCheatEnum::EditPlayerViewAngleID}
+		},
+
 			{ GUIElementEnum::switchBSPGUI,
 {OptionalCheatEnum::SwitchBSP}
 	},

@@ -7,6 +7,7 @@
 #include "SkullEnum.h"
 #include "BitBoolPointer.h"
 #include "SettingsEnums.h"
+#include "ViewAngleToSubpixelID.h"
 
 class SettingsStateAndEvents
 {
@@ -89,6 +90,12 @@ public:
 	std::shared_ptr<ActionEvent> editPlayerViewAnglePaste = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> editPlayerViewAngleAdjustHorizontal = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> editPlayerViewAngleAdjustVertical = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleIDSet = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleIDFillCurrent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleIDCopy = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleIDPaste = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleIDAdjustNegative = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> editPlayerViewAngleIDAdjustPositive = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraTeleportToCameraEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraBindingsPopup = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> freeCameraUserInputCameraSetPosition = std::make_shared<ActionEvent>();
@@ -861,6 +868,22 @@ public:
 			[](float in) { return true; },
 			nameof(editPlayerViewAngleAdjustFactor)
 		);
+
+
+	std::shared_ptr<BinarySetting<int>> editPlayerViewAngleIDInt = std::make_shared<BinarySetting<int>>
+		(
+			1000000, 
+			[](int in) { return (in >= 0) && (in < ViewAngleToSubpixelID(std::numbers::pi_v<float> *2.f));  },
+			nameof(editPlayerViewAngleIDVec2)
+		);
+
+	std::shared_ptr<BinarySetting<int>> editPlayerViewAngleIDAdjustFactor = std::make_shared<BinarySetting<int>>
+		(
+			1,
+			[](int in) { return in > 0; },
+			nameof(editPlayerViewAngleIDAdjustFactor)
+		);
+
 
 
 
@@ -2051,6 +2074,8 @@ public:
 		display2DInfoOutline,
 		editPlayerViewAngleVec2,
 		editPlayerViewAngleAdjustFactor,
+		editPlayerViewAngleIDInt,
+		editPlayerViewAngleIDAdjustFactor,
 		freeCameraThirdPersonRendering,
 		freeCameraGameInputDisable,
 		//freeCameraCameraInputDisable,

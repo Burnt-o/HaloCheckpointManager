@@ -270,6 +270,15 @@
 		((editPlayerViewAngleAdjustHorizontal, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleAdjustVertical, (ALL_SUPPORTED_GAMES)))\
 		((editPlayerViewAngleAdjustFactor, (ALL_SUPPORTED_GAMES)))\
+	((editPlayerViewAngleIDSubheading, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDSet, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDInt, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDFillCurrent, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDCopy, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDPaste, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDAdjustPositive, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDAdjustNegative, (ALL_SUPPORTED_GAMES)))\
+		((editPlayerViewAngleIDAdjustFactor, (ALL_SUPPORTED_GAMES)))\
 	((freeCameraToggleGUI, (FREE_CAMERA_SUPPORT)))\
 	((freeCameraSettingsSimpleSubheading, (FREE_CAMERA_SUPPORT)))\
 	((freeCameraSettingsAdvancedSubheading, (FREE_CAMERA_SUPPORT)))\
