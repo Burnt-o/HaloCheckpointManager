@@ -251,6 +251,7 @@ private:
 	ScopedCallback<ToggleEvent> display2DInfoShowNextObjectDatumCallback;
 	ScopedCallback<ToggleEvent> display2DInfoTrackPlayerCallback;
 	ScopedCallback<ToggleEvent> display2DInfoShowPlayerViewAngleCallback;
+	ScopedCallback<ToggleEvent> display2DInfoShowPlayerViewAngleIDCallback;
 	ScopedCallback<ToggleEvent> display2DInfoShowPlayerPositionCallback;
 	ScopedCallback<ToggleEvent> display2DInfoShowPlayerVelocityCallback;
 	ScopedCallback<ToggleEvent> display2DInfoShowPlayerVelocityAbsCallback;
@@ -293,6 +294,7 @@ private:
 
 			currentlyTrackingPlayer = settings->display2DInfoTrackPlayer->GetValue();
 			getPlayerDataAsString.getPlayerViewAngleOptionalWeak = settings->display2DInfoShowPlayerViewAngle->GetValue() ? this->getPlayerViewAngleOptionalWeak : std::nullopt;
+			getPlayerDataAsString.getPlayerViewAngleIDOptionalWeak = settings->display2DInfoShowPlayerViewAngleID->GetValue() ? this->getPlayerViewAngleOptionalWeak : std::nullopt;
 			getPlayerDataAsString.getObjectPhysicsOptionalWeakPos = settings->display2DInfoShowPlayerPosition->GetValue() ? this->getObjectPhysicsOptionalWeak : std::nullopt;
 			getPlayerDataAsString.getObjectPhysicsOptionalWeakVel = settings->display2DInfoShowPlayerVelocity->GetValue() ? this->getObjectPhysicsOptionalWeak : std::nullopt;
 			getPlayerDataAsString.velocityAbsolute = settings->display2DInfoShowPlayerVelocityAbs->GetValue();
@@ -380,6 +382,7 @@ public:
 		setSettingCallback(display2DInfoShowNextObjectDatum, bool),
 		setSettingCallback(display2DInfoTrackPlayer, bool),
 		setSettingCallback(display2DInfoShowPlayerViewAngle, bool),
+		setSettingCallback(display2DInfoShowPlayerViewAngleID, bool),
 		setSettingCallback(display2DInfoShowPlayerPosition, bool),
 		setSettingCallback(display2DInfoShowPlayerVelocity, bool),
 		setSettingCallback(display2DInfoShowPlayerVelocityAbs, bool),

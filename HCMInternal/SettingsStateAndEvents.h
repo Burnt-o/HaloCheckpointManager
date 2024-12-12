@@ -643,6 +643,13 @@ public:
 			nameof(display2DInfoShowPlayerViewAngle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> display2DInfoShowPlayerViewAngleID = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(display2DInfoShowPlayerViewAngleID)
+		);
+
 
 
 
@@ -2015,6 +2022,7 @@ public:
 		display2DInfoShowNextObjectDatum,
 		display2DInfoTrackPlayer,
 		display2DInfoShowPlayerViewAngle,
+		display2DInfoShowPlayerViewAngleID,
 		display2DInfoShowPlayerPosition,
 		display2DInfoShowPlayerVelocity,
 		display2DInfoShowPlayerVelocityAbs,

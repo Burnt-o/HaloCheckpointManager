@@ -868,6 +868,7 @@ private:
 							(game, ToolTipCollection(""), std::nullopt, "Track Player Entity", settings->display2DInfoTrackPlayer, headerChildElements
 								{
 									createNestedElement(GUIElementEnum::display2DInfoShowPlayerViewAngle),
+									createNestedElement(GUIElementEnum::display2DInfoShowPlayerViewAngleID),
 									createNestedElement(GUIElementEnum::display2DInfoShowPlayerPosition),
 									createNestedElement(GUIElementEnum::display2DInfoShowPlayerVelocity),
 									createNestedElement(GUIElementEnum::display2DInfoShowPlayerHealth),
@@ -877,6 +878,10 @@ private:
 						case GUIElementEnum::display2DInfoShowPlayerViewAngle:
 							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 								(game, ToolTipCollection(""), std::nullopt, "Show Player View Angle", settings->display2DInfoShowPlayerViewAngle));
+
+						case GUIElementEnum::display2DInfoShowPlayerViewAngleID:
+							return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+								(game, ToolTipCollection(""), std::nullopt, "Show View Angle Subpixel ID", settings->display2DInfoShowPlayerViewAngleID));
 
 
 

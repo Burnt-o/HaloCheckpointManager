@@ -147,6 +147,7 @@
 			((display2DInfoShowNextObjectDatum, (Halo2)))\
 			((display2DInfoTrackPlayer, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerViewAngle, (ALL_SUPPORTED_GAMES)))\
+				((display2DInfoShowPlayerViewAngleID, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerPosition, (ALL_SUPPORTED_GAMES)))\
 				((display2DInfoShowPlayerVelocity, (ALL_SUPPORTED_GAMES)))\
 					((display2DInfoShowPlayerVelocityAbs, (ALL_SUPPORTED_GAMES)))\

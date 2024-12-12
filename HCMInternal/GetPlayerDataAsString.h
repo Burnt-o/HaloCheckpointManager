@@ -8,6 +8,11 @@
 #include "GetPlayerViewAngle.h"
 #include "GetBipedsVehicleDatum.h"
 
+//https://stackoverflow.com/a/43482688
+struct separate_thousands : std::numpunct<char> {
+	char_type do_thousands_sep() const override { return ','; }  // separate with commas
+	string_type do_grouping() const override { return "\3"; } // groups of 3 digit
+};
 
 template <GameState::Value gameT>
 class GetPlayerDataAsString
@@ -15,7 +20,7 @@ class GetPlayerDataAsString
 private:
 	std::string dataStringA;
 	std::string dataStringB;
-
+	std::locale thousandsSeperatedLocale = std::locale(std::cout.getloc(), new separate_thousands);
 
 public:
 	std::string_view getDataString(bool useDataStringA) { return useDataStringA ? dataStringA : dataStringB; }
@@ -46,6 +51,26 @@ public:
 				lockOrThrow(getPlayerViewAngleOptionalWeak.value(), getPlayerViewAngle);
 				const auto currentViewAngle = getPlayerViewAngle->getPlayerViewAngle();
 				ss << " LookAngle: " << currentViewAngle << std::endl;
+			}
+
+			if (getPlayerViewAngleIDOptionalWeak.has_value())
+			{
+				lockOrThrow(getPlayerViewAngleIDOptionalWeak.value(), getPlayerViewAngle);
+				const auto currentViewAngle = getPlayerViewAngle->getPlayerViewAngle();
+
+
+
+				// The smallest subpixel the game will represent your view angle is 0. This is the 0th subpixel.
+				// the next smallest is 1.175494351E-38, which when reinterpreted as an int is 8388608. This is the 1st subpixel.
+				// int interpretations are just straight increments from here to 6.28f, therefore:
+				const uint32_t subpixelID = *reinterpret_cast<const uint32_t*>(&currentViewAngle.x) - 8388607;
+
+				// get thousands seperator to make number easier to read
+				auto prevLocale = ss.imbue(thousandsSeperatedLocale);
+				ss << " Subpixel ID: " << subpixelID << std::endl;
+				ss.imbue(prevLocale); // pop locale
+
+				// Fun fact: the highest subpixel id (aka the count of achieveable subpixels, minus one) is 
 			}
 
 			if (getObjectPhysicsOptionalWeakPos.has_value())
@@ -180,6 +205,7 @@ public:
 	std::optional<std::weak_ptr<GetObjectPhysics>> getObjectPhysicsOptionalWeakPos; // getObjectPhysics duplicated for control purposes (pos vs vel)
 	std::optional<std::weak_ptr<GetObjectPhysics>> getObjectPhysicsOptionalWeakVel;
 	std::optional<std::weak_ptr<GetPlayerViewAngle>> getPlayerViewAngleOptionalWeak;
+	std::optional<std::weak_ptr<GetPlayerViewAngle>> getPlayerViewAngleIDOptionalWeak;
 	std::optional<std::weak_ptr<GetObjectHealth>> getObjectHealthOptionalWeak; 
 	std::optional < std::weak_ptr<GetBipedsVehicleDatum>> getBipedsVehicleDatumOptionalWeak;
 
@@ -187,5 +213,6 @@ public:
 	bool velocityXY;
 	bool velocityXYZ;
 	bool showHealthShieldCooldown;
+
 
 };
