@@ -1846,6 +1846,12 @@ public:
 			nameof(sensSubpixelDriftSciNotationToggle)
 		);
 
+	std::shared_ptr<BinarySetting<bool>> sensCountTurnsToggle = std::make_shared<BinarySetting<bool>>
+		(
+			true,
+			[](bool in) { return true; },
+			nameof(sensCountTurnsToggle)
+		);
 
 	
 
@@ -1907,6 +1913,7 @@ public:
 			sensMessageOnSubpixelDriftToggle,
 			sensSoundOnSubpixelDriftToggle,
 			sensSubpixelDriftSciNotationToggle,
+			sensCountTurnsToggle,
 			sensResetCountOnRevertToggle,
 			sensAnchorCorner,
 			sensScreenOffset,

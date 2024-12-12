@@ -1417,6 +1417,7 @@ private:
 							createNestedElement(GUIElementEnum::sensMessageOnSubpixelDriftToggle),
 							createNestedElement(GUIElementEnum::sensSoundOnSubpixelDriftToggle),
 							createNestedElement(GUIElementEnum::sensSubpixelDriftSciNotationToggle),
+							createNestedElement(GUIElementEnum::sensCountTurnsToggle),
 							createNestedElement(GUIElementEnum::sensResetCountAction),
 							createNestedElement(GUIElementEnum::sensResetCountOnRevertToggle),
 							createNestedElement(GUIElementEnum::sensAnchorCorner),
@@ -1459,6 +1460,11 @@ private:
 				case GUIElementEnum::sensSubpixelDriftSciNotationToggle:
 					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
 						(game, ToolTipCollection("Whether to use scientific notation like \"1.59e-6\" vs \"0.00000159\"."), std::nullopt, "Display subpixel drift angle in scientific notation", settings->sensSubpixelDriftSciNotationToggle));
+
+
+				case GUIElementEnum::sensCountTurnsToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
+						(game, ToolTipCollection("Counts how many clockwise turns you do; specifically crossing the 0 -> 6.28 radians boundary."), std::nullopt, "Count clockwise turns", settings->sensCountTurnsToggle));
 
 
 				case GUIElementEnum::sensResetCountAction:

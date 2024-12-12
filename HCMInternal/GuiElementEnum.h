@@ -226,6 +226,7 @@
 			((sensMessageOnSubpixelDriftToggle, (Halo1)))\
 			((sensSoundOnSubpixelDriftToggle, (Halo1)))\
 			((sensSubpixelDriftSciNotationToggle, (Halo1)))\
+		((sensCountTurnsToggle, (Halo1)))\
 		((sensResetCountAction, (Halo1)))\
 		((sensResetCountOnRevertToggle, (Halo1)))\
 		((sensAnchorCorner, (Halo1)))\

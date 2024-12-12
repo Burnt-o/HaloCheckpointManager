@@ -73,7 +73,7 @@ long cardinal_float_distance(float a, float b)
 
 
 // modulo a number with 2pi (6.28). In the way MCC does it so the math matches
-float MCCModTwoPi(float in)
+float MCCModTwoPi(float in, int* pTurnCounter = nullptr)
 {
 	constexpr float twoPiRadians = 6.283185482f;
 	constexpr float negtwoPiRadians = -6.283185482f;
@@ -81,11 +81,15 @@ float MCCModTwoPi(float in)
 	while (in < 0.f)
 	{
 		in += twoPiRadians;
+		if (pTurnCounter)
+			*pTurnCounter += 1;
 	}
 
 	while (in > twoPiRadians)
 	{
 		in += negtwoPiRadians;
+		if (pTurnCounter)
+			*pTurnCounter -= 1;
 	}
 
 	return in;
@@ -170,6 +174,7 @@ private:
 	// Could make atomic but simple POD types so should be fine. We don't want to negatively affect fps since fps affects overdots/drift 
 	LeftRightCounter overDotCount = LeftRightCounter();
 	LeftRightCounter subpixelDriftCount = LeftRightCounter();
+	int clockwiseTurnCount; // negative indicates CCW turns. incremented/decremented when crossing the 0 -> 6.28 boundary wraparound
 	double subpixelDriftAngle = 0;
 
 
@@ -179,7 +184,7 @@ private:
 	std::weak_ptr<SettingsStateAndEvents> settingsWeak;
 	std::weak_ptr<IMCCStateHook> mccStateHookWeak;
 	std::optional<std::weak_ptr<RevertEventHook>> revertEventHookOptionalWeak;
-	std::weak_ptr<GetPlayerViewAngle> getPlayerViewAngleWeak;
+	std::shared_ptr<GetPlayerViewAngle> getPlayerViewAngle;
 
 
 	std::optional<std::weak_ptr<BlockGameInput>> blockGameInputOptionalWeak;
@@ -236,13 +241,17 @@ private:
 				LOG_ONCE_CAPTURE(PLOG_DEBUG << "pQueuedDots: " << p, p = ctxInterpreter->getParameterRef(ctx, (int)param::pQueuedDots))
 
 			int queuedDots = *(int*)ctxInterpreter->getParameterRef(ctx, (int)param::pQueuedDots);
+			auto previousViewAngle = instance->getPlayerViewAngle->getPlayerViewAngle().x;
+			float observedAngleDelta = *(float*)ctxInterpreter->getParameterRef(ctx, (int)param::pObservedAngleDelta);
+			float actualNewAngle = MCCModTwoPi(previousViewAngle - observedAngleDelta, &instance->clockwiseTurnCount); // yeah it's actually a subtraction - right dots are positive. left angle increase is positive.
 
+			
 
 			// drift only possible if more than one dot (in either direction) in a frame.
 
 				int overDotThreshold = 1;
 #ifdef HCM_DEBUG
-				overDotThreshold = 0;
+				overDotThreshold = 0; // IE do the math for EVERY dot, not just overdots. For debugging purposes to check my math.
 #endif
 
 			if (abs(queuedDots) > overDotThreshold)
@@ -265,15 +274,11 @@ private:
 				// subpixel drift calculations
 				{
 
-					float observedAngleDelta = *(float*)ctxInterpreter->getParameterRef(ctx, (int)param::pObservedAngleDelta);
 					float sensitivitySetting = *(float*)ctxInterpreter->getParameterRef(ctx, (int)param::pSensitivitySetting);
-					lockOrThrow(instance->getPlayerViewAngleWeak, getPlayerViewAngle);
-
-					auto previousViewAngle = getPlayerViewAngle->getPlayerViewAngle().x;
 
 
 					float perfectNewAngle = calc_perfect_viewangle(sensitivitySetting, previousViewAngle, queuedDots);
-					float actualNewAngle = MCCModTwoPi(previousViewAngle - observedAngleDelta); // yeah it's actually a subtraction - right dots are positive. left angle increase is positive.
+				
 
 
 					if ((previousViewAngle - observedAngleDelta) != actualNewAngle)
@@ -391,6 +396,11 @@ private:
 					ss << "  Angle: " << std::fixed << std::setprecision(10) << subpixelDriftAngle << std::endl;
 			}
 
+			if (settings->sensCountTurnsToggle->GetValue())
+			{
+				ss << "Clockwise Turns: " << clockwiseTurnCount << std::endl;
+			}
+
 			// render it
 			if (ss.rdbuf()->in_avail() != 0) // check if ss empty or not first
 			{
@@ -470,6 +480,7 @@ private:
 		overDotCount = LeftRightCounter();
 		subpixelDriftCount = LeftRightCounter();
 		subpixelDriftAngle = 0;
+		clockwiseTurnCount = 0;
 	}
 
 	void onRevertEvent()
@@ -526,7 +537,7 @@ public:
 		sensDriftOverlayToggleEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->sensDriftOverlayToggle->valueChangedEvent, [this](bool& n) {onSensDriftOverlayToggleEvent(n); }),
 		mGameStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) {onMCCStateChangedEvent(n); }),
 		mRenderEvent(dicon.Resolve<RenderEvent>()),
-		getPlayerViewAngleWeak(resolveDependentCheat(GetPlayerViewAngle)),
+		getPlayerViewAngle(resolveDependentCheat(GetPlayerViewAngle)),
 		mResetCountEventCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->sensResetCountsEvent, [this]() { resetCounts();  }),
 		blockGameInputOptionalWeak(dicon.Resolve<ControlServiceContainer>().lock()->blockGameInputService),
 		editPlayerViewAngleSetCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->editPlayerViewAngleSet, [this]() { resetCounts(); })
