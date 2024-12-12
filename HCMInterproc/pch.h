@@ -17,7 +17,7 @@
 #include <memory>
 #include <array>
 
-#include "magic_enum_all.hpp" // enum reflection https://github.com/Neargye/magic_enum
+#include "magic_enum\magic_enum_all.hpp" // enum reflection https://github.com/Neargye/magic_enum
 
 // logging
 #include <plog\Log.h>
