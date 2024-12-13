@@ -23,6 +23,7 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle;
 	ScopedCallback<ActionEvent> mHideHUDToggleHotkeyEventCallbackHandle;
 	ScopedCallback<ActionEvent> mtoggleWaypoint3DHotkeyEventCallbackHandle;
+	ScopedCallback<ActionEvent> mtoggleViewAngle3DHotkeyEventCallbackHandle;
 	ScopedCallback<ActionEvent> mtriggerOverlayToggleHotkeyEventCallbackHangle;
 	ScopedCallback<ActionEvent> mdisableBarriersHotkeyEventCallbackHangle;
 	ScopedCallback<ActionEvent> msoftCeilingOverlayToggleHotkeyEventCallbackHandle;
@@ -47,6 +48,7 @@ public:
 		mFreeCameraUserInputCameraMaintainVelocityHotkeyCallbackHandle(settings->freeCameraUserInputCameraMaintainVelocityHotkeyEvent, [boolsetting = settings->freeCameraUserInputCameraMaintainVelocity]() { boolsetting->flipBoolSetting(); }),
 		mHideHUDToggleHotkeyEventCallbackHandle(settings->hideHUDToggleHotkeyEvent, [boolsetting = settings->hideHUDToggle]() { boolsetting->flipBoolSetting(); }),
 		mtoggleWaypoint3DHotkeyEventCallbackHandle(settings->toggleWaypoint3DHotkeyEvent, [boolsetting = settings->waypoint3DToggle]() { boolsetting->flipBoolSetting(); }),
+		mtoggleViewAngle3DHotkeyEventCallbackHandle(settings->toggleViewAngle3DHotkeyEvent, [boolsetting = settings->viewAngleLine3DToggle]() { boolsetting->flipBoolSetting(); }),
 		mtriggerOverlayToggleHotkeyEventCallbackHangle(settings->triggerOverlayToggleHotkeyEvent, [boolsetting = settings->triggerOverlayToggle]() {boolsetting->flipBoolSetting(); }),
 		mdisableBarriersHotkeyEventCallbackHangle(settings->disableBarriersHotkeyEvent, [boolsettings = settings->disableBarriersToggle]() {boolsettings->flipBoolSetting(); }),
 		msoftCeilingOverlayToggleHotkeyEventCallbackHandle(settings->softCeilingOverlayToggleHotkeyEvent, [boolsetting = settings->softCeilingOverlayToggle]() {boolsetting->flipBoolSetting(); }),

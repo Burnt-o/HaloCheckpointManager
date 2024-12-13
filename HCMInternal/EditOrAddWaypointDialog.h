@@ -36,7 +36,7 @@ public:
 		}
 	}
 
-	void renderGlobalOption(bool& useGlobal, float customScale, std::string optionName)
+	void renderGlobalOption(bool& useGlobal, float& customScale, std::string optionName)
 	{
 		ImGui::Checkbox(std::format("Use Global {}", optionName).c_str(), &useGlobal);
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("Use the global setting for {} or customise it per waypoint", optionName).c_str()); }
@@ -52,7 +52,7 @@ public:
 		}
 	}
 
-	void renderGlobalOption(bool& useGlobal, int customPrecision, std::string optionName)
+	void renderGlobalOption(bool& useGlobal, int& customPrecision, std::string optionName)
 	{
 		ImGui::Checkbox(std::format("Use Global {}", optionName).c_str(), &useGlobal);
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) { ImGui::SetTooltip(std::format("Use the global setting for {} or customise it per waypoint", optionName).c_str()); }

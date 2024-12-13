@@ -436,6 +436,18 @@ const std::map <GUIElementEnum, std::vector<OptionalCheatEnum>> GUIRequiredServi
 {OptionalCheatEnum::Waypoint3D}
 				},
 
+	{ GUIElementEnum::viewAngleLine3DGUIToggle,
+{OptionalCheatEnum::ViewAngle3D}
+	},
+
+	{ GUIElementEnum::viewAngleLine3DGUIList,
+{OptionalCheatEnum::ViewAngle3D}
+	},
+
+	{ GUIElementEnum::viewAngleLine3DGUISettings,
+{OptionalCheatEnum::ViewAngle3D}
+	},
+
 
 		{ GUIElementEnum::skullToggleGUI,
 {OptionalCheatEnum::SkullToggler}

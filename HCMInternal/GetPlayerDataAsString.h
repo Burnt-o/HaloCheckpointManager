@@ -7,13 +7,9 @@
 #include "GetPlayerDatum.h"
 #include "GetPlayerViewAngle.h"
 #include "GetBipedsVehicleDatum.h"
-#include "ViewAngleToSubpixelID.h"
+#include "SubpixelID.h"
 
-//https://stackoverflow.com/a/43482688
-struct separate_thousands : std::numpunct<char> {
-	char_type do_thousands_sep() const override { return ','; }  // separate with commas
-	string_type do_grouping() const override { return "\3"; } // groups of 3 digit
-};
+
 
 template <GameState::Value gameT>
 class GetPlayerDataAsString
@@ -21,7 +17,6 @@ class GetPlayerDataAsString
 private:
 	std::string dataStringA;
 	std::string dataStringB;
-	std::locale thousandsSeperatedLocale = std::locale(std::cout.getloc(), new separate_thousands);
 
 public:
 	std::string_view getDataString(bool useDataStringA) { return useDataStringA ? dataStringA : dataStringB; }
@@ -59,10 +54,7 @@ public:
 				lockOrThrow(getPlayerViewAngleIDOptionalWeak.value(), getPlayerViewAngle);
 				const auto currentViewAngle = getPlayerViewAngle->getPlayerViewAngle();
 
-				// get thousands seperator to make number easier to read
-				auto prevLocale = ss.imbue(thousandsSeperatedLocale);
-				ss << " Subpixel ID: " << ViewAngleToSubpixelID(currentViewAngle.x) << std::endl;
-				ss.imbue(prevLocale); // pop locale
+				ss << " Subpixel ID: " << SubpixelID::fromFloat(currentViewAngle.x) << std::endl;
 
 			}
 

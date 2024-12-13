@@ -227,7 +227,6 @@ private:
 		{
 			ScopedAtomicBool lockRender(renderingMutex);
 			LOG_ONCE(PLOG_VERBOSE << "onRenderEvent");
-			constexpr int distancePrecision = 3; // TODO: let user set.
 
 
 
@@ -269,26 +268,6 @@ private:
 			}
 #endif
 
-#define TEST_VIEW_ANGLE_OVERLAY
-#ifdef TEST_VIEW_ANGLE_OVERLAY
-			// some code to test the feasibility of a ViewAngle overlay that draws lines at polar coords
-			// given the projection matrix and view matrix.. 
-			// we need to draw a line?
-			// it looks like the directxtk does not have a primitive batch that can support this. 
-				// they all take VertexPositions in 3d space
-			// so we need to go deeper- we need to calculate the screen positions ourselves;
-			// but our line is actually a great circle..
-			// we could cheat - basically draw an edge in 3d space from a vertex way below the player to way above the player that's offset by the polar coordinate 
-
-			auto cameraPosition = renderer->getCameraPosition();
-
-			// 0/6.28 = positive x direction
-			auto offsetAngle = SimpleMath::Vector3(10, 0, 0);
-			auto offsetBottom = SimpleMath::Vector3(0, 0, -10000);
-			auto offsetTop = SimpleMath::Vector3(0, 0, 10000);
-			renderer->drawEdge(cameraPosition + offsetAngle + offsetBottom, cameraPosition + offsetAngle + offsetTop, SimpleMath::Vector4(1.0, 1.0, 1.0, 1.0));
-
-#endif
 
 
 

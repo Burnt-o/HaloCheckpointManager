@@ -186,6 +186,15 @@
 		((waypoint3DGUIGlobalDistanceColor, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalDistanceScale, (ALL_SUPPORTED_GAMES)))\
 		((waypoint3DGUIGlobalDistancePrecision, (ALL_SUPPORTED_GAMES)))\
+	((viewAngleLine3DGUIToggle, (ALL_SUPPORTED_GAMES)))\
+	((viewAngleLine3DGUIList, (ALL_SUPPORTED_GAMES)))\
+	((viewAngleLine3DGUISettings, (ALL_SUPPORTED_GAMES)))\
+		((viewAngleLine3DGUIGlobalSpriteColor, (ALL_SUPPORTED_GAMES)))\
+		((viewAngleLine3DGUIGlobalLabelColor, (ALL_SUPPORTED_GAMES)))\
+		((viewAngleLine3DGUIGlobalLabelScale, (ALL_SUPPORTED_GAMES)))\
+		((viewAngleLine3DGUIGlobalDistanceColor, (ALL_SUPPORTED_GAMES)))\
+		((viewAngleLine3DGUIGlobalDistanceScale, (ALL_SUPPORTED_GAMES)))\
+		((viewAngleLine3DGUIGlobalDistancePrecision, (ALL_SUPPORTED_GAMES)))\
 	((triggerOverlayToggle, (ALL_SUPPORTED_GAMES)))\
 	((triggerOverlaySettings, (ALL_SUPPORTED_GAMES)))\
 		((triggerOverlayFilterToggle, (ALL_SUPPORTED_GAMES)))\

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "UnarySetting.h"
 #include "WaypointList.h"
+#include "ViewAngleLineList.h"
 
 void UnarySetting<bool>::deserialise(pugi::xml_node input)
 {
@@ -72,7 +73,12 @@ void UnarySetting<WaypointList>::deserialise(pugi::xml_node input)
 	valueChangedEvent.get()->operator()(value);
 }
 
-
+void UnarySetting<ViewAngleLineList>::deserialise(pugi::xml_node input)
+{
+	ViewAngleLineList in(input);
+	value.list = in.list;
+	valueChangedEvent.get()->operator()(value);
+}
 
 
 template<>

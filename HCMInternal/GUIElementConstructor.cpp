@@ -34,6 +34,7 @@
 #include "GUILabel.h"
 #include "GUIButtonAndBinaryInt.h"
 #include "GUIInvisible.h"
+#include "GUIViewAngleLineList.h"
 
 
 
@@ -793,6 +794,9 @@ private:
 							createNestedElement(GUIElementEnum::waypoint3DGUIToggle),
 							createNestedElement(GUIElementEnum::waypoint3DGUIList),
 							createNestedElement(GUIElementEnum::waypoint3DGUISettings),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIToggle),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIList),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUISettings),
 							createNestedElement(GUIElementEnum::triggerOverlayToggle),
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
@@ -1094,6 +1098,53 @@ private:
 					case GUIElementEnum::waypoint3DGUIGlobalDistancePrecision:
 						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<SliderParam<int>(0, 10)>>
 							(game, ToolTipCollection("Decimal precision of waypoint distance text"), "Global Distance Precision", settings->waypoint3DGlobalDistancePrecision));
+
+				case GUIElementEnum::viewAngleLine3DGUIToggle:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+						(game, ToolTipCollection("Toggles 3D View Angle Line overlay"), RebindableHotkeyEnum::toggleViewAngleLine3D, "View Angle Overlay", settings->viewAngleLine3DToggle));
+
+				case GUIElementEnum::viewAngleLine3DGUIList:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIViewAngleLineList<false>>
+						(game, ToolTipCollection("List of 3D ViewAngleLines"), settings->viewAngleLine3DList, settings->editViewAngleLineEvent, settings->deleteViewAngleLineEvent, settings->addViewAngleLineEvent, exp));
+
+
+				case GUIElementEnum::viewAngleLine3DGUISettings:
+					return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISubHeading<false>>
+						(game, ToolTipCollection("Custom ViewAngleLine Settings"), "View Angle Overlay Settings", headerChildElements
+							{
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIGlobalSpriteColor),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIGlobalLabelColor),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIGlobalLabelScale),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIGlobalDistanceColor),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIGlobalDistanceScale),
+							createNestedElement(GUIElementEnum::viewAngleLine3DGUIGlobalDistancePrecision),
+							}));
+
+
+
+					case GUIElementEnum::viewAngleLine3DGUIGlobalSpriteColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+							(game, ToolTipCollection("Color to apply to viewAngleLine sprite"), "Global Sprite Color", settings->viewAngleLine3DGlobalSpriteColor));
+
+					case GUIElementEnum::viewAngleLine3DGUIGlobalLabelColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+							(game, ToolTipCollection("Color to apply to viewAngleLine label"), "Global Label Color", settings->viewAngleLine3DGlobalLabelColor));
+
+					case GUIElementEnum::viewAngleLine3DGUIGlobalLabelScale:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
+							(game, ToolTipCollection("Scaling factor of viewAngleLine label"), "Global Label Scale", settings->viewAngleLine3DGlobalLabelScale));
+
+					case GUIElementEnum::viewAngleLine3DGUIGlobalDistanceColor:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIColourPickerAlpha<false>>
+							(game, ToolTipCollection("Color to apply to viewAngleLine distance text"), "Global Distance Color", settings->viewAngleLine3DGlobalDistanceColor));
+
+					case GUIElementEnum::viewAngleLine3DGUIGlobalDistanceScale:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIFloat<SliderParam<float>(6.f, 120.f)>>
+							(game, ToolTipCollection("Scaling factor of viewAngleLine distance text"), "Global Distance Scale", settings->viewAngleLine3DGlobalDistanceScale));
+
+					case GUIElementEnum::viewAngleLine3DGUIGlobalDistancePrecision:
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputInt<SliderParam<int>(0, 10)>>
+							(game, ToolTipCollection("Decimal precision of viewAngleLine distance text"), "Global Distance Precision", settings->viewAngleLine3DGlobalDistancePrecision));
 
 
 						

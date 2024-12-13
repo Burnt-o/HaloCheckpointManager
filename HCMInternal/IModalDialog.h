@@ -38,6 +38,7 @@ public:
 
 	void queueEmergencyClose()
 	{
+		hotkeyDisableRequest = std::nullopt;
 		emergencyClose = true;
 	}
 
@@ -58,7 +59,13 @@ public:
 	virtual void render(SimpleMath::Vector2 screenSize) final {
 
 
-		if (isOpen == false) return;
+		if (isOpen == false)
+		{
+			if (hotkeyDisableRequest)
+			hotkeyDisableRequest = std::nullopt;
+			return;
+		}
+
 
 		if (needToBeginDialog)
 		{

@@ -1,20 +1,20 @@
 #include "pch.h"
-#include "WaypointList.h"
+#include "ViewAngleLineList.h"
 
 
 
-void Waypoint::serialise(pugi::xml_node wpnode) const
+void ViewAngleLine::serialise(pugi::xml_node wpnode) const
 {
 
-	wpnode.append_child("position").text().set(vec3ToString(position).c_str());
+	wpnode.append_child("subpixelID").text().set((uint32_t)subpixelID);
 	wpnode.append_child("label").text().set(label.c_str());
-	wpnode.append_child("waypointEnabled").text().set(waypointEnabled);
-	wpnode.append_child("showSprite").text().set(showSprite);
+	wpnode.append_child("showAngle").text().set(showAngle);
+	wpnode.append_child("showSubpixelID").text().set(showSubpixelID);
+	wpnode.append_child("viewAngleLineEnabled").text().set(viewAngleLineEnabled);
 	wpnode.append_child("showLabel").text().set(showLabel);
 	wpnode.append_child("showDistance").text().set(showDistance);
-	wpnode.append_child("measureHorizontalOnly").text().set(measureHorizontalOnly);
+	wpnode.append_child("measureAsSubpixels").text().set(measureAsSubpixels);
 	wpnode.append_child("spriteColorUseGlobal").text().set(spriteColorUseGlobal);
-	wpnode.append_child("spriteScaleUseGlobal").text().set(spriteScaleUseGlobal);
 	wpnode.append_child("labelColorUseGlobal").text().set(labelColorUseGlobal);
 	wpnode.append_child("labelScaleUseGlobal").text().set(labelScaleUseGlobal);
 	wpnode.append_child("distanceColorUseGlobal").text().set(distanceColorUseGlobal);
@@ -23,7 +23,6 @@ void Waypoint::serialise(pugi::xml_node wpnode) const
 	wpnode.append_child("spriteColor").text().set(vec4ToString(spriteColor).c_str());
 	wpnode.append_child("labelColor").text().set(vec4ToString(labelColor).c_str());
 	wpnode.append_child("distanceColor").text().set(vec4ToString(distanceColor).c_str());
-	wpnode.append_child("spriteScale").text().set(spriteScale);
 	wpnode.append_child("labelScale").text().set(labelScale);
 	wpnode.append_child("distanceScale").text().set(distanceScale);
 	wpnode.append_child("distancePrecision").text().set(distancePrecision);
@@ -33,24 +32,38 @@ void Waypoint::serialise(pugi::xml_node wpnode) const
 }
 
 // deserialisation constructor
-Waypoint::Waypoint(pugi::xml_node input)
+ViewAngleLine::ViewAngleLine(pugi::xml_node input)
 {
 
 #define deserialiseMember(memberName, asWhat, conversionFunc)\
 if (input.child(###memberName)) this->memberName = conversionFunc(input.child(###memberName).text().##asWhat);
 
+
+	if (input.child("subpixelID"))
+	{
+		auto subpixelIDInt = input.child("subpixelID").text().as_int();
+		if (subpixelIDInt < 0 || subpixelIDInt > 1078530012)
+		{
+			subpixelIDInt = 1;
+			PLOG_ERROR << "Bad deserialised subpixel ID: " << subpixelIDInt << ", " << input.child("subpixelID").text();
+		}
+			
+
+		this->subpixelID = (SubpixelID)subpixelIDInt;
+	}
+		
+
 	// boy I wish cpp had reflection so that this would be a one liner
-	deserialiseMember(position, as_string(), vec3FromString);
 	deserialiseMember(label, as_string());
-	deserialiseMember(waypointEnabled, as_bool());
-	deserialiseMember(showSprite, as_bool());
+	deserialiseMember(viewAngleLineEnabled, as_bool());
 	deserialiseMember(showLabel, as_bool());
+	deserialiseMember(showAngle, as_bool());
+	deserialiseMember(showSubpixelID, as_bool());
 	deserialiseMember(showDistance, as_bool());
-	deserialiseMember(measureHorizontalOnly, as_bool());
-	deserialiseMember(spriteColorUseGlobal, as_bool());
-	deserialiseMember(spriteScaleUseGlobal, as_bool());
+	deserialiseMember(measureAsSubpixels, as_bool());
 	deserialiseMember(labelColorUseGlobal, as_bool());
 	deserialiseMember(labelScaleUseGlobal, as_bool());
+	deserialiseMember(spriteColorUseGlobal, as_bool());
 	deserialiseMember(distanceColorUseGlobal, as_bool());
 	deserialiseMember(distanceScaleUseGlobal, as_bool());
 	deserialiseMember(distancePrecisionUseGlobal, as_bool());
@@ -66,14 +79,14 @@ if (input.child(###memberName)) this->memberName = conversionFunc(input.child(##
 
 
 // serialise (output xml to stringstream)
-std::ostream& operator<<(std::ostream& os, const WaypointList& dt)
+std::ostream& operator<<(std::ostream& os, const ViewAngleLineList& dt)
 {
 	pugi::xml_document doc;
 	auto docRoot = doc.root();
 
 	for (auto& wp : dt.list)
 	{
-		auto node = docRoot.append_child("waypoint");
+		auto node = docRoot.append_child("ViewAngleLine");
 		wp.serialise(node);
 	}
 
@@ -83,7 +96,7 @@ std::ostream& operator<<(std::ostream& os, const WaypointList& dt)
 
 
 
-void WaypointList::setListFromString(const std::string& str)
+void ViewAngleLineList::setListFromString(const std::string& str)
 {
 	// parse str as xml
 	pugi::xml_document doc;
@@ -94,12 +107,12 @@ void WaypointList::setListFromString(const std::string& str)
 	}
 	else
 	{
-		throw HCMSerialisationException(std::format("error parsing waypointList str to xml: {} @ {}", result.description(), result.offset));
+		throw HCMSerialisationException(std::format("error parsing ViewAngleLineList str to xml: {} @ {}", result.description(), result.offset));
 	}
 }
 
 
-void WaypointList::setListFromXML(pugi::xml_node input)
+void ViewAngleLineList::setListFromXML(pugi::xml_node input)
 {
 
 	// god this is so dumb and hacky. For some reason pugi doesn't want to parse the &lt; escape chars properly
@@ -123,10 +136,10 @@ void WaypointList::setListFromXML(pugi::xml_node input)
 	if (result)
 	{
 		list.clear();
-		// for each <waypoint> node, add it to the waypoint list using waypoint deserialisation constructor.
+		// for each <ViewAngleLine> node, add it to the ViewAngleLine list using ViewAngleLine deserialisation constructor.
 		for (auto waypointNode = parsedLocalDoc.first_child().first_child(); waypointNode; waypointNode = waypointNode.next_sibling())
 		{
-			if (strcmp(waypointNode.name(), "waypoint") != 0)
+			if (strcmp(waypointNode.name(), "ViewAngleLine") != 0)
 			{
 				PLOG_ERROR << "bad waypointList input, child node named: " << waypointNode.name();
 				std::stringstream ss;
@@ -134,19 +147,19 @@ void WaypointList::setListFromXML(pugi::xml_node input)
 				PLOG_ERROR << "contents: " << std::endl << ss.str();
 				continue;
 			}
-			list.emplace_back(Waypoint(waypointNode));
+			list.emplace_back(ViewAngleLine(waypointNode));
 		}
 	}
 	else
 	{
-		throw HCMSerialisationException(std::format("error parsing waypointList xml: {} @ {}",result.description(), result.offset));
+		throw HCMSerialisationException(std::format("error parsing waypointList xml: {} @ {}", result.description(), result.offset));
 	}
 
 }
 
 
-	// deserialisation constructor
-WaypointList::WaypointList(pugi::xml_node input)
+// deserialisation constructor
+ViewAngleLineList::ViewAngleLineList(pugi::xml_node input)
 {
 	setListFromXML(input);
 }

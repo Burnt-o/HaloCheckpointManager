@@ -311,6 +311,11 @@ private:
 		mSettings->toggleWaypoint3DHotkeyEvent,
 		vsk{}),
 
+		initEventOnPressHotkey(toggleViewAngleLine3D,
+		mSettings->toggleViewAngle3DHotkeyEvent,
+		vsk{}),
+
+
 		initEventOnPressHotkey(triggerOverlayToggleHotkey,
 		mSettings->triggerOverlayToggleHotkeyEvent,
 		vsk{}),

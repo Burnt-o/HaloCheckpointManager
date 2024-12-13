@@ -245,6 +245,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="DirectXRenderEvent.h" />
     <ClInclude Include="DisableBarriers.h" />
     <ClInclude Include="DisableFog.h" />
+    <ClInclude Include="EditOrAddViewAngleLineDialog.h" />
     <ClInclude Include="EditOrAddWaypointDialog.h" />
     <ClInclude Include="EditPlayerViewAngleID.h" />
     <ClInclude Include="EnumClass.h" />
@@ -271,6 +272,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="GUIInvisible.h" />
     <ClInclude Include="GUILabel.h" />
     <ClInclude Include="GUISkullToggle.h" />
+    <ClInclude Include="GUIViewAngleLineList.h" />
     <ClInclude Include="GUIWaypointList.h" />
     <ClInclude Include="BSPSetChangeHookEvent.h" />
     <ClInclude Include="HaloScriptOutputHookEvent.h" />
@@ -325,6 +327,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="RevertEventHook.h" />
     <ClInclude Include="SharedRequestProvider.h" />
     <ClInclude Include="SoundClassGain.h" />
+    <ClInclude Include="SubpixelID.h" />
     <ClInclude Include="TextureFactory.h" />
     <ClInclude Include="MagicString.h" />
     <ClInclude Include="MCCString.h" />
@@ -366,7 +369,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClInclude Include="TriggerOverlay.h" />
     <ClInclude Include="UnarySetting.h" />
     <ClInclude Include="UpdateTriggerLastChecked.h" />
-    <ClInclude Include="ViewAngleToSubpixelID.h" />
+    <ClInclude Include="ViewAngle3D.h" />
+    <ClInclude Include="ViewAngleLineList.h" />
     <ClInclude Include="WaypointList.h" />
     <ClInclude Include="Waypoint3D.h" />
     <ClInclude Include="AdvanceTicks.h" />
@@ -595,6 +599,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="MCCInitialisationCheck.cpp" />
     <ClCompile Include="RevertEventHook.cpp" />
     <ClCompile Include="SoundClassGain.cpp" />
+    <ClCompile Include="SubpixelID.cpp" />
     <ClCompile Include="TextureFactory.cpp" />
     <ClCompile Include="MeasurePlayerDistanceToObject.cpp" />
     <ClCompile Include="ModalDialogFactory.cpp" />
@@ -630,6 +635,8 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <ClCompile Include="TriggerOverlay.cpp" />
     <ClCompile Include="UnarySetting.cpp" />
     <ClCompile Include="UpdateTriggerLastChecked.cpp" />
+    <ClCompile Include="ViewAngle3D.cpp" />
+    <ClCompile Include="ViewAngleLineList.cpp" />
     <ClCompile Include="Waypoint3D.cpp" />
     <ClCompile Include="AdvanceTicks.cpp" />
     <ClCompile Include="AIFreeze.cpp" />

@@ -63,6 +63,7 @@
 #include "OBSBypassCheck.h"
 #include "SetPlayerHealth.h"
 #include "Waypoint3D.h"
+#include "ViewAngle3D.h"
 #include "Render3DEventProvider.h"
 #include "MeasurePlayerDistanceToObject.h"
 #include "SkullToggler.h"

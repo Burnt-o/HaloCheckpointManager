@@ -5,6 +5,7 @@
 #include "CheckpointDumpNameDialog.h"
 #include "EditOrAddWaypointDialog.h"
 #include "TriggerFilterStringDialog.h"
+#include "EditOrAddViewAngleLineDialog.h"
 
 
 
@@ -35,6 +36,14 @@
 		PLOG_VERBOSE << "factory creating EditOrAddWaypointDialog";
 		return std::make_unique<EditOrAddWaypointDialog>(runtimeExceptionHandler, dialogTitle, defaultWaypoint, playerPosition, canMeasureDistance);
 	}
+
+	std::shared_ptr<IModalDialogReturner<std::optional<ViewAngleLine>>> ModalDialogFactory::makeEditOrAddViewAngleLineDialog
+	(std::shared_ptr<RuntimeExceptionHandler> runtimeExceptionHandler, std::string dialogTitle, ViewAngleLine defaultViewAngleLine, std::optional<SubpixelID> playerAngle)
+	{
+		PLOG_VERBOSE << "factory creating EditOrAddViewAngleLineDialog";
+		return std::make_unique<EditOrAddViewAngleLineDialog>(runtimeExceptionHandler, dialogTitle, defaultViewAngleLine, playerAngle);
+	}
+
 
 	std::shared_ptr<IModalDialogReturner<std::string>> ModalDialogFactory::makeTriggerFilterStringDialog
 	(std::string dialogTitle, std::string defaultValue, std::string allTriggers, LevelID currentLevel, std::optional<std::shared_ptr<std::map<LevelID, std::vector<std::pair<std::string, std::string>>>>> levelMapStringVector)

@@ -2,7 +2,7 @@
 #include "ModalDialogRenderer.h"
 #include "GlobalKill.h"
 #include "WaypointList.h"
-
+#include "ViewAngleLineList.h"
 
 class ModalDialogRenderer::ModalDialogRendererImpl
 {
@@ -80,7 +80,7 @@ public:
 		currentOpenDialog = dialogToShow; // set to be rendered
 
 		PLOG_DEBUG << "disabling hotkeys and creating scoped requests";
-		dialogToShow->disableHotkeys(mHotkeyDisabler); // disable hotkeys while dialog open
+		dialogToShow->disableHotkeys(mHotkeyDisabler); // di`sable hotkeys while dialog open
 		auto scopedRequests = getScopedRequests(); // pause game, free cursor, and block input while dialog open
 
 
@@ -101,6 +101,8 @@ public:
 			}
 	
 		}
+
+		PLOG_DEBUG << "Closing dialog!";
 
 		currentOpenDialog.reset();
 		return dialogToShow->getReturnValue();
@@ -189,6 +191,9 @@ std::tuple<bool, std::string> ModalDialogRenderer::showReturningDialog(std::shar
 
 template
 std::optional<Waypoint> ModalDialogRenderer::showReturningDialog(std::shared_ptr<IModalDialogReturner<std::optional<Waypoint>>>dialogToShow);
+
+template
+std::optional<ViewAngleLine> ModalDialogRenderer::showReturningDialog(std::shared_ptr<IModalDialogReturner<std::optional<ViewAngleLine>>>dialogToShow);
 
 template
 std::string ModalDialogRenderer::showReturningDialog(std::shared_ptr<IModalDialogReturner<std::string>>dialogToShow);

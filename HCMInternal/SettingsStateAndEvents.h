@@ -7,7 +7,8 @@
 #include "SkullEnum.h"
 #include "BitBoolPointer.h"
 #include "SettingsEnums.h"
-#include "ViewAngleToSubpixelID.h"
+#include "SubpixelID.h"
+#include "ViewAngleLineList.h"
 
 class SettingsStateAndEvents
 {
@@ -53,6 +54,7 @@ public:
 	std::shared_ptr<ActionEvent> hideHUDToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> setPlayerHealthEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> toggleWaypoint3DHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> toggleViewAngle3DHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> triggerOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> softCeilingOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> disableBarriersHotkeyEvent = std::make_shared<ActionEvent>();
@@ -128,6 +130,11 @@ public:
 	std::shared_ptr<WaypointAndListEvent> deleteWaypointEvent = std::make_shared<WaypointAndListEvent>();
 	std::shared_ptr<WaypointAndListEvent> editWaypointEvent = std::make_shared<WaypointAndListEvent>();
 	std::shared_ptr<WaypointListEvent> addWaypointEvent = std::make_shared<WaypointListEvent>();
+
+	// view angle line events (delete, edit)
+	std::shared_ptr<ViewAngleLineAndListEvent> deleteViewAngleLineEvent = std::make_shared<ViewAngleLineAndListEvent>();
+	std::shared_ptr<ViewAngleLineAndListEvent> editViewAngleLineEvent = std::make_shared<ViewAngleLineAndListEvent>();
+	std::shared_ptr<ViewAngleLineListEvent> addViewAngleLineEvent = std::make_shared<ViewAngleLineListEvent>();
 
 
 	// skulls
@@ -836,7 +843,7 @@ public:
 
 	std::shared_ptr<BinarySetting<int>> display2DInfoFloatPrecision = std::make_shared<BinarySetting<int>>
 		(
-			6,
+			7,
 			[](int in) { return in >= 0; },
 			nameof(display2DInfoFloatPrecision)
 		);
@@ -873,7 +880,7 @@ public:
 	std::shared_ptr<BinarySetting<int>> editPlayerViewAngleIDInt = std::make_shared<BinarySetting<int>>
 		(
 			1000000, 
-			[](int in) { return (in >= 0) && (in < ViewAngleToSubpixelID(std::numbers::pi_v<float> *2.f));  },
+			[](int in) { return (in >= 0) && (in < SubpixelID::fromFloat(std::numbers::pi_v<float> *2.f));  },
 			nameof(editPlayerViewAngleIDVec2)
 		);
 
@@ -1353,6 +1360,64 @@ public:
 			WaypointList(), // default constructed
 			nameof(waypoint3DList)
 		);
+
+	std::shared_ptr<BinarySetting<bool>> viewAngleLine3DToggle = std::make_shared<BinarySetting<bool>>
+		(
+			false,
+			[](bool in) { return true; },
+			nameof(viewAngleLine3DToggle)
+		);
+
+
+	std::shared_ptr<BinarySetting<float>> viewAngleLine3DGlobalLabelScale = std::make_shared<BinarySetting<float>>
+		(
+			16.f,
+			[](float in) { return in > 6.f; },
+			nameof(viewAngleLine3DGlobalLabelScale)
+		);
+
+	std::shared_ptr<BinarySetting<float>> viewAngleLine3DGlobalDistanceScale = std::make_shared<BinarySetting<float>>
+		(
+			16.f,
+			[](float in) { return in > 6.f; },
+			nameof(viewAngleLine3DGlobalDistanceScale)
+		);
+
+	std::shared_ptr<BinarySetting<int>> viewAngleLine3DGlobalDistancePrecision = std::make_shared<BinarySetting<int>>
+		(
+			7,
+			[](int in) { return in > 0; },
+			nameof(viewAngleLine3DGlobalDistancePrecision)
+		);
+
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> viewAngleLine3DGlobalSpriteColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{ 1.f, 0.f, 0.f, 1.f }, // red
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(viewAngleLine3DGlobalSpriteColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> viewAngleLine3DGlobalLabelColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{ 1.f, 0.f, 0.f, 1.f }, // red
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(viewAngleLine3DGlobalLabelColor)
+		);
+
+	std::shared_ptr<BinarySetting<SimpleMath::Vector4>> viewAngleLine3DGlobalDistanceColor = std::make_shared<BinarySetting<SimpleMath::Vector4>>
+		(
+			SimpleMath::Vector4{ 1.f, 0.f, 0.f, 1.f }, // red
+			[](SimpleMath::Vector4 in) { return true; },
+			nameof(viewAngleLine3DGlobalDistanceColor)
+		);
+
+	std::shared_ptr<UnarySetting<ViewAngleLineList>> viewAngleLine3DList = std::make_shared<UnarySetting<ViewAngleLineList>>
+		(
+			ViewAngleLineList(std::vector<ViewAngleLine>{ViewAngleLine(SubpixelID::fromFloat(0.f), "Zero Boundary")}),
+			nameof(viewAngleLine3DList)
+		);
+
 
 	std::shared_ptr<BinarySetting<bool>> triggerOverlayToggle = std::make_shared<BinarySetting<bool>>
 		(
@@ -2135,6 +2200,13 @@ public:
 		waypoint3DGlobalLabelColor,
 		waypoint3DGlobalDistanceColor,
 		waypoint3DList,
+		viewAngleLine3DGlobalLabelScale,
+		viewAngleLine3DGlobalDistanceScale,
+		viewAngleLine3DGlobalDistancePrecision,
+		viewAngleLine3DGlobalSpriteColor,
+		viewAngleLine3DGlobalLabelColor,
+		viewAngleLine3DGlobalDistanceColor,
+		viewAngleLine3DList,
 		consoleCommandFontSize,
 		consoleCommandFreeCursor,
 		consoleCommandBlockInput,

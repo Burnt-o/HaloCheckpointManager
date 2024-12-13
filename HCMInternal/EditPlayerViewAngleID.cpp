@@ -6,17 +6,11 @@
 #include "IMakeOrGetCheat.h"
 #include "GetPlayerViewAngle.h"
 #include "IMCCStateHook.h"
-
-//https://stackoverflow.com/a/43482688
-struct separate_thousands : std::numpunct<char> {
-	char_type do_thousands_sep() const override { return ','; }  // separate with commas
-	string_type do_grouping() const override { return "\3"; } // groups of 3 digit
-};
+#include "SubpixelID.h"
 
 class EditPlayerViewAngleID::EditPlayerViewAngleIDImpl
 {
 private:
-	std::locale thousandsSeperatedLocale = std::locale(std::cout.getloc(), new separate_thousands);
 	GameState mImplGame;
 
 	//event callbacks
@@ -51,11 +45,13 @@ private:
 			lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
 			lockOrThrow(settingsWeak, settings);
 
-			getPlayerViewAngle->setPlayerViewAngle(SimpleMath::Vector2(SubpixelIDToViewAngle(settings->editPlayerViewAngleIDInt->GetValue()), getPlayerViewAngle->getPlayerViewAngle().y));
+			SubpixelID subpixel(settings->editPlayerViewAngleIDInt->GetValue());
+
+			getPlayerViewAngle->setPlayerViewAngle(SimpleMath::Vector2(subpixel, getPlayerViewAngle->getPlayerViewAngle().y));
 
 
 			lockOrThrow(messagesGUIWeak, messagesGUI);
-			messagesGUI->addMessage(std::format(thousandsSeperatedLocale, "Setting Subpixel ID to: {}", settings->editPlayerViewAngleIDInt->GetValue()));
+			messagesGUI->addMessage(std::format("Setting Subpixel ID to: {}", subpixel.operator std::string()));
 
 		}
 		catch (HCMRuntimeException ex)
@@ -75,18 +71,21 @@ private:
 
 			lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
 			lockOrThrow(settingsWeak, settings);
-			auto currentSubpixel = ViewAngleToSubpixelID(getPlayerViewAngle->getPlayerViewAngle().x);
-			currentSubpixel -= settings->editPlayerViewAngleIDAdjustFactor->GetValue();
+
+			auto subpixel = SubpixelID::fromFloat(getPlayerViewAngle->getPlayerViewAngle().x);
+			subpixel -= SubpixelID(settings->editPlayerViewAngleIDAdjustFactor->GetValue());
 
 			// let setting perform validation
-			settings->editPlayerViewAngleIDInt->GetValueDisplay() = currentSubpixel;
+			settings->editPlayerViewAngleIDInt->GetValueDisplay() = subpixel;
 			settings->editPlayerViewAngleIDInt->UpdateValueWithInput();
 
-			getPlayerViewAngle->setPlayerViewAngle(SimpleMath::Vector2(SubpixelIDToViewAngle(settings->editPlayerViewAngleIDInt->GetValue()), getPlayerViewAngle->getPlayerViewAngle().y));
+
+
+			getPlayerViewAngle->setPlayerViewAngle(SimpleMath::Vector2(subpixel, getPlayerViewAngle->getPlayerViewAngle().y));
 			
 			{
 				lockOrThrow(messagesGUIWeak, messagesGUI);
-				messagesGUI->addMessage(std::format(thousandsSeperatedLocale, "Setting Subpixel ID to: {}", settings->editPlayerViewAngleIDInt->GetValue()));
+				messagesGUI->addMessage(std::format("Setting Subpixel ID to: {}", subpixel.operator std::string()));
 			}
 		}
 		catch (HCMRuntimeException ex)
@@ -106,18 +105,21 @@ private:
 
 			lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
 			lockOrThrow(settingsWeak, settings);
-			auto currentSubpixel = ViewAngleToSubpixelID(getPlayerViewAngle->getPlayerViewAngle().x);
-			currentSubpixel += settings->editPlayerViewAngleIDAdjustFactor->GetValue();
+
+			auto subpixel = SubpixelID::fromFloat(getPlayerViewAngle->getPlayerViewAngle().x);
+			subpixel += SubpixelID(settings->editPlayerViewAngleIDAdjustFactor->GetValue());
 
 			// let setting perform validation
-			settings->editPlayerViewAngleIDInt->GetValueDisplay() = currentSubpixel;
+			settings->editPlayerViewAngleIDInt->GetValueDisplay() = subpixel;
 			settings->editPlayerViewAngleIDInt->UpdateValueWithInput();
 
-			getPlayerViewAngle->setPlayerViewAngle(SimpleMath::Vector2(SubpixelIDToViewAngle(settings->editPlayerViewAngleIDInt->GetValue()), getPlayerViewAngle->getPlayerViewAngle().y));
+
+
+			getPlayerViewAngle->setPlayerViewAngle(SimpleMath::Vector2(subpixel, getPlayerViewAngle->getPlayerViewAngle().y));
 
 			{
 				lockOrThrow(messagesGUIWeak, messagesGUI);
-				messagesGUI->addMessage(std::format(thousandsSeperatedLocale, "Setting Subpixel ID to: {}", settings->editPlayerViewAngleIDInt->GetValue()));
+				messagesGUI->addMessage(std::format("Setting Subpixel ID to: {}", subpixel.operator std::string()));
 			}
 		}
 		catch (HCMRuntimeException ex)
@@ -138,9 +140,9 @@ private:
 			lockOrThrow(getPlayerViewAngleWeak, getPlayerViewAngle);
 			lockOrThrow(settingsWeak, settings);
 			auto playerViewAngle = getPlayerViewAngle->getPlayerViewAngle();
-			auto subpixelID = ViewAngleToSubpixelID(playerViewAngle.x);
-			PLOG_DEBUG << "filling viewAngle with " << subpixelID;
-			settings->editPlayerViewAngleIDInt->GetValueDisplay() = subpixelID;
+			auto subpixel = SubpixelID::fromFloat(playerViewAngle.x);
+			PLOG_DEBUG << "filling viewAngle with " << subpixel;
+			settings->editPlayerViewAngleIDInt->GetValueDisplay() = subpixel;
 			settings->editPlayerViewAngleIDInt->UpdateValueWithInput();
 		}
 		catch (HCMRuntimeException ex)

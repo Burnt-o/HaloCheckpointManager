@@ -59,7 +59,8 @@ disableBarriers,\
 softCeilingOverlayToggleHotkey,\
 abilityMeterToggleHotkey,\
 sensResetCountHotkey,\
-sensDriftOverlayToggleHotkey
+sensDriftOverlayToggleHotkey,\
+toggleViewAngleLine3D
 
 
 

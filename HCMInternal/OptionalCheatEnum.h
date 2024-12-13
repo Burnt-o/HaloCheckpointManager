@@ -109,7 +109,8 @@ SensDriftOverlay,\
 RevertEventHook,\
 ForceMissionRestart,\
 GameEngineDetail,\
-GameEngineFunctions
+GameEngineFunctions,\
+ViewAngle3D
 
 
 enum class OptionalCheatEnum {

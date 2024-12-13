@@ -107,6 +107,9 @@
     <Filter Include="Includes\type_safe\detail">
       <UniqueIdentifier>{836ccd33-f930-42c4-aeab-2a007dccca89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services\OptionalCheats\Implementations\3D\ViewAngleLine">
+      <UniqueIdentifier>{534fa38f-7c28-45de-b81d-142ec6ef4d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -1054,8 +1057,20 @@
     <ClInclude Include="EditPlayerViewAngleID.h">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="ViewAngleToSubpixelID.h">
-      <Filter>Global</Filter>
+    <ClInclude Include="ViewAngleLineList.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\ViewAngleLine</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewAngle3D.h">
+      <Filter>Services\OptionalCheats\Implementations\3D\ViewAngleLine</Filter>
+    </ClInclude>
+    <ClInclude Include="SubpixelID.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="EditOrAddViewAngleLineDialog.h">
+      <Filter>Services\GUI\ModalDialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIViewAngleLineList.h">
+      <Filter>Services\GUI\GUIElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1317,9 +1332,6 @@
     <ClCompile Include="ModalDialogRenderer.cpp">
       <Filter>Services\GUI\ModalDialogs</Filter>
     </ClCompile>
-    <ClCompile Include="ModalDialogFactory.cpp">
-      <Filter>Services\GUI\ModalDialogs</Filter>
-    </ClCompile>
     <ClCompile Include="BinarySetting.cpp">
       <Filter>Services\SettingsStateAndEvents</Filter>
     </ClCompile>
@@ -1505,6 +1517,18 @@
     </ClCompile>
     <ClCompile Include="EditPlayerViewAngleID.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewAngleLineList.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\ViewAngleLine</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewAngle3D.cpp">
+      <Filter>Services\OptionalCheats\Implementations\3D\ViewAngleLine</Filter>
+    </ClCompile>
+    <ClCompile Include="SubpixelID.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="ModalDialogFactory.cpp">
+      <Filter>Services\GUI\ModalDialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
