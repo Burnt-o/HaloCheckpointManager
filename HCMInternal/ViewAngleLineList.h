@@ -75,7 +75,7 @@ public:
 	}
 #else
 
-	ViewAngleLineList()
+	ViewAngleLineList() = default;
 #endif
 
 
