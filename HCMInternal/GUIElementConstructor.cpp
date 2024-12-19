@@ -801,9 +801,7 @@ private:
 							createNestedElement(GUIElementEnum::triggerOverlaySettings),
 							createNestedElement(GUIElementEnum::softCeilingOverlayToggle),
 							createNestedElement(GUIElementEnum::softCeilingOverlaySettings),
-#ifdef HCM_DEBUG
 							createNestedElement(GUIElementEnum::shieldInputPrinterToggle),
-#endif
 							createNestedElement(GUIElementEnum::abilityMeterOverlayToggle),
 							createNestedElement(GUIElementEnum::abilityMeterOverlaySettings),
 							createNestedElement(GUIElementEnum::sensDriftOverlayToggle),
