@@ -60,7 +60,8 @@ softCeilingOverlayToggleHotkey,\
 abilityMeterToggleHotkey,\
 sensResetCountHotkey,\
 sensDriftOverlayToggleHotkey,\
-toggleViewAngleLine3D
+toggleViewAngleLine3D,\
+shieldInputPrinterToggleHotkey
 
 
 

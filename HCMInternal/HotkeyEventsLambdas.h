@@ -29,6 +29,8 @@ class HotkeyEventsLambdas
 	ScopedCallback<ActionEvent> msoftCeilingOverlayToggleHotkeyEventCallbackHandle;
 	ScopedCallback<ActionEvent> mabilityMeterToggleHotkeyEventCallbackHandle;
 	ScopedCallback<ActionEvent> msensDriftOverlayToggleHotkeyEventCallbackHandle;
+	ScopedCallback<ActionEvent> mshieldInputPrinterToggleHotkeyEventCallbackHandle;
+	
 
 public:
 	HotkeyEventsLambdas(std::shared_ptr< SettingsStateAndEvents> settings)
@@ -53,7 +55,8 @@ public:
 		mdisableBarriersHotkeyEventCallbackHangle(settings->disableBarriersHotkeyEvent, [boolsettings = settings->disableBarriersToggle]() {boolsettings->flipBoolSetting(); }),
 		msoftCeilingOverlayToggleHotkeyEventCallbackHandle(settings->softCeilingOverlayToggleHotkeyEvent, [boolsetting = settings->softCeilingOverlayToggle]() {boolsetting->flipBoolSetting(); }),
 		mabilityMeterToggleHotkeyEventCallbackHandle(settings->abilityMeterToggleHotkeyEvent, [boolsetting = settings->abilityMeterOverlayToggle]() {boolsetting->flipBoolSetting(); }),
-		msensDriftOverlayToggleHotkeyEventCallbackHandle(settings->sensDriftOverlayToggleHotkeyEvent, [boolsetting = settings->sensDriftOverlayToggle]() {boolsetting->flipBoolSetting(); })
+		msensDriftOverlayToggleHotkeyEventCallbackHandle(settings->sensDriftOverlayToggleHotkeyEvent, [boolsetting = settings->sensDriftOverlayToggle]() {boolsetting->flipBoolSetting(); }),
+		mshieldInputPrinterToggleHotkeyEventCallbackHandle(settings->shieldInputPrinterHotkeyEvent, [boolsetting = settings->shieldInputPrinterToggle]() {boolsetting->flipBoolSetting(); })
 		
 
 	{ PLOG_DEBUG << "HotkeyEvents con"; }

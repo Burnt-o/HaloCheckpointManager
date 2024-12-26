@@ -60,6 +60,8 @@ public:
 	std::shared_ptr<ActionEvent> disableBarriersHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> abilityMeterToggleHotkeyEvent = std::make_shared<ActionEvent>();
 	std::shared_ptr<ActionEvent> sensDriftOverlayToggleHotkeyEvent = std::make_shared<ActionEvent>();
+	std::shared_ptr<ActionEvent> shieldInputPrinterHotkeyEvent = std::make_shared<ActionEvent>();
+	
 	
 
 	

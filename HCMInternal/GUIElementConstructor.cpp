@@ -1367,8 +1367,8 @@ private:
 
 
 			case GUIElementEnum::shieldInputPrinterToggle:
-				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<false>>
-					(game, ToolTipCollection("Locks onto nearest deployable shield; when shield disabled, prints which tick you pressed movement inputs"), std::nullopt, "Shield Input Printer", settings->shieldInputPrinterToggle));
+				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>
+					(game, ToolTipCollection("Locks onto nearest deployable shield; when shield disabled, prints which tick you pressed movement inputs"), RebindableHotkeyEnum::shieldInputPrinterToggleHotkey, "Shield Input Printer", settings->shieldInputPrinterToggle));
 
 			case GUIElementEnum::abilityMeterOverlayToggle:
 				return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUISimpleToggle<true>>

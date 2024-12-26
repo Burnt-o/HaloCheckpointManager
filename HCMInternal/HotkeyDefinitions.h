@@ -86,6 +86,12 @@ private:
 	const std::map<RebindableHotkeyEnum, std::shared_ptr<EventOnPressHotkey>>::value_type allEventOnPressHotkeysData[allEventOnPressHotkeyEnumCount]
 	{
 
+
+		
+		initEventOnPressHotkey(shieldInputPrinterToggleHotkey,
+		mSettings->shieldInputPrinterHotkeyEvent,
+		vsk{}),
+
 		initEventOnPressHotkey(toggleGUI,
 		mSettings->toggleGUIHotkeyEvent,
 		vsk{{ ImGuiKey_GraveAccent }}),

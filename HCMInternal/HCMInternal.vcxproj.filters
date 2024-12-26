@@ -1039,9 +1039,6 @@
     <ClInclude Include="ManagedResource.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Beeper.h">
-      <Filter>Services</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>

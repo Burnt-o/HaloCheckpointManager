@@ -234,7 +234,6 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Beeper.h" />
     <ClInclude Include="BitBoolPointer.h" />
     <ClInclude Include="BSPChangeHookEvent.h" />
     <ClInclude Include="ChangeOOBBackground.h" />

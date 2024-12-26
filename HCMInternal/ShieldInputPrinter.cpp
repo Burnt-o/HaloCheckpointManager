@@ -274,15 +274,21 @@ Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 			lockOrThrow(settingsWeak, settings);
 			lockOrThrow(mccStateHookWeak, mccStateHook);
 			bool shouldEnable = settings->shieldInputPrinterToggle->GetValue() && mccStateHook->isGameCurrentlyPlaying(mGame);
+			lockOrThrow(messagesWeak, messages);
 
 			if (shouldEnable)
 			{
+
 				lockOrThrow(gameTickEventHookWeak, gameTickEventHook);
 				mGameTickEventCallback = gameTickEventHook->getGameTickEvent()->subscribe([this](uint32_t i) {onGameTickEvent(i); });
+				if (mccStateHook->isGameCurrentlyPlaying(mGame))
+					messages->addMessage("Shield Input Printer enabled.");
 			}
 			else
 			{
 				mGameTickEventCallback.reset();
+				if (mccStateHook->isGameCurrentlyPlaying(mGame))
+					messages->addMessage("Shield Input Printer disabled.");
 			}
 
 		}
