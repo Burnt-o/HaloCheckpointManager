@@ -2330,6 +2330,13 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2448.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x12AB07</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
