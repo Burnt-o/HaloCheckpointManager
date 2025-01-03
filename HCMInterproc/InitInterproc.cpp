@@ -24,12 +24,7 @@ void stateMachineLoop()
 uint16_t initialiseInterproc(
 	bool CPnullData,
 	int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,
-	const char* SFnameH1, const char* SFpathH1,
-	const char* SFnameH2, const char* SFpathH2,
-	const char* SFnameH3, const char* SFpathH3,
-	const char* SFnameOD, const char* SFpathOD,
-	const char* SFnameHR, const char* SFpathHR,
-	const char* SFnameH4, const char* SFpathH4
+	int SFgame, const char* SFname, const char* SFpath
 )
 {
 	PLOG_DEBUG << "initialising interproc";
@@ -50,12 +45,7 @@ uint16_t initialiseInterproc(
 	{
 		g_SharedMemoryExternal = std::make_unique<SharedMemoryExternal>(CPnullData,
 			CPgame, CPname, CPpath, CPlevelcode, CPgameVersion, CPdifficulty,
-			SFnameH1, SFpathH1,
-			SFnameH2, SFpathH2,
-			SFnameH3, SFpathH3,
-			SFnameOD, SFpathOD,
-			SFnameHR, SFpathHR,
-			SFnameH4, SFpathH4);
+			SFgame, SFname, SFpath);
 		PLOG_INFO << "Success!";
 	}
 	catch (std::exception ex)

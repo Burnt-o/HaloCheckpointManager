@@ -1,5 +1,5 @@
-﻿using HCMExternal.Helpers.DictionariesNS;
-using HCMExternal.Services.CheckpointServiceNS;
+﻿using HCMExternal.CheckpointSorting;
+using HCMExternal.Services.CheckpointIO;
 using HCMExternal.ViewModels.Commands;
 using HCMExternal.ViewModels.Interfaces;
 using System;
@@ -48,12 +48,12 @@ namespace HCMExternal.ViewModels
             set => _cancel = value;
         }
 
-        public CheckpointService CheckpointServices { get; init; }
+        public ICheckpointIOService CheckpointServices { get; init; }
         public CheckpointViewModel CheckpointViewModel { get; init; }
 
 
 
-        public SortCheckpointsViewModel(CheckpointService checkpointServices, CheckpointViewModel checkpointViewModel)
+        public SortCheckpointsViewModel(ICheckpointIOService checkpointServices, CheckpointViewModel checkpointViewModel)
         {
             FolderName = "???";
             CheckpointServices = checkpointServices;
@@ -81,7 +81,7 @@ namespace HCMExternal.ViewModels
 
         public void AcceptAction()
         {
-            if (!Enum.IsDefined(typeof(HaloTabEnum), CheckpointViewModel.SelectedGame))
+            if (!Enum.IsDefined(typeof(HaloGame), CheckpointViewModel.SelectedGame))
             {
                 return;
             }

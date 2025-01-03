@@ -6,12 +6,7 @@ extern "C"
 	__declspec(dllexport) extern uint16_t initialiseInterproc(
 		bool CPnullData,
 		int CPgame, const char* CPname, const char* CPpath, const char* CPlevelcode, const char* CPgameVersion, int CPdifficulty,
-		const char* SFnameH1, const char* SFpathH1,
-		const char* SFnameH2, const char* SFpathH2,
-		const char* SFnameH3, const char* SFpathH3,
-		const char* SFnameOD, const char* SFpathOD,
-		const char* SFnameHR, const char* SFpathHR,
-		const char* SFnameH4, const char* SFpathH4
+		int SFgame, const char* SFname, const char* SFpath
 	);
 
 	_declspec(dllexport) void resetStateMachine();

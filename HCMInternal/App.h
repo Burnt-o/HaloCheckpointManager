@@ -125,7 +125,7 @@ public:
             auto imes = std::reinterpret_pointer_cast<IMessagesGUI>(mes);
             auto exp = std::make_shared<RuntimeExceptionHandler>(mes); PLOGV << "exp init";// tells user if a cheat hook throws a runtime exception
             auto settings = std::make_shared<SettingsStateAndEvents>(std::make_shared<SettingsSerialiser>(dirPath, exp, mes)); PLOGV << "settings init";
-            auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
+           
             auto mccStateHook = std::make_shared<MCCStateHook>(ptrStore, exp); PLOGV << "mccStateHook init";// fires event when game or level changes.
             auto guifail = std::make_shared<GUIServiceInfo>(mes); PLOGV << "guifail init"; // stores info about gui elements that failed to construct. starts empty, filled up later
             auto modal = std::make_shared<ModalDialogRenderer>(imm->ForegroundRenderEvent, control, hotkeyDisabler); PLOGV << "modal init"; // renders modal dialogs that can be called from optionalCheats
@@ -136,6 +136,7 @@ public:
             mes->setSettings(settings);
             // hotkeys
 
+            auto hke = std::make_shared<HotkeyEventsLambdas>(settings); // binds toggle hotkey events to lambdas of toggling settings etc
             auto hkd = std::make_shared<HotkeyDefinitions>(settings); PLOGV << "hkd init";
             auto hkm = std::make_shared<HotkeyManager>(imm->ForegroundRenderEvent, hkd, mes, dirPath, hotkeyDisabler); PLOGV << "hkm init"; // hotkey manager doesn't render but wants to poll inputs every frame to know if keys pressed etc
             

@@ -125,7 +125,7 @@ namespace HCMExternal.ViewModels
 
                 // Pass the two lists to checkpointmodel to actually apply the LWTs to the files.
                 // The new list of checkpoints gets the old list of LWTs, thus reordering them
-                CheckpointServices.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
+                cpservice.BatchModCheckpointLWTs(listCheckpoints, listLWT, SelectedSaveFolder);
 
                 // Refresh the list
                 RefreshCheckpointList();
@@ -174,7 +174,7 @@ namespace HCMExternal.ViewModels
 
                     // Pass the two lists to checkpointmodel to actually apply the createdOns to the folders.
                     // The new list of saveFolders gets the old list of createdOnss, thus reordering them
-                    CheckpointServices.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
+                    cpservice.BatchModSaveFolderCreatedOns(listSaveFolders, listCreatedOn);
 
                     // Refresh the tree
                     RefreshSaveFolderTree();

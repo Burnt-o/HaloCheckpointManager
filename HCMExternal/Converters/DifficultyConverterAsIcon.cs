@@ -1,4 +1,4 @@
-﻿using HCMExternal.Helpers.DictionariesNS;
+﻿
 using System;
 using System.Globalization;
 using System.Windows;
@@ -20,11 +20,9 @@ namespace HCMExternal.Converters
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.
-            HaloTabEnum gameindex = (HaloTabEnum)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
+            HaloGame gameEnum = (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
 
-            string game = Dictionaries.GameTo2LetterGameCode[gameindex];
-
-            string sourceImagePath = $"Images/{game}/diff_{difficulty}.png";
+            string sourceImagePath = $"Images/{gameEnum.ToAcronym()}/diff_{difficulty}.png";
 
             Uri sourceImageUri = new Uri(sourceImagePath, UriKind.Relative);
 

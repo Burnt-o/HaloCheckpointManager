@@ -1,4 +1,5 @@
-﻿using HCMExternal.Helpers.DictionariesNS;
+﻿
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,31 +13,41 @@ namespace HCMExternal.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string? valueString = value as string;
-            if (valueString == null)
+            string? levelCode = value as string;
+            if (levelCode == null)
             {
-                return "???";
+                return $"Images/errorfile.png";
             }
 
 
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.
-            HaloTabEnum gameindex = (HaloTabEnum)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
-            string gameID = Dictionaries.GameTo2LetterGameCode[gameindex];
+            HaloGame gameEnum = (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
 
             //check if level is a multiplayer level, if so we use the mp image
-            Dictionary<string, Dictionaries.LevelInfo> levelInfoGrabber = Dictionaries.GameToLevelInfoDictionary[gameindex];
-            if (levelInfoGrabber.TryGetValue(valueString, out Dictionaries.LevelInfo levelinfo) && levelinfo.LevelPosition == -1)
+            try
             {
-                return $"Images/mp.png";
+                LevelInfo levelInfo = new LevelInfo(gameEnum, levelCode);
+
+                // Check if level is a multiplayer map, which just share a generic image
+                if (levelInfo.LevelPosition == -1)
+                    return $"Images/mp.png";
+
+                //Otherwise, check whether the user wants the anniversary or classic icon for this level, then return the url to the image
+                string imageModeSuffix = HCMExternal.Properties.Settings.Default.ImageMode ? "anni" : "clas";
+                string URL = $"Images/{gameEnum.ToAcronym()}/{levelCode}_{imageModeSuffix}.png";
+
+                return URL;
+
+            }
+            catch(Exception ex)
+            {
+                Log.Error("Level converter error: " + ex.Message + "\n" + ex.Source + "n" + "for levelcode: " + levelCode);
+                return $"Images/errorfile.png";
             }
 
-            //Otherwise, check whether the user wants the anniversary or classic icon for this level, then return the url to the image
-            string imageModeSuffix = HCMExternal.Properties.Settings.Default.ImageMode ? "anni" : "clas";
-            string URL = $"Images/{gameID}/{valueString}_{imageModeSuffix}.png";
-
-            return URL;
+           
 
         }
 

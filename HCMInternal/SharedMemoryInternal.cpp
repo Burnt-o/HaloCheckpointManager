@@ -37,54 +37,17 @@ SelectedCheckpointData SharedMemoryInternal::getInjectInfo()
 
 SelectedFolderData SharedMemoryInternal::getDumpInfo(GameState game)
 {
-	std::string folderAccessName;
-	std::string folderAccessPath;
+	auto* selectedFolderGame = segment.find<int>("selectedFolderGame").first;
+	auto* selectedFolderName = segment.find<shm_string>("selectedFolderName").first;
+	auto* selectedFolderPath = segment.find<shm_string>("selectedFolderPath").first;
 
-	switch (game)
-	{
-	case GameState::Value::Halo1:
-		folderAccessName = "selectedH1FolderName";
-		folderAccessPath = "selectedH1FolderPath";
-		break;
-
-	case GameState::Value::Halo2:
-		folderAccessName = "selectedH2FolderName";
-		folderAccessPath = "selectedH2FolderPath";
-		break;
-
-	case GameState::Value::Halo3:
-		folderAccessName = "selectedH3FolderName";
-		folderAccessPath = "selectedH3FolderPath";
-		break;
-
-	case GameState::Value::Halo3ODST:
-		folderAccessName = "selectedODFolderName";
-		folderAccessPath = "selectedODFolderPath";
-		break;
-
-	case GameState::Value::HaloReach:
-		folderAccessName = "selectedHRFolderName";
-		folderAccessPath = "selectedHRFolderPath";
-		break;
-
-	case GameState::Value::Halo4:
-		folderAccessName = "selectedH4FolderName";
-		folderAccessPath = "selectedH4FolderPath";
-		break;
-
-	default:
-		throw HCMRuntimeException(std::format("Invalid game passed to getDumpInfo: {}", game.toString()));
-	}
-
-
-
-	auto* selectedFolderName = segment.find<shm_string>(folderAccessName.c_str()).first;
-	auto* selectedFolderPath = segment.find<shm_string>(folderAccessPath.c_str()).first;
-
+	nullCheck(selectedFolderGame);
 	nullCheck(selectedFolderName);
 	nullCheck(selectedFolderPath);
 
-	PLOG_VERBOSE << "getDumpInfo returning for game: " << game.toString() << ", \naccessor: " << folderAccessPath << ", \nvalue: " << std::string(*selectedFolderPath);
+	if ((GameState)*selectedFolderGame != game)
+		throw HCMRuntimeException(std::format("Cannot dump checkpoint; Wrong game tab selected in external window! HCM Tab was {} but currently running game is {}",((GameState)*selectedFolderGame).toString(), game.toString()));
+
 
 	return SelectedFolderData
 	{

@@ -8,7 +8,6 @@
              xmlns:cnv="clr-namespace:HCMExternal.Converters"
         xmlns:commands="clr-namespace:HCMExternal.ViewModels.Commands"
         xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
-           xmlns:helpers="clr-namespace:HCMExternal.Helpers.DictionariesNS"
 
         mc:Ignorable="d"
         Title="HaloCheckpointManager" Height="593" Width="760"
@@ -94,10 +93,22 @@
                     <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
                 </Grid>
         </TabItem>
+            <TabItem >
+                <TabItem.Header>
+                    <TextBlock Foreground="{DynamicResource TextColourHighlight}"> Project Cartographer</TextBlock>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                </Grid>
+            </TabItem>
 
 
 
-    </TabControl>
+        </TabControl>
 
         <control:StatusBarView  DataContext="{Binding Path=MCCHookStateViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"/>
     </Grid>

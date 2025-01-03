@@ -1,21 +1,22 @@
 ﻿using GongSolutions.Wpf.DragDrop;
-using HCMExternal.Helpers.DictionariesNS;
 using HCMExternal.Models;
-using HCMExternal.Services.CheckpointServiceNS;
-using HCMExternal.ViewModels.Commands;
+using HCMExternal.Services.CheckpointIO;
+using HCMExternal.Services.External;
+using HCMExternal.Services.Interproc;
 using HCMExternal.ViewModels.Interfaces;
 using Serilog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
+
 
 namespace HCMExternal.ViewModels
 {
@@ -23,22 +24,11 @@ namespace HCMExternal.ViewModels
     public partial class CheckpointViewModel : Presenter, IDropTarget
     {
 
+
         public ObservableCollection<Checkpoint> CheckpointCollection { get; private set; }
         public ObservableCollection<SaveFolder> SaveFolderHierarchy { get; private set; }
 
         public SaveFolder RootSaveFolder { get; private set; }
-
-        private HaloTabEnum _selectedGame = HaloTabEnum.Halo1;
-        public HaloTabEnum SelectedGame
-        {
-            get => _selectedGame;
-            set
-            {
-                Log.Verbose("SelectedGame changed: " + SelectedGame.ToString());
-                _selectedGame = value;
-                OnPropertyChanged(nameof(SelectedGame));
-            }
-        }
 
 
 
@@ -50,12 +40,15 @@ namespace HCMExternal.ViewModels
             {
                 _selectedCheckpoint = value;
                 OnPropertyChanged(nameof(SelectedCheckpoint));
+                ipservice.UpdateSharedMemCheckpoint(SelectedGame, SelectedCheckpoint);
 
                 if (value == null)
                 {
-                    Log.Debug("Selected checkpoint set to null");
-                    // Log.Verbose("SelectedCheckpoint set to null! Stacktrace:\n" + Environment.StackTrace);
+                    Log.Debug("Selected checkpoint set to null (ie no checkpoint selected)");
                 }
+
+                // serialise
+                Properties.Settings.Default.LastSelectedCheckpoint = _selectedCheckpoint?.CheckpointName;
 
             }
         }
@@ -73,8 +66,44 @@ namespace HCMExternal.ViewModels
 
                 _selectedSaveFolder = value;
                 OnPropertyChanged(nameof(SelectedSaveFolder));
+                ipservice.UpdateSharedMemSaveFolder(SelectedGame, SelectedSaveFolder);
+
+                // serialise
+                if (Properties.Settings.Default.LastSelectedFolder == null || Properties.Settings.Default.LastSelectedFolder.Count < 7)
+                {
+                    Properties.Settings.Default.LastSelectedFolder = new StringCollection() { "", "", "", "", "", "", "" };
+                }
+                Properties.Settings.Default.LastSelectedFolder[(int)SelectedGame] = _selectedSaveFolder.SaveFolderPath;
+
+
+                RefreshCheckpointList();
+                // set selected checkpoint to top of the list
+                if (CheckpointCollection.Count > 0)
+                {
+                    SelectedCheckpoint = CheckpointCollection.ElementAt(0);
+                }
             }
         }
+
+        private HaloGame _selectedGame = HaloGame.Halo1;
+        public HaloGame SelectedGame
+        {
+            get => _selectedGame;
+            set
+            {
+                Log.Verbose("SelectedGame changed: " + SelectedGame.ToString());
+                _selectedGame = value;
+                OnPropertyChanged(nameof(SelectedGame)); // update ui
+
+                // update save folder and checkpoints
+                RefreshSaveFolderTree();
+                RefreshCheckpointList();
+
+                // serialise
+                HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)SelectedGame;
+            }
+        }
+
 
 
         [Obsolete("Only for design data", true)]
@@ -87,41 +116,66 @@ namespace HCMExternal.ViewModels
 
         }
 
-        //public event EventHandler<int> RequestTabChange;
-
-        //public void InvokeRequestTabChange(int requestedTab)
-        //{ 
-        //RequestTabChange?.Invoke(this, requestedTab);
-        //}
-
 
         private readonly FileSystemWatcher? SaveFileWatcher = new FileSystemWatcher(@"Saves\", "*.bin");
         private readonly FileSystemWatcher? SaveDirWatcher = new FileSystemWatcher(@"Saves\");
 
 
+
         private readonly SynchronizationContext _syncContext;
-        private CheckpointService CheckpointServices { get; init; }
-        public CheckpointViewModel(CheckpointService cs)
+        private ICheckpointIOService cpservice { get; init; }
+        private IExternalService exservice { get; init; }
+        private IInterprocService ipservice { get; init; }
+        public CheckpointViewModel(ICheckpointIOService cs, IExternalService ex, IInterprocService ip)
         {
-            _syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current ?? throw new Exception("Null Synchronization Context ?!?!");
             Log.Verbose("CheckpointViewModel constructing");
-            CheckpointServices = cs;
+            cpservice = cs;
+            exservice = ex;
+            ipservice = ip;
             CheckpointCollection = new();
             SaveFolderHierarchy = new();
             RootSaveFolder = null;
 
             // Deserialise selected tab
-            if (!Enum.IsDefined(typeof(HaloTabEnum), HCMExternal.Properties.Settings.Default.LastSelectedGameTab))
+            if (!Enum.IsDefined(typeof(HaloGame), HCMExternal.Properties.Settings.Default.LastSelectedGameTab))
             {
                 Log.Error("Failed to deserialise valid LastSelectedGameTab value: " + HCMExternal.Properties.Settings.Default.LastSelectedGameTab);
-                HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)HaloTabEnum.Halo1;
+                HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)HaloGame.Halo1;
             }
-            SelectedGame = (HaloTabEnum)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
+            SelectedGame = (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
             ListCollectionView view = (ListCollectionView)CollectionViewSource
                     .GetDefaultView(CheckpointCollection);
 
             view.CustomSort = new SortCheckpointsByLastWriteTime();
 
+
+
+            RefreshSaveFolderTree();
+            RefreshCheckpointList();
+
+            // deserialise last selected checkpoint
+            Log.Verbose("Deserialising last selected checkpoint: Properties.Settings.Default.LastSelectedCheckpoint != null = " + (Properties.Settings.Default.LastSelectedCheckpoint != null) + ", this.SelectedSaveFolder != null = " + (SelectedSaveFolder != null));
+            if (Properties.Settings.Default.LastSelectedCheckpoint != null && SelectedSaveFolder != null)
+            {
+                Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint: " + Properties.Settings.Default.LastSelectedCheckpoint);
+                string lastSelectedCheckpointPath = (SelectedSaveFolder.SaveFolderPath + Properties.Settings.Default.LastSelectedCheckpoint);
+                Log.Verbose("lastSelectedCheckpointPath: " + lastSelectedCheckpointPath);
+                Log.Verbose("exists? " + File.Exists(lastSelectedCheckpointPath));
+                if (File.Exists(lastSelectedCheckpointPath))
+                {
+                    // iterate thru checkpoints in current savefolder and select the one that matches the name
+                    foreach (Checkpoint cp in CheckpointCollection)
+                    {
+                        if (cp.CheckpointName == Properties.Settings.Default.LastSelectedCheckpoint)
+                        {
+                            Log.Verbose("Found lastSelectedCheckpoint in current collection, selecting.");
+                            SelectedCheckpoint = cp;
+                            break;
+                        }
+                    }
+                }
+            }
 
 
             // Setup FileSystemWatcher to monitor save folders for changes
@@ -151,37 +205,24 @@ namespace HCMExternal.ViewModels
             SaveDirWatcher.EnableRaisingEvents = true;
 
 
-            RefreshSaveFolderTree();
-            RefreshCheckpointList();
-
-            PropertyChanged += CheckpointViewModel_PropertyChanged;
-
-            // deserialise last selected checkpoint
-            Log.Verbose("Deserialising last selected checkpoint: Properties.Settings.Default.LastSelectedCheckpoint != null = " + (Properties.Settings.Default.LastSelectedCheckpoint != null) + ", this.SelectedSaveFolder != null = " + (SelectedSaveFolder != null));
-            if (Properties.Settings.Default.LastSelectedCheckpoint != null && SelectedSaveFolder != null)
-            {
-                Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint: " + Properties.Settings.Default.LastSelectedCheckpoint);
-                string lastSelectedCheckpointPath = (SelectedSaveFolder.SaveFolderPath + Properties.Settings.Default.LastSelectedCheckpoint);
-                Log.Verbose("lastSelectedCheckpointPath: " + lastSelectedCheckpointPath);
-                Log.Verbose("exists? " + File.Exists(lastSelectedCheckpointPath));
-                if (File.Exists(lastSelectedCheckpointPath))
-                {
-                    // iterate thru checkpoints in current savefolder and select the one that matches the name
-                    foreach (Checkpoint cp in CheckpointCollection)
-                    {
-                        if (cp.CheckpointName == Properties.Settings.Default.LastSelectedCheckpoint)
-                        {
-                            Log.Verbose("Found lastSelectedCheckpoint in current collection, selecting.");
-                            SelectedCheckpoint = cp;
-                            break;
-                        }
-                    }
-                }
-            }
-
+            DeleteCheckpoint = new((arg) => { onDeleteCheckpoint(); });
+            RenameCheckpoint = new((arg) => { onRenameCheckpoint(); });
+            ReVersionCheckpoint = new((arg) => { onReVersionCheckpoint(); });
+            SortCheckpoint = new((arg) => { onSortCheckpoint(); });
+            OpenInExplorer = new((arg) => { onOpenInExplorer(); });
+            RenameFolder = new((arg) => { onRenameFolder(); });
+            DeleteFolder = new((arg) => { onDeleteFolder(); });
+            NewFolder = new((arg) => { onNewFolder(); });
+            ForceCheckpoint = new((arg) => { onForceCheckpoint(); });
+            ForceRevert = new((arg) => { onForceRevert(); });
+            ForceDoubleRevert = new((arg) => { onForceDoubleRevert(); });
+            DumpCheckpoint = new((arg) => { onDumpCheckpoint(); });
+            InjectCheckpoint = new((arg) => { onInjectCheckpoint(); });
 
 
         }
+
+
 
         private void OnFileChanged(object sender, FileSystemEventArgs e)
         {
@@ -210,41 +251,11 @@ namespace HCMExternal.ViewModels
             });
         }
 
-        private void CheckpointViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(SelectedGame):
-                    HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)SelectedGame;
-                    RefreshSaveFolderTree();
-                    RefreshCheckpointList();
-
-                    break;
-
-                case nameof(SelectedCheckpoint):
-                    // serialise 
-                    if (SelectedCheckpoint != null)
-                    {
-                        Properties.Settings.Default.LastSelectedCheckpoint = SelectedCheckpoint.CheckpointName;
-                        Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint set to " + SelectedCheckpoint.CheckpointName);
-                    }
-                    else
-                    {
-                        Properties.Settings.Default.LastSelectedCheckpoint = null;
-                        Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint set to null");
-                    }
-
-                    break;
-
-
-                default:
-                    break;
-            }
-        }
 
 
         public void RefreshCheckpointList()
         {
+            SelectedCheckpoint = null;
 
             // store old selected checkpoint
             string? oldCP = SelectedCheckpoint?.CheckpointName;
@@ -254,7 +265,7 @@ namespace HCMExternal.ViewModels
 
 
 
-            ObservableCollection<Checkpoint> newCollection = CheckpointServices.PopulateCheckpointList(SelectedSaveFolder, SelectedGame);
+            ObservableCollection<Checkpoint> newCollection = cpservice.PopulateCheckpointList(SelectedSaveFolder, SelectedGame);
             foreach (Checkpoint c in newCollection)
             {
                 CheckpointCollection.Add(c);
@@ -281,9 +292,8 @@ namespace HCMExternal.ViewModels
         public void RefreshSaveFolderTree()
         {
 
-
             SaveFolderHierarchy.Clear();
-            ObservableCollection<SaveFolder> newHierarchy = CheckpointServices.PopulateSaveFolderTree(out SaveFolder rootFolder, SelectedGame);
+            ObservableCollection<SaveFolder> newHierarchy = cpservice.PopulateSaveFolderTree(out SaveFolder rootFolder, SelectedGame);
             RootSaveFolder = rootFolder;
             foreach (SaveFolder s in newHierarchy)
             {
@@ -326,6 +336,10 @@ namespace HCMExternal.ViewModels
                 }
 
             }
+            else
+            {
+                Log.Error("Oh dear god, the root folder is null");
+            }
 
 
 
@@ -364,9 +378,9 @@ namespace HCMExternal.ViewModels
             }
         }
 
-        public void FolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        public void TreeFolderChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            Trace.WriteLine("FolderChanged. Sender: " + sender + ", currentgame?: " + SelectedGame);
+            Trace.WriteLine("TreeFolderChanged. Sender: " + sender + ", currentgame?: " + SelectedGame);
             SaveFolder? saveFolder = (SaveFolder?)e.NewValue;
 
             if (saveFolder == null)
@@ -377,112 +391,15 @@ namespace HCMExternal.ViewModels
             Trace.WriteLine("Selected Folder Path: " + saveFolder.SaveFolderPath);
 
             if (Directory.Exists(saveFolder.SaveFolderPath))
-            {
-                Trace.WriteLine("valid new saveFolder, so changing internal selection and inserting into lastSelectedFolder list.");
-                Log.Verbose("New lastSelectedFolder for game " + SelectedGame + " is " + saveFolder.SaveFolderPath);
-
-                Properties.Settings.Default.LastSelectedFolder[(int)SelectedGame] = saveFolder.SaveFolderPath;
-                // Properties.Settings.Default.LastSelectedFolder.Insert(, saveFolder.SaveFolderPath);
-
-                Log.Verbose("This should be the same value as:" + Properties.Settings.Default.LastSelectedFolder[(int)SelectedGame]);
-
                 SelectedSaveFolder = saveFolder;
-                RefreshCheckpointList();
-
-                // set selected checkpoint to top of the list
-                if (CheckpointCollection.Count > 0)
-                {
-                    SelectedCheckpoint = CheckpointCollection.ElementAt(0);
-                }
-
-            }
             else
-            {
                 MessageBox.Show("Error with new selected save folder at path: " + saveFolder.SaveFolderPath);
-                //this.RefreshSaveFolderTree();
-            }
 
 
 
         }
 
 
-        public void RequestTabChange(HaloTabEnum game)
-        {
-            // send is syncronhys so this will block
-            _syncContext.Send(o => { SelectedGame = game; }, null);
-            //Application.Current.Dispatcher.Invoke(new Action(() => { SelectedGame = game; }));
-        }
-
-
-        private ICommand _dump;
-        public ICommand Dump
-        {
-            get => _dump ?? (_dump = new DumpCommand());
-            set => _dump = value;
-        }
-        private ICommand _inject;
-        public ICommand Inject
-        {
-            get => _inject ?? (_inject = new InjectCommand());
-            set => _inject = value;
-        }
-
-        private ICommand _deleteCheckpoint;
-        public ICommand DeleteCheckpoint
-        {
-            get => _deleteCheckpoint ?? (_deleteCheckpoint = new DeleteCheckpointCommand(this, CheckpointServices));
-            set => _deleteCheckpoint = value;
-        }
-
-        private ICommand _renameCheckpoint;
-        public ICommand RenameCheckpoint
-        {
-            get => _renameCheckpoint ?? (_renameCheckpoint = new RenameCheckpointCommand(this, CheckpointServices));
-            set => _renameCheckpoint = value;
-        }
-
-        private ICommand _reVersionCheckpoint;
-        public ICommand ReVersionCheckpoint
-        {
-            get => _reVersionCheckpoint ?? (_reVersionCheckpoint = new ReVersionCheckpointCommand(this, CheckpointServices));
-            set => _reVersionCheckpoint = value;
-        }
-
-        private ICommand _sortCheckpoint;
-        public ICommand SortCheckpoint
-        {
-            get => _sortCheckpoint ?? (_sortCheckpoint = new SortCheckpointCommand(this, CheckpointServices));
-            set => _sortCheckpoint = value;
-        }
-
-        private ICommand _openInExplorer;
-        public ICommand OpenInExplorer
-        {
-            get => _openInExplorer ?? (_openInExplorer = new OpenInExplorerCommand(this, CheckpointServices));
-            set => _openInExplorer = value;
-        }
-
-        private ICommand _renameFolder;
-        public ICommand RenameFolder
-        {
-            get => _renameFolder ?? (_renameFolder = new RenameFolderCommand(this, CheckpointServices));
-            set => _renameFolder = value;
-        }
-
-        private ICommand _deleteFolder;
-        public ICommand DeleteFolder
-        {
-            get => _deleteFolder ?? (_deleteFolder = new DeleteFolderCommand(this, CheckpointServices));
-            set => _deleteFolder = value;
-        }
-
-        private ICommand _newFolder;
-        public ICommand NewFolder
-        {
-            get => _newFolder ?? (_newFolder = new NewFolderCommand(this, CheckpointServices));
-            set => _newFolder = value;
-        }
 
 
 

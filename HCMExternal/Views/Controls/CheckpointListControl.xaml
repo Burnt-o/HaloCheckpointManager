@@ -33,7 +33,7 @@
 
                 <ContextMenu x:Key="CheckpointContextMenu">
                     <MenuItem Header="Inject" 
-                        Command="{Binding Path=Parent.DataContext.Inject, 
+                        Command="{Binding Path=Parent.DataContext.InjectCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
                     
                     <MenuItem Header="Rename" 

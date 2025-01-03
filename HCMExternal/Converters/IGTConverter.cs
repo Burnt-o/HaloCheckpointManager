@@ -1,4 +1,4 @@
-﻿using HCMExternal.Helpers.DictionariesNS;
+﻿
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -28,9 +28,9 @@ namespace HCMExternal.Converters
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.
-            HaloTabEnum gameindex = (HaloTabEnum)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
+            HaloGame gameEnum = (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
             // Halo 1 (game/tab 0) runs at 30 ticks per sec, the rest at 60.
-            double divisor = (gameindex == HaloTabEnum.Halo1) ? 30 : 60;
+            double divisor = (gameEnum == HaloGame.Halo1) ? 30 : 60;
             double seconds = gameTicks / divisor;
 
             string formatter = @"mm\:ss";

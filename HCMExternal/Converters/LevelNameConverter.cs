@@ -1,4 +1,5 @@
-﻿using HCMExternal.Helpers.DictionariesNS;
+﻿
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,8 +11,8 @@ namespace HCMExternal.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string? valueString = value as string;
-            if (valueString == null)
+            string? levelCode = value as string;
+            if (levelCode == null)
             {
                 return "???";
             }
@@ -20,21 +21,18 @@ namespace HCMExternal.Converters
             // So I'd like this to check what the current tab index is directly, but haven't figured out how.
             // ConverterParameter won't seem to work since this is from a control under the tab control.
             // For now we'll used the saved setting which should always be accurate.
-            HaloTabEnum game = (HaloTabEnum)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
+            HaloGame gameEnum = (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
 
-            // Must be within bounds of array
-
-            Dictionary<string, Dictionaries.LevelInfo> stringMapper = Dictionaries.GameToLevelInfoDictionary[game];
-            if (stringMapper.ContainsKey(valueString))
+            try
             {
-                return stringMapper[valueString].FullName;
+                LevelInfo levelInfo = new LevelInfo(gameEnum, levelCode);
+                return levelInfo.FullName;
             }
-            else
+            catch(Exception ex)
             {
-                return "???";
+                Log.Error("Level converter error: " + ex.Message + "\n" + ex.Source + "n" + "for levelcode: " + levelCode);
+                return levelCode;
             }
-
-
 
         }
 

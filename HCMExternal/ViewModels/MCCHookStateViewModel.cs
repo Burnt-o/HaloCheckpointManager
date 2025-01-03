@@ -1,4 +1,5 @@
 ﻿using HCMExternal.Models;
+using HCMExternal.Services.Interproc;
 using HCMExternal.ViewModels.Commands;
 using Serilog;
 using System;
@@ -11,9 +12,18 @@ namespace HCMExternal.ViewModels
     {
         public ErrorDialogViewModel mErrorDialogViewModel { get; init; }
 
-        public MCCHookStateViewModel(ErrorDialogViewModel evm)
+        public MCCHookStateViewModel(ErrorDialogViewModel evm, IInterprocService ips)
         {
             mErrorDialogViewModel = evm;
+            ips.StateMachineStatusChangedHandler += (sender, obj) => { State.State = obj.hookState; };
+            ips.InterprocErrorHandler += (sender, obj) =>
+            {
+                evm.ErrorMessage = obj.errorMessage;
+                bool dialogResult = evm.RaiseShowErrorDialogEvent(evm.ErrorMessage);
+
+                if (dialogResult) // user wants to retry injection
+                    ips.resetStateMachineEx();
+            };
         }
 
         // store of current state. Updated by MCCHookService.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace HCMExternal.ViewModels.Commands
         public async void Execute(object? parameter)
         {
 
-            Trace.WriteLine($"Relay Command Thread : {Thread.CurrentThread.ManagedThreadId} Started");
+            Log.Verbose($"Relay Command Thread : {Thread.CurrentThread.ManagedThreadId} Started");
 
             try
             {

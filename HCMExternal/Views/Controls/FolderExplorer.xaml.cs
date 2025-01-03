@@ -17,7 +17,7 @@ namespace HCMExternal.Views.Controls
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             CheckpointViewModel vm = DataContext as CheckpointViewModel;
-            vm.FolderChanged(sender, e);
+            vm.TreeFolderChanged(sender, e);
         }
     }
 }

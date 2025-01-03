@@ -1,10 +1,14 @@
-﻿using HCMExternal.Services.CheckpointServiceNS;
-using HCMExternal.Services.DataPointersServiceNS;
-using HCMExternal.Services.InterprocServiceNS;
-using HCMExternal.Services.MCCHookService;
+﻿using HCMExternal.Services.CheckpointIO.Impl;
+using HCMExternal.Services.External.Impl;
+using HCMExternal.Services.Interproc.Impl;
+using HCMExternal.Services.PointerData.Impl;
+using HCMExternal.Services.CheckpointIO;
+using HCMExternal.Services.External;
+using HCMExternal.Services.Interproc;
+using HCMExternal.Services.PointerData;
 using HCMExternal.ViewModels;
 using HCMExternal.Views;
-using Microsoft.Extensions.DependencyInjection;
+
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -19,7 +23,6 @@ namespace HCMExternal
 
 
         public string CurrentHCMVersion = "unset";
-        private ServiceProvider _serviceProvider;
 
         public App()
         {
@@ -35,72 +38,19 @@ namespace HCMExternal
                 .CreateLogger();
             Log.Information("Logging started");
 
-            // Services
-            ServiceCollection services = new();
-            ConfigureServices(services);
-
-            _serviceProvider = services.BuildServiceProvider();
         }
 
-        private void ConfigureServices(ServiceCollection serviceCollection)
-        {
-            // View
-            serviceCollection.AddSingleton<MainWindow>();
-
-            // Viewmodels
-            serviceCollection.AddSingleton<CheckpointViewModel>();
-            serviceCollection.AddSingleton<MainViewModel>();
-
-
-            // Services
-            serviceCollection.AddSingleton<MCCHookService>();
-            serviceCollection.AddSingleton<CheckpointService>();
-            serviceCollection.AddSingleton<DataPointersService>();
-            serviceCollection.AddSingleton<InterprocService>();
-
-
-            serviceCollection.AddSingleton<ErrorDialogViewModel>();
-            serviceCollection.AddSingleton<ErrorDialogView>();
-            serviceCollection.AddSingleton<MCCHookStateViewModel>();
-
-
-
-
-
-            _serviceProvider = serviceCollection.BuildServiceProvider();
-        }
 
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-                    ShowErrorAndShutdown("An unhandled exception occured!\n" + (args.ExceptionObject as Exception).Message + "\n\nStackTrace:\n" + (args.ExceptionObject as Exception).StackTrace);
+            //AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+            //        ShowErrorAndShutdown("An unhandled exception occured!\n" + (args.ExceptionObject as Exception).Message + "\n\nStackTrace:\n" + (args.ExceptionObject as Exception).StackTrace);
 
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
             CurrentHCMVersion = fvi.FileVersion ?? "no version info";
-
-            // TODO: check for required files/folders
-
-            // Tell DataPointersService to load data
-            DataPointersService? dataPointersService = _serviceProvider.GetService<DataPointersService>();
-            if (dataPointersService == null) { }
-            // Create collection of all our needed data and load them from the online repository
-            string pointerErrors = "";
-            try
-            {
-                dataPointersService.LoadPointerDataFromSource(out pointerErrors);
-            }
-            catch (Exception ex)
-            {
-                ShowErrorAndShutdown(ex.ToString() + "\n" + pointerErrors);
-                return;
-            }
-            if (pointerErrors != "")
-            { ShowError("Some pointers failed to load. Yell at Burnt for making typos.\n" + pointerErrors); }
-
-
 
             try
             {
@@ -113,19 +63,47 @@ namespace HCMExternal
             }
 
 
+            // Set up services and view models
+
+            // Tell DataPointersService to load data
+            IPointerDataService pointerData;
+            try
+            {
+                (pointerData, string pointerErrors) = PointerDataServiceFactory.MakePointerDataService();
+                if (pointerErrors != "")
+                { 
+                    ShowError("Some pointers failed to load. Yell at Burnt for making typos.\n" + pointerErrors); 
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorAndShutdown(ex.ToString() + "\n" + ex.Message + "\n" + ex.Source);
+                return;
+            }
+
+
+            ICheckpointIOService checkpointIO = new CheckpointIOService(pointerData);
+            IExternalService external = new ExternalService();
+            IInterprocService interproc = new InterprocService();
+
+            CheckpointViewModel checkpointViewModel = new(checkpointIO, external, interproc);
+            ErrorDialogViewModel errorDialogViewModel = new();
+            MCCHookStateViewModel hookStateViewModel = new(errorDialogViewModel, interproc);
+            MainViewModel mainViewModel = new MainViewModel(checkpointViewModel, hookStateViewModel);
+
+         
+
+
             // Setup theming
             string appTheme = HCMExternal.Properties.Settings.Default.DarkMode ? "Dark" : "Light";
             Resources.MergedDictionaries[0].Source = new Uri($"/Themes/{appTheme}.xaml", UriKind.Relative);
 
-            MainWindow? mainWindow = _serviceProvider.GetService<MainWindow>();
-            mainWindow.DataContext = _serviceProvider.GetService<MainViewModel>();
+            MainWindow mainWindow = new();
+            mainWindow.DataContext = mainViewModel;
             mainWindow.Title = "HaloCheckpointManager " + (CurrentHCMVersion.Length > 4 ? CurrentHCMVersion.Substring(0, 5) : CurrentHCMVersion);
             mainWindow.Show();
 
-           var ips = _serviceProvider.GetService<InterprocService>();
-            _serviceProvider.GetService<MCCHookService>();
-
-            ips.initInterproc();
+            interproc.initializeSharedMemory(checkpointViewModel.SelectedCheckpoint, checkpointViewModel.SelectedSaveFolder, checkpointViewModel.SelectedGame);
 
         }
 
@@ -163,6 +141,7 @@ namespace HCMExternal
             @"Saves\Halo 3 ODST",
             @"Saves\Halo Reach",
             @"Saves\Halo 4",
+            @"Saves\Project Cartographer",
         };
 
         //Required files that HCM needs to be able to run.
