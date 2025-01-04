@@ -65,5 +65,20 @@ namespace HCMExternal
             }
         }
         
+
+        public static HaloGame FromAcronym(string acronym)
+        {
+            switch (acronym)
+            {
+                case "H1": return HaloGame.Halo1;
+                case "H2": return HaloGame.Halo2;
+                case "H3": return HaloGame.Halo3;
+                case "OD": return HaloGame.Halo3ODST;
+                case "HR": return HaloGame.HaloReach;
+                case "H4": return HaloGame.Halo4;
+                case "PC": return HaloGame.ProjectCartographer;
+                default: throw new System.Exception("Invalid HaloGame acronym: " + acronym);
+            }
+        }
     }
 }

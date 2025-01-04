@@ -51,6 +51,10 @@
                     <MenuItem Header="Sort" 
             Command="{Binding Path=Parent.DataContext.SortCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
+
+                    <MenuItem Header="ForceCheckpoint" 
+                        Command="{Binding Path=Parent.DataContext.ForceCheckpoint, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
                 </ContextMenu>
             </ListView.Resources>
 

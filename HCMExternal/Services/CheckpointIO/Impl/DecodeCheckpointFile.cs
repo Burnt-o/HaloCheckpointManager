@@ -83,7 +83,7 @@ namespace HCMExternal.Services.CheckpointIO.Impl
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetLevelCode = (int?)PointerData.GetPointer(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
+                                int? offsetLevelCode = PointerData.GetData<int>(gameString + "_CheckpointData_LevelCode", checkpointVersionGuess);
                                 if (offsetLevelCode.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -102,7 +102,7 @@ namespace HCMExternal.Services.CheckpointIO.Impl
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetGameTickCount = (int?)PointerData.GetPointer(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
+                                int? offsetGameTickCount = PointerData.GetData<int>(gameString + "_CheckpointData_GameTickCount", checkpointVersionGuess);
                                 if (offsetGameTickCount.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data
@@ -117,7 +117,7 @@ namespace HCMExternal.Services.CheckpointIO.Impl
                             try
                             {
                                 // Grab the offset; if it exists
-                                int? offsetDifficulty = (int?)PointerData.GetPointer(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
+                                int? offsetDifficulty = PointerData.GetData<int>(gameString + "_CheckpointData_Difficulty", checkpointVersionGuess);
                                 if (offsetDifficulty.HasValue)
                                 {
                                     // Use the offset to seek to the correct location and read the data

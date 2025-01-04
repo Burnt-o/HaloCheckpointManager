@@ -19,6 +19,10 @@
 		<Entry>1.3385.0.0</Entry>
 	</HighestSupportedVersion>
 
+	<HighestSupportedCartographerVersion>
+		<Entry>0.7.0.3</Entry>
+	</HighestSupportedCartographerVersion>
+
 
 <!-- Safety flag. 0 when MCC is still loading in, 1 after that. Is ROUGHLY 0x90 bytes behind the game engine pointer-->
 	<!--can scan nw "4c 8b 4c c1 08 4d 85 c9", go up a bit (add -> je -> mov) to where it moves a val in from r12-->
@@ -394,4 +398,16 @@
 	<!-- #endregion Halo 4-->
 
 
+
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>ForceCheckpointFlag</Name>
+			<Version Version="All">
+				<Offsets>
+					<Offset>0x482250</Offset>
+				</Offsets>
+			</Version>
+	</GameProcessEntry>
+
+	
 </Root>

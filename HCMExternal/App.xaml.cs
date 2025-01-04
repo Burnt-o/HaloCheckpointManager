@@ -45,8 +45,8 @@ namespace HCMExternal
         private void Application_Startup(object sender, StartupEventArgs e)
         {
 
-            //AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
-            //        ShowErrorAndShutdown("An unhandled exception occured!\n" + (args.ExceptionObject as Exception).Message + "\n\nStackTrace:\n" + (args.ExceptionObject as Exception).StackTrace);
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                    ShowErrorAndShutdown("An unhandled exception occured!\n" + (args.ExceptionObject as Exception).Message + "\n\nStackTrace:\n" + (args.ExceptionObject as Exception).StackTrace);
 
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -83,7 +83,7 @@ namespace HCMExternal
 
 
             ICheckpointIOService checkpointIO = new CheckpointIOService(pointerData);
-            IExternalService external = new ExternalService();
+            IExternalService external = new ExternalService(pointerData);
             IInterprocService interproc = new InterprocService();
 
             CheckpointViewModel checkpointViewModel = new(checkpointIO, external, interproc);
