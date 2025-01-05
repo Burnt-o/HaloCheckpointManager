@@ -1,7 +1,14 @@
+## 3.1.8 TODO:
+* Finish Project Cartographer Save Management support
+	* Inject/Dump checkpoint
+		* inject requirements
+		* Preserve locations
+		* Offsets for checkpoint location
+		* Offsets for loaded bsp in cp and exe
+	* Hotkeys (adapt from https://github.com/Burnt-o/HaloCheckpointManager/blob/HCM2/HCM3/Services/HotkeyManager.cs)*
+* Fix shield input printer messageGUI
+* Fix subpixel ID copy paste/ button/ enter value etc bugs
 
-## 3.1.6 TODO:
-* Finish shield input printer.
-* Make a general input printer? Would also help with stuff like h2 sword-flies etc
 
 
 
