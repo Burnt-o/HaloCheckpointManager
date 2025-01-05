@@ -267,6 +267,30 @@ Print message ("new input pressed at T-x ticks to shield-on-tick") as appopiate.
 		}
 	}
 
+	void onMCCStateChanged()
+	{
+		try
+		{
+			lockOrThrow(settingsWeak, settings);
+			lockOrThrow(mccStateHookWeak, mccStateHook);
+			bool shouldDisable = settings->shieldInputPrinterToggle->GetValue() && !mccStateHook->isGameCurrentlyPlaying(mGame);
+		
+			if (shouldDisable)
+			{
+				settings->shieldInputPrinterToggle->GetValueDisplay() = false;
+				settings->shieldInputPrinterToggle->UpdateValueWithInput();
+			}
+
+		}
+		catch (HCMRuntimeException ex)
+		{
+			lockOrThrow(settingsWeak, settings);
+			settings->shieldInputPrinterToggle->GetValueDisplay() = false;
+			settings->shieldInputPrinterToggle->UpdateValueWithInput();
+			runtimeExceptions->handleMessage(ex);
+		}
+	}
+
 	void onSettingChanged()
 	{
 		try
@@ -316,7 +340,7 @@ public:
 		settingsWeak(dicon.Resolve<SettingsStateAndEvents>()),
 		runtimeExceptions(dicon.Resolve<RuntimeExceptionHandler>()),
 		shieldInputPrinterToggleCallback(dicon.Resolve<SettingsStateAndEvents>().lock()->shieldInputPrinterToggle->valueChangedEvent, [this](bool& n) { onSettingChanged(); }),
-		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onSettingChanged(); })
+		MCCStateChangedCallback(dicon.Resolve<IMCCStateHook>().lock()->getMCCStateChangedEvent(), [this](const MCCState& n) { onMCCStateChanged(); })
 	{
 		auto ptr = dicon.Resolve<PointerDataStore>().lock();
 		playerDataStruct = DynamicStructFactory::make<bipedDataFields>(ptr, game);

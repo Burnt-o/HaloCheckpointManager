@@ -6,7 +6,6 @@
 		* Offsets for checkpoint location
 		* Offsets for loaded bsp in cp and exe
 	* Hotkeys (adapt from https://github.com/Burnt-o/HaloCheckpointManager/blob/HCM2/HCM3/Services/HotkeyManager.cs)*
-* Fix shield input printer messageGUI
 * Fix subpixel ID copy paste/ button/ enter value etc bugs
 
 
