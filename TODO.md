@@ -1,5 +1,6 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
+	* View (GUI)
 	* Inject/Dump checkpoint
 		* inject requirements
 		* Preserve locations

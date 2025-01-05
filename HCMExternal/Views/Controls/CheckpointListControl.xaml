@@ -10,6 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="593" d:DesignWidth="625"
              xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:debug="debug-mode"
 
              d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel, IsDesignTimeCreatable=True}">
     <Grid >
@@ -52,9 +53,39 @@
             Command="{Binding Path=Parent.DataContext.SortCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
 
-                    <MenuItem Header="ForceCheckpoint" 
+                    <mc:AlternateContent>
+                        <!--
+                        add option to invoke these commands to the context menu when compiling under HCM_DEBUG,
+                        because I haven't yet coded up the real gui for them yet
+                        -->
+                        <mc:Choice Requires="debug">
+                            <MenuItem Header="ForceCheckpoint" 
                         Command="{Binding Path=Parent.DataContext.ForceCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                            <MenuItem Header="ForceRevert" 
+                        Command="{Binding Path=Parent.DataContext.ForceRevert, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                            <MenuItem Header="ForceDoubleRevert" 
+                        Command="{Binding Path=Parent.DataContext.ForceDoubleRevert, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                            <MenuItem Header="InjectCheckpoint" 
+                        Command="{Binding Path=Parent.DataContext.InjectCheckpoint, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+
+                            <MenuItem Header="DumpCheckpoint" 
+                        Command="{Binding Path=Parent.DataContext.DumpCheckpoint, 
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
+                        </mc:Choice>
+                        <mc:Fallback>
+                        </mc:Fallback>
+                    </mc:AlternateContent>
+                    
+                    
+                    
+
                 </ContextMenu>
             </ListView.Resources>
 
