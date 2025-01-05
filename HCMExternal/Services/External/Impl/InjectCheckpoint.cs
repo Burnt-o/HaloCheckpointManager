@@ -12,7 +12,7 @@ namespace HCMExternal.Services.External.Impl
         public void InjectCheckpoint(Checkpoint checkpoint)
         {
             // TODO
-            
+            throw new NotImplementedException("InjectCheckpoint not impl yet");
         }
     }
 }

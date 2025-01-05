@@ -12,7 +12,7 @@ namespace HCMExternal.Services.External.Impl
         public void DumpCheckpoint(SaveFolder saveFolder)
         {
             // TODO
-            
+            throw new NotImplementedException("DumpCheckpoint not impl yet");
         }
     }
 }

@@ -409,5 +409,61 @@
 			</Version>
 	</GameProcessEntry>
 
-	
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>ForceRevertFlag</Name>
+		<Version Version="All">
+			<Offsets>
+				<Offset>0x48224F</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>DoubleRevertFlag</Name>
+		<Version Version="All">
+			<Offsets>
+				<Offset>0x47A72C</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type="InjectRequirements" HaloProcessType="ProjectCartographer" HaloGame ="PC">
+		<Name>InjectRequirements</Name>
+		<Version Version="All">
+			<singleCheckpoint>false</singleCheckpoint>
+			<preserveLocations>true</preserveLocations>
+			<SHA>false</SHA>
+			<BSP>true</BSP>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type="InjectRequirements" HaloProcessType="ProjectCartographer" HaloGame ="PC">
+		<Name>InjectRequirements</Name>
+		<Version Version="All">
+			<singleCheckpoint>false</singleCheckpoint>
+			<preserveLocations>true</preserveLocations>
+			<SHA>false</SHA>
+			<BSP>true</BSP>
+		</Version>
+	</GameProcessEntry>
+
+	<!-- #region preserveLocations-->
+	<GameProcessEntry Type="PreserveLocationArray" HaloProcessType="ProjectCartographer" HaloGame ="PC">
+		<Name>PreserveLocations</Name>
+		<Version Version="All">
+			<!--TODO: get real values-->
+			<PreserveLocation>
+				<Offset>0x597C</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5A05</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x381C</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+		</Version>
+	</GameProcessEntry>
 </Root>

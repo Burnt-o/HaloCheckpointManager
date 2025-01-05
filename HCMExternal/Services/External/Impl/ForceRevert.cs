@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HCMExternal.Services.PointerData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,13 @@ namespace HCMExternal.Services.External.Impl
     {
         public void ForceRevert()
         {
-            // TODO
-            
+            // get process
+            HaloProcessInfo haloProcess = GetHaloProcessInfo();
+            // get pointer
+            IMultilevelPointer pointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "ForceRevertFlag", haloProcess.processVersion);
+
+            // write a value of 1 to it
+            pointer.writeData(haloProcess.processHandle, new byte[] { 1 });
         }
     }
 }
