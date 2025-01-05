@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using HCMExternal.Services.External.Impl;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;

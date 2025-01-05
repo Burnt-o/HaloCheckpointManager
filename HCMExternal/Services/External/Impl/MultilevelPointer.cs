@@ -1,4 +1,5 @@
 ﻿using GongSolutions.Wpf.DragDrop.Utilities;
+using HCMExternal.Services.PointerData;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation.Text;
 using System.Xml.Linq;
 
-namespace HCMExternal.Services.PointerData.Impl
+namespace HCMExternal.Services.External.Impl
 {
     public class MultilevelPointer : IMultilevelPointer
     {
@@ -20,29 +21,29 @@ namespace HCMExternal.Services.PointerData.Impl
 
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
+        private static extern bool WriteProcessMemory(nint hProcess, nint lpBaseAddress, byte[] lpBuffer, int nSize, out int lpNumberOfBytesWritten);
 
         [DllImport("kernel32.dll")]
-        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
+        private static extern bool ReadProcessMemory(nint hProcess, nint lpBaseAddress, byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
 
         [DllImport("kernel32.dll")]
-        private static extern IntPtr OpenProcess(ProcessAccess processAccessFlags, bool bInheritHandle, int dwProcessId);
+        private static extern nint OpenProcess(ProcessAccess processAccessFlags, bool bInheritHandle, int dwProcessId);
 
         [DllImport("kernel32.dll")]
-        static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, int flNewProtect, out int lpflOldProtect);
+        static extern bool VirtualProtectEx(nint hProcess, nint lpAddress, int dwSize, int flNewProtect, out int lpflOldProtect);
 
         [DllImport("kernel32.dll")]
         public static extern uint GetLastError();
 
-        public IntPtr Resolve(IntPtr processHandle, IntPtr baseAddress)
+        public nint Resolve(nint processHandle, nint baseAddress)
         {
-            IntPtr ptr = baseAddress;
+            nint ptr = baseAddress;
 
             Log.Verbose("Resolving pointer beginning at baseAddress: 0x" + baseAddress.ToString("X"));
 
             if (Offsets.Length == 0)
                 return ptr;
-            
+
             ptr += Offsets[0];
 
             Log.Verbose("After adding first offset, ptr is: 0x" + ptr.ToString("X"));
@@ -50,21 +51,19 @@ namespace HCMExternal.Services.PointerData.Impl
             if (Offsets.Length == 1)
                 return ptr;
 
-            var LoopOffsets = Offsets.Skip(1).ToArray();
 
-
-            foreach (int offset in Offsets)
+            foreach (int offset in Offsets.Skip(1).ToArray()) // skip the first offset since we just did it above
             {
                 byte[] buffer = new byte[8];
                 if (!ReadProcessMemory(processHandle, ptr, buffer, 8, out int lpNumberOfBytesRead) || lpNumberOfBytesRead != 8)
-                    throw new System.Exception("Failed to read data from halo game process while looping pointer offsets! Error code: " + GetLastError());
+                    throw new Exception("Failed to read data from halo game process while looping pointer offsets! Error code: " + GetLastError());
 
-                Int64 baseOfNextPointer = BitConverter.ToInt64(buffer, 0);
+                long baseOfNextPointer = BitConverter.ToInt64(buffer, 0);
 
                 Log.Verbose(string.Format("baseOfNextPointer: 0x{0:X}", baseOfNextPointer));
                 Log.Verbose(string.Format("next offset: 0x{0:X}", offset));
 
-                ptr = IntPtr.Add(new IntPtr(baseOfNextPointer), offset);
+                ptr = nint.Add(new nint(baseOfNextPointer), offset);
 
                 Log.Verbose(string.Format("ptr: 0x{0:X}", ptr));
             }
@@ -73,28 +72,28 @@ namespace HCMExternal.Services.PointerData.Impl
 
 
         private const ProcessAccess readFlags = ProcessAccess.VmRead;
-        private const ProcessAccess writeFlags = ProcessAccess.VmWrite | ProcessAccess.VmOperation;
+        private const ProcessAccess writeFlags = ProcessAccess.VmWrite | ProcessAccess.VmRead|  ProcessAccess.VmOperation;
 
-        public IntPtr Resolve(Process process)
+        public nint Resolve(Process process)
         {
-            IntPtr processHandle = OpenProcess(readFlags, false, process.Id);
-            if (processHandle == IntPtr.Zero)
-                throw new System.Exception("Failed to open handle to halo game process with access perms: " + readFlags + ", Error code: " + GetLastError());
+            nint processHandle = OpenProcess(readFlags, false, process.Id);
+            if (processHandle == nint.Zero)
+                throw new Exception("Failed to open handle to halo game process with access perms: " + readFlags + ", Error code: " + GetLastError());
 
             return Resolve(processHandle, process.MainModule?.BaseAddress ?? throw new Exception("Could not access base address of halo game process"));
         }
 
         public void writeData(Process process, byte[] data, bool protectedMemory)
         {
-            IntPtr processHandle = OpenProcess(writeFlags, false, process.Id);
-            if (processHandle == IntPtr.Zero)
-                throw new System.Exception("Failed to open handle to halo game process with access perms: " + writeFlags + ", Error code: " + GetLastError());
+            nint processHandle = OpenProcess(writeFlags, false, process.Id);
+            if (processHandle == nint.Zero)
+                throw new Exception("Failed to open handle to halo game process with access perms: " + writeFlags + ", Error code: " + GetLastError());
 
-            IntPtr address = Resolve(processHandle, process.MainModule?.BaseAddress ?? throw new Exception("Could not access base address of halo game process"));
+            nint address = Resolve(processHandle, process.MainModule?.BaseAddress ?? throw new Exception("Could not access base address of halo game process"));
             Log.Verbose(string.Format("Writing 0x{0:X} bytes to address: 0x{1:X}", data.Length, address));
 
             int oldProtect = 0;
-            const int PAGE_EXECUTE_READWRITE = 0x40; 
+            const int PAGE_EXECUTE_READWRITE = 0x40;
             if (protectedMemory)
             {
                 if (!VirtualProtectEx(processHandle, address, data.Length, PAGE_EXECUTE_READWRITE, out oldProtect))
@@ -105,7 +104,7 @@ namespace HCMExternal.Services.PointerData.Impl
             {
                 if (protectedMemory)
                     VirtualProtectEx(processHandle, address, data.Length, oldProtect, out _);
-                throw new System.Exception("Failed to write data to halo game process! Error code: " + GetLastError());
+                throw new Exception("Failed to write data to halo game process! Error code: " + GetLastError());
             }
 
             if (protectedMemory)
@@ -116,18 +115,18 @@ namespace HCMExternal.Services.PointerData.Impl
 
         public byte[] readData(Process process, int dataLength)
         {
-            IntPtr processHandle = OpenProcess(readFlags, false, process.Id);
-            if (processHandle == IntPtr.Zero)
-                throw new System.Exception("Failed to open handle to halo game process with access perms: " + readFlags + ", Error code: " + GetLastError());
+            nint processHandle = OpenProcess(readFlags, false, process.Id);
+            if (processHandle == nint.Zero)
+                throw new Exception("Failed to open handle to halo game process with access perms: " + readFlags + ", Error code: " + GetLastError());
 
-            IntPtr address = Resolve(processHandle, process.MainModule?.BaseAddress ?? throw new Exception("Could not access base address of halo game process"));
+            nint address = Resolve(processHandle, process.MainModule?.BaseAddress ?? throw new Exception("Could not access base address of halo game process"));
 
             byte[] buffer = new byte[dataLength];
 
             Log.Verbose(string.Format("Reading 0x{0:X} bytes from address: 0x{1:X}", dataLength, address));
 
             if (!ReadProcessMemory(processHandle, address, buffer, dataLength, out int lpNumberOfBytesRead) || lpNumberOfBytesRead != dataLength)
-                throw new System.Exception("Failed to read data from halo game process! Error code: " + GetLastError());
+                throw new Exception("Failed to read data from halo game process! Error code: " + GetLastError());
 
             return buffer;
         }
@@ -136,7 +135,7 @@ namespace HCMExternal.Services.PointerData.Impl
         {
             List<int> offsets = new();
 
-            foreach(XElement offset in entry.Element("Offsets")?.Elements() ?? throw new Exception("MultilevelPointer xml missing Offsets"))
+            foreach (XElement offset in entry.Element("Offsets")?.Elements() ?? throw new Exception("MultilevelPointer xml missing Offsets"))
             {
                 int val = Utility.ParseHexadecimalString(offset.Value);
                 Log.Verbose("Adding offset to multilevelpointer: 0x" + val.ToString("X"));
