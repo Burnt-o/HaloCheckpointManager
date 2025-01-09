@@ -1,5 +1,4 @@
-﻿using HCMExternal.Services.External.Impl;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -124,6 +123,12 @@ namespace HCMExternal.Services.PointerData.Impl
 
                 case "MultilevelPointer":
                     return MultilevelPointer.FromXML(entry, haloGame ?? throw new Exception("Missing HaloGame field"));
+
+                case "InjectRequirements":
+                    return new InjectRequirements(entry);
+
+                case "PreserveLocationArray":
+                    return new PreserveLocationArray(entry);
 
                 default:
                     throw new ArgumentException("Didn't recognise type of PointerData entry, " + type);

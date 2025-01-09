@@ -1,4 +1,5 @@
 ﻿using GongSolutions.Wpf.DragDrop.Utilities;
+using HCMExternal.Services.External.Impl;
 using HCMExternal.Services.PointerData;
 using Serilog;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Automation.Text;
 using System.Xml.Linq;
 
-namespace HCMExternal.Services.External.Impl
+namespace HCMExternal.Services.PointerData.Impl
 {
     public class MultilevelPointer : IMultilevelPointer
     {
@@ -54,11 +55,11 @@ namespace HCMExternal.Services.External.Impl
 
             foreach (int offset in Offsets.Skip(1).ToArray()) // skip the first offset since we just did it above
             {
-                byte[] buffer = new byte[8];
-                if (!ReadProcessMemory(processHandle, ptr, buffer, 8, out int lpNumberOfBytesRead) || lpNumberOfBytesRead != 8)
+                byte[] buffer = new byte[4];
+                if (!ReadProcessMemory(processHandle, ptr, buffer, 4, out int lpNumberOfBytesRead) || lpNumberOfBytesRead != 4)
                     throw new Exception("Failed to read data from halo game process while looping pointer offsets! Error code: " + GetLastError());
 
-                long baseOfNextPointer = BitConverter.ToInt64(buffer, 0);
+                long baseOfNextPointer = BitConverter.ToInt32(buffer, 0);
 
                 Log.Verbose(string.Format("baseOfNextPointer: 0x{0:X}", baseOfNextPointer));
                 Log.Verbose(string.Format("next offset: 0x{0:X}", offset));
@@ -72,7 +73,7 @@ namespace HCMExternal.Services.External.Impl
 
 
         private const ProcessAccess readFlags = ProcessAccess.VmRead;
-        private const ProcessAccess writeFlags = ProcessAccess.VmWrite | ProcessAccess.VmRead|  ProcessAccess.VmOperation;
+        private const ProcessAccess writeFlags = ProcessAccess.VmWrite | ProcessAccess.VmRead | ProcessAccess.VmOperation;
 
         public nint Resolve(Process process)
         {
