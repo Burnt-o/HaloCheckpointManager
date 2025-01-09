@@ -64,6 +64,7 @@ namespace HCMExternal.Services.External.FileMapping.Impl
             if (_data == IntPtr.Zero)
                 throw new Exception("failed to create MapViewOfFile, Error code: " + GetLastError());
 
+            // TODO: check against expectedSize
         }
 
 

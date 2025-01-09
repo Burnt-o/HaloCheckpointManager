@@ -440,7 +440,7 @@
 	<GameProcessEntry Type="int" HaloProcessType="ProjectCartographer" HaloGame ="PC">
 		<Name>CheckpointLength</Name>
 		<Version Version="All">
-			<Offset>0x3FE000</Offset>
+			<Offset>0x40B000</Offset>
 		</Version>
 	</GameProcessEntry>
 
