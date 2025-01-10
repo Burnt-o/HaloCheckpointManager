@@ -25,6 +25,17 @@
 #include <plog\Formatters\TxtFormatter.h>
 #include <plog/Formatters/FuncMessageFormatter.h>
 
-
+// for logging
+template <typename T, typename F>
+void once(T t, F f) {
+    static bool first = true;
+    if (first) {
+        f();
+        first = false;
+    }
+}
+#define LOG_ONCE(x)   once([](){},[](){ x; });
+#define LOG_ONCE_THIS(x)   once([this](){},[this](){ x; });
+#define LOG_ONCE_CAPTURE(x, y)   once([y](){},[y](){ x; });
 
 #endif //PCH_H

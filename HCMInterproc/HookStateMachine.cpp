@@ -54,13 +54,15 @@ private:
 
 
 			// Find Valid MCC process(loop / return if unfound)
-            PLOG_VERBOSE << "checking for valid mcc process";
+            LOG_ONCE(PLOG_VERBOSE << "checking for valid mcc process");
             mccHandle = findValidMCCProcess();
             if (!mccHandle) // no process found
             {
-                PLOG_VERBOSE << "none found";
+                LOG_ONCE(PLOG_VERBOSE << "none found");
                 return;
             }
+
+            PLOG_INFO << "Found a valid MCC process!";
 
 			// Check for EAC (error if found)
 			if (anticheatIsEnabled())

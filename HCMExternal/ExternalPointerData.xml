@@ -397,12 +397,31 @@
 	</Entry>
 	<!-- #endregion Halo 4-->
 
-
+	<!-- #region Project Cartographer-->
+	<Entry Type="int">
+		<Name>PC_CheckpointData_LevelCode</Name>
+		<Version Version="0.7.0.3">
+			<Offset>0x17</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>PC_CheckpointData_GameTickCount</Name>
+		<Version Version="0.7.0.3">
+			<Offset>0x29D0</Offset>
+		</Version>
+	</Entry>
+	<Entry Type="int">
+		<Name>PC_CheckpointData_Difficulty</Name>
+		<Version Version="0.7.0.3">
+			<Offset>0x3CA</Offset>
+		</Version>
+	</Entry>
+	<!-- #endregion Project Cartographer-->
 
 
 	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
 		<Name>ForceCheckpointFlag</Name>
-			<Version Version="All">
+		<Version Version="0.7.0.3">
 				<Offsets>
 					<Offset>0x482250</Offset>
 				</Offsets>
@@ -411,7 +430,7 @@
 
 	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
 		<Name>ForceRevertFlag</Name>
-		<Version Version="All">
+		<Version Version="0.7.0.3">
 			<Offsets>
 				<Offset>0x48224F</Offset>
 			</Offsets>
@@ -420,7 +439,7 @@
 
 	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
 		<Name>DoubleRevertFlag</Name>
-		<Version Version="All">
+		<Version Version="0.7.0.3">
 			<Offsets>
 				<Offset>0x47A72C</Offset>
 			</Offsets>
@@ -428,14 +447,48 @@
 	</GameProcessEntry>
 
 	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
-		<Name>CheckpointLocationA</Name>
-		<Version Version="All">
+		<Name>CheckpointFileHandleA</Name>
+		<Version Version="0.7.0.3">
 			<Offsets>
-				<Offset>0x004C14F4</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x4C1508</Offset>
 			</Offsets>
 		</Version>
 	</GameProcessEntry>
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>CheckpointFileHandleB</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x4C150C</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>LoadedBSPCheckpointA</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x47B9E8</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>LoadedBSPCheckpointB</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x47CCE0</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type="int" HaloProcessType="ProjectCartographer" HaloGame ="PC">
+		<Name>CheckpointLoadedBSPOffset</Name>
+		<Version Version="0.7.0.3">
+			<Offset>0x12B8</Offset>
+		</Version>
+	</GameProcessEntry>
+
 
 	<GameProcessEntry Type="int" HaloProcessType="ProjectCartographer" HaloGame ="PC">
 		<Name>CheckpointLength</Name>
@@ -466,18 +519,40 @@
 				<Length>8</Length>
 			</PreserveLocation>
 			<PreserveLocation>
-				<Offset>0x4BF7</Offset>
+				<Offset>0x4CBA</Offset>
 				<Length>8</Length>
 			</PreserveLocation>
+			<!--<PreserveLocation>
+				<Offset>0x4C90</Offset>
+				<Length>0x70</Length>
+			</PreserveLocation>-->
 			<!--player array stuff below- not 100% sure on these offsets-->
-			<PreserveLocation>
+			<!--<PreserveLocation>
 				<Offset>0x2B2C</Offset>
 				<Length>8</Length>
 			</PreserveLocation>
 			<PreserveLocation>
 				<Offset>0x2B20</Offset>
 				<Length>4</Length>
+			</PreserveLocation>-->
+			<PreserveLocation>
+				<Offset>0x2B40</Offset>
+				<Length>8</Length>
 			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x28F8</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x2938</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x2978</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+
 		</Version>
 	</GameProcessEntry>
 </Root>

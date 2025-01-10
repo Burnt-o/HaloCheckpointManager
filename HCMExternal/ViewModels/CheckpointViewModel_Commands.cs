@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Data;
@@ -106,7 +107,12 @@ namespace HCMExternal.ViewModels
         private void onDumpCheckpoint()
         {
             exservice.DumpCheckpoint(SelectedSaveFolder);
-            RefreshCheckpointList();
+
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                RefreshCheckpointList();
+            });
+            
         }
 
         public RelayCommand InjectCheckpoint { get; init; }

@@ -10,7 +10,7 @@ namespace HCMExternal.Services.External.FileMapping
 {
     public static class MappedCartographerSaveFactory
     {
-        public static IMappedCartographerSave make(UInt32 saveFileHandle, Process cartographerProcess, int expectedSize)
+        public static IMappedCartographerSave make(UInt32 saveFileHandle, Process cartographerProcess, UInt32 expectedSize)
         {
             return new MappedCartographerSave(saveFileHandle, cartographerProcess, expectedSize);
         }

@@ -57,21 +57,18 @@ namespace HCMExternal.Services.CheckpointIO.Impl
                         // (Version string is 10 chars long)
                         readBinary.BaseStream.Seek(-10, SeekOrigin.End);
                         string? checkpointVersionGuess = new string(readBinary.ReadChars(10));
+                        checkpointVersionGuess = checkpointVersionGuess.Replace("\0", string.Empty); // remove null chracters
                         Log.Verbose("read ver string: " + checkpointVersionGuess);
 
-                        // If that string started with "1." then it's probably a valid version string, so we'll set checkpointVersion to it too
-                        if (checkpointVersionGuess != null && checkpointVersionGuess.StartsWith("1."))
-                        {
+                        // If that string started with "1." (or "0." for project cartographer) then it's probably a valid version string, so we'll set checkpointVersion to it too
+                        if (checkpointVersionGuess != null && (checkpointVersionGuess.StartsWith("1.") || checkpointVersionGuess.StartsWith("0.")))
                             checkpointVersion = checkpointVersionGuess;
-                        }
-                        else if (PointerData.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git
-                        {
+                        else if (gameEnum == HaloGame.ProjectCartographer && PointerData.HighestSupportedCartographerVersion != null) //otherwise set it the highest supported version we loaded from git (cartographer)
+                            checkpointVersionGuess = PointerData.HighestSupportedCartographerVersion;
+                        else if (PointerData.HighestSupportedMCCVersion != null) //otherwise set it the highest supported version we loaded from git (mcc)
                             checkpointVersionGuess = PointerData.HighestSupportedMCCVersion;
-                        }
                         else
-                        {
-                            checkpointVersionGuess = null;
-                        }
+                            checkpointVersionGuess = null; // otherwise.. give up
 
                         // Now let's try to actually read the data from the file
                         // Each will be in it's own trycatch so that one can fail without the others failing

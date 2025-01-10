@@ -11,20 +11,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using HCMExternal.Services.External.Impl;
+using System.ComponentModel;
 
 namespace HCMExternal.Services.External.FileMapping.Impl
 {
+
+
 
     // Responsible for duplicating the save file handle, mapping it to our address space, then cleaning up the handle to that map
     public class MappedCartographerSave : IMappedCartographerSave
     {
         private IntPtr _data;
-        private int _size;
+        private UInt32 _size;
         private WinHandle _fileMappingHandle;
 
         public IntPtr data() { return _data; }
 
-        public int size() { return _size; }
+        public UInt32 size() { return _size; }
 
         // RAII of handle returned by PInvokes
         private class WinHandle
@@ -37,38 +40,75 @@ namespace HCMExternal.Services.External.FileMapping.Impl
         }
 
 
-        public MappedCartographerSave(UInt32 saveFileHandle, Process cartographerProcess, int expectedSize)
+        public MappedCartographerSave(UInt32 saveFileHandle, Process cartographerProcess, UInt32 expectedSize)
         {
 
             ProcessAccess desiredDuplicationRights = ProcessAccess.DupHandle | ProcessAccess.AllAccess;
 
             WinHandle elevatedH2VHandle = OpenProcess(desiredDuplicationRights, false, cartographerProcess.Id);
             if (elevatedH2VHandle == nint.Zero)
-                throw new Exception("Failed to open handle to halo game process with access perms: " + desiredDuplicationRights + ", Error code: " + GetLastError());
+                throw new Exception("Failed to open handle to halo game process with access perms: " + desiredDuplicationRights + ", Error: " + ErrorMessage(Marshal.GetLastWin32Error()));
 
             WinHandle ownHandle = OpenProcess(desiredDuplicationRights, false, Environment.ProcessId);
             if (ownHandle == IntPtr.Zero)
-                throw new Exception("Failed to open handle to own process with access perms: " + desiredDuplicationRights + ", Error code: " + GetLastError());
+                throw new Exception("Failed to open handle to own process with access perms: " + desiredDuplicationRights + ", Error code: " + ErrorMessage(Marshal.GetLastWin32Error()));
 
-            bool duped = DuplicateHandle(elevatedH2VHandle, new IntPtr(0x970), ownHandle, out IntPtr duplicatedHandleRaw, ACCESS_MASK.GENERIC_READ | ACCESS_MASK.GENERIC_WRITE, false, 0);
+            bool duped = DuplicateHandle(elevatedH2VHandle, new IntPtr(saveFileHandle), ownHandle, out IntPtr duplicatedHandleRaw, ACCESS_MASK.GENERIC_READ | ACCESS_MASK.GENERIC_WRITE, false, 0);
             if (!duped)
-                throw new Exception("Failed to duplicate checkpoint file handle, Error code: " + GetLastError());
+                throw new Exception("Failed to duplicate checkpoint file handle, Error code: " + ErrorMessage(Marshal.GetLastWin32Error()));
 
             WinHandle duplicatedHandle = duplicatedHandleRaw;
 
-            _fileMappingHandle = CreateFileMapping(duplicatedHandle, 0, PageProtection.ReadWrite, 0, 0, 0);
+            _fileMappingHandle = CreateFileMapping(duplicatedHandle, 0, PageProtection.ReadWrite, 0, expectedSize, 0);
             if (_fileMappingHandle == IntPtr.Zero)
-                throw new Exception("failed to create file mapping, Error code: " + GetLastError());
+                throw new Exception("failed to create file mapping, Error code: " + ErrorMessage(Marshal.GetLastWin32Error()));
 
-            _data = MapViewOfFile(_fileMappingHandle, FileMapAccess.FileMapWrite | FileMapAccess.FileMapRead, 0, 0, 0);
+            _data = MapViewOfFile(_fileMappingHandle, FileMapAccess.FileMapWrite | FileMapAccess.FileMapRead, 0, 0, expectedSize);
             if (_data == IntPtr.Zero)
-                throw new Exception("failed to create MapViewOfFile, Error code: " + GetLastError());
+                throw new Exception("failed to create MapViewOfFile, Error code: " + ErrorMessage(Marshal.GetLastWin32Error()));
 
-            // TODO: check against expectedSize
+
+            //// Check that the size matches our expectedSize using virtual query
+            //MEMORY_BASIC_INFORMATION mbiBuffer = new();
+            //var vqhr = VirtualQuery(ref _data, ref mbiBuffer, System.Runtime.InteropServices.Marshal.SizeOf(mbiBuffer));
+            //if (vqhr == 0)
+            //    throw new Exception("Could not query size of MapViewOfFile, Error code: " + ErrorMessage(Marshal.GetLastWin32Error()));
+
+            //_size = (UInt32)mbiBuffer.RegionSize;
+
+            //if (_size < expectedSize) // virtual query returns size of allocated pages, so should always be >= expected size
+            //    throw new Exception(string.Format("Mapped file size (0x{0:X}) was less than expected file size (0x{1:X})", _size, expectedSize));
+
         }
 
 
+
         #region PInvokes
+
+        private string ErrorMessage(int errorCode)
+        {
+            return "" + errorCode + " (" + new Win32Exception(errorCode).Message + ")";
+        }
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MEMORY_BASIC_INFORMATION
+        {
+            public UIntPtr BaseAddress;
+            public UIntPtr AllocationBase;
+            public UInt32 AllocationProtect;
+            public UIntPtr RegionSize;
+            public UInt32 State;
+            public UInt32 Protect;
+            public UInt32 Type;
+        }
+        [DllImport("kernel32.dll", SetLastError=true)]
+        private static extern int VirtualQuery(
+    ref IntPtr lpAddress,
+    ref MEMORY_BASIC_INFORMATION lpBuffer,
+    int dwLength
+);
+
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [SuppressUnmanagedCodeSecurity]
@@ -78,7 +118,7 @@ namespace HCMExternal.Services.External.FileMapping.Impl
         [DllImport("kernel32.dll")]
         public static extern uint GetLastError();
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         private static extern nint OpenProcess(ProcessAccess processAccessFlags, bool bInheritHandle, int dwProcessId);
 
         [Flags]
