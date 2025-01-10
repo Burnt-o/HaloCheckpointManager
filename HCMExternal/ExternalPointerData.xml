@@ -482,6 +482,24 @@
 		</Version>
 	</GameProcessEntry>
 
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>CheckpointOccupiedSlotA</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x47A72A</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>CheckpointOccupiedSlotB</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x47A72B</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
 	<GameProcessEntry Type="int" HaloProcessType="ProjectCartographer" HaloGame ="PC">
 		<Name>CheckpointLoadedBSPOffset</Name>
 		<Version Version="0.7.0.3">
@@ -516,16 +534,18 @@
 		<Version Version="All">
 			<PreserveLocation>
 				<Offset>0x4B90</Offset>
-				<Length>8</Length>
+				<Length>0x10</Length>
 			</PreserveLocation>
 			<PreserveLocation>
 				<Offset>0x4CBA</Offset>
 				<Length>8</Length>
 			</PreserveLocation>
-			<!--<PreserveLocation>
-				<Offset>0x4C90</Offset>
-				<Length>0x70</Length>
-			</PreserveLocation>-->
+
+			<PreserveLocation>
+				<Offset>0x4CD0</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+
 			<!--player array stuff below- not 100% sure on these offsets-->
 			<!--<PreserveLocation>
 				<Offset>0x2B2C</Offset>
@@ -535,6 +555,10 @@
 				<Offset>0x2B20</Offset>
 				<Length>4</Length>
 			</PreserveLocation>-->
+			<PreserveLocation>
+				<Offset>0x28E8</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
 			<PreserveLocation>
 				<Offset>0x2B40</Offset>
 				<Length>8</Length>
@@ -548,11 +572,72 @@
 				<Offset>0x2938</Offset>
 				<Length>4</Length>
 			</PreserveLocation>
+
+
+			<!--2 byte id-->
 			<PreserveLocation>
-				<Offset>0x2978</Offset>
-				<Length>4</Length>
+				<Offset>0x586</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x1BAE</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x2B20</Offset>
+				<Length>2</Length>
 			</PreserveLocation>
 
+			<PreserveLocation>
+				<Offset>0x140</Offset>
+				<Length>0x10</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1768</Offset>
+				<Length>0x10</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x5000</Offset>
+				<Length>0x8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x5060</Offset>
+				<Length>0x8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x56D0</Offset>
+				<Length>0x8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x28E9</Offset>
+				<Length>0x1</Length>
+			</PreserveLocation>
+
+			<!--pointers-->
+			<PreserveLocation>
+				<Offset>0x1FA52C</Offset>
+				<Length>0x4</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1FA5AC</Offset>
+				<Length>0x4</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1FA62C</Offset>
+				<Length>0x4</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1FA6AC</Offset>
+				<Length>0x4</Length>
+			</PreserveLocation>
 		</Version>
 	</GameProcessEntry>
 </Root>

@@ -29,6 +29,28 @@ namespace HCMExternal.Services.External.Impl
         // Cartographer stores checkpoints on disk with non-shared file handles. We need to duplicate the handles then map them to our memory so we can read/write to them without messing with the games filestream pointer.
         private void InjectCheckpointCartographer(Checkpoint checkpoint, HaloProcessInfo haloProcess)
         {
+            // Need to make sure both checkpoint slots are already occupied
+            // (for multiplayer, they usually aren't).
+            // Otherwise a crash is likely.
+
+            {
+                IMultilevelPointer CheckpointOccupiedSlotAPointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "CheckpointOccupiedSlotA", haloProcess.processVersion);
+                IMultilevelPointer CheckpointOccupiedSlotBPointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "CheckpointOccupiedSlotB", haloProcess.processVersion);
+
+                int tries = 0;
+                int giveup = 10;
+                while (CheckpointOccupiedSlotAPointer.readData(haloProcess.processHandle, 1)[0] != 1 || CheckpointOccupiedSlotBPointer.readData(haloProcess.processHandle, 1)[0] != 1)
+                {
+                    Log.Verbose("Forcing checkpoint to occupy slots before injection!");
+                    ForceCheckpoint();
+                    System.Threading.Thread.Sleep(100);
+                    tries++;
+                    if (tries > giveup)
+                        throw new Exception("Failed to occupy checkpoint slots! Cannot inject a checkpoint into empty checkpoint slots.");
+                }
+            }
+
+
 
             // load checkpoint data from disk
             byte[] checkpointData = File.ReadAllBytes(checkpoint.CheckpointPath);

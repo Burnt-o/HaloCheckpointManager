@@ -31,7 +31,7 @@ namespace HCMExternal.Services.External.Impl
 
             // force a checkpoint. TODO: make this optional.
             ForceCheckpoint();
-            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread.Sleep(100);
 
             // get pointer to double revert flag
             IMultilevelPointer doubleRevertFlagPointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "DoubleRevertFlag", haloProcess.processVersion);
