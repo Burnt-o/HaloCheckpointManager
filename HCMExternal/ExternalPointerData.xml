@@ -446,6 +446,16 @@
 		</Version>
 	</GameProcessEntry>
 
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>NaturalCheckpointCode</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x3955A</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
+
 	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
 		<Name>CheckpointFileHandleA</Name>
 		<Version Version="0.7.0.3">
@@ -500,6 +510,7 @@
 			</Offsets>
 		</Version>
 	</GameProcessEntry>
+	
 	<GameProcessEntry Type="int" HaloProcessType="ProjectCartographer" HaloGame ="PC">
 		<Name>CheckpointLoadedBSPOffset</Name>
 		<Version Version="0.7.0.3">

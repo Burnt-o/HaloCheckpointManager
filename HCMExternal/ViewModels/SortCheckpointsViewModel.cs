@@ -48,16 +48,16 @@ namespace HCMExternal.ViewModels
             set => _cancel = value;
         }
 
-        public ICheckpointIOService CheckpointServices { get; init; }
-        public CheckpointViewModel CheckpointViewModel { get; init; }
+        public ICheckpointIOService _checkpointIOService { get; init; }
+        public FileViewModel _fileViewModel { get; init; }
 
 
 
-        public SortCheckpointsViewModel(ICheckpointIOService checkpointServices, CheckpointViewModel checkpointViewModel)
+        public SortCheckpointsViewModel(ICheckpointIOService checkpointServices, FileViewModel fileViewModel)
         {
             FolderName = "???";
-            CheckpointServices = checkpointServices;
-            CheckpointViewModel = checkpointViewModel;
+            _checkpointIOService = checkpointServices;
+            _fileViewModel = fileViewModel;
 
             ComboBoxOptions = new ObservableCollection<ICompareCheckpoints>()
             {
@@ -81,7 +81,7 @@ namespace HCMExternal.ViewModels
 
         public void AcceptAction()
         {
-            if (!Enum.IsDefined(typeof(HaloGame), CheckpointViewModel.SelectedGame))
+            if (!Enum.IsDefined(typeof(HaloGame), _fileViewModel.SelectedGame))
             {
                 return;
             }
@@ -100,8 +100,8 @@ namespace HCMExternal.ViewModels
 
             Application.Current.Dispatcher.Invoke(delegate
             {
-                CheckpointServices.SortCheckpoints(CheckpointViewModel.SelectedSaveFolder, CheckpointViewModel.CheckpointCollection, comparers, CheckpointViewModel.SelectedGame);
-                CheckpointViewModel.RefreshCheckpointList();
+                _checkpointIOService.SortCheckpoints(_fileViewModel.SelectedSaveFolder, _fileViewModel.CheckpointCollection, comparers, _fileViewModel.SelectedGame);
+                _fileViewModel.UpdateCheckpointCollection();
 
 
                 CloseAction();

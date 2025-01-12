@@ -35,7 +35,6 @@ namespace HCMExternal.ViewModels.Commands
         {
 
             Log.Verbose($"Relay Command Thread : {Thread.CurrentThread.ManagedThreadId} Started");
-
             try
             {
                 Task task = Task.Factory.StartNew(() => { execute(parameter); });

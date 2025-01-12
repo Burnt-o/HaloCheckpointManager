@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HCMExternal.Views"
         xmlns:control="clr-namespace:HCMExternal.Views.Controls"
-             xmlns:cnv="clr-namespace:HCMExternal.Converters"
+        xmlns:cnv="clr-namespace:HCMExternal.Converters"
         xmlns:commands="clr-namespace:HCMExternal.ViewModels.Commands"
         xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
 
@@ -19,12 +19,18 @@
     <Window.Resources>
         <ResourceDictionary>
             <cnv:EnumConverter x:Key="EnumConverter" />
+            <cnv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid>
 
-        <TabControl SelectedIndex="{Binding Path=CheckpointViewModel.SelectedGame, Converter={StaticResource EnumConverter}, 
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.Column="0"  SelectedIndex="{Binding Path=FileViewModel.SelectedGame, Converter={StaticResource EnumConverter}, 
                               Mode=TwoWay}"  >
 
             <TabItem >
@@ -33,7 +39,7 @@
                 </TabItem.Header>
                 <Grid>
 
-                <local:CheckpointControl  DataContext="{Binding Path=CheckpointViewModel}"/>
+                    <local:CheckpointControl  DataContext="{Binding Path=FileViewModel}"/>
 
             </Grid>
         </TabItem>
@@ -43,7 +49,7 @@
                 </TabItem.Header>
             <Grid>
 
-                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=FileViewModel}" />
                
             </Grid>
         </TabItem>
@@ -53,7 +59,7 @@
                 </TabItem.Header>
             <Grid>
 
-                <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=FileViewModel}" />
 
             </Grid>
         </TabItem>
@@ -66,7 +72,7 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=FileViewModel}" />
                 </Grid>
         </TabItem>
             <TabItem >
@@ -78,7 +84,7 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=FileViewModel}" />
                 </Grid>
         </TabItem>
             <TabItem >
@@ -90,7 +96,7 @@
                     <ColumnDefinition  />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=FileViewModel}" />
                 </Grid>
         </TabItem>
             <TabItem >
@@ -102,7 +108,7 @@
                         <ColumnDefinition  />
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=CheckpointViewModel}" />
+                    <local:CheckpointControl Grid.Column="0" DataContext="{Binding Path=FileViewModel}" />
                 </Grid>
             </TabItem>
 
@@ -110,7 +116,12 @@
 
         </TabControl>
 
-        <control:StatusBarView  DataContext="{Binding Path=MCCHookStateViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"/>
+        <control:StatusBarView  Grid.Column="0"  DataContext="{Binding Path=MCCHookStateViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0"/>
+
+
+        <control:TrainerControl  Grid.Column="1"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" Visibility="{Binding Path=ShouldShowTrainerView, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+
     </Grid>
 
 </Window>

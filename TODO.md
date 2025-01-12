@@ -1,15 +1,21 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
-	* View (GUI)
-	* Inject/Dump checkpoint
-		* inject requirements
-		* Preserve locations
-		* Offsets for checkpoint location
-		* Offsets for loaded bsp in cp and exe
-	* Hotkeys (adapt from https://github.com/Burnt-o/HaloCheckpointManager/blob/HCM2/HCM3/Services/HotkeyManager.cs)*
+  * setting/hotkey (de)serialisation
+  * binding string not reflecting gamepad when double bound
+   * Fix sort checkpoint binding
+   * check all binding expression errors
+   * hook toggle settings up to inject/dump (prolly via properties...)
+
+
+
 * Fix subpixel ID copy paste/ button/ enter value etc bugs
 
-
+DONE:
+* Need to disable hotkeys when not on proj cart tab
+* Need to auto expand HCMs width to account for trainer view
+* Need to hide trainer view when not on proj cart tab
+* Fix labels at top of trainer view
+* Fix Disable Natural Checkpoints
 
 
 ## Bugs to fix (eventually):

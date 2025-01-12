@@ -14,5 +14,6 @@ namespace HCMExternal.Services.External
         void ForceDoubleRevert();
         void DumpCheckpoint(SaveFolder saveFolder);
         void InjectCheckpoint(Checkpoint checkpoint);
+        void DisableCheckpoints(bool toggleValue);
     }
 }

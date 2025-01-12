@@ -22,34 +22,34 @@ using System.Windows.Input;
 namespace HCMExternal.ViewModels
 {
 
-    public partial class CheckpointViewModel : Presenter, IDropTarget
+    public partial class MainViewModel : Presenter
     {
        
-        public RelayCommand DeleteCheckpoint { get; init; }
+
         private void onDeleteCheckpoint()
         {
-            cpservice.DeleteCheckpoint(SelectedSaveFolder, SelectedCheckpoint);
-            RefreshCheckpointList();
+            _checkpointIOService.DeleteCheckpoint(FileViewModel.SelectedSaveFolder, FileViewModel.SelectedCheckpoint);
+            FileViewModel.UpdateCheckpointCollection();
         }
 
-        public RelayCommand RenameCheckpoint { get; init; }
+
         private void onRenameCheckpoint()
         {
-            cpservice.RenameCheckpoint(SelectedSaveFolder, SelectedCheckpoint);
+            _checkpointIOService.RenameCheckpoint(FileViewModel.SelectedSaveFolder, FileViewModel.SelectedCheckpoint);
         }
 
-        public RelayCommand ReVersionCheckpoint { get; init; }
+
         private void onReVersionCheckpoint()
         {
-            cpservice.ReVersionCheckpoint(SelectedSaveFolder, SelectedCheckpoint);
+            _checkpointIOService.ReVersionCheckpoint(FileViewModel.SelectedSaveFolder, FileViewModel.SelectedCheckpoint);
         }
 
-        public RelayCommand SortCheckpoint { get; init; }
+
         private void onSortCheckpoint()
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
-                SortCheckpointsView win = new(cpservice, this)
+                SortCheckpointsView win = new(_checkpointIOService, FileViewModel)
                 {
                     Owner = App.Current.MainWindow // makes the dialog be centered on the main window
                 };
@@ -57,78 +57,83 @@ namespace HCMExternal.ViewModels
             });
         }
 
-        public RelayCommand OpenInExplorer { get; init; }
+
         private void onOpenInExplorer()
         {
-            cpservice.OpenInExplorer(SelectedSaveFolder);
+            _checkpointIOService.OpenInExplorer(FileViewModel.SelectedSaveFolder);
         }
 
-        public RelayCommand RenameFolder { get; init; }
+
         private void onRenameFolder()
         {
-            cpservice.RenameFolder(SelectedSaveFolder);
-            RefreshSaveFolderTree();
+            _checkpointIOService.RenameFolder(FileViewModel.SelectedSaveFolder);
+            FileViewModel.UpdateSaveFolderCollection();
         }
 
-        public RelayCommand DeleteFolder { get; init; }
+
         private void onDeleteFolder()
         {
-            cpservice.DeleteFolder(SelectedSaveFolder);
-            RefreshSaveFolderTree();
-            RefreshCheckpointList();
+            _checkpointIOService.DeleteFolder(FileViewModel.SelectedSaveFolder);
+            FileViewModel.UpdateSaveFolderCollection();
+            FileViewModel.UpdateCheckpointCollection();
         }
 
-        public RelayCommand NewFolder { get; init; }
+
         private void onNewFolder()
         {
-            cpservice.NewFolder(SelectedSaveFolder);
-            RefreshSaveFolderTree();
+            _checkpointIOService.NewFolder(FileViewModel.SelectedSaveFolder);
+            FileViewModel.UpdateSaveFolderCollection();
         }
 
-        public RelayCommand ForceCheckpoint { get; init; }
+
         private void onForceCheckpoint()
         {
-            exservice.ForceCheckpoint();
+            _externalService.ForceCheckpoint();
         }
 
-        public RelayCommand ForceRevert { get; init; }
+
         private void onForceRevert()
         {
-            exservice.ForceRevert();
+            _externalService.ForceRevert();
         }
 
-        public RelayCommand ForceDoubleRevert { get; init; }
+
         private void onForceDoubleRevert()
         {
-            exservice.ForceDoubleRevert();
+            _externalService.ForceDoubleRevert();
         }
 
-        public RelayCommand DumpCheckpoint { get; init; }
+
         private void onDumpCheckpoint()
         {
-            exservice.DumpCheckpoint(SelectedSaveFolder);
+            _externalService.DumpCheckpoint(FileViewModel.SelectedSaveFolder);
 
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                RefreshCheckpointList();
+                FileViewModel.UpdateCheckpointCollection();
             });
             
         }
 
-        public RelayCommand InjectCheckpoint { get; init; }
+
         private void onInjectCheckpoint()
         {
 
-            if (SelectedCheckpoint == null)
+            if (FileViewModel.SelectedCheckpoint == null)
                 System.Windows.MessageBox.Show("Failed to Inject! \n" + "No checkpoint selected!", "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
             else
             {
-                if (SelectedGame.Equals(HaloGame.ProjectCartographer))
-                    exservice.InjectCheckpoint(SelectedCheckpoint);
+                if (FileViewModel.SelectedGame.Equals(HaloGame.ProjectCartographer))
+                    _externalService.InjectCheckpoint(FileViewModel.SelectedCheckpoint);
                 else
-                    ipservice.UpdateSharedMemQueueInjectCommand();
+                    _interprocService.UpdateSharedMemQueueInjectCommand();
             }
                 
+        }
+
+        private void onDisableCheckpoints(bool shouldDisableCheckpoint)
+        {
+            _externalService.DisableCheckpoints(shouldDisableCheckpoint);
         }
 
 

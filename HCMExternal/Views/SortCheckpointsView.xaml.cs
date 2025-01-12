@@ -11,10 +11,10 @@ namespace HCMExternal.Views
     /// </summary>
     public partial class SortCheckpointsView : Window
     {
-        internal SortCheckpointsView(ICheckpointIOService cpservice, CheckpointViewModel CheckpointViewModel)
+        internal SortCheckpointsView(ICheckpointIOService cpio, FileViewModel fileViewModel)
         {
             InitializeComponent();
-            SortCheckpointsViewModel vm = new SortCheckpointsViewModel(cpservice, CheckpointViewModel);
+            SortCheckpointsViewModel vm = new SortCheckpointsViewModel(cpio, fileViewModel);
             DataContext = vm;
             if (vm.CloseAction == null)
             {

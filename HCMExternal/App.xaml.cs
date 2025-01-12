@@ -6,6 +6,8 @@ using HCMExternal.Services.CheckpointIO;
 using HCMExternal.Services.External;
 using HCMExternal.Services.Interproc;
 using HCMExternal.Services.PointerData;
+using HCMExternal.Services.Hotkeys;
+using HCMExternal.Services.Hotkeys.Impl;
 using HCMExternal.ViewModels;
 using HCMExternal.Views;
 
@@ -14,6 +16,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using HCMExternal.Services.Hotkeys;
 
 namespace HCMExternal
 {
@@ -85,11 +88,10 @@ namespace HCMExternal
             ICheckpointIOService checkpointIO = new CheckpointIOService(pointerData);
             IExternalService external = new ExternalService(pointerData);
             IInterprocService interproc = new InterprocService();
+            IHotkeyManager hotkey = new HotkeyManager();
 
-            CheckpointViewModel checkpointViewModel = new(checkpointIO, external, interproc);
-            ErrorDialogViewModel errorDialogViewModel = new();
-            MCCHookStateViewModel hookStateViewModel = new(errorDialogViewModel, interproc);
-            MainViewModel mainViewModel = new MainViewModel(checkpointViewModel, hookStateViewModel);
+            // main view model will construct lower view models too
+            MainViewModel mainViewModel = new MainViewModel(checkpointIO, external, interproc, hotkey);
 
          
 
@@ -103,7 +105,7 @@ namespace HCMExternal
             mainWindow.Title = "HaloCheckpointManager " + (CurrentHCMVersion.Length > 4 ? CurrentHCMVersion.Substring(0, 5) : CurrentHCMVersion);
             mainWindow.Show();
 
-            interproc.initializeSharedMemory(checkpointViewModel.SelectedCheckpoint, checkpointViewModel.SelectedSaveFolder, checkpointViewModel.SelectedGame);
+            interproc.initializeSharedMemory(mainViewModel.FileViewModel.SelectedCheckpoint, mainViewModel.FileViewModel.SelectedSaveFolder, mainViewModel.FileViewModel.SelectedGame);
 
         }
 
