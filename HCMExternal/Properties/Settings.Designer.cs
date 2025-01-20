@@ -12,7 +12,7 @@ namespace HCMExternal.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.12.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -124,6 +124,78 @@ namespace HCMExternal.Properties {
             }
             set {
                 this["LastSelectedCheckpoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HK_ForceCheckpoint {
+            get {
+                return ((string)(this["HK_ForceCheckpoint"]));
+            }
+            set {
+                this["HK_ForceCheckpoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HK_ForceRevert {
+            get {
+                return ((string)(this["HK_ForceRevert"]));
+            }
+            set {
+                this["HK_ForceRevert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HK_DoubleRevert {
+            get {
+                return ((string)(this["HK_DoubleRevert"]));
+            }
+            set {
+                this["HK_DoubleRevert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HK_InjectCheckpoint {
+            get {
+                return ((string)(this["HK_InjectCheckpoint"]));
+            }
+            set {
+                this["HK_InjectCheckpoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HK_DumpCheckpoint {
+            get {
+                return ((string)(this["HK_DumpCheckpoint"]));
+            }
+            set {
+                this["HK_DumpCheckpoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HK_DisableCheckpoints {
+            get {
+                return ((string)(this["HK_DisableCheckpoints"]));
+            }
+            set {
+                this["HK_DisableCheckpoints"] = value;
             }
         }
     }

@@ -1,14 +1,22 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
   * setting/hotkey (de)serialisation
-  * binding string not reflecting gamepad when double bound
+
    * Fix sort checkpoint binding
    * check all binding expression errors
    * hook toggle settings up to inject/dump (prolly via properties...)
+   * explorer command broken
+   * open internal error button broken
+   * double check all commands work properly + dragdrop
+   * dump checkpoint -> check for existing name, don't overwrite
+   * send a build to jagged for testing
+
 
 
 
 * Fix subpixel ID copy paste/ button/ enter value etc bugs
+
+
 
 DONE:
 * Need to disable hotkeys when not on proj cart tab
@@ -16,7 +24,7 @@ DONE:
 * Need to hide trainer view when not on proj cart tab
 * Fix labels at top of trainer view
 * Fix Disable Natural Checkpoints
-
+  * binding string not reflecting gamepad when double bound ?? I think fixed
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).

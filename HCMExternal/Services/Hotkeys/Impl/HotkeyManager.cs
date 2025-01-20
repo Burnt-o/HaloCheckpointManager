@@ -31,17 +31,64 @@ namespace HCMExternal.Services.Hotkeys.Impl
 
         (VirtualKey?, XInputButton?)? deserialiseBinding(HotkeyEnum hotkeyEnum)
         {
-#if !HCM_DEBUG
-            throw new NotImplementedException();
-#endif
-            return null;
-        }
+            Log.Verbose("deserialising binding for hotkey: " + hotkeyEnum.ToString());
+            string settingName = "HK_" + hotkeyEnum.ToString();
 
-        void serialiseBinding(HotkeyEnum hotkeyEnum, VirtualKey? virtualKeyCode, XInputButton? gamepadButton)
-        {
-#if !HCM_DEBUG
-            throw new NotImplementedException();
-#endif
+
+            if (Properties.Settings.Default[settingName] == null)
+            {
+                Log.Error("Properties did not contain setting by name: " + settingName);
+                return null;
+            }
+               
+
+            string? serialisedBinding = Properties.Settings.Default[settingName].ToString();
+            if (serialisedBinding == null && serialisedBinding != "")
+            {
+                Log.Error("Properties setting at name [" + settingName + "] was null.");
+                return null;
+            }
+
+            Log.Information("Hotkey Setting string: " + serialisedBinding);
+
+            if (serialisedBinding.Contains(',') == false)
+            {
+                Log.Error("Setting did not contain a comma");
+                return null;
+            }
+
+            string[] serialisedBindingPair = serialisedBinding.Split(',');
+
+            if (serialisedBindingPair.Length != 2)
+            {
+                Log.Error("split setting string was wrong size: " + serialisedBindingPair.Length);
+                return null;
+            }
+
+            bool parsedVirtualKey = Enum.TryParse(serialisedBindingPair[0], out VirtualKey virtualKey);
+            
+            bool parsedGamepadButton = Enum.TryParse(serialisedBindingPair[1], out XButtons gamepadButtonButton);
+
+
+            if (!parsedVirtualKey)
+                Log.Error("Could not parse virtual key enum");
+
+            if (!parsedGamepadButton)
+                Log.Error("Could not parse game pad button enum");
+
+            XInputButton? gamepadButton = null;
+            try
+            {
+                if (parsedGamepadButton)
+                    gamepadButton = new XInputButton(gamepadButtonButton, false);
+            }
+            catch (ArgumentException ex)
+            {
+                Log.Error("Failled to parse gamepadButton: " + ex.Message);
+            }
+
+            return ((parsedVirtualKey ? virtualKey : null), gamepadButton);
+
         }
 
 
@@ -84,7 +131,7 @@ namespace HCMExternal.Services.Hotkeys.Impl
 
             var initialBinding = deserialiseBinding(hotkeyEnum) ?? getDefaultBinding(hotkeyEnum);
             
-            Hotkey hotkey = new Hotkey();
+            Hotkey hotkey = new Hotkey(hotkeyEnum);
             HotkeyViewModel hotkeyViewModel = new(hotkey.ToString(), () => { OpenHotkeyRebindDialog(hotkeyEnum); }, hotkey as IHotkey);
 
             // register keyboard
@@ -149,13 +196,6 @@ namespace HCMExternal.Services.Hotkeys.Impl
 
         }
 
-        ~HotkeyManager()
-        {
-            foreach (var (hotkeyEnum, (hvm, hk)) in _hotkeyMap)
-            {
-                serialiseBinding(hotkeyEnum, hk.VirtualKeyCode?.Item1, hk.GamepadButton);
-            }
-        }
 
         private static readonly System.Timers.Timer _gamepadUpdateTimer = new System.Timers.Timer() { Interval = 30, Enabled = true };
 

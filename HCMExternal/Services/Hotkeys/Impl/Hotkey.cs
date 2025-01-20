@@ -13,6 +13,23 @@ namespace HCMExternal.Services.Hotkeys.Impl
 
     public class Hotkey : IHotkey
     {
+
+
+        private void serialise()
+        {
+            // store in settings. keyboard/gamepad comma seperated.
+            string serialisedBinding = string.Format("{0},{1}", VirtualKeyCode?.Item1.ToString(), GamepadButton?.ToString());
+            string settingName = "HK_" + HotkeyEnum.ToString();
+
+            Log.Information("Serialising binding [" + settingName + "] with value: " + serialisedBinding);
+            Properties.Settings.Default[settingName] = serialisedBinding;
+            Properties.Settings.Default.Save();
+        }
+
+
+        public HotkeyEnum HotkeyEnum { get; init; }
+
+
         // null represents keyboard unbound
 
         public (VirtualKey, Guid)? VirtualKeyCode { get; private set; } = null;
@@ -25,6 +42,7 @@ namespace HCMExternal.Services.Hotkeys.Impl
         {
             VirtualKeyCode = vk;
             GamepadButton = gp;
+            serialise();
             BindingChangeEvent(this, new BindingChangedEventArgs(this.ToString()));
         }
 
@@ -38,8 +56,9 @@ namespace HCMExternal.Services.Hotkeys.Impl
                     (GamepadButton?.ToString() ?? "");
         }
 
-        public Hotkey()
+        public Hotkey(HotkeyEnum hk)
         {
+            HotkeyEnum = hk;
         }
 
         public event EventHandler<BindingChangedEventArgs> BindingChangeEvent = new((o, e) => { Log.Verbose("Firing binding change event"); });
