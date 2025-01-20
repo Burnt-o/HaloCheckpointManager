@@ -95,6 +95,10 @@ private:
 			auto dumpPath = currentSaveFolder.selectedFolderPath + "\\" + checkpointName + ".bin";
 			PLOG_DEBUG << "dump path: " << dumpPath;
 
+			// Check if file already exists 
+			if (fileExists(dumpPath))
+				throw HCMRuntimeException("File already exists at path: " + dumpPath);
+
 			// get pointer to checkpoint in memory
 			uintptr_t checkpointLoc = 0;
 			if (mInjectRequirements->singleCheckpoint)

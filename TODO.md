@@ -1,7 +1,5 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
-  * setting/hotkey (de)serialisation
-
    * Fix sort checkpoint binding
    * check all binding expression errors
    * hook toggle settings up to inject/dump (prolly via properties...)
@@ -25,6 +23,7 @@ DONE:
 * Fix labels at top of trainer view
 * Fix Disable Natural Checkpoints
   * binding string not reflecting gamepad when double bound ?? I think fixed
+	*   * setting/hotkey (de)serialisation
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).
