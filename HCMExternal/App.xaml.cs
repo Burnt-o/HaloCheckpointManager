@@ -90,18 +90,20 @@ namespace HCMExternal
             IInterprocService interproc = new InterprocService();
             IHotkeyManager hotkey = new HotkeyManager();
 
+
+            MainWindow mainWindow = new();
+
             // main view model will construct lower view models too
             MainViewModel mainViewModel = new MainViewModel(checkpointIO, external, interproc, hotkey);
+            mainWindow.DataContext = mainViewModel;
 
-         
 
 
             // Setup theming
             string appTheme = HCMExternal.Properties.Settings.Default.DarkMode ? "Dark" : "Light";
             Resources.MergedDictionaries[0].Source = new Uri($"/Themes/{appTheme}.xaml", UriKind.Relative);
 
-            MainWindow mainWindow = new();
-            mainWindow.DataContext = mainViewModel;
+
             mainWindow.Title = "HaloCheckpointManager " + (CurrentHCMVersion.Length > 4 ? CurrentHCMVersion.Substring(0, 5) : CurrentHCMVersion);
             mainWindow.Show();
 
