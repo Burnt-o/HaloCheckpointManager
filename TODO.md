@@ -6,7 +6,6 @@
    * explorer command broken
    * open internal error button broken
    * double check all commands work properly + dragdrop
-   * dump checkpoint -> check for existing name, don't overwrite
    * send a build to jagged for testing
 
 
@@ -16,14 +15,24 @@
 
 
 
+
+
+Licensing: 
+	add license.MD - make a full list of used software, group by MIT/BSD2/Apache/Boost etc
+	check for any gpl stuff - otherwise we should be fine as MIT
+	gitmodulize the include folders
+	double check any stack overflow stuff
+
+
 DONE:
 * Need to disable hotkeys when not on proj cart tab
 * Need to auto expand HCMs width to account for trainer view
 * Need to hide trainer view when not on proj cart tab
 * Fix labels at top of trainer view
 * Fix Disable Natural Checkpoints
-  * binding string not reflecting gamepad when double bound ?? I think fixed
-	*   * setting/hotkey (de)serialisation
+* binding string not reflecting gamepad when double bound ?? I think fixed
+*   * setting/hotkey (de)serialisation
+*    * dump checkpoint -> check for existing name, don't overwrite
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).
