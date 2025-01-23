@@ -24,9 +24,8 @@ public:
 	// setup texteditor
 		textEditor = std::make_unique<TextEditor>();
 		textEditor->SetText(defaultValue);
-		textEditor->SetPalette(TextEditor::PaletteId::Mariana);
+		textEditor->SetPalette(TextEditor::GetMarianaPalette());
 		textEditor->SetShowLineNumbersEnabled(false);
-		textEditor->SetLanguageDefinition(TextEditor::LanguageDefinitionId::None);
 		textEditor->SetShowWhitespacesEnabled(false);
 	}
 

@@ -10,7 +10,6 @@
 #include "safetyhook.hpp"
 
 
-
 D3D11Hook* D3D11Hook::instance = nullptr;
 SimpleMath::Vector2 D3D11Hook::mScreenSize{1920, 1080};
 SimpleMath::Vector2 D3D11Hook::mScreenCenter{960, 540};
@@ -340,7 +339,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 			GlobalKill::killMe();
 
 			// Call original present
-			return d3d->m_pOriginalPresent(pSwapChain, SyncInterval, Flags);
+			return d3d->presentHook.stdcall<HRESULT>(pSwapChain, SyncInterval, Flags);
 
 
 		}
@@ -350,7 +349,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	// Invoke the callback
 
 
-	if (!d3d->dxgiInternalPresentHook || d3d->dxgiInternalPresentHook->isHookInstalled() == false || Renderer2D::good == false)
+	if (!d3d->OBSPresentHook || d3d->OBSPresentHook->isHookInstalled() == false || Renderer2D::good == false)
 	{
 
 
@@ -382,7 +381,7 @@ HRESULT D3D11Hook::newDX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval,
 	LOG_ONCE(PLOG_VERBOSE << "calling original present function");
 	// Call original present
 
-	auto hr = d3d->m_pOriginalPresent(pSwapChain, SyncInterval, Flags);
+	auto hr = d3d->presentHook.stdcall<HRESULT>(pSwapChain, SyncInterval, Flags);
 
 	return hr;
 
@@ -403,7 +402,7 @@ HRESULT D3D11Hook::newDX11PresentOBSBypass(IDXGISwapChain* pSwapChain, UINT Sync
 
 	LOG_ONCE(PLOG_VERBOSE << "invoking mainPresentHookEvent callback via inline obs bypass");
 	d3d->presentHookEvent->operator()(d3d->m_pDevice, d3d->m_pDeviceContext, pSwapChain, d3d->m_pMainRenderTargetView);
-	auto hr = d3d->dxgiInternalPresentHook->getInlineHook().call<HRESULT, IDXGISwapChain*, UINT, UINT>(pSwapChain, SyncInterval, Flags);
+	auto hr = d3d->OBSPresentHook->getInlineHook().stdcall<HRESULT>(pSwapChain, SyncInterval, Flags);
 
 	return hr;
 }
@@ -438,7 +437,7 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 			GlobalKill::killMe();
 
 			// Call original resize buffers
-			return d3d->m_pOriginalResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+			return d3d->resizebuffersHook.stdcall<HRESULT>(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
 
 
 		}
@@ -455,7 +454,7 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 	}
 
 	// Call original ResizeBuffers
-	HRESULT hr = d3d->m_pOriginalResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+	HRESULT hr = d3d->resizebuffersHook.stdcall<HRESULT>(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
 
 
 	// Resetup the mainRenderTargetView
@@ -481,34 +480,16 @@ HRESULT D3D11Hook::newDX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferC
 // Releases D3D resources, if we acquired them
 D3D11Hook::~D3D11Hook()
 {
-	if (m_pOriginalPresent)
-	{
-		PLOG_INFO << "~D3D11Hook()";
-		PLOG_INFO << "Freezing threads";
-		safetyhook::freeze_and_execute([this]() { // freeze threads while we patch vmt
-
-
-			PLOG_INFO << "Unpatching present pointer";
-			// rewrite the pointers to go back to the original value
-			patch_pointer(m_ppPresent, (uintptr_t)m_pOriginalPresent);
-			// resizeBuffers too
-			patch_pointer(m_ppResizeBuffers, (uintptr_t)m_pOriginalResizeBuffers);
-
-			if (dxgiInternalPresentHook)
-				dxgiInternalPresentHook.reset();
-
-			PLOG_INFO << "Successfully unpatched present pointer!";
-
-			}); 
-
-	}
-
 
 	if (presentHookRunning)
 	{
 		PLOG_INFO << "Waiting for presentHook to finish execution";
 		presentHookRunning.wait(true);
 	}
+
+	DXGIHook = {};
+	OBSPresentHook = {};
+
 	instance = nullptr;
 
 	// D3D resource releasing:
@@ -529,93 +510,36 @@ void D3D11Hook::beginHook()
 
 
 	// set up d3d11 hook. This requires us to get the vmt of Present and ResizeBuffers functions. 
-		   // There are two ways to do this: One is to just get a pointer to this from our pointer data. 
-		   // But failing that, we can create a dummy swapchain and get the vmt out of that.
-		   // The first option is preferred as creating (more specifically, releasing) a dummy swapchain can cause overlays like RivaTuner to crash.
 
 	try
 	{
+
 		lockOrThrow(pointerDataStoreWeak, ptr);
 
-		uintptr_t ppPresent;
-		uintptr_t ppResizeBuffers;
+		uintptr_t pIDXGISwapChain;
 
-		auto pppPresent = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pppPresent));
-		if (!pppPresent->resolve(&ppPresent)) throw HCMInitException(std::format("Could not resolve pppPresent: {}", MultilevelPointer::GetLastError()));
+		auto mlp_IDXGISwapChain = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pIDXGISwapChain));
+		if (!mlp_IDXGISwapChain->resolve(&pIDXGISwapChain)) throw HCMInitException(std::format("Could not resolve pIDXGISwapChain: {}-\nThis probably means this version of MCC is not supported by HCM", MultilevelPointer::GetLastError()));
 
-		auto pppResizeBuffers = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(pppResizeBuffers));
-		if (!pppResizeBuffers->resolve(&ppResizeBuffers)) throw HCMInitException(std::format("Could not resolve pppResizeBuffers: {}", MultilevelPointer::GetLastError()));
+		PLOG_INFO << "Successfully resolved multilevelpointer to IDXGISwapChain virtual method table!";
+		PLOG_DEBUG << "pIDXGISwapChain: " << pIDXGISwapChain;
 
-		PLOG_INFO << "Successfully resolved multilevelpointers to present/resizeBuffer VMT entries!";
-		PLOG_DEBUG << "ppPresent: " << ppPresent;
-		PLOG_DEBUG << "ppResizeBuffers: " << ppResizeBuffers;
+		DXGIHook = safetyhook::create_vmt((void*)pIDXGISwapChain);
+		presentHook = safetyhook::create_vm(DXGIHook, (size_t)IDXGISwapChainVMT::Present, &newDX11Present);
+		resizebuffersHook = safetyhook::create_vm(DXGIHook, (size_t)IDXGISwapChainVMT::ResizeBuffers, &newDX11ResizeBuffers);
 
-		m_ppPresent = (DX11Present**)ppPresent;
-		m_ppResizeBuffers = (DX11ResizeBuffers**)ppResizeBuffers;
-		m_pOriginalPresent = *m_ppPresent;
-		m_pOriginalResizeBuffers = *m_ppResizeBuffers;
+		PLOG_DEBUG << "hooks set";
 
-	}
-	catch (HCMInitException ex)
-	{
-		PLOG_ERROR << "Could not resolve directX vmt. Using dummy swapchain instead (may cause crash with overlays eg RTSS): " << std::endl << ex.what();
 	}
 	catch (HCMRuntimeException ex)
 	{
-		PLOG_ERROR << "Failed to lock pointer Manager service somehow?! Using dummy swapchain instead (may cause crash with overlays eg RTSS): " << std::endl << ex.what();
+		throw HCMInitException(ex.what());
 	}
 
 
 
-	if (m_ppPresent == nullptr || m_ppResizeBuffers == nullptr) // ie trycatch above ended up throwing
-	{
-		ID3D11Device* pDummyDevice = nullptr;
-		IDXGISwapChain* pDummySwapchain = nullptr;
-
-		// Create a dummy device
-		CreateDummySwapchain(pDummySwapchain, pDummyDevice);
-
-		// Get swapchain vmt
-		void** pVMT = *(void***)pDummySwapchain;
-
-		// Get Present's address out of vmt
-		m_pOriginalPresent = (DX11Present*)pVMT[(UINT)IDXGISwapChainVMT::Present];
-		m_ppPresent = (DX11Present**)&pVMT[(UINT)IDXGISwapChainVMT::Present];
-		PLOG_INFO << "PRESENT: " << m_pOriginalPresent;
-		PLOG_INFO << "PRESENT pointer: " << m_ppPresent;
-
-		// Get resizeBuffers too
-		m_pOriginalResizeBuffers = (DX11ResizeBuffers*)pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
-		m_ppResizeBuffers = (DX11ResizeBuffers**)&pVMT[(UINT)IDXGISwapChainVMT::ResizeBuffers];
-		PLOG_INFO << "RESIZEBUFFERS: " << m_pOriginalResizeBuffers;
-		PLOG_INFO << "RESIZEBUFFERS pointer: " << m_ppResizeBuffers;
-
-		// Don't need the dummy device anymore
-		// it appears that releasing these can cause the game to crash when using RivaTuner.
-		//safe_release(pDummySwapchain);
-		//safe_release(pDummyDevice);
-	}
-
-
-
-
-
-	PLOG_DEBUG << "rewriting present pointer";
-
-
-	// freeze threads while we patch vmt
-	safetyhook::freeze_and_execute([this]() {
-
-		// Rewrite the present pointer to instead point to our newPresent
-		// Need access tho!
-		patch_pointer(m_ppPresent, (uintptr_t)&newDX11Present);
-		// resizeBuffers too
-		patch_pointer(m_ppResizeBuffers, (uintptr_t)&newDX11ResizeBuffers);
-
-		});
 
 }
-
 
 
 
@@ -637,12 +561,11 @@ void D3D11Hook::setOBSBypass(bool enabled)
 			auto dxgiInternalPresentFunction = ptr->getData<std::shared_ptr<MultilevelPointer>>(nameof(dxgiInternalPresentFunction));
 
 			// starts attached
-			//dxgiInternalPresentHook = ModuleInlineHook::make(L"dxgi.dll", dxgiInternalPresentFunction, newDX11PresentOBSBypass, true);
-			dxgiInternalPresentHook = ModuleInlineHook::make(L"graphics-hook64.dll", dxgiInternalPresentFunction, newDX11PresentOBSBypass, true);
+			OBSPresentHook = ModuleInlineHook::make(L"graphics-hook64.dll", dxgiInternalPresentFunction, newDX11PresentOBSBypass, true);
 		}
 		else
 		{
-			if (!dxgiInternalPresentHook) return; // don't need to reset if it's already reset
+			if (!OBSPresentHook) return; // don't need to reset if it's already reset
 
 			if (presentHookRunning)
 			{
@@ -651,7 +574,7 @@ void D3D11Hook::setOBSBypass(bool enabled)
 			}
 
 
-			dxgiInternalPresentHook.reset();
+			OBSPresentHook.reset();
 		}
 
 	}

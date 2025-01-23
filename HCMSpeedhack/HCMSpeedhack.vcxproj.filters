@@ -16,6 +16,15 @@
     <Filter Include="Includes">
       <UniqueIdentifier>{66f17b92-f200-48aa-b956-3e6b150fa054}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Includes\safetyhook">
+      <UniqueIdentifier>{75f55598-65f0-435f-8749-b1761a38ade6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\safetyhook\include">
+      <UniqueIdentifier>{ca9d7ab0-463e-4c49-b3d9-79bfac22df62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\safetyhook\src">
+      <UniqueIdentifier>{cab40ba0-6f70-4b5b-8700-38be1657d368}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -27,14 +36,38 @@
     <ClInclude Include="Speedhack.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\safetyhook\safetyhook.hpp">
-      <Filter>Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\safetyhook\Zydis.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\allocator.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\common.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\context.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\easy.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\inline_hook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\mid_hook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\os.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\utility.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\vmt_hook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -47,11 +80,29 @@
     <ClCompile Include="Speedhack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="includes\safetyhook\safetyhook.cpp">
-      <Filter>Includes</Filter>
+    <ClCompile Include="includes\safetyhook\src\allocator.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
     </ClCompile>
-    <ClCompile Include="includes\safetyhook\Zydis.c">
-      <Filter>Includes</Filter>
+    <ClCompile Include="includes\safetyhook\src\easy.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\inline_hook.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\mid_hook.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\os.linux.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\os.windows.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\utility.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\vmt_hook.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +113,15 @@
   <ItemGroup>
     <None Include="vcpkg.json">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="includes\safetyhook\src\mid_hook.x86_32.asm">
+      <Filter>Includes\safetyhook\src</Filter>
+    </None>
+    <None Include="includes\safetyhook\src\mid_hook.x86_64-linux.asm">
+      <Filter>Includes\safetyhook\src</Filter>
+    </None>
+    <None Include="includes\safetyhook\src\mid_hook.x86_64-windows.asm">
+      <Filter>Includes\safetyhook\src</Filter>
     </None>
   </ItemGroup>
 </Project>

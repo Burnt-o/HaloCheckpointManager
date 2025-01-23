@@ -14,8 +14,8 @@
 // TODO: move shit to impl so we can hind all the headers
 
 // Define the DX functions we're going to hook
-extern "C" typedef HRESULT __stdcall DX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
-extern "C" typedef HRESULT __stdcall DX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
+typedef HRESULT __stdcall DX11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
+typedef HRESULT __stdcall DX11ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
 
 //SCALAR TO ImVec4 OPERATIONS
 inline ImVec4 operator + (const ImVec4& v1, float s) { return ImVec4(v1.x + s, v1.y + s, v1.z + s, v1.w + s); }
@@ -49,17 +49,12 @@ private:
 	static DX11Present newDX11PresentOBSBypass;
 	static DX11Present mandatoryManualRender;
 
-	// For a VMT hook we need to keep track of the original functions and the VMT entry containing the function
-	// Pointers to original functions
-	DX11Present* m_pOriginalPresent = nullptr;
-	DX11ResizeBuffers* m_pOriginalResizeBuffers = nullptr;
-	// Pointers to the games pointers to original function (we redirect these to create hook)
-	DX11Present** m_ppPresent = nullptr;
-	DX11ResizeBuffers** m_ppResizeBuffers = nullptr;
-
 	std::weak_ptr<PointerDataStore> pointerDataStoreWeak; // not required but used to attempt to resolve vmt entries without needing a dummy swapchain
 
-	std::shared_ptr<ModuleInlineHook> dxgiInternalPresentHook; // for obs bypass
+	safetyhook::VmtHook DXGIHook;
+	safetyhook::VmHook presentHook; //  present hook
+	safetyhook::VmHook resizebuffersHook; // resizeBuffers hook
+	std::shared_ptr<ModuleInlineHook> OBSPresentHook; // obs hook for obs bypass
 
 
 	// D3D data

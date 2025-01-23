@@ -135,7 +135,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BuildStlModules>false</BuildStlModules>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook\include;$(ProjectDir)includes\safetyhook\src</AdditionalIncludeDirectories>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -160,7 +160,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BuildStlModules>false</BuildStlModules>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes\safetyhook\include;$(ProjectDir)includes\safetyhook\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,8 +172,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="includes\safetyhook\safetyhook.hpp" />
-    <ClInclude Include="includes\safetyhook\Zydis.h" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\allocator.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\common.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\context.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\easy.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\inline_hook.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\mid_hook.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\os.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\utility.hpp" />
+    <ClInclude Include="includes\safetyhook\include\safetyhook\vmt_hook.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Speedhack.h" />
@@ -181,11 +189,35 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="includes\safetyhook\safetyhook.cpp">
+    <ClCompile Include="includes\safetyhook\src\allocator.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="includes\safetyhook\Zydis.c">
+    <ClCompile Include="includes\safetyhook\src\easy.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\inline_hook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\mid_hook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\os.linux.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\os.windows.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\utility.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\vmt_hook.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -201,6 +233,9 @@
     <ResourceCompile Include="HCMSpeedhack.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="includes\safetyhook\src\mid_hook.x86_32.asm" />
+    <None Include="includes\safetyhook\src\mid_hook.x86_64-linux.asm" />
+    <None Include="includes\safetyhook\src\mid_hook.x86_64-windows.asm" />
     <None Include="vcpkg.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

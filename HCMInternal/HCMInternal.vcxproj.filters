@@ -104,11 +104,17 @@
     <Filter Include="Includes\type_safe">
       <UniqueIdentifier>{8e095301-396e-423f-bdfb-54cff888c81e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Includes\type_safe\detail">
-      <UniqueIdentifier>{836ccd33-f930-42c4-aeab-2a007dccca89}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Services\OptionalCheats\Implementations\3D\ViewAngleLine">
       <UniqueIdentifier>{534fa38f-7c28-45de-b81d-142ec6ef4d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\type_safe\detail">
+      <UniqueIdentifier>{80102b94-9a3d-4d6c-acbe-1f026d24740f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\safetyhook\include">
+      <UniqueIdentifier>{020ed911-0607-4d4f-980f-82fbc227888a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes\safetyhook\src">
+      <UniqueIdentifier>{9578365a-7b79-43f0-93c4-a6a6d3cb972c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -772,15 +778,6 @@
     <ClInclude Include="TriggerFilterStringDialog.h">
       <Filter>Services\GUI\ModalDialogs</Filter>
     </ClInclude>
-    <ClInclude Include="includes\safetyhook\safetyhook.hpp">
-      <Filter>Includes\safetyhook</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\safetyhook\Zydis.h">
-      <Filter>Includes\safetyhook</Filter>
-    </ClInclude>
     <ClInclude Include="GetScenarioAddress.h">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClInclude>
@@ -937,105 +934,6 @@
     <ClInclude Include="map.h">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="includes\type_safe\arithmetic_policy.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\boolean.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\bounded_type.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\compact_optional.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\config.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\constrained_type.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\deferred_construction.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\downcast.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\flag.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\flag_set.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\floating_point.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\index.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\integer.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\narrow_cast.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\optional.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\optional_ref.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\output_parameter.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\reference.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\strong_typedef.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\tagged_union.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\types.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\variant.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\visitor.hpp">
-      <Filter>Includes\type_safe</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\aligned_union.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\all_of.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\assert.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\assign_or_construct.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\constant_parser.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\copy_move_control.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\force_inline.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\is_nothrow_swappable.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\map_invoke.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\type_safe\detail\variant_impl.hpp">
-      <Filter>Includes\type_safe\detail</Filter>
-    </ClInclude>
     <ClInclude Include="ManagedResource.h">
       <Filter>Classes</Filter>
     </ClInclude>
@@ -1068,6 +966,138 @@
     </ClInclude>
     <ClInclude Include="GUIViewAngleLineList.h">
       <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\arithmetic_policy.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\boolean.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\bounded_type.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\compact_optional.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\config.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\constrained_type.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\deferred_construction.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\downcast.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\flag.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\flag_set.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\floating_point.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\index.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\integer.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\narrow_cast.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\optional.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\optional_ref.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\output_parameter.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\reference.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\strong_typedef.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\tagged_union.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\types.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\variant.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\visitor.hpp">
+      <Filter>Includes\type_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\aligned_union.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\all_of.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\assert.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\assign_or_construct.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\constant_parser.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\copy_move_control.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\force_inline.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\is_nothrow_swappable.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\map_invoke.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\type_safe\include\type_safe\detail\variant_impl.hpp">
+      <Filter>Includes\type_safe\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\allocator.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\common.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\context.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\easy.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\inline_hook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\mid_hook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\os.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\utility.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\safetyhook\include\safetyhook\vmt_hook.hpp">
+      <Filter>Includes\safetyhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1392,24 +1422,6 @@
     <ClCompile Include="SensDriftOverlay.cpp">
       <Filter>Services\OptionalCheats\Implementations</Filter>
     </ClCompile>
-    <ClCompile Include="includes\safetyhook\safetyhook.cpp">
-      <Filter>Includes\safetyhook</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\ImGuiColorTextEdit\TextEditor.cpp">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\ImGuiColorTextEdit\UnitTests.cpp">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\safetyhook\Zydis.c">
-      <Filter>Includes\safetyhook</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="includes\ImGuiColorTextEdit\LanguageDefinitions.cpp">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
-    </ClCompile>
     <ClCompile Include="GetScenarioAddress.cpp">
       <Filter>Services\OptionalCheats\Implementations\Services</Filter>
     </ClCompile>
@@ -1527,22 +1539,61 @@
     <ClCompile Include="ModalDialogFactory.cpp">
       <Filter>Services\GUI\ModalDialogs</Filter>
     </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\allocator.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\easy.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\inline_hook.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\mid_hook.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\os.linux.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\os.windows.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\utility.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\safetyhook\src\vmt_hook.cpp">
+      <Filter>Includes\safetyhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\ImGuiDebugPanel.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\LanguageDefinitions.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\TextEditor.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\ImGuiColorTextEdit\UnitTests.cpp">
+      <Filter>Includes\ImGuiColorTextEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="dds2.bin">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="includes\ImGuiColorTextEdit\README.md">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
-    </None>
-    <None Include="includes\ImGuiColorTextEdit\LICENSE">
-      <Filter>Includes\ImGuiColorTextEditor</Filter>
     </None>
     <None Include="vcpkg.json">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="cpp.hint">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="includes\safetyhook\src\mid_hook.x86_32.asm">
+      <Filter>Includes\safetyhook\src</Filter>
+    </None>
+    <None Include="includes\safetyhook\src\mid_hook.x86_64-linux.asm">
+      <Filter>Includes\safetyhook\src</Filter>
+    </None>
+    <None Include="includes\safetyhook\src\mid_hook.x86_64-windows.asm">
+      <Filter>Includes\safetyhook\src</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
