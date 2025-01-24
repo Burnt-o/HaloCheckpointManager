@@ -24,14 +24,22 @@ namespace HCMExternal.ViewModels
                 if (dialogResult) // user wants to retry injection
                     ips.resetStateMachineEx();
             };
+
+            this.ShowErrorEvent = delegate
+            {
+                bool dialogResult = evm.RaiseShowErrorDialogEvent(evm.ErrorMessage);
+
+                if (dialogResult) // user wants to retry injection
+                    ips.resetStateMachineEx();
+            };
+
         }
 
-        // store of current state. Updated by MCCHookService.
+        // store of current state. Updated by InterprocService
         public MCCHookState State { get; set; } = new MCCHookState();
 
 
-        // Subscribed to by MCCHookService which in turn Fires the ErrorDialogViewModels event handler
-        public event Action ShowErrorEvent = delegate { Log.Information("Firing ShowErrorEvent"); };
+        public event Action ShowErrorEvent;
 
         private ICommand? _showErrorCommand;
         public ICommand ShowErrorCommand

@@ -3,7 +3,6 @@
    * hook toggle settings up to inject/dump (prolly via properties...)
    * open internal error button broken
    * double check all commands work properly + dragdrop
-   * errorFile.png not loading
    * send a build to jagged for testing
 
 
@@ -37,6 +36,7 @@ double check any stack overflow stuff
 		   * Fix sort checkpoint binding
    * check all binding expression errors
 	*    * explorer command broken
+	*    * errorFile.png not loading
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).
