@@ -1,10 +1,8 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
-   * hook toggle settings up to inject/dump (prolly via properties...)
-
    * dragdrop issues:
 	* checkpoint within-list works fine.
-	* folder within-list broken.
+	* folder reordering works. folder moving does not.
 	* cp to folder broken.
    * send a build to jagged for testing 
 

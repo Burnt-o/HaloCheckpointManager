@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
+using System.IO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace HCMExternal.ViewModels
@@ -28,7 +30,7 @@ namespace HCMExternal.ViewModels
                     break;
 
                 //Trying to move a checkpoint into a different folder
-                case var value when value == (typeof(SaveFolder), typeof(Checkpoint)):
+                case var value when value == (typeof(Checkpoint), typeof(SaveFolder)):
                     dropInfo.Effects = DragDropEffects.Move;
                     dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                     break;
@@ -150,6 +152,28 @@ namespace HCMExternal.ViewModels
                             // Refresh the tree
                             UpdateSaveFolderCollection();
 
+                        }
+                    }
+                    break;
+
+                // Trying to move a checkpoint into a different folder
+                case var value when value == (typeof(Checkpoint), typeof(SaveFolder)):
+                    {
+
+                        Checkpoint checkpointToMove = (Checkpoint)dropInfo.Data;
+                        SaveFolder folderToMoveItTo = (SaveFolder)dropInfo.TargetItem;
+
+
+                        string newPath = folderToMoveItTo.SaveFolderPath + "\\" + checkpointToMove.CheckpointName + ".bin";
+                        Log.Verbose("Moving checkpoint folder to new location: " + newPath);
+
+                        try
+                        {
+                            File.Move(checkpointToMove.CheckpointPath, newPath, false); // don't overwrite
+                        }
+                        catch(Exception ex)
+                        {
+                            System.Windows.MessageBox.Show("Could not move checkpoint into folder:\n" + ex.Message + "\n\n" + ex.StackTrace, "HaloCheckpointManager Error", System.Windows.MessageBoxButton.OK);
                         }
                     }
                     break;
