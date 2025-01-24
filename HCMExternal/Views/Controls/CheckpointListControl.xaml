@@ -53,36 +53,6 @@
             Command="{Binding Path=DataContext.MainVMCommands.SortCheckpoint, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
 
-                    <mc:AlternateContent>
-                        <!--
-                        add option to invoke these commands to the context menu when compiling under HCM_DEBUG,
-                        because I haven't yet coded up the real gui for them yet
-                        -->
-                        <mc:Choice Requires="debug">
-                            <MenuItem Header="ForceCheckpoint" 
-                        Command="{Binding Path=DataContext.MainVMCommands.ForceCheckpoint, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-
-                            <MenuItem Header="ForceRevert" 
-                        Command="{Binding Path=DataContext.MainVMCommands.ForceRevert, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-
-                            <MenuItem Header="ForceDoubleRevert" 
-                        Command="{Binding Path=DataContext.MainVMCommands.ForceDoubleRevert, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-
-                            <MenuItem Header="InjectCheckpoint" 
-                        Command="{Binding Path=DataContext.MainVMCommands.InjectCheckpoint, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-
-                            <MenuItem Header="DumpCheckpoint" 
-                        Command="{Binding Path=DataContext.MainVMCommands.DumpCheckpoint, 
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"  />
-                        </mc:Choice>
-                        <mc:Fallback>
-                          
-                        </mc:Fallback>
-                    </mc:AlternateContent>
                     
                     
                     
