@@ -17,7 +17,7 @@
             <ColumnDefinition Width="*"/>
 
         </Grid.ColumnDefinitions>
-        <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Path=ToggleValue}"/>
         <Label Grid.Column="3" Content="{Binding Path=EffectText}" Padding="0,11,0,0"/>
     </Grid>
 </UserControl>

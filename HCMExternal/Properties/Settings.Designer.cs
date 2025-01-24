@@ -198,5 +198,29 @@ namespace HCMExternal.Properties {
                 this["HK_DisableCheckpoints"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckpointBeforeDump {
+            get {
+                return ((bool)(this["CheckpointBeforeDump"]));
+            }
+            set {
+                this["CheckpointBeforeDump"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RevertAfterInject {
+            get {
+                return ((bool)(this["RevertAfterInject"]));
+            }
+            set {
+                this["RevertAfterInject"] = value;
+            }
+        }
     }
 }

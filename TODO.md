@@ -2,7 +2,10 @@
 * Finish Project Cartographer Save Management support
    * hook toggle settings up to inject/dump (prolly via properties...)
 
-   * double check all commands work properly + dragdrop
+   * dragdrop issues:
+	* checkpoint within-list works fine.
+	* folder within-list broken.
+	* cp to folder broken.
    * send a build to jagged for testing 
 
 

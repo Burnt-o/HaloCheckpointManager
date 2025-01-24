@@ -20,7 +20,7 @@ namespace HCMExternal.ViewModels
             set
             {
                 _toggleValue = value;
-                OnPropertyChanged(nameof(_toggleValue)); // update ui
+                OnPropertyChanged(nameof(ToggleValue)); // update ui
             }
         }
 

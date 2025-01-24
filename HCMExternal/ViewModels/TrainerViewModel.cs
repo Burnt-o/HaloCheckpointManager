@@ -1,6 +1,7 @@
 ﻿using HCMExternal.Services.Hotkeys;
 using HCMExternal.Services.Hotkeys.Impl;
 using HCMExternal.ViewModels.Commands;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,27 +22,6 @@ namespace HCMExternal.ViewModels
         public ToggleViewModel RevertAfterInjectViewModel { get; init; }
         public HotkeyedToggleViewModel DisableNaturalCheckpointsViewModel { get; init; }
 
-        private enum ToggleSettingName
-        {
-            CheckpointBeforeDump,
-            RevertAfterInject
-        }
-
-        bool? DeserialiseToggle(ToggleSettingName toggleSettingName)
-        {
-#if !HCM_DEBUG
-            throw new NotImplementedException("Need to implement SerialiseToggle");
-#endif
-            return null;
-        }
-
-        void SerialiseToggle(ToggleSettingName toggleSettingName, bool value)
-        {
-#if !HCM_DEBUG
-            throw new NotImplementedException("Need to implement SerialiseToggle");
-#endif
-        }
-
 
 
         public TrainerViewModel(MainVMCommands mvmCommands, IHotkeyManager hotkeyManager)
@@ -53,20 +33,30 @@ namespace HCMExternal.ViewModels
             InjectCheckpointViewModel = new HotkeyedButtonViewModel("Inject Checkpoint", hotkeyManager, HotkeyEnum.InjectCheckpoint, mvmCommands.InjectCheckpoint);
 
 
-            CheckpointBeforeDumpViewModel = new ToggleViewModel(DeserialiseToggle(ToggleSettingName.CheckpointBeforeDump) ?? true, "Force Checkpoint before Dumping");
-            RevertAfterInjectViewModel = new ToggleViewModel(DeserialiseToggle(ToggleSettingName.RevertAfterInject) ?? true, "Force Revert after Injecting");
+            CheckpointBeforeDumpViewModel = new ToggleViewModel(Properties.Settings.Default.CheckpointBeforeDump, "Force Checkpoint before Dumping");
+            CheckpointBeforeDumpViewModel.PropertyChanged += (o, e) =>
+            {
+                Log.Verbose("Changing CheckpointBeforeDump value to " + CheckpointBeforeDumpViewModel.ToggleValue);
+                Properties.Settings.Default.CheckpointBeforeDump = CheckpointBeforeDumpViewModel.ToggleValue;
+                Properties.Settings.Default.Save();
+            };
+
+
+
+            RevertAfterInjectViewModel = new ToggleViewModel(Properties.Settings.Default.RevertAfterInject, "Force Revert after Injecting");
+            RevertAfterInjectViewModel.PropertyChanged += (o, e) =>
+            {
+                Log.Verbose("Changing RevertAfterInject value to " + RevertAfterInjectViewModel.ToggleValue);
+                Properties.Settings.Default.RevertAfterInject = RevertAfterInjectViewModel.ToggleValue;
+                Properties.Settings.Default.Save();
+            };
+
+
             DisableNaturalCheckpointsViewModel = new HotkeyedToggleViewModel(false, "Disable Natural Checkpoints", hotkeyManager, HotkeyEnum.DisableCheckpoints);
             DisableNaturalCheckpointsViewModel.PropertyChanged += (o, e) => { mvmCommands.DisableCheckpoint.Execute(DisableNaturalCheckpointsViewModel.ToggleValue); };
 
         }
 
-  
-
-        ~TrainerViewModel()
-        {
-            SerialiseToggle(ToggleSettingName.CheckpointBeforeDump, CheckpointBeforeDumpViewModel.ToggleValue);
-            SerialiseToggle(ToggleSettingName.RevertAfterInject, CheckpointBeforeDumpViewModel.ToggleValue);
-        }
 
     }
 }

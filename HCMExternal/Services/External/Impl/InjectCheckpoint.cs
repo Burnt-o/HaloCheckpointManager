@@ -147,8 +147,12 @@ namespace HCMExternal.Services.External.Impl
 
             }
 
-            // force a revert. TODO: make this optional.
-            ForceRevert();
+            // force a revert if user wants
+            if (Properties.Settings.Default.RevertAfterInject)
+            {
+                ForceRevert();
+            }
+                
 
         }
 

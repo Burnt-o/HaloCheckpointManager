@@ -29,9 +29,13 @@ namespace HCMExternal.Services.External.Impl
         private void DumpCheckpointCartographer(SaveFolder saveFolder, HaloProcessInfo haloProcess)
         {
 
-            // force a checkpoint. TODO: make this optional.
-            ForceCheckpoint();
-            System.Threading.Thread.Sleep(100);
+            // force a checkpoint if user wants
+            if (Properties.Settings.Default.CheckpointBeforeDump)
+            {
+                ForceCheckpoint();
+                System.Threading.Thread.Sleep(100);
+            }
+
 
             // get pointer to double revert flag
             IMultilevelPointer doubleRevertFlagPointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "DoubleRevertFlag", haloProcess.processVersion);
