@@ -16,7 +16,7 @@ ModuleHookManager::ModuleHookManager()
 	mHook_LoadLibraryA = safetyhook::create_inline(&LoadLibraryA, &newLoadLibraryA);
 	mHook_LoadLibraryW = safetyhook::create_inline(&LoadLibraryW, &newLoadLibraryW);
 	mHook_LoadLibraryExA = safetyhook::create_inline(&LoadLibraryExA, &newLoadLibraryExA);
-	//mHook_LoadLibraryExW = safetyhook::create_inline(&LoadLibraryExW, &newLoadLibraryExW); // Crashes on safetyhook 0.5.3. Not used by MCC anyway though.
+	mHook_LoadLibraryExW = safetyhook::create_inline(&LoadLibraryExW, &newLoadLibraryExW); // Crashes on safetyhook 0.5.3 due to shared mem page with VirtualProtect.
 	mHook_FreeLibrary = safetyhook::create_inline(&FreeLibrary, &newFreeLibrary);
 
 	//mModuleHooksMap.reserve(6); // probably only the 6 game dll's that we might care about ever

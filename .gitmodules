@@ -3,7 +3,7 @@
 	url = https://github.com/goossens/ImGuiColorTextEdit
 [submodule "HCMInternal/includes/safetyhook"]
 	path = HCMInternal/includes/safetyhook
-	url = https://github.com/cursey/safetyhook
+	url = https://github.com/Burnt-o/safetyhook
 [submodule "HCMInternal/includes/type_safe"]
 	path = HCMInternal/includes/type_safe
 	url = https://github.com/foonathan/type_safe

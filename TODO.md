@@ -6,6 +6,8 @@
    * explorer command broken
    * open internal error button broken
    * double check all commands work properly + dragdrop
+   * "failed to find halo process" error window (only if proj tab) - ah it's the hotkeys.. I had inject on N
+   * double check speedhack works ok after safetyhook upgrade 
    * send a build to jagged for testing
 
 
@@ -17,11 +19,7 @@
 
 
 
-Licensing: 
-	add license.MD - make a full list of used software, group by MIT/BSD2/Apache/Boost etc
-	check for any gpl stuff - otherwise we should be fine as MIT
-	gitmodulize the include folders
-	double check any stack overflow stuff
+
 
 
 DONE:
@@ -32,7 +30,12 @@ DONE:
 * Fix Disable Natural Checkpoints
 * binding string not reflecting gamepad when double bound ?? I think fixed
 *   * setting/hotkey (de)serialisation
-*    * dump checkpoint -> check for existing name, don't overwrite
+*   * dump checkpoint -> check for existing name, don't overwrite
+* Licensing: 
+add license.MD - make a full list of used software, group by MIT/BSD2/Apache/Boost etc
+check for any gpl stuff - otherwise we should be fine as MIT
+gitmodulize the include folders
+double check any stack overflow stuff
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).
@@ -108,7 +111,7 @@ DONE:
 * A lot of boilerplate shitty "features" can be merged. Ie force cp/revert/mission restart could all be GameEngine stuff, instead of duplicating game engine stuff
 	* We really need to put more faith that are optionalCheat construction won't fail cos yknow. For current patch it never will. For other patches we should start implementing more stuff anyway. And mcc is never gonna get updated again prolly
 	* That doesn't mean we should switch to a hard-coded system though. I kinda like the abstraction of the dynamic system as long as you hide the impl details from the user
-
+* also I should switch from microsoft unit tests to boost::ut
 
 ## Low priority stuff that I would like to implement if it weren't a lot of work and I weren't really lazy
 * Random practice mode (Select multiple checkpoints and have them randomly injected - including cross level loading)
