@@ -29,7 +29,10 @@ namespace HCMExternal.ViewModels
         private void onDeleteCheckpoint()
         {
             _checkpointIOService.DeleteCheckpoint(FileViewModel.SelectedSaveFolder, FileViewModel.SelectedCheckpoint);
-            FileViewModel.UpdateCheckpointCollection();
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                FileViewModel.UpdateCheckpointCollection();
+            });
         }
 
 
@@ -67,22 +70,32 @@ namespace HCMExternal.ViewModels
         private void onRenameFolder()
         {
             _checkpointIOService.RenameFolder(FileViewModel.SelectedSaveFolder);
-            FileViewModel.UpdateSaveFolderCollection();
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                FileViewModel.UpdateSaveFolderCollection();
+            });
         }
 
 
         private void onDeleteFolder()
         {
             _checkpointIOService.DeleteFolder(FileViewModel.SelectedSaveFolder);
-            FileViewModel.UpdateSaveFolderCollection();
-            FileViewModel.UpdateCheckpointCollection();
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                FileViewModel.UpdateSaveFolderCollection();
+                FileViewModel.UpdateCheckpointCollection();
+            });
+
         }
 
 
         private void onNewFolder()
         {
             _checkpointIOService.NewFolder(FileViewModel.SelectedSaveFolder);
-            FileViewModel.UpdateSaveFolderCollection();
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                FileViewModel.UpdateSaveFolderCollection();
+            });
         }
 
 

@@ -1,9 +1,10 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
    * hook toggle settings up to inject/dump (prolly via properties...)
-   * open internal error button broken
+
    * double check all commands work properly + dragdrop
-   * send a build to jagged for testing
+   * send a build to jagged for testing 
+
 
 
 
@@ -37,6 +38,8 @@ double check any stack overflow stuff
    * check all binding expression errors
 	*    * explorer command broken
 	*    * errorFile.png not loading
+	*    * open internal error button broken
+	*    * fix "This type of CollectionView does not support changes to its SourceCollection from a thread different from the Dispatcher thread"
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).
