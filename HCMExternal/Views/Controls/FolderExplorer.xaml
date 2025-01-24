@@ -11,7 +11,7 @@
              xmlns:CheckpointModel="clr-namespace:HCMExternal.Models"
             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
                           xmlns:dd="urn:gong-wpf-dragdrop"
-             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:FileViewModel}">
     <UserControl.Resources>
         
         <SolidColorBrush x:Key="TreeViewItem.TreeArrow.Static.Stroke" Color="#FF818181"/>
@@ -99,15 +99,15 @@
 
                     <ContextMenu x:Key="FolderContextMenu">
                         <MenuItem Header="Create New Folder" 
-                        Command="{Binding Path=Parent.DataContext.NewFolder, 
+                        Command="{Binding Path=DataContext.MainVMCommands.NewFolder, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}"  />
 
                         <MenuItem Header="Rename Folder" 
-                        Command="{Binding Path=Parent.DataContext.RenameFolder, 
+                        Command="{Binding Path=DataContext.MainVMCommands.RenameFolder, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}"  />
 
                         <MenuItem Header="Delete Folder" 
-                        Command="{Binding Path=Parent.DataContext.DeleteFolder, 
+                        Command="{Binding Path=DataContext.MainVMCommands.DeleteFolder, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}"  />
 
                     </ContextMenu>

@@ -6,8 +6,7 @@
    * explorer command broken
    * open internal error button broken
    * double check all commands work properly + dragdrop
-   * "failed to find halo process" error window (only if proj tab) - ah it's the hotkeys.. I had inject on N
-   * double check speedhack works ok after safetyhook upgrade 
+   * errorFile.png not loading
    * send a build to jagged for testing
 
 
@@ -36,6 +35,9 @@ add license.MD - make a full list of used software, group by MIT/BSD2/Apache/Boo
 check for any gpl stuff - otherwise we should be fine as MIT
 gitmodulize the include folders
 double check any stack overflow stuff
+*    * double check speedhack works ok after safetyhook upgrade 
+		*    * "failed to find halo process" error window (only if proj tab) - ah it's the hotkeys.. I had inject on N
+
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).

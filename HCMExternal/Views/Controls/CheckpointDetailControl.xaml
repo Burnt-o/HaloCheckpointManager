@@ -9,7 +9,7 @@
              xmlns:cnv="clr-namespace:HCMExternal.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="285" d:DesignWidth="200"
-             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:FileViewModel}">
 
     <Grid >
         <Grid.Resources>
@@ -83,10 +83,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Delete" Padding="0,-2,0,0" Width="50"  Command="{Binding DeleteCheckpoint}" ToolTip="Delete the selected checkpoint"/>
-            <Button Grid.Column="1" Content="Explorer" Padding="0,-2,0,0" Width="50"   Command="{Binding OpenInExplorer}" ToolTip="Open this checkpoints folder in Windows Explorer"/>
+            <Button Grid.Column="0" Content="Delete" Padding="0,-2,0,0" Width="50"  Command="{Binding Path=MainVMCommands.DeleteCheckpoint}" ToolTip="Delete the selected checkpoint"/>
+            <Button Grid.Column="1" Content="Explorer" Padding="0,-2,0,0" Width="50"   Command="{Binding MainVMCommands.OpenInExplorer}" ToolTip="Open this checkpoints folder in Windows Explorer"/>
 
-            <Button Grid.Column="2" Content="Rename" Padding="0,-2,0,0" Width="50" Command="{Binding RenameCheckpoint}" ToolTip="Rename the selected checkpoint"/>
+            <Button Grid.Column="2" Content="Rename" Padding="0,-2,0,0" Width="50" Command="{Binding Path=MainVMCommands.RenameCheckpoint}" ToolTip="Rename the selected checkpoint"/>
             
         </Grid>
     </Grid>
