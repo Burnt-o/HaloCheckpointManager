@@ -1,45 +1,26 @@
 Halo Checkpoint Manager would not be possible without the following open source projects:
 
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
+
 | Project                     | Method    | License      | Link                                                                          |
-+----------------------------------------------------------------------------------------------------------------------------------------+
-+----------------------------------------------------------------------------------------------------------------------------------------+
+| --------------------------- | --------- | ------------ | ----------------------------------------------------------------------------- |
 | Serilog                     | nuget     | Apache-2.0   | https://github.com/serilog/serilog?tab=Apache-2.0-1-ov-file#readme            |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | NonInvasiveKeyboardHook     | nuget     | MIT          | https://github.com/kfirprods/NonInvasiveKeyboardHook?tab=MIT-1-ov-file#readme |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | XInputium                   | nuget     | MIT          | https://github.com/AderitoSilva/XInputium?tab=MIT-1-ov-file#readme            |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | openssl                     | vcpkg     | Apache-2.0   | https://github.com/openssl/openssl?tab=Apache-2.0-1-ov-file#readme            |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | ms-gsl                      | vcpkg     | MIT          | https://github.com/microsoft/GSL?tab=License-1-ov-file#readme                 |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | plog                        | vcpkg     | MIT          | https://github.com/SergiusTheBest/plog?tab=MIT-1-ov-file#readme               |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | eventpp                     | vcpkg     | Apache-2.0   | https://github.com/wqking/eventpp?tab=License-1-ov-file#readme                |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | imgui                       | vcpkg     | MIT          | https://github.com/ocornut/imgui?tab=MIT-1-ov-file#readme                     |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | pugixml                     | vcpkg     | MIT          | https://github.com/zeux/pugixml?tab=MIT-1-ov-file#readme                      |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | curl                        | vcpkg     | curl         | https://curl.se/docs/copyright.html                                           |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | boost                       | vcpkg     | BSL-1.0      | https://www.boost.org/LICENSE_1_0.txt                                         |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | magic-enum                  | vcpkg     | MIT          | https://github.com/Neargye/magic_enum?tab=MIT-1-ov-file#readme                |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | directxtk                   | vcpkg     | MIT          | https://github.com/microsoft/DirectXTK?tab=MIT-1-ov-file#readme               |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | libguarded                  | vcpkg     | BSD-2-Clause | https://github.com/janwilmans/libguarded?tab=BSD-2-Clause-1-ov-file#readme    |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | zydis                       | vcpkg     | MIT          | https://github.com/zyantific/zydis?tab=MIT-1-ov-file#readme                   |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | goossens/ImGuiColorTextEdit | gitmodule | MIT          | https://github.com/goossens/ImGuiColorTextEdit#MIT-1-ov-file                  |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | safetyhook                  | gitmodule | BSL-1.0      | https://github.com/cursey/safetyhook?tab=BSL-1.0-1-ov-file#readme             |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 | type_safe                   | gitmodule | MIT          | https://github.com/foonathan/type_safe?tab=MIT-1-ov-file#readme               |
-+-----------------------------+-----------+--------------+-------------------------------------------------------------------------------+
 
 The following is a reproduction in full of the licenses of each of these projects.
 
@@ -703,7 +684,7 @@ SOFTWARE.
     The MIT License (MIT)
 
     Copyright (c) 2014-2024 Florian Bernd
-    Copyright (c) 2014-2024 Joel Höner
+    Copyright (c) 2014-2024 Joel HÃ¶ner
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -780,7 +761,7 @@ Boost Software License - Version 1.0 - August 17th, 2003
 
     MIT License
 
-    Copyright (c) 2016-2020 Jonathan Müller
+    Copyright (c) 2016-2020 Jonathan MÃ¼ller
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
