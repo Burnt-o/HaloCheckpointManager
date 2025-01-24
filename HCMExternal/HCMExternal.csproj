@@ -29,6 +29,7 @@
     <None Remove="Images\diff_2.png" />
     <None Remove="Images\diff_3.png" />
     <None Remove="Images\diff_4.png" />
+    <None Remove="Images\errorfile.png" />
     <None Remove="Images\H1\a10_anni.png" />
     <None Remove="Images\H1\a10_clas.png" />
     <None Remove="Images\H1\a30_anni.png" />
@@ -232,6 +233,9 @@
     <Resource Include="Images\diff_2.png" />
     <Resource Include="Images\diff_3.png" />
     <Resource Include="Images\diff_4.png" />
+    <Resource Include="Images\errorfile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\H1\a10_anni.png" />
     <Resource Include="Images\H1\a10_clas.png" />
     <Resource Include="Images\H1\a30_anni.png" />

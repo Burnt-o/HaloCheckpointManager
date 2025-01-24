@@ -1,9 +1,6 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
-   * Fix sort checkpoint binding
-   * check all binding expression errors
    * hook toggle settings up to inject/dump (prolly via properties...)
-   * explorer command broken
    * open internal error button broken
    * double check all commands work properly + dragdrop
    * errorFile.png not loading
@@ -37,7 +34,9 @@ gitmodulize the include folders
 double check any stack overflow stuff
 *    * double check speedhack works ok after safetyhook upgrade 
 		*    * "failed to find halo process" error window (only if proj tab) - ah it's the hotkeys.. I had inject on N
-
+		   * Fix sort checkpoint binding
+   * check all binding expression errors
+	*    * explorer command broken
 
 ## Bugs to fix (eventually):
 * Pause game-advance ticks occasionally breaks (ScopedServiceRequest stuff bugging out probably).
