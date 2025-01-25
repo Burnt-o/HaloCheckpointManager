@@ -609,15 +609,15 @@
 				<Length>0x10</Length>
 			</PreserveLocation>
 
-			<PreserveLocation>
-				<Offset>0x5000</Offset>
-				<Length>0x8</Length>
+			<!--<PreserveLocation>
+				<Offset>0x5004</Offset>
+				<Length>0x4</Length>
 			</PreserveLocation>
 
 			<PreserveLocation>
-				<Offset>0x5060</Offset>
-				<Length>0x8</Length>
-			</PreserveLocation>
+				<Offset>0x5064</Offset>
+				<Length>0x4</Length>
+			</PreserveLocation>-->
 
 			<PreserveLocation>
 				<Offset>0x56D0</Offset>

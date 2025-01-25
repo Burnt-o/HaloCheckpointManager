@@ -53,10 +53,7 @@ namespace HCMExternal.ViewModels
                     Log.Verbose("Expand/contracting main window");
                     if (value)
                     {
-#if !HCM_DEBUG
-do not compile
- // crash can occur here
-#endif
+
                         Application.Current.MainWindow.Width += trainerViewWidth;
                         Application.Current.MainWindow.MinWidth += trainerViewWidth;
                     }

@@ -1,9 +1,5 @@
 ## 3.1.8 TODO:
 * Finish Project Cartographer Save Management support
-   * dragdrop issues:
-	* checkpoint within-list works fine.
-	* folder reordering works. folder moving does not.
-	* cp to folder broken.
    * send a build to jagged for testing 
 
 
