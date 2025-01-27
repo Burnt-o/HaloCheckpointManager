@@ -510,6 +510,15 @@
 			</Offsets>
 		</Version>
 	</GameProcessEntry>
+
+	<GameProcessEntry Type = "MultilevelPointer" HaloProcessType="ProjectCartographer" HaloGame ="PC" >
+		<Name>is_host_enum</Name>
+		<Version Version="0.7.0.3">
+			<Offsets>
+				<Offset>0x514648</Offset>
+			</Offsets>
+		</Version>
+	</GameProcessEntry>
 	
 	<GameProcessEntry Type="int" HaloProcessType="ProjectCartographer" HaloGame ="PC">
 		<Name>CheckpointLoadedBSPOffset</Name>
