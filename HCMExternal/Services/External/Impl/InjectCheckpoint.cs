@@ -159,13 +159,14 @@ namespace HCMExternal.Services.External.Impl
 
         public void InjectCheckpoint(Checkpoint checkpoint)
         {
-            // get process
-            HaloProcessInfo haloProcess = GetHaloProcessInfo();
-
-            if (haloProcess.processType == HaloProcessType.ProjectCartographer)
-                InjectCheckpointCartographer(checkpoint, haloProcess);
-            else
-                InjectCheckpointMCC(checkpoint, haloProcess);
+            List<HaloProcessInfo> haloProcesses = GetHaloProcessInfo();
+            foreach (var haloProcess in haloProcesses)
+            { 
+                if (haloProcess.processType == HaloProcessType.ProjectCartographer)
+                    InjectCheckpointCartographer(checkpoint, haloProcess);
+                else
+                    InjectCheckpointMCC(checkpoint, haloProcess);
+            }
         }
     }
 }

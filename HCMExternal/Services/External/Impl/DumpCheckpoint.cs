@@ -94,14 +94,15 @@ namespace HCMExternal.Services.External.Impl
 
         public void DumpCheckpoint(SaveFolder saveFolder)
         {
-            // get process
-            HaloProcessInfo haloProcess = GetHaloProcessInfo();
+            List<HaloProcessInfo> haloProcesses = GetHaloProcessInfo();
 
-            if (haloProcess.processType == HaloProcessType.ProjectCartographer)
-                DumpCheckpointCartographer(saveFolder, haloProcess);
-            else
-                DumpCheckpointMCC(saveFolder, haloProcess);
-
+            foreach (var haloProcess in haloProcesses)
+            {
+                if (haloProcess.processType == HaloProcessType.ProjectCartographer)
+                    DumpCheckpointCartographer(saveFolder, haloProcess);
+                else
+                    DumpCheckpointMCC(saveFolder, haloProcess);
+            }
         }
 
     }

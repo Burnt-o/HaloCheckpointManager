@@ -14,15 +14,17 @@ namespace HCMExternal.Services.External.Impl
 
         public void DisableCheckpoints(bool toggleValue)
         {
-            Log.Verbose("DisableCheckpoints");
-            // get process
-            HaloProcessInfo haloProcess = GetHaloProcessInfo();
+            List<HaloProcessInfo> haloProcesses = GetHaloProcessInfo();
 
-            // get pointer to part of code that writes 1 into the "force checkpoint" slot
-            IMultilevelPointer naturalCheckpointCodePointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "NaturalCheckpointCode", haloProcess.processVersion);
+            foreach (var haloProcess in haloProcesses)
+            {
+                // get pointer to part of code that writes 1 into the "force checkpoint" slot
+                IMultilevelPointer naturalCheckpointCodePointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "NaturalCheckpointCode", haloProcess.processVersion);
 
-            // write the flag (protected)
-            naturalCheckpointCodePointer.writeData(haloProcess.processHandle, toggleValue ? new byte[]{ 0 } : new byte[] { 1 }, true);
+                // write the flag (protected)
+                naturalCheckpointCodePointer.writeData(haloProcess.processHandle, toggleValue ? new byte[] { 0 } : new byte[] { 1 }, true);
+            }
+
 
         }
     }           

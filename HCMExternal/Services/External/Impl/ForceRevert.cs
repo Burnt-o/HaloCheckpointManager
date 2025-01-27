@@ -11,13 +11,16 @@ namespace HCMExternal.Services.External.Impl
     {
         public void ForceRevert()
         {
-            // get process
-            HaloProcessInfo haloProcess = GetHaloProcessInfo();
-            // get pointer
-            IMultilevelPointer pointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "ForceRevertFlag", haloProcess.processVersion);
+            List<HaloProcessInfo> haloProcesses = GetHaloProcessInfo();
 
-            // write a value of 1 to it
-            pointer.writeData(haloProcess.processHandle, new byte[] { 1 });
+            foreach (var haloProcess in haloProcesses)
+            {
+                IMultilevelPointer pointer = PointerData.GetGameProcessData<IMultilevelPointer>(haloProcess.processType, haloProcess.haloGame, "ForceRevertFlag", haloProcess.processVersion);
+
+                // write a value of 1 to it
+                pointer.writeData(haloProcess.processHandle, new byte[] { 1 });
+            }
+
         }
     }
 }
