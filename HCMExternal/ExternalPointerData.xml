@@ -552,38 +552,25 @@
 	<GameProcessEntry Type="PreserveLocationArray" HaloProcessType="ProjectCartographer" HaloGame ="PC">
 		<Name>PreserveLocationArray</Name>
 		<Version Version="All">
-			<PreserveLocation>
+			<!--<PreserveLocation>
 				<Offset>0x4B90</Offset>
 				<Length>0x10</Length>
-			</PreserveLocation>
-			<PreserveLocation>
+			</PreserveLocation>-->
+			<!--<PreserveLocation>
 				<Offset>0x4CBA</Offset>
 				<Length>8</Length>
-			</PreserveLocation>
+			</PreserveLocation>-->
 
-			<PreserveLocation>
+			<!-- this one is actually a view angle  <PreserveLocation>
 				<Offset>0x4CD0</Offset>
 				<Length>4</Length>
-			</PreserveLocation>
+			</PreserveLocation>-->
 
 			<!--player array stuff below- not 100% sure on these offsets-->
 			<!--<PreserveLocation>
-				<Offset>0x2B2C</Offset>
-				<Length>8</Length>
-			</PreserveLocation>
-			<PreserveLocation>
-				<Offset>0x2B20</Offset>
-				<Length>4</Length>
-			</PreserveLocation>-->
-			<PreserveLocation>
 				<Offset>0x28E8</Offset>
 				<Length>8</Length>
 			</PreserveLocation>
-			<PreserveLocation>
-				<Offset>0x2B40</Offset>
-				<Length>8</Length>
-			</PreserveLocation>
-
 			<PreserveLocation>
 				<Offset>0x28F8</Offset>
 				<Length>4</Length>
@@ -591,11 +578,89 @@
 			<PreserveLocation>
 				<Offset>0x2938</Offset>
 				<Length>4</Length>
+			</PreserveLocation>-->
+
+			<!--<PreserveLocation>
+				<Offset>0x2B40</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x2B1C</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x2B2C</Offset>
+				<Length>8</Length>
+			</PreserveLocation>-->
+
+			<PreserveLocation>
+				<Offset>0x2B20</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x2B2C</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<!--player datum --> 
+			<!--<PreserveLocation>
+				<Offset>0x2B44</Offset>
+				<Length>4</Length>
+			</PreserveLocation>-->
+
+			<!--<PreserveLocation>
+				<Offset>0x2CD8</Offset>
+				<Length>0x40</Length>
+			</PreserveLocation>-->
+
+
+<!--id stuff as 2x8 byte pair-->
+			<PreserveLocation>
+				<Offset>0x508</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x56E</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x580</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1B30</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1B96</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x1BA8</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x4B90</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+
+			<PreserveLocation>
+				<Offset>0x4BF6</Offset>
+				<Length>8</Length>
 			</PreserveLocation>
 
 
 			<!--2 byte id-->
-			<PreserveLocation>
+			<!--<PreserveLocation>
 				<Offset>0x586</Offset>
 				<Length>2</Length>
 			</PreserveLocation>
@@ -606,7 +671,7 @@
 			<PreserveLocation>
 				<Offset>0x2B20</Offset>
 				<Length>2</Length>
-			</PreserveLocation>
+			</PreserveLocation>-->
 
 			<PreserveLocation>
 				<Offset>0x140</Offset>
@@ -618,7 +683,7 @@
 				<Length>0x10</Length>
 			</PreserveLocation>
 
-			<!--<PreserveLocation>
+			<!--actually view angles<PreserveLocation>
 				<Offset>0x5004</Offset>
 				<Length>0x4</Length>
 			</PreserveLocation>
@@ -628,7 +693,7 @@
 				<Length>0x4</Length>
 			</PreserveLocation>-->
 
-			<PreserveLocation>
+			<!--<PreserveLocation>
 				<Offset>0x56D0</Offset>
 				<Length>0x8</Length>
 			</PreserveLocation>
@@ -636,7 +701,7 @@
 			<PreserveLocation>
 				<Offset>0x28E9</Offset>
 				<Length>0x1</Length>
-			</PreserveLocation>
+			</PreserveLocation>-->
 
 			<!--pointers-->
 			<PreserveLocation>
