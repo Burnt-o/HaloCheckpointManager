@@ -9,4 +9,4 @@
 	url = https://github.com/foonathan/type_safe
 [submodule "HCMSpeedhack/includes/safetyhook"]
 	path = HCMSpeedhack/includes/safetyhook
-	url = https://github.com/cursey/safetyhook
+	url = https://github.com/Burnt-o/safetyhook
