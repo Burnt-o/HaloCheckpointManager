@@ -879,10 +879,10 @@ public:
 		);
 
 
-	std::shared_ptr<BinarySetting<int>> editPlayerViewAngleIDInt = std::make_shared<BinarySetting<int>>
+	std::shared_ptr<BinarySetting<SubpixelID>> editPlayerViewAngleIDInt = std::make_shared<BinarySetting<SubpixelID>>
 		(
-			1000000, 
-			[](int in) { return (in >= 0) && (in < SubpixelID::fromFloat(std::numbers::pi_v<float> *2.f));  },
+			SubpixelID::fromFloat(std::numbers::pi_v<float>),
+			[](int in) { return (in >= SubpixelID::fromFloat(0.f)) && (in < SubpixelID::fromFloat(std::numbers::pi_v<float> *2.f));  },
 			nameof(editPlayerViewAngleIDVec2)
 		);
 

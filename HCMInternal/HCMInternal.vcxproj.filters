@@ -1099,6 +1099,9 @@
     <ClInclude Include="includes\ImGuiColorTextEdit\TextEditor.h">
       <Filter>Includes\ImGuiColorTextEditor</Filter>
     </ClInclude>
+    <ClInclude Include="GUIInputSubpixel.h">
+      <Filter>Services\GUI\GUIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

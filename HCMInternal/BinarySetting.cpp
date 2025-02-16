@@ -2,6 +2,8 @@
 #include "BinarySetting.h"
 #include "SettingsEnums.h"
 #include <concepts>
+#include "SubpixelID.h"
+
 
 void BinarySetting<bool>::deserialise(pugi::xml_node input)
 {
@@ -37,6 +39,21 @@ void BinarySetting<int>::deserialise(pugi::xml_node input)
 void BinarySetting<unsigned int>::deserialise(pugi::xml_node input)
 {
 	valueDisplay = input.text().as_uint();
+	UpdateValueWithInput();
+}
+
+void BinarySetting<SubpixelID>::deserialise(pugi::xml_node input)
+{
+	// stored in form "1,094,303,389" etc
+	// need to remove commas, convert to int, then static cast.
+
+	std::string intstr = input.text().as_string();
+	const auto [first, last] = std::ranges::remove_if(intstr, [](char c) { return !isdigit(c); });
+	intstr.erase(first, last);
+
+	unsigned long val = strtoul(intstr.data(), nullptr, 0);
+
+	valueDisplay = static_cast<SubpixelID>(val);
 	UpdateValueWithInput();
 }
 

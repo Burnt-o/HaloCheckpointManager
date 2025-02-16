@@ -25,6 +25,13 @@ constexpr SliderParam<int>::SliderParam()
 }
 
 template<>
+constexpr SliderParam<SubpixelID>::SliderParam()
+	: showSlider(false), minValue(SubpixelID::fromFloat(0.f)), maxValue(SubpixelID::fromFloat(100.f))
+{
+
+}
+
+template<>
 constexpr SliderParam<float>::SliderParam()
 	: showSlider(false), minValue(0.f), maxValue(100.f)
 {

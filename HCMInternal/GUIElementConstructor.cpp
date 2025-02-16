@@ -35,6 +35,7 @@
 #include "GUIButtonAndBinaryInt.h"
 #include "GUIInvisible.h"
 #include "GUIViewAngleLineList.h"
+#include "GUIInputSubpixel.h"
 
 
 
@@ -1643,7 +1644,7 @@ private:
 							(game, ToolTipCollection("Set player horizontal view direction to the specified subpixel ID"), RebindableHotkeyEnum::editPlayerViewAngleIDSet, "Set subpixel to: ##editPlayerViewAngleIDSet", settings->editPlayerViewAngleIDSet));
 
 					case GUIElementEnum::editPlayerViewAngleIDInt:
-						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared < GUIInputInt<>>
+						return std::optional<std::shared_ptr<IGUIElement>>(std::make_shared<GUIInputSubpixel>
 							(game, ToolTipCollection("Rotation of the player"), "Subpixel ID: ##editPlayerViewAngleIDInt", settings->editPlayerViewAngleIDInt));
 
 

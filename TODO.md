@@ -1,21 +1,13 @@
 ## 3.1.8 TODO:
-* Finish Project Cartographer Save Management support
-   * send a build to jagged for testing 
-
-
-
-
-
 * Fix subpixel ID copy paste/ button/ enter value etc bugs
-
-
-
 eventually: add 2904 reach save management support
 
 
 
 
 DONE:
+* Finish Project Cartographer Save Management support
+   * send a build to jagged for testing 
 * Need to disable hotkeys when not on proj cart tab
 * Need to auto expand HCMs width to account for trainer view
 * Need to hide trainer view when not on proj cart tab
