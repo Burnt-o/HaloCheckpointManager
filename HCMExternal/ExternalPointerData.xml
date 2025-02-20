@@ -26,6 +26,7 @@
 
 <!-- Safety flag. 0 when MCC is still loading in, 1 after that. Is ROUGHLY 0x90 bytes behind the game engine pointer-->
 	<!--can scan nw "4c 8b 4c c1 08 4d 85 c9", go up a bit (add -> je -> mov) to where it moves a val in from r12-->
+	<!-- NOTE: no longer used. see HCMInternal.MCCInitialisationCheck-->
 	<Entry Type="int">
 		<Name>Steam_MCCInitialisationFlagOffset</Name>
 		<Version Version="1.2448.0.0">

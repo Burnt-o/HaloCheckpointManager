@@ -12,6 +12,7 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 	{
 		{ "1.3385.0.0", 0x3FFCA18 },
 		{ "1.3272.0.0", 0x3FFDA28 },
+		{ "1.2904.0.0", 0x3F7B848 },
 		{ "1.2645.0.0", 0x3B80E20 },
 		{ "1.2448.0.0", 0x3A24EF0 }
 	};
