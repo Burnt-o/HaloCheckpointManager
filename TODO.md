@@ -1,6 +1,6 @@
-## 3.1.8 TODO:
-* Fix subpixel ID copy paste/ button/ enter value etc bugs
-eventually: add 2904 reach save management support
+
+
+Next-> big ver 4 rework (MCCUtilities)
 
 
 
