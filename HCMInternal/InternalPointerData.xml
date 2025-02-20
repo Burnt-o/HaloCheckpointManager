@@ -508,10 +508,14 @@
 				<Offset>0x1E1458</Offset>
 			</Offsets>
 		</Version>
-
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1E7249</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1CC8E9</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
@@ -607,6 +611,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x85F3B8</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A358</Offset>
@@ -633,6 +643,10 @@
 		</Version>
 
 		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x48, 0x31, 0xD2</Data>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
 
@@ -663,6 +677,13 @@
 				<Offset>0x863370</Offset>
 			</Offsets>
 		</Version>
+		
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x85F320</Offset>
+			</Offsets>
+		</Version>
+
 
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
@@ -689,6 +710,10 @@
 		</Version>
 
 		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
@@ -722,6 +747,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x85F24D</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A1ED</Offset>
@@ -751,6 +782,10 @@
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
 
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90</Data>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
@@ -765,7 +800,7 @@
 	</VersionedEntry>
 
 
-	<!--a call to XINPUT1_3.XInputGetState-->
+	<!--a call to XINPUT1_3.XInputGetState (not the only call tho so need to do a conditional breakpoint on [rsp])-->
 	<VersionedEntry Name="blockGameControllerInputFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
@@ -776,6 +811,12 @@
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x8637E1</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x85F7A1</Offset>
 			</Offsets>
 		</Version>
 
@@ -804,6 +845,10 @@
 		</Version>
 
 		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
@@ -993,6 +1038,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x36100</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x33038</Offset>
 			</Offsets>
 		</Version>
 		
@@ -7074,6 +7126,12 @@
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03B80E78</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3F7BAC0</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
