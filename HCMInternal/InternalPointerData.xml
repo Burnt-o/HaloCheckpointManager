@@ -6,6 +6,7 @@
 	<SupportedGameVersions>
 		<Entry>1.2448.0.0</Entry>
 		<Entry>1.2645.0.0</Entry>
+		<Entry>1.2904.0.0</Entry>
 		<Entry>1.3272.0.0</Entry>
 		<Entry>1.3385.0.0</Entry>
 	</SupportedGameVersions>
@@ -38,6 +39,12 @@
 			<Offsets>
 				<Offset>0x03B37558</Offset>
 				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03F7C8E0</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -82,6 +89,14 @@
 				<Offset>0x40</Offset>
 			</Offsets>
 		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03F7C8E0</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
 			
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
@@ -120,6 +135,14 @@
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03B37558</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03F7C8E0</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x68</Offset>
 			</Offsets>
@@ -182,6 +205,13 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3F7BA70</Offset>
+				<Offset>0x2BF40</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03FFDAD0</Offset>
@@ -206,7 +236,7 @@
 		
 	</VersionedEntry>
 
-	<!--what writes to above-->
+	<!--what writes to above. aob scan see docs-->
 	<VersionedEntry Name="gameEngineChangedFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
@@ -217,6 +247,12 @@
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1DE4FA</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x2D5D3E</Offset>
 			</Offsets>
 		</Version>
 
@@ -251,6 +287,11 @@
 				<Offset>0x3B80E64</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3F7BAAD</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FFDAA4</Offset>
@@ -279,6 +320,11 @@
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3B80E75</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3F7BAB5</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
@@ -311,6 +357,11 @@
 			<Offsets>
 				<Offset>0x3B81270</Offset>
 				<Offset>0x78</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3F0DB30</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" ProcessType="Steam">
@@ -354,6 +405,11 @@
 				<Offset>0x1DD981</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x2D5255</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1EA916</Offset>
@@ -384,6 +440,11 @@
 				<Offset>0x4BAFB9</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x46F9C9</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x4A675E</Offset>
@@ -412,6 +473,11 @@
 		<Version Version="1.2645.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1DE32D</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x2D5B71</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
@@ -498,6 +564,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03DB9F08</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03E3C388</Offset>
@@ -1417,6 +1489,12 @@
 				<Offset>0x250cd6e</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x250FB1E</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -1582,6 +1660,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x250CD6B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x250FB1B</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
@@ -1751,6 +1835,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x23c9b1c</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x23CC87C</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
@@ -2030,6 +2120,12 @@
 				<Offset>0x2907107</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x290BDA7</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -2077,6 +2173,12 @@
 			<Offsets>
 				<Offset>0x03A253A0</Offset>
 				<Offset>0x6C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03F7C380</Offset>
+				<Offset>0x8C</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" ProcessType="Steam">
@@ -2255,6 +2357,12 @@
 				<Offset>0x22C27</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x1F8DB</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -2390,7 +2498,13 @@
 				<Offset>0x1FDEBA</Offset>
 			</Offsets>
 		</Version>
-
+		
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x152122</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -2535,6 +2649,9 @@
 			<Offset>0xA10000</Offset>
 		</Version>
 		<Version Version="1.2645.0.0" Game="HaloReach">
+			<Offset>0xA60000</Offset>
+		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
 			<Offset>0xA60000</Offset>
 		</Version>
 		<Version Version="1.3073.0.0" Game="HaloReach">
@@ -2871,6 +2988,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x026AFB70</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3073.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -2906,6 +3030,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x026ABEB0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x026AFB60</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -3371,6 +3502,10 @@
 			<offset>0x1F320</offset>
 			<length>20</length>
 		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<offset>0x1F320</offset>
+			<length>20</length>
+		</Version>
 		<Version Version="1.3073.0.0" Game="HaloReach">
 			<offset>0x1EC10</offset>
 			<length>20</length>
@@ -3774,6 +3909,21 @@
 				<Length>16</Length>
 			</PreserveLocation>
 			<PreserveLocation> <!--black screen fix-->
+				<Offset>0x5C0278</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
+		</Version>
+		<Version Version="1.2904.0.0" Game="HaloReach">
+			<PreserveLocation>
+				<Offset>0x5E5284</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5DFD00</Offset>
+				<Length>16</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<!--black screen fix-->
 				<Offset>0x5C0278</Offset>
 				<Length>0xC</Length>
 			</PreserveLocation>

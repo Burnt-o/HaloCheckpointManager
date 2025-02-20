@@ -34,6 +34,9 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x3B80E20</Offset>
 		</Version>
+		<Version Version="1.2904.0.0">
+			<Offset>0x3F7B848</Offset>
+		</Version>
 		<Version Version="1.3272.0.0">
 			<Offset>0x3FFDA28</Offset>
 		</Version>
@@ -283,6 +286,9 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x1017B</Offset>
 		</Version>
+		<Version Version="1.2904.0.0">
+			<Offset>0x1017B</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0x183</Offset>
 		</Version>
@@ -304,6 +310,9 @@
 		<Version Version="1.2645.0.0">
 			<Offset>0x10FD54</Offset>
 		</Version>
+		<Version Version="1.2904.0.0">
+			<Offset>0x10FD54</Offset>
+		</Version>
 		<Version Version="1.3073.0.0">
 			<Offset>0xC6770</Offset>
 		</Version>
@@ -323,6 +332,9 @@
 			<Offset>0x10304</Offset>
 		</Version>
 		<Version Version="1.2645.0.0">
+			<Offset>0x10304</Offset>
+		</Version>
+		<Version Version="1.2904.0.0">
 			<Offset>0x10304</Offset>
 		</Version>
 		<Version Version="1.3073.0.0">
