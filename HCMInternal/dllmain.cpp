@@ -21,9 +21,12 @@ void RealMain(HMODULE dllHandle)
 DWORD WINAPI MainThread(HMODULE hDLL)
 {
 
-    while (MCCInitialisationCheck(hDLL).value() == false)
+
+    auto mccIsInitialised = MCCInitialisationCheck(hDLL);
+    while (mccIsInitialised.has_value() && mccIsInitialised.value() == false)
     {
         Sleep(100);
+        mccIsInitialised = MCCInitialisationCheck(hDLL);
     }
 
     RealMain(hDLL);
