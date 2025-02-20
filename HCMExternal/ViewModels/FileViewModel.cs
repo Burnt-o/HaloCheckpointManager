@@ -48,6 +48,7 @@ namespace HCMExternal.ViewModels
 
                 // serialise
                 Properties.Settings.Default.LastSelectedCheckpoint = _selectedCheckpoint?.CheckpointName;
+                Properties.Settings.Default.Save();
 
             }
         }
@@ -73,7 +74,7 @@ namespace HCMExternal.ViewModels
                     Properties.Settings.Default.LastSelectedFolder = new StringCollection() { "", "", "", "", "", "", "" };
                 }
                 Properties.Settings.Default.LastSelectedFolder[(int)SelectedGame] = _selectedSaveFolder.SaveFolderPath;
-
+                Properties.Settings.Default.Save();
 
                 UpdateCheckpointCollection();
                 // set selected checkpoint to top of the list
@@ -100,6 +101,7 @@ namespace HCMExternal.ViewModels
 
                 // serialise
                 HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)SelectedGame;
+                Properties.Settings.Default.Save();
             }
         }
 

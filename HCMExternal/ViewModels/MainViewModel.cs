@@ -104,7 +104,8 @@ namespace HCMExternal.ViewModels
             };
 
 
-
+            // need to load before it might get changed by FileViewModel. used for deserialisation 
+            string? lastSelectedCheckpoint = Properties.Settings.Default.LastSelectedCheckpoint;
 
             FileViewModel = new(_checkpointIOService, exs, ips, mvmCommands); ;
             MCCHookStateViewModel = new(new ErrorDialogViewModel(), ips);
@@ -128,17 +129,19 @@ namespace HCMExternal.ViewModels
             {
                 Log.Error("Failed to deserialise valid LastSelectedGameTab value: " + HCMExternal.Properties.Settings.Default.LastSelectedGameTab);
                 HCMExternal.Properties.Settings.Default.LastSelectedGameTab = (int)HaloGame.Halo1;
+                Properties.Settings.Default.Save();
             }
+            Log.Verbose("Deserialised LastSelectedGameTab: " + (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab);
             FileViewModel.SelectedGame = (HaloGame)HCMExternal.Properties.Settings.Default.LastSelectedGameTab;
 
 
 
             // deserialise last selected checkpoint
-            Log.Verbose("Deserialising last selected checkpoint: Properties.Settings.Default.LastSelectedCheckpoint != null = " + (Properties.Settings.Default.LastSelectedCheckpoint != null) + ", this.SelectedSaveFolder != null = " + (FileViewModel.SelectedSaveFolder != null));
-            if (Properties.Settings.Default.LastSelectedCheckpoint != null && FileViewModel.SelectedSaveFolder != null)
+            Log.Verbose("Deserialising last selected checkpoint: lastSelectedCheckpoint != null = " + (lastSelectedCheckpoint != null) + ", this.SelectedSaveFolder != null = " + (FileViewModel.SelectedSaveFolder != null));
+            if (lastSelectedCheckpoint != null && FileViewModel.SelectedSaveFolder != null)
             {
-                Log.Verbose("Properties.Settings.Default.LastSelectedCheckpoint: " + Properties.Settings.Default.LastSelectedCheckpoint);
-                string lastSelectedCheckpointPath = (FileViewModel.SelectedSaveFolder.SaveFolderPath + Properties.Settings.Default.LastSelectedCheckpoint);
+                Log.Verbose("lastSelectedCheckpoint: " + lastSelectedCheckpoint);
+                string lastSelectedCheckpointPath = (FileViewModel.SelectedSaveFolder.SaveFolderPath + "\\" + lastSelectedCheckpoint + ".bin");
                 Log.Verbose("lastSelectedCheckpointPath: " + lastSelectedCheckpointPath);
                 Log.Verbose("exists? " + File.Exists(lastSelectedCheckpointPath));
                 if (File.Exists(lastSelectedCheckpointPath))
@@ -146,7 +149,7 @@ namespace HCMExternal.ViewModels
                     // iterate thru checkpoints in current savefolder and select the one that matches the name
                     foreach (Checkpoint cp in FileViewModel.CheckpointCollection)
                     {
-                        if (cp.CheckpointName == Properties.Settings.Default.LastSelectedCheckpoint)
+                        if (cp.CheckpointName == lastSelectedCheckpoint)
                         {
                             Log.Verbose("Found lastSelectedCheckpoint in current collection, selecting.");
                             FileViewModel.SelectedCheckpoint = cp;
