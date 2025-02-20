@@ -136,7 +136,17 @@ namespace PointerDataParser
 
                 if (baseVersionEntry == NULL)
                 {
-                    throw HCMInitException("Could not find matching base version entry");
+                    if (std::string(versionEntry.attribute("Version").as_string()) != "All")
+                    {
+                        PLOG_ERROR << versionEntry.attribute("Version").as_string();
+                        throw HCMInitException("Could not find matching base version entry");
+                    }
+                    else
+                    {
+                        // a derived pointer for "All" was missing a base entry for this specific mcc version. not actually a parsing error per se.
+                        throw HCMInitException("NOERROR"); // need to break but this one should not be added to the parse errors list 
+                    }
+
                 }
 
                 // pass base MLP over to getConstructionArgs

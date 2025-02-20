@@ -66,9 +66,10 @@ namespace PointerDataParser
     }
 
 
-    std::map<DataKey, std::any> parseVersionedData(std::shared_ptr<IGetMCCVersion> getMCCVer, const std::string& xmlDocument)
+    std::pair<std::map<DataKey, std::any>, std::vector<HCMInitException>> parseVersionedData(std::shared_ptr<IGetMCCVersion> getMCCVer, const std::string& xmlDocument)
     {
         std::map<PointerDataParser::DataKey, std::any> out;
+        std::vector<HCMInitException> parsingErrors;
 
         using namespace pugi;
         using namespace PointerDataParser::detail;
@@ -110,6 +111,9 @@ namespace PointerDataParser
                     // rethrow if HCM_DEBUG, otherwise continue processing
                     catch (HCMInitException ex)
                     {
+                        if (std::string(ex.what()) == "NOERROR")
+                            continue;
+
                         std::stringstream xmlContent;
                         versionEntry.print(xmlContent);
                         std::stringstream extraInfo;
@@ -122,10 +126,8 @@ namespace PointerDataParser
                             << "Error: " << ex.what() << std::endl
                             << "Data: " << xmlContent.str();
                         PLOG_ERROR << extraInfo.str();
-#ifdef HCM_DEBUG
                         ex.append(extraInfo.str());
-                        throw ex;
-#endif
+                        parsingErrors.push_back(ex);
                     }
                 }
 
@@ -144,15 +146,12 @@ namespace PointerDataParser
             else
             {
                 std::string err = std::format("Unexpected item in pointer data: {}", entry.name());
-#ifdef HCM_DEBUG
-                throw HCMInitException(err);
-#else
                 PLOG_ERROR << err;
-#endif
+                parsingErrors.push_back(HCMInitException(err));
             }
             
         }
-        return out;
+        return { out, parsingErrors };
 
 
     }

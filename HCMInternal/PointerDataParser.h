@@ -7,11 +7,14 @@
 namespace PointerDataParser
 {
 
+
+
 	typedef std::tuple<std::string, std::optional<GameState>> DataKey;
 
 	// statically parses the InternalPointerData.xml into the dataMap that will go into PointerDataStore.
-	// throws HCMInitExceptions if something goes wrong
-	std::map<DataKey, std::any> parseVersionedData(std::shared_ptr<IGetMCCVersion> getMCCVer, const std::string& xmlDocument);
+	// throws HCMInitExceptions if something goes HORRIBLY wrong
+	// also returns a vector of HCMInitExceptions of recoverable errors (mostly parsing errors)
+	std::pair<std::map<DataKey, std::any>, std::vector<HCMInitException>> parseVersionedData(std::shared_ptr<IGetMCCVersion> getMCCVer, const std::string& xmlDocument);
 
 	std::expected<std::set<std::string>, std::string> parseSupportedMCCVersions(const std::string& xmlDocument) noexcept;
 
