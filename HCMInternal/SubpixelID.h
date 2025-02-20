@@ -33,18 +33,12 @@ struct SubpixelID
 	// convert to float
 	constexpr operator float() const
 	{
-		if (!this)
-		{
-			throw HCMInitException("Null ptr to SubpixelID!");
-		}
-
-		auto angleInt = *this; // copy
-		if (angleInt == 0)
+		if (std::bit_cast<uint32_t>(*this) == 0)
 			return 0.f;
 		else
 		{
-			// reverse what we did above
-			angleInt += (SubpixelID)8388607;
+			// reverse consturction
+			uint32_t angleInt = std::bit_cast<uint32_t>(*this) + 8388607;
 			return std::bit_cast<float>(angleInt);
 		}
 	}
