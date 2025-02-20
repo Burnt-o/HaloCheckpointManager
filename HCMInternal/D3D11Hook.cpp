@@ -238,8 +238,29 @@ D3D11Hook::D3D11Hook(std::weak_ptr<PointerDataStore> pointerDataStore)
 
 
 
+#ifdef HCM_DEBUG
+	// get pointers to present/resizeBuffers using a dummy swapchain.
+	// then log em to the console so burnt can use ida/cheatengine to find the idxgi vmt 
+
+	IDXGISwapChain* pDummySwapchain; 
+	ID3D11Device* pDummyDevice;
+	CreateDummySwapchain(pDummySwapchain, pDummyDevice);
+
+	if (pDummySwapchain && pDummyDevice)
+	{
+		uintptr_t* dxgi_vmt = (uintptr_t*)::calloc(119, sizeof(uintptr_t));
+		::memcpy(dxgi_vmt, *(uintptr_t**)pDummyDevice, magic_enum::enum_count< IDXGISwapChainVMT>() * sizeof(uintptr_t));
+
+		PLOG_DEBUG << "DX12::Present @ 0x" << std::hex << dxgi_vmt[(int)IDXGISwapChainVMT::Present];
+		PLOG_DEBUG << "DX12::ResizeBuffers @ 0x" << std::hex << dxgi_vmt[(int)IDXGISwapChainVMT::ResizeBuffers];
+	}
+
+	safe_release(pDummyDevice);
+	safe_release(pDummySwapchain);
 
 
+
+#endif
 
 
 }
