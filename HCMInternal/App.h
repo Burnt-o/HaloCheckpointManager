@@ -94,7 +94,7 @@ public:
             std::string pointerXMLData = PointerDataGetter::getXMLDocument(dirPath);
 
             // parse it into a keyed map of data
-            auto dataMap = PointerDataParser::parseVersionedData(ver, pointerXMLData);
+            auto [dataMap, parsingErrors] = PointerDataParser::parseVersionedData(ver, pointerXMLData);
 
             // store it 
             auto ptrStore = std::make_shared<PointerDataStore>(dataMap); PLOGV << "ptrStore init";
@@ -173,6 +173,14 @@ public:
             Sleep(100);
 
             imes->addMessage("HCM successfully initialised!\n");
+
+#ifdef HCM_DEBUG
+            for (auto parsingError : parsingErrors)
+            {
+                imes->addMessage(parsingError.what());
+            }
+#endif
+
 
             std::thread modalFailureWindowThread;
             if (!guifail->getFailureMessagesMap().empty())
