@@ -17,7 +17,7 @@
 
 	<!--Highest MCC version. Used for WinStore version detection. Winstore can't downpatch so is always latest patch.-->
 	<HighestSupportedVersion>
-		<Entry>1.3385.0.0</Entry>
+		<Entry>1.3495.0.0</Entry>
 	</HighestSupportedVersion>
 
 	<HighestSupportedCartographerVersion>
@@ -80,6 +80,9 @@
 			<Offset>0x3FD4</Offset>
 		</Version>
 		<Version Version="1.3385.0.0">
+			<Offset>0x3FD4</Offset>
+		</Version>
+		<Version Version="1.3495.0.0">
 			<Offset>0x3FD4</Offset>
 		</Version>
 	</Entry>

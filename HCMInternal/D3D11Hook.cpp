@@ -251,14 +251,12 @@ D3D11Hook::D3D11Hook(std::weak_ptr<PointerDataStore> pointerDataStore)
 		uintptr_t* dxgi_vmt = (uintptr_t*)::calloc(119, sizeof(uintptr_t));
 		::memcpy(dxgi_vmt, *(uintptr_t**)pDummyDevice, magic_enum::enum_count< IDXGISwapChainVMT>() * sizeof(uintptr_t));
 
-		PLOG_DEBUG << "DX12::Present @ 0x" << std::hex << dxgi_vmt[(int)IDXGISwapChainVMT::Present];
-		PLOG_DEBUG << "DX12::ResizeBuffers @ 0x" << std::hex << dxgi_vmt[(int)IDXGISwapChainVMT::ResizeBuffers];
+		PLOG_DEBUG << "DX11::Present @ 0x" << std::hex << dxgi_vmt[(int)IDXGISwapChainVMT::Present];
+		PLOG_DEBUG << "DX11::ResizeBuffers @ 0x" << std::hex << dxgi_vmt[(int)IDXGISwapChainVMT::ResizeBuffers];
 	}
 
 	safe_release(pDummyDevice);
 	safe_release(pDummySwapchain);
-
-
 
 #endif
 

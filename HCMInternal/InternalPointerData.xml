@@ -9,6 +9,7 @@
 		<Entry>1.2904.0.0</Entry>
 		<Entry>1.3272.0.0</Entry>
 		<Entry>1.3385.0.0</Entry>
+		<Entry>1.3495.0.0</Entry>
 	</SupportedGameVersions>
 
 
@@ -63,6 +64,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FB4E98</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -114,6 +122,14 @@
 				<Offset>0x40</Offset>
 			</Offsets>
 		</Version>
+		
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FB4E98</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
 	
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -160,6 +176,14 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FB0CB8</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03FB4E98</Offset>
 				<Offset>0x0</Offset>
 				<Offset>0x68</Offset>
 			</Offsets>
@@ -227,6 +251,13 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x04000BC8</Offset>
+				<Offset>0x2BFE8</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x03E4B060</Offset> <!--03E4C060 old-->
@@ -269,6 +300,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1EFD9E</Offset> <!--old: 1EB6CE-->
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x1E66DA</Offset> <!--old 1E643A-->
@@ -301,6 +338,11 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FFCA94</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x4000B8C</Offset>
 			</Offsets>
 		</Version>
 
@@ -336,6 +378,11 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FFCAA5</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x4000B9D</Offset>
 			</Offsets>
 		</Version>
 
@@ -383,6 +430,12 @@
 				<Offset>0x78</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x4001658</Offset>
+				<Offset>0x78</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x3E4BA68</Offset> <!-- old 3E4CA68-->
@@ -421,6 +474,11 @@
 				<Offset>0x1EAB9D</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1EF276</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -456,6 +514,11 @@
 				<Offset>0x4A68AE</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x4ACA2F</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -489,6 +552,11 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1EB505</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1EFBD5</Offset>
 			</Offsets>
 		</Version>
 
@@ -527,6 +595,11 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1F4E89</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1F96F1</Offset>
 			</Offsets>
 		</Version>
 
@@ -587,6 +660,12 @@
 				<Offset>0x3FC</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x03E3F388</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -630,6 +709,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87CEC8</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x85E230</Offset>
@@ -656,6 +741,10 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="Steam">
+			<Data>0x48, 0x31, 0xD2</Data>
+		</Version>
+
+		<Version Version="1.3495.0.0" ProcessType="Steam">
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
 
@@ -697,6 +786,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87CE30</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x85E198</Offset>
@@ -706,31 +801,13 @@
 
 	<!--nop both instructions-->
 	<VersionedEntry Name="blockGameMouseMoveInputCode" Type="Vector" Typename="byte">
-		<Version Version="1.2448.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.2645.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.2904.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3272.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3385.0.0" ProcessType="Steam">
+		<Version Version="All" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 		
-		<Version Version="1.3385.0.0" ProcessType="WinStore">
+		<Version Version="All" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
-		
-		
 	</VersionedEntry>
 
 
@@ -766,6 +843,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87CD5D</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
 				<Offset>0x85E0C5</Offset>
@@ -775,27 +858,11 @@
 
 	<!--nops the code that moves mouse click input flagset into edi-->
 	<VersionedEntry Name="blockGameMouseClickInputCode" Type="Vector" Typename="byte">
-		<Version Version="1.2448.0.0" ProcessType="Steam">
+		<Version Version="All" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
 
-		<Version Version="1.2645.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.2904.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3272.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3385.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3385.0.0" ProcessType="WinStore">
+		<Version Version="All" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -831,6 +898,11 @@
 				<Offset>0x87A8F1</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87D2B1</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -841,27 +913,11 @@
 
 	<!--nop the call-->
 	<VersionedEntry Name="blockGameControllerInputCode" Type="Vector" Typename="byte">
-		<Version Version="1.2448.0.0" ProcessType="Steam">
+		<Version Version="All" ProcessType="Steam">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
-		<Version Version="1.2645.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.2904.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3272.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3385.0.0" ProcessType="Steam">
-			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
-		</Version>
-
-		<Version Version="1.3385.0.0" ProcessType="WinStore">
+		<Version Version="All" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -2243,6 +2299,12 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FFD4C8</Offset>
+				<Offset>0x9C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x4001658</Offset>
 				<Offset>0x9C</Offset>
 			</Offsets>
 		</Version>
@@ -7148,6 +7210,12 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x04000BA0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" ProcessType="WinStore">
 			<Offsets>
@@ -8170,6 +8238,11 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FB0EBC</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x3FB508C</Offset>
 			</Offsets>
 		</Version>
 
@@ -10421,6 +10494,11 @@
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x87A479</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x87CE43</Offset>
 			</Offsets>
 		</Version>
 
