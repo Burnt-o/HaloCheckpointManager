@@ -67,7 +67,7 @@
 
 		<Version Version="1.3495.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x03FB4E98</Offset>
+				<Offset>0x4001A98</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -1148,6 +1148,12 @@
 				<Offset>0x3438D</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x3438D</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -1385,6 +1391,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x2C06D4</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2C0864</Offset>
 			</Offsets>
 		</Version>
 
