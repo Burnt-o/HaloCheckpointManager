@@ -1524,7 +1524,7 @@
 			</Offsets>
 		</Version>
 
-
+		<!--scan nw "89 8b 64 01 00 00 b9 08 00 00 00" check what mov [rbx+164] accesses-->
 		<Version Version="1.3272.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
@@ -1536,6 +1536,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019D2230</Offset>
+				<Offset>0x174</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019A6310</Offset>
 				<Offset>0x174</Offset>
 			</Offsets>
 		</Version>
@@ -1739,6 +1746,12 @@
 				<Offset>0x263eb2e</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263EABE</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -1934,6 +1947,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x263EB2B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x263EABB</Offset>
 			</Offsets>
 		</Version>
 
@@ -2133,6 +2152,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x24FB76C</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x24FB6FC</Offset>
 			</Offsets>
 		</Version>
 
@@ -2467,6 +2492,12 @@
 				<Offset>0x2A1F587</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2A1F527</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -2747,6 +2778,12 @@
 				<Offset>0x204B3</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x204B3</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -2913,6 +2950,12 @@
 				<Offset>0x166292</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x1663FB</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -3072,6 +3115,9 @@
 			<Offset>0xA60000</Offset>
 		</Version>
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Offset>0xA60000</Offset>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Offset>0xA60000</Offset>
 		</Version>
 	</VersionedEntry>
@@ -3477,6 +3523,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x27BC4D0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="checkpointLocation2" Type="MultilevelPointer::ModuleOffset">
@@ -3519,6 +3572,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x027BF2A0</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x27BC4C0</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -4032,6 +4092,10 @@
 			<length>20</length>
 		</Version>
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<offset>0x1EC10</offset>
+			<length>20</length>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<offset>0x1EC10</offset>
 			<length>20</length>
 		</Version>
@@ -4558,6 +4622,21 @@
 				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<PreserveLocation>
+				<Offset>0x5E3E74</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5DF5F0</Offset>
+				<Length>16</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<!--black screen fix-->
+				<Offset>0x5C026E</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
+		</Version>
 	</VersionedEntry>
 
 	<VersionedEntry Name="preserveLocations" Type="preserveLocations">
@@ -4847,6 +4926,12 @@
 				<Offset>0x4DD0DD</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4DD125</Offset>
+			</Offsets>
+		</Version>
 
 		<!--scan nw "45 8d 43 01 48 85 c0 ** ** 8b 00" put it on je after test r13 r13-->
 		<Version Version="1.2448.0.0" Game="Halo4">
@@ -5093,13 +5178,6 @@
 				<Offset>0x38F8</Offset>
 			</Offsets>
 		</Version>
-		<Version Version="1.3495.0.0" Game="Halo3ODST">
-			<Module>halo3odst.dll</Module>
-			<Offsets>
-				<Offset>0x0133B400</Offset>
-				<Offset>0x38F8</Offset>
-			</Offsets>
-		</Version>
 
 		<Version Version="1.2448.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
@@ -5126,6 +5204,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019D2230</Offset>
+				<Offset>0x9B0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019A6310</Offset>
 				<Offset>0x9B0</Offset>
 			</Offsets>
 		</Version>
@@ -5291,6 +5376,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x019D2230</Offset>
+				<Offset>0x880</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x019A6310</Offset>
 				<Offset>0x880</Offset>
 			</Offsets>
 		</Version>
@@ -5541,6 +5633,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x016ACCE4</Offset>
+				<Offset>0xC8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x1680DC4</Offset>
 				<Offset>0xC8</Offset>
 			</Offsets>
 		</Version>
@@ -5917,6 +6016,12 @@
 				<Offset>0x4739C4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4739CC</Offset>
+			</Offsets>
+		</Version>
 
 		<!--scan nw "65 48 8b 04 25 58 00 00 00 8b d1 41 b9 18 00"-->
 		<Version Version="1.2448.0.0" Game="Halo4">
@@ -6035,6 +6140,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xC51A38</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xC519B8</Offset>
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
@@ -6195,6 +6307,13 @@
 			</Offsets>
 		</Version>
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Offsets>
+				<Offset>0x30</Offset>
+				<Offset>0x40</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Offsets>
 				<Offset>0x30</Offset>
 				<Offset>0x40</Offset>
@@ -6399,6 +6518,13 @@
 				<Offset>0x28</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015B6700</Offset>
+				<Offset>0x28</Offset>
+			</Offsets>
+		</Version>
 
 		<!--a few options for pointers here-->
 		<!--scan nw "70 89 b3 a4 00 00 00" check what acc on restart-->
@@ -6543,6 +6669,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x015E26A8</Offset>
+				<Offset>0x294</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x015B6708</Offset>
 				<Offset>0x294</Offset>
 			</Offsets>
 		</Version>
@@ -7074,6 +7207,15 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25bda20</Offset>
+				<Offset>0x2F8</Offset>
+				<Offset>0x18</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 
 		<!--[indexTableHeader+0x18]-->
 		<Version Version="1.3385.0.0" Game="Halo4">
@@ -7144,6 +7286,14 @@
 				<Offset>0x10</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25bda20</Offset>
+				<Offset>0x2F8</Offset>
+				<Offset>0x10</Offset>
+			</Offsets>
+		</Version>
 
 		<!--[indexTableHeader+0x10]-->
 		<Version Version="1.3385.0.0" Game="Halo4">
@@ -7198,6 +7348,15 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x25bdab0</Offset>
+				<Offset>0x2F8</Offset>
+				<Offset>0x8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25bda20</Offset>
 				<Offset>0x2F8</Offset>
 				<Offset>0x8</Offset>
 				<Offset>0x0</Offset>
@@ -7434,6 +7593,14 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25bda20</Offset>
+				<Offset>0x2F8</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 
 		<!--actually index table header-->
 		<Version Version="1.3272.0.0" Game="Halo4">
@@ -7541,6 +7708,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x025BDAB0</Offset>
+				<Offset>0x10000</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDA20</Offset>
 				<Offset>0x10000</Offset>
 			</Offsets>
 		</Version>
@@ -7653,6 +7827,20 @@
 				<Offset>0xA0C0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDA20</Offset>
+				<Offset>0xA0C0</Offset>
+			</Offsets>
+		</Version>
+		<!--<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x025BDA10</Offset>
+				<Offset>0xA0C0</Offset>
+			</Offsets>
+		</Version>-->
 
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -7827,6 +8015,14 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x25BDA20</Offset>
+				<Offset>0xA0A0</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -7943,6 +8139,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x68EE08</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x68EE48</Offset>
 			</Offsets>
 		</Version>
 
@@ -8348,6 +8550,12 @@
 				<Offset>0x82DB1</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x82DF9</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -8454,6 +8662,12 @@
 				<Offset>0x82D3B</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x82D83</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -8509,6 +8723,11 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Parameters>
+				<pOutputString>rdi+0</pOutputString>
+			</Parameters>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Parameters>
 				<pOutputString>rdi+0</pOutputString>
 			</Parameters>
@@ -8696,6 +8915,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xC57A5</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xC587E</Offset>
 			</Offsets>
 		</Version>
 
@@ -8960,6 +9185,12 @@
 				<Offset>0x26CD39</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x26CEC9</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -8995,6 +9226,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x26CDC8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x26CF58</Offset>
 			</Offsets>
 		</Version>
 
@@ -9069,6 +9306,10 @@
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
@@ -9086,6 +9327,9 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
@@ -9202,6 +9446,12 @@
 				<Offset>0x344e5</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x344e5</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -9292,6 +9542,13 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x0192DDF0</Offset>
+				<Offset>0x944</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x1901ED0</Offset>
 				<Offset>0x944</Offset>
 			</Offsets>
 		</Version>
@@ -9420,6 +9677,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xC9FB88</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xC9FB08</Offset>
 			</Offsets>
 		</Version>
 
@@ -9714,6 +9977,12 @@
 				<Offset>0x28806D4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2880654</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -9802,6 +10071,12 @@
 				<Offset>0x28806D0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2880650</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -9886,6 +10161,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x28806D8</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2880658</Offset>
 			</Offsets>
 		</Version>
 
@@ -9974,6 +10255,12 @@
 				<Offset>0x28806DC</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x288065C</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -10060,6 +10347,12 @@
 				<Offset>0x28806D8</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x2880658</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -10144,6 +10437,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x28806DC</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x288065C</Offset>
 			</Offsets>
 		</Version>
 
@@ -10234,6 +10533,12 @@
 				<Offset>0x288070C</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x288068C</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -10297,6 +10602,12 @@
 				<Offset>0x26CC98</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x26CE28</Offset>
+			</Offsets>
+		</Version>
 	</VersionedEntry>
 
 
@@ -10326,6 +10637,9 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 	</VersionedEntry>
@@ -10409,6 +10723,12 @@
 				<Offset>0x343DD</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x343DD</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -10435,6 +10755,9 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
@@ -10561,6 +10884,12 @@
 				<Offset>0x353FC</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x353FC</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -10673,6 +11002,12 @@
 				<Offset>0xAFBE30</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE30</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3272.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -10721,6 +11056,12 @@
 				<Offset>0x4E2FBAC</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x4E2FB2C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -10762,6 +11103,12 @@
 				<Offset>0x14E7B</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x14E7B</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -10777,6 +11124,12 @@
 				<Offset>0xAFBE30</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE30</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
@@ -10787,6 +11140,12 @@
 
 	<VersionedEntry Name="ZoneSetChangeFunction" Type="MultilevelPointer::ModuleOffset">
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x14E7B</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x14E7B</Offset>
@@ -10933,6 +11292,14 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x024FB660</Offset>
+				<Offset>0x1ED20</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x024FB5F0</Offset>
 				<Offset>0x1ED20</Offset>
 			</Offsets>
 			<BitOffset>0</BitOffset>
@@ -11827,7 +12194,7 @@
 
 	<!--#region reach + halo4 skull offsets (copy pasted)-->
 	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>2</LastOffsetAdjustment>
 			<BitOffsetOverride>2</BitOffsetOverride>
@@ -11836,7 +12203,7 @@
 
 
 	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>5</LastOffsetAdjustment>
 			<BitOffsetOverride>0</BitOffsetOverride>
@@ -11844,7 +12211,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>1</BitOffsetOverride>
@@ -11852,7 +12219,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>2</BitOffsetOverride>
@@ -11860,7 +12227,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>3</BitOffsetOverride>
@@ -11869,7 +12236,7 @@
 
 
 	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>4</BitOffsetOverride>
@@ -11877,7 +12244,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>5</BitOffsetOverride>
@@ -11885,7 +12252,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>6</BitOffsetOverride>
@@ -11893,7 +12260,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullTiltPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>7</BitOffsetOverride>
@@ -11901,7 +12268,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>0</BitOffsetOverride>
@@ -11909,7 +12276,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>2</BitOffsetOverride>
@@ -11917,7 +12284,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullCowbellPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>3</BitOffsetOverride>
@@ -11925,7 +12292,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>4</BitOffsetOverride>
@@ -11933,7 +12300,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="HaloReach">
+		<Version Version="All" Game="HaloReach">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>5</BitOffsetOverride>
@@ -11942,7 +12309,7 @@
 
 
 	<VersionedEntry Name="skullBandannaPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>2</LastOffsetAdjustment>
 			<BitOffsetOverride>2</BitOffsetOverride>
@@ -11951,7 +12318,7 @@
 
 
 	<VersionedEntry Name="skullAcrophobiaPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>5</LastOffsetAdjustment>
 			<BitOffsetOverride>0</BitOffsetOverride>
@@ -11959,7 +12326,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullBlackEyePointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>1</BitOffsetOverride>
@@ -11967,7 +12334,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullToughLuckPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>2</BitOffsetOverride>
@@ -11975,7 +12342,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullCatchPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>3</BitOffsetOverride>
@@ -11984,7 +12351,7 @@
 
 
 	<VersionedEntry Name="skullFogPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>4</BitOffsetOverride>
@@ -11992,7 +12359,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullFaminePointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>5</BitOffsetOverride>
@@ -12000,7 +12367,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullThunderstormPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>6</BitOffsetOverride>
@@ -12008,7 +12375,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullTiltPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>0</LastOffsetAdjustment>
 			<BitOffsetOverride>7</BitOffsetOverride>
@@ -12016,7 +12383,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullMythicPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>0</BitOffsetOverride>
@@ -12024,7 +12391,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullBlindPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>2</BitOffsetOverride>
@@ -12032,7 +12399,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullCowbellPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>3</BitOffsetOverride>
@@ -12040,7 +12407,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullGruntBirthdayPartyPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>4</BitOffsetOverride>
@@ -12048,7 +12415,7 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="skullIWHBYDPointer" Type="MultilevelPointer::Derived">
-		<Version Version="1.3385.0.0" Game="Halo4">
+		<Version Version="All" Game="Halo4">
 			<Base>skullIronPointer</Base>
 			<LastOffsetAdjustment>1</LastOffsetAdjustment>
 			<BitOffsetOverride>5</BitOffsetOverride>
@@ -12121,6 +12488,12 @@
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0x9E984</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x9E9CC</Offset>
 			</Offsets>
 		</Version>
 
@@ -12338,6 +12711,13 @@
 				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xC1A230</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -12407,6 +12787,12 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0xAFBE38</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
 				<Offset>0xAFBE38</Offset>
@@ -12845,6 +13231,12 @@
 				<Offset>0x155CE4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x155DC4</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -12872,6 +13264,9 @@
 		</Version>
 
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<Data>0xEB, 0x59</Data>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Data>0xEB, 0x59</Data>
 		</Version>
 
@@ -13012,6 +13407,12 @@
 				<Offset>0x26CAC4</Offset>
 			</Offsets>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>
+			<Offsets>
+				<Offset>0x26CC54</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.3385.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
@@ -13084,6 +13485,12 @@
 			<Module>haloreach.dll</Module>a
 			<Offsets>
 				<Offset>0x26CAD5</Offset>
+			</Offsets>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<Module>haloreach.dll</Module>a
+			<Offsets>
+				<Offset>0x26CC65</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>

@@ -1,3 +1,5 @@
+fix modal dialog init thing - alt tabbing in requiring esc/enter
+
 
 
 Next-> big ver 4 rework (MCCUtilities)
