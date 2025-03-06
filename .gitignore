@@ -416,3 +416,4 @@ FodyWeavers.xsd
 /HCMSpeedhack/vcpkg_installed/
 /HCMInterproc/vcpkg_installed/
 /enc_temp_folder/113e4d6b74d54c7b72f8459e25b5a575/MCCInitialisationCheck.cpp
+/OutputPath.vsmacro

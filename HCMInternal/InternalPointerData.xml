@@ -13131,13 +13131,13 @@
 		<Version Version="1.3385.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x89BAE8</Offset>
+				<Offset>0x89BAE4</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3495.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x89CAE8</Offset>
+				<Offset>0x89CAE4</Offset>
 			</Offsets>
 		</Version>
 
