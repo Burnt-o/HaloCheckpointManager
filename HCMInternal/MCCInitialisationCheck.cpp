@@ -18,7 +18,7 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 	};
 
 #ifndef HCM_DEBUG
-#error Need to update steam + winstore offsets for init flag
+#error Need to update steam offsets for init flag
 #endif
 
 	const uintptr_t winstoreOffset = 0x3E4AFC8;
@@ -37,6 +37,10 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 	}
 	else
 	{
+#ifndef HCM_DEBUG
+#error Need to update winstore offsets for init flag
+#endif
+		return std::unexpected("TODO");
 		initFlagOffset = winstoreOffset;
 	}
 
