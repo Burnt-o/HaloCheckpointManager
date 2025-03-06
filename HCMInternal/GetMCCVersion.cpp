@@ -3,7 +3,22 @@
 #include <winver.h> // to get version string of MCC
 VersionInfo GetMCCVersion::evalVersion()
 {
+
+
     VersionInfo outCurrentMCCVersion;
+
+    if (evalVersionType() == MCCProcessType::WinStore)
+    {
+        // hard coded
+        outCurrentMCCVersion.major = 1;
+        outCurrentMCCVersion.minor = 0;
+        outCurrentMCCVersion.build = 3495;
+        outCurrentMCCVersion.revision = 0;
+        return outCurrentMCCVersion;
+    }
+
+
+
     HMODULE mccProcess = GetModuleHandle(NULL);
     char mccProcessPath[MAX_PATH];
     GetModuleFileNameA(mccProcess, mccProcessPath, sizeof(mccProcessPath));
