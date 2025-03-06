@@ -18,10 +18,6 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 		{ "1.2448.0.0", 0x3A24EF0 }
 	};
 
-#ifndef HCM_DEBUG
-#error Need to update steam offsets for init flag
-#endif
-
 	const uintptr_t winstoreOffset = 0x3E4EF78;
 
 	std::unique_ptr<GetMCCVersion> getMCCVer = std::make_unique<GetMCCVersion>();
