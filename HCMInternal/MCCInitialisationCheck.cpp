@@ -10,6 +10,7 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 
 	const std::map< std::string, uintptr_t> steamOffsetMap =
 	{
+		{ "1.3495.0.0", 0x4000B10 },
 		{ "1.3385.0.0", 0x3FFCA18 },
 		{ "1.3272.0.0", 0x3FFDA28 },
 		{ "1.2904.0.0", 0x3F7B848 },
@@ -21,7 +22,7 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 #error Need to update steam offsets for init flag
 #endif
 
-	const uintptr_t winstoreOffset = 0x3E4AFC8;
+	const uintptr_t winstoreOffset = 0x3E4EF78;
 
 	std::unique_ptr<GetMCCVersion> getMCCVer = std::make_unique<GetMCCVersion>();
 
@@ -37,10 +38,6 @@ std::expected<uintptr_t, std::string> getInitFlagAddress(HMODULE dllHandle)
 	}
 	else
 	{
-#ifndef HCM_DEBUG
-#error Need to update winstore offsets for init flag
-#endif
-		return std::unexpected("TODO");
 		initFlagOffset = winstoreOffset;
 	}
 
