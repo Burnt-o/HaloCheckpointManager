@@ -47,10 +47,12 @@ public:
 	virtual void updateService() override
 	{
 		bool requested = serviceIsRequested();
+		PLOG_INFO << "BlockGameInput service is turning " << (requested ? "ON!" : "OFF!");
 		blockGameKeyboardInputHook->setWantsToBeAttached(requested);
 		blockGameMouseMoveInputPatch->setWantsToBeAttached(requested);
 		blockGameMouseClickInputPatch->setWantsToBeAttached(requested);
 		blockGameControllerInputPatch->setWantsToBeAttached(requested);
+		PLOG_DEBUG << "BlockGameInput hook state has been updated.";
 	}
 
 

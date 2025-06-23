@@ -45,7 +45,10 @@ public:
 
 	virtual void updateService() override
 	{
-		BlockPlayerCharacterInputHook->setWantsToBeAttached(serviceIsRequested());
+		bool requested = serviceIsRequested();
+		PLOG_INFO << "BlockPlayerCharacterInput service is turning " << (requested ? "ON!" : "OFF!");
+		BlockPlayerCharacterInputHook->setWantsToBeAttached(requested);
+		PLOG_DEBUG << "BlockPlayerCharacterInput hook state has been updated.";
 	}
 
 
@@ -72,7 +75,10 @@ public:
 
 	virtual void updateService() override
 	{
-		BlockPlayerCharacterInputPatch->setWantsToBeAttached(serviceIsRequested());
+		bool requested = serviceIsRequested();
+		PLOG_INFO << "BlockPlayerCharacterInput service is turning " << (requested ? "ON!" : "OFF!");
+		BlockPlayerCharacterInputPatch->setWantsToBeAttached(requested);
+		PLOG_DEBUG << "BlockPlayerCharacterInput hook state has been updated.";
 	}
 
 

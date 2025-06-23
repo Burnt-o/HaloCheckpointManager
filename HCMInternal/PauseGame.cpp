@@ -70,15 +70,19 @@ public:
 
 	void combinedUpdateService()
 	{
+
+		bool requested = this->IPauseService::serviceIsRequested() && !this->IOverridePauseService::serviceIsRequested();
+
+		PLOG_INFO << "PauseGame service is turning " << (requested ? "ON!" : "OFF!");
 		PLOG_DEBUG << "this->IPauseService::serviceIsRequested(): " << (this->IPauseService::serviceIsRequested() ? "true" : "false");
 		PLOG_DEBUG << "this->IOverridePauseService::serviceIsRequested(): " << (this->IOverridePauseService::serviceIsRequested() ? "true" : "false");
-		bool requested = this->IPauseService::serviceIsRequested() && !this->IOverridePauseService::serviceIsRequested();
-		PLOG_DEBUG << "requested: " << (requested ? "true" : "false");
 
 		for (auto& patch : pauseGamePatches)
 		{
 			patch->setWantsToBeAttached(requested);
 		}
+
+		PLOG_DEBUG << "PauseGame hooks have been updated.";
 
 	}
 

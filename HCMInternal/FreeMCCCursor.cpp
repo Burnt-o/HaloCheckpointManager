@@ -40,7 +40,10 @@ public:
 
 	virtual void updateService() override
 	{
-		shouldCursorBeFreeHook->setWantsToBeAttached(serviceIsRequested());
+		bool requested = serviceIsRequested();
+		PLOG_INFO << "FreeMCCCursor service is turning " << (requested ? "ON!" : "OFF!");
+		shouldCursorBeFreeHook->setWantsToBeAttached(requested);
+		PLOG_DEBUG << "FreeMCCCursor service hooks have been updated.";
 	}
 
 };
