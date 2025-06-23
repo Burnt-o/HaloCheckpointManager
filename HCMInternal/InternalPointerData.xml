@@ -2998,7 +2998,7 @@
 		<Version Version="1.3495.0.0" Game="HaloReach">
 			<Module>haloreach.dll</Module>
 			<Offsets>
-				<Offset>0x1663FB</Offset>
+				<Offset>0x166402</Offset>
 			</Offsets>
 		</Version>
 
@@ -3017,7 +3017,7 @@
 		<Version Version="1.3495.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
-				<Offset>0x194C76</Offset>
+				<Offset>0x194C77</Offset>
 			</Offsets>
 		</Version>
 
