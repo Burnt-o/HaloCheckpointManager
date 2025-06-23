@@ -14,21 +14,19 @@ public:
 
 	std::shared_ptr<SharedRequestDerivedType> makeScopedRequest()
 	{
-		if (mRequest.expired())
+
+		if (auto lock = mRequest.lock())
 		{
-			// create new request, fire update event
-			auto shared = std::shared_ptr<SharedRequestDerivedType>(mRequestFactory(),
-				[this](SharedRequestDerivedType* ptr) { delete ptr; updateService(); }); // once last reference expires, updateService is called
-			mRequest = shared;
-			updateService();
-			return shared;
-
-
+			return lock;
 		}
 		else
 		{
-			// return shared ptr to existing request
-			return mRequest.lock();
+			// create new request, fire update event
+			auto shared = std::shared_ptr<SharedRequestDerivedType>(mRequestFactory(),
+				[this](SharedRequestDerivedType* ptr) { delete ptr; this->updateService(); }); // once last reference expires, updateService is called
+			mRequest = shared;
+			this->updateService();
+			return shared;
 		}
 	}
 
@@ -38,6 +36,8 @@ public:
 	}
 
 	virtual void updateService() {} // function fired when new SharedRequestToken created or last one expires. override this to act on the new serviceIsRequested().
+
+
 	virtual ~SharedRequestProvider()
 	{
 		// if token outlives provider, the deleter would call a garbade updateService! so wait for token to die first.
