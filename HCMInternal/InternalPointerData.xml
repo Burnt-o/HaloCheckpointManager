@@ -9146,7 +9146,7 @@
 		<Version Version="1.3495.0.0" Game="Halo4">
 			<Module>halo4.dll</Module>
 			<Offsets>
-				<Offset>0x108DDA</Offset>
+				<Offset>0x10BDD5</Offset>
 			</Offsets>
 		</Version>
 	</VersionedEntry>
