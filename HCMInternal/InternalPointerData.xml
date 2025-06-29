@@ -3345,28 +3345,28 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01E637E0</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x7F0000</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01F623A0</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x870000</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2862.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01F24140</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x870000</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01FA7CA0</Offset>
-				<Offset>0x0</Offset>
+				<Offset>0x870000</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo3">
@@ -3397,28 +3397,28 @@
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01E637E0</Offset>
-				<Offset>0x7F0000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2645.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01F623A0</Offset>
-				<Offset>0x870000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2862.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01F24140</Offset>
-				<Offset>0x870000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3073.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
 				<Offset>0x01FA7CA0</Offset>
-				<Offset>0x870000</Offset>
+				<Offset>0x0</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.3272.0.0" Game="Halo3">
