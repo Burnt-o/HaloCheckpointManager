@@ -4,9 +4,10 @@
 
 	<!--Supported game versions. HCM will forcibly fail to initialize if MCC version isn't one of these.-->
 	<SupportedGameVersions>
-		<Entry>1.2448.0.0</Entry>
-		<Entry>1.2645.0.0</Entry>
-		<Entry>1.2904.0.0</Entry>
+		<Entry>1.2094.0.0</Entry> <!--Season 5-->
+		<Entry>1.2448.0.0</Entry> <!--Season 7-->
+		<Entry>1.2645.0.0</Entry> <!--Season 8-->
+		<Entry>1.2904.0.0</Entry> 
 		<Entry>1.3272.0.0</Entry>
 		<Entry>1.3385.0.0</Entry>
 		<Entry>1.3495.0.0</Entry>
@@ -29,6 +30,13 @@
 	<!--scan wr "10 00 00 00 01 00 00 00 05 00 00 00 00 00 00 00" go back 0x58 bytes-->
 	<!-- or "12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 03 00 00 42 02 00 00" and go forward 40 bytes (better?) -->
 	<VersionedEntry Name="pIDXGISwapChain" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x38F3598</Offset>
+				<Offset>0x0</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03A285C0</Offset>
@@ -82,6 +90,14 @@
 
 
 	<VersionedEntry Name="pppPresent" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x38F3598</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x40</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03A285C0</Offset>
@@ -140,6 +156,14 @@
 	</VersionedEntry>
 
 	<VersionedEntry Name="pppResizeBuffers" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x38F3598</Offset>
+				<Offset>0x0</Offset>
+				<Offset>0x68</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03A285C0</Offset>
@@ -215,6 +239,13 @@
 	<!--load into mission select of games, scanning for enum value. 1 level pointer with huge offset, 200,000 etc. pointer is actually near gameEnginePointer, duh.-->
 	<!-- will be two good values seperated by only 4 bytes - use the earlier one -->
 	<VersionedEntry Name="gameEngineIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x038EA128</Offset>
+				<Offset>0x2B730</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03A25000</Offset>
@@ -270,6 +301,12 @@
 
 	<!--what writes to above. aob scan see docs-->
 	<VersionedEntry Name="gameEngineChangedFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1911B67</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1D8712</Offset>
@@ -317,6 +354,11 @@
 
 	<!--1 when in load. should be approx 0xA34 BEHIND gameIndicator (the old shit one) pointer (was a44 behind for winstore 3272)-->
 	<VersionedEntry Name="loadIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x38EA169</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3A24FC4</Offset>
@@ -355,8 +397,13 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--0 when in MainMenu, 1 when in-game. 0x11 bytes ahead loadindicator-->
+	<!--0 when in MainMenu, 1 when in-game. 0x11 bytes BEHIND loadindicator-->
 	<VersionedEntry Name="menuIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x38EA158</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3A24FD5</Offset>
@@ -397,6 +444,11 @@
 
 	<!--gameIndicator (old shitty one) +0x78-->
 	<VersionedEntry Name="levelIndicator" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x38EB140</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x03A253A0</Offset>
@@ -451,6 +503,11 @@
 	Should be a "LoadingScreen" lea nearby. Put it right after loadIndicator written.
 	-->
 	<VersionedEntry Name="gameLoadStartFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x19103E0</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1D7B65</Offset>
@@ -491,6 +548,11 @@
 
 	<!-- what writes zero to load indicator at end of load. "Loading done" nearby.-->
 	<VersionedEntry Name="gameLoadEndFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1A69907</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x4A4831</Offset>
@@ -531,6 +593,11 @@
 
 	<!--writes zero to loadIndicator on s&q-->
 	<VersionedEntry Name="gameQuitFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1910B55</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1D8545</Offset>
@@ -574,6 +641,11 @@
 	<!-- #region control-->
 	<!--scan wr "00 00 00 00 00 00 01 01 01" while unpaused, then "01 ** ** ** ** ** ** ** **" while paused. check what accesses, one of these funcs that cmps to register is it.-->
 	<VersionedEntry Name="shouldCursorBeFreeFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x190F44C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x1E1458</Offset>
@@ -630,6 +702,13 @@
 	maybe do "01 00 00 00 FF FF FF FF ** ** ** ** 00 00 00 00 00 00 00 00 01 00 00 00"
 	-->
 	<VersionedEntry Name="isCursorShowing" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x037CA4A8</Offset>
+				<Offset>0x3FC</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x038642A8</Offset>
