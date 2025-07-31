@@ -640,10 +640,13 @@
 
 	<!-- #region control-->
 	<!--scan wr "00 00 00 00 00 00 01 01 01" while unpaused, then "01 ** ** ** ** ** ** ** **" while paused. check what accesses, one of these funcs that cmps to register is it.-->
+	<!--ALT: scan wr "54 4C 00 00 00 00 00 00 27 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00". the lock cmpxchg that accesses it is around 0x89 behind our je -->
+	
+	
 	<VersionedEntry Name="shouldCursorBeFreeFunction" Type="MultilevelPointer::ExeOffset">
 		<Version Version="1.2094.0.0" ProcessType="Steam">
 			<Offsets>
-				<Offset>0x190F44C</Offset>
+				<Offset>0x1816554</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2448.0.0" ProcessType="Steam">
@@ -758,8 +761,15 @@
 
 	<!--same as above, it's one of those funcs that accesses the pause flag.
 	ALT: scan nw "48 85 d2 ** ** 4c 8d 40 18" put it on the test rdx, rdx
+	ALT: scan nw "24 fc c0 e0 05". and, shl. scroll up a bit, need to find a branch that skips a particular call (mov [rax + 18], 00000100 - lea r8, [rax + 18] - add rcx, 20) 
 	-->
 	<VersionedEntry Name="blockGameKeyboardInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1BA2CAA</Offset>
+			</Offsets>
+		</Version>
+		
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x8508DB</Offset>
@@ -805,6 +815,10 @@
 
 	<!-- "test rdx, rdx" -> "xor rdx, rdx". this will set zeroFlag true and clear rdx like what the branch was actually testing.-->
 	<VersionedEntry Name="blockGameKeyboardInputCode" Type="Vector" Typename="byte">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Data>0x48, 0x31, 0xD2</Data>
 		</Version>
@@ -836,7 +850,16 @@
 
 
 	<!-- scan nw "f3 0f 11 1b f3 0f 11 63 04 40 f6 c7 01", movss [rbx], xmm3.-->
+	<!-- see sig scan docs. very obvious. -->
 	<VersionedEntry Name="blockGameMouseMoveInputFunction" Type="MultilevelPointer::ExeOffset">
+
+		<!-- annoyingly, in earlier versions, the two movss functions we need to nop aren't contiguous. Easier just to force a branch earlier on.-->
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1B9F6B4</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x850848</Offset>
@@ -880,9 +903,39 @@
 		</Version>
 	</VersionedEntry>
 
-	<!--nop both instructions-->
+	<!--nop both instructions.-->
 	<VersionedEntry Name="blockGameMouseMoveInputCode" Type="Vector" Typename="byte">
-		<Version Version="All" ProcessType="Steam">
+		<!-- both instructions aren't contiguous so uhhhhhh have to do shennigans-->
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+
+		<Version Version="1.2645.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.2904.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3272.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3385.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+
+		<Version Version="1.3495.0.0" ProcessType="Steam">
+			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
+		</Version>
+		
+		<Version Version="1.3495.0.0" ProcessType="WinStore">
 			<Data>0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90</Data>
 		</Version>
 
@@ -894,6 +947,12 @@
 
 	<!--just scroll up a bit in same func as above for mov edi, [rdx+50]-->
 	<VersionedEntry Name="blockGameMouseClickInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1B9F5ED</Offset>
+			</Offsets>
+		</Version>
+
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x850775</Offset>
@@ -950,7 +1009,15 @@
 
 
 	<!--a call to XINPUT1_3.XInputGetState (not the only call tho so need to do a conditional breakpoint on [rsp])-->
+	<!--scan nw "8b 89 08 08 00 00", the call immediately below. see sigscans-->
 	<VersionedEntry Name="blockGameControllerInputFunction" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2094.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x1BA2FBB</Offset>
+			</Offsets>
+		</Version>
+		
+		
 		<Version Version="1.2448.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x850CB9</Offset>
@@ -1157,6 +1224,12 @@
 			</Offsets>
 		</Version>
 
+		<Version Version="1.2094.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x2CF0EA</Offset>
+			</Offsets>
+		</Version>
 
 		<Version Version="1.2448.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
