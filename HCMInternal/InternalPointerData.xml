@@ -4844,7 +4844,7 @@
 		</Version>
 		<Version Version="1.3495.0.0" Game="HaloReach">
 			<PreserveLocation>
-				<Offset>0x5E3E74</Offset>
+				<Offset>0x5E3EF4</Offset>
 				<Length>4</Length>
 			</PreserveLocation>
 			<PreserveLocation>
