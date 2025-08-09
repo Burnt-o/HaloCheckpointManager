@@ -1614,7 +1614,7 @@
 		<Version Version="1.2448.0.0" Game="Halo2">
 			<Module>halo2.dll</Module>
 			<Offsets>
-				<Offset>0xE22F40</Offset>
+				<Offset>0xE63144</Offset>
 			</Offsets>
 		</Version>
 
