@@ -10241,6 +10241,11 @@
 
 
 	<VersionedEntry Name="gameFrameDeltaPointer" Type="MultilevelPointer::ExeOffset">
+		<Version Version="1.2448.0.0" ProcessType="Steam">
+			<Offsets>
+				<Offset>0x39DB79C</Offset>
+			</Offsets>
+		</Version>
 		<Version Version="1.3385.0.0" ProcessType="Steam">
 			<Offsets>
 				<Offset>0x3FB0EBC</Offset>
