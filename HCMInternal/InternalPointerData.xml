@@ -4072,7 +4072,7 @@
 		<Version Version="1.2645.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x1DA2558</Offset>
+				<Offset>0x1DB2BF8</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2862.0.0" Game="Halo3">
@@ -4117,7 +4117,7 @@
 		<Version Version="1.2645.0.0" Game="Halo3">
 			<Module>halo3.dll</Module>
 			<Offsets>
-				<Offset>0x1DB2BF8</Offset>
+				<Offset>0x1DA2558</Offset>
 			</Offsets>
 		</Version>
 		<Version Version="1.2862.0.0" Game="Halo3">
