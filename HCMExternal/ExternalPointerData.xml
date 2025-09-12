@@ -258,6 +258,9 @@
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_GameTickCount</Name>
+		<Version Version="1.2094.0.0">
+			<Offset>0x004002E0</Offset>
+		</Version>
 		<Version Version="1.2448.0.0">
 			<Offset>0x00400AF0</Offset>
 		</Version>
@@ -282,6 +285,9 @@
 	</Entry>
 	<Entry Type="int">
 		<Name>OD_CheckpointData_Difficulty</Name>
+		<Version Version="1.2094.0.0">
+			<Offset>0x26C</Offset>
+		</Version>
 		<Version Version="1.2448.0.0">
 			<Offset>0x26C</Offset>
 		</Version>
