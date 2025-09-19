@@ -14,7 +14,7 @@
 
 	<!--Highest MCC version. Used for WinStore version detection. Winstore can't downpatch so is always latest patch.-->
 	<HighestSupportedVersion>
-		<Entry>1.3495.0.0</Entry>
+		<Entry>1.3528.0.0</Entry>
 	</HighestSupportedVersion>
 
 	<HighestSupportedCartographerVersion>
@@ -42,14 +42,14 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x3FFCA18</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x4000B10</Offset>
 		</Version>
 	</Entry>
 
 	<Entry Type="int">
 		<Name>WinStore_MCCInitialisationFlagOffset</Name>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x3E4EF78</Offset>
 		</Version>
 	</Entry>
@@ -82,7 +82,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x3FD4</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x3FD4</Offset>
 		</Version>
 	</Entry>
@@ -114,7 +114,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x13</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x13</Offset>
 		</Version>
 	</Entry>
@@ -138,7 +138,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x36A0</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x36A0</Offset>
 		</Version>
 	</Entry>
@@ -162,7 +162,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x3EE</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x3EE</Offset>
 		</Version>
 	</Entry>
@@ -189,7 +189,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x187</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x187</Offset>
 		</Version>
 	</Entry>
@@ -216,7 +216,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x470220</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x470220</Offset>
 		</Version>
 	</Entry>
@@ -243,7 +243,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x294</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x294</Offset>
 		</Version>
 	</Entry>
@@ -279,7 +279,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x7b3A44</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x7b3A44</Offset>
 		</Version>
 	</Entry>
@@ -306,7 +306,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x28C</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x28C</Offset>
 		</Version>
 	</Entry>
@@ -336,7 +336,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x183</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x183</Offset>
 		</Version>
 	</Entry>
@@ -363,7 +363,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x5C0218</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x5C0218</Offset>
 		</Version>
 		
@@ -391,7 +391,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x304</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x304</Offset>
 		</Version>
 	</Entry>
@@ -421,7 +421,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x1CD97</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x1CD97</Offset>
 		</Version>
 	</Entry>
@@ -454,7 +454,7 @@
 		<Version Version="1.3385.0.0">
 			<Offset>0x1CF28</Offset>
 		</Version>
-		<Version Version="1.3495.0.0">
+		<Version Version="1.3528.0.0">
 			<Offset>0x1CF28</Offset>
 		</Version>
 	</Entry>
