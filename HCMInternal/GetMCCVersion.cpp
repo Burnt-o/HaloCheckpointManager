@@ -11,7 +11,7 @@ VersionInfo GetMCCVersion::evalVersion()
     {
         // hard coded
         outCurrentMCCVersion.major = 1;
-        outCurrentMCCVersion.minor = 3495;
+        outCurrentMCCVersion.minor = 3528;
         outCurrentMCCVersion.build = 0;
         outCurrentMCCVersion.revision = 0;
         return outCurrentMCCVersion;
