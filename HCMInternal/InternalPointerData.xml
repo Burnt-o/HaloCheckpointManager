@@ -3989,6 +3989,10 @@
 			<offset>0x1D9A</offset>
 			<length>1</length>
 		</Version>
+		<Version Version="1.3495.0.0" Game="Halo2">
+			<offset>0x1D9A</offset>
+			<length>1</length>
+		</Version>
 		<Version Version="1.3528.0.0" Game="Halo2">
 			<offset>0x1D9A</offset>
 			<length>1</length>
@@ -4020,6 +4024,10 @@
 			<offset>0xFC98</offset>
 			<length>44</length>
 		</Version>
+		<Version Version="1.3495.0.0" Game="Halo3">
+			<offset>0xFC98</offset>
+			<length>44</length>
+		</Version>
 		<Version Version="1.3528.0.0" Game="Halo3">
 			<offset>0xFC98</offset>
 			<length>44</length>
@@ -4048,6 +4056,10 @@
 			<length>60</length>
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo3ODST">
+			<offset>0xFB80</offset>
+			<length>60</length>
+		</Version>
+		<Version Version="1.3495.0.0" Game="Halo3ODST">
 			<offset>0xFB80</offset>
 			<length>60</length>
 		</Version>
@@ -4345,6 +4357,10 @@
 			<offset>0xFCD8</offset>
 			<length>20</length>
 		</Version>
+		<Version Version="1.3495.0.0" Game="Halo3">
+			<offset>0xFCD8</offset>
+			<length>20</length>
+		</Version>
 		<Version Version="1.3528.0.0" Game="Halo3">
 			<offset>0xFCD8</offset>
 			<length>20</length>
@@ -4376,6 +4392,10 @@
 			<offset>0xFBD0</offset>
 			<length>20</length>
 		</Version>
+		<Version Version="1.3495.0.0" Game="Halo3ODST">
+			<offset>0xFBD0</offset>
+			<length>20</length>
+		</Version>
 		<Version Version="1.3528.0.0" Game="Halo3ODST">
 			<offset>0xFBD0</offset>
 			<length>20</length>
@@ -4404,6 +4424,10 @@
 			<length>20</length>
 		</Version>
 		<Version Version="1.3385.0.0" Game="HaloReach">
+			<offset>0x1EC10</offset>
+			<length>20</length>
+		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
 			<offset>0x1EC10</offset>
 			<length>20</length>
 		</Version>
@@ -4487,6 +4511,26 @@
 			</PreserveLocation>
 			<PreserveLocation>
 				<Offset>0x5ABD</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x3814</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x3808</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+		</Version>
+		<Version Version="1.3495.0.0" Game="Halo2">
+			<PreserveLocation>
+				<Offset>0x5A74</Offset>
+				<!--moved-->
+				<Length>8</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5AFD</Offset>
+				<!--moved-->
 				<Length>8</Length>
 			</PreserveLocation>
 			<PreserveLocation>
@@ -4654,6 +4698,37 @@
 			</PreserveLocation>
 		</Version>
 		<Version Version="1.3385.0.0" Game="Halo3">
+			<PreserveLocation>
+				<Offset>8</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x4806E8</Offset>
+				<Length>16</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x4835E4</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x4806DC</Offset>
+				<Length>8</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x4835E4</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x48364E</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<!--black screen fix-->
+				<Offset>0x470274</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
+		</Version>
+		<Version Version="1.3495.0.0" Game="Halo3">
 			<PreserveLocation>
 				<Offset>8</Offset>
 				<Length>4</Length>
@@ -4852,6 +4927,28 @@
 				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
+		<Version Version="1.3495.0.0" Game="Halo3ODST">
+			<PreserveLocation>
+				<Offset>0x48066C</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x480678</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x4847F4</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x48485E</Offset>
+				<Length>2</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x470274</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
+		</Version>
 		<Version Version="1.3528.0.0" Game="Halo3ODST">
 			<PreserveLocation>
 				<Offset>0x48066C</Offset>
@@ -4957,6 +5054,21 @@
 				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
+		<Version Version="1.3495.0.0" Game="HaloReach">
+			<PreserveLocation>
+				<Offset>0x5E3EF4</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5DF5F0</Offset>
+				<Length>16</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<!--black screen fix-->
+				<Offset>0x5C026E</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
+		</Version>
 		<Version Version="1.3528.0.0" Game="HaloReach">
 			<PreserveLocation>
 				<Offset>0x5E3EF4</Offset>
@@ -5037,6 +5149,21 @@
 			<PreserveLocation>
 				<!--black screen fix-->
 				<Offset>0x55B29C</Offset>
+				<Length>0xC</Length>
+			</PreserveLocation>
+		</Version>
+		<Version Version="1.3495.0.0" Game="Halo4">
+			<PreserveLocation>
+				<Offset>0x598250</Offset>
+				<Length>4</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<Offset>0x5890CC</Offset>
+				<Length>0x3B0</Length>
+			</PreserveLocation>
+			<PreserveLocation>
+				<!--black screen fix-->
+				<Offset>0x55B31C</Offset>
 				<Length>0xC</Length>
 			</PreserveLocation>
 		</Version>
