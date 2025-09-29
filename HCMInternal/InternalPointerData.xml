@@ -12026,6 +12026,14 @@
 			<BitOffset>0</BitOffset>
 		</Version>
 
+		<Version Version="1.2094.0.0" Game="Halo3ODST">
+			<Module>halo3odst.dll</Module>
+			<Offsets>
+				<Offset>0x01C5ACC8</Offset>
+				<Offset>0xFCB4</Offset>
+			</Offsets>
+			<BitOffset>0</BitOffset>
+		</Version>
 		<Version Version="1.2448.0.0" Game="Halo3ODST">
 			<Module>halo3odst.dll</Module>
 			<Offsets>
