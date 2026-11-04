@@ -8,7 +8,7 @@
              xmlns:viewModels="clr-namespace:HCMExternal.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="593" d:DesignWidth="720"
-             d:DataContext="{d:DesignInstance viewModels:CheckpointViewModel}" x:ClassModifier="internal">
+             d:DataContext="{d:DesignInstance viewModels:FileViewModel}" x:ClassModifier="internal">
     <Grid Width="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" Width="99999*" /> <!--big number makes the default position push the second grid as far right as possible-->
