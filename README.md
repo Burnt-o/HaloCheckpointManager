@@ -27,6 +27,6 @@ I haven't tried building outside of this VS environment so YMMV if you try other
 
 This project also makes heavy use of the amazing SafetyHook by cursey. You can think of it as like "Microsoft Detours but if it didn't suck". I've included the release I'm using in this repository so you shouldn't need to worry about it.
 
-After successfully building all projects (besides HCMInternalTests, that doesn't matter), make sure to rebuild the entire solution to ensure all build events fire correctly.
+After successfully building all projects, make sure to rebuild the entire solution to ensure all build events fire correctly.
 
 Known build issue: Your build events may fail to copy over certain files to the correct directory due to macro issues: fix this by adjusting the build event macros for each project to make sure they're outputting to HCMExternal's binary output directory.
