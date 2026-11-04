@@ -11,7 +11,7 @@ namespace HCMExternal.Services.CheckpointIO.Impl
     public partial class CheckpointIOService
     {
         /// <summary>
-        /// Iterates through all the checkpoint files in a saveFolder and decodes them, creating the checkpointCollection observed by CheckpointViewModel.
+        /// Iterates through all the checkpoint files in a saveFolder and decodes them, creating the checkpointCollection observed by FileViewModel.
         /// </summary>
         /// <param name="SelectedSaveFolder">The saveFolder containing the checkpoints to parse.</param>
         /// <param name="SelectedGame">Which game are these checkpoints from?</param>
