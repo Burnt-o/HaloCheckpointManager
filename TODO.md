@@ -98,7 +98,6 @@ double check any stack overflow stuff
 * formatter pass
 * compiler warning pass
 * linter pass
-* update unit tests to actually work
 * Investigate alternate build environments - I'd like to get HCM building entirely in a github Runner eventually
 	* This could lead to code-signing in the future which would stop all the Windows Defender issues people have
 * I don't like the spamming of "if (game-this-implementation-is-for == not-currently-playing) return;"
@@ -106,7 +105,7 @@ double check any stack overflow stuff
 * A lot of boilerplate shitty "features" can be merged. Ie force cp/revert/mission restart could all be GameEngine stuff, instead of duplicating game engine stuff
 	* We really need to put more faith that are optionalCheat construction won't fail cos yknow. For current patch it never will. For other patches we should start implementing more stuff anyway. And mcc is never gonna get updated again prolly
 	* That doesn't mean we should switch to a hard-coded system though. I kinda like the abstraction of the dynamic system as long as you hide the impl details from the user
-* also I should switch from microsoft unit tests to boost::ut
+* Add real unit tests
 
 ## Low priority stuff that I would like to implement if it weren't a lot of work and I weren't really lazy
 * Random practice mode (Select multiple checkpoints and have them randomly injected - including cross level loading)
