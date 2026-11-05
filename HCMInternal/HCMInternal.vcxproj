@@ -780,7 +780,7 @@ IF EXIST "C:\Program Files\LockHunter\LockHunter.exe"  (
     <None Include="includes\safetyhook\src\mid_hook.x86_32.asm" />
     <None Include="includes\safetyhook\src\mid_hook.x86_64-linux.asm" />
     <None Include="includes\safetyhook\src\mid_hook.x86_64-windows.asm" />
-    <None Include="vcpkg.json" />
+    <None Include="..\vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HCMInternal.rc" />
