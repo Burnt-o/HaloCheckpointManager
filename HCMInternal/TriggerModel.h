@@ -18,6 +18,7 @@ private:
 	VertexCollection vertices;
 	IndexCollection triangleIndices;
 	IndexCollection edgeIndices;
+	IndexCollection sectorTriangles;
 
 	std::string label;
 
@@ -36,6 +37,8 @@ public:
 	const std::string& getLabel() const { return label; }
 	const SimpleMath::Vector3& getCenter() const { return centerPosition; }
 	const SimpleMath::Vector3& getCorner() const { return cornerPosition; }
+
+	bool contains(const SimpleMath::Vector3& point) const;
 
 	// Only accurate for box type triggers
 	const DirectX::BoundingOrientedBox& getBoundingBox() const { return box; }
