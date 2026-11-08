@@ -133,16 +133,12 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 
 
 // sector constructor
-TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPointsBottom, float height)
+TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPointsBottom, std::vector<SimpleMath::Vector3> sectorPointsTop)
 	: label(triggerName),
 	m_isSectorType(true)
 {
 
 	size_t sectorPointCount = sectorPointsBottom.size();
-
-	// vertices consists of sectorPoints, and then sectorPoints again but with z += height.
-	std::vector<SimpleMath::Vector3> sectorPointsTop = sectorPointsBottom; // copy
-	std::ranges::transform(sectorPointsTop, sectorPointsTop.begin(), [height](const auto& v) { return SimpleMath::Vector3{ v.x, v.y, v.z + height }; }); // add height
 
 	for (auto& sp : sectorPointsBottom)
 	{

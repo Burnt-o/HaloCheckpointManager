@@ -23,7 +23,7 @@ private:
 
 public:
 	TriggerModel(std::string triggerName, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up); // bounding box constructor
-	TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPoints, float height); // sector constructor
+	TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPointsBottom, std::vector<SimpleMath::Vector3> sectorPointsTop); // sector constructor
 
 	virtual const VertexCollection& getTriangleVertices() const override { return vertices; }
 	virtual const IndexCollection& getTriangleIndices() const override { return triangleIndices; }

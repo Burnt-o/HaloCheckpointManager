@@ -42,9 +42,9 @@ private:
 	{}
 	
 	// sector
-	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, std::vector<SimpleMath::Vector3> sectorPoints, float height)
+	explicit TriggerData(std::string triggerName, uint32_t trigIndex, bool isBSP, std::vector<SimpleMath::Vector3> sectorPointsBottom, std::vector<SimpleMath::Vector3> sectorPointsTop)
 		: name(triggerName),
-		model(triggerName, sectorPoints, height),
+		model(triggerName, sectorPointsBottom, sectorPointsTop),
 		triggerIndex(trigIndex),
 		isBSPTrigger(isBSP),
 		isSectorType(true)
@@ -63,9 +63,9 @@ public:
 	}
 
 
-	TriggerData makeSector(std::string triggerName, uint32_t trigIndex, bool isBSP, std::vector<SimpleMath::Vector3> sectorPoints, float height)
+	TriggerData makeSector(std::string triggerName, uint32_t trigIndex, bool isBSP, std::vector<SimpleMath::Vector3> sectorPointsBottom, std::vector<SimpleMath::Vector3> sectorPointsTop)
 	{
-		return std::move(TriggerData(triggerName, trigIndex, isBSP, sectorPoints, height));
+		return std::move(TriggerData(triggerName, trigIndex, isBSP, sectorPointsBottom, sectorPointsTop));
 	}
 
 

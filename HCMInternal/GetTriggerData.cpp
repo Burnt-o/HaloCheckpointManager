@@ -128,7 +128,7 @@ private:
 	//enum class tagBlockDataFields { entryCount, offset };
 	//std::shared_ptr<DynamicStruct<tagBlockDataFields>> tagBlockDataStruct;
 
-	enum class triggerDataFields { forward, up, position, extents, triggerType, sectorPointsTagBlock };
+	enum class triggerDataFields { forward, up, position, extents, zSink, triggerType, sectorPointsTagBlock };
 	std::shared_ptr<StrideableDynamicStruct<triggerDataFields>> triggerDataStruct;
 
 	enum class sectorPointsDataFields { position };
@@ -251,23 +251,51 @@ public:
 					sectorPoints.push_back(*pPos);
 				}
 
+				if (sectorPoints.empty()) continue;
+
 				auto* pExtents = triggerDataStruct->field<SimpleMath::Vector3>(triggerDataFields::extents);
 				if (IsBadReadPtr(pExtents, sizeof(SimpleMath::Vector3))) throw HCMRuntimeException(std::format("Bad read address for pExtents at {}", (uintptr_t)pExtents));
+
+				auto* pZSink = triggerDataStruct->field<float>(triggerDataFields::zSink);
+				if (IsBadReadPtr(pZSink, sizeof(float))) throw HCMRuntimeException(std::format("Bad read address for pZSink at {}", (uintptr_t)pZSink));
+
+				std::vector<SimpleMath::Vector3> sectorPointsBottom = sectorPoints;
+				std::vector<SimpleMath::Vector3> sectorPointsTop = sectorPoints;
+
+				auto [minZPoint, maxZPoint] = std::ranges::minmax(sectorPoints, {}, &SimpleMath::Vector3::z);
+
+				float bottomZ = minZPoint.z - *pZSink;
+				float topZ = maxZPoint.z + pExtents->z;
+
+				if constexpr (gameT == GameState::Value::Halo3ODST)
+				{
+					// ODST uses z sink / z extent directly on each sector point's z coordinate.
+					std::ranges::transform(sectorPointsBottom, sectorPointsBottom.begin(), [zSink = *pZSink](const auto& v) { return SimpleMath::Vector3{ v.x, v.y, v.z - zSink }; });
+					std::ranges::transform(sectorPointsTop, sectorPointsTop.begin(), [height = pExtents->z](const auto& v) { return SimpleMath::Vector3{ v.x, v.y, v.z + height }; });
+				}
+				else
+				{
+					// Reach/H4 are right prisms using bottomZ/topZ.
+					std::ranges::transform(sectorPointsBottom, sectorPointsBottom.begin(), [bottomZ](const auto& v) { return SimpleMath::Vector3{ v.x, v.y, bottomZ }; });
+					std::ranges::transform(sectorPointsTop, sectorPointsTop.begin(), [topZ](const auto& v) { return SimpleMath::Vector3{ v.x, v.y, topZ }; });
+				}
 
 				PLOG_DEBUG << "read sector Trigger Data at index " << triggerIndex << ", location " << std::hex << triggerDataStruct->currentBaseAddress << ":";
 				PLOG_DEBUG << "Name: " << name;
 				PLOG_DEBUG << "SectorPointCount: " << sectorPoints.size();
 				for (auto& p : sectorPoints) { PLOG_DEBUG << "sectorPointPosition: " << p; }
 				PLOG_DEBUG << "Exte: " << *pExtents;
-				PLOG_DEBUG << "Heig: " << pExtents->z;
+				PLOG_DEBUG << "ZSink: " << *pZSink;
+				PLOG_DEBUG << "BottomZ: " << bottomZ;
+				PLOG_DEBUG << "TopZ: " << topZ;
 
 				triggerDataAllLocked->emplace(triggerDataStruct->currentBaseAddress,
 					std::move(TriggerDataFactory::makeSector(
 						name,
 						triggerIndex,
 						triggerIsBSPLambda(name),
-						sectorPoints,
-						pExtents->z
+						sectorPointsBottom,
+						sectorPointsTop
 					)));
 			}
 		}
