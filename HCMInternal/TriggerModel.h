@@ -18,12 +18,13 @@ private:
 	VertexCollection vertices;
 	IndexCollection triangleIndices;
 	IndexCollection edgeIndices;
+	IndexCollection sectorTriangles;
 
 	std::string label;
 
 public:
 	TriggerModel(std::string triggerName, SimpleMath::Vector3 position, SimpleMath::Vector3 extents, SimpleMath::Vector3 forward, SimpleMath::Vector3 up); // bounding box constructor
-	TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPoints, float height); // sector constructor
+	TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPointsBottom, std::vector<SimpleMath::Vector3> sectorPointsTop); // sector constructor
 
 	virtual const VertexCollection& getTriangleVertices() const override { return vertices; }
 	virtual const IndexCollection& getTriangleIndices() const override { return triangleIndices; }
@@ -36,6 +37,8 @@ public:
 	const std::string& getLabel() const { return label; }
 	const SimpleMath::Vector3& getCenter() const { return centerPosition; }
 	const SimpleMath::Vector3& getCorner() const { return cornerPosition; }
+
+	bool contains(const SimpleMath::Vector3& point) const;
 
 	// Only accurate for box type triggers
 	const DirectX::BoundingOrientedBox& getBoundingBox() const { return box; }

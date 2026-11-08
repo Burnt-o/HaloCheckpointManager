@@ -91,8 +91,8 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 		1, 5,
 		2, 6,
 		3, 7,
-	};		
-	
+	};
+
 		//     Near    Far
 		//    0----1  4----5
 		//    |    |  |    |
@@ -133,16 +133,12 @@ TriggerModel::TriggerModel(std::string triggerName, SimpleMath::Vector3 position
 
 
 // sector constructor
-TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPointsBottom, float height)
+TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vector3> sectorPointsBottom, std::vector<SimpleMath::Vector3> sectorPointsTop)
 	: label(triggerName),
 	m_isSectorType(true)
 {
 
 	size_t sectorPointCount = sectorPointsBottom.size();
-
-	// vertices consists of sectorPoints, and then sectorPoints again but with z += height.
-	std::vector<SimpleMath::Vector3> sectorPointsTop = sectorPointsBottom; // copy
-	std::ranges::transform(sectorPointsTop, sectorPointsTop.begin(), [height](const auto& v) { return SimpleMath::Vector3{ v.x, v.y, v.z + height }; }); // add height
 
 	for (auto& sp : sectorPointsBottom)
 	{
@@ -200,7 +196,7 @@ TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vect
 	// This is to find constituent triangles of the 2d polygon formed by the sector points.
 
 	std::vector<std::vector<SimpleMath::Vector3>> polygon;
-	polygon.push_back(sectorPointsBottom); // doesn't matter if we use bottom or top since this is a 2d calc 
+	polygon.push_back(sectorPointsBottom); // doesn't matter if we use bottom or top since this is a 2d calc
 
 	// Run tessellation
 	// Returns array of indices that refer to the vertices of the input polygon.
@@ -218,7 +214,8 @@ TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vect
 	{
 		triangleIndices.push_back(index + sectorPointCount);
 	}
-	
+
+	sectorTriangles = triangulatedIndices;
 
 	// Create bounding box (not an accurate representation of sector trigs)
 	DirectX::BoundingOrientedBox::CreateFromPoints(box, vertices.size(), &vertices.data()->position, (size_t)sizeof(VertexPosition));
@@ -226,6 +223,57 @@ TriggerModel::TriggerModel(std::string triggerName, std::vector<SimpleMath::Vect
 	// setup center/corner
 	this->centerPosition = box.Center;
 	this->cornerPosition = sectorPointsBottom.at(0);
+}
+
+bool TriggerModel::contains(const SimpleMath::Vector3& point) const
+{
+	if (m_isSectorType == false)
+	{
+		return box.Contains(point) == DirectX::ContainmentType::CONTAINS;
+	}
+
+	const size_t pointCount = vertices.size() / 2;
+
+	for (size_t i = 0; i + 2 < sectorTriangles.size(); i += 3)
+	{
+		// earcut triangle: one of the triangles tiling the sector point footprint
+		const auto& a = vertices[sectorTriangles[i]].position;
+		const auto& b = vertices[sectorTriangles[i + 1]].position;
+		const auto& c = vertices[sectorTriangles[i + 2]].position;
+
+		// barycentric coords of the point's x/y within triangle abc
+		const float denominator = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
+		if (denominator == 0.0f)
+		{
+			continue;
+		}
+
+		const float w0 = ((b.y - c.y) * (point.x - c.x) + (c.x - b.x) * (point.y - c.y)) / denominator;
+		const float w1 = ((c.y - a.y) * (point.x - c.x) + (a.x - c.x) * (point.y - c.y)) / denominator;
+		const float w2 = 1.f - w0 - w1;
+
+		// is in triangle footprint?
+		if (w0 < 0.0f || w1 < 0.0f || w2 < 0.0f)
+		{
+			continue;
+		}
+
+		// interpolate cap heights at the point
+		// bottom and top rings share x/y so the same weights apply to both
+		const float bottomZ = w0 * a.z + w1 * b.z + w2 * c.z;
+		const float topZ =
+			w0 * vertices[sectorTriangles[i]     + pointCount].position.z +
+			w1 * vertices[sectorTriangles[i + 1] + pointCount].position.z +
+			w2 * vertices[sectorTriangles[i + 2] + pointCount].position.z;
+
+		// is in triangle's z span?
+		if (point.z >= bottomZ && point.z <= topZ)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // let's us input our SimpleMath Vec3's directly into the 2d earcut algo
@@ -259,7 +307,7 @@ Notes for if I ever wanna comeback and revist the texture tiling problem:
 We would need to use VertexPositionNormalTexture instead of VertexPosition.
 We would also need independent vertices for each tri instead of shared ones (so texture uv's are independent).
 Calculating the normal is pretty easy, just the normal of the tri (pointing outward).
-Calculating the UVs is a lot harder. For each triangle, would need to project from 3d to 2d (in the plane of the normal of the tri). 
+Calculating the UVs is a lot harder. For each triangle, would need to project from 3d to 2d (in the plane of the normal of the tri).
 	Those 2d coords would be our uvs, *I think*.
 IModelTriangles + IModelTexturedTriangles, with IRenderer3D having overloads for drawTriangle/drawTriangleCollection.
 */

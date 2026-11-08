@@ -319,8 +319,7 @@ private:
 				// render solid volumes
 				if (renderStyle == TriggerRenderStyle::Solid || renderStyle == TriggerRenderStyle::SolidAndWireframe)
 				{
-					// sector types don't have implemented containment test so we'll just always assume the camera is outside for those.
-					bool cameraIsInsideTrigger = triggerData.isSectorType == false && triggerData.model.getBoundingBox().Contains(cameraPosition) == DirectX::ContainmentType::CONTAINS;
+					bool cameraIsInsideTrigger = triggerData.model.contains(cameraPosition);
 
 					if (cameraIsInsideTrigger && interiorStyle == TriggerInteriorStyle::DontRender)
 					{

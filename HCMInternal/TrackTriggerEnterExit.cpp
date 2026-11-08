@@ -96,11 +96,7 @@ private:
 			for (auto& [triggerPointer, triggerData] : *filteredTriggerData.get())
 			{
 
-				// this functionality is disabled for SectorType triggers since I don't know how to do the containment math on that
-				if (triggerData.isSectorType)
-					continue;
-
-				bool playerIsInsideThisTick = triggerData.model.getBoundingBox().Contains(playerTriggerPosition.value()) == DirectX::ContainmentType::CONTAINS;
+				bool playerIsInsideThisTick = triggerData.model.contains(playerTriggerPosition.value());
 
 				if (playerIsInsideThisTick == triggerData.playerWasInsideLastTick)
 					continue;
