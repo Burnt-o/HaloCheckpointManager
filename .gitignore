@@ -13,12 +13,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-<<<<<<< HEAD
-=======
 # Mono auto generated files
 mono_crash.*
 
->>>>>>> Add .gitattributes and .gitignore.
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -26,22 +23,15 @@ mono_crash.*
 [Rr]eleases/
 x64/
 x86/
-<<<<<<< HEAD
-=======
 [Ww][Ii][Nn]32/
->>>>>>> Add .gitattributes and .gitignore.
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
 [Oo]bj/
-<<<<<<< HEAD
-[Ll]og/
-=======
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
->>>>>>> Add .gitattributes and .gitignore.
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -55,16 +45,10 @@ Generated\ Files/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
-<<<<<<< HEAD
-# NUNIT
-*.VisualState.xml
-TestResult.xml
-=======
 # NUnit
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
->>>>>>> Add .gitattributes and .gitignore.
 
 # Build Results of an ATL Project
 [Dd]ebugPS/
@@ -79,12 +63,9 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
-<<<<<<< HEAD
-=======
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
->>>>>>> Add .gitattributes and .gitignore.
 # StyleCop
 StyleCopReport.xml
 
@@ -151,12 +132,9 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
-<<<<<<< HEAD
 # JustCode is a .NET coding add-in
 .JustCode
 
-=======
->>>>>>> Add .gitattributes and .gitignore.
 # TeamCity is a build add-in
 _TeamCity*
 
@@ -167,14 +145,11 @@ _TeamCity*
 .axoCover/*
 !.axoCover/settings.json
 
-<<<<<<< HEAD
-=======
 # Coverlet is a free, cross platform Code Coverage Tool
 coverage*.json
 coverage*.xml
 coverage*.info
 
->>>>>>> Add .gitattributes and .gitignore.
 # Visual Studio code coverage results
 *.coverage
 *.coveragexml
@@ -222,11 +197,8 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
-<<<<<<< HEAD
-=======
 # NuGet Symbol Packages
 *.snupkg
->>>>>>> Add .gitattributes and .gitignore.
 # The packages folder can be ignored because of Package Restore
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
@@ -251,11 +223,8 @@ BundleArtifacts/
 Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
-<<<<<<< HEAD
-=======
 *.appxbundle
 *.appxupload
->>>>>>> Add .gitattributes and .gitignore.
 
 # Visual Studio cache files
 # files ending in .cache can be ignored
@@ -305,13 +274,10 @@ ServiceFabricBackup/
 *.bim.layout
 *.bim_*.settings
 *.rptproj.rsuser
-<<<<<<< HEAD
 *- Backup*.rdl
-=======
 *- [Bb]ackup.rdl
 *- [Bb]ackup ([0-9]).rdl
 *- [Bb]ackup ([0-9][0-9]).rdl
->>>>>>> Add .gitattributes and .gitignore.
 
 # Microsoft Fakes
 FakesAssemblies/
@@ -347,13 +313,10 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
-<<<<<<< HEAD
 # JetBrains Rider
 .idea/
 *.sln.iml
 
-=======
->>>>>>> Add .gitattributes and .gitignore.
 # CodeRush personal settings
 .cr/personal
 
@@ -397,11 +360,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-<<<<<<< HEAD
 /WpfApp3/offsets/1.2580.0.0.json
 /ConsoleApp1/ConsoleApp1.csproj
 /ConsoleApp1/Program.cs
-=======
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
@@ -411,9 +372,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
->>>>>>> Add .gitattributes and .gitignore.
-/HCMInternal/vcpkg_installed/
-/HCMSpeedhack/vcpkg_installed/
-/HCMInterproc/vcpkg_installed/
+/vcpkg_installed/
+/build/
 /enc_temp_folder/113e4d6b74d54c7b72f8459e25b5a575/MCCInitialisationCheck.cpp
-/OutputPath.vsmacro

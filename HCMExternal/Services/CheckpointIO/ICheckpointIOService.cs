@@ -58,7 +58,7 @@ namespace HCMExternal.Services.CheckpointIO
         public void OpenInExplorer(SaveFolder selectedSaveFolder);
 
         /// <summary>
-        /// Iterates through all the checkpoint files in a saveFolder and decodes them, creating the checkpointCollection observed by CheckpointViewModel.
+        /// Iterates through all the checkpoint files in a saveFolder and decodes them, creating the checkpointCollection observed by FileViewModel.
         /// </summary>
         /// <param name="selectedSaveFolder">The saveFolder containing the checkpoints to parse.</param>
         /// <param name="selectedGame">Which game are these checkpoints from?</param>
@@ -66,7 +66,7 @@ namespace HCMExternal.Services.CheckpointIO
         public ObservableCollection<Checkpoint> PopulateCheckpointList(SaveFolder selectedSaveFolder, HaloGame selectedGame);
 
         /// <summary>
-        /// Populates the saveFolder tree for a specified game -that's the root Folder and all folders underneath- into the saveFolderCollection observed by CheckpointViewModel.
+        /// Populates the saveFolder tree for a specified game -that's the root Folder and all folders underneath- into the saveFolderCollection observed by FileViewModel.
         /// </summary>
         /// <param name="rootFolder">Out parameter: the root folder for this game.</param>
         /// <param name="selectedGame">Which game is this for?</param>

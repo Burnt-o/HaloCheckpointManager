@@ -14,7 +14,7 @@ namespace HCMExternal.Services.CheckpointIO.Impl
     {
 
         /// <summary>
-        /// Populates the saveFolder tree for a specified game -that's the root Folder and all folders underneath- into the saveFolderCollection observed by CheckpointViewModel.
+        /// Populates the saveFolder tree for a specified game -that's the root Folder and all folders underneath- into the saveFolderCollection observed by FileViewModel.
         /// </summary>
         /// <param name="RootFolder">Out parameter: the root folder for this game.</param>
         /// <param name="SelectedGame">Which game is this for?</param>
